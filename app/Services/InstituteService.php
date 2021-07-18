@@ -14,7 +14,6 @@ use Illuminate\Validation\Rules\RequiredIf;
 
 class InstituteService
 {
-
     public function getInstituteList(Request $request): array
     {
         $startTime = Carbon::now();
