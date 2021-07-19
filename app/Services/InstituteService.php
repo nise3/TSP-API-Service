@@ -38,9 +38,9 @@ class InstituteService
         $institutes->orderBy('institutes.id', $order);
 
         if (!empty($titleEn)) {
-            $institutes->where('human_resource_templates.title_en', 'like', '%' . $titleEn . '%');
+            $institutes->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $institutes->where('human_resource_templates.title_bn', 'like', '%' . $titleBn . '%');
+            $institutes->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
         if ($paginate) {
@@ -108,7 +108,7 @@ class InstituteService
             'institutes.updated_at',
         ]);
 
-
+        $institute->where('institutes.id', $id);
         $institute = $institute->first();
 
         $links = [];
