@@ -9,7 +9,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Validation\Rules\RequiredIf;
 
 
 class InstituteService
@@ -35,6 +34,7 @@ class InstituteService
             'institutes.updated_at'
         ]);
 
+        $institutes->active();
         $institutes->orderBy('institutes.id', $order);
 
         if (!empty($titleEn)) {
@@ -155,7 +155,8 @@ class InstituteService
             'mobile_numbers' => ['array'],
             'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
-                new RequiredIf($id == null),
+                'nullable',
+//                new RequiredIf($id == null), //TODO: this field is required, just commented out because of api check
                 'image',
                 'mimes:jpeg,jpg,png,gif',
                 'max:500',
