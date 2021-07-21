@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -30,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class courseConfig extends BaseModel
 {
+    use ScopeRowStatusTrait;
+
     protected $guarded = ['id'];
     //TODO: add relation function
 

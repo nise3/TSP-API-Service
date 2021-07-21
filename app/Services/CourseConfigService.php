@@ -29,22 +29,23 @@ class CourseConfigService
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
-            'users.name_en as course_publisher_name',
             'course_configs.created_at',
-            'courses.title_en as course_title',
-            'branches.title_en as branch_name',
-            'programmes.title_en as programme_name',
-            'training_centers.title_en as training_center_name',
+//            'courses.title_en as course_title',
+//            'branches.title_en as branch_name',
+//            'programmes.title_en as programme_name',
+//            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
-        $courseConfigs->join('courses', 'publish_courses.course_id', '=', 'courses.id');
-        $courseConfigs->join('institutes', 'publish_courses.institute_id', '=', 'institutes.id');
-        $courseConfigs->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
-        $courseConfigs->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
-        $courseConfigs->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
 
-        $courseConfigs->active();
-        $courseConfigs->orderBy('institutes.id', $order);
+
+//        $courseConfigs->join('courses', 'publish_courses.course_id', '=', 'courses.id');
+        $courseConfigs->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
+//        $courseConfigs->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
+//        $courseConfigs->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
+//        $courseConfigs->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
+
+        $courseConfigs->orderBy('course_configs.id', $order);
+
 
         if (!empty($titleEn)) {
             $courseConfigs->where('course_configs.title_en', 'like', '%' . $titleEn . '%');
@@ -111,24 +112,24 @@ class CourseConfigService
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
-            'users.name_en as course_publisher_name',
             'course_configs.created_at',
-            'courses.title_en as course_title',
-            'branches.title_en as branch_name',
-            'programmes.title_en as programme_name',
-            'training_centers.title_en as training_center_name',
+//            'courses.title_en as course_title',
+//            'branches.title_en as branch_name',
+//            'programmes.title_en as programme_name',
+//            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
-        $courseConfig->join('courses', 'publish_courses.course_id', '=', 'courses.id');
-        $courseConfig->join('institutes', 'publish_courses.institute_id', '=', 'institutes.id');
-        $courseConfig->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
-        $courseConfig->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
-        $courseConfig->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
+//        $courseConfig->join('courses', 'publish_courses.course_id', '=', 'courses.id');
+        $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
+//        $courseConfig->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
+//        $courseConfig->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
+//        $courseConfig->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
         $courseConfig->where('course_configs.id', $id);
-        $courseConfig->active();
 
         $courseConfig = $courseConfig->first();
-        $courseConfig->with('courseSessions');
+        if (!empty($courseConfig)) {
+            $courseConfig->load('courseSessions');
+        }
 
         $links = [];
         if (!empty($courseConfig)) {
@@ -172,6 +173,7 @@ class CourseConfigService
         $courseConfig->fill($data);
         $courseConfig->save();
 
+
         foreach ($data['course_sessions'] as $session) {
             $session['course_id'] = $data['course_id'];
             $courseSessions[] = $session;
@@ -214,7 +216,8 @@ class CourseConfigService
         $rules = [
             'institute_id' => [
                 'required',
-                'int'
+                'int',
+                'exists:institutes,id',
             ],
             'course_id' => [
                 'required',
@@ -226,10 +229,6 @@ class CourseConfigService
             ],
             'programme_id' => [
                 'nullable',
-                'int'
-            ],
-            'application_form_type_id' => [
-                'required',
                 'int'
             ],
             'branch_id' => [
@@ -286,6 +285,7 @@ class CourseConfigService
         $messages = [
             'course_sessions.*.session_name_bn.regex' => "Session Name(Bangla) is required in Bangla",
         ];
+
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
     }
