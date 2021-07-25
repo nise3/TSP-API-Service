@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class TrainingCenter
@@ -32,14 +33,14 @@ class TrainingCenter extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
-//    public function branch(): BelongsTo
-//    {
-//        return $this->belongsTo(Branch::class);
-//    }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
-//    public function publishCourses(): HasMany
-//    {
-//        return $this->hasMany(PublishCourse::class);
-//    }
+    public function courseConfigs(): HasMany
+    {
+        return $this->hasMany(courseConfig::class);
+    }
 
 }
