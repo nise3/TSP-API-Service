@@ -7,7 +7,6 @@ namespace App\Services;
 use App\Models\courseConfig;
 use App\Models\CourseSession;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -38,11 +37,11 @@ class CourseConfigService
         ]);
 
 
-//        $courseConfigs->join('courses', 'publish_courses.course_id', '=', 'courses.id');
+//        $courseConfigs->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfigs->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-//        $courseConfigs->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
-//        $courseConfigs->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
-//        $courseConfigs->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
+//        $courseConfigs->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
+//        $courseConfigs->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
+//        $courseConfigs->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
 
         $courseConfigs->orderBy('course_configs.id', $order);
 
@@ -119,11 +118,11 @@ class CourseConfigService
 //            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
-//        $courseConfig->join('courses', 'publish_courses.course_id', '=', 'courses.id');
+//        $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-//        $courseConfig->leftJoin('programmes', 'publish_courses.programme_id', '=', 'programmes.id');
-//        $courseConfig->leftJoin('branches', 'publish_courses.branch_id', '=', 'branches.id');
-//        $courseConfig->leftJoin('training_centers', 'publish_courses.training_center_id', '=', 'training_centers.id');
+//        $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
+//        $courseConfig->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
+//        $courseConfig->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
         $courseConfig->where('course_configs.id', $id);
 
         $courseConfig = $courseConfig->first();
@@ -271,21 +270,47 @@ class CourseConfigService
                 'required',
                 'int'
             ],
-            'ethnic' => 'boolean',
-            'freedom_fighter' => 'boolean',
-            'disable_status' => 'Boolean',
-            'ssc' => 'boolean',
-            'hsc' => 'boolean',
-            'honors' => 'boolean',
-            'masters' => 'boolean',
-            'occupation' => 'boolean',
-            'guardian' => 'boolean',
+            'ethnic' => [
+                'boolean',
+                'nullable'
+            ],
+            'freedom_fighter' => [
+                'nullable',
+                'boolean'
+            ],
+            'disable_status' => [
+                'nullable',
+                'boolean'
+            ],
+            'ssc' => [
+                'nullable',
+                'boolean'
+            ],
+            'hsc' => [
+                'nullable',
+                'boolean',
+            ],
+            'honors' => [
+                'nullable',
+                'boolean',
+            ],
+            'masters' => [
+                'nullable',
+                'boolean',
+            ],
+            'occupation' => [
+                'nullable',
+                'boolean',
+            ],
+            'guardian' => [
+                'nullable',
+                'boolean',
+            ]
         ];
 
         $messages = [
             'course_sessions.*.session_name_bn.regex' => "Session Name(Bangla) is required in Bangla",
         ];
-
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
     }
