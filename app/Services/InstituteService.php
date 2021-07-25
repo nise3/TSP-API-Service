@@ -132,16 +132,17 @@ class InstituteService
 
     public function validator(Request $request, $id = null): Validator
     {
+
         $rules = [
             'title_en' => ['required', 'string', 'max:191'],
             'title_bn' => ['required', 'string', 'max:191'],
-            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
+            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,'.$id],
             'domain' => [
                 'required',
                 'string',
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191',
-                'unique:institutes,domain,' . $id
+                'unique:institutes,domain,'.$id
             ],
             'address' => ['nullable', 'string', 'max:191'],
             'google_map_src' => ['nullable', 'string'],
