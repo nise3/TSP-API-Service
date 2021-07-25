@@ -42,6 +42,7 @@ class BranchController extends Controller
                     "finished" => \Carbon\Carbon::now(),
                 ], $handler->convertExceptionToArray())
             ];
+
             return Response::json($response, $response['_response_status']['code']);
         }
 
