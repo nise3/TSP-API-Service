@@ -17,4 +17,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('organizations', 'OrganizationController')->render();
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     $customRouter()->resourceRoute('course-configs', 'CourseConfigController')->render();
+
+    //course crud api
+    $customRouter()->resourceRoute('courses', 'CourseController')->render();
 });
