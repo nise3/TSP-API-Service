@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Models\Branch;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;

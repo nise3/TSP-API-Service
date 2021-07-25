@@ -30,11 +30,18 @@ class InstituteService
             'institutes.code',
             'institutes.address',
             'institutes.domain',
+            'institutes.google_map_src',
+            'institutes.logo',
+            'institutes.primary_phone',
+            'institutes.phone_numbers',
+            'institutes.primary_mobile',
+            'institutes.mobile_numbers',
+            'institutes.email',
+            'institutes.config',
             'institutes.created_at',
-            'institutes.updated_at'
+            'institutes.updated_at',
         ]);
 
-        $institutes->active();
         $institutes->orderBy('institutes.id', $order);
 
         if (!empty($titleEn)) {
@@ -104,6 +111,14 @@ class InstituteService
             'institutes.code',
             'institutes.address',
             'institutes.domain',
+            'institutes.google_map_src',
+            'institutes.logo',
+            'institutes.primary_phone',
+            'institutes.phone_numbers',
+            'institutes.primary_mobile',
+            'institutes.mobile_numbers',
+            'institutes.email',
+            'institutes.config',
             'institutes.created_at',
             'institutes.updated_at',
         ]);
