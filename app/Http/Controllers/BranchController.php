@@ -3,15 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Classes\CustomExceptionHandler;
-use App\Models\Branch;
 use App\Services\BranchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Throwable;
-use Illuminate\Support\Carbon;
 
 
 class BranchController extends Controller
@@ -28,8 +25,8 @@ class BranchController extends Controller
      */
     public function __construct(BranchService $branchService)
     {
-        $this->BranchService = $branchService;
-//        $this->startTime = Carbon::now();
+        $this->branchService = $branchService;
+        $this->startTime = Carbon::now();
     }
 
     public function getList(Request $request): JsonResponse

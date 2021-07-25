@@ -5,9 +5,7 @@ namespace App\Services;
 
 
 use App\Models\Branch;
-use App\Models\PublishCourse;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -24,7 +22,7 @@ class BranchService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        $branches = CourseConfig::select([
+        $branches = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
@@ -35,7 +33,7 @@ class BranchService
         ]);
 
 
-        $branches->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
+        $branches->join('institutes', 'branches.institute_id', '=', 'institutes.id');
 
         $branches->orderBy('$branches.id', $order);
 
@@ -114,15 +112,18 @@ class BranchService
         $branch->where('$branches.id', $id);
 
         $branch = $branch->first();
+
         if (!empty($branch)) {
             $branch->load('publishCourses');
         }
 
         $links = [];
+
         if (!empty($branch)) {
             $links['update'] = route('api.v1.branches.update', ['id' => $id]);
             $links['delete'] = route('api.v1.branches.destroy', ['id' => $id]);
         }
+
         return [
             "data" => $branch ?: null,
             "_response_status" => [
@@ -147,11 +148,6 @@ class BranchService
         $branch->fill($data);
         $branch->save();
 
-        foreach ($data['publish_courses'] as $session) {
-            $session['course_id'] = $data['course_id'];
-            $publishCourses[] = $session;
-            $branch->publishCourses()->create($session);
-        }
         return $branch;
     }
 
@@ -160,22 +156,6 @@ class BranchService
         $branch->fill($data);
         $branch->save();
 
-
-        foreach ($data['publish_courses'] as $session) {
-            $session['course_id'] = $data['course_id'];
-            $publishCourses[] = $session;
-            if (empty($session['id'])) {
-                $branch->publishCourses()->create($session);
-                continue;
-            }
-
-            $publishCourse = PublishCourse::findOrFail($session['id']);
-            if (!empty($session['delete']) && $session['delete'] == 1) {
-                $publishCourse->delete();
-            } else {
-                $publishCourse->update($session);
-            }
-        }
         return $branch;
 
     }
@@ -185,10 +165,6 @@ class BranchService
         $branch->row_status = Branch::ROW_STATUS_DELETED;
         $branch->save();
 
-//        soft delete corresponding course sessions of this course configuration
-        foreach ($branch->publishCourses() as $publishCourse) {
-            $publishCourse->row_status = PublishCourse::ROW_STATUS_DELETED;
-        }
         return $branch;
     }
 
@@ -216,13 +192,18 @@ class BranchService
                 'int',
                 'exists:institutes,id',
             ],
-            'address' => ['nullable', 'string', 'max:191'],
-            'google_map_src' => ['nullable', 'string'],
+            'address' => [
+                'nullable',
+                'string',
+                'max:191'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
         ];
-
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
-
 
 }

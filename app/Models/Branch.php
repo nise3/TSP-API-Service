@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string title_en
  * @property string title_bn
  * @property int institute_id
+ * @property int row_status
  * @property string|null address
  * @property string|null google_map_src
  * @method static \Illuminate\Database\Eloquent\Builder|Institute acl()
