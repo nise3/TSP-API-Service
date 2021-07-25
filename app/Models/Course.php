@@ -51,8 +51,8 @@ class Course extends BaseModel
         return $this->hasMany(CourseSession::class,'course_id','id');
     }
 
-    public function publishCourses(): HasMany
+    public function courseConfigs(): HasMany
     {
-        return $this->hasMany(PublishCourse::class);
+        return $this->hasMany(courseConfig::class);
     }
 }

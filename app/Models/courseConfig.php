@@ -47,18 +47,17 @@ class courseConfig extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
-    //TODO: comment out branch relation function
-
-//    public function branch(): BelongsTo
-//    {
-//        return $this->belongsTo(Branch::class);
-//    }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
+    }
 
     public function trainingCenter(): BelongsTo
     {
         return $this->belongsTo(TrainingCenter::class);
     }
-    public function courseSessions():HasMany
+
+    public function courseSessions(): HasMany
     {
         return $this->hasMany(CourseSession::class);
     }

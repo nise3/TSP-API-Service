@@ -14,21 +14,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int row_status
  * @property string|null address
  * @property string|null google_map_src
- * @method static \Illuminate\Database\Eloquent\Builder|Institute acl()
  */
 
 class Branch extends BaseModel
 {
 
-
     protected $guarded = ['id'];
+
     public function institute(): BelongsTo
     {
         return $this->belongsTo(Institute::class);
-    }
-
-    public function publishCourses(): HasMany
-    {
-        return $this->hasMany(PublishCourse::class);
     }
 }
