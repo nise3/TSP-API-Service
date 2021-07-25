@@ -32,7 +32,6 @@ class BranchService
             'branches.updated_at',
         ]);
 
-
         $branches->join('institutes', 'branches.institute_id', '=', 'institutes.id');
 
         $branches->orderBy('$branches.id', $order);
@@ -174,7 +173,7 @@ class BranchService
      * @param null $id
      * @return Validator
      */
-    public function validator(Request $request, $id = null): Validator
+    public function validator(Request $request): Validator
     {
         $rules = [
             'title_en' => [
