@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Throwable;
 
 class CourseController extends Controller
 {
@@ -133,7 +134,7 @@ class CourseController extends Controller
 
         $course = Course::findOrFail($id);
 
-        $validated = $this->courseService->validator($request)->validate();
+        $validated = $this->courseService->validator($request, $id)->validate();
 
         try {
             $data = $this->courseService->update($course, $validated);

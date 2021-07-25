@@ -172,22 +172,24 @@ class CourseConfigService
         $courseConfig->fill($data);
         $courseConfig->save();
 
-
         foreach ($data['course_sessions'] as $session) {
             $session['course_id'] = $data['course_id'];
             $courseSessions[] = $session;
+
             if (empty($session['id'])) {
                 $courseConfig->courseSessions()->create($session);
                 continue;
             }
 
             $courseSession = CourseSession::findOrFail($session['id']);
+
             if (!empty($session['delete']) && $session['delete'] == 1) {
                 $courseSession->delete();
             } else {
                 $courseSession->update($session);
             }
         }
+
         return $courseConfig;
 
     }
@@ -201,6 +203,7 @@ class CourseConfigService
         foreach ($courseConfig->courseSessions() as $courseSession) {
             $courseSession->row_status = CourseSession::ROW_STATUS_DELETED;
         }
+
         return $courseConfig;
     }
 
@@ -315,6 +318,5 @@ class CourseConfigService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
     }
-
 
 }

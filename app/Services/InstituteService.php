@@ -112,10 +112,12 @@ class InstituteService
         $institute = $institute->first();
 
         $links = [];
+
         if (!empty($institute)) {
             $links['update'] = route('api.v1.institutes.update', ['id' => $id]);
             $links['delete'] = route('api.v1.institutes.destroy', ['id' => $id]);
         }
+
         return [
             "data" => $institute ?: null,
             "_response_status" => [
@@ -132,16 +134,17 @@ class InstituteService
 
     public function validator(Request $request, $id = null): Validator
     {
+
         $rules = [
             'title_en' => ['required', 'string', 'max:191'],
             'title_bn' => ['required', 'string', 'max:191'],
-            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
+            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,'.$id],
             'domain' => [
                 'required',
                 'string',
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191',
-                'unique:institutes,domain,' . $id
+                'unique:institutes,domain,'.$id
             ],
             'address' => ['nullable', 'string', 'max:191'],
             'google_map_src' => ['nullable', 'string'],
@@ -196,6 +199,7 @@ class InstituteService
     {
         $institute->fill($data);
         $institute->save();
+
         return $institute;
     }
 
@@ -208,6 +212,7 @@ class InstituteService
     {
         $institute->row_status = Institute::ROW_STATUS_DELETED;
         $institute->save();
+
         return $institute;
     }
 

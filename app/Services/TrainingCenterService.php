@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\RequiredIf;
 
 /**
  * Class TrainingCenterService

@@ -125,7 +125,7 @@ class InstituteController extends Controller
     {
         $institute = Institute::findOrFail($id);
 
-        $validated = $this->instituteService->validator($request)->validate();
+        $validated = $this->instituteService->validator($request, $id)->validate();
 
         try {
             $data = $this->instituteService->update($institute, $validated);

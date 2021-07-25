@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-use App\Helpers\Classes\FileHandler;
 use App\Models\Course;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
