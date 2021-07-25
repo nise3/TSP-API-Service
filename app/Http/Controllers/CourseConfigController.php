@@ -102,8 +102,8 @@ class CourseConfigController extends Controller
             ];
         } catch (Throwable $e) {
             DB::rollBack();
-            Log::debug($e->getMessage());
             $handler = new CustomExceptionHandler($e);
+            $handler->
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
