@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\File;
  * @property string prerequisite
  * @property string eligibility
  * @property File cover_image
- * @method static \Illuminate\Database\Eloquent\Builder|Institute acl()
  * @method static Builder|Institute active()
  * @method static Builder|Institute newModelQuery()
  * @method static Builder|Institute newQuery()
