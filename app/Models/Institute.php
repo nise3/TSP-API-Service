@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Institute
@@ -37,5 +38,30 @@ class Institute extends BaseModel
     public function title(): ?string
     {
         return $this->title_bn || $this->title_en;
+    }
+
+    public function branches(): HasMany
+    {
+        return $this->hasMany(Branch::class);
+    }
+
+    public function courses(): HasMany
+    {
+        return $this->hasMany(Course::class);
+    }
+
+    public function programmes(): HasMany
+    {
+        return $this->hasMany(Programme::class);
+    }
+
+    public function trainingCenters(): HasMany
+    {
+        return $this->hasMany(TrainingCenter::class);
+    }
+
+    public function courseConfigs(): HasMany
+    {
+        return $this->hasMany(CourseConfig::class);
     }
 }

@@ -57,6 +57,12 @@ class CourseConfig extends BaseModel
         return $this->belongsTo(TrainingCenter::class);
     }
 
+    public function programme(): BelongsTo
+    {
+        return $this->belongsTo(Programme::class);
+    }
+
+
     public function courseSessions(): HasMany
     {
         return $this->hasMany(CourseSession::class);

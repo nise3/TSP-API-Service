@@ -32,9 +32,9 @@ class CourseSession extends BaseModel
     {
         return $this->belongsTo(CourseConfig::class);
     }
-//
-//    public function course(): BelongsTo
-//    {
-//        return $this->belongsTo(Course::class);
-//    }
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
 }
