@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Institute;
 use App\Traits\scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class TrainingCenter
@@ -17,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int branch_id
  * @property string|null address
  * @property string|null google_map_src
+ * @property int row_status
+ * @property-read  Institute institute
  */
 class TrainingCenter extends BaseModel
 {

@@ -25,9 +25,6 @@ class Programme extends BaseModel
 
     protected $guarded = ['id'];
 
-    protected $fillableble = ['title_en', 'title_bn', 'institute_id', 'code', 'description','logo'];
-
-
     const DEFAULT_LOGO = 'programme/default.jpg';
 
     /**
@@ -38,11 +35,10 @@ class Programme extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
-    //TO DO
-//    public function publishCourses(): HasMany
-//    {
-//        return $this->hasMany(PublishCourse::class);
-//    }
+    public function courseConfigs(): HasMany
+    {
+        return $this->hasMany(courseConfig::class);
+    }
 
     /**
      * @return bool
