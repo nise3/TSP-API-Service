@@ -29,7 +29,7 @@ class CourseConfigService
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
             'course_configs.created_at',
-//            'courses.title_en as course_title',
+            'courses.title_en as course_title',
 //            'branches.title_en as branch_name',
 //            'programmes.title_en as programme_name',
 //            'training_centers.title_en as training_center_name',
@@ -37,7 +37,7 @@ class CourseConfigService
         ]);
 
 
-//        $courseConfigs->join('courses', 'course_configs.course_id', '=', 'courses.id');
+        $courseConfigs->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfigs->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
 //        $courseConfigs->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
 //        $courseConfigs->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
@@ -112,13 +112,13 @@ class CourseConfigService
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
             'course_configs.created_at',
-//            'courses.title_en as course_title',
+            'courses.title_en as course_title',
 //            'branches.title_en as branch_name',
 //            'programmes.title_en as programme_name',
 //            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
-//        $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
+        $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
 //        $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
 //        $courseConfig->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
@@ -210,7 +210,7 @@ class CourseConfigService
      * @param null $id
      * @return Validator
      */
-    public function validator(Request $request, $id = null): Validator
+    public function validator(Request $request): Validator
     {
         $rules = [
             'institute_id' => [
@@ -220,7 +220,8 @@ class CourseConfigService
             ],
             'course_id' => [
                 'required',
-                'int'
+                'int',
+                'exists:courses,id'
             ],
             'training_center_id' => [
                 'nullable',
