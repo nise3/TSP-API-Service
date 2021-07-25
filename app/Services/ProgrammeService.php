@@ -118,8 +118,8 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ])->join('institutes', 'programmes.institute_id', '=', 'institutes.id')
-            ->where('programmes.row_status', '=', Programme::ROW_STATUS_ACTIVE)
-            ->where('programmes.id', $id);
+            ->where('programmes.id', $id)
+            ->where('programmes.row_status','=',Programme::ROW_STATUS_ACTIVE);
         $programme = $programme->first();
 
         $links = [];
