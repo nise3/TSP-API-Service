@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Models\courseConfig;
+use App\Models\CourseConfig;
 use App\Models\CourseSession;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
@@ -151,7 +151,7 @@ class CourseConfigService
 
     /**
      * @param array $data
-     * @return courseConfig
+     * @return CourseConfig
      */
     public function store(array $data): CourseConfig
     {

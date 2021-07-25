@@ -30,7 +30,7 @@ class CourseSession extends BaseModel
 
     public function courseConfig(): BelongsTo
     {
-        return $this->belongsTo(courseConfig::class);
+        return $this->belongsTo(CourseConfig::class);
     }
 //
 //    public function course(): BelongsTo

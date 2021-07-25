@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Classes\CustomExceptionHandler;
-use App\Models\courseConfig;
+use App\Models\CourseConfig;
 use App\Services\CourseConfigService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

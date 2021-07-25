@@ -41,7 +41,7 @@ class TrainingCenter extends BaseModel
 
     public function courseConfigs(): HasMany
     {
-        return $this->hasMany(courseConfig::class);
+        return $this->hasMany(CourseConfig::class);
     }
 
 }

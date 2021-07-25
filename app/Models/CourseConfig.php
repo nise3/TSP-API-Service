@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class courseConfig
+ * Class CourseConfig
  * @package App\Models
  * @property int institute_id
  * @property int branch_id
@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Programme programme
  * @property-read Course course
  */
-class courseConfig extends BaseModel
+class CourseConfig extends BaseModel
 {
     use ScopeRowStatusTrait;
 
