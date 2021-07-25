@@ -193,5 +193,4 @@ class ProgrammeController extends Controller
         return Response::json($response, JsonResponse::HTTP_OK);
     }
 
-
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -34,8 +35,29 @@ class courseConfig extends BaseModel
     use ScopeRowStatusTrait;
 
     protected $guarded = ['id'];
-    //TODO: add relation function
 
+
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function institute(): BelongsTo
+    {
+        return $this->belongsTo(Institute::class);
+    }
+
+    //TODO: comment out branch relation function
+
+//    public function branch(): BelongsTo
+//    {
+//        return $this->belongsTo(Branch::class);
+//    }
+
+    public function trainingCenter(): BelongsTo
+    {
+        return $this->belongsTo(TrainingCenter::class);
+    }
     public function courseSessions():HasMany
     {
         return $this->hasMany(CourseSession::class);

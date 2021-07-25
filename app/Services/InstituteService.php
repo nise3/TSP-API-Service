@@ -112,10 +112,12 @@ class InstituteService
         $institute = $institute->first();
 
         $links = [];
+
         if (!empty($institute)) {
             $links['update'] = route('api.v1.institutes.update', ['id' => $id]);
             $links['delete'] = route('api.v1.institutes.destroy', ['id' => $id]);
         }
+
         return [
             "data" => $institute ?: null,
             "_response_status" => [
@@ -197,6 +199,7 @@ class InstituteService
     {
         $institute->fill($data);
         $institute->save();
+
         return $institute;
     }
 
@@ -209,6 +212,7 @@ class InstituteService
     {
         $institute->row_status = Institute::ROW_STATUS_DELETED;
         $institute->save();
+
         return $institute;
     }
 

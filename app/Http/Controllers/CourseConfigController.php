@@ -121,12 +121,10 @@ class CourseConfigController extends Controller
     public function update(Request $request, $id): JsonResponse
     {
         $courseConfig = CourseConfig::findOrFail($id);
-
         $validated = $this->courseConfigService->validator($request)->validate();
 
         try {
             $data = $this->courseConfigService->update($courseConfig, $validated);
-
             $response = [
                 'data' => $data ?: null,
                 '_response_status' => [

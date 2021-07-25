@@ -10,7 +10,6 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\RequiredIf;
 
 
 /**
@@ -153,7 +152,6 @@ class ProgrammeService
         $programme->fill($data);
         $programme->Save();
         return $programme;
-
     }
 
 
@@ -167,7 +165,6 @@ class ProgrammeService
         $programme->fill($data);
         $programme->save();
         return $programme;
-
     }
 
     /**
@@ -209,6 +206,4 @@ class ProgrammeService
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
-
-
 }
