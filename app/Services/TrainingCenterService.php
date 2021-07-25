@@ -44,11 +44,15 @@ class TrainingCenterService
         ]);
         $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
 //            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id')
+
+
         if (!empty($titleEn)) {
             $trainingCenters->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $trainingCenters->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
+
+
         if ($paginate) {
             $trainingCenters = $trainingCenters->paginate(10);
             $paginate_data = (object)$trainingCenters->toArray();
@@ -98,7 +102,7 @@ class TrainingCenterService
      * @param $id
      * @return array
      */
-    public function getOneTrainingCenter($id)
+    public function getOneTrainingCenter($id): array
     {
         $startTime = Carbon::now();
 
@@ -147,8 +151,11 @@ class TrainingCenterService
      */
     public function store(array $data): TrainingCenter
     {
-        if (!empty($data['google_map_src']))
+        if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+
+        }
+
 
         $trainingCenter = new TrainingCenter();
         $trainingCenter->fill($data);
@@ -164,9 +171,9 @@ class TrainingCenterService
      */
     public function update(TrainingCenter $trainingCenter, array $data): TrainingCenter
     {
-        if (!empty($data['google_map_src']))
+        if (!empty($data['google_map_src'])){
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
-
+        }
 
         $trainingCenter->fill($data);
         $trainingCenter->Save();

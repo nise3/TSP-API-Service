@@ -198,7 +198,6 @@ class ProgrammeService
                 'string',
                 'max:191',
                 'unique:programmes,code,' . $id,
-                Rule::unique('programmes')->ignore($id),
             ],
             'description' => ['nullable', 'string'],
             'logo' => [
