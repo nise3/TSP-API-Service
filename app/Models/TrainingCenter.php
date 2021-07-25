@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null google_map_src
  * @property int row_status
  * @property-read  Institute institute
+ * @property-read  Branch branch
  */
 class TrainingCenter extends BaseModel
 {
