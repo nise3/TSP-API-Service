@@ -211,16 +211,4 @@ class InstituteService
         return $institute;
     }
 
-    /**
-     * @param string|null $googleMapSrc
-     * @return string
-     */
-    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
-    {
-        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
-            $googleMapSrc = $match[1];
-        }
-
-        return $googleMapSrc;
-    }
 }
