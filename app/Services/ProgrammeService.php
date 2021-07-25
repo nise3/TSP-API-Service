@@ -118,8 +118,9 @@ class ProgrammeService
             'programmes.row_status',
             'programmes.created_at',
             'programmes.updated_at',
-        ])->join('institutes', 'programmes.institute_id', '=', 'institutes.id')->
-        where('programmes.row_status', '=', Programme::ROW_STATUS_ACTIVE);
+        ])->join('institutes', 'programmes.institute_id', '=', 'institutes.id')
+            ->where('programmes.row_status', '=', Programme::ROW_STATUS_ACTIVE)
+            ->where('programmes.id', $id);
         $programme = $programme->first();
 
         $links = [];
@@ -196,7 +197,7 @@ class ProgrammeService
                 'required',
                 'string',
                 'max:191',
-                'unique:programmes,code,'.$id,
+                'unique:programmes,code,' . $id,
                 Rule::unique('programmes')->ignore($id),
             ],
             'description' => ['nullable', 'string'],
@@ -208,17 +209,6 @@ class ProgrammeService
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
-    /**
-     * @param string|null $googleMapSrc
-     * @return string
-     */
-    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
-    {
-        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
-            $googleMapSrc = $match[1];
-        }
 
-        return $googleMapSrc;
-    }
 
 }

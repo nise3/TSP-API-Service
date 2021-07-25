@@ -18,5 +18,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     //programme crud operation
     $customRouter()->resourceRoute('programmes', 'ProgrammeController')->render();
-
+    //training center crud operation
+    $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();
 });
