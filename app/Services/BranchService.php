@@ -28,20 +28,22 @@ class BranchService
             'branches.title_bn',
             'institutes.title_en as institute_title_en',
             'branches.row_status',
+            'branches.address',
+            'branches.google_map_src',
             'branches.created_at',
             'branches.updated_at',
         ]);
 
         $branches->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-
-        $branches->orderBy('$branches.id', $order);
+        $branches->orderBy('branches.id', $order);
 
 
         if (!empty($titleEn)) {
-            $branches->where('$branches.title_en', 'like', '%' . $titleEn . '%');
+            $branches->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $branches->where('$branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branches->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
+
 
         if ($paginate) {
             $branches = $branches->paginate(10);
@@ -97,24 +99,23 @@ class BranchService
     public function getOneBranch($id): array
     {
         $startTime = Carbon::now();
+
         $branch = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
             'institutes.title_en as institute_title_en',
             'branches.row_status',
+            'branches.address',
+            'branches.google_map_src',
             'branches.created_at',
             'branches.updated_at',
         ]);
 
+
         $branch->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-        $branch->where('$branches.id', $id);
-
+        $branch->where('branches.id', $id);
         $branch = $branch->first();
-
-        if (!empty($branch)) {
-            $branch->load('publishCourses');
-        }
 
         $links = [];
 
