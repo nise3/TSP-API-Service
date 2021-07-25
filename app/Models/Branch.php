@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends BaseModel
 {
-
     protected $guarded = ['id'];
 
     public function institute(): BelongsTo

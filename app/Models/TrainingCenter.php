@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Institute;
 use App\Traits\scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -13,11 +15,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string title_bn
  * @property int institute_id
  * @property int branch_id
+ * @property  int row_status
  * @property string|null address
  * @property string|null google_map_src
- * @property int row_status
- * @property-read  Institute institute
- * @property-read  Branch branch
+ * @property-read Institute $institute
+ * @property-read  Branch $branch
  */
 class TrainingCenter extends BaseModel
 {
@@ -34,12 +36,18 @@ class TrainingCenter extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
-    public function courseConfigs(): HasMany
+    /**
+     * @return HasMany
+     */
+    public function courseConfig(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
     }

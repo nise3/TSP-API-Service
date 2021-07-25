@@ -15,10 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null logo
  * @property string code
  * @property string description
+ * @property int row_status
+ * @property-read courseConfig $courseConfig
+ * @property-read Institute $institute
  */
 class Programme extends BaseModel
 {
-    use  ScopeRowStatusTrait;
+    use ScopeRowStatusTrait;
 
     protected $guarded = ['id'];
 
@@ -32,7 +35,7 @@ class Programme extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
-    public function courseConfigs(): HasMany
+    public function courseConfig(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
     }

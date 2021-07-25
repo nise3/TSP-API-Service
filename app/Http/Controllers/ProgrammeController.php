@@ -62,19 +62,19 @@ class ProgrammeController extends Controller
      */
     public function read($id): JsonResponse
     {
-        try {
+//        try {
             $response = $this->programmeService->getOneProgramme($id);
-        } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
-        }
+//        } catch (Throwable $e) {
+//            $handler = new CustomExceptionHandler($e);
+//            $response = [
+//                '_response_status' => array_merge([
+//                    "success" => false,
+//                    "started" => $this->startTime,
+//                    "finished" => Carbon::now(),
+//                ], $handler->convertExceptionToArray())
+//            ];
+//            return Response::json($response, $response['_response_status']['code']);
+//        }
         return Response::json($response);
 
     }

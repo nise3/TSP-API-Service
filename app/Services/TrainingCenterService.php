@@ -34,13 +34,13 @@ class TrainingCenterService
             'training_centers.title_bn',
             'institutes.title_en as institute_name',
             'training_centers.row_status',
-//            'branches.title_en as branch_name',
+            'branches.title_en as branch_name',
 //            'users.name_en as training_center_created_by',
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
-//            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id')
+        $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id')
+            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
 
 
         if (!empty($titleEn)) {
@@ -108,7 +108,7 @@ class TrainingCenterService
             'training_centers.title_en',
             'training_centers.title_bn',
             'institutes.title_en as institute_name',
-//            'branches.title_en as branch_name',
+            'branches.title_en as branch_name',
             'training_centers.address',
             'training_centers.row_status',
             'training_centers.google_map_src',
@@ -116,8 +116,8 @@ class TrainingCenterService
             'training_centers.updated_at'
         ]);
         $trainingCenter->join('institutes', 'training_centers.institute_id', '=', 'institutes.id')
-            //            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id')
-            ->where('training_centers.id', '=', $id)
+            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id')
+            ->where('training_centers.id',$id)
             ->where('training_centers.row_status', '=', TrainingCenter::ROW_STATUS_ACTIVE);
         $trainingCenter = $trainingCenter->first();
         $links = [];
@@ -168,7 +168,7 @@ class TrainingCenterService
      */
     public function update(TrainingCenter $trainingCenter, array $data): TrainingCenter
     {
-        if (!empty($data['google_map_src'])){
+        if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
 
