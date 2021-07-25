@@ -31,17 +31,17 @@ class CourseConfigService
             'course_configs.created_at',
             'courses.title_en as course_title',
 //            'branches.title_en as branch_name',
-//            'programmes.title_en as programme_name',
-//            'training_centers.title_en as training_center_name',
+            'programmes.title_en as programme_name',
+            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
 
 
         $courseConfigs->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfigs->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-//        $courseConfigs->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
+        $courseConfigs->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
 //        $courseConfigs->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
-//        $courseConfigs->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
+        $courseConfigs->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
 
         $courseConfigs->orderBy('course_configs.id', $order);
 
@@ -114,15 +114,15 @@ class CourseConfigService
             'course_configs.created_at',
             'courses.title_en as course_title',
 //            'branches.title_en as branch_name',
-//            'programmes.title_en as programme_name',
-//            'training_centers.title_en as training_center_name',
+            'programmes.title_en as programme_name',
+            'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
         $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-//        $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
+        $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
 //        $courseConfig->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
-//        $courseConfig->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
+        $courseConfig->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
         $courseConfig->where('course_configs.id', $id);
 
         $courseConfig = $courseConfig->first();
