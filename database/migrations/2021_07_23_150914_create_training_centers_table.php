@@ -22,7 +22,6 @@ class CreateTrainingCentersTable extends Migration
             $table->string('address', 191)->nullable();
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active, 99->deleted');
-            $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
         });
     }

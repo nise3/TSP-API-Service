@@ -25,7 +25,6 @@ class CreateProgrammesTable extends Migration
             $table->string('code', 191)->nullable();
             $table->text('description')->nullable();
             $table->string('logo', 191)->nullable();
-            $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->unsignedTinyInteger('row_status')->nullable()->default(1);
         });
