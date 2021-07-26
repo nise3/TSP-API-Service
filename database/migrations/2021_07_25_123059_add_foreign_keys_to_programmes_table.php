@@ -26,7 +26,7 @@ class AddForeignKeysToProgrammesTable extends Migration
     public function down()
     {
         Schema::table('programmes', function (Blueprint $table) {
-            //
+            $table->dropForeign('programmes_fk_institute_id');
         });
     }
 }

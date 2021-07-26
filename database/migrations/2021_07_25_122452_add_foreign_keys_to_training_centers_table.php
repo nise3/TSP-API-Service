@@ -29,7 +29,8 @@ class AddForeignKeysToTrainingCentersTable extends Migration
     public function down()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            //
+            $table->dropForeign('training_centers_fk_branch_id');
+            $table->dropForeign('training_centers_fk_institute_id');
         });
     }
 }
