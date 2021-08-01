@@ -4,23 +4,33 @@
 namespace App\Services;
 
 use App\Models\Branch;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Query\Builder;
 
+/**
+ * Class BranchService
+ * @package App\Services
+ */
 class BranchService
 {
-    public function getBranchList(Request $request): array
+    /**
+     * @param Request $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getBranchList(Request $request, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
+        /** @var Branch|Builder $branches */
         $branches = Branch::select([
             'branches.id as id',
             'branches.title_en',
@@ -53,17 +63,17 @@ class BranchService
                 "total_page" => $paginate_data->last_page,
                 "current_page" => $paginate_data->current_page
             ];
-            $paginate_link[] = $paginate_data->links;
+            $paginateLink[] = $paginate_data->links;
         } else {
             $branches = $branches->get();
         }
 
         $data = [];
         foreach ($branches as $branch) {
-            $_links['read'] = route('api.v1.branches.read', ['id' => $branch->id]);
-            $_links['update'] = route('api.v1.branches.update', ['id' => $branch->id]);
-            $_links['delete'] = route('api.v1.branches.destroy', ['id' => $branch->id]);
-            $branch['_links'] = $_links;
+            $links['read'] = route('api.v1.branches.read', ['id' => $branch->id]);
+            $links['update'] = route('api.v1.branches.update', ['id' => $branch->id]);
+            $links['delete'] = route('api.v1.branches.destroy', ['id' => $branch->id]);
+            $branch['_links'] = $links;
             $data[] = $branch->toArray();
         }
 
@@ -72,12 +82,11 @@ class BranchService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginate_link,
+                'paginate' => $paginateLink,
 
                 "search" => [
                     'parameters' => [
@@ -95,10 +104,14 @@ class BranchService
         ];
     }
 
-    public function getOneBranch($id): array
+    /**
+     * @param int $id
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getOneBranch(int $id,  Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-
+        /** @var Branch|Builder $branch */
         $branch = Branch::select([
             'branches.id as id',
             'branches.title_en',
@@ -111,13 +124,11 @@ class BranchService
             'branches.updated_at',
         ]);
 
-
         $branch->join('institutes', 'branches.institute_id', '=', 'institutes.id');
         $branch->where('branches.id', $id);
         $branch = $branch->first();
 
         $links = [];
-
         if (!empty($branch)) {
             $links['update'] = route('api.v1.branches.update', ['id' => $id]);
             $links['delete'] = route('api.v1.branches.destroy', ['id' => $id]);
@@ -128,9 +139,8 @@ class BranchService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => $links,
         ];
@@ -159,6 +169,10 @@ class BranchService
 
     }
 
+    /**
+     * @param Branch $branch
+     * @return Branch
+     */
     public function destroy(Branch $branch): Branch
     {
         $branch->row_status = Branch::ROW_STATUS_DELETED;
@@ -170,10 +184,9 @@ class BranchService
 
     /**
      * @param Request $request
-     * @param null $id
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request): Validator
+    public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'title_en' => [
@@ -202,7 +215,7 @@ class BranchService
             ],
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        return Validator::make($request->all(), $rules);
     }
 
 }
