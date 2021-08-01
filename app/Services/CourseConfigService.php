@@ -180,6 +180,11 @@ class CourseConfigService
         return $courseConfig;
     }
 
+    /**
+     * @param CourseConfig $courseConfig
+     * @param array $data
+     * @return CourseConfig
+     */
     public function update(CourseConfig $courseConfig, array $data): CourseConfig
     {
         $courseConfig->fill($data);
@@ -207,6 +212,10 @@ class CourseConfigService
 
     }
 
+    /**
+     * @param CourseConfig $courseConfig
+     * @return CourseConfig
+     */
     public function destroy(CourseConfig $courseConfig): CourseConfig
     {
         $courseConfig->row_status = CourseConfig::ROW_STATUS_DELETED;
