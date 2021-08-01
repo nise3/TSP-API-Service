@@ -116,7 +116,7 @@ class ProgrammeController extends Controller
         }
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
-    
+
     /**
      * @param Request $request
      * @param int $id
