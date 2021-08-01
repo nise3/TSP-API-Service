@@ -38,32 +38,50 @@ class CourseConfig extends BaseModel
     protected $guarded = ['id'];
 
 
+    /**
+     * @return BelongsTo
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function institute(): BelongsTo
     {
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function branch(): BelongsTo
     {
         return $this->belongsTo(Branch::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function trainingCenter(): BelongsTo
     {
         return $this->belongsTo(TrainingCenter::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function programme(): BelongsTo
     {
         return $this->belongsTo(Programme::class);
     }
 
 
+    /**
+     * @return HasMany
+     */
     public function courseSessions(): HasMany
     {
         return $this->hasMany(CourseSession::class);
