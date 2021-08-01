@@ -64,14 +64,14 @@ class CourseConfigService
 
         if ($paginate) {
             $courseConfigs = $courseConfigs->paginate(10);
-            $paginate_data = (object)$courseConfigs->toArray();
+            $paginateData = (object)$courseConfigs->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginateLink[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $courseConfigs = $courseConfigs->get();
         }

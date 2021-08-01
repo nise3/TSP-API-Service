@@ -56,14 +56,14 @@ class BranchService
 
         if ($paginate) {
             $branches = $branches->paginate(10);
-            $paginate_data = (object)$branches->toArray();
+            $paginateData = (object)$branches->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginateLink[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $branches = $branches->get();
         }
