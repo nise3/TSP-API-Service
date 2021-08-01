@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Services;
-
 
 use Illuminate\Http\Request;
 use App\Models\Programme;
@@ -76,6 +74,7 @@ class ProgrammeService
             $programme['_links'] = $links;
             $data[] = $programme->toArray();
         }
+
         return [
             "data" => $data,
             "_response_status" => [
@@ -104,7 +103,7 @@ class ProgrammeService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneProgramme($id, Carbon $startTime): array
+    public function getOneProgramme(int $id, Carbon $startTime): array
     {
         /** @var Programme|Builder $programme */
         $programme = Programme::select([
@@ -120,7 +119,7 @@ class ProgrammeService
             'programmes.updated_at',
         ]);
         $programme->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programme->where('programmes.id','=', $id);
+        $programme->where('programmes.id', '=', $id);
         $programme = $programme->first();
 
         $links = [];
@@ -178,10 +177,10 @@ class ProgrammeService
 
     /**
      * @param Request $request
-     * @param null $id
+     * @param int|null $id
      * @return Validator
      */
-    public function validator(Request $request, $id = null): Validator
+    public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
             'title_en' => [

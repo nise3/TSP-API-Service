@@ -45,7 +45,7 @@ class ProgrammeController extends Controller
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->programmeService->getProgrammeList($request,$this->startTime);
+            $response = $this->programmeService->getProgrammeList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -67,7 +67,7 @@ class ProgrammeController extends Controller
     public function read(int $id): JsonResponse
     {
         try {
-            $response = $this->programmeService->getOneProgramme($id,$this->startTime);
+            $response = $this->programmeService->getOneProgramme($id, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -92,7 +92,6 @@ class ProgrammeController extends Controller
         $validatedData = $this->programmeService->validator($request)->validate();
         try {
             $data = $this->programmeService->store($validatedData);
-
             $response = [
                 'data' => $data ?: null,
                 '_response_status' => [
@@ -108,8 +107,8 @@ class ProgrammeController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
@@ -126,8 +125,7 @@ class ProgrammeController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $programme = Programme::findOrFail($id);
-        $validated = $this->programmeService->validator($request,$id)->validate();
-
+        $validated = $this->programmeService->validator($request, $id)->validate();
         try {
             $data = $this->programmeService->update($programme, $validated);
             $response = [
@@ -158,10 +156,9 @@ class ProgrammeController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $programme = Programme::findOrFail($id);
-
         try {
             $this->programmeService->destroy($programme);
             $response = [
@@ -182,7 +179,6 @@ class ProgrammeController extends Controller
                     "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
         return Response::json($response, JsonResponse::HTTP_OK);
