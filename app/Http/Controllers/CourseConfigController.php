@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
+/**
+ * Class CourseConfigController
+ * @package App\Http\Controllers
+ */
 class CourseConfigController extends Controller
 {
     /**
@@ -31,6 +35,10 @@ class CourseConfigController extends Controller
         $this->startTime = Carbon::now();
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getList(Request $request): JsonResponse
     {
         try {
@@ -114,6 +122,12 @@ class CourseConfigController extends Controller
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function update(Request $request, int $id): JsonResponse
     {
         $courseConfig = CourseConfig::findOrFail($id);
@@ -144,6 +158,10 @@ class CourseConfigController extends Controller
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
     public function destroy(int $id): JsonResponse
     {
         $courseConfig = CourseConfig::findOrFail($id);
