@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddForeignKeysToProgrammesTable
+ */
 class AddForeignKeysToProgrammesTable extends Migration
 {
     /**
@@ -26,7 +29,7 @@ class AddForeignKeysToProgrammesTable extends Migration
     public function down()
     {
         Schema::table('programmes', function (Blueprint $table) {
-            //
+            $table->dropForeign('programmes_fk_institute_id');
         });
     }
 }

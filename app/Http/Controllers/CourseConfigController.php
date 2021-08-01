@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class CourseConfigController extends Controller
@@ -45,7 +46,6 @@ class CourseConfigController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response);
     }
 
@@ -55,7 +55,7 @@ class CourseConfigController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function read($id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         try {
             $response = $this->courseConfigService->getOneCourseConfig($id, $this->startTime);
@@ -79,7 +79,7 @@ class CourseConfigController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -109,18 +109,15 @@ class CourseConfigController extends Controller
                     "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $courseConfig = CourseConfig::findOrFail($id);
         $validated = $this->courseConfigService->validator($request)->validate();
-
         try {
             $data = $this->courseConfigService->update($courseConfig, $validated);
             $response = [
@@ -133,7 +130,6 @@ class CourseConfigController extends Controller
                     "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
-
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -143,14 +139,12 @@ class CourseConfigController extends Controller
                     "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $courseConfig = CourseConfig::findOrFail($id);
 
@@ -174,11 +168,8 @@ class CourseConfigController extends Controller
                     "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_OK);
     }
-
 }

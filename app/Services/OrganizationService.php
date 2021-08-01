@@ -23,7 +23,7 @@ class OrganizationService
      */
     public function getAllOrganization(Request $request): array
     {
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $startTime = Carbon::now();
 

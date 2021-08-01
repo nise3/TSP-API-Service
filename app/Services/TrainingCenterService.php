@@ -1,13 +1,14 @@
 <?php
 
-
 namespace App\Services;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rule;
 
 /**
  * Class TrainingCenterService
@@ -17,17 +18,19 @@ class TrainingCenterService
 {
     /**
      * @param Request $request
+     * @param Carbon $startTime
      * @return array
      */
-    public function getTrainingCenterList(Request $request): array
+    public function getTrainingCenterList(Request $request, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var TrainingCenter|Builder $trainingCenters */
         $trainingCenters = TrainingCenter::select([
             'training_centers.id as id',
             'training_centers.title_en',
@@ -35,13 +38,11 @@ class TrainingCenterService
             'institutes.title_en as institute_name',
             'training_centers.row_status',
             'branches.title_en as branch_name',
-//            'users.name_en as training_center_created_by',
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id')
-            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
-
+        $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
+        $trainingCenters->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
 
         if (!empty($titleEn)) {
             $trainingCenters->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
@@ -49,39 +50,39 @@ class TrainingCenterService
             $trainingCenters->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-
         if ($paginate) {
             $trainingCenters = $trainingCenters->paginate(10);
-            $paginate_data = (object)$trainingCenters->toArray();
+            $paginateData = (object)$trainingCenters->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginate_link[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $trainingCenters = $trainingCenters->get();
         }
+
         $data = [];
         foreach ($trainingCenters as $trainingCenter) {
-            $_links['read'] = route('api.v1.training-centers.read', ['id' => $trainingCenter->id]);
-            $_links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $_links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
-            $programme['_links'] = $_links;
+            $links['read'] = route('api.v1.training-centers.read', ['id' => $trainingCenter->id]);
+            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
+            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
+            $trainingCenter['_links'] = $links;
             $data[] = $trainingCenter->toArray();
         }
+
         return [
-            "data" => $data,
+            "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginate_link,
+                'paginate' => $paginateLink,
                 "search" => [
                     'parameters' => [
                         'title_en',
@@ -97,12 +98,12 @@ class TrainingCenterService
 
     /**
      * @param $id
+     * @param Carbon $startTime
      * @return array
      */
-    public function getOneTrainingCenter($id): array
+    public function getOneTrainingCenter(int $id, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-
+        /** @var TrainingCenter|Builder $trainingCenter */
         $trainingCenter = TrainingCenter::select([
             'training_centers.id as id',
             'training_centers.title_en',
@@ -115,16 +116,15 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenter->join('institutes', 'training_centers.institute_id', '=', 'institutes.id')
-            ->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id')
-            ->where('training_centers.id',$id)
-            ->where('training_centers.row_status', '=', TrainingCenter::ROW_STATUS_ACTIVE);
+        $trainingCenter->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
+        $trainingCenter->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+        $trainingCenter->where('training_centers.id', '=', $id);
         $trainingCenter = $trainingCenter->first();
-        $links = [];
 
+        $links = [];
         if (!empty($programme)) {
-            $_links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $_links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
+            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
+            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
         }
 
         return [
@@ -132,14 +132,11 @@ class TrainingCenterService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => $links,
         ];
-
-
     }
 
     /**
@@ -150,15 +147,11 @@ class TrainingCenterService
     {
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
-
         }
-
-
         $trainingCenter = new TrainingCenter();
         $trainingCenter->fill($data);
         $trainingCenter->Save();
         return $trainingCenter;
-
     }
 
     /**
@@ -171,11 +164,9 @@ class TrainingCenterService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
-
         $trainingCenter->fill($data);
         $trainingCenter->Save();
         return $trainingCenter;
-
     }
 
     /**
@@ -189,20 +180,24 @@ class TrainingCenterService
         return $trainingCenter;
     }
 
-
     /**
      * @param Request $request
+     * @param null $id
      * @return Validator
      */
-    public function validator(Request $request): Validator
+    public function validator(Request $request, $id = null): Validator
     {
         $rules = [
             'title_en' => 'required|string|max: 191',
             'title_bn' => 'required|string|max: 191',
-            'institute_id' => 'required|int',
-            'branch_id' => 'nullable|int',
+            'institute_id' => 'required|int|exists:institutes,id',
+            'branch_id' => 'nullable|int|exists:branches,id',
             'address' => ['nullable', 'string', 'max:191'],
             'google_map_src' => ['nullable', 'string'],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([TrainingCenter::ROW_STATUS_ACTIVE, TrainingCenter::ROW_STATUS_INACTIVE]),
+            ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
@@ -216,7 +211,6 @@ class TrainingCenterService
         if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
             $googleMapSrc = $match[1];
         }
-
         return $googleMapSrc;
     }
 }
