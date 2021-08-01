@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use Illuminate\Database\Query\Builder;
@@ -26,7 +25,6 @@ class TrainingCenterService
     {
         $paginateLink = [];
         $page = [];
-
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -76,7 +74,7 @@ class TrainingCenterService
         }
 
         return [
-            "data" => $data,
+            "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
@@ -103,7 +101,7 @@ class TrainingCenterService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneTrainingCenter($id, Carbon $startTime): array
+    public function getOneTrainingCenter(int $id, Carbon $startTime): array
     {
         /** @var TrainingCenter|Builder $trainingCenter */
         $trainingCenter = TrainingCenter::select([

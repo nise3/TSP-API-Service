@@ -45,7 +45,7 @@ class TrainingCenterController extends Controller
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->trainingCenterService->getTrainingCenterList($request,$this->startTime);
+            $response = $this->trainingCenterService->getTrainingCenterList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -64,10 +64,10 @@ class TrainingCenterController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function read($id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         try {
-            $response = $this->trainingCenterService->getOneTrainingCenter($id,$this->startTime);
+            $response = $this->trainingCenterService->getOneTrainingCenter($id, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -90,7 +90,6 @@ class TrainingCenterController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->trainingCenterService->validator($request)->validate();
-
         try {
             $data = $this->trainingCenterService->store($validatedData);
             $response = [
@@ -108,8 +107,8 @@ class TrainingCenterController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
@@ -117,18 +116,16 @@ class TrainingCenterController extends Controller
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
      * @param Request $request
      * @param $id
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
-        $validated = $this->trainingCenterService->validator($request)->validate();
-
+        $validated = $this->trainingCenterService->validator($request, $id)->validate();
         try {
             $data = $this->trainingCenterService->update($trainingCenter, $validated);
             $response = [
@@ -159,10 +156,9 @@ class TrainingCenterController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
-
         try {
             $this->trainingCenterService->destroy($trainingCenter);
             $response = [
@@ -179,8 +175,8 @@ class TrainingCenterController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
