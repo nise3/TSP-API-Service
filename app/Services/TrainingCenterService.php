@@ -97,7 +97,7 @@ class TrainingCenterService
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param Carbon $startTime
      * @return array
      */
