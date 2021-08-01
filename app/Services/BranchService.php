@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Models\Branch;
@@ -94,11 +93,8 @@ class BranchService
                         'title_bn'
                     ],
                     '_link' => route('api.v1.branches.get-list')
-
                 ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
@@ -144,7 +140,6 @@ class BranchService
             ],
             "_links" => $links,
         ];
-
     }
 
     /**
@@ -214,7 +209,6 @@ class BranchService
                 'string'
             ],
         ];
-
         return Validator::make($request->all(), $rules);
     }
 

@@ -62,7 +62,7 @@ class BranchController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function read($id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         try {
             $response = $this->branchService->getOneBranch($id, $this->startTime);
@@ -160,10 +160,9 @@ class BranchController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
-
         try {
             $this->branchService->destroy($branch);
             $response = [
