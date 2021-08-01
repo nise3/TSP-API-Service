@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Programme programme
  * @property-read Course course
  */
+
 class CourseConfig extends BaseModel
 {
     use ScopeRowStatusTrait;
