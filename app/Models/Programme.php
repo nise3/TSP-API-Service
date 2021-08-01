@@ -14,18 +14,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int institute_id
  * @property string|null logo
  * @property string code
- * @property string description
+ * @property string|null description
  * @property int row_status
- * @property-read courseConfig $courseConfig
+ * @property-read CourseConfig $courseConfig
  * @property-read Institute $institute
  */
 class Programme extends BaseModel
 {
     use ScopeRowStatusTrait;
 
+    /**
+     * @var string[]
+     */
     protected $guarded = ['id'];
-
-    const DEFAULT_LOGO = 'programme/default.jpg';
 
     /**
      * @return BelongsTo
@@ -35,16 +36,11 @@ class Programme extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseConfig(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
-    }
-
-    /**
-     * @return bool
-     */
-    public function logoIsDefault(): bool
-    {
-        return $this->logo === self::DEFAULT_LOGO;
     }
 }

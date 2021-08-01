@@ -34,6 +34,4 @@ class Branch extends BaseModel
     {
         return $this->hasMany(CourseConfig::class);
     }
-
-
 }

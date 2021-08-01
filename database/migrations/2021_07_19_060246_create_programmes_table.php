@@ -14,7 +14,6 @@ class CreateProgrammesTable extends Migration
      *
      * @return void
      */
-
     public function up()
     {
         Schema::create('programmes', function (Blueprint $table) {
@@ -25,20 +24,17 @@ class CreateProgrammesTable extends Migration
             $table->string('code', 191)->nullable();
             $table->text('description')->nullable();
             $table->string('logo', 191)->nullable();
-            $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->unsignedTinyInteger('row_status')->nullable()->default(1);
         });
     }
-
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public
-    function down()
+    public function down()
     {
         Schema::dropIfExists('programmes');
     }
