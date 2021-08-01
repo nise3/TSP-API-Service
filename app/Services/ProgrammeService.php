@@ -99,7 +99,7 @@ class ProgrammeService
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @param Carbon $startTime
      * @return array
      */

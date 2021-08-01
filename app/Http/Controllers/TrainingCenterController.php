@@ -39,6 +39,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
      */
@@ -61,7 +62,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * @param $id
+     * Display the specified resource
+     * @param int $id
      * @return JsonResponse
      */
     public function read(int $id): JsonResponse
@@ -83,6 +85,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
@@ -117,8 +120,9 @@ class TrainingCenterController extends Controller
     }
 
     /**
+     * update the specified resource in storage
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -153,7 +157,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * @param $id
+     * remove the specified resource from storage
+     * @param int $id
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
