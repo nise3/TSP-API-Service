@@ -25,8 +25,10 @@ class TrainingCenter extends BaseModel
 {
     use  ScopeRowStatusTrait;
 
+    /**
+     * @var string[]
+     */
     protected $guarded = ['id'];
-
 
     /**
      * @return BelongsTo
@@ -47,9 +49,8 @@ class TrainingCenter extends BaseModel
     /**
      * @return HasMany
      */
-    public function courseConfig(): HasMany
+    public function CourseConfig(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
     }
-
 }

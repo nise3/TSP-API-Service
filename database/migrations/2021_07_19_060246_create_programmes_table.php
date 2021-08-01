@@ -14,7 +14,6 @@ class CreateProgrammesTable extends Migration
      *
      * @return void
      */
-
     public function up()
     {
         Schema::create('programmes', function (Blueprint $table) {
@@ -30,14 +29,12 @@ class CreateProgrammesTable extends Migration
         });
     }
 
-
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public
-    function down()
+    public function down()
     {
         Schema::dropIfExists('programmes');
     }
