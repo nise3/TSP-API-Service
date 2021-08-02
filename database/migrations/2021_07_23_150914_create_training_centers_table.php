@@ -16,14 +16,16 @@ class CreateTrainingCentersTable extends Migration
         Schema::create('training_centers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title_en', 191)->nullable();
-            $table->string('title_bn', 191)->nullable();
+            $table->string('title_bn', 1000)->nullable();
             $table->unsignedInteger('institute_id')->index('training_centers_fk_institute_id');
             $table->unsignedInteger('branch_id')->nullable()->index('training_centers_fk_branch_id');
-            $table->string('address', 191)->nullable();
+            $table->text('address')->nullable();
             $table->text('google_map_src')->nullable();
-            $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active, 99->deleted');
+            $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active');
             $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
