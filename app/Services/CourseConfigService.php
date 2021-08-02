@@ -120,6 +120,7 @@ class CourseConfigService
     public function getOneCourseConfig(int $id , Carbon $startTime): array
     {
         /** @var CourseConfig|Builder $courseConfig */
+
         $courseConfig = CourseConfig::select([
             'course_configs.id as id',
             'course_configs.course_id',
@@ -132,14 +133,15 @@ class CourseConfigService
             'training_centers.title_en as training_center_name',
             'course_configs.updated_at'
         ]);
+
         $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
         $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
         $courseConfig->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
         $courseConfig->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
         $courseConfig->where('course_configs.id', $id);
-
         $courseConfig = $courseConfig->first();
+
         if (!empty($courseConfig)) {
             $courseConfig->load('courseSessions');
         }

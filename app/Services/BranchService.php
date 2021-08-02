@@ -160,6 +160,11 @@ class BranchService
         return $branch;
     }
 
+    /**
+     * @param Branch $branch
+     * @param array $data
+     * @return Branch
+     */
     public function update(Branch $branch, array $data): Branch
     {
         $branch->fill($data);

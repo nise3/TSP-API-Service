@@ -18,6 +18,9 @@ class InstituteController extends Controller
      * @var InstituteService
      */
     public InstituteService $instituteService;
+    /**
+     * @var Carbon
+     */
     private Carbon $startTime;
 
     /**
@@ -30,6 +33,11 @@ class InstituteController extends Controller
         $this->startTime = Carbon::now();
     }
 
+    /**
+     * * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getList(Request $request): JsonResponse
     {
         try {
@@ -49,8 +57,8 @@ class InstituteController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     * @param $id
+     * * Display the specified resource
+     * @param int $id
      * @return JsonResponse
      */
     public function read(int $id): JsonResponse
@@ -108,9 +116,9 @@ class InstituteController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * * Update the specified resource in storage.
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -148,8 +156,8 @@ class InstituteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     * @param $id
+     *  * Remove the specified resource from storage.
+     * @param int $id
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse

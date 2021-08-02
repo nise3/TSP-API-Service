@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class CourseService
@@ -107,7 +108,7 @@ class CourseService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneCourse(int $id, Carbon $startTime)
+    public function getOneCourse(int $id, Carbon $startTime): array
     {
         /** @var Course|Builder $course */
         $course = Course::select(

@@ -34,6 +34,9 @@ class Branch extends BaseModel
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseConfigs(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
