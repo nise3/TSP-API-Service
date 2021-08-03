@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 
 /**
  * Class BranchService
@@ -36,6 +37,7 @@ class BranchService
             'branches.title_en',
             'branches.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
@@ -117,6 +119,7 @@ class BranchService
             'branches.title_en',
             'branches.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
@@ -182,6 +185,7 @@ class BranchService
     {
         $branch->row_status = Branch::ROW_STATUS_DELETED;
         $branch->save();
+        $branch->delete();
 
         return $branch;
     }
@@ -191,7 +195,7 @@ class BranchService
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'title_en' => [
@@ -202,7 +206,7 @@ class BranchService
             'title_bn' => [
                 'required',
                 'string',
-                'max: 191',
+                'max: 600',
             ],
             'institute_id' => [
                 'required',
@@ -212,12 +216,16 @@ class BranchService
             'address' => [
                 'nullable',
                 'string',
-                'max:191'
+                'max:1000'
             ],
             'google_map_src' => [
                 'nullable',
                 'string'
             ],
+//            'row_status' => [
+//                'required_if:' . $id . ',==,null',
+//                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
+//            ],
         ];
 
         return Validator::make($request->all(), $rules);

@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CourseConfigService
@@ -39,11 +40,15 @@ class CourseConfigService
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
+            'institutes.id as institute_id',
             'course_configs.created_at',
             'courses.title_en as course_title',
+            'courses.id as course_id',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'programmes.title_en as programme_name',
             'training_centers.title_en as training_center_name',
+            'training_centers.id as training_center_id',
             'course_configs.updated_at'
         ]);
 
@@ -126,11 +131,15 @@ class CourseConfigService
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
+            'institutes.id as institute_id',
             'course_configs.created_at',
             'courses.title_en as course_title',
+            'courses.id as course_id',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'programmes.title_en as programme_name',
             'training_centers.title_en as training_center_name',
+            'training_centers.id as training_center_id',
             'course_configs.updated_at'
         ]);
 
@@ -222,6 +231,7 @@ class CourseConfigService
     {
         $courseConfig->row_status = CourseConfig::ROW_STATUS_DELETED;
         $courseConfig->save();
+        $courseConfig->delete();
 
         foreach ($courseConfig->courseSessions() as $courseSession) {
             $courseSession->row_status = CourseSession::ROW_STATUS_DELETED;
@@ -235,7 +245,7 @@ class CourseConfigService
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request):  \Illuminate\Contracts\Validation\Validator
+    public function validator(Request $request, int $id = Null):  \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'institute_id' => [
@@ -331,7 +341,11 @@ class CourseConfigService
             'guardian' => [
                 'nullable',
                 'boolean',
-            ]
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([CourseConfig::ROW_STATUS_ACTIVE, CourseConfig::ROW_STATUS_INACTIVE]),
+            ],
         ];
 
         $messages = [

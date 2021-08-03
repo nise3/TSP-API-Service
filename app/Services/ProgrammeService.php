@@ -36,6 +36,7 @@ class ProgrammeService
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'programmes.code as programme_code',
             'programmes.logo as programme_logo',
             'programmes.description',
@@ -111,6 +112,7 @@ class ProgrammeService
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'programmes.code as programme_code',
             'programmes.logo as programme_logo',
             'programmes.row_status',
@@ -172,6 +174,7 @@ class ProgrammeService
     {
         $programme->row_status = Programme::ROW_STATUS_DELETED;
         $programme->save();
+        $programme->delete();
         return $programme;
     }
 
@@ -191,7 +194,7 @@ class ProgrammeService
             'title_bn' => [
                 'required',
                 'string',
-                'max:191'
+                'max:1000'
             ],
             'institute_id' => [
                 'required',
@@ -214,7 +217,7 @@ class ProgrammeService
                 'max:191',
             ],
             'row_status' => [
-                'required_if:' . $id . ',!=,null',
+                'required_if:' . $id . ',==,null',
                 Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
             ],
         ];

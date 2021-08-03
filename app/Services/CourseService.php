@@ -47,6 +47,7 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'institutes.title_en as institute_title',
+                'institutes.id as institute_id',
             ]
         );
         $courses->join('institutes', 'courses.institute_id', '=', 'institutes.id');
@@ -127,6 +128,7 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'institutes.title_en as institute_title',
+                'institutes.id as institute_id',
             ]
         );
         $course->join('institutes', 'courses.institute_id', '=', 'institutes.id');
@@ -183,6 +185,7 @@ class CourseService
     {
         $course->row_status = 99;
         $course->save();
+        $course->delete();
         return $course;
     }
 
@@ -203,7 +206,7 @@ class CourseService
             'title_bn' => [
                 'required',
                 'string',
-                'max:191'
+                'max:1000'
             ],
             'code' => [
                 'required',
@@ -266,8 +269,8 @@ class CourseService
             ],
             'cover_image' => [
                 'nullable',
-                'file',
-                'mimes:jpg,bmp,png,jpeg,svg',
+                'string',
+                'max:191',
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 
 
 /**
@@ -160,7 +161,7 @@ class InstituteService
     {
         $rules = [
             'title_en' => ['required', 'string', 'max:191'],
-            'title_bn' => ['required', 'string', 'max:191'],
+            'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
             'domain' => [
                 'required',
@@ -184,7 +185,11 @@ class InstituteService
                 'nullable',
                 'string',
                 'max:191',
-            ]
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
+            ],
         ];
         $messages = [
             'logo.dimensions' => 'Please upload 80x80 size of image',
@@ -225,6 +230,7 @@ class InstituteService
     {
         $institute->row_status = Institute::ROW_STATUS_DELETED;
         $institute->save();
+        $institute->delete();
         return $institute;
     }
 }
