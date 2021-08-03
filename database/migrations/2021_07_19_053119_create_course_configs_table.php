@@ -20,7 +20,7 @@ class CreateCourseConfigsTable extends Migration
             $table->unsignedInteger('training_center_id')->nullable()->index('publish_courses_fk_training_center_id');
             $table->unsignedInteger('programme_id')->nullable()->index('publish_courses_fk_programme_id');
             $table->unsignedInteger('course_id')->index('publish_courses_fk_course_id');
-            $table->unsignedTinyInteger('row_status')->nullable()->default(1);
+            $table->unsignedTinyInteger('row_status')->default(1);
             $table->boolean('ethnic')->nullable()->default(false)->comment("1 => in ethnic group, 2 => not in ethnic group");
             $table->boolean('freedom_fighter')->nullable()->default(false);
             $table->boolean('disable_status')->nullable()->default(false)->comment('1 => disable  2 => not disable');
@@ -31,6 +31,7 @@ class CreateCourseConfigsTable extends Migration
             $table->boolean('occupation')->nullable()->default(false)->comment('is occupation needed');
             $table->boolean('guardian')->nullable()->default(false)->comment('is guardian information needed');            $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
