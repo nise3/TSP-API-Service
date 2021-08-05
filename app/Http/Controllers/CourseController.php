@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class CourseController extends Controller
@@ -20,6 +21,7 @@ class CourseController extends Controller
     /**
      * @var Carbon
      */
+
     private Carbon $startTime;
 
     /**
@@ -28,6 +30,7 @@ class CourseController extends Controller
      */
     public function __construct(CourseService $courseService)
     {
+
         $this->courseService = $courseService;
         $this->startTime = Carbon::now();
     }
@@ -40,21 +43,19 @@ class CourseController extends Controller
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->courseService->getCourseList($request);
+            $response = $this->courseService->getCourseList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response);
-
     }
 
     /**
@@ -63,36 +64,33 @@ class CourseController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function read(Request $request, $id): JsonResponse
+    public function read(Request $request, int $id): JsonResponse
     {
         try {
-            $response = $this->courseService->getOneCourse($id);
+            $response = $this->courseService->getOneCourse($id, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
         return Response::json($response);
-
     }
 
     /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     function store(Request $request): JsonResponse
     {
         $validated = $this->courseService->validator($request)->validate();
-
-        //dd($validated);
         try {
             $data = $this->courseService->store($validated);
 
@@ -101,9 +99,9 @@ class CourseController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_CREATED,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Course added successfully",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -111,81 +109,69 @@ class CourseController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
     /**
-     * update the specified resource in storage
+     * * update the specified resource in storage
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-
         $course = Course::findOrFail($id);
-
         $validated = $this->courseService->validator($request, $id)->validate();
-
         try {
             $data = $this->courseService->update($course, $validated);
-
             $response = [
                 'data' => $data ? $data : null,
                 '_response_status' => [
-
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Course updated successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
-
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
-
     }
 
     /**
-     *  remove the specified resource from storage
-     * @param $id
+     *  *  remove the specified resource from storage
+     * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $course = Course::findOrFail($id);
-
         try {
             $this->courseService->destroy($course);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Course deleted successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -193,15 +179,12 @@ class CourseController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_OK);
-
     }
 }

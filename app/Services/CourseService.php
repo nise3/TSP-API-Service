@@ -1,12 +1,13 @@
 <?php
 
-
 namespace App\Services;
 
 use App\Models\Course;
 use Carbon\Carbon;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class CourseService
@@ -17,17 +18,19 @@ class CourseService
 
     /**
      * @param Request $request
+     * @param Carbon $startTime
      * @return array
      */
-    public function getCourseList(Request $request): array
+    public function getCourseList(Request $request, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Course|Builder $courses */
         $courses = Course::select(
             [
                 'courses.id as id',
@@ -44,9 +47,10 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'institutes.title_en as institute_title',
+                'institutes.id as institute_id',
             ]
-        )
-            ->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+        );
+        $courses->join('institutes', 'courses.institute_id', '=', 'institutes.id');
 
         if (!empty($titleEn)) {
             $courses->where('courses.title_en', 'like', '%' . $titleEn . '%');
@@ -54,67 +58,60 @@ class CourseService
             $courses->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-
         if ($paginate) {
             $courses = $courses->paginate(10);
-            $paginate_data = (object)$courses->toArray();
+            $paginateData = (object)$courses->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginate_link[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $courses = $courses->get();
         }
 
         $data = [];
-
         foreach ($courses as $course) {
-            $_links['read'] = route('api.v1.courses.read', ['id' => $course->id]);
-            $_links['update'] = route('api.v1.courses.update', ['id' => $course->id]);
-            $_links['delete'] = route('api.v1.courses.destroy', ['id' => $course->id]);
-            $course['_links'] = $_links;
+            $links['read'] = route('api.v1.courses.read', ['id' => $course->id]);
+            $links['update'] = route('api.v1.courses.update', ['id' => $course->id]);
+            $links['delete'] = route('api.v1.courses.destroy', ['id' => $course->id]);
+            $course['_links'] = $links;
             $data[] = $course->toArray();
         }
-        $response = [
+
+        return [
             "data" => $data,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginate_link,
+                'paginate' => $paginateLink,
                 'search' => [
                     'parameters' => [
                         'title_en',
                         'title_bn'
                     ],
                     '_link' => route('api.v1.courses.get-list')
-
                 ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
-
-        return $response;
-
     }
 
     /**
-     * @param $id
+     * @param int $id
+     * @param Carbon $startTime
      * @return array
      */
-    public function getOneCourse($id)
+    public function getOneCourse(int $id, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
+        /** @var Course|Builder $course */
         $course = Course::select(
             [
                 'courses.id as id',
@@ -131,11 +128,11 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'institutes.title_en as institute_title',
+                'institutes.id as institute_id',
             ]
-        )
-            ->join('institutes', 'courses.institute_id', '=', 'institutes.id')
-            ->where('courses.row_status', '=', Course::ROW_STATUS_ACTIVE)
-            ->where('courses.id', '=', $id);
+        );
+        $course->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+        $course->where('courses.id', '=', $id);
         $course = $course->first();
 
         $links = [];
@@ -143,18 +140,17 @@ class CourseService
             $links['update'] = route('api.v1.courses.update', ['id' => $id]);
             $links['delete'] = route('api.v1.courses.destroy', ['id' => $id]);
         }
-        $response = [
+
+        return [
             "data" => $course ? $course : null,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => $links,
         ];
-        return $response;
     }
 
     /**
@@ -163,20 +159,9 @@ class CourseService
      */
     public function store(array $data): Course
     {
-        $filename = null;
-        if (!empty($data['cover_image'])) {
-            $filename = FileHandler::storePhoto($data['cover_image'], 'course');
-        }
-        if ($filename) {
-            $data['cover_image'] = 'course/' . $filename;
-        } else {
-            $data['cover_image'] = Course::DEFAULT_COVER_IMAGE;
-        }
-
         $course = new Course();
         $course->fill($data);
         $course->save();
-
         return $course;
     }
 
@@ -189,7 +174,6 @@ class CourseService
     {
         $course->fill($data);
         $course->save();
-
         return $course;
     }
 
@@ -201,15 +185,17 @@ class CourseService
     {
         $course->row_status = 99;
         $course->save();
-
+        $course->delete();
         return $course;
     }
 
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
+     * @param int|null $id
+     * @return Validator
      */
-    public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
+    public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
             'title_en' => [
@@ -220,7 +206,7 @@ class CourseService
             'title_bn' => [
                 'required',
                 'string',
-                'max:191'
+                'max:1000'
             ],
             'code' => [
                 'required',
@@ -283,12 +269,10 @@ class CourseService
             ],
             'cover_image' => [
                 'nullable',
-                'file',
-                'mimes:jpg,bmp,png,jpeg,svg',
+                'string',
+                'max:191',
             ]
         ];
-
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
-
 }

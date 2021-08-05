@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddForeignKeysToTrainingCentersTable
+ */
 class AddForeignKeysToTrainingCentersTable extends Migration
 {
     /**
@@ -11,7 +14,6 @@ class AddForeignKeysToTrainingCentersTable extends Migration
      *
      * @return void
      */
-
     public function up()
     {
         Schema::table('training_centers', function (Blueprint $table) {
@@ -34,7 +36,8 @@ class AddForeignKeysToTrainingCentersTable extends Migration
     public function down()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            //
+            $table->dropForeign('training_centers_fk_branch_id');
+            $table->dropForeign('training_centers_fk_institute_id');
         });
     }
 }

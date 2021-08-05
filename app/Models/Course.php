@@ -40,16 +40,25 @@ class Course extends BaseModel
     protected $guarded = ['id'];
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
 
+    /**
+     * @return BelongsTo
+     */
     public function institute(): BelongsTo
     {
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseSessions(): HasMany
     {
         return $this->hasMany(CourseSession::class,'course_id','id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseConfigs(): HasMany
     {
         return $this->hasMany(CourseConfig::class);

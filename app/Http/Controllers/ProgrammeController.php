@@ -8,6 +8,7 @@ use App\Models\Programme;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 use App\Services\ProgrammeService;
 
@@ -21,6 +22,10 @@ class ProgrammeController extends Controller
      * @var ProgrammeService
      */
     public ProgrammeService $programmeService;
+
+    /**
+     * @var Carbon
+     */
     private Carbon $startTime;
 
     /**
@@ -34,70 +39,70 @@ class ProgrammeController extends Controller
     }
 
     /**
+     * * * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
      */
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->programmeService->getProgrammeList($request);
+            $response = $this->programmeService->getProgrammeList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response);
     }
 
     /**
-     * @param $id
+     * * * Display the specified resource
+     * @param int $id
      * @return JsonResponse
      */
-    public function read($id): JsonResponse
+    public function read(int $id): JsonResponse
     {
-//        try {
-            $response = $this->programmeService->getOneProgramme($id);
-//        } catch (Throwable $e) {
-//            $handler = new CustomExceptionHandler($e);
-//            $response = [
-//                '_response_status' => array_merge([
-//                    "success" => false,
-//                    "started" => $this->startTime,
-//                    "finished" => Carbon::now(),
-//                ], $handler->convertExceptionToArray())
-//            ];
-//            return Response::json($response, $response['_response_status']['code']);
-//        }
+        try {
+            $response = $this->programmeService->getOneProgramme($id, $this->startTime);
+        } catch (Throwable $e) {
+            $handler = new CustomExceptionHandler($e);
+            $response = [
+                '_response_status' => array_merge([
+                    "success" => false,
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
+                ], $handler->convertExceptionToArray())
+            ];
+            return Response::json($response, $response['_response_status']['code']);
+        }
         return Response::json($response);
-
     }
 
     /**
+     * * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->programmeService->validator($request)->validate();
         try {
             $data = $this->programmeService->store($validatedData);
-
             $response = [
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_CREATED,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Programme added successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -105,76 +110,69 @@ class ProgrammeController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
+     *  * * Update the specified resource in storage.
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $programme = Programme::findOrFail($id);
-
-        $validated = $this->programmeService->validator($request,$id)->validate();
-
+        $validated = $this->programmeService->validator($request, $id)->validate();
         try {
             $data = $this->programmeService->update($programme, $validated);
-
             $response = [
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Programme updated successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
-
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
     /**
-     * @param $id
+     *  *   Remove the specified resource from storage.
+     * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $programme = Programme::findOrFail($id);
-
         try {
             $this->programmeService->destroy($programme);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Programme deleted successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -182,15 +180,12 @@ class ProgrammeController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_OK);
     }
-
 }

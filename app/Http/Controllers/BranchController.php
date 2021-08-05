@@ -11,15 +11,22 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
-
+/**
+ * Class BranchController
+ * @package App\Http\Controllers
+ */
 class BranchController extends Controller
 {
     /**
      * @var BranchService
      */
     public BranchService $branchService;
+    /**
+     * @var \Carbon\Carbon|Carbon
+     */
     private \Carbon\Carbon $startTime;
 
     /**
@@ -32,17 +39,22 @@ class BranchController extends Controller
         $this->startTime = Carbon::now();
     }
 
+    /**
+     * * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->branchService->getBranchList($request);
+            $response = $this->branchService->getBranchList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => \Carbon\Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
 
@@ -53,22 +65,20 @@ class BranchController extends Controller
     }
 
     /**
-     * display one resource
-     *
      * @param $id
      * @return JsonResponse
      */
     public function read($id): JsonResponse
     {
         try {
-            $response = $this->branchService->getOneBranch($id);
+            $response = $this->branchService->getOneBranch($id, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => \Carbon\Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
@@ -78,11 +88,10 @@ class BranchController extends Controller
     }
 
     /**
-     * store one resource
-     *
+     *  * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -97,9 +106,9 @@ class BranchController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_CREATED,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => \Carbon\Carbon::now(),
+                    "message" => "Branch added successfully",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -109,8 +118,8 @@ class BranchController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
 
@@ -120,7 +129,14 @@ class BranchController extends Controller
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    /**
+     * * update the specified resource in storage
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function update(Request $request, int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
 
@@ -134,9 +150,9 @@ class BranchController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Brnach Update successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
 
@@ -145,8 +161,8 @@ class BranchController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
 
@@ -156,7 +172,13 @@ class BranchController extends Controller
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-    public function destroy($id): JsonResponse
+
+    /**
+     *  *  remove the specified resource from storage
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
 
@@ -166,9 +188,9 @@ class BranchController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Branch deleted successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -176,8 +198,8 @@ class BranchController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
 

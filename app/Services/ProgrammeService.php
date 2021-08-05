@@ -1,16 +1,14 @@
 <?php
 
-
 namespace App\Services;
-
 
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class ProgrammeService
@@ -18,32 +16,35 @@ use Illuminate\Validation\Rule;
  */
 class ProgrammeService
 {
-
     /**
      * @param Request $request
+     * @param Carbon $startTime
      * @return array
      */
-    public function getProgrammeList(Request $request): array
+    public function getProgrammeList(Request $request, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
+        /** @var Programme|Builder $programmes */
         $programmes = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'programmes.code as programme_code',
             'programmes.logo as programme_logo',
+            'programmes.description',
             'programmes.row_status',
             'programmes.created_at',
             'programmes.updated_at',
-        ])->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        ]);
+        $programmes->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
         $programmes->orderBy('programmes.id', $order);
 
         if (!empty($titleEn)) {
@@ -51,50 +52,48 @@ class ProgrammeService
         } elseif (!empty($titleBn)) {
             $programmes->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
+
         if ($paginate) {
             $programmes = $programmes->paginate(10);
-            $paginate_data = (object)$programmes->toArray();
+            $paginateData = (object)$programmes->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginate_link[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $programmes = $programmes->get();
         }
+
         $data = [];
         foreach ($programmes as $programme) {
-            $_links['read'] = route('api.v1.programmes.read', ['id' => $programme->id]);
-            $_links['update'] = route('api.v1.programmes.update', ['id' => $programme->id]);
-            $_links['delete'] = route('api.v1.programmes.destroy', ['id' => $programme->id]);
-            $programme['_links'] = $_links;
+            $links['read'] = route('api.v1.programmes.read', ['id' => $programme->id]);
+            $links['update'] = route('api.v1.programmes.update', ['id' => $programme->id]);
+            $links['delete'] = route('api.v1.programmes.destroy', ['id' => $programme->id]);
+            $programme['_links'] = $links;
             $data[] = $programme->toArray();
         }
+
         return [
             "data" => $data,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginate_link,
-
+                'paginate' => $paginateLink,
                 "search" => [
                     'parameters' => [
                         'title_en',
                         'title_bn'
                     ],
                     '_link' => route('api.v1.programmes.get-list')
-
                 ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
@@ -102,24 +101,27 @@ class ProgrammeService
 
     /**
      * @param $id
+     * @param Carbon $startTime
      * @return array
      */
-    public function getOneProgramme($id): array
+    public function getOneProgramme(int $id, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
+        /** @var Programme|Builder $programme */
         $programme = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
             'programmes.code as programme_code',
             'programmes.logo as programme_logo',
             'programmes.row_status',
+            'programmes.description',
             'programmes.created_at',
             'programmes.updated_at',
-        ])->join('institutes', 'programmes.institute_id', '=', 'institutes.id')
-            ->where('programmes.id', $id)
-            ->where('programmes.row_status','=',Programme::ROW_STATUS_ACTIVE);
+        ]);
+        $programme->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programme->where('programmes.id', '=', $id);
         $programme = $programme->first();
 
         $links = [];
@@ -133,13 +135,11 @@ class ProgrammeService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => $links,
         ];
-
     }
 
     /**
@@ -153,7 +153,6 @@ class ProgrammeService
         $programme->Save();
         return $programme;
     }
-
 
     /**
      * @param Programme $programme
@@ -175,32 +174,51 @@ class ProgrammeService
     {
         $programme->row_status = Programme::ROW_STATUS_DELETED;
         $programme->save();
+        $programme->delete();
         return $programme;
     }
 
-
     /**
      * @param Request $request
-     * @param null $id
+     * @param int|null $id
      * @return Validator
      */
-    public function validator(Request $request, $id = null): Validator
+    public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
-            'title_en' => 'required|string|max:191',
-            'title_bn' => 'required|string|max:191',
-            'institute_id' => 'required|int',
+            'title_en' => [
+                'required',
+                'string',
+                'max:191'
+            ],
+            'title_bn' => [
+                'required',
+                'string',
+                'max:1000'
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id'
+            ],
             'code' => [
                 'required',
                 'string',
                 'max:191',
                 'unique:programmes,code,' . $id,
             ],
-            'description' => ['nullable', 'string'],
+            'description' => [
+                'nullable',
+                'string'
+            ],
             'logo' => [
                 'nullable',
-                'file',
-                'mimes:jpg,bmp,png,jpeg,svg',
+                'string',
+                'max:191',
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string title_en
  * @property string title_bn
  * @property int institute_id
+ * @property int row_status
  * @property string|null address
  * @property string|null google_map_src
  * @method static Builder|Institute acl()
@@ -24,16 +25,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Branch extends BaseModel
 {
     protected $guarded = ['id'];
+    /**
+     * @var mixed|string
+     */
 
     public function institute(): BelongsTo
     {
         return $this->belongsTo(Institute::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseConfigs(): HasMany
     {
         return $this->hasMany(CourseConfig::class);
     }
-
-
 }

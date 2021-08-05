@@ -28,11 +28,17 @@ class CourseSession extends BaseModel
         'course_start_date',
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function courseConfig(): BelongsTo
     {
         return $this->belongsTo(CourseConfig::class);
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

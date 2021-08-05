@@ -6,36 +6,51 @@ namespace App\Services;
 
 use App\Models\CourseConfig;
 use App\Models\CourseSession;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 
+/**
+ * Class CourseConfigService
+ * @package App\Services
+ */
 class CourseConfigService
 {
-    public function getCourseConfigList(Request $request): array
+
+    /**
+     * @param Request $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getCourseConfigList(Request $request, Carbon $startTime): array
     {
-        $startTime = Carbon::now();
-        $paginate_link = [];
+        $paginateLink = [];
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
+        /** @var CourseConfig|Builder $courseConfigs */
         $courseConfigs = CourseConfig::select([
             'course_configs.id as id',
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
+            'institutes.id as institute_id',
             'course_configs.created_at',
             'courses.title_en as course_title',
+            'courses.id as course_id',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'programmes.title_en as programme_name',
             'training_centers.title_en as training_center_name',
+            'training_centers.id as training_center_id',
             'course_configs.updated_at'
         ]);
-
 
         $courseConfigs->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfigs->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
@@ -54,24 +69,24 @@ class CourseConfigService
 
         if ($paginate) {
             $courseConfigs = $courseConfigs->paginate(10);
-            $paginate_data = (object)$courseConfigs->toArray();
+            $paginateData = (object)$courseConfigs->toArray();
             $page = [
-                "size" => $paginate_data->per_page,
-                "total_element" => $paginate_data->total,
-                "total_page" => $paginate_data->last_page,
-                "current_page" => $paginate_data->current_page
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
             ];
-            $paginate_link[] = $paginate_data->links;
+            $paginateLink[] = $paginateData->links;
         } else {
             $courseConfigs = $courseConfigs->get();
         }
 
         $data = [];
         foreach ($courseConfigs as $courseConfig) {
-            $_links['read'] = route('api.v1.course-configs.read', ['id' => $courseConfig->id]);
-            $_links['update'] = route('api.v1.course-configs.update', ['id' => $courseConfig->id]);
-            $_links['delete'] = route('api.v1.course-configs.destroy', ['id' => $courseConfig->id]);
-            $courseConfig['_links'] = $_links;
+            $links['read'] = route('api.v1.course-configs.read', ['id' => $courseConfig->id]);
+            $links['update'] = route('api.v1.course-configs.update', ['id' => $courseConfig->id]);
+            $links['delete'] = route('api.v1.course-configs.destroy', ['id' => $courseConfig->id]);
+            $courseConfig['_links'] = $links;
             $data[] = $courseConfig->toArray();
         }
 
@@ -80,12 +95,11 @@ class CourseConfigService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginate_link,
+                'paginate' => $paginateLink,
 
                 "search" => [
                     'parameters' => [
@@ -103,29 +117,40 @@ class CourseConfigService
         ];
     }
 
-    public function getOneCourseConfig($id): array
+    /**
+     * @param int $id
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getOneCourseConfig(int $id , Carbon $startTime): array
     {
-        $startTime = Carbon::now();
+        /** @var CourseConfig|Builder $courseConfig */
+
         $courseConfig = CourseConfig::select([
             'course_configs.id as id',
             'course_configs.course_id',
             'course_configs.institute_id',
             'institutes.title_en as institute_title',
+            'institutes.id as institute_id',
             'course_configs.created_at',
             'courses.title_en as course_title',
+            'courses.id as course_id',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'programmes.title_en as programme_name',
             'training_centers.title_en as training_center_name',
+            'training_centers.id as training_center_id',
             'course_configs.updated_at'
         ]);
+
         $courseConfig->join('courses', 'course_configs.course_id', '=', 'courses.id');
         $courseConfig->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
         $courseConfig->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
         $courseConfig->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
         $courseConfig->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
         $courseConfig->where('course_configs.id', $id);
-
         $courseConfig = $courseConfig->first();
+
         if (!empty($courseConfig)) {
             $courseConfig->load('courseSessions');
         }
@@ -140,9 +165,8 @@ class CourseConfigService
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
-                "message" => "Job finished successfully.",
-                "started" => $startTime,
-                "finished" => Carbon::now(),
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => $links,
         ];
@@ -167,6 +191,11 @@ class CourseConfigService
         return $courseConfig;
     }
 
+    /**
+     * @param CourseConfig $courseConfig
+     * @param array $data
+     * @return CourseConfig
+     */
     public function update(CourseConfig $courseConfig, array $data): CourseConfig
     {
         $courseConfig->fill($data);
@@ -194,12 +223,16 @@ class CourseConfigService
 
     }
 
+    /**
+     * @param CourseConfig $courseConfig
+     * @return CourseConfig
+     */
     public function destroy(CourseConfig $courseConfig): CourseConfig
     {
         $courseConfig->row_status = CourseConfig::ROW_STATUS_DELETED;
         $courseConfig->save();
+        $courseConfig->delete();
 
-//        soft delete corresponding course sessions of this course configuration
         foreach ($courseConfig->courseSessions() as $courseSession) {
             $courseSession->row_status = CourseSession::ROW_STATUS_DELETED;
         }
@@ -210,10 +243,9 @@ class CourseConfigService
 
     /**
      * @param Request $request
-     * @param null $id
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request): Validator
+    public function validator(Request $request, int $id = Null):  \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'institute_id' => [
@@ -309,14 +341,18 @@ class CourseConfigService
             'guardian' => [
                 'nullable',
                 'boolean',
-            ]
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([CourseConfig::ROW_STATUS_ACTIVE, CourseConfig::ROW_STATUS_INACTIVE]),
+            ],
         ];
 
         $messages = [
             'course_sessions.*.session_name_bn.regex' => "Session Name(Bangla) is required in Bangla",
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules, $messages);
     }
 
 }

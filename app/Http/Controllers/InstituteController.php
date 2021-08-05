@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Classes\CustomExceptionHandler;
 use App\Models\Institute;
-use Carbon\Carbon;
+use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class InstituteController extends Controller
@@ -17,6 +18,9 @@ class InstituteController extends Controller
      * @var InstituteService
      */
     public InstituteService $instituteService;
+    /**
+     * @var Carbon
+     */
     private Carbon $startTime;
 
     /**
@@ -29,35 +33,38 @@ class InstituteController extends Controller
         $this->startTime = Carbon::now();
     }
 
+    /**
+     * * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->instituteService->getInstituteList($request);
+            $response = $this->instituteService->getInstituteList($request, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param $id
+     * * Display the specified resource
+     * @param int $id
      * @return JsonResponse
      */
-    public function read($id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         try {
-            $response = $this->instituteService->getOneInstitute($id);
+            $response = $this->instituteService->getOneInstitute($id, $this->startTime);
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
@@ -70,15 +77,13 @@ class InstituteController extends Controller
             return Response::json($response, $response['_response_status']['code']);
         }
         return Response::json($response);
-
     }
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -91,9 +96,9 @@ class InstituteController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_CREATED,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Institute added successfully",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -101,27 +106,23 @@ class InstituteController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
-
     /**
-     * Update the specified resource in storage.
-     *
+     * * Update the specified resource in storage.
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
 
@@ -135,47 +136,42 @@ class InstituteController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Institute updated successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
-
         } catch (Throwable $e) {
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param $id
+     *  * Remove the specified resource from storage.
+     * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
-
         try {
             $this->instituteService->destroy($institute);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => JsonResponse::HTTP_OK,
-                    "message" => "Job finished successfully.",
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "message" => "Institute deleted successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ]
             ];
         } catch (Throwable $e) {
@@ -183,15 +179,12 @@ class InstituteController extends Controller
             $response = [
                 '_response_status' => array_merge([
                     "success" => false,
-                    "started" => $this->startTime,
-                    "finished" => Carbon::now(),
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
                 ], $handler->convertExceptionToArray())
             ];
-
             return Response::json($response, $response['_response_status']['code']);
         }
-
         return Response::json($response, JsonResponse::HTTP_OK);
     }
-
 }
