@@ -59,7 +59,7 @@ class CustomExceptionHandler
 
     public function getCode(): string
     {
-        return $this->exception->getCode();
+        return $this->exception->getCode()!=0? $this->exception->getCode():500;
     }
 
     public function getFile(): string
