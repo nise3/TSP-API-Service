@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 /**
@@ -23,6 +24,9 @@ class BranchController extends Controller
      * @var BranchService
      */
     public BranchService $branchService;
+    /**
+     * @var \Carbon\Carbon|Carbon
+     */
     private \Carbon\Carbon $startTime;
 
     /**
@@ -36,6 +40,7 @@ class BranchController extends Controller
     }
 
     /**
+     * * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
      */
@@ -83,9 +88,10 @@ class BranchController extends Controller
     }
 
     /**
+     *  * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -124,10 +130,11 @@ class BranchController extends Controller
     }
 
     /**
+     * * update the specified resource in storage
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -167,10 +174,11 @@ class BranchController extends Controller
 
 
     /**
-     * @param $id
+     *  *  remove the specified resource from storage
+     * @param int $id
      * @return JsonResponse
      */
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
 

@@ -16,13 +16,15 @@ class CreateBranchesTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title_en', 191)->nullable();
-            $table->string('title_bn', 191)->nullable();
+            $table->string('title_bn', 600)->nullable();
             $table->unsignedInteger('institute_id')->index('branches_fk_institute_id');
-            $table->string('address', 191)->nullable();
+            $table->string('address', 1000)->nullable();
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

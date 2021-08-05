@@ -40,26 +40,41 @@ class Institute extends BaseModel
         return $this->title_bn || $this->title_en;
     }
 
+    /**
+     * @return HasMany
+     */
     public function branches(): HasMany
     {
         return $this->hasMany(Branch::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courses(): HasMany
     {
         return $this->hasMany(Course::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function programmes(): HasMany
     {
         return $this->hasMany(Programme::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function trainingCenters(): HasMany
     {
         return $this->hasMany(TrainingCenter::class);
     }
 
+    /**
+     * @return HasMany
+     */
     public function courseConfigs(): HasMany
     {
         return $this->hasMany(CourseConfig::class);

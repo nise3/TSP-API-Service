@@ -39,7 +39,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
      */
@@ -62,7 +62,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * Display the specified resource
+     *  * Display the specified resource
      * @param int $id
      * @return JsonResponse
      */
@@ -85,7 +85,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     *  * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
@@ -120,7 +120,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * update the specified resource in storage
+     * * update the specified resource in storage
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -157,7 +157,7 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * remove the specified resource from storage
+     *  *  remove the specified resource from storage
      * @param int $id
      * @return JsonResponse
      */

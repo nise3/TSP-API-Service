@@ -16,22 +16,23 @@ class CreateInstitutesTable extends Migration
         Schema::create('institutes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title_en', 191)->nullable();
-            $table->string('title_bn', 191)->nullable();
+            $table->string('title_bn', 1000)->nullable();
             $table->string('code', 191);
             $table->string('domain', 191);
-            $table->string('address', 191)->nullable();
+            $table->text('address')->nullable();
             $table->text('google_map_src')->nullable();
-            $table->string('logo', 191)->nullable();
-            $table->string('primary_phone', 191)->nullable();
-            $table->string('phone_numbers', 191)->nullable();
-            $table->string('primary_mobile', 191)->nullable();
+            $table->text('logo')->nullable();
+            $table->string('primary_phone', 15)->nullable();
+            $table->string('phone_numbers', 15)->nullable();
+            $table->string('primary_mobile', 15)->nullable();
             $table->string('mobile_numbers', 191)->nullable();
             $table->string('email', 191)->nullable();
-            $table->string('config', 191)->nullable();
-            $table->tinyInteger('row_status')->default(1);
+            $table->text('config')->nullable();
+            $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
-
+            $table->softDeletes();
         });
     }
 

@@ -14,27 +14,34 @@ class CreateProgrammesTable extends Migration
      *
      * @return void
      */
+
     public function up()
     {
         Schema::create('programmes', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title_en', 191)->nullable();
-            $table->string('title_bn', 191)->nullable();
+            $table->string('title_bn', 1000)->nullable();
             $table->unsignedInteger('institute_id')->index('programmes_fk_institute_id');
             $table->string('code', 191)->nullable();
             $table->text('description')->nullable();
-            $table->string('logo', 191)->nullable();
+            $table->text('logo')->nullable();
+            $table->unsignedTinyInteger('row_status')->default(1);
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+
             $table->timestamps();
-            $table->unsignedTinyInteger('row_status')->nullable()->default(1);
+            $table->softDeletes();
         });
     }
+
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
+    public
+    function down()
     {
         Schema::dropIfExists('programmes');
     }

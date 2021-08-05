@@ -36,8 +36,10 @@ class TrainingCenterService
             'training_centers.title_en',
             'training_centers.title_bn',
             'institutes.title_en as institute_name',
+            'institutes.id as institute_id',
             'training_centers.row_status',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
@@ -109,7 +111,9 @@ class TrainingCenterService
             'training_centers.title_en',
             'training_centers.title_bn',
             'institutes.title_en as institute_name',
+            'institutes.title_en as institute_name',
             'branches.title_en as branch_name',
+            'branches.id as branch_id',
             'training_centers.address',
             'training_centers.row_status',
             'training_centers.google_map_src',
@@ -177,6 +181,7 @@ class TrainingCenterService
     {
         $trainingCenter->row_status = TrainingCenter::ROW_STATUS_DELETED;
         $trainingCenter->save();
+        $trainingCenter->delete();
         return $trainingCenter;
     }
 
@@ -189,13 +194,13 @@ class TrainingCenterService
     {
         $rules = [
             'title_en' => 'required|string|max: 191',
-            'title_bn' => 'required|string|max: 191',
+            'title_bn' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
-            'address' => ['nullable', 'string', 'max:191'],
+            'address' => ['nullable', 'string', 'max:1000'],
             'google_map_src' => ['nullable', 'string'],
             'row_status' => [
-                'required_if:' . $id . ',!=,null',
+                'required_if:' . $id . ',==,null',
                 Rule::in([TrainingCenter::ROW_STATUS_ACTIVE, TrainingCenter::ROW_STATUS_INACTIVE]),
             ],
         ];

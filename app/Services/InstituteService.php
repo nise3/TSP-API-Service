@@ -7,11 +7,21 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use PhpParser\Builder;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 
 
+/**
+ * Class InstituteService
+ * @package App\Services
+ */
 class InstituteService
 {
+    /**
+     * @param Request $request
+     * @param Carbon $startTime
+     * @return array
+     */
     public function getInstituteList(Request $request, Carbon $startTime): array
     {
         $paginateLink = [];
@@ -101,6 +111,7 @@ class InstituteService
      */
     public function getOneInstitute(int $id, Carbon $startTime): array
     {
+        /** @var Institute|Builder $institute */
         $institute = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
@@ -141,11 +152,16 @@ class InstituteService
         ];
     }
 
-    public function validator(Request $request, $id = null): Validator
+    /**
+     * @param Request $request
+     * @param null $id
+     * @return Validator
+     */
+    public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
             'title_en' => ['required', 'string', 'max:191'],
-            'title_bn' => ['required', 'string', 'max:191'],
+            'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
             'domain' => [
                 'required',
@@ -167,12 +183,13 @@ class InstituteService
             'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
                 'nullable',
-                /*new RequiredIf($id == null),*/ //TODO: this field is required, just commented out because of api check
-                'image',
-                'mimes:jpeg,jpg,png,gif',
-                'max:500',
-                //'dimensions:width=80,height=80'
-            ]
+                'string',
+                'max:191',
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
+            ],
         ];
         $messages = [
             'logo.dimensions' => 'Please upload 80x80 size of image',
@@ -213,6 +230,7 @@ class InstituteService
     {
         $institute->row_status = Institute::ROW_STATUS_DELETED;
         $institute->save();
+        $institute->delete();
         return $institute;
     }
 }

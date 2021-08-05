@@ -30,6 +30,7 @@ class CourseController extends Controller
      */
     public function __construct(CourseService $courseService)
     {
+
         $this->courseService = $courseService;
         $this->startTime = Carbon::now();
     }
@@ -118,9 +119,9 @@ class CourseController extends Controller
     }
 
     /**
-     * update the specified resource in storage
+     * * update the specified resource in storage
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return JsonResponse
      * @throws ValidationException
      */
@@ -155,8 +156,8 @@ class CourseController extends Controller
     }
 
     /**
-     *  remove the specified resource from storage
-     * @param $id
+     *  *  remove the specified resource from storage
+     * @param int $id
      * @return JsonResponse
      */
     public function destroy(int $id): JsonResponse
