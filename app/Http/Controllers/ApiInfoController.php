@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Response;
 
 class ApiInfoController extends Controller
 {
-    const SERVICE_NAME = 'NISE-3 Organization Management API Service';
+    const SERVICE_NAME = 'NISE-3 Institute Management API Service';
     const SERVICE_VERSION = 'V1';
 
     public function apiInfo(): JsonResponse
