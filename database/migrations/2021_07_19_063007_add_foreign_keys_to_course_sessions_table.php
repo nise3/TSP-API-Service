@@ -14,8 +14,17 @@ class AddForeignKeysToCourseSessionsTable extends Migration
     public function up()
     {
         Schema::table('course_sessions', function (Blueprint $table) {
-            $table->foreign('course_id', 'course_sessions_fk_course_id')->references('id')->on('course_configs')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreign('course_config_id', 'course_sessions_fk_course_config_id')->references('id')->on('course_configs')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->foreign('course_id', 'course_sessions_fk_course_id')
+                ->references('id')
+                ->on('course_configs')
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
+
+            $table->foreign('course_config_id', 'course_sessions_fk_course_config_id')
+                ->references('id')
+                ->on('course_configs')
+                ->onUpdate('CASCADE')
+                ->onDelete('CASCADE');
         });
     }
 

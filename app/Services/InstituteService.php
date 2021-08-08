@@ -224,13 +224,10 @@ class InstituteService
 
     /**
      * @param Institute $institute
-     * @return Institute
+     * @return bool
      */
-    public function destroy(Institute $institute): Institute
+    public function destroy(Institute $institute): bool
     {
-        $institute->row_status = Institute::ROW_STATUS_DELETED;
-        $institute->save();
-        $institute->delete();
-        return $institute;
+        return $institute->delete();
     }
 }

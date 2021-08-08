@@ -179,20 +179,17 @@ class BranchService
 
     /**
      * @param Branch $branch
-     * @return Branch
+     * @return bool
      */
-    public function destroy(Branch $branch): Branch
+    public function destroy(Branch $branch): bool
     {
-        $branch->row_status = Branch::ROW_STATUS_DELETED;
-        $branch->save();
-        $branch->delete();
-
-        return $branch;
+        return $branch->delete();
     }
 
 
     /**
      * @param Request $request
+     * @param int|null $id
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator

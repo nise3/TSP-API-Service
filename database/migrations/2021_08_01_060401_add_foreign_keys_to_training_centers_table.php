@@ -18,11 +18,15 @@ class AddForeignKeysToTrainingCentersTable extends Migration
     {
         Schema::table('training_centers', function (Blueprint $table) {
             $table->foreign('branch_id', 'training_centers_fk_branch_id')
-                ->references('id')->on('branches')->onUpdate('CASCADE')
+                ->references('id')
+                ->on('branches')
+                ->onUpdate('CASCADE')
                 ->onDelete('RESTRICT');
 
             $table->foreign('institute_id', 'training_centers_fk_institute_id')
-                ->references('id')->on('institutes')->onUpdate('CASCADE')
+                ->references('id')
+                ->on('institutes')
+                ->onUpdate('CASCADE')
                 ->onDelete('RESTRICT');
         });
     }

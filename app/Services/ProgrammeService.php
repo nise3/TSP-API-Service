@@ -168,14 +168,11 @@ class ProgrammeService
 
     /**
      * @param Programme $programme
-     * @return Programme
+     * @return bool
      */
-    public function destroy(Programme $programme): Programme
+    public function destroy(Programme $programme): bool
     {
-        $programme->row_status = Programme::ROW_STATUS_DELETED;
-        $programme->save();
-        $programme->delete();
-        return $programme;
+        return $programme->delete();
     }
 
     /**

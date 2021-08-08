@@ -18,7 +18,9 @@ class AddForeignKeysToProgrammesTable extends Migration
     {
         Schema::table('programmes', function (Blueprint $table) {
             $table->foreign('institute_id', 'programmes_fk_institute_id')
-                ->references('id')->on('institutes')->onUpdate('CASCADE')
+                ->references('id')
+                ->on('institutes')
+                ->onUpdate('CASCADE')
                 ->onDelete('RESTRICT');
         });
     }

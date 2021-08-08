@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Branch
@@ -24,11 +25,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends BaseModel
 {
-    protected $guarded = ['id'];
-    /**
-     * @var mixed|string
-     */
+    use SoftDeletes;
 
+    protected $guarded = ['id'];
+
+    /**
+     *
+     * @return BelongsTo
+     */
     public function institute(): BelongsTo
     {
         return $this->belongsTo(Institute::class);

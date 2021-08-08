@@ -175,14 +175,11 @@ class TrainingCenterService
 
     /**
      * @param TrainingCenter $trainingCenter
-     * @return TrainingCenter
+     * @return bool
      */
-    public function destroy(TrainingCenter $trainingCenter): TrainingCenter
+    public function destroy(TrainingCenter $trainingCenter): bool
     {
-        $trainingCenter->row_status = TrainingCenter::ROW_STATUS_DELETED;
-        $trainingCenter->save();
-        $trainingCenter->delete();
-        return $trainingCenter;
+        return $trainingCenter->delete();
     }
 
     /**
