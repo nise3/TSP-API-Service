@@ -7,8 +7,9 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Collection;
 
 
 /**
@@ -31,8 +32,8 @@ class InstituteService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Institute|Builder $institutes */
-        $institutes = Institute::select([
+        /** @var Institute|Builder $instituteBuilder*/
+        $instituteBuilder = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title_bn',
@@ -50,16 +51,17 @@ class InstituteService
             'institutes.created_at',
             'institutes.updated_at',
         ]);
-        $institutes->orderBy('institutes.id', $order);
+        $instituteBuilder->orderBy('institutes.id', $order);
 
         if (!empty($titleEn)) {
-            $institutes->where('institutes.title_en', 'like', '%' . $titleEn . '%');
+            $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $institutes->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
+            $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $instituteBuilder */
         if ($paginate) {
-            $institutes = $institutes->paginate(10);
+            $institutes = $instituteBuilder->paginate(10);
             $paginateData = (object)$institutes->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -69,7 +71,7 @@ class InstituteService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $institutes = $institutes->get();
+            $institutes = $instituteBuilder->get();
         }
 
         $data = [];
@@ -111,8 +113,8 @@ class InstituteService
      */
     public function getOneInstitute(int $id, Carbon $startTime): array
     {
-        /** @var Institute|Builder $institute */
-        $institute = Institute::select([
+        /** @var Institute|Builder $instituteBuilder */
+        $instituteBuilder = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title_bn',
@@ -131,11 +133,12 @@ class InstituteService
             'institutes.updated_at',
         ]);
 
-        $institute->where('institutes.id', $id);
-        $institute = $institute->first();
+        $instituteBuilder->where('institutes.id', $id);
+        /** @var Institute $instituteBuilder */
+        $institute = $instituteBuilder->first();
 
         $links = [];
-        if (!empty($institute)) {
+        if ($institute) {
             $links['update'] = route('api.v1.institutes.update', ['id' => $id]);
             $links['delete'] = route('api.v1.institutes.destroy', ['id' => $id]);
         }
@@ -154,7 +157,7 @@ class InstituteService
 
     /**
      * @param Request $request
-     * @param null $id
+     * @param int|null $id
      * @return Validator
      */
     public function validator(Request $request, int $id = null): Validator

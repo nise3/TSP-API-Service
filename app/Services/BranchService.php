@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 
 /**
@@ -31,8 +32,8 @@ class BranchService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Branch|Builder $branches */
-        $branches = Branch::select([
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
@@ -45,19 +46,20 @@ class BranchService
             'branches.updated_at',
         ]);
 
-        $branches->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-        $branches->orderBy('branches.id', $order);
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->orderBy('branches.id', $order);
+
 
 
         if (!empty($titleEn)) {
-            $branches->where('branches.title_en', 'like', '%' . $titleEn . '%');
+            $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $branches->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-
+        /** @var Collection $branchBuilder */
         if ($paginate) {
-            $branches = $branches->paginate(10);
+            $branches = $branchBuilder->paginate(10);
             $paginateData = (object)$branches->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -67,11 +69,12 @@ class BranchService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $branches = $branches->get();
+            $branches = $branchBuilder->get();
         }
 
         $data = [];
         foreach ($branches as $branch) {
+            /** @var Branch $branch */
             $links['read'] = route('api.v1.branches.read', ['id' => $branch->id]);
             $links['update'] = route('api.v1.branches.update', ['id' => $branch->id]);
             $links['delete'] = route('api.v1.branches.destroy', ['id' => $branch->id]);
@@ -113,8 +116,8 @@ class BranchService
      */
     public function getOneBranch(int $id,  Carbon $startTime): array
     {
-        /** @var Branch|Builder $branch */
-        $branch = Branch::select([
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
@@ -127,12 +130,14 @@ class BranchService
             'branches.updated_at',
         ]);
 
-        $branch->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-        $branch->where('branches.id', $id);
-        $branch = $branch->first();
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->where('branches.id', $id);
+
+        /** @var Branch $branchBuilder */
+        $branch = $branchBuilder->first();
 
         $links = [];
-        if (!empty($branch)) {
+        if ($branch) {
             $links['update'] = route('api.v1.branches.update', ['id' => $id]);
             $links['delete'] = route('api.v1.branches.destroy', ['id' => $id]);
         }

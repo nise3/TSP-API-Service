@@ -8,7 +8,8 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class ProgrammeService
@@ -30,8 +31,8 @@ class ProgrammeService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Programme|Builder $programmes */
-        $programmes = Programme::select([
+        /** @var Programme|Builder $programmesBuilder */
+        $programmesBuilder = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
@@ -44,17 +45,18 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmes->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programmes->orderBy('programmes.id', $order);
+        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmesBuilder->orderBy('programmes.id', $order);
 
         if (!empty($titleEn)) {
-            $programmes->where('programmes.title_en', 'like', '%' . $titleEn . '%');
+            $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $programmes->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $programmesBuilder */
         if ($paginate) {
-            $programmes = $programmes->paginate(10);
+            $programmes = $programmesBuilder->paginate(10);
             $paginateData = (object)$programmes->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -64,11 +66,12 @@ class ProgrammeService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $programmes = $programmes->get();
+            $programmes = $programmesBuilder->get();
         }
 
         $data = [];
         foreach ($programmes as $programme) {
+            /** @var Programme $programme */
             $links['read'] = route('api.v1.programmes.read', ['id' => $programme->id]);
             $links['update'] = route('api.v1.programmes.update', ['id' => $programme->id]);
             $links['delete'] = route('api.v1.programmes.destroy', ['id' => $programme->id]);
@@ -106,8 +109,8 @@ class ProgrammeService
      */
     public function getOneProgramme(int $id, Carbon $startTime): array
     {
-        /** @var Programme|Builder $programme */
-        $programme = Programme::select([
+        /** @var Programme|Builder $programmeBuilder */
+        $programmeBuilder = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
@@ -120,12 +123,14 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programme->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programme->where('programmes.id', '=', $id);
-        $programme = $programme->first();
+        $programmeBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmeBuilder->where('programmes.id', '=', $id);
+
+        /** @var Programme $programmeBuilder */
+        $programme = $programmeBuilder->first();
 
         $links = [];
-        if (!empty($programme)) {
+        if ($programme) {
             $links['update'] = route('api.v1.programmes.update', ['id' => $id]);
             $links['delete'] = route('api.v1.programmes.destroy', ['id' => $id]);
         }
