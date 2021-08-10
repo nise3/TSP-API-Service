@@ -7,7 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class CourseService
@@ -30,8 +31,8 @@ class CourseService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Course|Builder $courses */
-        $courses = Course::select(
+        /** @var Course|Builder $coursesBuilder */
+        $coursesBuilder = Course::select(
             [
                 'courses.id as id',
                 'courses.title_en',
@@ -50,16 +51,17 @@ class CourseService
                 'institutes.id as institute_id',
             ]
         );
-        $courses->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+        $coursesBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
 
         if (!empty($titleEn)) {
-            $courses->where('courses.title_en', 'like', '%' . $titleEn . '%');
+            $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $courses->where('courses.title_bn', 'like', '%' . $titleBn . '%');
+            $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $coursesBuilder */
         if ($paginate) {
-            $courses = $courses->paginate(10);
+            $courses = $coursesBuilder->paginate(10);
             $paginateData = (object)$courses->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -69,11 +71,12 @@ class CourseService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $courses = $courses->get();
+            $courses = $coursesBuilder->get();
         }
 
         $data = [];
         foreach ($courses as $course) {
+            /** @var Course $course */
             $links['read'] = route('api.v1.courses.read', ['id' => $course->id]);
             $links['update'] = route('api.v1.courses.update', ['id' => $course->id]);
             $links['delete'] = route('api.v1.courses.destroy', ['id' => $course->id]);
@@ -111,8 +114,8 @@ class CourseService
      */
     public function getOneCourse(int $id, Carbon $startTime): array
     {
-        /** @var Course|Builder $course */
-        $course = Course::select(
+        /** @var Course|Builder $courseBuilder */
+        $courseBuilder = Course::select(
             [
                 'courses.id as id',
                 'courses.title_en',
@@ -131,12 +134,14 @@ class CourseService
                 'institutes.id as institute_id',
             ]
         );
-        $course->join('institutes', 'courses.institute_id', '=', 'institutes.id');
-        $course->where('courses.id', '=', $id);
-        $course = $course->first();
+        $courseBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+        $courseBuilder->where('courses.id', '=', $id);
+
+        /** @var Course $courseBuilder */
+        $course = $courseBuilder->first();
 
         $links = [];
-        if (!empty($course)) {
+        if ($course) {
             $links['update'] = route('api.v1.courses.update', ['id' => $id]);
             $links['delete'] = route('api.v1.courses.destroy', ['id' => $id]);
         }

@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,6 +36,7 @@ use Illuminate\Support\Facades\File;
 
 class Course extends BaseModel
 {
+    use ScopeRowStatusTrait, HasFactory;
 
     use SoftDeletes;
     protected $table = 'courses';

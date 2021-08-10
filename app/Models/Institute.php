@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Institute extends BaseModel
 {
 
+    use ScopeRowStatusTrait, HasFactory;
     use SoftDeletes;
 
     /**
