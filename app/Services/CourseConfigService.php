@@ -188,11 +188,7 @@ class CourseConfigService
         $courseConfig->fill($data);
         $courseConfig->save();
 
-        foreach ($data['course_sessions'] as $session) {
-            $session['course_id'] = $data['course_id'];
-            $courseSessions[] = $session;
-            $courseConfig->courseSessions()->create($session);
-        }
+
         return $courseConfig;
     }
 
@@ -205,24 +201,6 @@ class CourseConfigService
     {
         $courseConfig->fill($data);
         $courseConfig->save();
-
-        foreach ($data['course_sessions'] as $session) {
-            $session['course_id'] = $data['course_id'];
-            $courseSessions[] = $session;
-
-            if (empty($session['id'])) {
-                $courseConfig->courseSessions()->create($session);
-                continue;
-            }
-
-            $courseSession = CourseSession::findOrFail($session['id']);
-
-            if (!empty($session['delete']) && $session['delete'] == 1) {
-                $courseSession->delete();
-            } else {
-                $courseSession->update($session);
-            }
-        }
 
         return $courseConfig;
 
@@ -275,42 +253,7 @@ class CourseConfigService
                 'nullable',
                 'int'
             ],
-//            'course_sessions' => [
-//                "required",
-//                "array",
-//                "min:1"
-//            ],
-//            'course_sessions.*.session_name_en' => [
-//                'required',
-//                'string',
-//                'max:30'
-//            ],
-//            'course_sessions.*.session_name_bn' => [
-//                'required',
-//                'string',
-//                'max:30',
-//                'regex:/^[\x{0980}-\x{09FF}\s\-\*!@#%\+=\._\^\'()]*$/u',
-//            ],
-//            'course_sessions.*.number_of_batches' => [
-//                'required',
-//                'int'
-//            ],
-//            'course_sessions.*.application_start_date' => [
-//                'required',
-//                'date'
-//            ],
-//            'course_sessions.*.application_end_date' => [
-//                'required',
-//                'date'
-//            ],
-//            'course_sessions.*.course_start_date' => [
-//                'required',
-//                'date'
-//            ],
-//            'course_sessions.*.max_seat_available' => [
-//                'required',
-//                'int'
-//            ],
+
             'ethnic' => [
                 'boolean',
                 'nullable'
