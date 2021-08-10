@@ -42,7 +42,7 @@ class CourseService
                 'courses.course_fee',
                 'courses.target_group',
                 'courses.contents',
-                'courses.objects',
+                'courses.objectives',
                 'courses.training_methodology',
                 'courses.evaluation_system',
                 'courses.created_at',
@@ -125,7 +125,7 @@ class CourseService
                 'courses.course_fee',
                 'courses.target_group',
                 'courses.contents',
-                'courses.objects',
+                'courses.objectives',
                 'courses.training_methodology',
                 'courses.evaluation_system',
                 'courses.created_at',
@@ -233,7 +233,7 @@ class CourseService
                 'string',
                 'max: 300',
             ],
-            'objects' => [
+            'objectives' => [
                 'nullable',
                 'string',
                 'max: 1000',

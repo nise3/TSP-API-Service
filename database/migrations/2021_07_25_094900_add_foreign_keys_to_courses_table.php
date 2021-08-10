@@ -14,7 +14,11 @@ class AddForeignKeysToCoursesTable extends Migration
     public function up()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->foreign('institute_id', 'courses_fk_institute_id')->references('id')->on('institutes')->onUpdate('CASCADE')->onDelete('RESTRICT');
+            $table->foreign('institute_id', 'courses_fk_institute_id')
+                ->references('id')
+                ->on('institutes')
+                ->onUpdate('CASCADE')
+                ->onDelete('RESTRICT');
         });
     }
 

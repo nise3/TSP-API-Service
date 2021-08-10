@@ -125,7 +125,7 @@ class CourseConfigService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneCourseConfig(int $id , Carbon $startTime): array
+    public function getOneCourseConfig(int $id, Carbon $startTime): array
     {
         /** @var CourseConfig|Builder $courseConfigBuilder */
 
@@ -211,12 +211,10 @@ class CourseConfigService
      */
     public function destroy(CourseConfig $courseConfig): CourseConfig
     {
-        $courseConfig->row_status = CourseConfig::ROW_STATUS_DELETED;
-        $courseConfig->save();
-        $courseConfig->delete();
-
-        foreach ($courseConfig->courseSessions() as $courseSession) {
-            $courseSession->row_status = CourseSession::ROW_STATUS_DELETED;
+        if ($courseConfig->delete()) {
+            foreach ($courseConfig->courseSessions() as $courseSession) {
+                $courseSession->delete();
+            }
         }
 
         return $courseConfig;
@@ -227,7 +225,7 @@ class CourseConfigService
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request, int $id = Null):  \Illuminate\Contracts\Validation\Validator
+    public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'institute_id' => [

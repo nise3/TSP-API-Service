@@ -4,37 +4,47 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBranchesTable extends Migration
+/**
+ * Class CreateProgrammesTable
+ */
+class CreateProgrammesTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
+
     public function up()
     {
-        Schema::create('branches', function (Blueprint $table) {
+        Schema::create('programmes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title_en', 191)->nullable();
-            $table->string('title_bn', 600)->nullable();
-            $table->unsignedInteger('institute_id')->index('branches_fk_institute_id');
-            $table->string('address', 1000)->nullable();
-            $table->text('google_map_src')->nullable();
+            $table->string('code', 191)->nullable();
+            $table->unsignedInteger('institute_id');
+
+            $table->string('title_en', 300);
+            $table->string('title_bn', 800)->nullable();
+            $table->text('description')->nullable();
+            $table->text('logo')->nullable();
+
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });
     }
+
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
+    public
+    function down()
     {
-        Schema::dropIfExists('branches');
+        Schema::dropIfExists('programmes');
     }
 }

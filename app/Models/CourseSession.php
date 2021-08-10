@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class CourseSession
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CourseSession extends BaseModel
 {
+    use SoftDeletes;
+
     protected $guarded = ['id'];
 
     protected $dates = [

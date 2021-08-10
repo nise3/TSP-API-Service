@@ -6,6 +6,7 @@ use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class CourseConfig
@@ -31,13 +32,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Programme programme
  * @property-read Course course
  */
-
 class CourseConfig extends BaseModel
 {
     use ScopeRowStatusTrait, HasFactory;
+    use SoftDeletes;
 
     protected $guarded = ['id'];
-
 
     /**
      * @return BelongsTo

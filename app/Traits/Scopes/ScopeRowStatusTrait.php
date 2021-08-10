@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\scopes;
+namespace App\Traits\Scopes;
 
 
 use App\Models\BaseModel;
@@ -28,9 +28,4 @@ trait ScopeRowStatusTrait
         return $query->where('row_status', BaseModel::ROW_STATUS_INACTIVE);
     }
 
-    public function scopeDeleted($query): Builder
-    {
-        /**  @var Builder $query */
-        return $query->where('row_status', BaseModel::ROW_STATUS_DELETED);
-    }
 }

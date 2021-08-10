@@ -6,6 +6,7 @@ use App\Traits\scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Programme
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Programme extends BaseModel
 {
     use ScopeRowStatusTrait, HasFactory;
+    use SoftDeletes;
 
     /**
      * @var string[]
