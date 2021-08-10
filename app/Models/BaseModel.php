@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\scopes\ScopeRowStatusTrait;
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
