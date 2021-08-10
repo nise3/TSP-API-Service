@@ -201,7 +201,6 @@ class CourseConfigService
     {
         $courseConfig->fill($data);
         $courseConfig->save();
-
         return $courseConfig;
 
     }
