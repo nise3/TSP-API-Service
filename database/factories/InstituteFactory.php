@@ -23,13 +23,17 @@ class InstituteFactory extends Factory
      */
     public function definition(): array
     {
-        $instituteName = $this->faker->company;
+//        $title = $this->faker->unique()->jobTitle;
         return [
-            'title_en' => $instituteName,
-            'title_bn' => $instituteName,
-            'code' => $this->faker->unique(),
-            'domain' => 'https://' . $this->faker->domainName,
+            'title_en' => $this->faker->name,
+            'title_bn' => $this->faker->name,
+            'code' => $this->faker->unique()->countryCode,
+            'domain' => 'http://' . $this->faker->domainName,
             'address' => $this->faker->address,
+            'primary_phone' => $this->faker->phoneNumber,
+            'phone_numbers' => $this->faker->phoneNumber,
+            'primary_mobile' => $this->faker->phoneNumber,
+            'email' => $this->faker->email(),
         ];
     }
 }

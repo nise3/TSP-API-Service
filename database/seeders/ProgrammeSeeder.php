@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Institute;
+use App\Models\Programme;
 use Illuminate\Database\Seeder;
 
-class InstituteSeeder extends Seeder
+class ProgrammeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class InstituteSeeder extends Seeder
      */
     public function run()
     {
-        Institute::factory()->count(10)->create();
+        Programme::factory()->count(10)->create();
     }
 }

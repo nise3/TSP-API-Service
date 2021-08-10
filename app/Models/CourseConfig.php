@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -33,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CourseConfig extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, HasFactory;
 
     protected $guarded = ['id'];
 
