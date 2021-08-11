@@ -38,9 +38,6 @@ class InstituteService
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
-            'institutes.address',
-            'institutes.domain',
-            'institutes.google_map_src',
             'institutes.logo',
             'institutes.primary_phone',
             'institutes.phone_numbers',
@@ -48,6 +45,12 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
+            'institutes.row_status',
+            'institutes.created_by',
+            'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
         ]);
@@ -119,9 +122,6 @@ class InstituteService
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
-            'institutes.address',
-            'institutes.domain',
-            'institutes.google_map_src',
             'institutes.logo',
             'institutes.primary_phone',
             'institutes.phone_numbers',
@@ -129,6 +129,12 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
+            'institutes.row_status',
+            'institutes.created_by',
+            'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
         ]);
@@ -173,7 +179,7 @@ class InstituteService
                 'max:191',
                 'unique:institutes,domain,' . $id
             ],
-            'address' => ['nullable', 'string', 'max:191'],
+            'address' => ['nullable', 'string', 'max:500'],
             'google_map_src' => ['nullable', 'string'],
             'primary_phone' => [
                 'nullable',
@@ -190,7 +196,7 @@ class InstituteService
                 'max:191',
             ],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
+                'required_if:' . $id . ',!=,null',
                 Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
             ],
         ];
