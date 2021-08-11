@@ -42,6 +42,7 @@ class BranchService
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
+            'branches.row_status',
             'branches.created_at',
             'branches.updated_at',
         ]);
@@ -126,6 +127,7 @@ class BranchService
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
+            'branches.row_status',
             'branches.created_at',
             'branches.updated_at',
         ]);
@@ -224,10 +226,10 @@ class BranchService
                 'nullable',
                 'string'
             ],
-//            'row_status' => [
-//                'required_if:' . $id . ',==,null',
-//                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
-//            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
+            ],
         ];
 
         return Validator::make($request->all(), $rules);
