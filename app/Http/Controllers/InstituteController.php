@@ -7,6 +7,8 @@ use App\Models\Institute;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
@@ -88,9 +90,11 @@ class InstituteController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->instituteService->validator($request)->validate();
+
+        DB::beginTransaction();
         try {
             $data = $this->instituteService->store($validatedData);
-
+            DB::commit();
             $response = [
                 'data' => $data ?: null,
                 '_response_status' => [
@@ -102,6 +106,8 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
+            DB::rollBack();
+            Log::debug($e->getMessage());
             $handler = new CustomExceptionHandler($e);
             $response = [
                 '_response_status' => array_merge([
