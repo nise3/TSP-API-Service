@@ -163,6 +163,9 @@ class BranchService
      */
     public function store(array $data): Branch
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $branch = new Branch();
         $branch->fill($data);
         $branch->save();
@@ -177,6 +180,9 @@ class BranchService
      */
     public function update(Branch $branch, array $data): Branch
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $branch->fill($data);
         $branch->save();
 
@@ -233,6 +239,14 @@ class BranchService
         ];
 
         return Validator::make($request->all(), $rules);
+    }
+
+    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
+    {
+        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
+            $googleMapSrc = $match[1];
+        }
+        return $googleMapSrc;
     }
 
 }

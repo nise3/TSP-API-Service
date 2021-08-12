@@ -207,12 +207,23 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
     }
 
+    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
+    {
+        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
+            $googleMapSrc = $match[1];
+        }
+        return $googleMapSrc;
+    }
+
     /**
      * @param array $data
      * @return Institute
      */
     public function store(array $data): Institute
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $institute = new Institute();
         $institute->fill($data);
         $institute->save();
@@ -226,6 +237,9 @@ class InstituteService
      */
     public function update(Institute $institute, array $data): Institute
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $institute->fill($data);
         $institute->save();
         return $institute;
