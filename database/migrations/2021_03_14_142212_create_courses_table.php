@@ -30,7 +30,6 @@ class CreateCoursesTable extends Migration
             $table->text('prerequisite')->nullable();
             $table->text('eligibility')->nullable();
             $table->string('cover_image', 191)->nullable();
-
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();

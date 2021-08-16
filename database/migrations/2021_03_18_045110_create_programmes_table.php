@@ -21,16 +21,13 @@ class CreateProgrammesTable extends Migration
             $table->increments('id');
             $table->string('code', 191)->nullable();
             $table->unsignedInteger('institute_id');
-
             $table->string('title_en', 300);
             $table->string('title_bn', 800)->nullable();
             $table->text('description')->nullable();
             $table->text('logo')->nullable();
-
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });
