@@ -9,9 +9,6 @@ $customRouter = function (string $as = '') use ($router) {
     return $custom->as($as);
 };
 
-//$router->get('/', function () use ($router) {
-//    return $router->app->version();
-//});
 
 $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
