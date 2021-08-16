@@ -1,0 +1,3007 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "version": "1.0",
+        "title": "institute management api service",
+        "description": "",
+        "termsOfService": "",
+        "contact": {},
+        "license": {
+            "name": ""
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/{basePath}",
+            "description": "",
+            "variables": {
+                "basePath": {
+                    "default": "api/v1"
+                }
+            }
+        }
+    ],
+    "paths": {
+        "/institutes": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of institutes.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/institute"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3745",
+                                        "address": null,
+                                        "domain": "https://www.bitac.gov.bd",
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": 1558292976,
+                                        "mobile_numbers": null,
+                                        "email": null,
+                                        "config": null,
+                                        "created_at": "2021-07-26T05:50:46.000000Z",
+                                        "updated_at": "2021-07-26T05:50:46.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:56:02.855177Z",
+                                        "finished": "2021-07-26T05:56:02.888598Z"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of institute.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/domain"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/primary_phone"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_numbers"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/primary_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/mobile_numbers"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/institute"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "BITAC",
+                                            "title_bn": "বিতাক",
+                                            "code": "3745",
+                                            "address": null,
+                                            "domain": "https://www.bitac.gov.bd",
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": 1558292976,
+                                            "mobile_numbers": null,
+                                            "email": null,
+                                            "config": null,
+                                            "created_at": "2021-07-26T05:50:46.000000Z",
+                                            "updated_at": "2021-07-26T05:50:46.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Institute added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            }
+        },
+        "/institutes/{instituteId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified institute.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/instituteId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/institute"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3745",
+                                        "address": null,
+                                        "domain": "https://www.bitac.gov.bd",
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": 1558292976,
+                                        "mobile_numbers": null,
+                                        "email": null,
+                                        "config": null,
+                                        "created_at": "2021-07-26T05:50:46.000000Z",
+                                        "updated_at": "2021-07-26T05:50:46.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/institutes/1",
+                                        "delete": "http://localhost:8000/api/v1/institutes/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified institute.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/domain"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/primary_phone"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_numbers"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/primary_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/mobile_numbers"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/institute"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3749",
+                                        "domain": "http://skill.bitac.gov.bd",
+                                        "address": null,
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": 1749838292,
+                                        "mobile_numbers": null,
+                                        "email": null,
+                                        "config": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T05:53:40.000000Z",
+                                        "updated_at": "2021-07-26T05:57:51.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/institutes/1",
+                                        "delete": "http://localhost:8000/api/v1/institutes/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of rank types.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/instituteId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            }
+        },
+        "/programmes": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of programmes.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programme"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Mrs. Amaya Schaden Sr.",
+                                        "title_bn": "Elmira Skiles",
+                                        "institute_title_en": "Clarissa Renner",
+                                        "institute_id": 8,
+                                        "programme_code": "91431-5149",
+                                        "programme_logo": null,
+                                        "description": "Sunt sit est recusandae repellendus repellendus.",
+                                        "row_status": 1,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "07 16 15",
+                                        "finished": "07 16 15"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "programmes"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of programmes.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/logo"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programme"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Mrs. Amaya Schaden Sr.",
+                                            "title_bn": "Elmira Skiles",
+                                            "institute_title_en": "Clarissa Renner",
+                                            "institute_id": 8,
+                                            "programme_code": "91431-5149",
+                                            "programme_logo": null,
+                                            "description": "Sunt sit est recusandae repellendus repellendus.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-16T04:00:01.000000Z",
+                                            "updated_at": "2021-08-16T04:00:01.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Programme added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "programmes"
+                ]
+            }
+        },
+        "/programmes/{programmeId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified programme.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/programmeId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programme"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Mrs. Amaya Schaden Sr.",
+                                        "title_bn": "Elmira Skiles",
+                                        "institute_title_en": "Clarissa Renner",
+                                        "institute_id": 8,
+                                        "programme_code": "91431-5149",
+                                        "programme_logo": null,
+                                        "description": "Sunt sit est recusandae repellendus repellendus.",
+                                        "row_status": 1,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/programmes/1",
+                                        "delete": "http://localhost:8000/api/v1/programmes/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "programmes"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified programme.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/programmeId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/logo"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programme"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Mrs. Amaya Schaden Sr.",
+                                        "title_bn": "Elmira Skiles",
+                                        "institute_title_en": "Clarissa Renner",
+                                        "institute_id": 8,
+                                        "programme_code": "91431-5149",
+                                        "programme_logo": null,
+                                        "description": "Sunt sit est recusandae repellendus repellendus.",
+                                        "row_status": 1,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Programme updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/programmes/1",
+                                        "delete": "http://localhost:8000/api/v1/programmes/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "programmes"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of programmes.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/instituteId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "delete",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "programme deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "programmes"
+                ]
+            }
+        },
+        "/training-centers": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of training center.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCenter"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Timothy Fahey",
+                                        "title_bn": "Prof. General O'Keefe",
+                                        "institute_id": 8,
+                                        "institute_name": "Clarissa Renner",
+                                        "branch_id": 2,
+                                        "branch_name": "Isobel Swift DDS",
+                                        "address": "8580 Wolf Grove\nLethaside, HI 08530-4113",
+                                        "google_map_src": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "07 16 15",
+                                        "finished": "07 16 15"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/training-centers/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/training-centers/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "training-centers"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of training Center.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCenter"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Timothy Fahey",
+                                            "title_bn": "Prof. General O'Keefe",
+                                            "institute_id": 8,
+                                            "institute_name": "Clarissa Renner",
+                                            "branch_id": 2,
+                                            "branch_name": "Isobel Swift DDS",
+                                            "address": "8580 Wolf Grove\nLethaside, HI 08530-4113",
+                                            "google_map_src": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-16T04:00:01.000000Z",
+                                            "updated_at": "2021-08-16T04:00:01.000000Z",
+
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/training-centers/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/training-centers/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/training-centers/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training Center added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "training-centers"
+                ]
+            }
+        },
+        "/training-centers/{trainingCenterId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified training center.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/trainingCenterId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCenter"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Timothy Fahey",
+                                        "title_bn": "Prof. General O'Keefe",
+                                        "institute_id": 8,
+                                        "institute_name": "Clarissa Renner",
+                                        "branch_id": 2,
+                                        "branch_name": "Isobel Swift DDS",
+                                        "address": "8580 Wolf Grove\nLethaside, HI 08530-4113",
+                                        "google_map_src": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/training-centers/1",
+                                        "delete": "http://localhost:8000/api/v1/training-centers/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "training-centers"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified training center.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/trainingCenterId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCenter"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Timothy Fahey",
+                                        "title_bn": "Prof. General O'Keefe",
+                                        "institute_id": 8,
+                                        "institute_name": "Clarissa Renner",
+                                        "branch_id": 2,
+                                        "branch_name": "Isobel Swift DDS",
+                                        "address": "8580 Wolf Grove\nLethaside, HI 08530-4113",
+                                        "google_map_src": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Training Center updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/training-centers/1",
+                                        "delete": "http://localhost:8000/api/v1/training-centers/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "training-centers"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of programmes.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/trainingCenterId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "delete",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "training center deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "training-centers"
+                ]
+            }
+        },
+        "/course-configs": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of course configs.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courseConfig"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "course_id": 6,
+                                        "course_title": "Prof. Davin Kessler",
+                                        "institute_id": 7,
+                                        "institute_title": "Dr. Augustus Miller",
+                                        "branch_id": 6,
+                                        "branch_name": "Ludwig Renner",
+                                        "programme_id": 7,
+                                        "programme_name": "Jalyn Stamm",
+                                        "training_center_id": 10,
+                                        "training_center_name": "Prof. Webster Kirlin",
+                                        "ethnic": 0,
+                                        "freedom_fighter": 0,
+                                        "disable_status": 0,
+                                        "ssc": 0,
+                                        "hsc": 0,
+                                        "honors": 0,
+                                        "masters": 0,
+                                        "occupation": 0,
+                                        "guardian": 0,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "07 16 15",
+                                        "finished": "07 16 15"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "course-configs"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of training Center.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_id"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/training_center_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/programme_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ethnic"
+                    },
+                    {
+                        "$ref": "#/components/parameters/freedom_fighter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/disable_status"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ssc"
+                    },
+                    {
+                        "$ref": "#/components/parameters/hsc"
+                    },
+                    {
+                        "$ref": "#/components/parameters/honors"
+                    },
+                    {
+                        "$ref": "#/components/parameters/masters"
+                    },
+                    {
+                        "$ref": "#/components/parameters/occupation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/guardian"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courseConfig"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "course_id": 6,
+                                            "course_title": "Prof. Davin Kessler",
+                                            "institute_id": 7,
+                                            "institute_title": "Dr. Augustus Miller",
+                                            "branch_id": 6,
+                                            "branch_name": "Ludwig Renner",
+                                            "programme_id": 7,
+                                            "programme_name": "Jalyn Stamm",
+                                            "training_center_id": 10,
+                                            "training_center_name": "Prof. Webster Kirlin",
+                                            "ethnic": 0,
+                                            "freedom_fighter": 0,
+                                            "disable_status": 0,
+                                            "ssc": 0,
+                                            "hsc": 0,
+                                            "honors": 0,
+                                            "masters": 0,
+                                            "occupation": 0,
+                                            "guardian": 0,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-16T04:00:01.000000Z",
+                                            "updated_at": "2021-08-16T04:00:01.000000Z",
+
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course Config added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "course-configs"
+                ]
+            }
+        },
+        "/course-configs/{courseConfigId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified course config.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courseConfig"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "course_id": 6,
+                                        "course_title": "Prof. Davin Kessler",
+                                        "institute_id": 7,
+                                        "institute_title": "Dr. Augustus Miller",
+                                        "branch_id": 6,
+                                        "branch_name": "Ludwig Renner",
+                                        "programme_id": 7,
+                                        "programme_name": "Jalyn Stamm",
+                                        "training_center_id": 10,
+                                        "training_center_name": "Prof. Webster Kirlin",
+                                        "ethnic": 0,
+                                        "freedom_fighter": 0,
+                                        "disable_status": 0,
+                                        "ssc": 0,
+                                        "hsc": 0,
+                                        "honors": 0,
+                                        "masters": 0,
+                                        "occupation": 0,
+                                        "guardian": 0,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/course-configs/1",
+                                        "delete": "http://localhost:8000/api/v1/course-configs/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "course-configs"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified course config.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_id"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/training_center_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/programme_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ethnic"
+                    },
+                    {
+                        "$ref": "#/components/parameters/freedom_fighter"
+                    },
+                    {
+                        "$ref": "#/components/parameters/disable_status"
+                    },
+                    {
+                        "$ref": "#/components/parameters/ssc"
+                    },
+                    {
+                        "$ref": "#/components/parameters/hsc"
+                    },
+                    {
+                        "$ref": "#/components/parameters/honors"
+                    },
+                    {
+                        "$ref": "#/components/parameters/masters"
+                    },
+                    {
+                        "$ref": "#/components/parameters/occupation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/guardian"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courseConfig"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "course_id": 6,
+                                        "course_title": "Prof. Davin Kessler",
+                                        "institute_id": 7,
+                                        "institute_title": "Dr. Augustus Miller",
+                                        "branch_id": 6,
+                                        "branch_name": "Ludwig Renner",
+                                        "programme_id": 7,
+                                        "programme_name": "Jalyn Stamm",
+                                        "training_center_id": 10,
+                                        "training_center_name": "Prof. Webster Kirlin",
+                                        "ethnic": 0,
+                                        "freedom_fighter": 0,
+                                        "disable_status": 0,
+                                        "ssc": 0,
+                                        "hsc": 0,
+                                        "honors": 0,
+                                        "masters": 0,
+                                        "occupation": 0,
+                                        "guardian": 0,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course Config updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/course-configs/1",
+                                        "delete": "http://localhost:8000/api/v1/course-configs/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "course-configs"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of course config.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "delete",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course config deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "course-configs"
+                ]
+            }
+        },
+        "/courses": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of Courses.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/course"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "MU",
+                                        "institute_id": 2,
+                                        "institute_title": "Prof. Marilyne Durgan II",
+                                        "title_en": "Blaise Roberts DVM",
+                                        "title_bn": "Cordia Daniel V",
+                                        "course_fee": "566.00",
+                                        "duration": "18.00",
+                                        "description": "Facilis reprehenderit natus velit omnis.",
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "07 16 15",
+                                        "finished": "07 16 15"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/courses/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/courses/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "courses"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of Course.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_fee"
+                    },
+                    {
+                        "$ref": "#/components/parameters/duration"
+                    },
+                    {
+                        "$ref": "#/components/parameters/target_group"
+                    },
+                    {
+                        "$ref": "#/components/parameters/objectives"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contents"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_methodology"
+                    },
+                    {
+                        "$ref": "#/components/parameters/evaluation_system"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/prerequisite"
+                    },
+                    {
+                        "$ref": "#/components/parameters/eligibility"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/course"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "code": "MU",
+                                            "institute_id": 2,
+                                            "institute_title": "Prof. Marilyne Durgan II",
+                                            "title_en": "Blaise Roberts DVM",
+                                            "title_bn": "Cordia Daniel V",
+                                            "course_fee": "566.00",
+                                            "duration": "18.00",
+                                            "description": "Facilis reprehenderit natus velit omnis.",
+                                            "target_group": null,
+                                            "objectives": null,
+                                            "contents": null,
+                                            "training_methodology": null,
+                                            "evaluation_system": null,
+                                            "prerequisite": null,
+                                            "eligibility": null,
+                                            "cover_image": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-16T04:00:01.000000Z",
+                                            "updated_at": "2021-08-16T04:00:01.000000Z",
+
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/courses/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/courses/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/courses/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "courses"
+                ]
+            }
+        },
+        "/courses/{courseId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified course.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/course"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "MU",
+                                        "institute_id": 2,
+                                        "institute_title": "Prof. Marilyne Durgan II",
+                                        "title_en": "Blaise Roberts DVM",
+                                        "title_bn": "Cordia Daniel V",
+                                        "course_fee": "566.00",
+                                        "duration": "18.00",
+                                        "description": "Facilis reprehenderit natus velit omnis.",
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/courses/1",
+                                        "delete": "http://localhost:8000/api/v1/courses/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "courses"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified course config.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_fee"
+                    },
+                    {
+                        "$ref": "#/components/parameters/duration"
+                    },
+                    {
+                        "$ref": "#/components/parameters/target_group"
+                    },
+                    {
+                        "$ref": "#/components/parameters/objectives"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contents"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_methodology"
+                    },
+                    {
+                        "$ref": "#/components/parameters/evaluation_system"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/prerequisite"
+                    },
+                    {
+                        "$ref": "#/components/parameters/eligibility"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/course"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "MU",
+                                        "institute_id": 2,
+                                        "institute_title": "Prof. Marilyne Durgan II",
+                                        "title_en": "Blaise Roberts DVM",
+                                        "title_bn": "Cordia Daniel V",
+                                        "course_fee": "566.00",
+                                        "duration": "18.00",
+                                        "description": "Facilis reprehenderit natus velit omnis.",
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/courses/1",
+                                        "delete": "http://localhost:8000/api/v1/courses/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "courses"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of course.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "delete",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "courses"
+                ]
+            }
+        },
+        "/branches": {
+            "get": {
+                "summary": "get_list",
+                "description": "API endpoint to get the list of branch.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branch"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Jake Ebert",
+                                        "title_bn": "Orval Hickle",
+                                        "institute_title_en": "Dr. Elaina Gerhold",
+                                        "institute_id": 3,
+                                        "row_status": 1,
+                                        "address": "95185 Ebony Rue\nWest Roma, DC 93661",
+                                        "google_map_src": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "07 16 15",
+                                        "finished": "07 16 15"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/branches/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/branches/1"
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "branches"
+                ]
+            },
+            "post": {
+                "summary": "create",
+                "description": "API endpoint to get the list of Course.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+
+                ],
+                "responses": {
+                    "201": {
+                        "description": "create",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branch"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Jake Ebert",
+                                            "title_bn": "Orval Hickle",
+                                            "institute_title_en": "Dr. Elaina Gerhold",
+                                            "institute_id": 3,
+                                            "row_status": 1,
+                                            "address": "95185 Ebony Rue\nWest Roma, DC 93661",
+                                            "google_map_src": null,
+                                            "created_at": "2021-08-16T04:00:01.000000Z",
+                                            "updated_at": "2021-08-16T04:00:01.000000Z",
+
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/branches/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/branches/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/branches/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Branch added successfully",
+                                        "started": "08 41 09",
+                                        "finished": "08 41 09"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "branches"
+                ]
+            }
+        },
+        "/branches/{branchId}": {
+            "get": {
+                "summary": "get_one",
+                "description": "API endpoint to get a specified branch.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/branchId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "get_one",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branch"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Jake Ebert",
+                                        "title_bn": "Orval Hickle",
+                                        "institute_title_en": "Dr. Elaina Gerhold",
+                                        "institute_id": 3,
+                                        "row_status": 1,
+                                        "address": "95185 Ebony Rue\nWest Roma, DC 93661",
+                                        "google_map_src": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "16 16 57",
+                                        "finished": "16 16 57"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/branches/1",
+                                        "delete": "http://localhost:8000/api/v1/branches/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "branches"
+                ]
+            },
+            "put": {
+                "summary": "update",
+                "description": "API endpoint to get a specified branch.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/branchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+
+                    {
+                        "$ref": "#/components/parameters/institute_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branch"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Jake Ebert",
+                                        "title_bn": "Orval Hickle",
+                                        "institute_title_en": "Dr. Elaina Gerhold",
+                                        "institute_id": 3,
+                                        "row_status": 1,
+                                        "address": "95185 Ebony Rue\nWest Roma, DC 93661",
+                                        "google_map_src": null,
+                                        "created_at": "2021-08-16T04:00:01.000000Z",
+                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Branche updated successfully",
+                                        "started": "11 44 41",
+                                        "finished": "11 44 42"
+                                    },
+                                    "_links": {
+                                        "update": "http://localhost:8000/api/v1/branches/1",
+                                        "delete": "http://localhost:8000/api/v1/branches/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "branches"
+                ]
+            },
+            "delete": {
+                "summary": "delete",
+                "description": " API endpoint to get the list of branch.A successful request response will show 200 HTTP status code",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/branchId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "delete",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Branche deleted successfully.",
+                                        "started": "06 25 05",
+                                        "finished": "06 25 05"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "branches"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "institute": {
+                "type": "object",
+                "description": "Institute",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 500
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Unique code of the institute"
+                    },
+                    "domain": {
+                        "type": "string",
+                        "description": "Unique Website domain of the institute"
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Details about the Institute"
+                    },
+                    "google_map_src": {
+                        "type": "string",
+                        "description": "Google Source Map"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "description": "Logo of the institute"
+                    },
+                    "primary_phone": {
+                        "type": "string",
+                        "description": "Primary Phone of the institute"
+                    },
+                    "phone_numbers": {
+                        "type": "string",
+                        "description": "All phone numbers of the institute"
+                    },
+                    "primary_mobile": {
+                        "type": "string",
+                        "description": "Mobile number of the institute"
+                    },
+                    "mobile_numbers": {
+                        "type": "string",
+                        "description": "All Mobile numbers of the institute"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email of the institute"
+                    },
+                    "config": {
+                        "type": "string",
+                        "description": "Config of the institute"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "code",
+                    "domain",
+                    "primary_mobile"
+                ]
+            },
+            "programme": {
+                "type": "object",
+                "description": "provide programmes",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": " title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 500
+                    },
+                    "code": {
+                        "type": "string",
+                        "description": "Unique code of the programme"
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Institute id"
+                    },
+                    "logo": {
+                        "type": "string",
+                        "description": "Logo of the organization"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Details about the organization"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "institute_id",
+                    "code"
+                ]
+            },
+            "trainingCenter": {
+                "type": "object",
+                "description": "Provide Training Center",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "Rank type title in English",
+                        "minLength": 2,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "Rank type title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 500
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Institute id"
+                    },
+                    "branch_id": {
+                        "type": "integer",
+                        "description": "Branch id"
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Address of the Training Center"
+                    },
+                    "google_map_src": {
+                        "type": "string",
+                        "description": "Google Map Source"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "institute_id"
+                ]
+            },
+            "courseConfig": {
+                "type": "object",
+                "description": "provide Course Config",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Institute id "
+                    },
+                    "branch_id": {
+                        "type": "integer",
+                        "description": "Branch id "
+                    },
+                    "training_center_id": {
+                        "type": "integer",
+                        "description": "Training Center id "
+                    },
+                    "programme_id": {
+                        "type": "integer",
+                        "description": "Programme id "
+                    },
+                    "course_id": {
+                        "type": "integer",
+                        "description": "Course id "
+                    },
+                    "ethnic": {
+                        "type": "boolean",
+                        "description": "Ethic "
+                    },
+                    "freedom_fighter": {
+                        "type": "boolean",
+                        "description": "Freedom fighter's son "
+                    },
+                    "disable_status": {
+                        "type": "boolean",
+                        "description": "Disable Status"
+                    },
+                    "ssc": {
+                        "type": "boolean",
+                        "description": "SSC "
+                    },
+                    "hsc": {
+                        "type": "boolean",
+                        "description": "HSC "
+                    },
+                    "honors": {
+                        "type": "boolean",
+                        "description": "Honors "
+                    },
+                    "masters": {
+                        "type": "boolean",
+                        "description": "Masters "
+                    },
+                    "occupation": {
+                        "type": "boolean",
+                        "description": "Occupation "
+                    },
+                    "guardian": {
+                        "type": "boolean",
+                        "description": "Guardian "
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "institute_id",
+                    "course_id"
+                ]
+            },
+            "course": {
+                "type": "object",
+                "description": "Job Sectors",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 500
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Institute id "
+                    },
+                    "course_fee": {
+                        "type": "integer",
+                        "description": "Course Fee"
+                    },
+                    "duration": {
+                        "type": "integer",
+                        "description": "Duration"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description"
+                    },
+                    "target_group": {
+                        "type": "string",
+                        "description": "Target Group for the Course"
+                    },
+                    "objectives": {
+                        "type": "string",
+                        "description": "objectives of the course"
+                    },
+                    "contents": {
+                        "type": "string",
+                        "description": "contents of  the Course"
+                    },
+                    "training_methodology": {
+                        "type": "string",
+                        "description": "training_methodology of the Course"
+                    },
+                    "evaluation_system": {
+                        "type": "string",
+                        "description": "Evaluation System"
+                    },
+                    "prerequisite": {
+                        "type": "string",
+                        "description": "Prerequisite"
+                    },
+                    "eligibility": {
+                        "type": "string",
+                        "description": "Eligibility"
+                    },
+                    "cover_image": {
+                        "type": "string",
+                        "description": "cover image of the course"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "code",
+                    "course_fee",
+                    "institute_id"
+                ]
+            },
+            "branch": {
+                "type": "object",
+                "description": "branch",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "Rank type title in English",
+                        "minLength": 2,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "Rank type title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 500
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Branch id"
+                    },
+                    "address": {
+                        "type": "string",
+                        "description": "Address of the Branch"
+                    },
+                    "google_map_src": {
+                        "type": "string",
+                        "description": "Google Map Source"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Activation status .1 => active ,0=>inactive",
+                        "enum": [
+                            0,
+                            1
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Creator"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Modifier"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "institute_id"
+                ]
+            }
+        },
+        "parameters": {
+            "cover_image": {
+                "name": "cover_image",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "eligibility": {
+                "name": "eligibility",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "prerequisite": {
+                "name": "prerequisite",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "training_methodology": {
+                "name": "training_methodology",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "evaluation_system": {
+                "name": "evaluation_system",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "contents": {
+                "name": "contents",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "objectives": {
+                "name": "objectives",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "target_group": {
+                "name": "target_group",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "duration": {
+                "name": "duration",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_fee": {
+                "name": "course_fee",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_fee_optional": {
+                "name": "course_fee",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "guardian": {
+                "name": "guardian",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "occupation": {
+                "name": "occupation",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "masters": {
+                "name": "masters",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "honors": {
+                "name": "honors",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "ssc": {
+                "name": "SSC",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "hsc": {
+                "name": "HSC",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "disable_status": {
+                "name": "disable_status",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "freedom_fighter": {
+                "name": "freedom_fighter",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "ethnic": {
+                "name": "ethnic",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            "config": {
+                "name": "config",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "google_map_src": {
+                "name": "google_map_src",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "branchId": {
+                "name": "branchId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "courseConfigId": {
+                "name": "courseConfigId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "courseId": {
+                "name": "courseId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "instituteId": {
+                "name": "instituteId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "programmeId": {
+                "name": "programmeId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "trainingCenterId": {
+                "name": "trainingCenterId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "branch_id": {
+                "name": "branch_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "branch_id_optional": {
+                "name": "branch_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_config_id": {
+                "name": "course_config_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_config_id_optional": {
+                "name": "course_config_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_id": {
+                "name": "course_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "course_id_optional": {
+                "name": "course_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "institute_id": {
+                "name": "institute_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "institute_id_optional": {
+                "name": "institute_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "programme_id": {
+                "name": "programme_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+
+            "programme_id_optional": {
+                "name": "programme_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "training_center_id": {
+                "name": "training_center_id",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "training_center_id_optional": {
+                "name": "training_center_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "page": {
+                "name": "page",
+                "in": "query",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "order": {
+                "in": "query",
+                "name": "order",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ]
+                }
+            },
+            "title_en": {
+                "name": "title_en",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "title_bn": {
+                "name": "title_bn",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "row_status": {
+                "name": "row_status",
+                "in": "query",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "integer",
+                    "enum": [
+                        1,
+                        0
+                    ]
+                }
+            },
+            "title_bn_optional": {
+                "name": "title_bn",
+                "in": "query",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "title_en_optional": {
+                "name": "title_en",
+                "in": "query",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "description": {
+                "name": "description",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "address": {
+                "name": "address",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "mobile": {
+                "name": "mobile",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "domain": {
+                "name": "domain",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "domain_optional": {
+                "name": "domain",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "primary_phone": {
+                "name": "primary_phone",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "phone_numbers": {
+                "name": "phone_numbers",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "primary_mobile": {
+                "name": "primary_mobile",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "mobile_numbers": {
+                "name": "primary_phone",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "email": {
+                "name": "email",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "logo": {
+                "name": "logo",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "code": {
+                "name": "code",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "code_optional": {
+                "name": "code",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
+
+
