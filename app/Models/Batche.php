@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class CourseConfig
+ * Class Batche
  * @package App\Models
  * @property int institute_id
  * @property int branch_id
@@ -32,7 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read Programme programme
  * @property-read Course course
  */
-class CourseConfig extends BaseModel
+class Batche extends BaseModel
 {
     use ScopeRowStatusTrait, HasFactory;
     use SoftDeletes;

@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\CourseConfig;
+use App\Models\Batche;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class CourseConfigFactory extends Factory
+class BatcheFactory extends Factory
 {
-    protected $model = CourseConfig::class;
+    protected $model = Batche::class;
 
     public function definition(): array
     {

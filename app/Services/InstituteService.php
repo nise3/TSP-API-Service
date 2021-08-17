@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Institute;
+use App\Models\TrainingCenter;
+use App\Services\TrainingCenterService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,6 +20,9 @@ use Illuminate\Database\Eloquent\Collection;
  */
 class InstituteService
 {
+    public TrainingCenterService $trainingCenterService;
+
+
     /**
      * @param Request $request
      * @param Carbon $startTime
@@ -195,6 +200,9 @@ class InstituteService
                 'string',
                 'max:191',
             ],
+            'is_training_center' => 'nullable|boolean',
+            'training_center_name_en' => 'nullable|string|max: 191',
+            'training_center_name_bn' => 'nullable|string|max: 191',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
@@ -221,12 +229,22 @@ class InstituteService
      */
     public function store(array $data): Institute
     {
+//       dd($data);
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
         $institute = new Institute();
         $institute->fill($data);
         $institute->save();
+//        if($data['is_training_center']==true){
+//            $tData['institute_id'] = $institute->id;
+//            $tData['title_en'] = $data['training_center_name_en'];
+//            $tData['title_bn'] = $data['training_center_name_bn'];
+//            $trainingCenter = new TrainingCenter();
+//            $trainingCenter->fill($tData);
+//            $trainingCenter->save();
+//        }
         return $institute;
     }
 

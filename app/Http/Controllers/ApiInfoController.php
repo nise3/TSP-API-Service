@@ -19,7 +19,7 @@ class ApiInfoController extends Controller
             'lumen_version' => App::version(),
             'module_list' => [
                 'Branch',
-                'CourseConfig',
+                'Batche',
                 'Course',
                 'Institute',
                 'Programme',

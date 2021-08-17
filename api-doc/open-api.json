@@ -682,6 +682,7 @@
                                         "institute_name": "Clarissa Renner",
                                         "branch_id": 2,
                                         "branch_name": "Isobel Swift DDS",
+                                        "center_location_type": null,
                                         "address": "8580 Wolf Grove\nLethaside, HI 08530-4113",
                                         "google_map_src": null,
                                         "row_status": 1,
@@ -726,7 +727,7 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/institute_id_optional"
+                        "$ref": "#/components/parameters/center_location_type"
                     },
                     {
                         "$ref": "#/components/parameters/address"
@@ -861,7 +862,7 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/branch_id_optional"
+                        "$ref": "#/components/parameters/center_location_type"
                     },
                     {
                         "$ref": "#/components/parameters/address"
@@ -950,7 +951,7 @@
                 ]
             }
         },
-        "/course-configs": {
+        "/batches": {
             "get": {
                 "summary": "get_list",
                 "description": "API endpoint to get the list of course configs.A successful request response will show 200 HTTP status code",
@@ -974,34 +975,40 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/courseConfig"
+                                    "$ref": "#/components/schemas/batch"
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "course_id": 6,
-                                        "course_title": "Prof. Davin Kessler",
-                                        "institute_id": 7,
-                                        "institute_title": "Dr. Augustus Miller",
-                                        "branch_id": 6,
-                                        "branch_name": "Ludwig Renner",
-                                        "programme_id": 7,
-                                        "programme_name": "Jalyn Stamm",
-                                        "training_center_id": 10,
-                                        "training_center_name": "Prof. Webster Kirlin",
-                                        "ethnic": 0,
-                                        "freedom_fighter": 0,
-                                        "disable_status": 0,
-                                        "ssc": 0,
-                                        "hsc": 0,
-                                        "honors": 0,
-                                        "masters": 0,
-                                        "occupation": 0,
-                                        "guardian": 0,
+                                        "id": 2,
+                                        "course_id": 1,
+                                        "course_title": "sdf",
+                                        "institute_id": 1,
+                                        "institute_title": "asdf",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "programme_id": null,
+                                        "programme_name": null,
+                                        "number_of_vacancies": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_vacancies": 0,
+                                        "training_center_id": 1,
+                                        "training_center_name": "wer",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-16T04:00:01.000000Z",
-                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                        "created_at": "2021-08-17T11:18:09.000000Z",
+                                        "updated_at": "2021-08-17T11:18:09.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1021,7 +1028,7 @@
                     }
                 },
                 "tags": [
-                    "course-configs"
+                    "batches"
                 ]
             },
             "post": {
@@ -1036,7 +1043,7 @@
                     },
 
                     {
-                        "$ref": "#/components/parameters/training_center_id_optional"
+                        "$ref": "#/components/parameters/training_center_id"
                     },
                     {
                         "$ref": "#/components/parameters/programme_id_optional"
@@ -1045,31 +1052,31 @@
                         "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/ethnic"
+                        "$ref": "#/components/parameters/in_ethnic_group"
                     },
                     {
-                        "$ref": "#/components/parameters/freedom_fighter"
+                        "$ref": "#/components/parameters/is_freedom_fighter"
                     },
                     {
-                        "$ref": "#/components/parameters/disable_status"
+                        "$ref": "#/components/parameters/disability_status"
                     },
                     {
-                        "$ref": "#/components/parameters/ssc"
+                        "$ref": "#/components/parameters/ssc_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/hsc"
+                        "$ref": "#/components/parameters/hsc_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/honors"
+                        "$ref": "#/components/parameters/honors_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/masters"
+                        "$ref": "#/components/parameters/masters_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/occupation"
+                        "$ref": "#/components/parameters/is_occupation_needed"
                     },
                     {
-                        "$ref": "#/components/parameters/guardian"
+                        "$ref": "#/components/parameters/is_guardian_info_needed"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -1082,7 +1089,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/courseConfig"
+                                    "$ref": "#/components/schemas/batch"
                                 },
                                 "example": {
                                     "data": [
@@ -1132,17 +1139,17 @@
                     }
                 },
                 "tags": [
-                    "course-configs"
+                    "batches"
                 ]
             }
         },
-        "/course-configs/{courseConfigId}": {
+        "/batches/{batchId}": {
             "get": {
                 "summary": "get_one",
                 "description": "API endpoint to get a specified course config.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/courseConfigId"
+                        "$ref": "#/components/parameters/batchId"
                     }
 
                 ],
@@ -1152,34 +1159,40 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/courseConfig"
+                                    "$ref": "#/components/schemas/batch"
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "course_id": 6,
-                                        "course_title": "Prof. Davin Kessler",
-                                        "institute_id": 7,
-                                        "institute_title": "Dr. Augustus Miller",
-                                        "branch_id": 6,
-                                        "branch_name": "Ludwig Renner",
-                                        "programme_id": 7,
-                                        "programme_name": "Jalyn Stamm",
-                                        "training_center_id": 10,
-                                        "training_center_name": "Prof. Webster Kirlin",
-                                        "ethnic": 0,
-                                        "freedom_fighter": 0,
-                                        "disable_status": 0,
-                                        "ssc": 0,
-                                        "hsc": 0,
-                                        "honors": 0,
-                                        "masters": 0,
-                                        "occupation": 0,
-                                        "guardian": 0,
+                                        "id": 2,
+                                        "course_id": 1,
+                                        "course_title": "sdf",
+                                        "institute_id": 1,
+                                        "institute_title": "asdf",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "programme_id": null,
+                                        "programme_name": null,
+                                        "number_of_vacancies": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_vacancies": 0,
+                                        "training_center_id": 1,
+                                        "training_center_name": "wer",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-16T04:00:01.000000Z",
-                                        "updated_at": "2021-08-16T04:00:01.000000Z"
+                                        "created_at": "2021-08-17T11:18:09.000000Z",
+                                        "updated_at": "2021-08-17T11:18:09.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1197,15 +1210,15 @@
                     }
                 },
                 "tags": [
-                    "course-configs"
+                    "batches"
                 ]
             },
             "put": {
                 "summary": "update",
-                "description": "API endpoint to get a specified course config.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get a specified batch.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/courseConfigId"
+                        "$ref": "#/components/parameters/batchId"
                     },
                     {
                         "$ref": "#/components/parameters/institute_id"
@@ -1215,7 +1228,7 @@
                     },
 
                     {
-                        "$ref": "#/components/parameters/training_center_id_optional"
+                        "$ref": "#/components/parameters/training_center_id"
                     },
                     {
                         "$ref": "#/components/parameters/programme_id_optional"
@@ -1224,31 +1237,34 @@
                         "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/ethnic"
+                        "$ref": "#/components/parameters/number_of_vacancies"
                     },
                     {
-                        "$ref": "#/components/parameters/freedom_fighter"
+                        "$ref": "#/components/parameters/in_ethnic_group"
                     },
                     {
-                        "$ref": "#/components/parameters/disable_status"
+                        "$ref": "#/components/parameters/is_freedom_fighter"
                     },
                     {
-                        "$ref": "#/components/parameters/ssc"
+                        "$ref": "#/components/parameters/disability_status"
                     },
                     {
-                        "$ref": "#/components/parameters/hsc"
+                        "$ref": "#/components/parameters/ssc_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/honors"
+                        "$ref": "#/components/parameters/hsc_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/masters"
+                        "$ref": "#/components/parameters/honors_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/occupation"
+                        "$ref": "#/components/parameters/masters_passing_status"
                     },
                     {
-                        "$ref": "#/components/parameters/guardian"
+                        "$ref": "#/components/parameters/is_occupation_needed"
+                    },
+                    {
+                        "$ref": "#/components/parameters/is_guardian_info_needed"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -1260,7 +1276,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/courseConfig"
+                                    "$ref": "#/components/schemas/batch"
                                 },
                                 "example": {
                                     "data": {
@@ -1306,7 +1322,7 @@
                     }
                 },
                 "tags": [
-                    "course-configs"
+                    "batches"
                 ]
             },
             "delete": {
@@ -1315,7 +1331,7 @@
                 "operationId": "delete",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/courseConfigId"
+                        "$ref": "#/components/parameters/batchId"
                     }
                 ],
                 "responses": {
@@ -1337,7 +1353,7 @@
                     }
                 },
                 "tags": [
-                    "course-configs"
+                    "batches"
                 ]
             }
         },
@@ -2243,7 +2259,7 @@
                     "institute_id"
                 ]
             },
-            "courseConfig": {
+            "batch": {
                 "type": "object",
                 "description": "provide Course Config",
                 "properties": {
@@ -2506,6 +2522,62 @@
             }
         },
         "parameters": {
+            "center_location_type": {
+                "name": "center_location_type",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "registration_start_date": {
+                "name": "registration_start_date",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "registration_end_date": {
+                "name": "registration_end_date",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "batch_start_date": {
+                "name": "batch_start_date",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "batch_end_date": {
+                "name": "batch_end_date",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "available_vacancies": {
+                "name": "available_vacancies",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "number_of_vacancies": {
+                "name": "number_of_vacancies",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "cover_image": {
                 "name": "cover_image",
                 "in": "query",
@@ -2594,7 +2666,7 @@
                     "type": "integer"
                 }
             },
-            "guardian": {
+            "is_guardian_info_needed": {
                 "name": "guardian",
                 "in": "query",
                 "required": false,
@@ -2602,7 +2674,7 @@
                     "type": "boolean"
                 }
             },
-            "occupation": {
+            "is_occupation_needed": {
                 "name": "occupation",
                 "in": "query",
                 "required": false,
@@ -2610,7 +2682,7 @@
                     "type": "boolean"
                 }
             },
-            "masters": {
+            "masters_passing_status": {
                 "name": "masters",
                 "in": "query",
                 "required": false,
@@ -2618,7 +2690,7 @@
                     "type": "boolean"
                 }
             },
-            "honors": {
+            "honors_passing_status": {
                 "name": "honors",
                 "in": "query",
                 "required": false,
@@ -2626,7 +2698,7 @@
                     "type": "boolean"
                 }
             },
-            "ssc": {
+            "ssc_passing_status": {
                 "name": "SSC",
                 "in": "query",
                 "required": false,
@@ -2634,7 +2706,7 @@
                     "type": "boolean"
                 }
             },
-            "hsc": {
+            "hsc_passing_status": {
                 "name": "HSC",
                 "in": "query",
                 "required": false,
@@ -2642,7 +2714,7 @@
                     "type": "boolean"
                 }
             },
-            "disable_status": {
+            "disability_status": {
                 "name": "disable_status",
                 "in": "query",
                 "required": false,
@@ -2650,7 +2722,7 @@
                     "type": "boolean"
                 }
             },
-            "freedom_fighter": {
+            "is_freedom_fighter": {
                 "name": "freedom_fighter",
                 "in": "query",
                 "required": false,
@@ -2658,7 +2730,7 @@
                     "type": "boolean"
                 }
             },
-            "ethnic": {
+            "in_ethnic_group": {
                 "name": "ethnic",
                 "in": "query",
                 "required": false,
@@ -2690,8 +2762,8 @@
                     "type": "integer"
                 }
             },
-            "courseConfigId": {
-                "name": "courseConfigId",
+            "batchId": {
+                "name": "batchId",
                 "in": "path",
                 "required": true,
                 "schema": {
@@ -2746,7 +2818,7 @@
                     "type": "integer"
                 }
             },
-            "course_config_id": {
+            "batch_id": {
                 "name": "course_config_id",
                 "in": "query",
                 "required": true,
@@ -2961,7 +3033,7 @@
                 }
             },
             "mobile_numbers": {
-                "name": "primary_phone",
+                "name": "mobile_numbers",
                 "in": "query",
                 "required": false,
                 "schema": {

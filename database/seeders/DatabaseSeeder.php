@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             TrainingCenterSeeder::class,
             CourseSeeder::class,
-            CourseConfigSeeder::class,
+            BatcheSeeder::class,
         ]);
     }
 }

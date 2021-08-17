@@ -89,6 +89,6 @@ class Institute extends BaseModel
      */
     public function courseConfigs(): HasMany
     {
-        return $this->hasMany(CourseConfig::class);
+        return $this->hasMany(Batche::class);
     }
 }
