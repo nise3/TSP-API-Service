@@ -122,6 +122,7 @@ class TrainingCenterService
             'institutes.title_en as institute_name',
             'training_centers.branch_id',
             'branches.title_en as branch_name',
+            'training_centers.center_location_type',
             'training_centers.address',
             'training_centers.address',
             'training_centers.google_map_src',
@@ -207,6 +208,7 @@ class TrainingCenterService
             'title_bn' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
+            'center_location_type' => 'nullable|int',
             'address' => ['nullable', 'string', 'max:1000'],
             'google_map_src' => ['nullable', 'string'],
             'row_status' => [

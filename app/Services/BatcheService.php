@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Models\CourseConfig;
+use App\Models\Batche;
 use App\Models\CourseSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
@@ -15,10 +15,10 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
- * Class CourseConfigService
+ * Class BatcheService
  * @package App\Services
  */
-class CourseConfigService
+class BatcheService
 {
 
     /**
@@ -35,54 +35,60 @@ class CourseConfigService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var CourseConfig|Builder $courseConfigBuilder */
-        $courseConfigBuilder = CourseConfig::select([
-            'course_configs.id as id',
-            'course_configs.course_id',
+        /** @var Batche|Builder $batchBuilder */
+        $batchBuilder = Batche::select([
+            'batches.id as id',
+            'batches.course_id',
             'courses.title_en as course_title',
-            'course_configs.institute_id',
+            'batches.institute_id',
             'institutes.title_en as institute_title',
             'institutes.id as institute_id',
             'branches.id as branch_id',
             'branches.title_en as branch_name',
-            'course_configs.programme_id',
+            'batches.programme_id',
             'programmes.title_en as programme_name',
+            'batches.number_of_vacancies',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_vacancies',
             'training_centers.id as training_center_id',
             'training_centers.title_en as training_center_name',
-            'course_configs.ethnic',
-            'course_configs.freedom_fighter',
-            'course_configs.disable_status',
-            'course_configs.ssc',
-            'course_configs.hsc',
-            'course_configs.honors',
-            'course_configs.masters',
-            'course_configs.occupation',
-            'course_configs.guardian',
-            'course_configs.created_by',
-            'course_configs.updated_by',
-            'course_configs.created_at',
-            'course_configs.updated_at'
+            'batches.in_ethnic_group',
+            'batches.is_freedom_fighter',
+            'batches.disability_status',
+            'batches.ssc_passing_status',
+            'batches.hsc_passing_status',
+            'batches.honors_passing_status',
+            'batches.masters_passing_status',
+            'batches.is_occupation_needed',
+            'batches.is_guardian_info_needed',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at'
         ]);
 
-        $courseConfigBuilder->join('courses', 'course_configs.course_id', '=', 'courses.id');
-        $courseConfigBuilder->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-        $courseConfigBuilder->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
-        $courseConfigBuilder->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
-        $courseConfigBuilder->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
+        $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
+        $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
+        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
+        $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
+        $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
 
-        $courseConfigBuilder->orderBy('course_configs.id', $order);
+        $batchBuilder->orderBy('batches.id', $order);
 
 
         if (!empty($titleEn)) {
-            $courseConfigBuilder->where('course_configs.title_en', 'like', '%' . $titleEn . '%');
+            $batchBuilder->where('batches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $courseConfigBuilder->where('course_configs.title_bn', 'like', '%' . $titleBn . '%');
+            $batchBuilder->where('batches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $courseConfigBuilder */
         if ($paginate) {
-            $courseConfigs = $courseConfigBuilder->paginate(10);
-            $paginateData = (object)$courseConfigs->toArray();
+            $batches = $batchBuilder->paginate(10);
+            $paginateData = (object)$batches->toArray();
             $page = [
                 "size" => $paginateData->per_page,
                 "total_element" => $paginateData->total,
@@ -91,17 +97,17 @@ class CourseConfigService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $courseConfigs = $courseConfigBuilder->get();
+            $batches = $batchBuilder->get();
         }
 
         $data = [];
-        foreach ($courseConfigs as $courseConfig) {
-            /** @var CourseConfig $courseConfig */
-            $links['read'] = route('api.v1.course-configs.read', ['id' => $courseConfig->id]);
-            $links['update'] = route('api.v1.course-configs.update', ['id' => $courseConfig->id]);
-            $links['delete'] = route('api.v1.course-configs.destroy', ['id' => $courseConfig->id]);
+        foreach ($batches as $batch) {
+            /** @var Batche $batch */
+            $links['read'] = route('api.v1.batches.read', ['id' => $batch->id]);
+            $links['update'] = route('api.v1.batches.update', ['id' => $batch->id]);
+            $links['delete'] = route('api.v1.batches.destroy', ['id' => $batch->id]);
             $courseConfig['_links'] = $links;
-            $data[] = $courseConfig->toArray();
+            $data[] = $batch->toArray();
         }
 
         return [
@@ -120,7 +126,7 @@ class CourseConfigService
                         'title_en',
                         'title_bn'
                     ],
-                    '_link' => route('api.v1.course-configs.get-list')
+                    '_link' => route('api.v1.batches.get-list')
 
                 ],
 
@@ -138,57 +144,53 @@ class CourseConfigService
      */
     public function getOneCourseConfig(int $id, Carbon $startTime): array
     {
-        /** @var CourseConfig|Builder $courseConfigBuilder */
+        /** @var Batche|Builder $batchBuilder */
 
-        $courseConfigBuilder = CourseConfig::select([
-            'course_configs.id as id',
-            'course_configs.course_id',
+        $batchBuilder = Batche::select([
+            'batches.id as id',
+            'batches.course_id',
             'courses.title_en as course_title',
-            'course_configs.institute_id',
+            'batches.institute_id',
             'institutes.title_en as institute_title',
             'institutes.id as institute_id',
             'branches.id as branch_id',
             'branches.title_en as branch_name',
-            'course_configs.programme_id',
+            'batches.programme_id',
             'programmes.title_en as programme_name',
             'training_centers.id as training_center_id',
             'training_centers.title_en as training_center_name',
-            'course_configs.ethnic',
-            'course_configs.freedom_fighter',
-            'course_configs.disable_status',
-            'course_configs.ssc',
-            'course_configs.hsc',
-            'course_configs.honors',
-            'course_configs.masters',
-            'course_configs.occupation',
-            'course_configs.guardian',
-            'course_configs.created_by',
-            'course_configs.updated_by',
-            'course_configs.created_at',
-            'course_configs.updated_at'
+            'batches.in_ethnic_group',
+            'batches.is_freedom_fighter',
+            'batches.disability_status',
+            'batches.ssc_passing_status',
+            'batches.hsc_passing_status',
+            'batches.honors_passing_status',
+            'batches.masters_passing_status',
+            'batches.is_occupation_needed',
+            'batches.is_guardian_info_needed',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at'
         ]);
 
-        $courseConfigBuilder->join('courses', 'course_configs.course_id', '=', 'courses.id');
-        $courseConfigBuilder->join('institutes', 'course_configs.institute_id', '=', 'institutes.id');
-        $courseConfigBuilder->leftJoin('programmes', 'course_configs.programme_id', '=', 'programmes.id');
-        $courseConfigBuilder->leftJoin('branches', 'course_configs.branch_id', '=', 'branches.id');
-        $courseConfigBuilder->leftJoin('training_centers', 'course_configs.training_center_id', '=', 'training_centers.id');
-        $courseConfigBuilder->where('course_configs.id', $id);
+        $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
+        $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
+        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
+        $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
+        $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
+        $batchBuilder->where('batches.id', $id);
 
-        /** @var CourseConfig $instituteBuilder */
-        $courseConfig = $courseConfigBuilder->first();
-
-        if ($courseConfig) {
-            $courseConfig->load('courseSessions');
-        }
+        /** @var Batche $instituteBuilder */
+        $batch = $batchBuilder->first();
 
         $links = [];
-        if ($courseConfig) {
-            $links['update'] = route('api.v1.course-configs.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.course-configs.destroy', ['id' => $id]);
+        if ($batch) {
+            $links['update'] = route('api.v1.batches.update', ['id' => $id]);
+            $links['delete'] = route('api.v1.batches.destroy', ['id' => $id]);
         }
         return [
-            "data" => $courseConfig ?: null,
+            "data" => $batch ?: null,
             "_response_status" => [
                 "success" => true,
                 "code" => JsonResponse::HTTP_OK,
@@ -202,11 +204,11 @@ class CourseConfigService
 
     /**
      * @param array $data
-     * @return CourseConfig
+     * @return Batche
      */
-    public function store(array $data): CourseConfig
+    public function store(array $data): Batche
     {
-        $courseConfig = new CourseConfig();
+        $courseConfig = new Batche();
         $courseConfig->fill($data);
         $courseConfig->save();
 
@@ -215,11 +217,11 @@ class CourseConfigService
     }
 
     /**
-     * @param CourseConfig $courseConfig
+     * @param Batche $courseConfig
      * @param array $data
-     * @return CourseConfig
+     * @return Batche
      */
-    public function update(CourseConfig $courseConfig, array $data): CourseConfig
+    public function update(Batche $courseConfig, array $data): Batche
     {
         $courseConfig->fill($data);
         $courseConfig->save();
@@ -228,10 +230,10 @@ class CourseConfigService
     }
 
     /**
-     * @param CourseConfig $courseConfig
-     * @return CourseConfig
+     * @param Batche $courseConfig
+     * @return Batche
      */
-    public function destroy(CourseConfig $courseConfig): CourseConfig
+    public function destroy(Batche $courseConfig): Batche
     {
         if ($courseConfig->delete()) {
             foreach ($courseConfig->courseSessions() as $courseSession) {
@@ -261,7 +263,7 @@ class CourseConfigService
                 'exists:courses,id'
             ],
             'training_center_id' => [
-                'nullable',
+                'required',
                 'int'
             ],
             'programme_id' => [
@@ -272,46 +274,71 @@ class CourseConfigService
                 'nullable',
                 'int'
             ],
+            'number_of_vacancies' => [
+                'int',
+                'nullable'
+            ],
+            'registration_start_date' => [
+                'date_format:d/m/Y',
+                'nullable'
+            ],
+            'registration_end_date' => [
+                'date_format:d/m/Y',
+                'nullable'
+            ],
+            'batch_start_date' => [
+                'date_format:d/m/Y',
+                'nullable'
+            ],
 
-            'ethnic' => [
+            'batch_end_date' => [
+                'date_format:d/m/Y',
+                'nullable'
+            ],
+            'available_vacancies' => [
+                'int',
+                'nullable'
+            ],
+
+            'in_ethnic_group' => [
                 'boolean',
                 'nullable'
             ],
-            'freedom_fighter' => [
+            'is_freedom_fighter' => [
                 'nullable',
                 'boolean'
             ],
-            'disable_status' => [
+            'disability_status' => [
                 'nullable',
                 'boolean'
             ],
-            'ssc' => [
+            'ssc_passing_status' => [
                 'nullable',
                 'boolean'
             ],
-            'hsc' => [
+            'hsc_passing_status' => [
                 'nullable',
                 'boolean',
             ],
-            'honors' => [
+            'honors_passing_status' => [
                 'nullable',
                 'boolean',
             ],
-            'masters' => [
+            'masters_passing_status' => [
                 'nullable',
                 'boolean',
             ],
-            'occupation' => [
+            'is_occupation_needed' => [
                 'nullable',
                 'boolean',
             ],
-            'guardian' => [
+            'is_guardian_info_needed' => [
                 'nullable',
                 'boolean',
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([CourseConfig::ROW_STATUS_ACTIVE, CourseConfig::ROW_STATUS_INACTIVE]),
+                Rule::in([Batche::ROW_STATUS_ACTIVE, Batche::ROW_STATUS_INACTIVE]),
             ],
         ];
 

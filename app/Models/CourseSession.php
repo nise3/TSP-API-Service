@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon application_end_date
  * @property Carbon course_start_date
  * @property int max_seat_available
- * @property-read CourseConfig $courseConfig
+ * @property-read Batche $courseConfig
  * @property-read Course $course
  */
 class CourseSession extends BaseModel
@@ -36,7 +36,7 @@ class CourseSession extends BaseModel
      */
     public function courseConfig(): BelongsTo
     {
-        return $this->belongsTo(CourseConfig::class);
+        return $this->belongsTo(Batche::class);
     }
 
     /**

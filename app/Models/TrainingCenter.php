@@ -52,6 +52,6 @@ class TrainingCenter extends BaseModel
      */
     public function CourseConfig(): HasMany
     {
-        return $this->hasMany(CourseConfig::class);
+        return $this->hasMany(Batche::class);
     }
 }

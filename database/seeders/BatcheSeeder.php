@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\CourseConfig;
+use App\Models\Batche;
 use Illuminate\Database\Seeder;
 
-class CourseConfigSeeder extends Seeder
+class BatcheSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class CourseConfigSeeder extends Seeder
      */
     public function run()
     {
-        CourseConfig::factory()->count(10)->create();
+        Batche::factory()->count(10)->create();
     }
 }
