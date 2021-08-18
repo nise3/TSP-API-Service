@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\Batche;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BatcheFactory extends Factory
+class BatchFactory extends Factory
 {
     protected $model = Batche::class;
 
