@@ -37,51 +37,24 @@
                 ],
                 "summary": "get_list",
                 "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:57:11 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": [
@@ -94,12 +67,7 @@
                                             "programme_logo": "",
                                             "row_status": 1,
                                             "created_at": "2021-07-26T06:53:00.000000Z",
-                                            "updated_at": "2021-07-26T06:56:12.000000Z",
-                                            "_links": {
-                                                "read": "http://127.0.0.1:8000/api/v1/programmes/1",
-                                                "update": "http://127.0.0.1:8000/api/v1/programmes/1",
-                                                "delete": "http://127.0.0.1:8000/api/v1/programmes/1"
-                                            }
+                                            "updated_at": "2021-07-26T06:56:12.000000Z"
                                         }
                                     ],
                                     "_response_status": {
@@ -110,20 +78,16 @@
                                         "finished": "2021-07-26T06:57:11.635651Z"
                                     },
                                     "_links": {
-                                        "paginate": [],
-                                        "search": {
-                                            "parameters": [
-                                                "title_en",
-                                                "title_bn"
-                                            ],
-                                            "_link": "http://127.0.0.1:8000/api/v1/programmes"
-                                        }
+                                        "paginate": []
                                     },
                                     "_page": [],
                                     "_order": "ASC"
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
                     }
                 }
             },
@@ -133,16 +97,6 @@
                 ],
                 "summary": "create",
                 "description": "###### API endpoint to create a programme\n\nA successful request response will show 201 HTTP status code",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": ""
-                            }
-                        }
-                    }
-                },
                 "parameters": [
                     {
                         "name": "title_en",
@@ -196,48 +150,10 @@
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:53:00 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": {
@@ -285,48 +201,10 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:57:56 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": {
@@ -346,10 +224,6 @@
                                         "message": "Job finished successfully.",
                                         "started": "2021-07-26T06:57:56.790490Z",
                                         "finished": "2021-07-26T06:57:56.816062Z"
-                                    },
-                                    "_links": {
-                                        "update": "http://127.0.0.1:8000/api/v1/programmes/1",
-                                        "delete": "http://127.0.0.1:8000/api/v1/programmes/1"
                                     }
                                 }
                             }
@@ -363,16 +237,6 @@
                 ],
                 "summary": "update",
                 "description": "### API endpoint to update a programme\n\nA successful request response will show 201 HTTP status code",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "example": ""
-                            }
-                        }
-                    }
-                },
                 "parameters": [
                     {
                         "name": "programmeId",
@@ -435,48 +299,10 @@
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:56:12 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": {
@@ -525,48 +351,10 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:58:34 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "_response_status": {
@@ -2849,7 +2637,7 @@
                 }
             }
         },
-        "/api/v1/courses": {
+        "/courses": {
             "get": {
                 "tags": [
                     "course"
@@ -3074,7 +2862,7 @@
                 }
             }
         },
-        "/api/v1/courses/{courseId}": {
+        "/courses/{courseId}": {
             "get": {
                 "tags": [
                     "course"
@@ -3392,10 +3180,58 @@
     },
     "components": {
         "schemas": {
-            "institute": {
+            "programmes": {
+                "type": "object",
+                "description": "Programmes management Service",
                 "properties": {
                     "id": {
-
+                        "type": "integer",
+                        "readOnly": false
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "minLength": 2
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "maxLength": 800,
+                        "minLength": 2
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "create_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             }

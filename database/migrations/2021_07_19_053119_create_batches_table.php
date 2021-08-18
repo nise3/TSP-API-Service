@@ -20,12 +20,12 @@ class CreateBatchesTable extends Migration
             $table->unsignedInteger('institute_id')->nullable();
             $table->unsignedInteger('branch_id')->nullable();
             $table->unsignedInteger('training_center_id');
-            $table->unsignedSmallInteger('number_of_vacancies');
+            $table->unsignedSmallInteger('number_of_seats');
             $table->dateTime('registration_start_date');
             $table->dateTime('registration_end_date');
             $table->dateTime('batch_start_date');
             $table->dateTime('batch_end_date');
-            $table->unsignedSmallInteger('available_vacancies')->default(0);
+            $table->unsignedSmallInteger('available_seats')->default(0);
             $table->boolean('in_ethnic_group')->nullable()->default(false)->comment("1 => in ethnic group, 2 => not in ethnic group");
             $table->boolean('is_freedom_fighter')->nullable()->default(false);
             $table->boolean('disability_status')->nullable()->default(false)->comment('1 => disable  2 => not disable');
