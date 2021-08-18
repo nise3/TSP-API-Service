@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TrainingCenterService
@@ -73,33 +74,16 @@ class TrainingCenterService
             $trainingCenters = $trainingCentersBuilder->get();
         }
 
-        $data = [];
-        foreach ($trainingCenters as $trainingCenter) {
-            /** @var TrainingCenter $trainingCenter */
-            $links['read'] = route('api.v1.training-centers.read', ['id' => $trainingCenter->id]);
-            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
-            $trainingCenter['_links'] = $links;
-            $data[] = $trainingCenter->toArray();
-        }
-
         return [
-            "data" => $data ?: null,
+            "data" => $trainingCenters->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.training-centers.get-list')
-                ],
+                'paginate' => $paginateLink
             ],
             "_page" => $page,
             "_order" => $order
@@ -139,21 +123,15 @@ class TrainingCenterService
         /** @var TrainingCenter $trainingCenterBuilder */
         $trainingCenter = $trainingCenterBuilder->first();
 
-        $links = [];
-        if (!empty($programme)) {
-            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
-        }
 
         return [
-            "data" => $trainingCenter ?: null,
+            "data" => $trainingCenter ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 

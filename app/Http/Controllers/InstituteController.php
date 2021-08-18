@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Classes\CustomExceptionHandler;
 use App\Models\Institute;
 use Exception;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 class InstituteController extends Controller
@@ -81,10 +80,10 @@ class InstituteController extends Controller
             $data = $this->instituteService->store($validatedData);
             DB::commit();
             $response = [
-                'data' => $data ?: null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_CREATED,
+                    "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Institute added successfully",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -93,7 +92,7 @@ class InstituteController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -113,10 +112,10 @@ class InstituteController extends Controller
             $data = $this->instituteService->update($institute, $validated);
 
             $response = [
-                'data' => $data ?: null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Institute updated successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -125,7 +124,7 @@ class InstituteController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -141,7 +140,7 @@ class InstituteController extends Controller
             $response = [
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Institute deleted successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -150,6 +149,6 @@ class InstituteController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

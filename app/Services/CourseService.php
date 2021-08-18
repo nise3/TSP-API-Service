@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CourseService
@@ -81,33 +82,16 @@ class CourseService
             $courses = $coursesBuilder->get();
         }
 
-        $data = [];
-        foreach ($courses as $course) {
-            /** @var Course $course */
-            $links['read'] = route('api.v1.courses.read', ['id' => $course->id]);
-            $links['update'] = route('api.v1.courses.update', ['id' => $course->id]);
-            $links['delete'] = route('api.v1.courses.destroy', ['id' => $course->id]);
-            $course['_links'] = $links;
-            $data[] = $course->toArray();
-        }
-
         return [
-            "data" => $data,
+            "data" => $courses->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-                'search' => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.courses.get-list')
-                ],
             ],
             "_page" => $page,
             "_order" => $order
@@ -154,21 +138,14 @@ class CourseService
         /** @var Course $courseBuilder */
         $course = $courseBuilder->first();
 
-        $links = [];
-        if ($course) {
-            $links['update'] = route('api.v1.courses.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.courses.destroy', ['id' => $id]);
-        }
-
         return [
-            "data" => $course ? $course : null,
+            "data" => $course ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 
@@ -198,14 +175,11 @@ class CourseService
 
     /**
      * @param Course $course
-     * @return Course
+     * @return bool
      */
-    public function destroy(Course $course): Course
+    public function destroy(Course $course): bool
     {
-        $course->row_status = 99;
-        $course->save();
-        $course->delete();
-        return $course;
+        return $course->delete();
     }
 
     /**

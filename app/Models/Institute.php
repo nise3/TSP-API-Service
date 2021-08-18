@@ -23,8 +23,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Institute extends BaseModel
 {
 
-    use ScopeRowStatusTrait, HasFactory;
-    use SoftDeletes;
+    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
+
 
     /**
      * @var string[]
@@ -87,8 +87,8 @@ class Institute extends BaseModel
     /**
      * @return HasMany
      */
-    public function courseConfigs(): HasMany
+    public function batches(): HasMany
     {
-        return $this->hasMany(Batche::class);
+        return $this->hasMany(Batch::class);
     }
 }
