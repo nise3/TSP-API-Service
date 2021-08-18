@@ -28,17 +28,11 @@ use Illuminate\Support\Facades\File;
  * @property string prerequisite
  * @property string eligibility
  * @property File cover_image
- * @method static Builder|Institute active()
- * @method static Builder|Institute newModelQuery()
- * @method static Builder|Institute newQuery()
- * @method static Builder|Institute query()
  */
-
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, HasFactory;
+    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
 
-    use SoftDeletes;
     protected $table = 'courses';
     protected $guarded = ['id'];
 
@@ -55,16 +49,8 @@ class Course extends BaseModel
     /**
      * @return HasMany
      */
-    public function courseSessions(): HasMany
+    public function batch(): HasMany
     {
-        return $this->hasMany(CourseSession::class,'course_id','id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function courseConfigs(): HasMany
-    {
-        return $this->hasMany(Batche::class);
+        return $this->hasMany(Batch::class);
     }
 }

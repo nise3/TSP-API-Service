@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Helpers\Classes\CustomExceptionHandler;
 use App\Models\Programme;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 use App\Services\ProgrammeService;
 
@@ -84,7 +84,7 @@ class ProgrammeController extends Controller
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_CREATED,
+                    "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Programme added successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -93,7 +93,7 @@ class ProgrammeController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -113,7 +113,7 @@ class ProgrammeController extends Controller
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Programme updated successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -122,7 +122,7 @@ class ProgrammeController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -138,7 +138,7 @@ class ProgrammeController extends Controller
             $response = [
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Programme deleted successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -147,6 +147,6 @@ class ProgrammeController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null google_map_src
  * @property-read Institute $institute
  * @property-read  Branch $branch
+ * @property-read  Batch $batch
  */
 class TrainingCenter extends BaseModel
 {
@@ -50,8 +51,8 @@ class TrainingCenter extends BaseModel
     /**
      * @return HasMany
      */
-    public function CourseConfig(): HasMany
+    public function batch(): HasMany
     {
-        return $this->hasMany(Batche::class);
+        return $this->hasMany(Batch::class);
     }
 }

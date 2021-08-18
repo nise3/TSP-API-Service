@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProgrammeService
@@ -69,33 +70,16 @@ class ProgrammeService
             $programmes = $programmesBuilder->get();
         }
 
-        $data = [];
-        foreach ($programmes as $programme) {
-            /** @var Programme $programme */
-            $links['read'] = route('api.v1.programmes.read', ['id' => $programme->id]);
-            $links['update'] = route('api.v1.programmes.update', ['id' => $programme->id]);
-            $links['delete'] = route('api.v1.programmes.destroy', ['id' => $programme->id]);
-            $programme['_links'] = $links;
-            $data[] = $programme->toArray();
-        }
-
         return [
-            "data" => $data,
+            "data" => $programmes->toArray()??[],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.programmes.get-list')
-                ],
+                'paginate' => $paginateLink
             ],
             "_page" => $page,
             "_order" => $order
@@ -128,22 +112,15 @@ class ProgrammeService
 
         /** @var Programme $programmeBuilder */
         $programme = $programmeBuilder->first();
-
         $links = [];
-        if ($programme) {
-            $links['update'] = route('api.v1.programmes.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.programmes.destroy', ['id' => $id]);
-        }
-
         return [
-            "data" => $programme ?: null,
+            "data" => $programme ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 

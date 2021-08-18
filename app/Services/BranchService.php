@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class BranchService
@@ -51,7 +52,6 @@ class BranchService
         $branchBuilder->orderBy('branches.id', $order);
 
 
-
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
@@ -73,38 +73,18 @@ class BranchService
             $branches = $branchBuilder->get();
         }
 
-        $data = [];
-        foreach ($branches as $branch) {
-            /** @var Branch $branch */
-            $links['read'] = route('api.v1.branches.read', ['id' => $branch->id]);
-            $links['update'] = route('api.v1.branches.update', ['id' => $branch->id]);
-            $links['delete'] = route('api.v1.branches.destroy', ['id' => $branch->id]);
-            $branch['_links'] = $links;
-            $data[] = $branch->toArray();
-        }
 
         return [
-            "data" => $data,
+            "data" => $branches->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.branches.get-list')
-
-                ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
@@ -115,7 +95,7 @@ class BranchService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneBranch(int $id,  Carbon $startTime): array
+    public function getOneBranch(int $id, Carbon $startTime): array
     {
         /** @var Branch|Builder $branchBuilder */
         $branchBuilder = Branch::select([
@@ -138,12 +118,6 @@ class BranchService
         /** @var Branch $branchBuilder */
         $branch = $branchBuilder->first();
 
-        $links = [];
-        if ($branch) {
-            $links['update'] = route('api.v1.branches.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.branches.destroy', ['id' => $id]);
-        }
-
         return [
             "data" => $branch ?: null,
             "_response_status" => [
@@ -151,8 +125,7 @@ class BranchService
                 "code" => JsonResponse::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
 
     }
@@ -169,7 +142,6 @@ class BranchService
         $branch = new Branch();
         $branch->fill($data);
         $branch->save();
-
         return $branch;
     }
 
@@ -185,7 +157,6 @@ class BranchService
         }
         $branch->fill($data);
         $branch->save();
-
         return $branch;
 
     }

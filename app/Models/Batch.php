@@ -32,10 +32,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property-read Programme programme
  * @property-read Course course
  */
-class Batche extends BaseModel
+class Batch extends BaseModel
 {
-    use ScopeRowStatusTrait, HasFactory;
-    use SoftDeletes;
+    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 
@@ -79,12 +78,4 @@ class Batche extends BaseModel
         return $this->belongsTo(Programme::class);
     }
 
-
-    /**
-     * @return HasMany
-     */
-    public function courseSessions(): HasMany
-    {
-        return $this->hasMany(CourseSession::class);
-    }
 }

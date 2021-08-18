@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string code
  * @property string|null description
  * @property int row_status
- * @property-read Batche $courseConfig
+ * @property-read Batch $batch
  * @property-read Institute $institute
  */
 class Programme extends BaseModel
@@ -42,8 +42,8 @@ class Programme extends BaseModel
     /**
      * @return HasMany
      */
-    public function courseConfig(): HasMany
+    public function batch(): HasMany
     {
-        return $this->hasMany(Batche::class);
+        return $this->hasMany(Batch::class);
     }
 }

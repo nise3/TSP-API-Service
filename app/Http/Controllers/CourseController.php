@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 class CourseController extends Controller
@@ -80,10 +81,10 @@ class CourseController extends Controller
             $data = $this->courseService->store($validated);
 
             $response = [
-                'data' => $data ? $data : null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_CREATED,
+                    "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Course added successfully",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -92,7 +93,7 @@ class CourseController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -109,10 +110,10 @@ class CourseController extends Controller
         try {
             $data = $this->courseService->update($course, $validated);
             $response = [
-                'data' => $data ? $data : null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Course updated successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -121,7 +122,7 @@ class CourseController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -137,7 +138,7 @@ class CourseController extends Controller
             $response = [
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Course deleted successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -146,6 +147,6 @@ class CourseController extends Controller
         } catch (Throwable $e) {
             return $e;
         }
-        return Response::json($response, JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

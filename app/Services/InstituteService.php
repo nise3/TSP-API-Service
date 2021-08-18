@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -21,7 +22,6 @@ use Illuminate\Database\Eloquent\Collection;
 class InstituteService
 {
     public TrainingCenterService $trainingCenterService;
-
 
     /**
      * @param Request $request
@@ -82,32 +82,16 @@ class InstituteService
             $institutes = $instituteBuilder->get();
         }
 
-        $data = [];
-        foreach ($institutes as $institute) {
-            $links['read'] = route('api.v1.institutes.read', ['id' => $institute->id]);
-            $links['update'] = route('api.v1.institutes.update', ['id' => $institute->id]);
-            $links['delete'] = route('api.v1.institutes.destroy', ['id' => $institute->id]);
-            $institute['_links'] = $links;
-            $data[] = $institute->toArray();
-        }
-
         return [
-            "data" => $data ?: null,
+            "data" => $institutes->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.institutes.get-list')
-                ],
             ],
             "_page" => $page,
             "_order" => $order
@@ -148,21 +132,14 @@ class InstituteService
         /** @var Institute $instituteBuilder */
         $institute = $instituteBuilder->first();
 
-        $links = [];
-        if ($institute) {
-            $links['update'] = route('api.v1.institutes.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.institutes.destroy', ['id' => $id]);
-        }
-
         return [
-            "data" => $institute ?: null,
+            "data" => $institute ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 
@@ -198,7 +175,9 @@ class InstituteService
             'logo' => [
                 'nullable',
                 'string',
-                'max:191',
+                'maxSize:512000',
+                'mimes:png,jpg,jpeg',
+                "dimensions:max_width=80,max_height=80"
             ],
             'is_training_center' => 'nullable|boolean',
             'training_center_name_en' => 'nullable|string|max: 191',
@@ -229,7 +208,6 @@ class InstituteService
      */
     public function store(array $data): Institute
     {
-//       dd($data);
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }

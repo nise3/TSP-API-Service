@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Models\Batche;
+use App\Models\Batch;
 use App\Models\CourseSession;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
@@ -13,12 +13,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class BatcheService
+ * Class BatchService
  * @package App\Services
  */
-class BatcheService
+class BatchService
 {
 
     /**
@@ -26,7 +27,7 @@ class BatcheService
      * @param Carbon $startTime
      * @return array
      */
-    public function getCourseConfigList(Request $request, Carbon $startTime): array
+    public function getBatchList(Request $request, Carbon $startTime): array
     {
         $paginateLink = [];
         $page = [];
@@ -35,8 +36,8 @@ class BatcheService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Batche|Builder $batchBuilder */
-        $batchBuilder = Batche::select([
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::select([
             'batches.id as id',
             'batches.course_id',
             'courses.title_en as course_title',
@@ -100,38 +101,17 @@ class BatcheService
             $batches = $batchBuilder->get();
         }
 
-        $data = [];
-        foreach ($batches as $batch) {
-            /** @var Batche $batch */
-            $links['read'] = route('api.v1.batches.read', ['id' => $batch->id]);
-            $links['update'] = route('api.v1.batches.update', ['id' => $batch->id]);
-            $links['delete'] = route('api.v1.batches.destroy', ['id' => $batch->id]);
-            $courseConfig['_links'] = $links;
-            $data[] = $batch->toArray();
-        }
-
         return [
-            "data" => $data,
+            "data" =>  $batches->toArray()?:[],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.batches.get-list')
-
-                ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
@@ -142,11 +122,11 @@ class BatcheService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneCourseConfig(int $id, Carbon $startTime): array
+    public function getBatch(int $id, Carbon $startTime): array
     {
-        /** @var Batche|Builder $batchBuilder */
+        /** @var Batch|Builder $batchBuilder */
 
-        $batchBuilder = Batche::select([
+        $batchBuilder = Batch::select([
             'batches.id as id',
             'batches.course_id',
             'courses.title_en as course_title',
@@ -181,47 +161,39 @@ class BatcheService
         $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
         $batchBuilder->where('batches.id', $id);
 
-        /** @var Batche $instituteBuilder */
+        /** @var Batch $instituteBuilder */
         $batch = $batchBuilder->first();
 
-        $links = [];
-        if ($batch) {
-            $links['update'] = route('api.v1.batches.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.batches.destroy', ['id' => $id]);
-        }
         return [
-            "data" => $batch ?: null,
+            "data" => $batch ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
 
     }
 
     /**
      * @param array $data
-     * @return Batche
+     * @return Batch
      */
-    public function store(array $data): Batche
+    public function store(array $data): Batch
     {
-        $courseConfig = new Batche();
+        $courseConfig = new Batch();
         $courseConfig->fill($data);
         $courseConfig->save();
-
-
         return $courseConfig;
     }
 
     /**
-     * @param Batche $courseConfig
+     * @param Batch $courseConfig
      * @param array $data
-     * @return Batche
+     * @return Batch
      */
-    public function update(Batche $courseConfig, array $data): Batche
+    public function update(Batch $courseConfig, array $data): Batch
     {
         $courseConfig->fill($data);
         $courseConfig->save();
@@ -230,30 +202,25 @@ class BatcheService
     }
 
     /**
-     * @param Batche $courseConfig
-     * @return Batche
+     * @param Batch $batch
+     * @return bool
      */
-    public function destroy(Batche $courseConfig): Batche
+    public function destroy(Batch $batch): bool
     {
-        if ($courseConfig->delete()) {
-            foreach ($courseConfig->courseSessions() as $courseSession) {
-                $courseSession->delete();
-            }
-        }
-
-        return $courseConfig;
+        return $batch->delete();
     }
 
 
     /**
      * @param Request $request
+     * @param int|null $id
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'institute_id' => [
-                'required',
+                'nullable',
                 'int',
                 'exists:institutes,id',
             ],
@@ -264,15 +231,18 @@ class BatcheService
             ],
             'training_center_id' => [
                 'required',
-                'int'
+                'int',
+                'exists:training_centers,id'
             ],
             'programme_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:programmes,id'
             ],
             'branch_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:branches,id'
             ],
             'number_of_vacancies' => [
                 'int',
@@ -338,15 +308,10 @@ class BatcheService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Batche::ROW_STATUS_ACTIVE, Batche::ROW_STATUS_INACTIVE]),
+                Rule::in([Batch::ROW_STATUS_ACTIVE, Batch::ROW_STATUS_INACTIVE]),
             ],
         ];
-
-        $messages = [
-            'course_sessions.*.session_name_bn.regex' => "Session Name(Bangla) is required in Bangla",
-        ];
-
-        return Validator::make($request->all(), $rules, $messages);
+        return Validator::make($request->all(), $rules);
     }
 
 }
