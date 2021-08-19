@@ -1403,7 +1403,7 @@
                         "name": "in_ethnic_group",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1411,7 +1411,7 @@
                         "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1419,14 +1419,14 @@
                         "name": "disability_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
                     },
                     {
                         "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1434,7 +1434,7 @@
                         "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1442,7 +1442,7 @@
                         "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1450,7 +1450,7 @@
                         "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1458,7 +1458,7 @@
                         "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1466,7 +1466,7 @@
                         "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     }
@@ -3092,31 +3092,58 @@
                         "type": "integer"
                     },
                     "in_ethnic_group": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "disability_status": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "ssc_passing_status": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "hsc_passing_status": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "honors_passing_status": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "masters_passing_status": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "is_occupation_needed": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "is_guardian_info_needed": {
-                        "type": "boolean"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "create_by": {
                         "type": "string",
