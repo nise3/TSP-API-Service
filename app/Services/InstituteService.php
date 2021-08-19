@@ -151,7 +151,7 @@ class InstituteService
     public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
-            'title_en' => ['required', 'string', 'max:191'],
+            'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
             'domain' => [
