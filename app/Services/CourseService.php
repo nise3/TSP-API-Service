@@ -25,8 +25,7 @@ class CourseService
      */
     public function getCourseList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -69,33 +68,25 @@ class CourseService
 
         /** @var Collection $coursesBuilder */
         if ($paginate) {
-            $courses = $coursesBuilder->paginate(10);
+            $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $courses = $coursesBuilder->get();
         }
-
-        return [
-            "data" => $courses->toArray() ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order']=$order;
+        $response['data']=$courses->toArray()['data'] ?? $courses->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "started" => $startTime->format('H i s'),
+            "finished" => Carbon::now()->format('H i s'),
         ];
+
+        return $response;
     }
 
     /**

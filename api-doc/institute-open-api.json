@@ -73,9 +73,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
+                                        "started": "10 14 22",
+                                        "finished": "10 14 22"
                                     },
                                     "_links": {
                                         "paginate": []

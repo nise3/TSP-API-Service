@@ -63,31 +63,24 @@ class TrainingCenterService
         if ($paginate) {
             $trainingCenters = $trainingCentersBuilder->paginate(10);
             $paginateData = (object)$trainingCenters->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $trainingCenters = $trainingCentersBuilder->get();
         }
 
-        return [
-            "data" => $trainingCenters->toArray() ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order']=$order;
+        $response['data']=$trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "started" => $startTime->format('H i s'),
+            "finished" => Carbon::now()->format('H i s'),
         ];
+
+        return $response;
     }
 
     /**

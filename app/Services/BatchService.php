@@ -29,8 +29,6 @@ class BatchService
      */
     public function getBatchList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -109,11 +107,11 @@ class BatchService
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+//            "_links" => [
+//                'paginate' => $paginateLink,
+//            ],
+//            "_page" => $page,
+//            "_order" => $order
         ];
     }
 

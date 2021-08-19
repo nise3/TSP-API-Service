@@ -29,7 +29,7 @@ class ProgrammeService
         $response=[];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
-        $limit = $request->query('limit', 2);
+        $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -72,8 +72,8 @@ class ProgrammeService
         $response['response_status']= [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "started" => $startTime,
-            "finished" => Carbon::now()->format('s'),
+            "started" => $startTime->format('H i s'),
+            "finished" => Carbon::now()->format('H i s'),
         ];
 
         return $response;
