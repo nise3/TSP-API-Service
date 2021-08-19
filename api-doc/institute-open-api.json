@@ -189,7 +189,7 @@
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": "127.0.0.1:8000"
+                            "example": "1"
                         }
                     }
                 ],
@@ -1229,108 +1229,108 @@
         "/batches": {
             "get": {
                 "tags": [
-                    "Batch"
+                    "batches"
                 ],
-                "summary": "get list",
-                "description": "###### API endpoint to get list of batch\n\nA successful request response will show 200 HTTP status code",
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n batches\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 07:25:03 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
                                     "data": [
                                         {
                                             "id": 1,
                                             "course_id": 1,
+                                            "course_title": "sdf",
                                             "institute_id": 1,
-                                            "institute_title": "BITAC",
-                                            "created_at": "2021-07-26T07:23:32.000000Z",
-                                            "course_title": "Math II",
-                                            "branch_name": "branch -1",
+                                            "institute_title": "asdf",
+                                            "branch_id": null,
+                                            "branch_name": null,
+                                            "programme_id": null,
                                             "programme_name": null,
-                                            "training_center_name": "creating IT",
-                                            "updated_at": "2021-07-26T07:23:32.000000Z",
-                                            "_links": {
-                                                "read": "http://127.0.0.1:8000/api/v1/course-configs/1",
-                                                "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
-                                                "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
-                                            }
+                                            "number_of_vacancies": 0,
+                                            "registration_start_date": "0000-00-00 00:00:00",
+                                            "registration_end_date": "0000-00-00 00:00:00",
+                                            "batch_start_date": "0000-00-00 00:00:00",
+                                            "batch_end_date": "0000-00-00 00:00:00",
+                                            "available_vacancies": 0,
+                                            "training_center_id": 1,
+                                            "training_center_name": "wer",
+                                            "in_ethnic_group": 0,
+                                            "is_freedom_fighter": 0,
+                                            "disability_status": 0,
+                                            "ssc_passing_status": 0,
+                                            "hsc_passing_status": 0,
+                                            "honors_passing_status": 0,
+                                            "masters_passing_status": 0,
+                                            "is_occupation_needed": 0,
+                                            "is_guardian_info_needed": 0,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-17T11:18:09.000000Z",
+                                            "updated_at": "2021-08-17T11:18:09.000000Z"
                                         }
                                     ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T07:25:03.231063Z",
-                                        "finished": "2021-07-26T07:25:03.262919Z"
+                                        "started": "2021-07-26T06:57:11.606837Z",
+                                        "finished": "2021-07-26T06:57:11.635651Z"
                                     },
                                     "_links": {
-                                        "paginate": [],
-                                        "search": {
-                                            "parameters": [
-                                                "title_en",
-                                                "title_bn"
-                                            ],
-                                            "_link": "http://127.0.0.1:8000/api/v1/course-configs"
-                                        }
+                                        "paginate": []
                                     },
                                     "_page": [],
                                     "_order": "ASC"
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
                     }
                 }
             },
             "post": {
                 "tags": [
-                    "Batch"
+                    "batches"
                 ],
                 "summary": "create",
-                "description": "###### API endpoint to create a batch\n\nA successful request response will show 201 HTTP status code",
+                "description": "###### API endpoint to create a course\n\nA successful request response will show 201 HTTP status code",
                 "parameters": [
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "programme_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
                     {
                         "name": "institute_id",
                         "in": "query",
@@ -1353,152 +1353,124 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "6"
+                        "example": "1"
                     },
                     {
-                        "name": "course_id",
+                        "name": "number_of_seats",
                         "in": "query",
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": "44"
                     },
                     {
-                        "name": "course_sessions",
+                        "name": "registration_start_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "[1]"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][session_name_en]",
+                        "name": "registration_end_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "\"session one\""
+                        }
                     },
                     {
-                        "name": "course_sessions[0][session_name_bn]",
+                        "name": "batch_start_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "সেশন"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][number_of_batches]",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "2"
-                    },
-                    {
-                        "name": "course_sessions[0][application_start_date]",
+                        "name": "batch_end_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "10-12-21"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][application_end_date]",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "10-12-21"
-                    },
-                    {
-                        "name": "course_sessions[0][course_start_date]",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "10-12-21"
-                    },
-                    {
-                        "name": "course_sessions[0][max_seat_available]",
+                        "name": "available_seats",
                         "in": "query",
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "100"
+                        "example": "20"
                     },
                     {
-                        "name": "ethnic",
+                        "name": "in_ethnic_group",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "freedom_fighter",
+                        "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "disable_status",
+                        "name": "disability_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
                     },
                     {
-                        "name": "ssc",
+                        "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "hsc",
+                        "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "honors",
+                        "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "masters",
+                        "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "occupation",
+                        "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "guardian",
+                        "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     }
+
                 ],
                 "responses": {
                     "201": {
@@ -1506,33 +1478,47 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
                                     "data": {
-                                        "institute_id": "1",
-                                        "course_id": "1",
-                                        "training_center_id": "6",
-                                        "branch_id": "1",
-                                        "ethnic": "0",
-                                        "freedom_fighter": "0",
-                                        "disable_status": "0",
-                                        "ssc": "1",
-                                        "hsc": "1",
-                                        "honors": "1",
-                                        "masters": "1",
-                                        "occupation": "1",
-                                        "guardian": "1",
-                                        "updated_at": "2021-07-26T07:23:32.000000Z",
-                                        "created_at": "2021-07-26T07:23:32.000000Z",
+                                        "course_id": 1,
+                                        "course_title": "sdf",
+                                        "institute_id": 1,
+                                        "institute_title": "asdf",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "programme_id": null,
+                                        "programme_name": null,
+                                        "number_of_vacancies": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_vacancies": 0,
+                                        "training_center_id": 1,
+                                        "training_center_name": "wer",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T11:18:09.000000Z",
+                                        "updated_at": "2021-08-17T11:18:09.000000Z",
                                         "id": 1
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T07:23:32.619886Z",
-                                        "finished": "2021-07-26T07:23:32.766903Z"
+                                        "started": "2021-07-26T06:53:00.665843Z",
+                                        "finished": "2021-07-26T06:53:00.727054Z"
                                     }
                                 }
                             }
@@ -1543,82 +1529,70 @@
         },
         "/batches/{batchId}": {
             "get": {
-                "tags": [
-                    "batch"
-                ],
-                "summary": "get one",
-                "description": "###### API endpoint to get a batch\n\nA successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "name": "batchId",
                         "in": "path",
+                        "description": "programme id to get one",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": "1"
                         }
                     }
                 ],
+                "tags": [
+                    "batches"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a batch by batch id\n\nA successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
                                     "data": {
                                         "id": 1,
                                         "course_id": 1,
+                                        "course_title": "sdf",
                                         "institute_id": 1,
-                                        "institute_title": "BITAC",
-                                        "created_at": "2021-07-26T07:23:32.000000Z",
-                                        "course_title": "Math II",
-                                        "branch_name": "branch -1",
+                                        "institute_title": "asdf",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "programme_id": null,
                                         "programme_name": null,
-                                        "training_center_name": "creating IT",
-                                        "updated_at": "2021-07-26T07:23:32.000000Z",
-                                        "course_sessions": [
-                                            {
-                                                "id": 1,
-                                                "course_id": 1,
-                                                "course_config_id": 1,
-                                                "session_name_en": "\"session one\"",
-                                                "session_name_bn": "সেশন",
-                                                "number_of_batches": 2,
-                                                "application_start_date": "2010-12-21T00:00:00.000000Z",
-                                                "application_end_date": "2010-12-21T00:00:00.000000Z",
-                                                "course_start_date": "2010-12-21T00:00:00.000000Z",
-                                                "max_seat_available": 100,
-                                                "created_at": "2021-07-26T07:23:32.000000Z",
-                                                "updated_at": "2021-07-26T07:23:32.000000Z"
-                                            },
-                                            {
-                                                "id": 2,
-                                                "course_id": 1,
-                                                "course_config_id": 1,
-                                                "session_name_en": "\"session\"",
-                                                "session_name_bn": "সেশন",
-                                                "number_of_batches": 2,
-                                                "application_start_date": "2010-12-21T00:00:00.000000Z",
-                                                "application_end_date": "2010-12-21T00:00:00.000000Z",
-                                                "course_start_date": "2010-12-21T00:00:00.000000Z",
-                                                "max_seat_available": 200,
-                                                "created_at": "2021-07-26T07:26:29.000000Z",
-                                                "updated_at": "2021-07-26T07:26:29.000000Z"
-                                            }
-                                        ]
+                                        "number_of_vacancies": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_vacancies": 0,
+                                        "training_center_id": 1,
+                                        "training_center_name": "wer",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T11:18:09.000000Z",
+                                        "updated_at": "2021-08-17T11:18:09.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T07:27:31.837083Z",
-                                        "finished": "2021-07-26T07:27:31.897936Z"
-                                    },
-                                    "_links": {
-                                        "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
-                                        "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
+                                        "started": "2021-07-26T06:57:56.790490Z",
+                                        "finished": "2021-07-26T06:57:56.816062Z"
                                     }
                                 }
                             }
@@ -1628,21 +1602,34 @@
             },
             "put": {
                 "tags": [
-                    "Batch"
+                    "batches"
                 ],
                 "summary": "update",
-                "description": "###### API endpoint to update a batch\n\nA successful request response will show 201 HTTP status code",
-                "requestBody": {
-                    "content": {}
-                },
+                "description": "### API endpoint to update a batch\n\nA successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
                         "name": "batchId",
-                        "in": "path",
                         "required": true,
+                        "in": "path",
                         "schema": {
                             "type": "integer"
                         }
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "programme_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     },
                     {
                         "name": "institute_id",
@@ -1666,227 +1653,172 @@
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "6"
+                        "example": "1"
                     },
                     {
-                        "name": "course_id",
+                        "name": "number_of_seats",
                         "in": "query",
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "1"
+                        "example": "44"
                     },
                     {
-                        "name": "course_sessions",
+                        "name": "registration_start_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "[1]"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][session_name_en]",
+                        "name": "registration_end_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "\"session\""
+                        }
                     },
                     {
-                        "name": "course_sessions[0][session_name_bn]",
+                        "name": "batch_start_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "সেশন"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][number_of_batches]",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "2"
-                    },
-                    {
-                        "name": "course_sessions[0][application_start_date]",
+                        "name": "batch_end_date",
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
-                        "example": "10-12-21"
+                        }
                     },
                     {
-                        "name": "course_sessions[0][application_end_date]",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "10-12-21"
-                    },
-                    {
-                        "name": "course_sessions[0][course_start_date]",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "10-12-21"
-                    },
-                    {
-                        "name": "course_sessions[0][max_seat_available]",
+                        "name": "available_seats",
                         "in": "query",
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "200"
+                        "example": "20"
                     },
                     {
-                        "name": "ethnic",
+                        "name": "in_ethnic_group",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "freedom_fighter",
+                        "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "disable_status",
+                        "name": "disability_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                            "type": "boolean"
+                        }
                     },
                     {
-                        "name": "ssc",
+                        "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "hsc",
+                        "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "honors",
+                        "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "masters",
+                        "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "occupation",
+                        "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     },
                     {
-                        "name": "guardian",
+                        "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
+                            "type": "boolean"
+                        }
+
                     }
+
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 07:26:29 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
+                        "description": "Updated",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "institute_id": "1",
-                                        "branch_id": "1",
-                                        "training_center_id": "6",
+                                        "course_id": 1,
+                                        "course_title": "sdf",
+                                        "institute_id": 1,
+                                        "institute_title": "asdf",
+                                        "branch_id": null,
+                                        "branch_name": null,
                                         "programme_id": null,
-                                        "course_id": "1",
-                                        "row_status": 1,
-                                        "ethnic": "0",
-                                        "freedom_fighter": "0",
-                                        "disable_status": "0",
-                                        "ssc": "1",
-                                        "hsc": "1",
-                                        "honors": "1",
-                                        "masters": "1",
-                                        "occupation": "1",
-                                        "guardian": "1",
+                                        "programme_name": null,
+                                        "number_of_vacancies": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_vacancies": 0,
+                                        "training_center_id": 1,
+                                        "training_center_name": "wer",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
                                         "created_by": null,
-                                        "created_at": "2021-07-26T07:23:32.000000Z",
-                                        "updated_at": "2021-07-26T07:23:32.000000Z"
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T11:18:09.000000Z",
+                                        "updated_at": "2021-08-17T11:18:09.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T07:26:29.079218Z",
-                                        "finished": "2021-07-26T07:26:29.155416Z"
+                                        "started": "2021-07-26T06:56:12.054312Z",
+                                        "finished": "2021-07-26T06:56:12.141544Z"
                                     }
                                 }
                             }
@@ -1896,14 +1828,15 @@
             },
             "delete": {
                 "tags": [
-                    "course config"
+                    "batches"
                 ],
-                "summary": "delete",
-                "description": "###### API endpoint to delete a course config\n\nA successful request response will show 200 HTTP status code",
+                "summary": "deleted",
+                "description": "###### API endpoint to delete a batch\n\nA successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "name": "courseConfigId",
+                        "name": "batchId",
                         "in": "path",
+                        "description": "batch id to delete",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -1913,56 +1846,18 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 07:28:35 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T07:28:35.536244Z",
-                                        "finished": "2021-07-26T07:28:35.572323Z"
+                                        "started": "2021-07-26T06:58:34.514135Z",
+                                        "finished": "2021-07-26T06:58:34.552021Z"
                                     }
                                 }
                             }
@@ -2300,114 +2195,83 @@
         "/courses": {
             "get": {
                 "tags": [
-                    "course"
+                    "courses"
                 ],
-                "summary": "get list",
-                "description": "###### API endpoint to get the list of courses\n\nA successful request response will show 200 HTTP status code",
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n courses\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:20:12 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
+                        "description": "success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/courses"
                                 },
                                 "example": {
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title_en": "Math",
-                                            "title_bn": "গণিত",
+                                            "code": "1234",
+                                            "institute_id": 2,
+                                            "institute_title": "asdf",
+                                            "title_en": "sdf",
+                                            "title_bn": "asdf",
+                                            "course_fee": "344.00",
                                             "duration": null,
-                                            "code": "CSE300",
-                                            "course_fee": 300,
+                                            "description": null,
                                             "target_group": null,
+                                            "objectives": null,
                                             "contents": null,
-                                            "objects": null,
                                             "training_methodology": null,
                                             "evaluation_system": null,
-                                            "created_at": "2021-07-26T06:18:05.000000Z",
-                                            "updated_at": "2021-07-26T06:18:05.000000Z",
-                                            "institute_title": "BITAC",
-                                            "_links": {
-                                                "read": "http://127.0.0.1:8000/api/v1/courses/1",
-                                                "update": "http://127.0.0.1:8000/api/v1/courses/1",
-                                                "delete": "http://127.0.0.1:8000/api/v1/courses/1"
-                                            }
+                                            "prerequisite": null,
+                                            "eligibility": null,
+                                            "cover_image": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-17T10:34:07.000000Z",
+                                            "updated_at": "2021-08-17T10:34:07.000000Z"
                                         }
                                     ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:20:11.984678Z",
-                                        "finished": "2021-07-26T06:20:12.046213Z"
+                                        "started": "2021-07-26T06:57:11.606837Z",
+                                        "finished": "2021-07-26T06:57:11.635651Z"
                                     },
                                     "_links": {
-                                        "paginate": [],
-                                        "search": {
-                                            "parameters": [
-                                                "title_en",
-                                                "title_bn"
-                                            ],
-                                            "_link": "http://127.0.0.1:8000/api/v1/courses"
-                                        }
+                                        "paginate": []
                                     },
                                     "_page": [],
                                     "_order": "ASC"
                                 }
                             }
                         }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
                     }
                 }
             },
             "post": {
                 "tags": [
-                    "course"
+                    "courses"
                 ],
                 "summary": "create",
                 "description": "###### API endpoint to create a course\n\nA successful request response will show 201 HTTP status code",
-                "requestBody": {
-                    "content": {}
-                },
                 "parameters": [
                     {
                         "name": "title_en",
@@ -2415,7 +2279,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "Math"
+                        "example": "PROGRAMME ON RMG4"
                     },
                     {
                         "name": "title_bn",
@@ -2423,23 +2287,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "গণিত"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE300"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "300"
+                        "example": "আরএমজি-প্রোগ্রাম4"
                     },
                     {
                         "name": "institute_id",
@@ -2448,72 +2296,139 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "123"
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "very good courses"
+                    },
+                    {
+                        "name": "target_group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "objectives",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contents",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "training_methodology",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "evaluation_system",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "prerequisite",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "eligibility",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jph"
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:18:05 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": {
-                                        "title_en": "Math",
-                                        "title_bn": "গণিত",
-                                        "code": "CSE300",
-                                        "course_fee": "300",
-                                        "institute_id": "1",
-                                        "cover_image": "course/course.jpeg",
-                                        "updated_at": "2021-07-26T06:18:05.000000Z",
-                                        "created_at": "2021-07-26T06:18:05.000000Z",
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z",
                                         "id": 1
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:18:05.266571Z",
-                                        "finished": "2021-07-26T06:18:05.305270Z"
+                                        "started": "2021-07-26T06:53:00.665843Z",
+                                        "finished": "2021-07-26T06:53:00.727054Z"
                                     }
                                 }
                             }
@@ -2524,94 +2439,62 @@
         },
         "/courses/{courseId}": {
             "get": {
-                "tags": [
-                    "course"
-                ],
-                "summary": "get one",
-                "description": "###### API endpoint to get an institute\n\nA successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "name": "courseId",
                         "in": "path",
+                        "description": "course id to get one",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": "127.0.0.1:8000"
                         }
                     }
                 ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:20:41 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/programmes"
                                 },
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Math",
-                                        "title_bn": "গণিত",
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
                                         "duration": null,
-                                        "code": "CSE300",
-                                        "course_fee": 300,
+                                        "description": null,
                                         "target_group": null,
+                                        "objectives": null,
                                         "contents": null,
-                                        "objects": null,
                                         "training_methodology": null,
                                         "evaluation_system": null,
-                                        "created_at": "2021-07-26T06:18:05.000000Z",
-                                        "updated_at": "2021-07-26T06:18:05.000000Z",
-                                        "institute_title": "BITAC"
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:20:41.711859Z",
-                                        "finished": "2021-07-26T06:20:41.735140Z"
-                                    },
-                                    "_links": {
-                                        "update": "http://127.0.0.1:8000/api/v1/courses/1",
-                                        "delete": "http://127.0.0.1:8000/api/v1/courses/1"
+                                        "started": "2021-07-26T06:57:56.790490Z",
+                                        "finished": "2021-07-26T06:57:56.816062Z"
                                     }
                                 }
                             }
@@ -2621,18 +2504,15 @@
             },
             "put": {
                 "tags": [
-                    "course"
+                    "courses"
                 ],
                 "summary": "update",
-                "description": "###### API endpoint to update an institute\n\nA successful request response will show 201 HTTP status code",
-                "requestBody": {
-                    "content": {}
-                },
+                "description": "### API endpoint to update a course\n\nA successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
                         "name": "courseId",
-                        "in": "path",
                         "required": true,
+                        "in": "path",
                         "schema": {
                             "type": "integer"
                         }
@@ -2643,7 +2523,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "Math II"
+                        "example": "PROGRAMME ON RMG4"
                     },
                     {
                         "name": "title_bn",
@@ -2651,23 +2531,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "গণিত II"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "CSE-300"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "300"
+                        "example": "আরএমজি-প্রোগ্রাম4"
                     },
                     {
                         "name": "institute_id",
@@ -2676,83 +2540,139 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "123"
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "very good courses"
+                    },
+                    {
+                        "name": "target_group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "objectives",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contents",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "training_methodology",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "evaluation_system",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "prerequisite",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "eligibility",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jph"
                     }
                 ],
                 "responses": {
                     "201": {
                         "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:22:32 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/courses"
                                 },
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Math II",
-                                        "title_bn": "গণিত II",
-                                        "course_fee": "300",
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
                                         "duration": null,
                                         "description": null,
                                         "target_group": null,
-                                        "objects": null,
+                                        "objectives": null,
                                         "contents": null,
                                         "training_methodology": null,
                                         "evaluation_system": null,
                                         "prerequisite": null,
                                         "eligibility": null,
-                                        "cover_image": "course/course.jpeg",
-                                        "code": "CSE-300",
-                                        "institute_id": "1",
-                                        "row_status": 99,
+                                        "cover_image": null,
+                                        "row_status": 1,
                                         "created_by": null,
-                                        "created_at": "2021-07-26T06:18:05.000000Z",
-                                        "updated_at": "2021-07-26T06:22:32.000000Z"
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:22:32.605086Z",
-                                        "finished": "2021-07-26T06:22:32.682841Z"
+                                        "started": "2021-07-26T06:56:12.054312Z",
+                                        "finished": "2021-07-26T06:56:12.141544Z"
                                     }
                                 }
                             }
@@ -2762,14 +2682,15 @@
             },
             "delete": {
                 "tags": [
-                    "course"
+                    "courses"
                 ],
                 "summary": "delete",
-                "description": "###### API endpoint to delete an institute.\n\nA successful request response will show 200 HTTP status code",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "name": "courseId",
                         "in": "path",
+                        "description": "Course id to delete",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -2779,56 +2700,18 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 06:21:29 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/courses"
                                 },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:21:29.153295Z",
-                                        "finished": "2021-07-26T06:21:29.180094Z"
+                                        "started": "2021-07-26T06:58:34.514135Z",
+                                        "finished": "2021-07-26T06:58:34.552021Z"
                                     }
                                 }
                             }
@@ -3055,6 +2938,182 @@
                     },
                     "google_map_src": {
                         "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "create_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "courses": {
+                "type": "object",
+                "description": "Courses management Service",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": false
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "minLength": 2
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "maxLength": 800,
+                        "minLength": 2
+                    },
+                    "course_fee": {
+                        "type": "integer"
+                    },
+                    "duration": {
+                        "type": "integer"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "target_group": {
+                        "type": "string"
+                    },
+                    "objectives": {
+                        "type": "string"
+                    },
+                    "contents": {
+                        "type": "string"
+                    },
+                    "training_methodology": {
+                        "type": "string"
+                    },
+                    "evaluation_system": {
+                        "type": "string"
+                    },
+                    "prerequisite": {
+                        "type": "string"
+                    },
+                    "eligibility": {
+                        "type": "string"
+                    },
+                    "cover_image": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "create_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "batches": {
+                "type": "object",
+                "description": "Batch management Service",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": false
+                    },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "programme_id": {
+                        "type": "integer"
+                    },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "course_id": {
+                        "type": "integer"
+                    },
+                    "number_of_seats": {
+                        "type": "integer"
+                    },
+                    "registration_start_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "registration_end_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "batch_start_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "batch_end_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "available_seats": {
+                        "type": "integer"
+                    },
+                    "in_ethnic_group": {
+                        "type": "boolean"
+                    },
+                    "disability_status": {
+                        "type": "boolean"
+                    },
+                    "ssc_passing_status": {
+                        "type": "boolean"
+                    },
+                    "hsc_passing_status": {
+                        "type": "boolean"
+                    },
+                    "honors_passing_status": {
+                        "type": "boolean"
+                    },
+                    "masters_passing_status": {
+                        "type": "boolean"
+                    },
+                    "is_occupation_needed": {
+                        "type": "boolean"
+                    },
+                    "is_guardian_info_needed": {
+                        "type": "boolean"
                     },
                     "row_status": {
                         "type": "integer"
