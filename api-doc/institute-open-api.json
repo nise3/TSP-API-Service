@@ -42,6 +42,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -70,17 +76,12 @@
                                             "updated_at": "2021-07-26T06:56:12.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "10 14 22",
-                                        "finished": "10 14 22"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -382,6 +383,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -415,18 +422,12 @@
                                             "updated_at": "2021-08-18T23:33:05.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -753,6 +754,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -791,18 +798,12 @@
                                             "updated_at": "2021-08-18T14:39:55.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -1237,6 +1238,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -1286,18 +1293,12 @@
                                             "updated_at": "2021-08-17T11:18:09.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -1877,6 +1878,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -1906,18 +1913,12 @@
                                             "updated_at": "2021-08-19T00:00:01.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -2203,6 +2204,12 @@
                         "$ref": "#/components/parameters/page"
                     },
                     {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
@@ -2244,18 +2251,12 @@
                                             "updated_at": "2021-08-17T10:34:07.000000Z"
                                         }
                                     ],
-                                    "_response_status": {
+                                    "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:11.606837Z",
-                                        "finished": "2021-07-26T06:57:11.635651Z"
-                                    },
-                                    "_links": {
-                                        "paginate": []
-                                    },
-                                    "_page": [],
-                                    "_order": "ASC"
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
                                 }
                             }
                         }
@@ -3173,6 +3174,26 @@
                 "name": "page",
                 "schema": {
                     "type": "integer"
+                }
+            },
+            "limit": {
+                "in": "query",
+                "name": "limit",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "order": {
+                "in": "query",
+                "name": "order",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "asc",
+                        "desc"
+                    ]
                 }
             },
             "title_en": {
