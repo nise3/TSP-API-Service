@@ -2077,7 +2077,7 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        },
+                        }
                     }
                 ],
                 "responses": {
@@ -2115,91 +2115,52 @@
                 }
             }
         },
-        "/api/v1/branches/{branchId}": {
+        "/branches/{branchId}": {
             "get": {
-                "tags": [
-                    "branch"
-                ],
-                "summary": "get one",
-                "description": "###### API endpoint to get a branch by specifying id as request parameter\n\nA successful request response will show HTTP 200 status code",
                 "parameters": [
                     {
                         "name": "branchId",
                         "in": "path",
+                        "description": "branch id to get one",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": "1"
                         }
                     }
                 ],
+                "tags": [
+                    "branches"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a branch by branch id\n\nA successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 05:28:46 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/branches"
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 3,
-                                        "title_en": "branch -1",
-                                        "title_bn": "ব্রাঞ্ছ-১",
-                                        "institute_title_en": "bitac",
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "yews",
+                                        "institute_id": 1,
                                         "row_status": 1,
-                                        "address": null,
-                                        "google_map_src": null,
-                                        "created_at": "2021-07-26T05:28:15.000000Z",
-                                        "updated_at": "2021-07-26T05:28:15.000000Z"
+                                        "address": "dhaka 1112",
+                                        "google_map_src": "branch under bitac institute",
+                                        "created_at": "2021-08-19T00:00:01.000000Z",
+                                        "updated_at": "2021-08-19T00:00:01.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T05:28:46.322690Z",
-                                        "finished": "2021-07-26T05:28:46.350463Z"
-                                    },
-                                    "_links": {
-                                        "update": "http://127.0.0.1:8000/api/v1/branches/3",
-                                        "delete": "http://127.0.0.1:8000/api/v1/branches/3"
+                                        "started": "2021-07-26T06:57:56.790490Z",
+                                        "finished": "2021-07-26T06:57:56.816062Z"
                                     }
                                 }
                             }
@@ -2209,18 +2170,15 @@
             },
             "put": {
                 "tags": [
-                    "branch"
+                    "branches"
                 ],
                 "summary": "update",
-                "description": "###### API endpoint to update a branch\nA successful request response will show HTTP 201 status code",
-                "requestBody": {
-                    "content": {}
-                },
+                "description": "### API endpoint to update a branch\n\nA successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
                         "name": "branchId",
-                        "in": "path",
                         "required": true,
+                        "in": "path",
                         "schema": {
                             "type": "integer"
                         }
@@ -2231,7 +2189,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "Branch-1"
+                        "example": "PROGRAMME ON RMG4"
                     },
                     {
                         "name": "title_bn",
@@ -2239,7 +2197,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "ব্রাঞ্ছ-১"
+                        "example": "আরএমজি-প্রোগ্রাম4"
                     },
                     {
                         "name": "institute_id",
@@ -2248,73 +2206,50 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "dhaka 1112"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 05:29:30 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
+                        "description": "Update",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/branches"
                                 },
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Branch-1",
-                                        "title_bn": "ব্রাঞ্ছ-১",
-                                        "institute_id": "1",
-                                        "address": null,
-                                        "google_map_src": null,
-                                        "row_status": 99,
-                                        "created_by": null,
-                                        "created_at": "2021-07-25T12:50:40.000000Z",
-                                        "updated_at": "2021-07-26T05:29:30.000000Z"
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "yews",
+                                        "institute_id": 1,
+                                        "row_status": 1,
+                                        "address": "dhaka 1112",
+                                        "google_map_src": "branch under bitac institute",
+                                        "created_at": "2021-08-19T00:00:01.000000Z",
+                                        "updated_at": "2021-08-19T00:00:01.000000Z",
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T05:29:30.780322Z",
-                                        "finished": "2021-07-26T05:29:30.827452Z"
+                                        "started": "2021-07-26T06:56:12.054312Z",
+                                        "finished": "2021-07-26T06:56:12.141544Z"
                                     }
                                 }
                             }
@@ -2324,14 +2259,15 @@
             },
             "delete": {
                 "tags": [
-                    "branch"
+                    "branches"
                 ],
                 "summary": "delete",
-                "description": "###### API endpoint to delete a branch\nA successful request response will show HTTP 200 status code",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "name": "branchId",
                         "in": "path",
+                        "description": "Branch id to delete",
                         "required": true,
                         "schema": {
                             "type": "integer"
@@ -2341,56 +2277,18 @@
                 "responses": {
                     "200": {
                         "description": "OK",
-                        "headers": {
-                            "Host": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "127.0.0.1:8000"
-                                }
-                            },
-                            "Date": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "Mon, 26 Jul 2021 05:29:43 GMT"
-                                }
-                            },
-                            "Connection": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "close"
-                                }
-                            },
-                            "X-Powered-By": {
-                                "schema": {
-                                    "type": "number",
-                                    "example": "PHP/8.0.3"
-                                }
-                            },
-                            "Cache-Control": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "no-cache, private"
-                                }
-                            },
-                            "Content-Type": {
-                                "schema": {
-                                    "type": "string",
-                                    "example": "application/json"
-                                }
-                            }
-                        },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object"
+                                    "$ref": "#/components/schemas/branches"
                                 },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T05:29:43.807426Z",
-                                        "finished": "2021-07-26T05:29:43.835780Z"
+                                        "started": "2021-07-26T06:58:34.514135Z",
+                                        "finished": "2021-07-26T06:58:34.552021Z"
                                     }
                                 }
                             }
