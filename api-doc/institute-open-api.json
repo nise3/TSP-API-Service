@@ -2729,7 +2729,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "code": {
                         "type": "string"
@@ -2784,7 +2784,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "code": {
                         "type": "string"
@@ -2860,7 +2860,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "institute_id": {
                         "type": "integer"
@@ -2918,7 +2918,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "institute_id": {
                         "type": "integer"
@@ -2970,7 +2970,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "code": {
                         "type": "string"
@@ -3052,7 +3052,7 @@
                 "properties": {
                     "id": {
                         "type": "integer",
-                        "readOnly": false
+                        "readOnly": true
                     },
                     "institute_id": {
                         "type": "integer"
