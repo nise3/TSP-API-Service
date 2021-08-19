@@ -18,7 +18,7 @@ class CourseFactory extends Factory
             'course_fee' => $this->faker->randomElement([0,200,399,400,566,666,722,811,911,1110]),
             'duration' => $this->faker->time,
             'description' => $this->faker->sentence,
-            'institute_id' => $this->faker->randomElement([1,2,3,4,5,6,7,8,9,10]),
+
     	];
     }
 }

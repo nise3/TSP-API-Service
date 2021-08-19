@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Classes\CustomPaginateResonse;
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
@@ -25,10 +26,10 @@ class ProgrammeService
      */
     public function getProgrammeList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $response=[];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
+        $limit = $request->query('limit', 2);
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -57,33 +58,26 @@ class ProgrammeService
 
         /** @var Collection $programmesBuilder */
         if ($paginate) {
-            $programmes = $programmesBuilder->paginate(10);
+            $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $programmes = $programmesBuilder->get();
         }
-
-        return [
-            "data" => $programmes->toArray()??[],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order']=$order;
+        $response['data']=$programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "started" => $startTime,
+            "finished" => Carbon::now()->format('s'),
         ];
+
+        return $response;
+
     }
 
     /**
