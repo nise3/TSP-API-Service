@@ -1,0 +1,57 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Please do not change anything if you dont know what you are doing - Kalyan
+
+variables:
+  
+  hostName: institute.bus.softbd.xyz
+
+  # app version, changing version will auto deploy the app to current version
+
+  imageAppVersion: "1.0.2"
+
+  # increase this when you need scale up
+  replicaCount: 1
+
+  imagePullPolicy: IfNotPresent
+
+  serviceType: ClusterIP
+  
+  # service port, this provide traffic to ingress within this port
+  servicePort: 80
+
+  # target container port
+  serviceTargetPort: 80
+
+  #app buil image 
+  imageRepository: kalyan31.jfrog.io/nise3-institute-docker/nise3-institute-docker
+
+
+  #auto scaling config
+  #autoScalingEnabled: 0
+
+  #autoScalingMinReplicas: 1
+
+  #autoScalingMaxReplicas: 100
+
+  #autoScalingTargetCPUUtilizationPercentage: 80
+
+  #autoScalingTargetMemoryUtilizationPercentage: 80
+
+
+  # application config
+
+  APP_ENV: "local"
+  APP_DEBUG: "false"
+  APP_URL: "institute.bus.softbd.xyz"
+  DB_HOST: mysql-service.db
+  DB_PORT: "3306"
+  DB_DATABASE: institute
+  DB_USERNAME: n3_institute
+  DB_PASSWORD: "kvx6V3Y^7"
+
+
+  #control git realese branch
+  GIT_DEVELOPMENT_BRANCH: "develop"
+  GIT_PRODUCTION_BRANCH: "master"

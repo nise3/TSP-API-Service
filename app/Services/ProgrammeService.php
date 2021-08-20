@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,8 +32,8 @@ class ProgrammeService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Programme|Builder $programmes */
-        $programmes = Programme::select([
+        /** @var Programme|Builder $programmesBuilder */
+        $programmesBuilder = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
@@ -46,17 +46,18 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmes->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programmes->orderBy('programmes.id', $order);
+        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmesBuilder->orderBy('programmes.id', $order);
 
         if (!empty($titleEn)) {
-            $programmes->where('programmes.title_en', 'like', '%' . $titleEn . '%');
+            $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $programmes->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $programmesBuilder */
         if ($paginate) {
-            $programmes = $programmes->paginate(10);
+            $programmes = $programmesBuilder->paginate(10);
             $paginateData = (object)$programmes->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -66,20 +67,11 @@ class ProgrammeService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $programmes = $programmes->get();
-        }
-
-        $data = [];
-        foreach ($programmes as $programme) {
-            $links['read'] = route('api.v1.programmes.read', ['id' => $programme->id]);
-            $links['update'] = route('api.v1.programmes.update', ['id' => $programme->id]);
-            $links['delete'] = route('api.v1.programmes.destroy', ['id' => $programme->id]);
-            $programme['_links'] = $links;
-            $data[] = $programme->toArray();
+            $programmes = $programmesBuilder->get();
         }
 
         return [
-            "data" => $data,
+            "data" => $programmes->toArray()??[],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -87,14 +79,7 @@ class ProgrammeService
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.programmes.get-list')
-                ],
+                'paginate' => $paginateLink
             ],
             "_page" => $page,
             "_order" => $order
@@ -108,8 +93,8 @@ class ProgrammeService
      */
     public function getOneProgramme(int $id, Carbon $startTime): array
     {
-        /** @var Programme|Builder $programme */
-        $programme = Programme::select([
+        /** @var Programme|Builder $programmeBuilder */
+        $programmeBuilder = Programme::select([
             'programmes.id as id',
             'programmes.title_en',
             'programmes.title_bn',
@@ -122,25 +107,20 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programme->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programme->where('programmes.id', '=', $id);
-        $programme = $programme->first();
+        $programmeBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmeBuilder->where('programmes.id', '=', $id);
 
+        /** @var Programme $programmeBuilder */
+        $programme = $programmeBuilder->first();
         $links = [];
-        if (!empty($programme)) {
-            $links['update'] = route('api.v1.programmes.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.programmes.destroy', ['id' => $id]);
-        }
-
         return [
-            "data" => $programme ?: null,
+            "data" => $programme ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 
@@ -217,7 +197,7 @@ class ProgrammeService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);

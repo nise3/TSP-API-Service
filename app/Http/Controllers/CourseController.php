@@ -6,6 +6,7 @@ use App\Helpers\Classes\CustomExceptionHandler;
 use App\Models\Course;
 use App\Services\CourseService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -39,7 +40,7 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      * @param Request $request
-     * @return JsonResponse
+     *  @return Exception|JsonResponse|Throwable
      */
     public function getList(Request $request): JsonResponse
     {
@@ -86,7 +87,7 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return JsonResponse
+     *  @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     function store(Request $request): JsonResponse
@@ -96,7 +97,7 @@ class CourseController extends Controller
             $data = $this->courseService->store($validated);
 
             $response = [
-                'data' => $data ? $data : null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
@@ -116,14 +117,14 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+        return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
     /**
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
-     * @return JsonResponse
+     *  @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
@@ -133,7 +134,7 @@ class CourseController extends Controller
         try {
             $data = $this->courseService->update($course, $validated);
             $response = [
-                'data' => $data ? $data : null,
+                'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
@@ -153,13 +154,13 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+        return Response::json($response, JsonResponse::HTTP_CREATED);
     }
 
     /**
      *  *  remove the specified resource from storage
      * @param int $id
-     * @return JsonResponse
+     *  @return Exception|JsonResponse|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
@@ -186,6 +187,6 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, JsonResponse::HTTP_OK);
     }
 }

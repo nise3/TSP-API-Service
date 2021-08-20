@@ -1,0 +1,3263 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Institute root",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1"
+        }
+    ],
+    "tags": [
+        {
+            "name": "programmes"
+        },
+        {
+            "name": "training center"
+        },
+        {
+            "name": "institutes"
+        },
+        {
+            "name": "course config"
+        },
+        {
+            "name": "branch"
+        },
+        {
+            "name": "course"
+        }
+    ],
+    "paths": {
+        "/programmes": {
+            "get": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "PROGRAMME ON RMG4",
+                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                            "institute_title_en": "BITAC",
+                                            "programme_code": "4456",
+                                            "programme_logo": "",
+                                            "row_status": 1,
+                                            "created_at": "2021-07-26T06:53:00.000000Z",
+                                            "updated_at": "2021-07-26T06:56:12.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:57:11.606837Z",
+                                        "finished": "2021-07-26T06:57:11.635651Z"
+                                    },
+                                    "_links": {
+                                        "paginate": []
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a programme\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "discription",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "programme under bitac institute"
+                    },
+                    {
+                        "name": "logo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jpg"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": "1",
+                                        "code": "4455",
+                                        "updated_at": "2021-07-26T06:53:00.000000Z",
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:53:00.665843Z",
+                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/programmes/{programmeId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "in": "path",
+                        "description": "programme id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "127.0.0.1:8000"
+                        }
+                    }
+                ],
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "BITAC",
+                                        "programme_code": "4456",
+                                        "programme_logo": "",
+                                        "row_status": 1,
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "updated_at": "2021-07-26T06:56:12.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:57:56.790490Z",
+                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a programme\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4456"
+                    },
+                    {
+                        "name": "discription",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "programme under bitac institute"
+                    },
+                    {
+                        "name": "logo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": "1",
+                                        "code": "4456",
+                                        "description": null,
+                                        "logo": "",
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "updated_at": "2021-07-26T06:56:12.000000Z",
+                                        "row_status": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:56:12.054312Z",
+                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "in": "path",
+                        "description": "Programme id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:58:34.514135Z",
+                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/": {
+            "get": {
+                "tags": [
+                    "training center"
+                ],
+                "summary": "get list",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "training center"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a Training Center\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "creating IT"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ক্রিয়েটিভ আইটি "
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "dhaka-1000"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:16:30 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "creating IT",
+                                        "title_bn": "ক্রিয়েটিভ আইটি ",
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "address": "dhaka-1000",
+                                        "google_map_src": "",
+                                        "updated_at": "2021-07-26T07:16:30.000000Z",
+                                        "created_at": "2021-07-26T07:16:30.000000Z",
+                                        "id": 6
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:16:30.904824Z",
+                                        "finished": "2021-07-26T07:16:30.947598Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/{trainingcenterId}": {
+            "get": {
+                "tags": [
+                    "training center"
+                ],
+                "summary": "get one",
+                "description": "###### API endpoint to get a Training Center\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainingcenterId",
+                        "in": "path",
+                        "description": "training Center id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:19:43 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 6,
+                                        "title_en": "creating IT",
+                                        "title_bn": "ক্রিয়েটিভ আইটি ",
+                                        "institute_name": "BITAC",
+                                        "branch_name": "branch -1",
+                                        "address": "dhaka-1000",
+                                        "row_status": 1,
+                                        "google_map_src": "",
+                                        "created_at": "2021-07-26T07:16:30.000000Z",
+                                        "updated_at": "2021-07-26T07:16:30.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:19:43.476745Z",
+                                        "finished": "2021-07-26T07:19:43.506398Z"
+                                    },
+                                    "_links": []
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "training center"
+                ],
+                "summary": "update",
+                "description": "###### API endpoint to update a Training Center\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "example": ""
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "trainingcenterId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "creating IT"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ক্রিয়েটিভ আইটি "
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "dhaka-1000"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:18:13 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 6,
+                                        "title_en": "creating IT",
+                                        "title_bn": "ক্রিয়েটিভ আইটি ",
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "address": "dhaka-1000",
+                                        "google_map_src": "",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T07:16:30.000000Z",
+                                        "updated_at": "2021-07-26T07:16:30.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:18:13.721146Z",
+                                        "finished": "2021-07-26T07:18:13.764519Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "training center"
+                ],
+                "summary": "delete",
+                "description": "# API endpoint to delete a training center\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainingcenterId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:20:21 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:20:21.922415Z",
+                                        "finished": "2021-07-26T07:20:21.980108Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institutes": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "get list",
+                "description": "###### API endpoint to get the list of institutes\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:54:53 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "BITAC",
+                                            "title_bn": "বিতাক",
+                                            "code": "3745",
+                                            "address": null,
+                                            "domain": "https://www.bitac.gov.bd",
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": 1558292976,
+                                            "mobile_numbers": null,
+                                            "email": null,
+                                            "config": null,
+                                            "created_at": "2021-07-26T05:50:46.000000Z",
+                                            "updated_at": "2021-07-26T05:50:46.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                            }
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title_en": "BASIS",
+                                            "title_bn": "বেসিস",
+                                            "code": "3748",
+                                            "address": null,
+                                            "domain": "https://www.basis.gov.bd",
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": 1558292977,
+                                            "mobile_numbers": null,
+                                            "email": null,
+                                            "config": null,
+                                            "created_at": "2021-07-26T05:53:40.000000Z",
+                                            "updated_at": "2021-07-26T05:53:40.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/institutes/2",
+                                                "update": "http://127.0.0.1:8000/api/v1/institutes/2",
+                                                "delete": "http://127.0.0.1:8000/api/v1/institutes/2"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:54:53.650352Z",
+                                        "finished": "2021-07-26T05:54:53.681598Z"
+                                    },
+                                    "_links": {
+                                        "paginate": [],
+                                        "search": {
+                                            "parameters": [
+                                                "title_en",
+                                                "title_bn"
+                                            ],
+                                            "_link": "http://127.0.0.1:8000/api/v1/institutes"
+                                        }
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create an institute\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "BITAC"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "বিতাক"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "3745"
+                    },
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://www.bitac.gov.bd"
+                    },
+                    {
+                        "name": "primary_mobile",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1558292976
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3745",
+                                        "domain": "https://www.bitac.gov.bd",
+                                        "primary_mobile": 1558292976,
+                                        "updated_at": "2021-07-26T05:50:46.000000Z",
+                                        "created_at": "2021-07-26T05:50:46.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:50:46.759705Z",
+                                        "finished": "2021-07-26T05:50:46.857006Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institutes/{instituteId}": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "get one",
+                "description": "###### API endpoint to get an  institute\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "instituteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:56:02 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3745",
+                                        "address": null,
+                                        "domain": "https://www.bitac.gov.bd",
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": 1558292976,
+                                        "mobile_numbers": null,
+                                        "email": null,
+                                        "config": null,
+                                        "created_at": "2021-07-26T05:50:46.000000Z",
+                                        "updated_at": "2021-07-26T05:50:46.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:56:02.855177Z",
+                                        "finished": "2021-07-26T05:56:02.888598Z"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/institutes/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/institutes/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "update",
+                "description": "###### API endpoint to update an institute\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "instituteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "BITAC"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "বিতাক"
+                    },
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "http://skill.bitac.gov.bd"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "3749"
+                    },
+                    {
+                        "name": "primary_mobile",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1749838292
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:57:51 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title_en": "BITAC",
+                                        "title_bn": "বিতাক",
+                                        "code": "3749",
+                                        "domain": "http://skill.bitac.gov.bd",
+                                        "address": null,
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": 1749838292,
+                                        "mobile_numbers": null,
+                                        "email": null,
+                                        "config": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T05:53:40.000000Z",
+                                        "updated_at": "2021-07-26T05:57:51.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:57:51.266402Z",
+                                        "finished": "2021-07-26T05:57:51.342813Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete an institute.\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "instituteId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:58:30 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:58:30.554574Z",
+                                        "finished": "2021-07-26T05:58:30.586354Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batches": {
+            "get": {
+                "tags": [
+                    "Batch"
+                ],
+                "summary": "get list",
+                "description": "###### API endpoint to get list of batch\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:25:03 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "course_id": 1,
+                                            "institute_id": 1,
+                                            "institute_title": "BITAC",
+                                            "created_at": "2021-07-26T07:23:32.000000Z",
+                                            "course_title": "Math II",
+                                            "branch_name": "branch -1",
+                                            "programme_name": null,
+                                            "training_center_name": "creating IT",
+                                            "updated_at": "2021-07-26T07:23:32.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:25:03.231063Z",
+                                        "finished": "2021-07-26T07:25:03.262919Z"
+                                    },
+                                    "_links": {
+                                        "paginate": [],
+                                        "search": {
+                                            "parameters": [
+                                                "title_en",
+                                                "title_bn"
+                                            ],
+                                            "_link": "http://127.0.0.1:8000/api/v1/course-configs"
+                                        }
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Batch"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a batch\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "6"
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_sessions",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "[1]"
+                    },
+                    {
+                        "name": "course_sessions[0][session_name_en]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "\"session one\""
+                    },
+                    {
+                        "name": "course_sessions[0][session_name_bn]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "সেশন"
+                    },
+                    {
+                        "name": "course_sessions[0][number_of_batches]",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    },
+                    {
+                        "name": "course_sessions[0][application_start_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][application_end_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][course_start_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][max_seat_available]",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "100"
+                    },
+                    {
+                        "name": "ethnic",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "freedom_fighter",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "disable_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "ssc",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "hsc",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "honors",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "masters",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "occupation",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "guardian",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "institute_id": "1",
+                                        "course_id": "1",
+                                        "training_center_id": "6",
+                                        "branch_id": "1",
+                                        "ethnic": "0",
+                                        "freedom_fighter": "0",
+                                        "disable_status": "0",
+                                        "ssc": "1",
+                                        "hsc": "1",
+                                        "honors": "1",
+                                        "masters": "1",
+                                        "occupation": "1",
+                                        "guardian": "1",
+                                        "updated_at": "2021-07-26T07:23:32.000000Z",
+                                        "created_at": "2021-07-26T07:23:32.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:23:32.619886Z",
+                                        "finished": "2021-07-26T07:23:32.766903Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batches/{batchId}": {
+            "get": {
+                "tags": [
+                    "batch"
+                ],
+                "summary": "get one",
+                "description": "###### API endpoint to get a batch\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "batchId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "course_id": 1,
+                                        "institute_id": 1,
+                                        "institute_title": "BITAC",
+                                        "created_at": "2021-07-26T07:23:32.000000Z",
+                                        "course_title": "Math II",
+                                        "branch_name": "branch -1",
+                                        "programme_name": null,
+                                        "training_center_name": "creating IT",
+                                        "updated_at": "2021-07-26T07:23:32.000000Z",
+                                        "course_sessions": [
+                                            {
+                                                "id": 1,
+                                                "course_id": 1,
+                                                "course_config_id": 1,
+                                                "session_name_en": "\"session one\"",
+                                                "session_name_bn": "সেশন",
+                                                "number_of_batches": 2,
+                                                "application_start_date": "2010-12-21T00:00:00.000000Z",
+                                                "application_end_date": "2010-12-21T00:00:00.000000Z",
+                                                "course_start_date": "2010-12-21T00:00:00.000000Z",
+                                                "max_seat_available": 100,
+                                                "created_at": "2021-07-26T07:23:32.000000Z",
+                                                "updated_at": "2021-07-26T07:23:32.000000Z"
+                                            },
+                                            {
+                                                "id": 2,
+                                                "course_id": 1,
+                                                "course_config_id": 1,
+                                                "session_name_en": "\"session\"",
+                                                "session_name_bn": "সেশন",
+                                                "number_of_batches": 2,
+                                                "application_start_date": "2010-12-21T00:00:00.000000Z",
+                                                "application_end_date": "2010-12-21T00:00:00.000000Z",
+                                                "course_start_date": "2010-12-21T00:00:00.000000Z",
+                                                "max_seat_available": 200,
+                                                "created_at": "2021-07-26T07:26:29.000000Z",
+                                                "updated_at": "2021-07-26T07:26:29.000000Z"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:27:31.837083Z",
+                                        "finished": "2021-07-26T07:27:31.897936Z"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/course-configs/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/course-configs/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Batch"
+                ],
+                "summary": "update",
+                "description": "###### API endpoint to update a batch\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "batchId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "6"
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "course_sessions",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "[1]"
+                    },
+                    {
+                        "name": "course_sessions[0][session_name_en]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "\"session\""
+                    },
+                    {
+                        "name": "course_sessions[0][session_name_bn]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "সেশন"
+                    },
+                    {
+                        "name": "course_sessions[0][number_of_batches]",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    },
+                    {
+                        "name": "course_sessions[0][application_start_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][application_end_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][course_start_date]",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "10-12-21"
+                    },
+                    {
+                        "name": "course_sessions[0][max_seat_available]",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "200"
+                    },
+                    {
+                        "name": "ethnic",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "freedom_fighter",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "disable_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+                    {
+                        "name": "ssc",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "hsc",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "honors",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "masters",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "occupation",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "guardian",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:26:29 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "training_center_id": "6",
+                                        "programme_id": null,
+                                        "course_id": "1",
+                                        "row_status": 1,
+                                        "ethnic": "0",
+                                        "freedom_fighter": "0",
+                                        "disable_status": "0",
+                                        "ssc": "1",
+                                        "hsc": "1",
+                                        "honors": "1",
+                                        "masters": "1",
+                                        "occupation": "1",
+                                        "guardian": "1",
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T07:23:32.000000Z",
+                                        "updated_at": "2021-07-26T07:23:32.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:26:29.079218Z",
+                                        "finished": "2021-07-26T07:26:29.155416Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "course config"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a course config\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "courseConfigId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 07:28:35 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T07:28:35.536244Z",
+                                        "finished": "2021-07-26T07:28:35.572323Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/branches": {
+            "get": {
+                "tags": [
+                    "branch"
+                ],
+                "summary": "get list",
+                "description": "###### API endpoint to get the list of branches\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:28:31 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "branch -1",
+                                            "title_bn": "branch -2",
+                                            "institute_title_en": "bitac",
+                                            "row_status": 99,
+                                            "address": null,
+                                            "google_map_src": null,
+                                            "created_at": "2021-07-25T12:50:40.000000Z",
+                                            "updated_at": "2021-07-25T12:50:55.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/branches/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/branches/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/branches/1"
+                                            }
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title_en": "branch -1",
+                                            "title_bn": "branch -1",
+                                            "institute_title_en": "bitac",
+                                            "row_status": 1,
+                                            "address": null,
+                                            "google_map_src": null,
+                                            "created_at": "2021-07-26T05:25:35.000000Z",
+                                            "updated_at": "2021-07-26T05:25:35.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/branches/2",
+                                                "update": "http://127.0.0.1:8000/api/v1/branches/2",
+                                                "delete": "http://127.0.0.1:8000/api/v1/branches/2"
+                                            }
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title_en": "branch -1",
+                                            "title_bn": "ব্রাঞ্ছ-১",
+                                            "institute_title_en": "bitac",
+                                            "row_status": 1,
+                                            "address": null,
+                                            "google_map_src": null,
+                                            "created_at": "2021-07-26T05:28:15.000000Z",
+                                            "updated_at": "2021-07-26T05:28:15.000000Z",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/branches/3",
+                                                "update": "http://127.0.0.1:8000/api/v1/branches/3",
+                                                "delete": "http://127.0.0.1:8000/api/v1/branches/3"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:28:31.219267Z",
+                                        "finished": "2021-07-26T05:28:31.269677Z"
+                                    },
+                                    "_links": {
+                                        "paginate": [],
+                                        "search": {
+                                            "parameters": [
+                                                "title_en",
+                                                "title_bn"
+                                            ],
+                                            "_link": "http://127.0.0.1:8000/api/v1/branches"
+                                        }
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "branch"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a branch\nA successful request response will show HTTP 201 status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Branch-1"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ব্রাঞ্ছ-১"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:28:15 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "branch -1",
+                                        "title_bn": "ব্রাঞ্ছ-১",
+                                        "institute_id": "1",
+                                        "updated_at": "2021-07-26T05:28:15.000000Z",
+                                        "created_at": "2021-07-26T05:28:15.000000Z",
+                                        "id": 3
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:28:14.994885Z",
+                                        "finished": "2021-07-26T05:28:15.050193Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/branches/{branchId}": {
+            "get": {
+                "tags": [
+                    "branch"
+                ],
+                "summary": "get one",
+                "description": "###### API endpoint to get a branch by specifying id as request parameter\n\nA successful request response will show HTTP 200 status code",
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:28:46 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 3,
+                                        "title_en": "branch -1",
+                                        "title_bn": "ব্রাঞ্ছ-১",
+                                        "institute_title_en": "bitac",
+                                        "row_status": 1,
+                                        "address": null,
+                                        "google_map_src": null,
+                                        "created_at": "2021-07-26T05:28:15.000000Z",
+                                        "updated_at": "2021-07-26T05:28:15.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:28:46.322690Z",
+                                        "finished": "2021-07-26T05:28:46.350463Z"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/branches/3",
+                                        "delete": "http://127.0.0.1:8000/api/v1/branches/3"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "branch"
+                ],
+                "summary": "update",
+                "description": "###### API endpoint to update a branch\nA successful request response will show HTTP 201 status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Branch-1"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "ব্রাঞ্ছ-১"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:29:30 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Branch-1",
+                                        "title_bn": "ব্রাঞ্ছ-১",
+                                        "institute_id": "1",
+                                        "address": null,
+                                        "google_map_src": null,
+                                        "row_status": 99,
+                                        "created_by": null,
+                                        "created_at": "2021-07-25T12:50:40.000000Z",
+                                        "updated_at": "2021-07-26T05:29:30.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:29:30.780322Z",
+                                        "finished": "2021-07-26T05:29:30.827452Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "branch"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a branch\nA successful request response will show HTTP 200 status code",
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 05:29:43 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T05:29:43.807426Z",
+                                        "finished": "2021-07-26T05:29:43.835780Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses": {
+            "get": {
+                "tags": [
+                    "course"
+                ],
+                "summary": "get list",
+                "description": "###### API endpoint to get the list of courses\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 06:20:12 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Math",
+                                            "title_bn": "গণিত",
+                                            "duration": null,
+                                            "code": "CSE300",
+                                            "course_fee": 300,
+                                            "target_group": null,
+                                            "contents": null,
+                                            "objects": null,
+                                            "training_methodology": null,
+                                            "evaluation_system": null,
+                                            "created_at": "2021-07-26T06:18:05.000000Z",
+                                            "updated_at": "2021-07-26T06:18:05.000000Z",
+                                            "institute_title": "BITAC",
+                                            "_links": {
+                                                "read": "http://127.0.0.1:8000/api/v1/courses/1",
+                                                "update": "http://127.0.0.1:8000/api/v1/courses/1",
+                                                "delete": "http://127.0.0.1:8000/api/v1/courses/1"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:20:11.984678Z",
+                                        "finished": "2021-07-26T06:20:12.046213Z"
+                                    },
+                                    "_links": {
+                                        "paginate": [],
+                                        "search": {
+                                            "parameters": [
+                                                "title_en",
+                                                "title_bn"
+                                            ],
+                                            "_link": "http://127.0.0.1:8000/api/v1/courses"
+                                        }
+                                    },
+                                    "_page": [],
+                                    "_order": "ASC"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "course"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a course\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Math"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "গণিত"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "CSE300"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "300"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 06:18:05 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "Math",
+                                        "title_bn": "গণিত",
+                                        "code": "CSE300",
+                                        "course_fee": "300",
+                                        "institute_id": "1",
+                                        "cover_image": "course/course.jpeg",
+                                        "updated_at": "2021-07-26T06:18:05.000000Z",
+                                        "created_at": "2021-07-26T06:18:05.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:18:05.266571Z",
+                                        "finished": "2021-07-26T06:18:05.305270Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{courseId}": {
+            "get": {
+                "tags": [
+                    "course"
+                ],
+                "summary": "get one",
+                "description": "###### API endpoint to get an institute\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 06:20:41 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Math",
+                                        "title_bn": "গণিত",
+                                        "duration": null,
+                                        "code": "CSE300",
+                                        "course_fee": 300,
+                                        "target_group": null,
+                                        "contents": null,
+                                        "objects": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "created_at": "2021-07-26T06:18:05.000000Z",
+                                        "updated_at": "2021-07-26T06:18:05.000000Z",
+                                        "institute_title": "BITAC"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:20:41.711859Z",
+                                        "finished": "2021-07-26T06:20:41.735140Z"
+                                    },
+                                    "_links": {
+                                        "update": "http://127.0.0.1:8000/api/v1/courses/1",
+                                        "delete": "http://127.0.0.1:8000/api/v1/courses/1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "course"
+                ],
+                "summary": "update",
+                "description": "###### API endpoint to update an institute\n\nA successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {}
+                },
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Math II"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "গণিত II"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "CSE-300"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "300"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 06:22:32 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Math II",
+                                        "title_bn": "গণিত II",
+                                        "course_fee": "300",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objects": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": "course/course.jpeg",
+                                        "code": "CSE-300",
+                                        "institute_id": "1",
+                                        "row_status": 99,
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T06:18:05.000000Z",
+                                        "updated_at": "2021-07-26T06:22:32.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:22:32.605086Z",
+                                        "finished": "2021-07-26T06:22:32.682841Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "course"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete an institute.\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "Host": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "127.0.0.1:8000"
+                                }
+                            },
+                            "Date": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "Mon, 26 Jul 2021 06:21:29 GMT"
+                                }
+                            },
+                            "Connection": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "close"
+                                }
+                            },
+                            "X-Powered-By": {
+                                "schema": {
+                                    "type": "number",
+                                    "example": "PHP/8.0.3"
+                                }
+                            },
+                            "Cache-Control": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "no-cache, private"
+                                }
+                            },
+                            "Content-Type": {
+                                "schema": {
+                                    "type": "string",
+                                    "example": "application/json"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:21:29.153295Z",
+                                        "finished": "2021-07-26T06:21:29.180094Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "programmes": {
+                "type": "object",
+                "description": "Programmes management Service",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": false
+                    },
+                    "code": {
+                        "type": "string"
+                    },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 300,
+                        "minLength": 2
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "maxLength": 800,
+                        "minLength": 2
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "create_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "page": {
+                "in": "query",
+                "name": "page",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "title_en": {
+                "in": "query",
+                "name": "title_en",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "title_bn": {
+                "in": "query",
+                "name": "title_bn",
+                "schema": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

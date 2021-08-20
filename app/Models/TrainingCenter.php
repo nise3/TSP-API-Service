@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Traits\scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class TrainingCenter
@@ -18,10 +20,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null google_map_src
  * @property-read Institute $institute
  * @property-read  Branch $branch
+ * @property-read  Batch $batch
  */
 class TrainingCenter extends BaseModel
 {
-    use  ScopeRowStatusTrait;
+    use  ScopeRowStatusTrait, HasFactory;
+    use SoftDeletes;
 
     /**
      * @var string[]
@@ -47,8 +51,8 @@ class TrainingCenter extends BaseModel
     /**
      * @return HasMany
      */
-    public function CourseConfig(): HasMany
+    public function batch(): HasMany
     {
-        return $this->hasMany(CourseConfig::class);
+        return $this->hasMany(Batch::class);
     }
 }

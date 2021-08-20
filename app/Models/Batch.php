@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class CourseConfig
+ * Class Batche
  * @package App\Models
  * @property int institute_id
  * @property int branch_id
@@ -30,13 +32,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Programme programme
  * @property-read Course course
  */
-
-class CourseConfig extends BaseModel
+class Batch extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
-
 
     /**
      * @return BelongsTo
@@ -78,12 +78,4 @@ class CourseConfig extends BaseModel
         return $this->belongsTo(Programme::class);
     }
 
-
-    /**
-     * @return HasMany
-     */
-    public function courseSessions(): HasMany
-    {
-        return $this->hasMany(CourseSession::class);
-    }
 }

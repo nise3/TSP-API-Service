@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class BaseModel
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 abstract class BaseModel extends Model
 {
-    use SoftDeletes;
+    use ScopeRowStatusTrait;
     public const ROW_STATUS_ACTIVE = '1';
     public const ROW_STATUS_INACTIVE = '0';
 }

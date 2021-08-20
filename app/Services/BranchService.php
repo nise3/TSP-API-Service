@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -33,8 +34,8 @@ class BranchService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Branch|Builder $branches */
-        $branches = Branch::select([
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
@@ -43,23 +44,24 @@ class BranchService
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
+            'branches.row_status',
             'branches.created_at',
             'branches.updated_at',
         ]);
 
-        $branches->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-        $branches->orderBy('branches.id', $order);
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->orderBy('branches.id', $order);
 
 
         if (!empty($titleEn)) {
-            $branches->where('branches.title_en', 'like', '%' . $titleEn . '%');
+            $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $branches->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-
+        /** @var Collection $branchBuilder */
         if ($paginate) {
-            $branches = $branches->paginate(10);
+            $branches = $branchBuilder->paginate(10);
             $paginateData = (object)$branches->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -69,20 +71,12 @@ class BranchService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $branches = $branches->get();
+            $branches = $branchBuilder->get();
         }
 
-        $data = [];
-        foreach ($branches as $branch) {
-            $links['read'] = route('api.v1.branches.read', ['id' => $branch->id]);
-            $links['update'] = route('api.v1.branches.update', ['id' => $branch->id]);
-            $links['delete'] = route('api.v1.branches.destroy', ['id' => $branch->id]);
-            $branch['_links'] = $links;
-            $data[] = $branch->toArray();
-        }
 
         return [
-            "data" => $data,
+            "data" => $branches->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -91,18 +85,7 @@ class BranchService
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.branches.get-list')
-
-                ],
-
             ],
-
             "_page" => $page,
             "_order" => $order
         ];
@@ -113,10 +96,10 @@ class BranchService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneBranch(int $id,  Carbon $startTime): array
+    public function getOneBranch(int $id, Carbon $startTime): array
     {
-        /** @var Branch|Builder $branch */
-        $branch = Branch::select([
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::select([
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
@@ -125,19 +108,16 @@ class BranchService
             'branches.row_status',
             'branches.address',
             'branches.google_map_src',
+            'branches.row_status',
             'branches.created_at',
             'branches.updated_at',
         ]);
 
-        $branch->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-        $branch->where('branches.id', $id);
-        $branch = $branch->first();
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->where('branches.id', $id);
 
-        $links = [];
-        if (!empty($branch)) {
-            $links['update'] = route('api.v1.branches.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.branches.destroy', ['id' => $id]);
-        }
+        /** @var Branch $branchBuilder */
+        $branch = $branchBuilder->first();
 
         return [
             "data" => $branch ?: null,
@@ -146,8 +126,7 @@ class BranchService
                 "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
 
     }
@@ -158,10 +137,12 @@ class BranchService
      */
     public function store(array $data): Branch
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $branch = new Branch();
         $branch->fill($data);
         $branch->save();
-
         return $branch;
     }
 
@@ -172,9 +153,11 @@ class BranchService
      */
     public function update(Branch $branch, array $data): Branch
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $branch->fill($data);
         $branch->save();
-
         return $branch;
 
     }
@@ -221,13 +204,21 @@ class BranchService
                 'nullable',
                 'string'
             ],
-//            'row_status' => [
-//                'required_if:' . $id . ',==,null',
-//                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
-//            ],
+            'row_status' => [
+                'required_if:' . $id . ',==,null',
+                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
+            ],
         ];
 
         return Validator::make($request->all(), $rules);
+    }
+
+    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
+    {
+        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
+            $googleMapSrc = $match[1];
+        }
+        return $googleMapSrc;
     }
 
 }

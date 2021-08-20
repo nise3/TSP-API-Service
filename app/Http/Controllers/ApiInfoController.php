@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ApiInfoController extends Controller
 {
-    const SERVICE_NAME = 'NISE-3 Organization Management API Service';
+    const SERVICE_NAME = 'NISE-3 Institute Management API Service';
     const SERVICE_VERSION = 'V1';
 
     public function apiInfo(): JsonResponse
@@ -19,7 +20,7 @@ class ApiInfoController extends Controller
             'lumen_version' => App::version(),
             'module_list' => [
                 'Branch',
-                'CourseConfig',
+                'Batch',
                 'Course',
                 'Institute',
                 'Programme',
@@ -29,6 +30,6 @@ class ApiInfoController extends Controller
                 'It is a institute management api service that manages services related to a institute'
             ]
         ];
-        return Response::json($response,JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

@@ -2,14 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\BaseModel;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -32,30 +32,36 @@ class TrainingCenterService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var TrainingCenter|Builder $trainingCenters */
-        $trainingCenters = TrainingCenter::select([
+        /** @var TrainingCenter|Builder $trainingCentersBuilder */
+        $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id as id',
             'training_centers.title_en',
             'training_centers.title_bn',
+            'training_centers.institute_id',
             'institutes.title_en as institute_name',
-            'institutes.id as institute_id',
-            'training_centers.row_status',
+            'training_centers.branch_id',
             'branches.title_en as branch_name',
-            'branches.id as branch_id',
+            'training_centers.address',
+            'training_centers.address',
+            'training_centers.google_map_src',
+            'training_centers.row_status',
+            'training_centers.created_by',
+            'training_centers.updated_by',
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenters->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
-        $trainingCenters->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+        $trainingCentersBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
+        $trainingCentersBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
 
         if (!empty($titleEn)) {
-            $trainingCenters->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
+            $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainingCenters->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $trainingCentersBuilder */
         if ($paginate) {
-            $trainingCenters = $trainingCenters->paginate(10);
+            $trainingCenters = $trainingCentersBuilder->paginate(10);
             $paginateData = (object)$trainingCenters->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -65,20 +71,11 @@ class TrainingCenterService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $trainingCenters = $trainingCenters->get();
-        }
-
-        $data = [];
-        foreach ($trainingCenters as $trainingCenter) {
-            $links['read'] = route('api.v1.training-centers.read', ['id' => $trainingCenter->id]);
-            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
-            $trainingCenter['_links'] = $links;
-            $data[] = $trainingCenter->toArray();
+            $trainingCenters = $trainingCentersBuilder->get();
         }
 
         return [
-            "data" => $data ?: null,
+            "data" => $trainingCenters->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -86,14 +83,7 @@ class TrainingCenterService
                 "finished" => Carbon::now()->format('H i s'),
             ],
             "_links" => [
-                'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.training-centers.get-list')
-                ],
+                'paginate' => $paginateLink
             ],
             "_page" => $page,
             "_order" => $order
@@ -107,41 +97,41 @@ class TrainingCenterService
      */
     public function getOneTrainingCenter(int $id, Carbon $startTime): array
     {
-        /** @var TrainingCenter|Builder $trainingCenter */
-        $trainingCenter = TrainingCenter::select([
+        /** @var TrainingCenter|Builder $trainingCenterBuilder */
+        $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id as id',
             'training_centers.title_en',
             'training_centers.title_bn',
+            'training_centers.institute_id',
             'institutes.title_en as institute_name',
-            'institutes.title_en as institute_name',
+            'training_centers.branch_id',
             'branches.title_en as branch_name',
-            'branches.id as branch_id',
+            'training_centers.center_location_type',
             'training_centers.address',
-            'training_centers.row_status',
+            'training_centers.address',
             'training_centers.google_map_src',
+            'training_centers.row_status',
+            'training_centers.created_by',
+            'training_centers.updated_by',
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenter->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
-        $trainingCenter->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
-        $trainingCenter->where('training_centers.id', '=', $id);
-        $trainingCenter = $trainingCenter->first();
+        $trainingCenterBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
+        $trainingCenterBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+        $trainingCenterBuilder->where('training_centers.id', '=', $id);
 
-        $links = [];
-        if (!empty($programme)) {
-            $links['update'] = route('api.v1.training-centers.update', ['id' => $trainingCenter->id]);
-            $links['delete'] = route('api.v1.training-centers.destroy', ['id' => $trainingCenter->id]);
-        }
+        /** @var TrainingCenter $trainingCenterBuilder */
+        $trainingCenter = $trainingCenterBuilder->first();
+
 
         return [
-            "data" => $trainingCenter ?: null,
+            "data" => $trainingCenter ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 
@@ -196,11 +186,12 @@ class TrainingCenterService
             'title_bn' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
+            'center_location_type' => 'nullable|int',
             'address' => ['nullable', 'string', 'max:1000'],
             'google_map_src' => ['nullable', 'string'],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                'required_if:' . $id . ',!=,null',
+                Rule::in([TrainingCenter::ROW_STATUS_ACTIVE, TrainingCenter::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);

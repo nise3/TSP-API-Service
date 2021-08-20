@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use App\Traits\scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Programme
@@ -16,12 +18,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string code
  * @property string|null description
  * @property int row_status
- * @property-read CourseConfig $courseConfig
+ * @property-read Batch $batch
  * @property-read Institute $institute
  */
 class Programme extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, HasFactory;
+    use SoftDeletes;
 
     /**
      * @var string[]
@@ -39,8 +42,8 @@ class Programme extends BaseModel
     /**
      * @return HasMany
      */
-    public function courseConfig(): HasMany
+    public function batch(): HasMany
     {
-        return $this->hasMany(CourseConfig::class);
+        return $this->hasMany(Batch::class);
     }
 }

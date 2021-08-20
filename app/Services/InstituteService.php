@@ -2,14 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Models\TrainingCenter;
+use App\Services\TrainingCenterService;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -19,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InstituteService
 {
+    public TrainingCenterService $trainingCenterService;
+
     /**
      * @param Request $request
      * @param Carbon $startTime
@@ -33,15 +37,12 @@ class InstituteService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Institute|Builder $institutes */
-        $institutes = Institute::select([
+        /** @var Institute|Builder $instituteBuilder*/
+        $instituteBuilder = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
-            'institutes.address',
-            'institutes.domain',
-            'institutes.google_map_src',
             'institutes.logo',
             'institutes.primary_phone',
             'institutes.phone_numbers',
@@ -49,19 +50,26 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
+            'institutes.row_status',
+            'institutes.created_by',
+            'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
         ]);
-        $institutes->orderBy('institutes.id', $order);
+        $instituteBuilder->orderBy('institutes.id', $order);
 
         if (!empty($titleEn)) {
-            $institutes->where('institutes.title_en', 'like', '%' . $titleEn . '%');
+            $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $institutes->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
+            $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        /** @var Collection $instituteBuilder */
         if ($paginate) {
-            $institutes = $institutes->paginate(10);
+            $institutes = $instituteBuilder->paginate(10);
             $paginateData = (object)$institutes->toArray();
             $page = [
                 "size" => $paginateData->per_page,
@@ -71,20 +79,11 @@ class InstituteService
             ];
             $paginateLink[] = $paginateData->links;
         } else {
-            $institutes = $institutes->get();
-        }
-
-        $data = [];
-        foreach ($institutes as $institute) {
-            $links['read'] = route('api.v1.institutes.read', ['id' => $institute->id]);
-            $links['update'] = route('api.v1.institutes.update', ['id' => $institute->id]);
-            $links['delete'] = route('api.v1.institutes.destroy', ['id' => $institute->id]);
-            $institute['_links'] = $links;
-            $data[] = $institute->toArray();
+            $institutes = $instituteBuilder->get();
         }
 
         return [
-            "data" => $data ?: null,
+            "data" => $institutes->toArray() ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -93,13 +92,6 @@ class InstituteService
             ],
             "_links" => [
                 'paginate' => $paginateLink,
-                "search" => [
-                    'parameters' => [
-                        'title_en',
-                        'title_bn'
-                    ],
-                    '_link' => route('api.v1.institutes.get-list')
-                ],
             ],
             "_page" => $page,
             "_order" => $order
@@ -113,15 +105,12 @@ class InstituteService
      */
     public function getOneInstitute(int $id, Carbon $startTime): array
     {
-        /** @var Institute|Builder $institute */
-        $institute = Institute::select([
+        /** @var Institute|Builder $instituteBuilder */
+        $instituteBuilder = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
-            'institutes.address',
-            'institutes.domain',
-            'institutes.google_map_src',
             'institutes.logo',
             'institutes.primary_phone',
             'institutes.phone_numbers',
@@ -129,28 +118,28 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
+            'institutes.row_status',
+            'institutes.created_by',
+            'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
         ]);
 
-        $institute->where('institutes.id', $id);
-        $institute = $institute->first();
-
-        $links = [];
-        if (!empty($institute)) {
-            $links['update'] = route('api.v1.institutes.update', ['id' => $id]);
-            $links['delete'] = route('api.v1.institutes.destroy', ['id' => $id]);
-        }
+        $instituteBuilder->where('institutes.id', $id);
+        /** @var Institute $instituteBuilder */
+        $institute = $instituteBuilder->first();
 
         return [
-            "data" => $institute ?: null,
+            "data" => $institute ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => $links,
+            ]
         ];
     }
 
@@ -172,7 +161,7 @@ class InstituteService
                 'max:191',
                 'unique:institutes,domain,' . $id
             ],
-            'address' => ['nullable', 'string', 'max:191'],
+            'address' => ['nullable', 'string', 'max:500'],
             'google_map_src' => ['nullable', 'string'],
             'primary_phone' => [
                 'nullable',
@@ -186,11 +175,16 @@ class InstituteService
             'logo' => [
                 'nullable',
                 'string',
-                'max:191',
+                'maxSize:512000',
+                'mimes:png,jpg,jpeg',
+                "dimensions:max_width=80,max_height=80"
             ],
+            'is_training_center' => 'nullable|boolean',
+            'training_center_name_en' => 'nullable|string|max: 191',
+            'training_center_name_bn' => 'nullable|string|max: 191',
             'row_status' => [
-                'required_if:' . $id . ',==,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                'required_if:' . $id . ',!=,null',
+                Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
             ],
         ];
         $messages = [
@@ -200,15 +194,35 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
     }
 
+    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
+    {
+        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
+            $googleMapSrc = $match[1];
+        }
+        return $googleMapSrc;
+    }
+
     /**
      * @param array $data
      * @return Institute
      */
     public function store(array $data): Institute
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
+
         $institute = new Institute();
         $institute->fill($data);
         $institute->save();
+//        if($data['is_training_center']==true){
+//            $tData['institute_id'] = $institute->id;
+//            $tData['title_en'] = $data['training_center_name_en'];
+//            $tData['title_bn'] = $data['training_center_name_bn'];
+//            $trainingCenter = new TrainingCenter();
+//            $trainingCenter->fill($tData);
+//            $trainingCenter->save();
+//        }
         return $institute;
     }
 
@@ -219,6 +233,9 @@ class InstituteService
      */
     public function update(Institute $institute, array $data): Institute
     {
+        if (!empty($data['google_map_src'])) {
+            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
+        }
         $institute->fill($data);
         $institute->save();
         return $institute;
