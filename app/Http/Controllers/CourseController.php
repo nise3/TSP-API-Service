@@ -117,7 +117,7 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -154,7 +154,7 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -187,6 +187,6 @@ class CourseController extends Controller
             ];
             return Response::json($response, $response['_response_status']['code']);
         }
-        return Response::json($response, JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

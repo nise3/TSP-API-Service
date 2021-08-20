@@ -6,7 +6,6 @@ namespace App\Services;
 use App\Models\BaseModel;
 use App\Models\Branch;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -206,7 +205,7 @@ class BranchService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Branch::ROW_STATUS_ACTIVE, Branch::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
 

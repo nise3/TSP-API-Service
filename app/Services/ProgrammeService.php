@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
@@ -197,7 +197,7 @@ class ProgrammeService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
