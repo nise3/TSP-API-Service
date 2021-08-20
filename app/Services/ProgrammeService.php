@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
@@ -9,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Query\Builder;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class ProgrammeService
@@ -80,7 +82,7 @@ class ProgrammeService
             "data" => $data,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -134,7 +136,7 @@ class ProgrammeService
             "data" => $programme ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -168,14 +170,11 @@ class ProgrammeService
 
     /**
      * @param Programme $programme
-     * @return Programme
+     * @return bool
      */
-    public function destroy(Programme $programme): Programme
+    public function destroy(Programme $programme): bool
     {
-        $programme->row_status = Programme::ROW_STATUS_DELETED;
-        $programme->save();
-        $programme->delete();
-        return $programme;
+        return $programme->delete();
     }
 
     /**
@@ -218,7 +217,7 @@ class ProgrammeService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);

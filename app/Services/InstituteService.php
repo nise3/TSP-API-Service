@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use App\Models\Institute;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 
 /**
@@ -85,7 +87,7 @@ class InstituteService
             "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -144,7 +146,7 @@ class InstituteService
             "data" => $institute ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -154,7 +156,7 @@ class InstituteService
 
     /**
      * @param Request $request
-     * @param null $id
+     * @param int|null $id
      * @return Validator
      */
     public function validator(Request $request, int $id = null): Validator
@@ -188,7 +190,7 @@ class InstituteService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         $messages = [
@@ -224,13 +226,10 @@ class InstituteService
 
     /**
      * @param Institute $institute
-     * @return Institute
+     * @return bool
      */
-    public function destroy(Institute $institute): Institute
+    public function destroy(Institute $institute): bool
     {
-        $institute->row_status = Institute::ROW_STATUS_DELETED;
-        $institute->save();
-        $institute->delete();
-        return $institute;
+        return $institute->delete();
     }
 }

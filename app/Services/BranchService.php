@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use App\Models\Branch;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class BranchService
@@ -83,7 +85,7 @@ class BranchService
             "data" => $data,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -141,7 +143,7 @@ class BranchService
             "data" => $branch ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -179,20 +181,17 @@ class BranchService
 
     /**
      * @param Branch $branch
-     * @return Branch
+     * @return bool
      */
-    public function destroy(Branch $branch): Branch
+    public function destroy(Branch $branch): bool
     {
-        $branch->row_status = Branch::ROW_STATUS_DELETED;
-        $branch->save();
-        $branch->delete();
-
-        return $branch;
+        return $branch->delete();
     }
 
 
     /**
      * @param Request $request
+     * @param int|null $id
      * @return \Illuminate\Contracts\Validation\Validator
      */
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator

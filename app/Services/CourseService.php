@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Database\Query\Builder;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CourseService
@@ -85,7 +86,7 @@ class CourseService
             "data" => $data,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -145,7 +146,7 @@ class CourseService
             "data" => $course ? $course : null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -179,14 +180,11 @@ class CourseService
 
     /**
      * @param Course $course
-     * @return Course
+     * @return bool
      */
-    public function destroy(Course $course): Course
+    public function destroy(Course $course): bool
     {
-        $course->row_status = 99;
-        $course->save();
-        $course->delete();
-        return $course;
+        return  $course->delete();
     }
 
     /**

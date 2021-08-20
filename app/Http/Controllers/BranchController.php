@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
@@ -105,7 +106,7 @@ class BranchController extends Controller
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_CREATED,
+                    "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Branch added successfully",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -126,7 +127,7 @@ class BranchController extends Controller
             return Response::json($response, $response['_response_status']['code']);
         }
 
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -149,7 +150,7 @@ class BranchController extends Controller
                 'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Brnach Update successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -169,7 +170,7 @@ class BranchController extends Controller
             return Response::json($response, $response['_response_status']['code']);
         }
 
-        return Response::json($response, JsonResponse::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
 
@@ -187,7 +188,7 @@ class BranchController extends Controller
             $response = [
                 '_response_status' => [
                     "success" => true,
-                    "code" => JsonResponse::HTTP_OK,
+                    "code" => ResponseAlias::HTTP_OK,
                     "message" => "Branch deleted successfully.",
                     "started" => $this->startTime->format('H i s'),
                     "finished" => Carbon::now()->format('H i s'),
@@ -206,6 +207,6 @@ class BranchController extends Controller
             return Response::json($response, $response['_response_status']['code']);
         }
 
-        return Response::json($response, JsonResponse::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

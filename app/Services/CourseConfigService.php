@@ -4,14 +4,18 @@
 namespace App\Services;
 
 
+use App\Models\BaseModel;
 use App\Models\CourseConfig;
 use App\Models\CourseSession;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class CourseConfigService
@@ -94,7 +98,7 @@ class CourseConfigService
             "data" => $data,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -122,7 +126,7 @@ class CourseConfigService
      * @param Carbon $startTime
      * @return array
      */
-    public function getOneCourseConfig(int $id , Carbon $startTime): array
+    public function getOneCourseConfig(int $id, Carbon $startTime): array
     {
         /** @var CourseConfig|Builder $courseConfig */
 
@@ -164,7 +168,7 @@ class CourseConfigService
             "data" => $courseConfig ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -229,13 +233,18 @@ class CourseConfigService
      */
     public function destroy(CourseConfig $courseConfig): CourseConfig
     {
-        $courseConfig->row_status = CourseConfig::ROW_STATUS_DELETED;
-        $courseConfig->save();
-        $courseConfig->delete();
+        try {
+            DB::beginTransaction();
+            $courseConfig->delete();
 
-        foreach ($courseConfig->courseSessions() as $courseSession) {
-            $courseSession->row_status = CourseSession::ROW_STATUS_DELETED;
+            foreach ($courseConfig->courseSessions() as $courseSession) {
+                $courseSession->delete();
+            }
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
         }
+
 
         return $courseConfig;
     }
@@ -243,9 +252,10 @@ class CourseConfigService
 
     /**
      * @param Request $request
+     * @param int|null $id
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request, int $id = Null):  \Illuminate\Contracts\Validation\Validator
+    public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'institute_id' => [
@@ -344,7 +354,7 @@ class CourseConfigService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([CourseConfig::ROW_STATUS_ACTIVE, CourseConfig::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
 

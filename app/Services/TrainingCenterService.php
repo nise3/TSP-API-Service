@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TrainingCenterService
@@ -79,7 +81,7 @@ class TrainingCenterService
             "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -135,7 +137,7 @@ class TrainingCenterService
             "data" => $trainingCenter ?: null,
             "_response_status" => [
                 "success" => true,
-                "code" => JsonResponse::HTTP_OK,
+                "code" => Response::HTTP_OK,
                 "started" => $startTime->format('H i s'),
                 "finished" => Carbon::now()->format('H i s'),
             ],
@@ -175,14 +177,11 @@ class TrainingCenterService
 
     /**
      * @param TrainingCenter $trainingCenter
-     * @return TrainingCenter
+     * @return bool
      */
-    public function destroy(TrainingCenter $trainingCenter): TrainingCenter
+    public function destroy(TrainingCenter $trainingCenter): bool
     {
-        $trainingCenter->row_status = TrainingCenter::ROW_STATUS_DELETED;
-        $trainingCenter->save();
-        $trainingCenter->delete();
-        return $trainingCenter;
+        return $trainingCenter->delete();
     }
 
     /**
@@ -201,7 +200,7 @@ class TrainingCenterService
             'google_map_src' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([TrainingCenter::ROW_STATUS_ACTIVE, TrainingCenter::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
