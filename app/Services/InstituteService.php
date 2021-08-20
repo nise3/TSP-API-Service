@@ -2,11 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Models\TrainingCenter;
-use App\Services\TrainingCenterService;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -177,7 +175,7 @@ class InstituteService
             'training_center_name_bn' => 'nullable|string|max: 191',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
-                Rule::in([Institute::ROW_STATUS_ACTIVE, Institute::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         $messages = [
@@ -208,14 +206,14 @@ class InstituteService
         $institute = new Institute();
         $institute->fill($data);
         $institute->save();
-//        if($data['is_training_center']==true){
-//            $tData['institute_id'] = $institute->id;
-//            $tData['title_en'] = $data['training_center_name_en'];
-//            $tData['title_bn'] = $data['training_center_name_bn'];
-//            $trainingCenter = new TrainingCenter();
-//            $trainingCenter->fill($tData);
-//            $trainingCenter->save();
-//        }
+/*        if($data['is_training_center']==true){
+            $tData['institute_id'] = $institute->id;
+            $tData['title_en'] = $data['training_center_name_en'];
+            $tData['title_bn'] = $data['training_center_name_bn'];
+            $trainingCenter = new TrainingCenter();
+            $trainingCenter->fill($tData);
+            $trainingCenter->save();
+        }*/
         return $institute;
     }
 
