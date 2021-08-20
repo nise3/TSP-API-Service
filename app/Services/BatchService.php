@@ -4,10 +4,9 @@
 namespace App\Services;
 
 
+use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\CourseSession;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -308,7 +307,7 @@ class BatchService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Batch::ROW_STATUS_ACTIVE, Batch::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return Validator::make($request->all(), $rules);
