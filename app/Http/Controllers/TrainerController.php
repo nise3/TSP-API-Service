@@ -3,83 +3,151 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trainer;
+use App\Services\TrainerService;
+use Exception;
+use \Illuminate\Support\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use App\Services\InstituteService;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class TrainerController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var TrainerService
      */
-    public function index()
+    public TrainerService $trainerService;
+
+    /**
+     * @var Carbon
+     */
+    private Carbon $startTime;
+
+    /**
+     * TrainerController constructor.
+     * @param TrainerService $trainerService
+     */
+
+    public function __construct(TrainerService $trainerService)
     {
-        //
+        $this->trainerService = $trainerService;
+        $this->startTime = Carbon::now();
+    }
+
+
+    /**
+     * * Display a listing of the resource.
+     * @param Request $request
+     * @return Exception|JsonResponse|Throwable
+     */
+    public function getList(Request $request): JsonResponse
+    {
+        try {
+            $response = $this->trainerService->getTrainerList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * * Display the specified resource
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
      */
-    public function create()
+    public function read(int $id): JsonResponse
     {
-        //
+        try {
+            $response = $this->trainerService->getOneTrainer($id, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validatedData = $this->trainerService->validator($request)->validate();
+        try {
+            $data = $this->trainerService->store($validatedData);
+            $response = [
+                'data' => $data ?: null,
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Trainer added successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+    /**
+     * * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $trainer = Trainer::findOrFail($id);
+        $validated = $this->trainerService->validator($request, $id)->validate();
+
+        try {
+            $data = $this->trainerService->update($trainer, $validated);
+            $response = [
+                'data' => $data ?: [],
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Trainer updated successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Trainer  $trainer
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
      */
-    public function show(Trainer $trainer)
+    public function destroy(int $id): JsonResponse
     {
-        //
+        $trainer = Trainer::findOrFail($id);
+        try {
+            $this->trainerService->destroy($trainer);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Trainer deleted successfully.",
+                    "started" => $this->startTime->format('H i s'),
+                    "finished" => Carbon::now()->format('H i s'),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Trainer  $trainer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Trainer $trainer)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Trainer  $trainer
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Trainer $trainer)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Trainer  $trainer
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Trainer $trainer)
-    {
-        //
-    }
 }

@@ -20,4 +20,5 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('batches', 'BatchController')->render();
     $customRouter()->resourceRoute('courses', 'CourseController')->render();
     $customRouter()->resourceRoute('branches', 'BranchController')->render();
+    $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
 });
