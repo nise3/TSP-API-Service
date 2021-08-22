@@ -101,6 +101,7 @@
                     {
                         "name": "title_en",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -109,6 +110,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -117,6 +119,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -125,6 +128,7 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -145,6 +149,14 @@
                             "type": "string"
                         },
                         "example": "default.jpg"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -248,8 +260,8 @@
                     },
                     {
                         "name": "title_en",
-                        "required": true,
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -257,8 +269,8 @@
                     },
                     {
                         "name": "title_bn",
-                        "required": true,
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -267,6 +279,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -275,10 +288,11 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
-                        "example": "4456"
+                        "example": "4455"
                     },
                     {
                         "name": "discription",
@@ -293,7 +307,16 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "default.jpg"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -446,6 +469,7 @@
                 "parameters": [
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -454,6 +478,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -462,6 +487,7 @@
                     },
                     {
                         "name": "institute_id",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -498,6 +524,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -613,6 +647,7 @@
                     },
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -621,6 +656,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -629,6 +665,7 @@
                     },
                     {
                         "name": "institute_id",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -665,6 +702,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -822,6 +867,7 @@
                 "parameters": [
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -830,6 +876,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -839,6 +886,7 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -847,10 +895,11 @@
                     {
                         "name": "domain",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
-                        "example": "https://developer.chrome.com/"
+                        "example": "https://developer.com"
                     },
                     {
                         "name": "address",
@@ -893,6 +942,7 @@
                     {
                         "name": "primary_mobile",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -906,19 +956,12 @@
                         }
                     },
                     {
-                        "name": "email",
+                        "name": "row_status",
                         "in": "query",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         },
-                        "example": "softbd@gmail.com"
-                    },
-                    {
-                        "name": "config",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -1318,6 +1361,7 @@
                     {
                         "name": "course_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1350,6 +1394,7 @@
                     {
                         "name": "training_center_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1469,6 +1514,14 @@
                             "type": "integer"
                         }
 
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
 
                 ],
@@ -1618,6 +1671,7 @@
                     {
                         "name": "course_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1650,6 +1704,7 @@
                     {
                         "name": "training_center_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1703,7 +1758,7 @@
                         "name": "in_ethnic_group",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1711,7 +1766,7 @@
                         "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1719,14 +1774,14 @@
                         "name": "disability_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
                     },
                     {
                         "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1734,7 +1789,7 @@
                         "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1742,7 +1797,7 @@
                         "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1750,7 +1805,7 @@
                         "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1758,7 +1813,7 @@
                         "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
                     },
@@ -1766,11 +1821,18 @@
                         "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
-                            "type": "boolean"
+                            "type": "integer"
                         }
 
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
-
                 ],
                 "responses": {
                     "201": {
@@ -1937,6 +1999,7 @@
                 "parameters": [
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1945,6 +2008,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1954,6 +2018,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1973,6 +2038,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -2080,6 +2153,7 @@
                     },
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -2088,6 +2162,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -2097,6 +2172,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2116,6 +2192,14 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -2276,6 +2360,7 @@
                     {
                         "name": "title_en",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -2284,6 +2369,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -2292,6 +2378,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2300,6 +2387,7 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2308,6 +2396,7 @@
                     {
                         "name": "course_fee",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2388,6 +2477,14 @@
                             "type": "string"
                         },
                         "example": "default.jph"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -2520,6 +2617,7 @@
                     {
                         "name": "title_en",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -2528,6 +2626,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -2536,6 +2635,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2544,6 +2644,7 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2552,6 +2653,7 @@
                     {
                         "name": "course_fee",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2632,6 +2734,14 @@
                             "type": "string"
                         },
                         "example": "default.jph"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {

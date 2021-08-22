@@ -304,7 +304,7 @@ class BatchService
                 'boolean',
             ],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
+                'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];

@@ -5,11 +5,12 @@ namespace App\Services;
 use App\Models\Course;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
+use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CourseService
@@ -77,9 +78,9 @@ class CourseService
         } else {
             $courses = $coursesBuilder->get();
         }
-        $response['order']=$order;
-        $response['data']=$courses->toArray()['data'] ?? $courses->toArray();
-        $response['response_status']= [
+        $response['order'] = $order;
+        $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
+        $response['response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "started" => $startTime->format('H i s'),
@@ -255,7 +256,11 @@ class CourseService
                 'nullable',
                 'string',
                 'max:191',
-            ]
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
