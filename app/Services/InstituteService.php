@@ -166,9 +166,6 @@ class InstituteService
             'logo' => [
                 'nullable',
                 'string',
-                'maxSize:512000',
-                'mimes:png,jpg,jpeg',
-                "dimensions:max_width=80,max_height=80"
             ],
             'is_training_center' => 'nullable|boolean',
             'training_center_name_en' => 'nullable|string|max: 191',
@@ -178,11 +175,7 @@ class InstituteService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        $messages = [
-            'logo.dimensions' => 'Please upload 80x80 size of image',
-            'logo.max' => 'Please upload maximum 500kb size of image',
-        ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string

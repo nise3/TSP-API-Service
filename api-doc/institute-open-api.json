@@ -66,14 +66,42 @@
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "institute_title_en": "BITAC",
-                                            "programme_code": "4456",
-                                            "programme_logo": "",
+                                            "title_en": "Dr. Ransom Wehner",
+                                            "title_bn": "Prof. Neoma Gusikowski",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "16026",
+                                            "programme_logo": null,
+                                            "description": "Blanditiis itaque reiciendis molestias est iusto.",
                                             "row_status": 1,
-                                            "created_at": "2021-07-26T06:53:00.000000Z",
-                                            "updated_at": "2021-07-26T06:56:12.000000Z"
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title_en": "Hector Conroy",
+                                            "title_bn": "Shyanne Trantow",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "68731-6509",
+                                            "programme_logo": null,
+                                            "description": "Quia rerum dolores voluptas cum quis rerum fugiat.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title_en": "Dessie Murphy V",
+                                            "title_bn": "Rylan Mueller",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "15620-6934",
+                                            "programme_logo": null,
+                                            "description": "Ex consequuntur optio tenetur quis voluptas.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
                                         }
                                     ],
                                     "response_status": {
@@ -255,7 +283,8 @@
                         "required": true,
                         "in": "path",
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": "1"
                         }
                     },
                     {
@@ -367,7 +396,8 @@
                         "description": "Programme id to delete",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": "1"
                         }
                     }
                 ],
@@ -523,7 +553,8 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
                         "name": "row_status",
@@ -643,7 +674,8 @@
                         "in": "path",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "1"
                     },
                     {
                         "name": "title_en",
@@ -701,7 +733,8 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
                         "name": "row_status",
@@ -723,16 +756,19 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "center_location_type": "1",
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "code": "4456",
-                                        "description": null,
-                                        "logo": "",
+                                        "address": "Dhaka firm gate block 2",
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "row_status": "0",
                                         "created_by": null,
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "updated_at": "2021-07-26T06:56:12.000000Z",
-                                        "row_status": 1
+                                        "updated_by": null,
+                                        "created_at": "2021-08-22T08:35:49.000000Z",
+                                        "updated_at": "2021-08-22T08:54:34.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -761,7 +797,8 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "5"
                     }
                 ],
                 "responses": {
@@ -888,7 +925,7 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "example": "4455"
                     },
@@ -1087,6 +1124,7 @@
                     },
                     {
                         "name": "title_en",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1095,6 +1133,7 @@
                     },
                     {
                         "name": "title_bn",
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1104,18 +1143,20 @@
                     {
                         "name": "code",
                         "in": "query",
+                        "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "example": "4455"
                     },
                     {
                         "name": "domain",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
-                        "example": "https://developer.chrome.com"
+                        "example": "https://developer.com"
                     },
                     {
                         "name": "address",
@@ -1158,6 +1199,7 @@
                     {
                         "name": "primary_mobile",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -1171,19 +1213,12 @@
                         }
                     },
                     {
-                        "name": "email",
+                        "name": "row_status",
                         "in": "query",
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         },
-                        "example": "softbd@gmail.com"
-                    },
-                    {
-                        "name": "config",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -1196,25 +1231,26 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
+                                        "id": 4,
+                                        "code": "4455",
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "code": "4455",
-                                        "logo": null,
+                                        "domain": "https://developer.com",
+                                        "address": "Dhaka mirpur road 4 block 2",
+                                        "google_map_src": null,
+                                        "logo": "default.jpg",
                                         "primary_phone": "01845654543",
                                         "phone_numbers": null,
                                         "primary_mobile": "01845654543",
                                         "mobile_numbers": null,
-                                        "email": null,
+                                        "email": "sammy93@yahoo.com",
                                         "config": null,
-                                        "domain": "https://developer.chrome.com",
-                                        "address": "Dhaka mirpur road 4 block 2",
-                                        "google_map_src": null,
-                                        "row_status": 1,
+                                        "row_status": "0",
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-18T14:39:55.000000Z",
-                                        "updated_at": "2021-08-18T14:39:55.000000Z"
+                                        "created_at": "2021-08-22T06:40:17.000000Z",
+                                        "updated_at": "2021-08-22T06:43:23.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1313,12 +1349,12 @@
                                             "branch_name": null,
                                             "programme_id": null,
                                             "programme_name": null,
-                                            "number_of_vacancies": 0,
+                                            "number_of_seats": 0,
                                             "registration_start_date": "0000-00-00 00:00:00",
                                             "registration_end_date": "0000-00-00 00:00:00",
                                             "batch_start_date": "0000-00-00 00:00:00",
                                             "batch_end_date": "0000-00-00 00:00:00",
-                                            "available_vacancies": 0,
+                                            "available_seats": 0,
                                             "training_center_id": 1,
                                             "training_center_name": "wer",
                                             "in_ethnic_group": 0,
@@ -1543,12 +1579,12 @@
                                         "branch_name": null,
                                         "programme_id": null,
                                         "programme_name": null,
-                                        "number_of_vacancies": 0,
+                                        "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
                                         "batch_start_date": "0000-00-00 00:00:00",
                                         "batch_end_date": "0000-00-00 00:00:00",
-                                        "available_vacancies": 0,
+                                        "available_seats": 0,
                                         "training_center_id": 1,
                                         "training_center_name": "wer",
                                         "in_ethnic_group": 0,
@@ -1666,7 +1702,8 @@
                         "in": "path",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "4"
                     },
                     {
                         "name": "course_id",
@@ -1902,7 +1939,8 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "4"
                     }
                 ],
                 "responses": {
@@ -2037,7 +2075,8 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
                         "name": "row_status",
@@ -2149,7 +2188,8 @@
                         "in": "path",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "4"
                     },
                     {
                         "name": "title_en",
@@ -2191,7 +2231,8 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
                         "name": "row_status",
@@ -2250,7 +2291,8 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "5"
                     }
                 ],
                 "responses": {
@@ -2476,7 +2518,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "default.jph"
+                        "example": "default.jpg"
                     },
                     {
                         "name": "row_status",
@@ -2544,7 +2586,7 @@
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": "127.0.0.1:8000"
+                            "example": "2"
                         }
                     }
                 ],
@@ -2612,7 +2654,8 @@
                         "in": "path",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "4"
                     },
                     {
                         "name": "title_en",
@@ -2804,7 +2847,8 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "6"
                     }
                 ],
                 "responses": {
@@ -2842,17 +2886,21 @@
                         "readOnly": true
                     },
                     "code": {
+                        "required": true,
                         "type": "string"
                     },
                     "institute_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
@@ -2897,19 +2945,23 @@
                         "readOnly": true
                     },
                     "code": {
+                        "required": true,
                         "type": "string"
                     },
                     "title_en": {
                         "type": "string",
+                        "required": true,
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
                         "type": "string",
+                        "required": true,
                         "maxLength": 800,
                         "minLength": 2
                     },
                     "domain": {
+                        "required": true,
                         "type": "string"
                     },
                     "address": {
@@ -2928,6 +2980,7 @@
                         "type": "string"
                     },
                     "primary_mobile": {
+                        "required": true,
                         "type": "string"
                     },
                     "mobile_numbers": {
@@ -2973,17 +3026,20 @@
                         "readOnly": true
                     },
                     "institute_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "branch_id": {
                         "type": "integer"
                     },
                     "title_en": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 400,
                         "minLength": 2
                     },
                     "title_bn": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 900,
                         "minLength": 2
@@ -3031,14 +3087,17 @@
                         "readOnly": true
                     },
                     "institute_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
                         "type": "string",
+                        "required": true,
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
@@ -3083,22 +3142,27 @@
                         "readOnly": true
                     },
                     "code": {
+                        "required": true,
                         "type": "string"
                     },
                     "institute_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
+                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
                     },
                     "course_fee": {
+                        "required": true,
                         "type": "integer"
                     },
                     "duration": {
@@ -3174,9 +3238,11 @@
                         "type": "integer"
                     },
                     "training_center_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "course_id": {
+                        "required": true,
                         "type": "integer"
                     },
                     "number_of_seats": {

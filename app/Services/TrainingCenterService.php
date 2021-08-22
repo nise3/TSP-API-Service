@@ -25,8 +25,7 @@ class TrainingCenterService
      */
     public function getTrainingCenterList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -61,7 +60,7 @@ class TrainingCenterService
 
         /** @var Collection $trainingCentersBuilder */
         if ($paginate) {
-            $trainingCenters = $trainingCentersBuilder->paginate(10);
+            $trainingCenters = $trainingCentersBuilder->paginate($limit);
             $paginateData = (object)$trainingCenters->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;

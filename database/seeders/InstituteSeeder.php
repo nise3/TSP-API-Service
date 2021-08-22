@@ -31,9 +31,11 @@ class InstituteSeeder extends Seeder
 
         Institute::factory()->count(10)
             ->has(Branch::factory()->count(3))
-            ->has(Course::factory()->count(3))
+            ->has(TrainingCenter::factory()->count(3))
             ->has(Programme::factory()->count(3))
-            ->has(TrainingCenter::factory()->count(3))->has(Batch::factory()->count(3))
+            ->has(
+                Course::factory()->count(3)->has(Batch::factory()->count(3)
+               ))
             ->create();
 
         Schema::disableForeignKeyConstraints();

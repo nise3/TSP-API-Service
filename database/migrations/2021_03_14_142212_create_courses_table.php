@@ -20,7 +20,7 @@ class CreateCoursesTable extends Migration
             $table->string('title_en', 255);
             $table->string('title_bn', 1000)->nullable();
             $table->unsignedDecimal('course_fee', 14)->default(0);
-            $table->unsignedDecimal('duration', 14)->nullable()->comment('Duration in hours');
+            $table->string('duration', 14)->nullable()->comment('Duration in hours');
             $table->text('description')->nullable();
             $table->string('target_group', 500)->nullable();
             $table->text('objectives')->nullable();

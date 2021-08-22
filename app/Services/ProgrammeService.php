@@ -25,8 +25,7 @@ class ProgrammeService
      */
     public function getProgrammeList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -57,7 +56,7 @@ class ProgrammeService
 
         /** @var Collection $programmesBuilder */
         if ($paginate) {
-            $programmes = $programmesBuilder->paginate(10);
+            $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
