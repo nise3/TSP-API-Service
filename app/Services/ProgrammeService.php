@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
-use App\Helpers\Classes\CustomPaginateResonse;
+use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use App\Models\Programme;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,10 +25,10 @@ class ProgrammeService
      */
     public function getProgrammeList(Request $request, Carbon $startTime): array
     {
-        $response=[];
+        $paginateLink = [];
+        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
-        $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -58,26 +57,33 @@ class ProgrammeService
 
         /** @var Collection $programmesBuilder */
         if ($paginate) {
-            $programmes = $programmesBuilder->paginate($limit);
+            $programmes = $programmesBuilder->paginate(10);
             $paginateData = (object)$programmes->toArray();
-            $response['current_page'] = $paginateData->current_page;
-            $response['total_page'] = $paginateData->last_page;
-            $response['page_size'] = $paginateData->per_page;
-            $response['total'] = $paginateData->total;
+            $page = [
+                "size" => $paginateData->per_page,
+                "total_element" => $paginateData->total,
+                "total_page" => $paginateData->last_page,
+                "current_page" => $paginateData->current_page
+            ];
+            $paginateLink[] = $paginateData->links;
         } else {
             $programmes = $programmesBuilder->get();
         }
-        $response['order']=$order;
-        $response['data']=$programmes->toArray()['data'] ?? $programmes->toArray();
-        $response['response_status']= [
-            "success" => true,
-            "code" => Response::HTTP_OK,
-            "started" => $startTime->format('H i s'),
-            "finished" => Carbon::now()->format('H i s'),
+
+        return [
+            "data" => $programmes->toArray()??[],
+            "_response_status" => [
+                "success" => true,
+                "code" => Response::HTTP_OK,
+                "started" => $startTime->format('H i s'),
+                "finished" => Carbon::now()->format('H i s'),
+            ],
+            "_links" => [
+                'paginate' => $paginateLink
+            ],
+            "_page" => $page,
+            "_order" => $order
         ];
-
-        return $response;
-
     }
 
     /**
@@ -191,7 +197,7 @@ class ProgrammeService
             ],
             'row_status' => [
                 'required_if:' . $id . ',==,null',
-                Rule::in([Programme::ROW_STATUS_ACTIVE, Programme::ROW_STATUS_INACTIVE]),
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
