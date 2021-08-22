@@ -59,7 +59,8 @@ class TrainingCenterService
         }
 
         /** @var Collection $trainingCentersBuilder */
-        if ($paginate) {
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($limit);
             $paginateData = (object)$trainingCenters->toArray();
             $response['current_page'] = $paginateData->current_page;

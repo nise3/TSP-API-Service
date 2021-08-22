@@ -67,7 +67,8 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if ($paginate) {
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
             $response['current_page'] = $paginateData->current_page;

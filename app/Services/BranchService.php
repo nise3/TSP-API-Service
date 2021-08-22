@@ -60,7 +60,8 @@ class BranchService
         }
 
         /** @var Collection $branchBuilder */
-        if ($paginate) {
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
             $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();
             $response['current_page'] = $paginateData->current_page;

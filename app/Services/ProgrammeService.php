@@ -55,7 +55,8 @@ class ProgrammeService
         }
 
         /** @var Collection $programmesBuilder */
-        if ($paginate) {
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
             $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();
             $response['current_page'] = $paginateData->current_page;
