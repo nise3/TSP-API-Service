@@ -23,7 +23,6 @@ class InstituteFactory extends Factory
      */
     public function definition(): array
     {
-//        $title = $this->faker->unique()->jobTitle;
         return [
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,

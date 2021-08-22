@@ -15,7 +15,7 @@ class CourseFactory extends Factory
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,
             'code' => $this->faker->unique()->countryCode,
-            'course_fee' => $this->faker->randomElement([0,200,399,400,566,666,722,811,911,1110]),
+            'course_fee' => $this->faker->randomDigit(),
             'duration' => $this->faker->time,
             'description' => $this->faker->sentence,
 
