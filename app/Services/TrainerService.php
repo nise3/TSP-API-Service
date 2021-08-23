@@ -93,8 +93,7 @@ class TrainerService
         $response['response_status']= [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "started" => $startTime->format('H i s'),
-            "finished" => Carbon::now()->format('H i s'),
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
 
         return $response;
@@ -117,12 +116,12 @@ class TrainerService
             'trainers.branch_id',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
-            'trainers.about_me as about_me',
+            'trainers.about_me',
             'trainers.gender as gender',
             'trainers.marital_status as marital_status',
             'trainers.religion as religion',
             'trainers.nationality as nationality',
-            'trainers.nid as nid',
+            'trainers.nid',
             'trainers.passport_number as passport_number',
             'trainers.physical_disabilities_status as physical_disabilities_status',
             'trainers.freedom_fighter_status as freedom_fighter_status',
@@ -142,6 +141,7 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
         ]);
+        $trainerBuilder->where('trainers.id', $id);
 
         /** @var Trainer $trainerBuilder */
         $trainer = $trainerBuilder->first();
@@ -150,8 +150,7 @@ class TrainerService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
     }

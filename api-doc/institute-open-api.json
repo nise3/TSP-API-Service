@@ -110,8 +110,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -211,9 +210,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Programme added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -265,8 +263,7 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -376,9 +373,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Programme updated successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -416,9 +412,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Programme delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -481,8 +476,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -596,9 +590,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Training Center added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -655,8 +648,7 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -776,9 +768,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Training Center update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -816,9 +807,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Training Center delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -886,8 +876,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1038,9 +1027,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Institute added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1101,9 +1089,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1260,9 +1246,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Institute update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1299,9 +1284,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Institute delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1380,8 +1364,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1610,9 +1593,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Batch added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1684,9 +1666,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1920,9 +1900,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Batch update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -1961,8 +1940,7 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2021,8 +1999,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2116,9 +2093,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Branch added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2170,9 +2146,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2272,9 +2246,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Branch update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2312,9 +2285,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Branch delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2385,8 +2357,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2570,9 +2541,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Course added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2636,9 +2606,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2828,9 +2796,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Course update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2868,9 +2835,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Course delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -2985,8 +2951,7 @@
                                     "response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "started": "11 59 04",
-                                        "finished": "11 59 04"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -3261,9 +3226,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:53:00.665843Z",
-                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                        "message": "Trainer added successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -3337,9 +3301,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:57:56.790490Z",
-                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -3627,9 +3589,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:56:12.054312Z",
-                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                        "message": "Trainer update successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -3667,9 +3628,8 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "started": "2021-07-26T06:58:34.514135Z",
-                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                        "message": "Trainer delete successfully.",
+                                        "query_time": 0
                                     }
                                 }
                             }
@@ -4171,8 +4131,159 @@
                         "format": "date-time"
                     }
                 }
+            },
+            "batches": {
+                "type": "object",
+                "description": "Batch management Service",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": false
+                    },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "programme_id": {
+                        "type": "integer"
+                    },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "required": true,
+                        "type": "integer"
+                    },
+                    "course_id": {
+                        "required": true,
+                        "type": "integer"
+                    },
+                    "number_of_seats": {
+                        "type": "integer"
+                    },
+                    "registration_start_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "registration_end_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "batch_start_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "batch_end_date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "available_seats": {
+                        "type": "integer"
+                    },
+                    "in_ethnic_group": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "disability_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "ssc_passing_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "hsc_passing_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "honors_passing_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "masters_passing_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "is_occupation_needed": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "is_guardian_info_needed": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "create_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_by": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
             }
-        },
+
+            },
         "parameters": {
             "page": {
                 "in": "query",

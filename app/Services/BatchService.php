@@ -63,6 +63,7 @@ class BatchService
             'batches.masters_passing_status',
             'batches.is_occupation_needed',
             'batches.is_guardian_info_needed',
+            'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -103,8 +104,7 @@ class BatchService
         $response['response_status']= [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "started" => $startTime->format('H i s'),
-            "finished" => Carbon::now()->format('H i s'),
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
         return $response;
     }
@@ -146,6 +146,7 @@ class BatchService
             'batches.masters_passing_status',
             'batches.is_occupation_needed',
             'batches.is_guardian_info_needed',
+            'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -167,8 +168,7 @@ class BatchService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 

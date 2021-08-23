@@ -47,15 +47,7 @@ class CourseController extends Controller
         try {
             $response = $this->courseService->getCourseList($request, $this->startTime);
         } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
+            return $e;
         }
         return Response::json($response);
     }
@@ -71,15 +63,7 @@ class CourseController extends Controller
         try {
             $response = $this->courseService->getOneCourse($id, $this->startTime);
         } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
+            return $e;
         }
         return Response::json($response);
     }
@@ -102,20 +86,11 @@ class CourseController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Course added successfully",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
+            return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -139,20 +114,11 @@ class CourseController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Course updated successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
+            return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -172,20 +138,11 @@ class CourseController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Course deleted successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
-            $handler = new CustomExceptionHandler($e);
-            $response = [
-                '_response_status' => array_merge([
-                    "success" => false,
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
-                ], $handler->convertExceptionToArray())
-            ];
-            return Response::json($response, $response['_response_status']['code']);
+            return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
