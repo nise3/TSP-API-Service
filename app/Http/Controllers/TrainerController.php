@@ -8,9 +8,7 @@ use Exception;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
@@ -94,6 +92,7 @@ class TrainerController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
+
     /**
      * * Update the specified resource in storage.
      * @param Request $request
@@ -137,6 +136,32 @@ class TrainerController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Trainer deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
+     */
+    public function assignTrainerToBatch(Request $request, int $id): JsonResponse
+    {
+        $trainer = Trainer::findOrFail($id);
+        $validated = $this->trainerService->batchValidator($request)->validated();
+        try {
+            $trainer = $this->trainerService->assignTrainer($trainer, $validated['batchIds']);
+            $response = [
+                'data' => $trainer,
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "trainer added to batch successfully",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

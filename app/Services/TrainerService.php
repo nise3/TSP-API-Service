@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\Batch;
 use App\Models\Trainer;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -189,6 +191,18 @@ class TrainerService
     }
 
     /**
+     * @param Trainer $trainer
+     * @param array $batchIds
+     * @return Trainer
+     */
+    public function assignTrainer(Trainer $trainer, array $batchIds): Trainer
+    {
+        $validTrainers = Batch::whereIn('id', $batchIds)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $trainer->batches()->syncWithoutDetaching($validTrainers);
+        return $trainer;
+    }
+
+    /**
      * @param Request $request
      * @param int|null $id
      * @return Validator
@@ -330,5 +344,16 @@ class TrainerService
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+    }
+
+    public function batchValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data["batchIds"] = is_array($request['batchIds']) ? $request['batchIds'] : explode(',', $request['batchIds']);
+
+        $rules = [
+            'batchIds' => 'required|array|min:1',
+            'batchIds.*' => 'required|integer|distinct|min:1'
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 }

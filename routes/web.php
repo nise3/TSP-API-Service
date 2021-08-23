@@ -21,4 +21,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('courses', 'CourseController')->render();
     $customRouter()->resourceRoute('branches', 'BranchController')->render();
     $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
+
+
+    $router->post('trainers/{id}/assign-trainer-to-batch', ['as' => 'trainers.assign-trainer-to-batch', 'uses' => 'TrainerController@assignTrainerToBatch']);
 });

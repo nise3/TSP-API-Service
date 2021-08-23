@@ -9,29 +9,6 @@
             "url": "http://localhost:8000/api/v1"
         }
     ],
-    "tags": [
-        {
-            "name": "programmes"
-        },
-        {
-            "name": "training center"
-        },
-        {
-            "name": "institutes"
-        },
-        {
-            "name": "course config"
-        },
-        {
-            "name": "branch"
-        },
-        {
-            "name": "course"
-        },
-        {
-            "name": "trainers"
-        }
-    ],
     "paths": {
         "/programmes": {
             "get": {
@@ -3629,6 +3606,103 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Trainer delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trainers/{trainerId}/assign-trainer-to-batch": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "trainerId",
+                        "in": "path",
+                        "description": "trainer id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "batchIds",
+                        "in": "query",
+                        "style": "form",
+                        "required": true,
+                        "content": {
+                            "multipart/form-data": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "uniqueItems": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by trainer id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainers"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 13,
+                                        "institute_id": 1,
+                                        "branch_id": 1,
+                                        "training_center_id": null,
+                                        "trainer_name_en": "assdsddf",
+                                        "trainer_name_bn": "asfsdfsdf",
+                                        "trainer_registration_number": "434235232",
+                                        "email": "asdfqwr@gmailcom",
+                                        "mobile": "09877654321",
+                                        "date_of_birth": null,
+                                        "about_me": null,
+                                        "gender": 1,
+                                        "marital_status": 0,
+                                        "religion": null,
+                                        "nationality": "",
+                                        "nid": null,
+                                        "passport_number": null,
+                                        "physical_disabilities_status": 0,
+                                        "freedom_fighter_status": 0,
+                                        "present_address_division_id": null,
+                                        "present_address_district_id": null,
+                                        "present_address_upazila_id": null,
+                                        "present_house_address": null,
+                                        "permanent_address_division_id": null,
+                                        "permanent_address_district_id": null,
+                                        "permanent_address_upazila_id": null,
+                                        "permanent_house_address": null,
+                                        "educational_qualification": null,
+                                        "skills": null,
+                                        "photo": null,
+                                        "signature": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "deleted_at": null,
+                                        "created_at": "2021-08-22T12:32:35.000000Z",
+                                        "updated_at": "2021-08-22T12:32:35.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "trainer added to batch successfully",
                                         "query_time": 0
                                     }
                                 }

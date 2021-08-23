@@ -21,9 +21,5 @@ class Trainer extends Model
         return $this->belongsToMany(Batch::class,'trainer_batch');
     }
 
-    public function trainerBatches(): BelongsToMany
-    {
-        return $this->belongsToMany(TrainerBatch::class, 'organization_unit_services');
-    }
 
 }

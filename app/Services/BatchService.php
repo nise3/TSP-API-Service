@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -209,6 +210,9 @@ class BatchService
     }
 
 
+
+
+
     /**
      * @param Request $request
      * @param int|null $id
@@ -311,5 +315,7 @@ class BatchService
         ];
         return Validator::make($request->all(), $rules);
     }
+
+
 
 }

@@ -80,7 +80,7 @@ class Batch extends BaseModel
 
     public function trainer(): HasMany
     {
-        return $this->hasMany(Trainer::class);
+        return $this->hasMany(Trainer::class, 'trainer_batch');
     }
 
 }
