@@ -3631,7 +3631,6 @@
                     {
                         "name": "batchIds",
                         "in": "query",
-                        "style": "form",
                         "required": true,
                         "content": {
                             "multipart/form-data": {
@@ -3724,21 +3723,17 @@
                         "readOnly": true
                     },
                     "code": {
-                        "required": true,
                         "type": "string"
                     },
                     "institute_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
@@ -3772,7 +3767,14 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "code",
+                    "institute_id",
+                    "title_bn",
+                    "title_en"
+
+                ]
             },
             "institutes": {
                 "type": "object",
@@ -3783,23 +3785,19 @@
                         "readOnly": true
                     },
                     "code": {
-                        "required": true,
                         "type": "string"
                     },
                     "title_en": {
                         "type": "string",
-                        "required": true,
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
                         "type": "string",
-                        "required": true,
                         "maxLength": 800,
                         "minLength": 2
                     },
                     "domain": {
-                        "required": true,
                         "type": "string"
                     },
                     "address": {
@@ -3818,7 +3816,6 @@
                         "type": "string"
                     },
                     "primary_mobile": {
-                        "required": true,
                         "type": "string"
                     },
                     "mobile_numbers": {
@@ -3853,7 +3850,12 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn",
+                    "code"
+                ]
             },
             "training-centers": {
                 "type": "object",
@@ -3864,20 +3866,17 @@
                         "readOnly": true
                     },
                     "institute_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "branch_id": {
                         "type": "integer"
                     },
                     "title_en": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 400,
                         "minLength": 2
                     },
                     "title_bn": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 900,
                         "minLength": 2
@@ -3914,7 +3913,12 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "institute_id",
+                    "title_bn",
+                    "title_en"
+                ]
             },
             "branches": {
                 "type": "object",
@@ -3925,17 +3929,14 @@
                         "readOnly": true
                     },
                     "institute_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
                         "type": "string",
-                        "required": true,
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
@@ -3969,7 +3970,12 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "institute_id",
+                    "title_en",
+                    "title_bn"
+                ]
             },
             "courses": {
                 "type": "object",
@@ -3980,27 +3986,22 @@
                         "readOnly": true
                     },
                     "code": {
-                        "required": true,
                         "type": "string"
                     },
                     "institute_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "title_en": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 300,
                         "minLength": 2
                     },
                     "title_bn": {
-                        "required": true,
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
                     },
                     "course_fee": {
-                        "required": true,
                         "type": "integer"
                     },
                     "duration": {
@@ -4056,7 +4057,14 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "code",
+                    "institute_id",
+                    "title_en",
+                    "title_bn",
+                    "course_fee"
+                ]
             },
             "trainers": {
                 "type": "object",
@@ -4067,8 +4075,7 @@
                         "readOnly": true
                     },
                     "institute_id": {
-                        "type": "integer",
-                        "required": true
+                        "type": "integer"
                     },
                     "branch_id": {
                         "type": "integer"
@@ -4077,24 +4084,19 @@
                         "type": "integer"
                     },
                     "trainer_name_en": {
-                        "required": true,
                         "type": "integer"
                     },
                     "trainer_name_bn": {
-                        "required": true,
                         "type": "integer"
                     },
                     "trainer_registration_number": {
-                        "type": "string",
-                        "required": true
+                        "type": "string"
                     },
                     "email": {
-                        "type": "string",
-                        "required": true
+                        "type": "string"
                     },
                     "mobile": {
-                        "type": "string",
-                        "required": true
+                        "type": "string"
                     },
                     "date_of_birth": {
                         "type": "string",
@@ -4204,7 +4206,15 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "institute_id",
+                    "trainer_name_bn",
+                    "trainer_name_en",
+                    "email",
+                    "mobile",
+                    "trainer_registration_number"
+                ]
             },
             "batches": {
                 "type": "object",
@@ -4224,11 +4234,9 @@
                         "type": "integer"
                     },
                     "training_center_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "course_id": {
-                        "required": true,
                         "type": "integer"
                     },
                     "number_of_seats": {
@@ -4354,7 +4362,11 @@
                         "type": "string",
                         "format": "date-time"
                     }
-                }
+                },
+                "required": [
+                    "training_center_id",
+                    "course_id"
+                ]
             }
 
             },
