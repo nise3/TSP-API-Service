@@ -3656,7 +3656,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/trainers"
+                                    "$ref": "#/components/schemas/trainerBatch"
                                 },
                                 "example": {
                                     "data": {
@@ -4214,6 +4214,22 @@
                     "email",
                     "mobile",
                     "trainer_registration_number"
+                ]
+            },
+            "trainerBatch": {
+                "type": "object",
+                "description": "Associate Model",
+                "properties": {
+                    "trainer_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "trainer_id",
+                    "batch_id"
                 ]
             },
             "batches": {
