@@ -4,7 +4,31 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:8000/api/v1
+  - url: https://api.bus.softbd.xyz/institute/api/v1/
 paths:
+  /:
+    get:
+      summary: Institute Api Service Information
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              example:
+                service_name: NISE-3 Institute Management API Service
+                service_version: V1
+                lumen_version: Lumen (8.2.4) (Laravel Components ^8.0)
+                module_list:
+                  - Branch
+                  - Batch
+                  - Course
+                  - Institute
+                  - Programme
+                  - TrainingCenter
+                description:
+                  - It is a institute management api service that manages services related to a institute
+      tags:
+        - Api Information
   /programmes:
     get:
       tags:
@@ -2580,7 +2604,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/trainers'
+                $ref: '#/components/schemas/trainerBatch'
               example:
                 data:
                   id: 13
@@ -3008,6 +3032,17 @@ components:
         - email
         - mobile
         - trainer_registration_number
+    trainerBatch:
+      type: object
+      description: Associate Model
+      properties:
+        trainer_id:
+          type: integer
+        batch_id:
+          type: integer
+      required:
+        - trainer_id
+        - batch_id
     batches:
       type: object
       description: Batch management Service
