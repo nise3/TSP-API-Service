@@ -27,6 +27,9 @@
         },
         {
             "name": "course"
+        },
+        {
+            "name": "trainers"
         }
     ],
     "paths": {
@@ -2875,6 +2878,805 @@
                     }
                 }
             }
+        },
+        "/trainers": {
+            "get": {
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n trainers\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainers"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "trainer_name_en": "assdsddf",
+                                            "trainer_name_bn": "asfsdfsdf",
+                                            "institute_id": 1,
+                                            "training_center_id": null,
+                                            "branch_id": 1,
+                                            "email": "asdqdwr@gmailcom",
+                                            "date_of_birth": null,
+                                            "about_me": null,
+                                            "gender": 1,
+                                            "marital_status": 0,
+                                            "religion": null,
+                                            "nationality": "",
+                                            "nid": null,
+                                            "passport_number": null,
+                                            "physical_disabilities_status": 0,
+                                            "freedom_fighter_status": 0,
+                                            "present_address_division_id": null,
+                                            "present_address_district_id": null,
+                                            "present_address_upazila_id": null,
+                                            "present_house_address": null,
+                                            "permanent_address_division_id": null,
+                                            "permanent_address_district_id": null,
+                                            "permanent_address_upazila_id": null,
+                                            "permanent_house_address": null,
+                                            "educational_qualification": null,
+                                            "skills": null,
+                                            "photo": null,
+                                            "signature": null,
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T12:34:58.000000Z",
+                                            "updated_at": "2021-08-22T12:34:58.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "trainer_name_en": "assdsddf",
+                                            "trainer_name_bn": "asfsdfsdf",
+                                            "institute_id": 1,
+                                            "training_center_id": null,
+                                            "branch_id": 1,
+                                            "email": "asdqdwr@gmailcom",
+                                            "date_of_birth": null,
+                                            "about_me": null,
+                                            "gender": 1,
+                                            "marital_status": 0,
+                                            "religion": null,
+                                            "nationality": "",
+                                            "nid": null,
+                                            "passport_number": null,
+                                            "physical_disabilities_status": 0,
+                                            "freedom_fighter_status": 0,
+                                            "present_address_division_id": null,
+                                            "present_address_district_id": null,
+                                            "present_address_upazila_id": null,
+                                            "present_house_address": null,
+                                            "permanent_address_division_id": null,
+                                            "permanent_address_district_id": null,
+                                            "permanent_address_upazila_id": null,
+                                            "permanent_house_address": null,
+                                            "educational_qualification": null,
+                                            "skills": null,
+                                            "photo": null,
+                                            "signature": null,
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T12:34:58.000000Z",
+                                            "updated_at": "2021-08-22T12:34:58.000000Z"
+                                        }
+                                    ],
+                                    "response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "started": "11 59 04",
+                                        "finished": "11 59 04"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a trainer\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainer_name_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Tikka Khan"
+                    },
+                    {
+                        "name": "trainer_name_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "trainer_registration_number",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "asdf@gmail.com"
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "01844676535"
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "about_me",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gender",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "marital_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+
+                    {
+                        "name": "religion",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "nationality",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "nid",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "passport_number",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "physical_disabilities_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "freedom_fighter_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_house_address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "permanent_address_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "permanent_address_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "permanent_house_address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "educational_qualification",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "skills",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "photo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainers"
+                                },
+                                "example": {
+                                    "data": {
+                                        "trainer_name_en": "Tikka Khan",
+                                        "trainer_name_bn": "আরএমজি",
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "training_center_id": "1",
+                                        "trainer_registration_number": "445511",
+                                        "email": "asdfsdf@gmail.com",
+                                        "mobile": "01804676535",
+                                        "gender": "1",
+                                        "marital_status": "0",
+                                        "religion": "1",
+                                        "row_status": "1",
+                                        "updated_at": "2021-08-23T04:46:11.000000Z",
+                                        "created_at": "2021-08-23T04:46:11.000000Z",
+                                        "id": 20
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:53:00.665843Z",
+                                        "finished": "2021-07-26T06:53:00.727054Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trainers/{trainerId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "trainerId",
+                        "in": "path",
+                        "description": "trainer id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by trainer id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainers"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 8,
+                                        "trainer_name_en": "asd",
+                                        "trainer_name_bn": "asdf",
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "branch_id": 1,
+                                        "email": "asdfasd@gmail.com",
+                                        "date_of_birth": null,
+                                        "about_me": "asdasd",
+                                        "gender": 1,
+                                        "marital_status": 0,
+                                        "religion": null,
+                                        "nationality": "",
+                                        "nid": null,
+                                        "passport_number": null,
+                                        "physical_disabilities_status": 0,
+                                        "freedom_fighter_status": 0,
+                                        "present_address_division_id": null,
+                                        "present_address_district_id": null,
+                                        "present_address_upazila_id": null,
+                                        "present_house_address": null,
+                                        "permanent_address_division_id": null,
+                                        "permanent_address_district_id": null,
+                                        "permanent_address_upazila_id": null,
+                                        "permanent_house_address": null,
+                                        "educational_qualification": null,
+                                        "skills": null,
+                                        "photo": null,
+                                        "signature": null,
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:57:56.790490Z",
+                                        "finished": "2021-07-26T06:57:56.816062Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a course\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainerId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4"
+                    },
+                    {
+                        "name": "trainer_name_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Tikka Khan"
+                    },
+                    {
+                        "name": "trainer_name_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "trainer_registration_number",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "asdf@gmail.com"
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "01844676535"
+                    },
+                    {
+                        "name": "date_of_birth",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "about_me",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gender",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "marital_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "0"
+                    },
+
+                    {
+                        "name": "religion",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "nationality",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "nid",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "passport_number",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "physical_disabilities_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "freedom_fighter_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_address_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "present_house_address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "permanent_address_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "permanent_address_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "permanent_house_address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "educational_qualification",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "skills",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "photo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "signature",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courses"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:56:12.054312Z",
+                                        "finished": "2021-07-26T06:56:12.141544Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "trainers"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainerId",
+                        "in": "path",
+                        "description": "Trainer id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "20"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainers"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "started": "2021-07-26T06:58:34.514135Z",
+                                        "finished": "2021-07-26T06:58:34.552021Z"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -3222,7 +4024,7 @@
                     }
                 }
             },
-            "batches": {
+            "trainers": {
                 "type": "object",
                 "description": "Batch management Service",
                 "properties": {
@@ -3231,91 +4033,116 @@
                         "readOnly": true
                     },
                     "institute_id": {
-                        "type": "integer"
-                    },
-                    "programme_id": {
-                        "type": "integer"
+                        "type": "integer",
+                        "required": true
                     },
                     "branch_id": {
                         "type": "integer"
                     },
                     "training_center_id": {
+                        "type": "integer"
+                    },
+                    "trainer_name_en": {
                         "required": true,
                         "type": "integer"
                     },
-                    "course_id": {
+                    "trainer_name_bn": {
                         "required": true,
                         "type": "integer"
                     },
-                    "number_of_seats": {
+                    "trainer_registration_number": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "required": true
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "about_me": {
+                        "type": "string"
+                    },
+                    "gender": {
+                        "type": "integer",
+                        "enum": [1,2,3],
+                        "description": "1=>male, 2=>females, 3=>others",
+                        "default": 1
+                    },
+                    "marital_status": {
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "religion": {
+                        "type": "integer",
+                        "enum": [1,2,3,4,5],
+                        "description": "1=>islam, 2=>hindu, 3=>buddhist, 4=>Christians, 5=>others",
+                        "default": 1
+                    },
+                    "nationality": {
+                        "type": "string"
+                    },
+                    "nid": {
+                        "type": "string"
+                    },
+                    "passport_number": {
+                        "type": "string"
+                    },
+                    "physical_disabilities_status": {
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "freedom_fighter_status": {
+                        "type": "integer",
+                        "enum": [0,1],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "present_address_division_id": {
                         "type": "integer"
                     },
-                    "registration_start_date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "registration_end_date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "batch_start_date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "batch_end_date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "available_seats": {
+                    "present_address_district_id": {
                         "type": "integer"
                     },
-                    "in_ethnic_group": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "present_address_upazila_id": {
+                        "type": "integer"
                     },
-                    "disability_status": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "present_house_address": {
+                        "type": "string"
                     },
-                    "ssc_passing_status": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "permanent_address_division_id": {
+                        "type": "integer"
                     },
-                    "hsc_passing_status": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "permanent_address_district_id": {
+                        "type": "integer"
                     },
-                    "honors_passing_status": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "permanent_address_upazila_id": {
+                        "type": "integer"
                     },
-                    "masters_passing_status": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "permanent_house_address": {
+                        "type": "string"
                     },
-                    "is_occupation_needed": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "educational_qualification": {
+                        "type": "string"
                     },
-                    "is_guardian_info_needed": {
-                        "type": "integer",
-                        "enum": [0,1],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "skills": {
+                        "type": "string"
+                    },
+                    "photo": {
+                        "type": "string"
+                    },
+                    "signature": {
+                        "type": "string"
                     },
                     "row_status": {
                         "type": "integer",

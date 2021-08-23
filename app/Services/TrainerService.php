@@ -208,16 +208,20 @@ class TrainerService
                 'max:1000'
             ],
             'institute_id' => [
-                'nullable',
+                'required',
                 'int',
                 'exists:institutes,id'
             ],
             'branch_id' => [
                 'nullable',
                 'int',
-                'exists:institutes,id'
+                'exists:branches,id'
             ],
-
+            'training_center_id' => [
+                'nullable',
+                'int',
+                'exists:training_centers,id'
+            ],
             'trainer_registration_number' => [
                 'nullable',
                 'string',
@@ -251,7 +255,7 @@ class TrainerService
             ],
             'religion' => [
                 'nullable',
-                'inr'
+                'int'
             ],
             'nationality' => [
                 'nullable',
