@@ -4,12 +4,12 @@
 # Please do not change anything if you dont know what you are doing - Kalyan
 
 variables:
-  
+
   hostName: institute.bus.softbd.xyz
 
   # app version, changing version will auto deploy the app to current version
 
-  imageAppVersion: "1.0.2"
+  imageAppVersion: "1.0.3"
 
   # increase this when you need scale up
   replicaCount: 1
@@ -17,14 +17,14 @@ variables:
   imagePullPolicy: IfNotPresent
 
   serviceType: ClusterIP
-  
+
   # service port, this provide traffic to ingress within this port
   servicePort: 80
 
   # target container port
   serviceTargetPort: 80
 
-  #app buil image 
+  #app buil image
   imageRepository: kalyan31.jfrog.io/nise3-institute-docker/nise3-institute-docker
 
 

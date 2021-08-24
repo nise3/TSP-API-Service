@@ -25,8 +25,7 @@ class ProgrammeService
      */
     public function getProgrammeList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -56,34 +55,27 @@ class ProgrammeService
         }
 
         /** @var Collection $programmesBuilder */
-        if ($paginate) {
-            $programmes = $programmesBuilder->paginate(10);
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $programmes = $programmesBuilder->get();
         }
 
-        return [
-            "data" => $programmes->toArray()??[],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order']=$order;
+        $response['data']=$programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
+
+        return $response;
     }
 
     /**
@@ -118,8 +110,7 @@ class ProgrammeService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
     }
@@ -196,7 +187,7 @@ class ProgrammeService
                 'max:191',
             ],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
+                'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];

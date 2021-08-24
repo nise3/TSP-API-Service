@@ -23,7 +23,6 @@ class InstituteFactory extends Factory
      */
     public function definition(): array
     {
-//        $title = $this->faker->unique()->jobTitle;
         return [
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,
@@ -34,6 +33,9 @@ class InstituteFactory extends Factory
             'phone_numbers' => $this->faker->phoneNumber,
             'primary_mobile' => $this->faker->phoneNumber,
             'email' => $this->faker->email(),
+            'config' => $this->faker->sentence,
+            'google_map_src' => $this->faker->sentence,
+            'logo' => "softbd.jpg"
         ];
     }
 }

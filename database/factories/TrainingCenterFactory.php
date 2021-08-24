@@ -13,13 +13,14 @@ class TrainingCenterFactory extends Factory
 
     public function definition(): array
     {
-        $branch = Branch::all()->random();
+        $branch = Branch::inRandomOrder()->first();
     	return [
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,
-            'institute_id' => $this->faker->randomElement([1,2,3,4,5,6,7,8,9,10]),
             'branch_id' => $branch->id,
             'address' => $this->faker->address,
+            'center_location_type' => $this->faker->randomElement([1,2,3]),
+            'google_map_src' => $this->faker->sentence
     	];
     }
 }

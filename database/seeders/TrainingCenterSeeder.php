@@ -14,6 +14,5 @@ class TrainingCenterSeeder extends Seeder
      */
     public function run()
     {
-        TrainingCenter::factory()->count(10)->create();
     }
 }

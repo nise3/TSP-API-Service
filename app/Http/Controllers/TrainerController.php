@@ -2,41 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Batch;
-use App\Services\BatchService;
+use App\Models\Trainer;
+use App\Services\TrainerService;
 use Exception;
+use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-/**
- * Class BatcheController
- * @package App\Http\Controllers
- */
-class BatchController extends Controller
+class TrainerController extends Controller
 {
     /**
-     * @var BatchService
+     * @var TrainerService
      */
-    public BatchService $batchService;
-    /**
-     * @var \Carbon\Carbon|Carbon
-     */
-    private \Carbon\Carbon $startTime;
+    public TrainerService $trainerService;
 
     /**
-     * BatcheController constructor.
-     * @param BatchService $batchService
+     * @var Carbon
      */
-    public function __construct(BatchService $batchService)
+    private Carbon $startTime;
+
+    /**
+     * TrainerController constructor.
+     * @param TrainerService $trainerService
+     */
+
+    public function __construct(TrainerService $trainerService)
     {
-        $this->batchService = $batchService;
+        $this->trainerService = $trainerService;
         $this->startTime = Carbon::now();
     }
+
 
     /**
      * * Display a listing of the resource.
@@ -46,47 +45,45 @@ class BatchController extends Controller
     public function getList(Request $request): JsonResponse
     {
         try {
-            $response = $this->batchService->getBatchList($request,  $this->startTime);
+            $response = $this->trainerService->getTrainerList($request, $this->startTime);
         } catch (Throwable $e) {
-            return  $e;
+            return $e;
         }
         return Response::json($response);
     }
 
     /**
+     * * Display the specified resource
      * @param int $id
-     *  * Display the specified resource
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function read(int $id): JsonResponse
     {
         try {
-            $response = $this->batchService->getBatch($id, $this->startTime);
+            $response = $this->trainerService->getOneTrainer($id, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }
         return Response::json($response);
-
     }
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
-        $validatedData = $this->batchService->validator($request)->validate();
+        $validatedData = $this->trainerService->validator($request)->validate();
         try {
-            $data = $this->batchService->store($validatedData);
+            $data = $this->trainerService->store($validatedData);
             $response = [
-                'data' => $data ?: [],
+                'data' => $data ?: null,
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Batch added successfully",
+                    "message" => "Trainer added successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -97,24 +94,25 @@ class BatchController extends Controller
     }
 
     /**
-     * * update the specified resource in storage
+     * * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $batch = Batch::findOrFail($id);
-        $validated = $this->batchService->validator($request)->validate();
+        $trainer = Trainer::findOrFail($id);
+        $validated = $this->trainerService->validator($request, $id)->validate();
+
         try {
-            $data = $this->batchService->update($batch, $validated);
+            $data = $this->trainerService->update($trainer, $validated);
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Batch update successfully.",
+                    "message" => "Trainer updated successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -125,21 +123,19 @@ class BatchController extends Controller
     }
 
     /**
-     *  *  remove the specified resource from storage
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
-        $batch = Batch::findOrFail($id);
-
+        $trainer = Trainer::findOrFail($id);
         try {
-            $this->batchService->destroy($batch);
+            $this->trainerService->destroy($trainer);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Batch Delete successfully.",
+                    "message" => "Trainer deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -148,4 +144,32 @@ class BatchController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
+     */
+    public function assignTrainerToBatch(Request $request, int $id): JsonResponse
+    {
+        $trainer = Trainer::findOrFail($id);
+        $validated = $this->trainerService->batchValidator($request)->validated();
+        try {
+            $trainer = $this->trainerService->assignTrainer($trainer, $validated['batchIds']);
+            $response = [
+                'data' => $trainer,
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "trainer added to batch successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+
 }

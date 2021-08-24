@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Batche;
+use App\Models\Batch;
 use Illuminate\Database\Seeder;
 
-class BatcheSeeder extends Seeder
+class BatchSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class BatcheSeeder extends Seeder
      */
     public function run()
     {
-        Batche::factory()->count(10)->create();
+        Batch::factory()->count(10)->create();
     }
 }

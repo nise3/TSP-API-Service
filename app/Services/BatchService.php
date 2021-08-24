@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -28,11 +29,10 @@ class BatchService
      */
     public function getBatchList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Batch|Builder $batchBuilder */
@@ -47,12 +47,12 @@ class BatchService
             'branches.title_en as branch_name',
             'batches.programme_id',
             'programmes.title_en as programme_name',
-            'batches.number_of_vacancies',
+            'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
             'batches.batch_start_date',
             'batches.batch_end_date',
-            'batches.available_vacancies',
+            'batches.available_seats',
             'training_centers.id as training_center_id',
             'training_centers.title_en as training_center_name',
             'batches.in_ethnic_group',
@@ -64,6 +64,7 @@ class BatchService
             'batches.masters_passing_status',
             'batches.is_occupation_needed',
             'batches.is_guardian_info_needed',
+            'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -86,34 +87,27 @@ class BatchService
         }
 
         /** @var Collection $courseConfigBuilder */
-        if ($paginate) {
-            $batches = $batchBuilder->paginate(10);
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $batches = $batchBuilder->paginate($limit);
             $paginateData = (object)$batches->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $batches = $batchBuilder->get();
         }
 
-        return [
-            "data" =>  $batches->toArray()?:[],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order']=$order;
+        $response['data']=$batches->toArray()['data'] ?? $batches->toArray();
+
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
+        return $response;
     }
 
     /**
@@ -136,6 +130,12 @@ class BatchService
             'branches.title_en as branch_name',
             'batches.programme_id',
             'programmes.title_en as programme_name',
+            'batches.number_of_seats',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_seats',
             'training_centers.id as training_center_id',
             'training_centers.title_en as training_center_name',
             'batches.in_ethnic_group',
@@ -147,6 +147,7 @@ class BatchService
             'batches.masters_passing_status',
             'batches.is_occupation_needed',
             'batches.is_guardian_info_needed',
+            'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -168,8 +169,7 @@ class BatchService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 
@@ -208,6 +208,9 @@ class BatchService
     {
         return $batch->delete();
     }
+
+
+
 
 
     /**
@@ -306,11 +309,13 @@ class BatchService
                 'boolean',
             ],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
+                'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
         return Validator::make($request->all(), $rules);
     }
+
+
 
 }

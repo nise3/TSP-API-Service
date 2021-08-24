@@ -32,6 +32,7 @@ class InstituteService
         $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
+        $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -66,34 +67,26 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if ($paginate) {
-            $institutes = $instituteBuilder->paginate(10);
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $institutes = $instituteBuilder->get();
         }
+        $response['order']=$order;
+        $response['data']=$institutes->toArray()['data'] ?? $institutes->toArray();
 
-        return [
-            "data" => $institutes->toArray() ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
+        return $response;
     }
 
     /**
@@ -135,8 +128,7 @@ class InstituteService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
     }
@@ -149,7 +141,7 @@ class InstituteService
     public function validator(Request $request, int $id = null): Validator
     {
         $rules = [
-            'title_en' => ['required', 'string', 'max:191'],
+            'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
             'domain' => [
@@ -173,9 +165,6 @@ class InstituteService
             'logo' => [
                 'nullable',
                 'string',
-                'maxSize:512000',
-                'mimes:png,jpg,jpeg',
-                "dimensions:max_width=80,max_height=80"
             ],
             'is_training_center' => 'nullable|boolean',
             'training_center_name_en' => 'nullable|string|max: 191',
@@ -185,11 +174,7 @@ class InstituteService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        $messages = [
-            'logo.dimensions' => 'Please upload 80x80 size of image',
-            'logo.max' => 'Please upload maximum 500kb size of image',
-        ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $messages);
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string

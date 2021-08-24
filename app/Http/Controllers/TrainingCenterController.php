@@ -86,8 +86,7 @@ class TrainingCenterController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Training center added successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
@@ -115,8 +114,7 @@ class TrainingCenterController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Training center updated successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
@@ -140,8 +138,7 @@ class TrainingCenterController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Training center deleted successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {

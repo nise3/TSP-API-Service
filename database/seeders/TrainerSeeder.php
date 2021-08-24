@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class TrainerSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,8 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            InstituteSeeder::class
-        ]);
+        //
     }
 }

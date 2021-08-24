@@ -31,6 +31,7 @@ class BranchService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Branch|Builder $branchBuilder */
@@ -59,35 +60,27 @@ class BranchService
         }
 
         /** @var Collection $branchBuilder */
-        if ($paginate) {
-            $branches = $branchBuilder->paginate(10);
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $branches = $branchBuilder->get();
         }
+        $response['order']=$order;
+        $response['data']=$branches->toArray()['data'] ?? $branches->toArray();
 
 
-        return [
-            "data" => $branches->toArray() ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
+        return $response;
     }
 
     /**
@@ -123,8 +116,7 @@ class BranchService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 
@@ -204,7 +196,7 @@ class BranchService
                 'string'
             ],
             'row_status' => [
-                'required_if:' . $id . ',==,null',
+                'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];

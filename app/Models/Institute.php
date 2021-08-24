@@ -91,4 +91,9 @@ class Institute extends BaseModel
     {
         return $this->hasMany(Batch::class);
     }
+
+    public function trainers(): HasMany
+    {
+        return $this->hasMany(Trainer::class);
+    }
 }

@@ -18,7 +18,7 @@ class CreateInstitutesTable extends Migration
             $table->string('code', 150);
             $table->string('title_en', 500);
             $table->string('title_bn', 1000)->nullable();
-            $table->string('domain', 191);
+            $table->string('domain', 191)->nullable();
             $table->text('address')->nullable();
             $table->text('google_map_src')->nullable();
             $table->text('logo')->nullable();

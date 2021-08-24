@@ -5,11 +5,12 @@ namespace App\Services;
 use App\Models\Course;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\JsonResponse;
+use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CourseService
@@ -25,8 +26,7 @@ class CourseService
      */
     public function getCourseList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
+        $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
@@ -68,34 +68,26 @@ class CourseService
         }
 
         /** @var Collection $coursesBuilder */
-        if ($paginate) {
-            $courses = $coursesBuilder->paginate(10);
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();
-            $page = [
-                "size" => $paginateData->per_page,
-                "total_element" => $paginateData->total,
-                "total_page" => $paginateData->last_page,
-                "current_page" => $paginateData->current_page
-            ];
-            $paginateLink[] = $paginateData->links;
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
         } else {
             $courses = $coursesBuilder->get();
         }
-
-        return [
-            "data" => $courses->toArray() ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
-            ],
-            "_links" => [
-                'paginate' => $paginateLink,
-            ],
-            "_page" => $page,
-            "_order" => $order
+        $response['order'] = $order;
+        $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
+        $response['response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
         ];
+
+        return $response;
     }
 
     /**
@@ -143,8 +135,7 @@ class CourseService
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
-                "started" => $startTime->format('H i s'),
-                "finished" => Carbon::now()->format('H i s'),
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
             ]
         ];
     }
@@ -264,7 +255,11 @@ class CourseService
                 'nullable',
                 'string',
                 'max:191',
-            ]
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }

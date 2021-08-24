@@ -85,8 +85,7 @@ class BranchController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Branch added successfully",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {
@@ -118,8 +117,7 @@ class BranchController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Brnach Update successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
 
@@ -147,8 +145,7 @@ class BranchController extends Controller
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Branch deleted successfully.",
-                    "started" => $this->startTime->format('H i s'),
-                    "finished" => Carbon::now()->format('H i s'),
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
         } catch (Throwable $e) {

@@ -78,4 +78,9 @@ class Batch extends BaseModel
         return $this->belongsTo(Programme::class);
     }
 
+    public function trainer(): HasMany
+    {
+        return $this->hasMany(Trainer::class, 'trainer_batch');
+    }
+
 }
