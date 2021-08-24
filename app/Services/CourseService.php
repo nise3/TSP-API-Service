@@ -263,4 +263,80 @@ class CourseService
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
+
+    public function getCourseTrashList(Request $request, Carbon $startTime): array
+    {
+        $limit = $request->query('limit', 10);
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Course|Builder $coursesBuilder */
+        $coursesBuilder = Course::onlyTrashed()->select(
+            [
+                'courses.id as id',
+                'courses.code',
+                'courses.institute_id',
+                'institutes.title_en as institute_title',
+                'courses.title_en',
+                'courses.title_bn',
+                'courses.course_fee',
+                'courses.duration',
+                'courses.description',
+                'courses.target_group',
+                'courses.objectives',
+                'courses.contents',
+                'courses.training_methodology',
+                'courses.evaluation_system',
+                'courses.prerequisite',
+                'courses.eligibility',
+                'courses.cover_image',
+                'courses.row_status',
+                'courses.created_by',
+                'courses.updated_by',
+                'courses.created_at',
+                'courses.updated_at',
+            ]
+        );
+        $coursesBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+
+        if (!empty($titleEn)) {
+            $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $coursesBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $courses = $coursesBuilder->paginate($limit);
+            $paginateData = (object)$courses->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courses = $coursesBuilder->get();
+        }
+        $response['order'] = $order;
+        $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
+        $response['response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    public function restore(Course $course): bool
+    {
+        return $course->restore();
+    }
+
+    public function forceDelete(Course $courses): bool
+    {
+        return $courses->forceDelete();
+    }
 }

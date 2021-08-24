@@ -356,4 +356,90 @@ class TrainerService
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
+
+    public function getTrainerTrashList(Request $request, Carbon $startTime): array
+    {
+        $limit = $request->query('limit', 10);
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Trainer|Builder $trainerBuilder */
+        $trainerBuilder = Trainer::onlyTrashed()->select([
+            'trainers.id as id',
+            'trainers.trainer_name_en',
+            'trainers.trainer_name_bn',
+            'trainers.institute_id',
+            'trainers.training_center_id',
+            'trainers.branch_id',
+            'trainers.email',
+            'trainers.date_of_birth as date_of_birth',
+            'trainers.about_me',
+            'trainers.gender as gender',
+            'trainers.marital_status as marital_status',
+            'trainers.religion as religion',
+            'trainers.nationality as nationality',
+            'trainers.nid',
+            'trainers.passport_number as passport_number',
+            'trainers.physical_disabilities_status as physical_disabilities_status',
+            'trainers.freedom_fighter_status as freedom_fighter_status',
+            'trainers.present_address_division_id as present_address_division_id',
+            'trainers.present_address_district_id as present_address_district_id',
+            'trainers.present_address_upazila_id as present_address_upazila_id',
+            'trainers.present_house_address as present_house_address',
+            'trainers.permanent_address_division_id as permanent_address_division_id',
+            'trainers.permanent_address_district_id as permanent_address_district_id',
+            'trainers.permanent_address_upazila_id as permanent_address_upazila_id',
+            'trainers.permanent_house_address as permanent_house_address',
+            'trainers.educational_qualification as educational_qualification',
+            'trainers.skills as skills',
+            'trainers.photo as photo',
+            'trainers.signature as signature',
+            'trainers.row_status',
+            'trainers.created_at',
+            'trainers.updated_at',
+        ]);
+
+        $trainerBuilder->orderBy('trainers.id', $order);
+
+        if (!empty($titleEn)) {
+            $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $trainerBuilder->where('trainers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $trainerBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $trainers = $trainerBuilder->paginate($limit);
+            $paginateData = (object)$trainers->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $trainers = $trainerBuilder->get();
+        }
+
+        $response['order']=$order;
+        $response['data']=$trainers->toArray()['data'] ?? $trainers->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    public function restore(Trainer $trainer): bool
+    {
+        return $trainer->restore();
+    }
+
+    public function forceDelete(Trainer $trainer): bool
+    {
+        return $trainer->forceDelete();
+    }
 }

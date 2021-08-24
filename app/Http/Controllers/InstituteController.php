@@ -149,4 +149,52 @@ class InstituteController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->instituteService->getInstituteTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $institute = Institute::onlyTrashed()->findOrFail($id);
+        try {
+            $this->instituteService->restore($institute);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $institute = Institute::onlyTrashed()->findOrFail($id);
+        try {
+            $this->instituteService->forceDelete($institute);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
 }

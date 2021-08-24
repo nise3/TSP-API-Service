@@ -317,5 +317,99 @@ class BatchService
     }
 
 
+    public function getBatchTrashList(Request $request, Carbon $startTime): array
+    {
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $limit = $request->query('limit', 10);
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::onlyTrashed()->select([
+            'batches.id as id',
+            'batches.course_id',
+            'courses.title_en as course_title',
+            'batches.institute_id',
+            'institutes.title_en as institute_title',
+            'institutes.id as institute_id',
+            'branches.id as branch_id',
+            'branches.title_en as branch_name',
+            'batches.programme_id',
+            'programmes.title_en as programme_name',
+            'batches.number_of_seats',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_seats',
+            'training_centers.id as training_center_id',
+            'training_centers.title_en as training_center_name',
+            'batches.in_ethnic_group',
+            'batches.is_freedom_fighter',
+            'batches.disability_status',
+            'batches.ssc_passing_status',
+            'batches.hsc_passing_status',
+            'batches.honors_passing_status',
+            'batches.masters_passing_status',
+            'batches.is_occupation_needed',
+            'batches.is_guardian_info_needed',
+            'batches.row_status',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at'
+        ]);
+
+        $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
+        $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
+        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
+        $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
+        $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
+
+        $batchBuilder->orderBy('batches.id', $order);
+
+
+        if (!empty($titleEn)) {
+            $batchBuilder->where('batches.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $batchBuilder->where('batches.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $courseConfigBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $batches = $batchBuilder->paginate($limit);
+            $paginateData = (object)$batches->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $batches = $batchBuilder->get();
+        }
+
+        $response['order']=$order;
+        $response['data']=$batches->toArray()['data'] ?? $batches->toArray();
+
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    public function restore(Batch $batch): bool
+    {
+        return $batch->restore();
+    }
+
+    public function forceDelete(Batch $batch): bool
+    {
+        return $batch->forceDelete();
+    }
+
+
 
 }

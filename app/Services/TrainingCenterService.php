@@ -199,4 +199,73 @@ class TrainingCenterService
         }
         return $googleMapSrc;
     }
+
+    public function getTrainingCenterTrashList(Request $request, Carbon $startTime): array
+    {
+        $limit = $request->query('limit', 10);
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var TrainingCenter|Builder $trainingCentersBuilder */
+        $trainingCentersBuilder = TrainingCenter::onlyTrashed()->select([
+            'training_centers.id as id',
+            'training_centers.title_en',
+            'training_centers.title_bn',
+            'training_centers.institute_id',
+            'institutes.title_en as institute_name',
+            'training_centers.branch_id',
+            'branches.title_en as branch_name',
+            'training_centers.address',
+            'training_centers.address',
+            'training_centers.google_map_src',
+            'training_centers.row_status',
+            'training_centers.created_by',
+            'training_centers.updated_by',
+            'training_centers.created_at',
+            'training_centers.updated_at'
+        ]);
+        $trainingCentersBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
+        $trainingCentersBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+
+        if (!empty($titleEn)) {
+            $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $trainingCentersBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $trainingCenters = $trainingCentersBuilder->paginate($limit);
+            $paginateData = (object)$trainingCenters->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $trainingCenters = $trainingCentersBuilder->get();
+        }
+
+        $response['order']=$order;
+        $response['data']=$trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    public function restore(TrainingCenter $trainingCenter): bool
+    {
+        return $trainingCenter->restore();
+    }
+
+    public function forceDelete(TrainingCenter $trainingCenter): bool
+    {
+        return $trainingCenter->forceDelete();
+    }
 }

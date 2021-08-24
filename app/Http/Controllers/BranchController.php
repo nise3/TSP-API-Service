@@ -154,4 +154,52 @@ class BranchController extends Controller
 
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->branchService->getBranchTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $branch = Branch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->branchService->restore($branch);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Branch restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $branch = Branch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->branchService->forceDelete($branch);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Branch permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
 }

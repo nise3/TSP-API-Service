@@ -212,4 +212,71 @@ class BranchService
         return $googleMapSrc;
     }
 
+    public function getBranchTrashList(Request $request, Carbon $startTime): array
+    {
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $limit = $request->query('limit', 10);
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::onlyTrashed()->select([
+            'branches.id as id',
+            'branches.title_en',
+            'branches.title_bn',
+            'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
+            'branches.row_status',
+            'branches.address',
+            'branches.google_map_src',
+            'branches.row_status',
+            'branches.created_at',
+            'branches.updated_at',
+        ]);
+
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->orderBy('branches.id', $order);
+
+
+        if (!empty($titleEn)) {
+            $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $branchBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $branches = $branchBuilder->paginate($limit);
+            $paginateData = (object)$branches->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $branches = $branchBuilder->get();
+        }
+        $response['order']=$order;
+        $response['data']=$branches->toArray()['data'] ?? $branches->toArray();
+
+
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    public function restore(Branch $branch): bool
+    {
+        return $branch->restore();
+    }
+
+    public function forceDelete(Branch $branch): bool
+    {
+        return $branch->forceDelete();
+    }
+
 }
