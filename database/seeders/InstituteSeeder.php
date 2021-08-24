@@ -23,11 +23,11 @@ class InstituteSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         Institute::query()->truncate();
-        Batch::query()->truncate();
-        TrainingCenter::query()->truncate();
-        Course::query()->truncate();
-        Programme::query()->truncate();
-        Branch::query()->truncate();
+//        Batch::query()->truncate();
+//        TrainingCenter::query()->truncate();
+//        Course::query()->truncate();
+//        Programme::query()->truncate();
+//        Branch::query()->truncate();
 
         Institute::factory()->count(10)
             ->has(Branch::factory()->count(3))

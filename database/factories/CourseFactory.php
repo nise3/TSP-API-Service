@@ -18,6 +18,13 @@ class CourseFactory extends Factory
             'course_fee' => $this->faker->randomDigit(),
             'duration' => $this->faker->time,
             'description' => $this->faker->sentence,
+            'target_group' => $this->faker->randomDigit(),
+            'objectives' => $this->faker->sentence,
+            'contents' => $this->faker->sentence,
+            'training_methodology' => $this->faker->sentence,
+            'evaluation_system' => $this->faker->sentence,
+            'prerequisite' => $this->faker->sentence,
+            'eligibility' => $this->faker->sentence,
 
     	];
     }
