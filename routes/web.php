@@ -24,4 +24,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 
     $router->post('trainers/{id}/assign-trainer-to-batch', ['as' => 'trainers.assign-trainer-to-batch', 'uses' => 'TrainerController@assignTrainerToBatch']);
+
+
+
+    //institutes trashed
+    $router->get('institutes-trashed-data', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
+    $router->get('institutes-restore-data/{id}', ['as' => 'institutes.restore-data', 'uses' => 'InstituteController@restore']);
+    $router->get('institutes-force-delete/{id}', ['as' => 'institutes.restore-data', 'uses' => 'InstituteController@forceDelete']);
+
 });
