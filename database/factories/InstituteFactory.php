@@ -33,6 +33,9 @@ class InstituteFactory extends Factory
             'phone_numbers' => $this->faker->phoneNumber,
             'primary_mobile' => $this->faker->phoneNumber,
             'email' => $this->faker->email(),
+            'config' => $this->faker->sentence,
+            'google_map_src' => $this->faker->sentence,
+            'logo' => "softbd.jpg"
         ];
     }
 }

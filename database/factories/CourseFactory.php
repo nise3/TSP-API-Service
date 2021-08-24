@@ -25,6 +25,7 @@ class CourseFactory extends Factory
             'evaluation_system' => $this->faker->sentence,
             'prerequisite' => $this->faker->sentence,
             'eligibility' => $this->faker->sentence,
+            'cover_image' => "softbd.jpg"
 
     	];
     }

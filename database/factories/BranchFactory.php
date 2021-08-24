@@ -15,6 +15,7 @@ class BranchFactory extends Factory
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,
             'address' => $this->faker->address,
+            'google_map_src' => $this->faker->address,
     	];
     }
 }

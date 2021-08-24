@@ -16,6 +16,7 @@ class ProgrammeFactory extends Factory
             'title_bn' => $this->faker->name,
             'code' => $this->faker->unique()->postcode,
             'description' => $this->faker->sentence,
+            'logo' => "softBd.jpg"
     	];
     }
 }
