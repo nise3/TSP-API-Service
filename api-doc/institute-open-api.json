@@ -10,790 +10,6 @@
         }
     ],
     "paths": {
-        "/programmes": {
-            "get": {
-                "tags": [
-                    "programmes"
-                ],
-                "summary": "get_list",
-                "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/order"
-                    },
-                    {
-                        "$ref": "#/components/parameters/limit"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "Dr. Ransom Wehner",
-                                            "title_bn": "Prof. Neoma Gusikowski",
-                                            "institute_title_en": "Shannon Kshlerin",
-                                            "institute_id": 1,
-                                            "programme_code": "16026",
-                                            "programme_logo": null,
-                                            "description": "Blanditiis itaque reiciendis molestias est iusto.",
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
-                                        },
-                                        {
-                                            "id": 2,
-                                            "title_en": "Hector Conroy",
-                                            "title_bn": "Shyanne Trantow",
-                                            "institute_title_en": "Shannon Kshlerin",
-                                            "institute_id": 1,
-                                            "programme_code": "68731-6509",
-                                            "programme_logo": null,
-                                            "description": "Quia rerum dolores voluptas cum quis rerum fugiat.",
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
-                                        },
-                                        {
-                                            "id": 3,
-                                            "title_en": "Dessie Murphy V",
-                                            "title_bn": "Rylan Mueller",
-                                            "institute_title_en": "Shannon Kshlerin",
-                                            "institute_id": 1,
-                                            "programme_code": "15620-6934",
-                                            "programme_logo": null,
-                                            "description": "Ex consequuntur optio tenetur quis voluptas.",
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "programmes"
-                ],
-                "summary": "create",
-                "description": "###### API endpoint to create a programme\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4455"
-                    },
-                    {
-                        "name": "discription",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "programme under bitac institute"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "default.jpg"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "code": "4455",
-                                        "updated_at": "2021-07-26T06:53:00.000000Z",
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "id": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Programme added successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/programmes/{programmeId}": {
-            "get": {
-                "parameters": [
-                    {
-                        "name": "programmeId",
-                        "in": "path",
-                        "description": "programme id to get one",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    }
-                ],
-                "tags": [
-                    "programmes"
-                ],
-                "summary": "get_one",
-                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "BITAC",
-                                        "programme_code": "4456",
-                                        "programme_logo": "",
-                                        "row_status": 1,
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "updated_at": "2021-07-26T06:56:12.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "programmes"
-                ],
-                "summary": "update",
-                "description": "### API endpoint to update a programme\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "programmeId",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4455"
-                    },
-                    {
-                        "name": "discription",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "programme under bitac institute"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "default.jpg"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "code": "4456",
-                                        "description": null,
-                                        "logo": "",
-                                        "created_by": null,
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "updated_at": "2021-07-26T06:56:12.000000Z",
-                                        "row_status": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Programme updated successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "programmes"
-                ],
-                "summary": "delete",
-                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "programmeId",
-                        "in": "path",
-                        "description": "Programme id to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Programme delete successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/training-centers": {
-            "get": {
-                "tags": [
-                    "training-centers"
-                ],
-                "summary": "get_list",
-                "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/order"
-                    },
-                    {
-                        "$ref": "#/components/parameters/limit"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
-                                "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "institute_id": 1,
-                                            "institute_name": "yews",
-                                            "branch_id": null,
-                                            "branch_name": null,
-                                            "address": "Dhaka firm gate block 2",
-                                            "google_map_src": null,
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-18T23:33:05.000000Z",
-                                            "updated_at": "2021-08-18T23:33:05.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "training-centers"
-                ],
-                "summary": "create",
-                "description": "###### API endpoint to create a training center\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "title_en",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "branch_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "center_location_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "Dhaka firm gate block 2"
-                    },
-                    {
-                        "name": "google_map_src",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
-                                "example": {
-                                    "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": 1,
-                                        "institute_name": "yews",
-                                        "branch_id": null,
-                                        "branch_name": null,
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-18T23:33:05.000000Z",
-                                        "updated_at": "2021-08-18T23:33:05.000000Z",
-                                        "id": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Training Center added successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/training-centers/{trainingCenterId}": {
-            "get": {
-                "parameters": [
-                    {
-                        "name": "trainingCenterId",
-                        "in": "path",
-                        "description": "Training Center id to get one",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    }
-                ],
-                "tags": [
-                    "training-centers"
-                ],
-                "summary": "get_one",
-                "description": "###### API endpoint to get a programme by training center id\n\nA successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": 1,
-                                        "institute_name": "yews",
-                                        "branch_id": null,
-                                        "branch_name": null,
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-18T23:33:05.000000Z",
-                                        "updated_at": "2021-08-18T23:33:05.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Job finished successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "training-centers"
-                ],
-                "summary": "update",
-                "description": "### API endpoint to update a training center\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "trainingCenterId",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "title_en",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "branch_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "center_location_type",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "Dhaka firm gate block 2"
-                    },
-                    {
-                        "name": "google_map_src",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "institute_id": "1",
-                                        "branch_id": "1",
-                                        "center_location_type": "1",
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "row_status": "0",
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-22T08:35:49.000000Z",
-                                        "updated_at": "2021-08-22T08:54:34.000000Z",
-                                        "deleted_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Training Center update successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "training-centers"
-                ],
-                "summary": "delete",
-                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "trainingCenterId",
-                        "in": "path",
-                        "description": "Training Center id to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Training Center delete successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/institutes": {
             "get": {
                 "tags": [
@@ -1262,6 +478,1686 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Institute delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/branches": {
+            "get": {
+                "tags": [
+                    "branches"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n branches\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branches"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "PROGRAMME ON RMG4",
+                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                            "institute_title_en": "yews",
+                                            "institute_id": 1,
+                                            "row_status": 1,
+                                            "address": "dhaka 1112",
+                                            "google_map_src": "branch under bitac institute",
+                                            "created_at": "2021-08-19T00:00:01.000000Z",
+                                            "updated_at": "2021-08-19T00:00:01.000000Z"
+                                        }
+                                    ],
+                                    "response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post":{
+                "tags": [
+                    "branches"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a branch\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "dhaka 1112"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "yews",
+                                        "institute_id": 1,
+                                        "row_status": 1,
+                                        "address": "dhaka 1112",
+                                        "google_map_src": "branch under bitac institute",
+                                        "created_at": "2021-08-19T00:00:01.000000Z",
+                                        "updated_at": "2021-08-19T00:00:01.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Branch added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/branches/{branchId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "in": "path",
+                        "description": "branch id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "branches"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a branch by branch id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "yews",
+                                        "institute_id": 1,
+                                        "row_status": 1,
+                                        "address": "dhaka 1112",
+                                        "google_map_src": "branch under bitac institute",
+                                        "created_at": "2021-08-19T00:00:01.000000Z",
+                                        "updated_at": "2021-08-19T00:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "branches"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a branch\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4"
+                    },
+                    {
+                        "name": "title_en",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "dhaka 1112"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Update",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "yews",
+                                        "institute_id": 1,
+                                        "row_status": 1,
+                                        "address": "dhaka 1112",
+                                        "google_map_src": "branch under bitac institute",
+                                        "created_at": "2021-08-19T00:00:01.000000Z",
+                                        "updated_at": "2021-08-19T00:00:01.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Branch update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "branches"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "branchId",
+                        "in": "path",
+                        "description": "Branch id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/branches"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Branch delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers": {
+            "get": {
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/training-centers"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "PROGRAMME ON RMG4",
+                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                            "institute_id": 1,
+                                            "institute_name": "yews",
+                                            "branch_id": null,
+                                            "branch_name": null,
+                                            "address": "Dhaka firm gate block 2",
+                                            "google_map_src": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-18T23:33:05.000000Z",
+                                            "updated_at": "2021-08-18T23:33:05.000000Z"
+                                        }
+                                    ],
+                                    "response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a training center\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "center_location_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Dhaka firm gate block 2"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/training-centers"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": 1,
+                                        "institute_name": "yews",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "address": "Dhaka firm gate block 2",
+                                        "google_map_src": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-18T23:33:05.000000Z",
+                                        "updated_at": "2021-08-18T23:33:05.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training Center added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/{trainingCenterId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "trainingCenterId",
+                        "in": "path",
+                        "description": "Training Center id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by training center id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/training-centers"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": 1,
+                                        "institute_name": "yews",
+                                        "branch_id": null,
+                                        "branch_name": null,
+                                        "address": "Dhaka firm gate block 2",
+                                        "google_map_src": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-18T23:33:05.000000Z",
+                                        "updated_at": "2021-08-18T23:33:05.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a training center\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainingCenterId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "title_en",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "center_location_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Dhaka firm gate block 2"
+                    },
+                    {
+                        "name": "google_map_src",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "center_location_type": "1",
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "address": "Dhaka firm gate block 2",
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "row_status": "0",
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-22T08:35:49.000000Z",
+                                        "updated_at": "2021-08-22T08:54:34.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Training Center update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "trainingCenterId",
+                        "in": "path",
+                        "description": "Training Center id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/training-centers"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Training Center delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/programmes": {
+            "get": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n programmes\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Dr. Ransom Wehner",
+                                            "title_bn": "Prof. Neoma Gusikowski",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "16026",
+                                            "programme_logo": null,
+                                            "description": "Blanditiis itaque reiciendis molestias est iusto.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title_en": "Hector Conroy",
+                                            "title_bn": "Shyanne Trantow",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "68731-6509",
+                                            "programme_logo": null,
+                                            "description": "Quia rerum dolores voluptas cum quis rerum fugiat.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title_en": "Dessie Murphy V",
+                                            "title_bn": "Rylan Mueller",
+                                            "institute_title_en": "Shannon Kshlerin",
+                                            "institute_id": 1,
+                                            "programme_code": "15620-6934",
+                                            "programme_logo": null,
+                                            "description": "Ex consequuntur optio tenetur quis voluptas.",
+                                            "row_status": 1,
+                                            "created_at": "2021-08-22T08:35:49.000000Z",
+                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                        }
+                                    ],
+                                    "response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a programme\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "discription",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "programme under bitac institute"
+                    },
+                    {
+                        "name": "logo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jpg"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": "1",
+                                        "code": "4455",
+                                        "updated_at": "2021-07-26T06:53:00.000000Z",
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Programme added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/programmes/{programmeId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "in": "path",
+                        "description": "programme id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_title_en": "BITAC",
+                                        "programme_code": "4456",
+                                        "programme_logo": "",
+                                        "row_status": 1,
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "updated_at": "2021-07-26T06:56:12.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a programme\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "discription",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "programme under bitac institute"
+                    },
+                    {
+                        "name": "logo",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jpg"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "PROGRAMME ON RMG4",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "institute_id": "1",
+                                        "code": "4456",
+                                        "description": null,
+                                        "logo": "",
+                                        "created_by": null,
+                                        "created_at": "2021-07-26T06:53:00.000000Z",
+                                        "updated_at": "2021-07-26T06:56:12.000000Z",
+                                        "row_status": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Programme updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "programmes"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "programmeId",
+                        "in": "path",
+                        "description": "Programme id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Programme delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses": {
+            "get": {
+                "tags": [
+                    "courses"
+                ],
+                "summary": "get_list",
+                "description": "###### API endpoint to get list of \n courses\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courses"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "code": "1234",
+                                            "institute_id": 2,
+                                            "institute_title": "asdf",
+                                            "title_en": "sdf",
+                                            "title_bn": "asdf",
+                                            "course_fee": "344.00",
+                                            "duration": null,
+                                            "description": null,
+                                            "target_group": null,
+                                            "objectives": null,
+                                            "contents": null,
+                                            "training_methodology": null,
+                                            "evaluation_system": null,
+                                            "prerequisite": null,
+                                            "eligibility": null,
+                                            "cover_image": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-17T10:34:07.000000Z",
+                                            "updated_at": "2021-08-17T10:34:07.000000Z"
+                                        }
+                                    ],
+                                    "response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "courses"
+                ],
+                "summary": "create",
+                "description": "###### API endpoint to create a course\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "123"
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "very good courses"
+                    },
+                    {
+                        "name": "target_group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "objectives",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contents",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "training_methodology",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "evaluation_system",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "prerequisite",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "eligibility",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jpg"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/courses/{courseId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "course id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "2"
+                        }
+                    }
+                ],
+                "tags": [
+                    "courses"
+                ],
+                "summary": "get_one",
+                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programmes"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "courses"
+                ],
+                "summary": "update",
+                "description": "### API endpoint to update a course\n\nA successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4"
+                    },
+                    {
+                        "name": "title_en",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "PROGRAMME ON RMG4"
+                    },
+                    {
+                        "name": "title_bn",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "আরএমজি-প্রোগ্রাম4"
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4455"
+                    },
+                    {
+                        "name": "course_fee",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "123"
+                    },
+                    {
+                        "name": "duration",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "very good courses"
+                    },
+                    {
+                        "name": "target_group",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "5"
+                    },
+                    {
+                        "name": "objectives",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contents",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "training_methodology",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+
+                    {
+                        "name": "evaluation_system",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "prerequisite",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "eligibility",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "cover_image",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "default.jph"
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courses"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "code": "1234",
+                                        "institute_id": 2,
+                                        "institute_title": "asdf",
+                                        "title_en": "sdf",
+                                        "title_bn": "asdf",
+                                        "course_fee": "344.00",
+                                        "duration": null,
+                                        "description": null,
+                                        "target_group": null,
+                                        "objectives": null,
+                                        "contents": null,
+                                        "training_methodology": null,
+                                        "evaluation_system": null,
+                                        "prerequisite": null,
+                                        "eligibility": null,
+                                        "cover_image": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-17T10:34:07.000000Z",
+                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "courses"
+                ],
+                "summary": "delete",
+                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "courseId",
+                        "in": "path",
+                        "description": "Course id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "6"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/courses"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Course delete successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -1917,902 +2813,6 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Job finished successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/branches": {
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "get_list",
-                "description": "###### API endpoint to get list of \n branches\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/order"
-                    },
-                    {
-                        "$ref": "#/components/parameters/limit"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
-                                "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "institute_title_en": "yews",
-                                            "institute_id": 1,
-                                            "row_status": 1,
-                                            "address": "dhaka 1112",
-                                            "google_map_src": "branch under bitac institute",
-                                            "created_at": "2021-08-19T00:00:01.000000Z",
-                                            "updated_at": "2021-08-19T00:00:01.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error"
-                    }
-                }
-            },
-            "post":{
-                "tags": [
-                    "branches"
-                ],
-                "summary": "create",
-                "description": "###### API endpoint to create a branch\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "title_en",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "dhaka 1112"
-                    },
-                    {
-                        "name": "google_map_src",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
-                                "example": {
-                                    "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
-                                        "institute_id": 1,
-                                        "row_status": 1,
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z",
-                                        "id": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Branch added successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/branches/{branchId}": {
-            "get": {
-                "parameters": [
-                    {
-                        "name": "branchId",
-                        "in": "path",
-                        "description": "branch id to get one",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    }
-                ],
-                "tags": [
-                    "branches"
-                ],
-                "summary": "get_one",
-                "description": "###### API endpoint to get a branch by branch id\n\nA successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
-                                        "institute_id": 1,
-                                        "row_status": 1,
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "update",
-                "description": "### API endpoint to update a branch\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "branchId",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4"
-                    },
-                    {
-                        "name": "title_en",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "dhaka 1112"
-                    },
-                    {
-                        "name": "google_map_src",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Update",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
-                                        "institute_id": 1,
-                                        "row_status": 1,
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Branch update successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "delete",
-                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "branchId",
-                        "in": "path",
-                        "description": "Branch id to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Branch delete successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/courses": {
-            "get": {
-                "tags": [
-                    "courses"
-                ],
-                "summary": "get_list",
-                "description": "###### API endpoint to get list of \n courses\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/order"
-                    },
-                    {
-                        "$ref": "#/components/parameters/limit"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/courses"
-                                },
-                                "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "code": "1234",
-                                            "institute_id": 2,
-                                            "institute_title": "asdf",
-                                            "title_en": "sdf",
-                                            "title_bn": "asdf",
-                                            "course_fee": "344.00",
-                                            "duration": null,
-                                            "description": null,
-                                            "target_group": null,
-                                            "objectives": null,
-                                            "contents": null,
-                                            "training_methodology": null,
-                                            "evaluation_system": null,
-                                            "prerequisite": null,
-                                            "eligibility": null,
-                                            "cover_image": null,
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-17T10:34:07.000000Z",
-                                            "updated_at": "2021-08-17T10:34:07.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "default": {
-                        "description": "Unexpected error"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "courses"
-                ],
-                "summary": "create",
-                "description": "###### API endpoint to create a course\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4455"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "123"
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "very good courses"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "5"
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "default.jpg"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z",
-                                        "id": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Course added successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/courses/{courseId}": {
-            "get": {
-                "parameters": [
-                    {
-                        "name": "courseId",
-                        "in": "path",
-                        "description": "course id to get one",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "2"
-                        }
-                    }
-                ],
-                "tags": [
-                    "courses"
-                ],
-                "summary": "get_one",
-                "description": "###### API endpoint to get a programme by programme id\n\nA successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programmes"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "courses"
-                ],
-                "summary": "update",
-                "description": "### API endpoint to update a course\n\nA successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "courseId",
-                        "required": true,
-                        "in": "path",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4"
-                    },
-                    {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "PROGRAMME ON RMG4"
-                    },
-                    {
-                        "name": "title_bn",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "আরএমজি-প্রোগ্রাম4"
-                    },
-                    {
-                        "name": "institute_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "code",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "4455"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "123"
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "5"
-                    },
-                    {
-                        "name": "description",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "very good courses"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "5"
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        },
-                        "example": "default.jph"
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/courses"
-                                },
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z"
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Course update successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "courses"
-                ],
-                "summary": "delete",
-                "description": "###### API endpoint to delete a programme\n\nA successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "name": "courseId",
-                        "in": "path",
-                        "description": "Course id to delete",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "6"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/courses"
-                                },
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Course delete successfully.",
                                         "query_time": 0
                                     }
                                 }
