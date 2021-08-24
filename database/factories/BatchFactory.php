@@ -17,11 +17,8 @@ class BatchFactory extends Factory
     public function definition(): array
     {
         $trainingCenter = TrainingCenter::inRandomOrder()->first();
-        $institute = Institute::inRandomOrder()->first();
     	return [
-            'training_center_id' => $trainingCenter->id,
-            'institute_id' => $institute->id,
-
+            'training_center_id' => $trainingCenter->id
     	];
     }
 }
