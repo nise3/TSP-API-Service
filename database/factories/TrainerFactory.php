@@ -21,7 +21,7 @@ class TrainerFactory extends Factory
             'branch_id' => $branch->id,
             'trainer_name_en' => $this->faker->name,
             'trainer_name_bn' => $this->faker->name,
-            'trainer_registration_number' => $this->faker->shuffleString("123456789"),
+            'trainer_registration_number' => $this->faker->uuid(),
             'email' => $this->faker->safeEmail(),
             'mobile' => $this->faker->phoneNumber(),
             'about_me' => $this->faker->sentence,
