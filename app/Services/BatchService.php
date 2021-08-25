@@ -122,7 +122,7 @@ class BatchService
         }
 
         /** @var Collection $courseConfigBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $batches = $batchBuilder->paginate($limit);
             $paginateData = (object)$batches->toArray();

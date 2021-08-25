@@ -69,7 +69,7 @@ class ProgrammeService
         }
 
         /** @var Collection $programmesBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();

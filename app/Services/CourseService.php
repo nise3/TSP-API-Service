@@ -83,7 +83,7 @@ class CourseService
         }
 
         /** @var Collection $coursesBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();

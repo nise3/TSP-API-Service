@@ -73,7 +73,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
