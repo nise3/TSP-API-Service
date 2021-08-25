@@ -28,8 +28,6 @@ class InstituteService
      */
     public function getInstituteList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $limit = $request->query('limit', 10);
