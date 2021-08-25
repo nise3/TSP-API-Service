@@ -189,20 +189,20 @@ class BatchService
             'batches.updated_at'
         ]);
 
-        $batchBuilder->join("courses",function($join) use($rowStatus){
+        $batchBuilder->join("courses",function($join) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
-        $batchBuilder->join("institutes",function($join) use($rowStatus){
+        $batchBuilder->join("institutes",function($join){
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
-        $batchBuilder->join("programmes",function($join) use($rowStatus){
+        $batchBuilder->join("programmes",function($join){
             $join->on('batches.programme_id', '=', 'programmes.id')
                 ->whereNull('programmes.deleted_at');
         });
 
-        $batchBuilder->join("branches",function($join) use($rowStatus){
+        $batchBuilder->join("branches",function($join){
             $join->on('batches.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
         });
@@ -226,6 +226,7 @@ class BatchService
         ];
 
     }
+
 
     /**
      * @param array $data
