@@ -43,7 +43,7 @@ class BatchController extends Controller
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
      */
-    public function getList(Request $request): JsonResponse
+    public function getList(Request $request)
     {
         try {
             $response = $this->batchService->getBatchList($request,  $this->startTime);

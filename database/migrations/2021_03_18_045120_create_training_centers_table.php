@@ -21,6 +21,9 @@ class CreateTrainingCentersTable extends Migration
                 ->comment('1 => On Institute Premises, 2 => On Branch Premises, 3 => On Training Center Premises');
             $table->string('title_en', 400);
             $table->string('title_bn', 1000)->nullable();
+            $table->unsignedInteger("loc_division_id")->nullable();
+            $table->unsignedInteger("loc_district_id")->nullable();
+            $table->unsignedInteger("loc_upazila_id")->nullable();
             $table->text('address')->nullable();
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active');

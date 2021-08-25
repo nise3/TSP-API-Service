@@ -31,6 +31,7 @@ class TrainerService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Trainer|Builder $trainerBuilder */

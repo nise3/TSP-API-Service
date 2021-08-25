@@ -26,11 +26,10 @@ class BranchService
      */
     public function getBranchList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -50,6 +49,15 @@ class BranchService
         ]);
 
         $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+
+        $branchBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('branches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
         $branchBuilder->orderBy('branches.id', $order);
 
 
@@ -112,7 +120,7 @@ class BranchService
         $branch = $branchBuilder->first();
 
         return [
-            "data" => $branch ?: null,
+            "data" => $branch ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,

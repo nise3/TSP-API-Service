@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Batch;
 use App\Models\Branch;
-use App\Models\Course;
 use App\Models\Institute;
 use App\Models\Programme;
 use App\Models\TrainingCenter;
@@ -18,9 +17,13 @@ class BatchFactory extends Factory
     {
         $trainingCenter = TrainingCenter::inRandomOrder()->first();
         $institute = Institute::inRandomOrder()->first();
+        $programme = Programme::inRandomOrder()->first();
+        $branch = Branch::inRandomOrder()->first();
     	return [
             'training_center_id' => $trainingCenter->id,
             'institute_id' => $institute->id,
+            'programme_id' => $programme->id,
+            'branch_id' => $branch->id,
             'number_of_seats' => $this->faker->randomDigit(),
             'available_seats' => $this->faker->randomDigit(),
             'in_ethnic_group' => $this->faker->randomElement([0, 1]),

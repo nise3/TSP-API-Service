@@ -32,9 +32,9 @@ class BatchService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
-
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::select([
             'batches.id as id',
@@ -70,14 +70,49 @@ class BatchService
             'batches.created_at',
             'batches.updated_at'
         ]);
+        $batchBuilder->join("courses",function($join) use($rowStatus){
+            $join->on('batches.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('courses.row_status',$rowStatus);
+            }
+        });
+        $batchBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+        $batchBuilder->join("programmes",function($join) use($rowStatus){
+            $join->on('batches.programme_id', '=', 'programmes.id')
+                ->whereNull('programmes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('programmes.row_status',$rowStatus);
+            }
+        });
 
-        $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
-        $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
-        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
-        $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
-        $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
+        $batchBuilder->join("branches",function($join) use($rowStatus){
+            $join->on('batches.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('branches.row_status',$rowStatus);
+            }
+        });
+        $batchBuilder->join("training_centers",function($join) use($rowStatus){
+            $join->on('batches.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('training_centers.row_status',$rowStatus);
+            }
+        });
+
 
         $batchBuilder->orderBy('batches.id', $order);
+
+        if(!is_null($rowStatus)){
+            $batchBuilder->where('batches.row_status',$rowStatus);
+        }
 
 
         if (!empty($titleEn)) {
@@ -159,6 +194,7 @@ class BatchService
         $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
         $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
         $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
+
         $batchBuilder->where('batches.id', $id);
 
         /** @var Batch $instituteBuilder */

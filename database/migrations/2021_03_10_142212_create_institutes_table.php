@@ -28,6 +28,9 @@ class CreateInstitutesTable extends Migration
             $table->string('mobile_numbers', 191)->nullable();
             $table->string('email', 191)->nullable();
             $table->text('config')->nullable();
+            $table->unsignedInteger("loc_division_id")->nullable();
+            $table->unsignedInteger("loc_district_id")->nullable();
+            $table->unsignedInteger("loc_upazila_id")->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();

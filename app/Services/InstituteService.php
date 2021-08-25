@@ -32,6 +32,7 @@ class InstituteService
         $titleBn = $request->query('title_bn');
         $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Institute|Builder $instituteBuilder*/
