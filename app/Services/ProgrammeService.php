@@ -47,7 +47,20 @@ class ProgrammeService
             'programmes.updated_at',
         ]);
         $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+
+        $programmesBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('programmes.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
         $programmesBuilder->orderBy('programmes.id', $order);
+
+        if(!is_null($rowStatus)){
+            $programmesBuilder->where('programmes.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
@@ -101,6 +114,12 @@ class ProgrammeService
             'programmes.updated_at',
         ]);
         $programmeBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+
+        $programmeBuilder->join("institutes",function($join){
+            $join->on('programmes.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
         $programmeBuilder->where('programmes.id', '=', $id);
 
         /** @var Programme $programmeBuilder */

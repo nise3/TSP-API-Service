@@ -60,6 +60,9 @@ class BranchService
 
         $branchBuilder->orderBy('branches.id', $order);
 
+        if(!is_null($rowStatus)){
+            $branchBuilder->where('branches.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
@@ -103,6 +106,9 @@ class BranchService
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
+            'branches.loc_division_id',
+            'branches.loc_district_id',
+            'branches.loc_upazila_id',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'branches.row_status',
@@ -114,6 +120,11 @@ class BranchService
         ]);
 
         $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+
+        $branchBuilder->join("institutes",function($join){
+            $join->on('branches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
         $branchBuilder->where('branches.id', $id);
 
         /** @var Branch $branchBuilder */

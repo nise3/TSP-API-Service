@@ -37,6 +37,9 @@ class TrainingCenterService
             'training_centers.id as id',
             'training_centers.title_en',
             'training_centers.title_bn',
+            'training_centers.loc_division_id',
+            'training_centers.loc_district_id',
+            'training_centers.loc_upazila_id',
             'training_centers.institute_id',
             'institutes.title_en as institute_name',
             'training_centers.branch_id',
@@ -52,6 +55,27 @@ class TrainingCenterService
         ]);
         $trainingCentersBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
         $trainingCentersBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+
+        $trainingCentersBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('training_centers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+        $trainingCentersBuilder->join("branches",function($join) use($rowStatus){
+            $join->on('training_centers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('branches.row_status',$rowStatus);
+            }
+        });
+
+        $trainingCentersBuilder->orderBy('training_centers.id', $order);
+
+        if(!is_null($rowStatus)){
+            $trainingCentersBuilder->where('training_centers.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
@@ -109,8 +133,15 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenterBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
-        $trainingCenterBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
+        $trainingCenterBuilder->join("institutes",function($join){
+            $join->on('training_centers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+        $trainingCenterBuilder->join("branches",function($join) {
+            $join->on('training_centers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+        });
+
         $trainingCenterBuilder->where('training_centers.id', '=', $id);
 
         /** @var TrainingCenter $trainingCenterBuilder */

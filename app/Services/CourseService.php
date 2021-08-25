@@ -62,6 +62,20 @@ class CourseService
         );
         $coursesBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
 
+        $coursesBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('courses.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
+        $coursesBuilder->orderBy('courses.id', $order);
+
+        if(!is_null($rowStatus)){
+            $coursesBuilder->where('courses.row_status',$rowStatus);
+        }
+
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
@@ -126,6 +140,12 @@ class CourseService
             ]
         );
         $courseBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
+
+        $courseBuilder->join("institutes",function($join){
+            $join->on('courses.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
         $courseBuilder->where('courses.id', '=', $id);
 
         /** @var Course $courseBuilder */

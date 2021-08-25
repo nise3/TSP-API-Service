@@ -72,6 +72,10 @@ class TrainerService
 
         $trainerBuilder->orderBy('trainers.id', $order);
 
+        if(!is_null($rowStatus)){
+            $trainerBuilder->where('trainers.row_status',$rowStatus);
+        }
+
         if (!empty($titleEn)) {
             $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {

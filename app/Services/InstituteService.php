@@ -48,6 +48,9 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.loc_division_id',
+            'institutes.loc_district_id',
+            'institutes.loc_upazila_id',
             'institutes.domain',
             'institutes.address',
             'institutes.google_map_src',
@@ -58,6 +61,10 @@ class InstituteService
             'institutes.updated_at',
         ]);
         $instituteBuilder->orderBy('institutes.id', $order);
+
+        if(!is_null($rowStatus)){
+            $instituteBuilder->where('institutes.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
