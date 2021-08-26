@@ -31,6 +31,7 @@ class BranchService
         $paginate = $request->query('page');
         $rowStatus=$request->query('row_status');
         $limit = $request->query('limit', 10);
+        $instituteId = $request->query('institute_id');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Branch|Builder $branchBuilder */
@@ -66,6 +67,10 @@ class BranchService
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        if($instituteId){
+            $branchBuilder->where('branches.institute_id', '=' ,$instituteId );
         }
 
         /** @var Collection $branchBuilder */
@@ -116,8 +121,6 @@ class BranchService
             'branches.created_at',
             'branches.updated_at',
         ]);
-
-        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
 
         $branchBuilder->join("institutes",function($join){
             $join->on('branches.institute_id', '=', 'institutes.id')

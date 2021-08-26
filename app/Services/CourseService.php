@@ -31,6 +31,7 @@ class CourseService
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
         $rowStatus=$request->query('row_status');
+        $instituteId = $request->query('institute_id');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Course|Builder $coursesBuilder */
@@ -79,6 +80,10 @@ class CourseService
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        if($instituteId){
+            $coursesBuilder->where('courses.institute_id', '=' ,$instituteId );
         }
 
         /** @var Collection $coursesBuilder */
@@ -138,7 +143,6 @@ class CourseService
                 'courses.updated_at',
             ]
         );
-        $courseBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
 
         $courseBuilder->join("institutes",function($join){
             $join->on('courses.institute_id', '=', 'institutes.id')

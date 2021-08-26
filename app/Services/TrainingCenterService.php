@@ -29,6 +29,7 @@ class TrainingCenterService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $rowStatus=$request->query('row_status');
+        $instituteId = $request->query('institute_id');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -79,6 +80,10 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        if($instituteId){
+            $trainingCentersBuilder->where('training_centers.institute_id', '=' ,$instituteId );
         }
 
         /** @var Collection $trainingCentersBuilder */

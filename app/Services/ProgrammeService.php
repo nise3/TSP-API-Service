@@ -29,6 +29,7 @@ class ProgrammeService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $rowStatus=$request->query('row_status');
+        $instituteId = $request->query('institute_id');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -39,7 +40,7 @@ class ProgrammeService
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
-            'programmes.code as programme_code',
+            'programmes.code',
             'programmes.logo as programme_logo',
             'programmes.description',
             'programmes.row_status',
@@ -66,6 +67,10 @@ class ProgrammeService
         } elseif (!empty($titleBn)) {
             $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
+        if($instituteId){
+            $programmesBuilder->where('programmes.institute_id', '=' ,$instituteId );
+        }
+
 
         /** @var Collection $programmesBuilder */
         if (!is_null($paginate) || !is_null($limit)) {
@@ -112,8 +117,6 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmeBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-
         $programmeBuilder->join("institutes",function($join){
             $join->on('programmes.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');

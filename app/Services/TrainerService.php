@@ -31,6 +31,7 @@ class TrainerService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $instituteId = $request->query('institute_id');
         $rowStatus=$request->query('row_status');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -70,6 +71,22 @@ class TrainerService
             'trainers.updated_at',
         ]);
 
+        $trainerBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('trainers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
+        $trainerBuilder->join("training_centers",function($join) use($rowStatus){
+            $join->on('trainers.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('training_centers.row_status',$rowStatus);
+            }
+        });
+
         $trainerBuilder->orderBy('trainers.id', $order);
 
         if(!is_null($rowStatus)){
@@ -80,6 +97,10 @@ class TrainerService
             $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $trainerBuilder->where('trainers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        if($instituteId){
+            $trainerBuilder->where('trainers.institute_id', '=' ,$instituteId );
         }
 
         /** @var Collection $trainerBuilder */
@@ -148,6 +169,17 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
         ]);
+
+        $trainerBuilder->join("institutes",function($join){
+            $join->on('trainers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
+        $trainerBuilder->join("training_centers",function($join){
+            $join->on('trainers.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+
         $trainerBuilder->where('trainers.id', $id);
 
         /** @var Trainer $trainerBuilder */
