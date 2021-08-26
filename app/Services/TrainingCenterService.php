@@ -53,8 +53,6 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCentersBuilder->join('institutes', 'training_centers.institute_id', '=', 'institutes.id');
-        $trainingCentersBuilder->leftJoin('branches', 'training_centers.branch_id', '=', 'branches.id');
 
         $trainingCentersBuilder->join("institutes",function($join) use($rowStatus){
             $join->on('training_centers.institute_id', '=', 'institutes.id')

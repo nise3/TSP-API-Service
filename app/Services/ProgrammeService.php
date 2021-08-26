@@ -46,7 +46,6 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
 
         $programmesBuilder->join("institutes",function($join) use($rowStatus){
             $join->on('programmes.institute_id', '=', 'institutes.id')

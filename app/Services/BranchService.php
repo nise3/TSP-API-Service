@@ -48,8 +48,6 @@ class BranchService
             'branches.updated_at',
         ]);
 
-        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
-
         $branchBuilder->join("institutes",function($join) use($rowStatus){
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');

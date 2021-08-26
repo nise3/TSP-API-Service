@@ -60,7 +60,6 @@ class CourseService
                 'courses.updated_at',
             ]
         );
-        $coursesBuilder->join('institutes', 'courses.institute_id', '=', 'institutes.id');
 
         $coursesBuilder->join("institutes",function($join) use($rowStatus){
             $join->on('courses.institute_id', '=', 'institutes.id')
