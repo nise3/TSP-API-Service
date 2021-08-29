@@ -10,6 +10,9 @@
         },
         {
             "url": "https://api.bus.softbd.xyz/institute/api/v1/"
+        },
+        {
+            "url": "http://nise3-institute.asm/api/v1"
         }
     ],
     "paths": {
