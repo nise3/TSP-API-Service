@@ -26,12 +26,12 @@ class BranchService
      */
     public function getBranchList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $limit = $request->query('limit', 10);
+        $instituteId = $request->query('institute_id');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Branch|Builder $branchBuilder */
@@ -49,9 +49,19 @@ class BranchService
             'branches.updated_at',
         ]);
 
-        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('branches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
         $branchBuilder->orderBy('branches.id', $order);
 
+        if(!is_null($rowStatus)){
+            $branchBuilder->where('branches.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
@@ -59,8 +69,12 @@ class BranchService
             $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
+        if($instituteId){
+            $branchBuilder->where('branches.institute_id', '=' ,$instituteId );
+        }
+
         /** @var Collection $branchBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();
@@ -95,6 +109,9 @@ class BranchService
             'branches.id as id',
             'branches.title_en',
             'branches.title_bn',
+            'branches.loc_division_id',
+            'branches.loc_district_id',
+            'branches.loc_upazila_id',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'branches.row_status',
@@ -105,14 +122,17 @@ class BranchService
             'branches.updated_at',
         ]);
 
-        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->join("institutes",function($join){
+            $join->on('branches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
         $branchBuilder->where('branches.id', $id);
 
         /** @var Branch $branchBuilder */
         $branch = $branchBuilder->first();
 
         return [
-            "data" => $branch ?: null,
+            "data" => $branch ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -210,6 +230,73 @@ class BranchService
             $googleMapSrc = $match[1];
         }
         return $googleMapSrc;
+    }
+
+    public function getBranchTrashList(Request $request, Carbon $startTime): array
+    {
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $limit = $request->query('limit', 10);
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Branch|Builder $branchBuilder */
+        $branchBuilder = Branch::onlyTrashed()->select([
+            'branches.id as id',
+            'branches.title_en',
+            'branches.title_bn',
+            'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
+            'branches.row_status',
+            'branches.address',
+            'branches.google_map_src',
+            'branches.row_status',
+            'branches.created_at',
+            'branches.updated_at',
+        ]);
+
+        $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
+        $branchBuilder->orderBy('branches.id', $order);
+
+
+        if (!empty($titleEn)) {
+            $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $branchBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $branches = $branchBuilder->paginate($limit);
+            $paginateData = (object)$branches->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $branches = $branchBuilder->get();
+        }
+        $response['order']=$order;
+        $response['data']=$branches->toArray()['data'] ?? $branches->toArray();
+
+
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    public function restore(Branch $branch): bool
+    {
+        return $branch->restore();
+    }
+
+    public function forceDelete(Branch $branch): bool
+    {
+        return $branch->forceDelete();
     }
 
 }

@@ -146,4 +146,53 @@ class TrainingCenterController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->trainingCenterService->getTrainingCenterTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
+        try {
+            $this->trainingCenterService->restore($trainingCenter);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Training Center restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
+        try {
+            $this->trainingCenterService->forceDelete($trainingCenter);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Training Center permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 }

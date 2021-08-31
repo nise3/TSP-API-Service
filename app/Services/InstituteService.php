@@ -28,12 +28,11 @@ class InstituteService
      */
     public function getInstituteList(Request $request, Carbon $startTime): array
     {
-        $paginateLink = [];
-        $page = [];
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
         $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
+        $rowStatus=$request->query('row_status');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Institute|Builder $instituteBuilder*/
@@ -49,6 +48,9 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.loc_division_id',
+            'institutes.loc_district_id',
+            'institutes.loc_upazila_id',
             'institutes.domain',
             'institutes.address',
             'institutes.google_map_src',
@@ -60,6 +62,10 @@ class InstituteService
         ]);
         $instituteBuilder->orderBy('institutes.id', $order);
 
+        if(!is_null($rowStatus)){
+            $instituteBuilder->where('institutes.row_status',$rowStatus);
+        }
+
         if (!empty($titleEn)) {
             $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
@@ -67,7 +73,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
@@ -198,14 +204,6 @@ class InstituteService
         $institute = new Institute();
         $institute->fill($data);
         $institute->save();
-/*        if($data['is_training_center']==true){
-            $tData['institute_id'] = $institute->id;
-            $tData['title_en'] = $data['training_center_name_en'];
-            $tData['title_bn'] = $data['training_center_name_bn'];
-            $trainingCenter = new TrainingCenter();
-            $trainingCenter->fill($tData);
-            $trainingCenter->save();
-        }*/
         return $institute;
     }
 
@@ -231,5 +229,78 @@ class InstituteService
     public function destroy(Institute $institute): bool
     {
         return $institute->delete();
+    }
+
+
+
+    public function getInstituteTrashList(Request $request, Carbon $startTime): array
+    {
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $limit = $request->query('limit', 10);
+        $paginate = $request->query('page');
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Institute|Builder $instituteBuilder*/
+        $instituteBuilder = Institute::onlyTrashed()->select([
+            'institutes.id as id',
+            'institutes.title_en',
+            'institutes.title_bn',
+            'institutes.code',
+            'institutes.logo',
+            'institutes.primary_phone',
+            'institutes.phone_numbers',
+            'institutes.primary_mobile',
+            'institutes.mobile_numbers',
+            'institutes.email',
+            'institutes.config',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
+            'institutes.row_status',
+            'institutes.created_by',
+            'institutes.updated_by',
+            'institutes.created_at',
+            'institutes.updated_at',
+        ]);
+        $instituteBuilder->orderBy('institutes.id', $order);
+
+        if (!empty($titleEn)) {
+            $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $instituteBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $institutes = $instituteBuilder->paginate($limit);
+            $paginateData = (object)$institutes->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $institutes = $instituteBuilder->get();
+        }
+        $response['order']=$order;
+        $response['data']=$institutes->toArray()['data'] ?? $institutes->toArray();
+
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    public function restore(Institute $institute): bool
+    {
+        return $institute->restore();
+    }
+
+    public function forceDelete(Institute $institute): bool
+    {
+        return $institute->forceDelete();
     }
 }

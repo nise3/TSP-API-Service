@@ -18,6 +18,9 @@ class CreateBranchesTable extends Migration
             $table->unsignedInteger('institute_id');
             $table->string('title_en', 191);
             $table->string('title_bn', 600)->nullable();
+            $table->unsignedInteger("loc_division_id")->nullable();
+            $table->unsignedInteger("loc_district_id")->nullable();
+            $table->unsignedInteger("loc_upazila_id")->nullable();
             $table->text('address')->nullable();
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);

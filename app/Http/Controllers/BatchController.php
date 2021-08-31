@@ -43,7 +43,7 @@ class BatchController extends Controller
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
      */
-    public function getList(Request $request): JsonResponse
+    public function getList(Request $request)
     {
         try {
             $response = $this->batchService->getBatchList($request,  $this->startTime);
@@ -141,6 +141,54 @@ class BatchController extends Controller
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Batch Delete successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->batchService->getBatchTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $batch = Batch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->batchService->restore($batch);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "batch restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $institute = Batch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->batchService->forceDelete($institute);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Batch permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];
         } catch (Throwable $e) {

@@ -28,6 +28,8 @@ class ProgrammeService
         $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
+        $rowStatus=$request->query('row_status');
+        $instituteId = $request->query('institute_id');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -38,24 +40,40 @@ class ProgrammeService
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
-            'programmes.code as programme_code',
+            'programmes.code',
             'programmes.logo as programme_logo',
             'programmes.description',
             'programmes.row_status',
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+
+        $programmesBuilder->join("institutes",function($join) use($rowStatus){
+            $join->on('programmes.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if(!is_null($rowStatus)){
+                $join->where('institutes.row_status',$rowStatus);
+            }
+        });
+
         $programmesBuilder->orderBy('programmes.id', $order);
+
+        if(!is_null($rowStatus)){
+            $programmesBuilder->where('programmes.row_status',$rowStatus);
+        }
 
         if (!empty($titleEn)) {
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
             $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
+        if($instituteId){
+            $programmesBuilder->where('programmes.institute_id', '=' ,$instituteId );
+        }
+
 
         /** @var Collection $programmesBuilder */
-        if ($paginate || $limit) {
+        if (!is_null($paginate) || !is_null($limit)) {
             $limit = $limit ?: 10;
             $programmes = $programmesBuilder->paginate($limit);
             $paginateData = (object)$programmes->toArray();
@@ -99,7 +117,11 @@ class ProgrammeService
             'programmes.created_at',
             'programmes.updated_at',
         ]);
-        $programmeBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmeBuilder->join("institutes",function($join){
+            $join->on('programmes.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
         $programmeBuilder->where('programmes.id', '=', $id);
 
         /** @var Programme $programmeBuilder */
@@ -193,4 +215,73 @@ class ProgrammeService
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
+
+
+    public function getProgrammeTrashList(Request $request, Carbon $startTime): array
+    {
+        $limit = $request->query('limit', 10);
+        $titleEn = $request->query('title_en');
+        $titleBn = $request->query('title_bn');
+        $paginate = $request->query('page');
+        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        /** @var Programme|Builder $programmesBuilder */
+        $programmesBuilder = Programme::onlyTrashed()->select([
+            'programmes.id as id',
+            'programmes.title_en',
+            'programmes.title_bn',
+            'institutes.title_en as institute_title_en',
+            'institutes.id as institute_id',
+            'programmes.code as programme_code',
+            'programmes.logo as programme_logo',
+            'programmes.description',
+            'programmes.row_status',
+            'programmes.created_at',
+            'programmes.updated_at',
+        ]);
+        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
+        $programmesBuilder->orderBy('programmes.id', $order);
+
+        if (!empty($titleEn)) {
+            $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+        /** @var Collection $programmesBuilder */
+        if ($paginate || $limit) {
+            $limit = $limit ?: 10;
+            $programmes = $programmesBuilder->paginate($limit);
+            $paginateData = (object)$programmes->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $programmes = $programmesBuilder->get();
+        }
+
+        $response['order']=$order;
+        $response['data']=$programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['response_status']= [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+
+    public function restore(Programme $programmes): bool
+    {
+        return $programmes->restore();
+    }
+
+    public function forceDelete(Programme $programmes): bool
+    {
+        return $programmes->forceDelete();
+    }
+
+
 }

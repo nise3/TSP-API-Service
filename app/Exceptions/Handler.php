@@ -16,6 +16,7 @@ use Illuminate\Http\Response;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use TypeError;
 
 
 class Handler extends ExceptionHandler
@@ -82,10 +83,18 @@ class Handler extends ExceptionHandler
                 'errors' => $e->errors()
             ];
             return response()->json($errors);
-        } elseif ($e instanceof BindingResolutionException) {
+        }
+        elseif ($e instanceof Exception) {
             $errors = [
                 "code" => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
-                "message" => "Unable to resolve dependency",
+                "message" => "Internal Server Error",
+            ];
+            return response()->json($errors);
+        }
+        elseif ($e instanceof TypeError) {
+            $errors = [
+                "code" => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
+                "message" => "Type Error",
             ];
             return response()->json($errors);
         }

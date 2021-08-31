@@ -26,6 +26,9 @@ class InstituteFactory extends Factory
         return [
             'title_en' => $this->faker->name,
             'title_bn' => $this->faker->name,
+            'loc_division_id' => "1",
+            'loc_district_id' =>"1",
+            'loc_upazila_id' => "1",
             'code' => $this->faker->unique()->countryCode,
             'domain' => 'http://' . $this->faker->domainName,
             'address' => $this->faker->address,
