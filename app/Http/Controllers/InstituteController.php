@@ -39,11 +39,14 @@ class InstituteController extends Controller
      * * Display a listing of the resource.
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->instituteService->filterValidator($request)->validate();
+
         try {
-            $response = $this->instituteService->getInstituteList($request, $this->startTime);
+            $response = $this->instituteService->getInstituteList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }

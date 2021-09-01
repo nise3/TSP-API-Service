@@ -22,20 +22,20 @@ class InstituteService
     public TrainingCenterService $trainingCenterService;
 
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
-    public function getInstituteList(Request $request, Carbon $startTime): array
+    public function getInstituteList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
-        $limit = $request->query('limit', 10);
-        $paginate = $request->query('page');
-        $rowStatus=$request->query('row_status');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
+        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
+        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
+        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
+        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
+        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
 
-        /** @var Institute|Builder $instituteBuilder*/
+        /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
             'institutes.id as id',
             'institutes.title_en',
@@ -49,8 +49,14 @@ class InstituteService
             'institutes.email',
             'institutes.config',
             'institutes.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
             'institutes.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
             'institutes.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'institutes.domain',
             'institutes.address',
             'institutes.google_map_src',
@@ -60,10 +66,35 @@ class InstituteService
             'institutes.created_at',
             'institutes.updated_at',
         ]);
+
         $instituteBuilder->orderBy('institutes.id', $order);
 
-        if(!is_null($rowStatus)){
-            $instituteBuilder->where('institutes.row_status',$rowStatus);
+        $instituteBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+            $join->on('loc_divisions.id', '=', 'institutes.loc_division_id')
+                ->whereNull('loc_divisions.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_divisions.row_status', $rowStatus);
+            }
+        });
+
+        $instituteBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+            $join->on('loc_districts.id', '=', 'institutes.loc_district_id')
+                ->whereNull('loc_districts.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_districts.row_status', $rowStatus);
+            }
+        });
+
+        $instituteBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+            $join->on('loc_upazilas.id', '=', 'institutes.loc_upazila_id')
+                ->whereNull('loc_upazilas.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_upazilas.row_status', $rowStatus);
+            }
+        });
+
+        if (is_numeric($rowStatus)) {
+            $instituteBuilder->where('institutes.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
@@ -73,9 +104,9 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (!is_null($paginate) || !is_null($limit)) {
-            $limit = $limit ?: 10;
-            $institutes = $instituteBuilder->paginate($limit);
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $institutes = $instituteBuilder->paginate($pageSize);
             $paginateData = (object)$institutes->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
@@ -84,10 +115,10 @@ class InstituteService
         } else {
             $institutes = $instituteBuilder->get();
         }
-        $response['order']=$order;
-        $response['data']=$institutes->toArray()['data'] ?? $institutes->toArray();
+        $response['order'] = $order;
+        $response['data'] = $institutes->toArray()['data'] ?? $institutes->toArray();
 
-        $response['response_status']= [
+        $response['response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -115,6 +146,15 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.config',
+            'institutes.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
+            'institutes.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
+            'institutes.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'institutes.domain',
             'institutes.address',
             'institutes.google_map_src',
@@ -125,7 +165,25 @@ class InstituteService
             'institutes.updated_at',
         ]);
 
-        $instituteBuilder->where('institutes.id', $id);
+        $instituteBuilder->leftJoin('loc_divisions', function ($join) {
+            $join->on('loc_divisions.id', '=', 'institutes.loc_division_id')
+                ->whereNull('loc_divisions.deleted_at');
+        });
+
+        $instituteBuilder->leftJoin('loc_districts', function ($join) {
+            $join->on('loc_districts.id', '=', 'institutes.loc_district_id')
+                ->whereNull('loc_districts.deleted_at');
+        });
+
+        $instituteBuilder->leftJoin('loc_upazilas', function ($join) {
+            $join->on('loc_upazilas.id', '=', 'institutes.loc_upazila_id')
+                ->whereNull('loc_upazilas.deleted_at');
+        });
+
+        if (!empty($id)) {
+            $instituteBuilder->where('institutes.id', $id);
+        }
+
         /** @var Institute $instituteBuilder */
         $institute = $instituteBuilder->first();
 
@@ -231,8 +289,6 @@ class InstituteService
         return $institute->delete();
     }
 
-
-
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
@@ -241,7 +297,7 @@ class InstituteService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Institute|Builder $instituteBuilder*/
+        /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::onlyTrashed()->select([
             'institutes.id as id',
             'institutes.title_en',
@@ -272,7 +328,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if ($paginate || $limit) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
@@ -283,10 +339,10 @@ class InstituteService
         } else {
             $institutes = $instituteBuilder->get();
         }
-        $response['order']=$order;
-        $response['data']=$institutes->toArray()['data'] ?? $institutes->toArray();
+        $response['order'] = $order;
+        $response['data'] = $institutes->toArray()['data'] ?? $institutes->toArray();
 
-        $response['response_status']= [
+        $response['response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -302,5 +358,31 @@ class InstituteService
     public function forceDelete(Institute $institute): bool
     {
         return $institute->forceDelete();
+    }
+
+    public function filterValidator(Request $request): Validator
+    {
+        if (!empty($request['order'])) {
+            $request['order'] = strtoupper($request['order']);
+        }
+        $customMessage = [
+            'order.in' => 'Order must be within ASC or DESC',
+            'row_status.in' => 'Row status must be within 1 or 0'
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'title_en' => 'nullable|min:1',
+            'title_bn' => 'nullable|min:1',
+            'page_size' => 'numeric',
+            'page' => 'numeric',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                "numeric",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ], $customMessage);
     }
 }

@@ -41,11 +41,14 @@ class BranchController extends Controller
     /**
      * @param Request $request
      * * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->branchService->filterValidator($request)->validate();
+
         try {
-            $response = $this->branchService->getBranchList($request, $this->startTime);
+            $response = $this->branchService->getBranchList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }

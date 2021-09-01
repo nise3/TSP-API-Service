@@ -41,11 +41,14 @@ class TrainerController extends Controller
      * * Display a listing of the resource.
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->trainerService->filterValidator($request)->validate();
+
         try {
-            $response = $this->trainerService->getTrainerList($request, $this->startTime);
+            $response = $this->trainerService->getTrainerList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }

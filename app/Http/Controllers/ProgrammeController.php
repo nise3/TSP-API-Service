@@ -42,12 +42,15 @@ class ProgrammeController extends Controller
     /**
      * * * Display a listing of the resource.
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->programmeService->filterValidator($request)->validate();
+
         try {
-            $response = $this->programmeService->getProgrammeList($request, $this->startTime);
+            $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }
@@ -57,7 +60,7 @@ class ProgrammeController extends Controller
     /**
      * * * Display the specified resource
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function read(int $id): JsonResponse
     {
@@ -72,7 +75,7 @@ class ProgrammeController extends Controller
     /**
      * * Store a newly created resource in storage.
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
@@ -99,7 +102,7 @@ class ProgrammeController extends Controller
      *  * * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse

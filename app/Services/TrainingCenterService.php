@@ -23,29 +23,36 @@ class TrainingCenterService
      * @param Carbon $startTime
      * @return array
      */
-    public function getTrainingCenterList(Request $request, Carbon $startTime): array
+    public function getTrainingCenterList(array $request, Carbon $startTime): array
     {
-        $limit = $request->query('limit', 10);
-        $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
-        $rowStatus=$request->query('row_status');
-        $instituteId = $request->query('institute_id');
-        $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
+        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
+        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
+        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
+        $instituteId = array_key_exists('institute_id', $request) ? $request['institute_id'] : "";
+        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
+        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
 
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
-            'training_centers.id as id',
+            'training_centers.id',
             'training_centers.title_en',
             'training_centers.title_bn',
             'training_centers.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
             'training_centers.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
             'training_centers.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
-            'institutes.title_en as institute_name',
+            'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
             'training_centers.branch_id',
-            'branches.title_en as branch_name',
-            'training_centers.address',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -55,25 +62,25 @@ class TrainingCenterService
             'training_centers.updated_at'
         ]);
 
-        $trainingCentersBuilder->join("institutes",function($join) use($rowStatus){
+        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if(!is_null($rowStatus)){
-                $join->where('institutes.row_status',$rowStatus);
+            if (is_numeric($rowStatus)) {
+                $join->where('institutes.row_status', $rowStatus);
             }
         });
-        $trainingCentersBuilder->join("branches",function($join) use($rowStatus){
+        $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if(!is_null($rowStatus)){
-                $join->where('branches.row_status',$rowStatus);
+            if (is_numeric($rowStatus)) {
+                $join->where('branches.row_status', $rowStatus);
             }
         });
 
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if(!is_null($rowStatus)){
-            $trainingCentersBuilder->where('training_centers.row_status',$rowStatus);
+        if (is_numeric($rowStatus)) {
+            $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
@@ -82,14 +89,42 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if($instituteId){
-            $trainingCentersBuilder->where('training_centers.institute_id', '=' ,$instituteId );
+        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+            $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
+                ->whereNull('loc_divisions.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_divisions.row_status', $rowStatus);
+            }
+        });
+
+        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+            $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
+                ->whereNull('loc_districts.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_districts.row_status', $rowStatus);
+            }
+        });
+
+        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+            $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
+                ->whereNull('loc_upazilas.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_upazilas.row_status', $rowStatus);
+            }
+        });
+
+        if ($instituteId) {
+            $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
+        }
+
+        if (is_numeric($rowStatus)) {
+            $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
         /** @var Collection $trainingCentersBuilder */
-        if (!is_null($paginate) || !is_null($limit)) {
-            $limit = $limit ?: 10;
-            $trainingCenters = $trainingCentersBuilder->paginate($limit);
+        if (!is_null($paginate) || !is_null($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
@@ -99,9 +134,9 @@ class TrainingCenterService
             $trainingCenters = $trainingCentersBuilder->get();
         }
 
-        $response['order']=$order;
-        $response['data']=$trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
-        $response['response_status']= [
+        $response['order'] = $order;
+        $response['data'] = $trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
+        $response['response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -119,15 +154,24 @@ class TrainingCenterService
     {
         /** @var TrainingCenter|Builder $trainingCenterBuilder */
         $trainingCenterBuilder = TrainingCenter::select([
-            'training_centers.id as id',
+            'training_centers.id',
             'training_centers.title_en',
             'training_centers.title_bn',
+            'training_centers.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
+            'training_centers.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
+            'training_centers.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
-            'institutes.title_en as institute_name',
+            'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
             'training_centers.branch_id',
-            'branches.title_en as branch_name',
-            'training_centers.center_location_type',
-            'training_centers.address',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -136,16 +180,35 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at'
         ]);
-        $trainingCenterBuilder->join("institutes",function($join){
+
+        $trainingCenterBuilder->join("institutes", function ($join) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
-        $trainingCenterBuilder->join("branches",function($join) {
+
+        $trainingCenterBuilder->leftJoin("branches", function ($join) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
         });
 
-        $trainingCenterBuilder->where('training_centers.id', '=', $id);
+        if (!empty($id)) {
+            $trainingCenterBuilder->where('training_centers.id', '=', $id);
+        }
+
+        $trainingCenterBuilder->leftJoin('loc_divisions', function ($join) {
+            $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
+                ->whereNull('loc_divisions.deleted_at');
+        });
+
+        $trainingCenterBuilder->leftJoin('loc_districts', function ($join) {
+            $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
+                ->whereNull('loc_districts.deleted_at');
+        });
+
+        $trainingCenterBuilder->leftJoin('loc_upazilas', function ($join) {
+            $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
+                ->whereNull('loc_upazilas.deleted_at');
+        });
 
         /** @var TrainingCenter $trainingCenterBuilder */
         $trainingCenter = $trainingCenterBuilder->first();
@@ -283,9 +346,9 @@ class TrainingCenterService
             $trainingCenters = $trainingCentersBuilder->get();
         }
 
-        $response['order']=$order;
-        $response['data']=$trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
-        $response['response_status']= [
+        $response['order'] = $order;
+        $response['data'] = $trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
+        $response['response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -302,5 +365,32 @@ class TrainingCenterService
     public function forceDelete(TrainingCenter $trainingCenter): bool
     {
         return $trainingCenter->forceDelete();
+    }
+
+    public function filterValidator(Request $request): Validator
+    {
+        if (!empty($request['order'])) {
+            $request['order'] = strtoupper($request['order']);
+        }
+        $customMessage = [
+            'order.in' => 'Order must be within ASC or DESC',
+            'row_status.in' => 'Row status must be within 1 or 0'
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'title_en' => 'nullable|min:1',
+            'title_bn' => 'nullable|min:1',
+            'page_size' => 'numeric',
+            'page' => 'numeric',
+            'institute_id' => 'numeric',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                "numeric",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ], $customMessage);
     }
 }

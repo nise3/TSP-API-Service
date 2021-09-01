@@ -20,29 +20,30 @@ class CourseService
 {
 
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
-    public function getCourseList(Request $request, Carbon $startTime): array
+    public function getCourseList(array $request, Carbon $startTime): array
     {
-        $limit = $request->query('limit', 10);
-        $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
-        $paginate = $request->query('page');
-        $rowStatus=$request->query('row_status');
-        $instituteId = $request->query('institute_id');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
+        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
+        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
+        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
+        $instituteId = array_key_exists('institute_id', $request) ? $request['institute_id'] : "";
+        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
+        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
             [
-                'courses.id as id',
+                'courses.id',
                 'courses.code',
-                'courses.institute_id',
-                'institutes.title_en as institute_title',
                 'courses.title_en',
                 'courses.title_bn',
+                'courses.institute_id',
+                'institutes.title_en as institute_title_en',
+                'institutes.title_bn as institute_title_bn',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -62,18 +63,18 @@ class CourseService
             ]
         );
 
-        $coursesBuilder->join("institutes",function($join) use($rowStatus){
+        $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if(!is_null($rowStatus)){
-                $join->where('institutes.row_status',$rowStatus);
+            if (is_numeric($rowStatus)) {
+                $join->where('institutes.row_status', $rowStatus);
             }
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
 
-        if(!is_null($rowStatus)){
-            $coursesBuilder->where('courses.row_status',$rowStatus);
+        if (is_numeric($rowStatus)) {
+            $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
@@ -82,14 +83,14 @@ class CourseService
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if($instituteId){
-            $coursesBuilder->where('courses.institute_id', '=' ,$instituteId );
+        if ($instituteId) {
+            $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $coursesBuilder */
-        if (!is_null($paginate) || !is_null($limit)) {
-            $limit = $limit ?: 10;
-            $courses = $coursesBuilder->paginate($limit);
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
@@ -119,12 +120,13 @@ class CourseService
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
             [
-                'courses.id as id',
+                'courses.id',
                 'courses.code',
-                'courses.institute_id',
-                'institutes.title_en as institute_title',
                 'courses.title_en',
                 'courses.title_bn',
+                'courses.institute_id',
+                'institutes.title_en as institute_title_en',
+                'institutes.title_bn as institute_title_bn',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -144,7 +146,7 @@ class CourseService
             ]
         );
 
-        $courseBuilder->join("institutes",function($join){
+        $courseBuilder->join("institutes", function ($join) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -362,5 +364,32 @@ class CourseService
     public function forceDelete(Course $courses): bool
     {
         return $courses->forceDelete();
+    }
+
+    public function filterValidator(Request $request): Validator
+    {
+        if (!empty($request['order'])) {
+            $request['order'] = strtoupper($request['order']);
+        }
+        $customMessage = [
+            'order.in' => 'Order must be within ASC or DESC',
+            'row_status.in' => 'Row status must be within 1 or 0'
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'title_en' => 'nullable|min:1',
+            'title_bn' => 'nullable|min:1',
+            'page_size' => 'numeric',
+            'page' => 'numeric',
+            'institute_id' => 'numeric',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                "numeric",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ], $customMessage);
     }
 }

@@ -61,7 +61,7 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -82,30 +82,37 @@
                                     "$ref": "#/components/schemas/institutes"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "code": "4455",
-                                            "logo": null,
-                                            "primary_phone": "01845654543",
-                                            "phone_numbers": null,
-                                            "primary_mobile": "01845654543",
-                                            "mobile_numbers": null,
-                                            "email": null,
-                                            "config": null,
-                                            "domain": "https://developer.chrome.com",
-                                            "address": "Dhaka mirpur road 4 block 2",
-                                            "google_map_src": null,
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-18T14:39:55.000000Z",
-                                            "updated_at": "2021-08-18T14:39:55.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Hellen Mante",
+                                        "title_bn": "Brenda McDermott",
+                                        "code": "PG",
+                                        "logo": "softbd.jpg",
+                                        "primary_phone": "641.838.9521",
+                                        "phone_numbers": "781.736.9309",
+                                        "primary_mobile": "1-678-953-7447",
+                                        "mobile_numbers": null,
+                                        "email": "runolfsson.stefan@shanahan.com",
+                                        "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "domain": "http://graham.net",
+                                        "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
+                                        "google_map_src": "Inventore earum nihil velit magni.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -299,24 +306,33 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "code": "4455",
-                                        "logo": null,
-                                        "primary_phone": "01845654543",
-                                        "phone_numbers": null,
-                                        "primary_mobile": "01845654543",
+                                        "title_en": "Hellen Mante",
+                                        "title_bn": "Brenda McDermott",
+                                        "code": "PG",
+                                        "logo": "softbd.jpg",
+                                        "primary_phone": "641.838.9521",
+                                        "phone_numbers": "781.736.9309",
+                                        "primary_mobile": "1-678-953-7447",
                                         "mobile_numbers": null,
-                                        "email": null,
-                                        "config": null,
-                                        "domain": "https://developer.chrome.com",
-                                        "address": "Dhaka mirpur road 4 block 2",
-                                        "google_map_src": null,
+                                        "email": "runolfsson.stefan@shanahan.com",
+                                        "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "domain": "http://graham.net",
+                                        "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
+                                        "google_map_src": "Inventore earum nihil velit magni.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-18T14:39:55.000000Z",
-                                        "updated_at": "2021-08-18T14:39:55.000000Z"
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -541,7 +557,10 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -562,25 +581,34 @@
                                     "$ref": "#/components/schemas/training-centers"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "institute_id": 1,
-                                            "institute_name": "yews",
-                                            "branch_id": null,
-                                            "branch_name": null,
-                                            "address": "Dhaka firm gate block 2",
-                                            "google_map_src": null,
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-18T23:33:05.000000Z",
-                                            "updated_at": "2021-08-18T23:33:05.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Thaddeus Kohler Jr.",
+                                        "title_bn": "Alison Kassulke",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "branch_id": 2,
+                                        "branch_title_en": "Bettie Halvorson",
+                                        "branch_title_bn": "Oma Hammes",
+                                        "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
+                                        "google_map_src": "Est omnis temporibus expedita odit.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -737,24 +765,34 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title_en": "Thaddeus Kohler Jr.",
+                                        "title_bn": "Alison Kassulke",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
                                         "institute_id": 1,
-                                        "institute_name": "yews",
-                                        "branch_id": null,
-                                        "branch_name": null,
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": null,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "branch_id": 2,
+                                        "branch_title_en": "Bettie Halvorson",
+                                        "branch_title_bn": "Oma Hammes",
+                                        "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
+                                        "google_map_src": "Est omnis temporibus expedita odit.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-18T23:33:05.000000Z",
-                                        "updated_at": "2021-08-18T23:33:05.000000Z"
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Job finished successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -939,7 +977,10 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -960,21 +1001,29 @@
                                     "$ref": "#/components/schemas/branches"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title_en": "PROGRAMME ON RMG4",
-                                            "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                            "institute_title_en": "yews",
-                                            "institute_id": 1,
-                                            "row_status": 1,
-                                            "address": "dhaka 1112",
-                                            "google_map_src": "branch under bitac institute",
-                                            "created_at": "2021-08-19T00:00:01.000000Z",
-                                            "updated_at": "2021-08-19T00:00:01.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 1,
+                                        "title_en": "Annamae Rippin",
+                                        "title_bn": "Hanna McLaughlin",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "row_status": 1,
+                                        "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
+                                        "google_map_src": "3170 Kautzer Trace Apt. 887\nSouth Laisha, MT 90797",
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -988,7 +1037,7 @@
                     }
                 }
             },
-            "post":{
+            "post": {
                 "tags": [
                     "branches"
                 ],
@@ -1111,15 +1160,25 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
+                                        "title_en": "Annamae Rippin",
+                                        "title_bn": "Hanna McLaughlin",
                                         "institute_id": 1,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
                                         "row_status": 1,
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z"
+                                        "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
+                                        "google_map_src": "3170 Kautzer Trace Apt. 887\nSouth Laisha, MT 90797",
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1288,7 +1347,10 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -1680,7 +1742,7 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -1701,41 +1763,45 @@
                                     "$ref": "#/components/schemas/batches"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "course_id": 1,
-                                            "course_title": "sdf",
-                                            "institute_id": 1,
-                                            "institute_title": "asdf",
-                                            "branch_id": null,
-                                            "branch_name": null,
-                                            "programme_id": null,
-                                            "programme_name": null,
-                                            "number_of_seats": 0,
-                                            "registration_start_date": "0000-00-00 00:00:00",
-                                            "registration_end_date": "0000-00-00 00:00:00",
-                                            "batch_start_date": "0000-00-00 00:00:00",
-                                            "batch_end_date": "0000-00-00 00:00:00",
-                                            "available_seats": 0,
-                                            "training_center_id": 1,
-                                            "training_center_name": "wer",
-                                            "in_ethnic_group": 0,
-                                            "is_freedom_fighter": 0,
-                                            "disability_status": 0,
-                                            "ssc_passing_status": 0,
-                                            "hsc_passing_status": 0,
-                                            "honors_passing_status": 0,
-                                            "masters_passing_status": 0,
-                                            "is_occupation_needed": 0,
-                                            "is_guardian_info_needed": 0,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-17T11:18:09.000000Z",
-                                            "updated_at": "2021-08-17T11:18:09.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 1,
+                                        "course_id": 1,
+                                        "course_title_en": "Delores Leffler",
+                                        "course_title_bn": "Ashtyn Schulist",
+                                        "institute_id": null,
+                                        "institute_title_en": null,
+                                        "institute_title_bn": null,
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title_bn": null,
+                                        "programme_id": null,
+                                        "programme_title_en": null,
+                                        "programme_title_bn": null,
+                                        "number_of_seats": 0,
+                                        "registration_start_date": "0000-00-00 00:00:00",
+                                        "registration_end_date": "0000-00-00 00:00:00",
+                                        "batch_start_date": "0000-00-00 00:00:00",
+                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "available_seats": 0,
+                                        "training_center_id": 3,
+                                        "training_center_title_en": "Miss Deanna Swaniawski",
+                                        "training_center_title_bn": "Mrs. Jewell Feest",
+                                        "in_ethnic_group": 0,
+                                        "is_freedom_fighter": 0,
+                                        "disability_status": 0,
+                                        "ssc_passing_status": 0,
+                                        "hsc_passing_status": 0,
+                                        "honors_passing_status": 0,
+                                        "masters_passing_status": 0,
+                                        "is_occupation_needed": 0,
+                                        "is_guardian_info_needed": 0,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -1848,7 +1914,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_freedom_fighter",
@@ -1856,7 +1921,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "disability_status",
@@ -1871,7 +1935,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "hsc_passing_status",
@@ -1879,7 +1942,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "honors_passing_status",
@@ -1887,7 +1949,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "masters_passing_status",
@@ -1895,7 +1956,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_occupation_needed",
@@ -1903,7 +1963,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_guardian_info_needed",
@@ -1911,7 +1970,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "row_status",
@@ -1921,7 +1979,6 @@
                         },
                         "example": "1"
                     }
-
                 ],
                 "responses": {
                     "201": {
@@ -2008,21 +2065,26 @@
                                     "data": {
                                         "id": 1,
                                         "course_id": 1,
-                                        "course_title": "sdf",
-                                        "institute_id": 1,
-                                        "institute_title": "asdf",
+                                        "course_title_en": "Delores Leffler",
+                                        "course_title_bn": "Ashtyn Schulist",
+                                        "institute_id": null,
+                                        "institute_title_en": null,
+                                        "institute_title_bn": null,
                                         "branch_id": null,
-                                        "branch_name": null,
+                                        "branch_title_en": null,
+                                        "branch_title_bn": null,
                                         "programme_id": null,
-                                        "programme_name": null,
-                                        "number_of_vacancies": 0,
+                                        "programme_title_en": null,
+                                        "programme_title_bn": null,
+                                        "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
                                         "batch_start_date": "0000-00-00 00:00:00",
                                         "batch_end_date": "0000-00-00 00:00:00",
-                                        "available_vacancies": 0,
-                                        "training_center_id": 1,
-                                        "training_center_name": "wer",
+                                        "available_seats": 0,
+                                        "training_center_id": 3,
+                                        "training_center_title_en": "Miss Deanna Swaniawski",
+                                        "training_center_title_bn": "Mrs. Jewell Feest",
                                         "in_ethnic_group": 0,
                                         "is_freedom_fighter": 0,
                                         "disability_status": 0,
@@ -2032,10 +2094,11 @@
                                         "masters_passing_status": 0,
                                         "is_occupation_needed": 0,
                                         "is_guardian_info_needed": 0,
+                                        "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-17T11:18:09.000000Z",
-                                        "updated_at": "2021-08-17T11:18:09.000000Z"
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -2156,7 +2219,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_freedom_fighter",
@@ -2164,7 +2226,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "disability_status",
@@ -2179,7 +2240,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "hsc_passing_status",
@@ -2187,7 +2247,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "honors_passing_status",
@@ -2195,7 +2254,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "masters_passing_status",
@@ -2203,7 +2261,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_occupation_needed",
@@ -2211,7 +2268,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "is_guardian_info_needed",
@@ -2219,7 +2275,6 @@
                         "schema": {
                             "type": "integer"
                         }
-
                     },
                     {
                         "name": "row_status",
@@ -2338,7 +2393,10 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -2359,33 +2417,32 @@
                                     "$ref": "#/components/schemas/courses"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "code": "1234",
-                                            "institute_id": 2,
-                                            "institute_title": "asdf",
-                                            "title_en": "sdf",
-                                            "title_bn": "asdf",
-                                            "course_fee": "344.00",
-                                            "duration": null,
-                                            "description": null,
-                                            "target_group": null,
-                                            "objectives": null,
-                                            "contents": null,
-                                            "training_methodology": null,
-                                            "evaluation_system": null,
-                                            "prerequisite": null,
-                                            "eligibility": null,
-                                            "cover_image": null,
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-08-17T10:34:07.000000Z",
-                                            "updated_at": "2021-08-17T10:34:07.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 2,
+                                        "code": "ZM",
+                                        "title_en": "Miss Heath Ondricka",
+                                        "title_bn": "Tessie Stark PhD",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "course_fee": "0.00",
+                                        "duration": "19:53:32",
+                                        "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
+                                        "target_group": "3",
+                                        "objectives": "Voluptas consequatur similique dignissimos.",
+                                        "contents": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
+                                        "training_methodology": "Qui sit quia qui rerum accusantium amet non.",
+                                        "evaluation_system": "Repellendus amet maxime facere porro.",
+                                        "prerequisite": "Voluptatem non sed nesciunt ab voluptatibus.",
+                                        "eligibility": "Accusamus voluptates nemo eum temporibus.",
+                                        "cover_image": "softbd.jpg",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -2489,7 +2546,6 @@
                             "type": "string"
                         }
                     },
-
                     {
                         "name": "training_methodology",
                         "in": "query",
@@ -2497,7 +2553,6 @@
                             "type": "string"
                         }
                     },
-
                     {
                         "name": "evaluation_system",
                         "in": "query",
@@ -2611,28 +2666,29 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
+                                        "id": 2,
+                                        "code": "ZM",
+                                        "title_en": "Miss Heath Ondricka",
+                                        "title_bn": "Tessie Stark PhD",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Hellen Mante",
+                                        "institute_title_bn": "Brenda McDermott",
+                                        "course_fee": "0.00",
+                                        "duration": "19:53:32",
+                                        "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
+                                        "target_group": "3",
+                                        "objectives": "Voluptas consequatur similique dignissimos.",
+                                        "contents": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
+                                        "training_methodology": "Qui sit quia qui rerum accusantium amet non.",
+                                        "evaluation_system": "Repellendus amet maxime facere porro.",
+                                        "prerequisite": "Voluptatem non sed nesciunt ab voluptatibus.",
+                                        "eligibility": "Accusamus voluptates nemo eum temporibus.",
+                                        "cover_image": "softbd.jpg",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -2744,7 +2800,6 @@
                             "type": "string"
                         }
                     },
-
                     {
                         "name": "training_methodology",
                         "in": "query",
@@ -2752,7 +2807,6 @@
                             "type": "string"
                         }
                     },
-
                     {
                         "name": "evaluation_system",
                         "in": "query",
@@ -2891,7 +2945,10 @@
                         "$ref": "#/components/parameters/order"
                     },
                     {
-                        "$ref": "#/components/parameters/limit"
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/title_en"
@@ -2912,77 +2969,53 @@
                                     "$ref": "#/components/schemas/trainers"
                                 },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "trainer_name_en": "assdsddf",
-                                            "trainer_name_bn": "asfsdfsdf",
-                                            "institute_id": 1,
-                                            "training_center_id": null,
-                                            "branch_id": 1,
-                                            "email": "asdqdwr@gmailcom",
-                                            "date_of_birth": null,
-                                            "about_me": null,
-                                            "gender": 1,
-                                            "marital_status": 0,
-                                            "religion": null,
-                                            "nationality": "",
-                                            "nid": null,
-                                            "passport_number": null,
-                                            "physical_disabilities_status": 0,
-                                            "freedom_fighter_status": 0,
-                                            "present_address_division_id": null,
-                                            "present_address_district_id": null,
-                                            "present_address_upazila_id": null,
-                                            "present_house_address": null,
-                                            "permanent_address_division_id": null,
-                                            "permanent_address_district_id": null,
-                                            "permanent_address_upazila_id": null,
-                                            "permanent_house_address": null,
-                                            "educational_qualification": null,
-                                            "skills": null,
-                                            "photo": null,
-                                            "signature": null,
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T12:34:58.000000Z",
-                                            "updated_at": "2021-08-22T12:34:58.000000Z"
-                                        },
-                                        {
-                                            "id": 2,
-                                            "trainer_name_en": "assdsddf",
-                                            "trainer_name_bn": "asfsdfsdf",
-                                            "institute_id": 1,
-                                            "training_center_id": null,
-                                            "branch_id": 1,
-                                            "email": "asdqdwr@gmailcom",
-                                            "date_of_birth": null,
-                                            "about_me": null,
-                                            "gender": 1,
-                                            "marital_status": 0,
-                                            "religion": null,
-                                            "nationality": "",
-                                            "nid": null,
-                                            "passport_number": null,
-                                            "physical_disabilities_status": 0,
-                                            "freedom_fighter_status": 0,
-                                            "present_address_division_id": null,
-                                            "present_address_district_id": null,
-                                            "present_address_upazila_id": null,
-                                            "present_house_address": null,
-                                            "permanent_address_division_id": null,
-                                            "permanent_address_district_id": null,
-                                            "permanent_address_upazila_id": null,
-                                            "permanent_house_address": null,
-                                            "educational_qualification": null,
-                                            "skills": null,
-                                            "photo": null,
-                                            "signature": null,
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T12:34:58.000000Z",
-                                            "updated_at": "2021-08-22T12:34:58.000000Z"
-                                        }
-                                    ],
-                                    "response_status": {
+                                    "data": {
+                                        "id": 1,
+                                        "trainer_name_en": "Maurice Marquardt",
+                                        "trainer_name_bn": "Enola Klein",
+                                        "institute_id": 1,
+                                        "institutes_title_en": "Hellen Mante",
+                                        "institutes_title_bn": "Brenda McDermott",
+                                        "training_center_id": 2,
+                                        "training_centers_title_en": "Ms. Shanel Hayes",
+                                        "training_centers_title_bn": "Karli Fisher",
+                                        "branch_id": 1,
+                                        "branches_title_en": "Annamae Rippin",
+                                        "branches_title_bn": "Hanna McLaughlin",
+                                        "email": "ernestina.predovic@example.org",
+                                        "date_of_birth": null,
+                                        "about_me": "Quis sit saepe expedita officiis et totam molestiae.",
+                                        "gender": 3,
+                                        "marital_status": 1,
+                                        "religion": 3,
+                                        "nationality": "Reprehenderit labore error provident ut et voluptatem.",
+                                        "nid": "Eaque dignissimos placeat deleniti eius quibusdam ",
+                                        "passport_number": "839251467",
+                                        "physical_disabilities_status": 1,
+                                        "freedom_fighter_status": 0,
+                                        "present_address_division_id": 4,
+                                        "division_title_bn": "খুলনা",
+                                        "division_title_en": "Khulna",
+                                        "present_address_district_id": 0,
+                                        "district_title_bn": null,
+                                        "district_title_en": null,
+                                        "present_address_upazila_id": 32767,
+                                        "upazila_title_bn": null,
+                                        "upazila_title_en": null,
+                                        "present_house_address": "169 Kertzmann Burgs Apt. 677\nNorth Laishachester, DE 03946",
+                                        "permanent_address_division_id": 0,
+                                        "permanent_address_district_id": 8,
+                                        "permanent_address_upazila_id": 8,
+                                        "permanent_house_address": "1703 Herman Gateway Suite 577\nHegmannchester, NE 78990",
+                                        "educational_qualification": "Nemo reiciendis dolorem eum id.",
+                                        "skills": "Natus nostrum voluptas occaecati porro non.",
+                                        "photo": "softbd.jpg",
+                                        "signature": "Freddy Ryan",
+                                        "row_status": 1,
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                    },
+                                    "_response_status": {
                                         "success": true,
                                         "code": 200,
                                         "query_time": 0
@@ -3101,7 +3134,6 @@
                         },
                         "example": "0"
                     },
-
                     {
                         "name": "religion",
                         "in": "query",
@@ -3299,38 +3331,50 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 8,
-                                        "trainer_name_en": "asd",
-                                        "trainer_name_bn": "asdf",
+                                        "id": 1,
+                                        "trainer_name_en": "Maurice Marquardt",
+                                        "trainer_name_bn": "Enola Klein",
                                         "institute_id": 1,
-                                        "training_center_id": 1,
+                                        "institutes_title_en": "Hellen Mante",
+                                        "institutes_title_bn": "Brenda McDermott",
+                                        "training_center_id": 2,
+                                        "training_centers_title_en": "Ms. Shanel Hayes",
+                                        "training_centers_title_bn": "Karli Fisher",
                                         "branch_id": 1,
-                                        "email": "asdfasd@gmail.com",
+                                        "branches_title_en": "Annamae Rippin",
+                                        "branches_title_bn": "Hanna McLaughlin",
+                                        "email": "ernestina.predovic@example.org",
                                         "date_of_birth": null,
-                                        "about_me": "asdasd",
-                                        "gender": 1,
-                                        "marital_status": 0,
-                                        "religion": null,
-                                        "nationality": "",
-                                        "nid": null,
-                                        "passport_number": null,
-                                        "physical_disabilities_status": 0,
+                                        "about_me": "Quis sit saepe expedita officiis et totam molestiae.",
+                                        "gender": 3,
+                                        "marital_status": 1,
+                                        "religion": 3,
+                                        "nationality": "Reprehenderit labore error provident ut et voluptatem.",
+                                        "nid": "Eaque dignissimos placeat deleniti eius quibusdam ",
+                                        "passport_number": "839251467",
+                                        "physical_disabilities_status": 1,
                                         "freedom_fighter_status": 0,
-                                        "present_address_division_id": null,
-                                        "present_address_district_id": null,
-                                        "present_address_upazila_id": null,
-                                        "present_house_address": null,
-                                        "permanent_address_division_id": null,
-                                        "permanent_address_district_id": null,
-                                        "permanent_address_upazila_id": null,
-                                        "permanent_house_address": null,
-                                        "educational_qualification": null,
-                                        "skills": null,
-                                        "photo": null,
-                                        "signature": null,
+                                        "present_address_division_id": 4,
+                                        "division_title_bn": "খুলনা",
+                                        "division_title_en": "Khulna",
+                                        "present_address_district_id": 0,
+                                        "district_title_bn": null,
+                                        "district_title_en": null,
+                                        "present_address_upazila_id": 32767,
+                                        "upazila_title_bn": null,
+                                        "upazila_title_en": null,
+                                        "present_house_address": "169 Kertzmann Burgs Apt. 677\nNorth Laishachester, DE 03946",
+                                        "permanent_address_division_id": 0,
+                                        "permanent_address_district_id": 8,
+                                        "permanent_address_upazila_id": 8,
+                                        "permanent_house_address": "1703 Herman Gateway Suite 577\nHegmannchester, NE 78990",
+                                        "educational_qualification": "Nemo reiciendis dolorem eum id.",
+                                        "skills": "Natus nostrum voluptas occaecati porro non.",
+                                        "photo": "softbd.jpg",
+                                        "signature": "Freddy Ryan",
                                         "row_status": 1,
-                                        "created_at": null,
-                                        "updated_at": null
+                                        "created_at": "2021-08-31T08:52:04.000000Z",
+                                        "updated_at": "2021-08-31T08:52:04.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -3457,7 +3501,6 @@
                         },
                         "example": "0"
                     },
-
                     {
                         "name": "religion",
                         "in": "query",
@@ -3767,6 +3810,509 @@
                     }
                 }
             }
+        },
+        "/divisions": {
+            "get": {
+                "summary": "get list",
+                "description": " API endpoint to get the list of divisions.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/division"
+                                },
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_bn": "বরিশাল",
+                                            "title_en": "Barisal",
+                                            "bbs_code": "10",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title_bn": "চট্টগ্রাম",
+                                            "title_en": "Chittagong",
+                                            "bbs_code": "20",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title_bn": "ঢাকা",
+                                            "title_en": "Dhaka",
+                                            "bbs_code": "30",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "title_bn": "খুলনা",
+                                            "title_en": "Khulna",
+                                            "bbs_code": "40",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 5,
+                                            "title_bn": "রাজশাহী",
+                                            "title_en": "Rajshahi",
+                                            "bbs_code": "50",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 6,
+                                            "title_bn": "রংপুর",
+                                            "title_en": "Rangpur",
+                                            "bbs_code": "60",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 7,
+                                            "title_bn": "সিলেট",
+                                            "title_en": "Sylhet",
+                                            "bbs_code": "70",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        },
+                                        {
+                                            "id": 9,
+                                            "title_bn": "ময়মনসিংহ",
+                                            "title_en": "Mymensingh",
+                                            "bbs_code": "45",
+                                            "row_status": 1,
+                                            "created_by": 0,
+                                            "updated_by": 0,
+                                            "created_at": "2021-08-31T07:11:05.000000Z",
+                                            "updated_at": "2021-08-31T07:11:05.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Division"
+                ]
+            }
+        },
+        "/divisions/{divisionId}": {
+            "get": {
+                "summary": "get one",
+                "description": " API endpoint to get the specified division.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/divisionId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get one Division",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/division"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 4,
+                                        "title_bn": "খুলনা",
+                                        "title_en": "Khulna",
+                                        "bbs_code": "40",
+                                        "row_status": 1,
+                                        "created_by": 0,
+                                        "updated_by": 0,
+                                        "created_at": "2021-08-31T07:11:05.000000Z",
+                                        "updated_at": "2021-08-31T07:11:05.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                },
+                "tags": [
+                    "Division"
+                ]
+            }
+        },
+        "/districts": {
+            "get": {
+                "summary": "get list",
+                "description": " API endpoint to get the list of districts.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/division_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/division"
+                                },
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "loc_division_id": 1,
+                                            "title_bn": "বরগুনা",
+                                            "title_en": "BARGUNA",
+                                            "bbs_code": "04",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "loc_division_id": 1,
+                                            "title_bn": "বরিশাল",
+                                            "title_en": "BARISAL",
+                                            "bbs_code": "06",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "loc_division_id": 1,
+                                            "title_bn": "ভোলা",
+                                            "title_en": "BHOLA",
+                                            "bbs_code": "09",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "loc_division_id": 1,
+                                            "title_bn": "ঝালকাঠি",
+                                            "title_en": "JHALOKATI",
+                                            "bbs_code": "42",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "District"
+                ]
+            }
+        },
+        "/districts/{districtId}": {
+            "get": {
+                "summary": "get one",
+                "description": " API endpoint to get the specified district.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/districtId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get one Division",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/division"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "loc_division_id": 1,
+                                        "title_bn": "বরগুনা",
+                                        "title_en": "BARGUNA",
+                                        "bbs_code": "04",
+                                        "division_bbs_code": "10",
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "row_status": 1,
+                                        "created_by": 1,
+                                        "updated_by": 1,
+                                        "created_at": "2021-08-31T07:11:06.000000Z",
+                                        "updated_at": "2021-08-31T07:11:06.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "District"
+                ]
+            }
+        },
+        "/upazilas": {
+            "get": {
+                "summary": "get list",
+                "description": " API endpoint to get the list of upazilas.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status"
+                    },
+                    {
+                        "$ref": "#/components/parameters/division_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/district_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/upazila"
+                                },
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "loc_district_id": 1,
+                                            "loc_division_id": 1,
+                                            "title_bn": "আমতলী ",
+                                            "title_en": "AMTALI",
+                                            "bbs_code": "09",
+                                            "row_status": "1",
+                                            "district_title_bn": "Test Title (BN)",
+                                            "district_title_en": "Test Title (EN)",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "Test Title (BN)",
+                                            "division_title_en": "Test Title (EN)"
+                                        },
+                                        {
+                                            "id": 2,
+                                            "loc_district_id": 1,
+                                            "loc_division_id": 1,
+                                            "title_bn": "বামনা ",
+                                            "title_en": "BAMNA",
+                                            "bbs_code": "19",
+                                            "district_title_bn": "বরগুনা",
+                                            "district_title_en": "BARGUNA",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        },
+                                        {
+                                            "id": 3,
+                                            "loc_district_id": 1,
+                                            "loc_division_id": 1,
+                                            "title_bn": "বরগুনা সদর ",
+                                            "title_en": "BARGUNA SADAR",
+                                            "bbs_code": "28",
+                                            "district_title_bn": "বরগুনা",
+                                            "district_title_en": "BARGUNA",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        },
+                                        {
+                                            "id": 4,
+                                            "loc_district_id": 1,
+                                            "loc_division_id": 1,
+                                            "title_bn": "বেতাগী ",
+                                            "title_en": "BETAGI",
+                                            "bbs_code": "47",
+                                            "district_title_bn": "বরগুনা",
+                                            "district_title_en": "BARGUNA",
+                                            "division_bbs_code": "10",
+                                            "division_title_bn": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "row_status": 1,
+                                            "created_by": 1,
+                                            "updated_by": 1,
+                                            "created_at": "2021-08-31T07:11:06.000000Z",
+                                            "updated_at": "2021-08-31T07:11:06.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Upazila"
+                ]
+            }
+        },
+        "/upazilas/{upazilaId}": {
+            "get": {
+                "summary": "get one",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/upazilaId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get one Upazila",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/upazila"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "loc_district_id": 1,
+                                        "loc_division_id": 1,
+                                        "title_bn": "আমতলী ",
+                                        "title_en": "AMTALI",
+                                        "bbs_code": "09",
+                                        "district_title_bn": "Test Title (BN)",
+                                        "district_title_en": "Test Title (EN)",
+                                        "division_bbs_code": "10",
+                                        "division_title_bn": "Test Title (BN)",
+                                        "division_title_en": "Test Title (EN)"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": "1 second before"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                },
+                "tags": [
+                    "Upazila"
+                ]
+            }
         }
     },
     "components": {
@@ -3830,7 +4376,6 @@
                     "institute_id",
                     "title_bn",
                     "title_en"
-
                 ]
             },
             "institutes": {
@@ -3984,9 +4529,6 @@
                     "id": {
                         "type": "integer",
                         "readOnly": true
-                    },
-                    "institute_id": {
-                        "type": "integer"
                     },
                     "title_en": {
                         "type": "string",
@@ -4164,19 +4706,32 @@
                     },
                     "gender": {
                         "type": "integer",
-                        "enum": [1,2,3],
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
                         "description": "1=>male, 2=>females, 3=>others",
                         "default": 1
                     },
                     "marital_status": {
                         "type": "integer",
-                        "enum": [0,1],
+                        "enum": [
+                            0,
+                            1
+                        ],
                         "description": "0=>No, 1=>Yes",
                         "default": 0
                     },
                     "religion": {
                         "type": "integer",
-                        "enum": [1,2,3,4,5],
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
                         "description": "1=>islam, 2=>hindu, 3=>buddhist, 4=>Christians, 5=>others",
                         "default": 1
                     },
@@ -4191,13 +4746,19 @@
                     },
                     "physical_disabilities_status": {
                         "type": "integer",
-                        "enum": [0,1],
+                        "enum": [
+                            0,
+                            1
+                        ],
                         "description": "0=>No, 1=>Yes",
                         "default": 0
                     },
                     "freedom_fighter_status": {
                         "type": "integer",
-                        "enum": [0,1],
+                        "enum": [
+                            0,
+                            1
+                        ],
                         "description": "0=>No, 1=>Yes",
                         "default": 0
                     },
@@ -4239,7 +4800,10 @@
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [0,1],
+                        "enum": [
+                            0,
+                            1
+                        ],
                         "description": "0=>No, 1=>Yes",
                         "default": 0
                     },
@@ -4440,8 +5004,210 @@
                     "training_center_id",
                     "course_id"
                 ]
+            },
+            "division": {
+                "type": "object",
+                "description": "Provide the Loc Division",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "Division Title In English",
+                        "minLength": 1,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "Division Title In Bengali",
+                        "minLength": 1,
+                        "maxLength": 500
+                    },
+                    "bbs_code": {
+                        "type": "string",
+                        "description": "Division BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "Division activation status",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "Division creater id"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "Division modifier id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "title_en",
+                    "title_bn"
+                ]
+            },
+            "district": {
+                "type": "object",
+                "description": "Provide the Loc District",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "description": "Division Id"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "District Title In English",
+                        "minLength": 1,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "District Title In Bengali",
+                        "minLength": 1,
+                        "maxLength": 500
+                    },
+                    "bbs_code": {
+                        "type": "string",
+                        "description": "District BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "division_bbs_code": {
+                        "type": "string",
+                        "description": "Division BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "District activation status",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "District creater id"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "District modifier id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "loc_division_id",
+                    "title_en",
+                    "title_bn"
+                ]
+            },
+            "upazila": {
+                "type": "object",
+                "description": "Provide the Loc Upazila Data",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Primary Key",
+                        "readOnly": true
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "description": "Division Id"
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "description": "Division Id"
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "description": "District Title In English",
+                        "minLength": 1,
+                        "maxLength": 255
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": "District Title In Bengali",
+                        "minLength": 1,
+                        "maxLength": 500
+                    },
+                    "bbs_code": {
+                        "type": "string",
+                        "description": "District BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "division_bbs_code": {
+                        "type": "string",
+                        "description": "Division BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "district_bbs_code": {
+                        "type": "string",
+                        "description": "Division BBS code",
+                        "minLength": 1,
+                        "maxLength": 4
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "description": "District activation status",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "create_by": {
+                        "type": "integer",
+                        "description": "District creater id"
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "description": "District modifier id"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "loc_division_id",
+                    "title_en",
+                    "title_bn"
+                ]
             }
-
         },
         "parameters": {
             "page": {
@@ -4454,6 +5220,21 @@
             "limit": {
                 "in": "query",
                 "name": "limit",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "page_size": {
+                "in": "query",
+                "name": "page_size",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "institute_id": {
+                "in": "query",
+                "required": false,
+                "name": "institute_id",
                 "schema": {
                     "type": "integer"
                 }
@@ -4474,12 +5255,14 @@
             "title_en": {
                 "in": "query",
                 "name": "title_en",
+                "required": false,
                 "schema": {
                     "type": "string"
                 }
             },
             "title_bn": {
                 "in": "query",
+                "required": false,
                 "name": "title_bn",
                 "schema": {
                     "type": "string"
@@ -4487,6 +5270,54 @@
             },
             "row_status": {
                 "name": "row_status",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "divisionId": {
+                "name": "divisionId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "division_id": {
+                "name": "division_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "districtId": {
+                "name": "districtId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "district_id": {
+                "name": "district_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "upazilaId": {
+                "name": "upazilaId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "upazila_id": {
+                "name": "upazila_id",
                 "in": "query",
                 "required": false,
                 "schema": {
