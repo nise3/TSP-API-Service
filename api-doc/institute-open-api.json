@@ -2951,10 +2951,10 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/trainer_name_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/trainer_name_bn"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -2994,18 +2994,23 @@
                                         "physical_disabilities_status": 1,
                                         "freedom_fighter_status": 0,
                                         "present_address_division_id": 4,
-                                        "division_title_bn": "খুলনা",
-                                        "division_title_en": "Khulna",
+                                        "division_title_bn_present_address": "খুলনা",
+                                        "division_title_en_present_address": "Khulna",
                                         "present_address_district_id": 0,
-                                        "district_title_bn": null,
-                                        "district_title_en": null,
+                                        "district_title_bn_present_address": null,
+                                        "district_title_en_present_address": "BRAHMANBARIA",
                                         "present_address_upazila_id": 32767,
-                                        "upazila_title_bn": null,
-                                        "upazila_title_en": null,
+                                        "upazila_title_bn_present_address": null,
+                                        "upazila_title_en_present_address": null,
                                         "present_house_address": "169 Kertzmann Burgs Apt. 677\nNorth Laishachester, DE 03946",
                                         "permanent_address_division_id": 0,
+                                        "division_title_bn_permanent_address": null,
+                                        "division_title_en_permanent_address": null,
                                         "permanent_address_district_id": 8,
+                                        "district_title_bn_permanent_address": "ব্রাহ্মণবাড়িয়া",
                                         "permanent_address_upazila_id": 8,
+                                        "upazila_title_bn_permanent_address": "বাবুগঞ্জ ",
+                                        "upazila_title_en_permanent_address": "BABUGANJ",
                                         "permanent_house_address": "1703 Herman Gateway Suite 577\nHegmannchester, NE 78990",
                                         "educational_qualification": "Nemo reiciendis dolorem eum id.",
                                         "skills": "Natus nostrum voluptas occaecati porro non.",
@@ -3355,18 +3360,23 @@
                                         "physical_disabilities_status": 1,
                                         "freedom_fighter_status": 0,
                                         "present_address_division_id": 4,
-                                        "division_title_bn": "খুলনা",
-                                        "division_title_en": "Khulna",
+                                        "division_title_bn_present_address": "খুলনা",
+                                        "division_title_en_present_address": "Khulna",
                                         "present_address_district_id": 0,
-                                        "district_title_bn": null,
-                                        "district_title_en": null,
+                                        "district_title_bn_present_address": null,
+                                        "district_title_en_present_address": "BRAHMANBARIA",
                                         "present_address_upazila_id": 32767,
-                                        "upazila_title_bn": null,
-                                        "upazila_title_en": null,
+                                        "upazila_title_bn_present_address": null,
+                                        "upazila_title_en_present_address": null,
                                         "present_house_address": "169 Kertzmann Burgs Apt. 677\nNorth Laishachester, DE 03946",
                                         "permanent_address_division_id": 0,
+                                        "division_title_bn_permanent_address": null,
+                                        "division_title_en_permanent_address": null,
                                         "permanent_address_district_id": 8,
+                                        "district_title_bn_permanent_address": "ব্রাহ্মণবাড়িয়া",
                                         "permanent_address_upazila_id": 8,
+                                        "upazila_title_bn_permanent_address": "বাবুগঞ্জ ",
+                                        "upazila_title_en_permanent_address": "BABUGANJ",
                                         "permanent_house_address": "1703 Herman Gateway Suite 577\nHegmannchester, NE 78990",
                                         "educational_qualification": "Nemo reiciendis dolorem eum id.",
                                         "skills": "Natus nostrum voluptas occaecati porro non.",
@@ -5264,6 +5274,22 @@
                 "in": "query",
                 "required": false,
                 "name": "title_bn",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "trainer_name_en": {
+                "in": "query",
+                "name": "trainer_name_en",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "trainer_name_bn": {
+                "in": "query",
+                "name": "trainer_name_bn",
+                "required": false,
                 "schema": {
                     "type": "string"
                 }

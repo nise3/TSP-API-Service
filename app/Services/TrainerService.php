@@ -28,8 +28,8 @@ class TrainerService
      */
     public function getTrainerList(array $request, Carbon $startTime): array
     {
-        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
-        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
+        $titleEn = array_key_exists('trainer_name_en', $request) ? $request['title_en'] : "";
+        $titleBn = array_key_exists('trainer_name_bn', $request) ? $request['title_bn'] : "";
         $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
         $paginate = array_key_exists('page', $request) ? $request['page'] : "";
         $instituteId = array_key_exists('institute_id', $request) ? $request['institute_id'] : "";
@@ -42,14 +42,14 @@ class TrainerService
             'trainers.trainer_name_en',
             'trainers.trainer_name_bn',
             'trainers.institute_id',
-            'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title_en as institutes_title_en',
+            'institutes.title_bn as institutes_title_bn',
             'trainers.training_center_id',
             'training_centers.title_en as training_centers_title_en',
             'training_centers.title_bn as training_centers_title_bn',
             'trainers.branch_id',
-            'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title_en as branches_title_en',
+            'branches.title_bn as branches_title_bn',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
@@ -62,18 +62,24 @@ class TrainerService
             'trainers.physical_disabilities_status',
             'trainers.freedom_fighter_status',
             'trainers.present_address_division_id',
-            'loc_divisions.title_bn as present_address_division_title_bn',
-            'loc_divisions.title_en as present_address_division_title_en',
+            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts.title_bn as present_address_district_title_bn',
-            'loc_districts.title_en as present_address_district_title_en',
+            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas.title_bn as present_address_upazila_title_bn',
-            'loc_upazilas.title_en as present_address_upazila_title_en',
+            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
             'trainers.permanent_address_division_id',
+            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
+            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
+            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
             'trainers.educational_qualification',
             'trainers.skills',
@@ -108,27 +114,51 @@ class TrainerService
             }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
-            $join->on('loc_divisions.id', '=', 'trainers.present_address_division_id')
-                ->whereNull('loc_divisions.deleted_at');
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) use ($rowStatus) {
+            $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
+                ->whereNull('loc_divisions_present.deleted_at');
             if (is_numeric($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
+                $join->where('loc_divisions_present.row_status', $rowStatus);
             }
         });
 
-        $trainerBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
-            $join->on('loc_districts.id', '=', 'trainers.present_address_district_id')
-                ->whereNull('loc_districts.deleted_at');
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) use ($rowStatus) {
+            $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
+                ->whereNull('loc_districts_present.deleted_at');
             if (is_numeric($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
+                $join->where('loc_districts_present.row_status', $rowStatus);
             }
         });
 
-        $trainerBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
-            $join->on('loc_upazilas.id', '=', 'trainers.present_address_upazila_id')
-                ->whereNull('loc_upazilas.deleted_at');
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) use ($rowStatus) {
+            $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
+                ->whereNull('loc_upazilas_present.deleted_at');
             if (is_numeric($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
+                $join->where('loc_upazilas_present.row_status', $rowStatus);
+            }
+        });
+
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) use ($rowStatus) {
+            $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
+                ->whereNull('loc_divisions_permanent.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_divisions_permanent.row_status', $rowStatus);
+            }
+        });
+
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {
+            $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
+                ->whereNull('loc_districts_permanent.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_districts_permanent.row_status', $rowStatus);
+            }
+        });
+
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) use ($rowStatus) {
+            $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
+                ->whereNull('loc_upazilas_permanent.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('loc_upazilas_permanent.row_status', $rowStatus);
             }
         });
 
@@ -139,9 +169,9 @@ class TrainerService
         }
 
         if (!empty($titleEn)) {
-            $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
+            $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainerBuilder->where('trainers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $titleBn . '%');
         }
 
         if ($instituteId) {
@@ -205,18 +235,24 @@ class TrainerService
             'trainers.physical_disabilities_status',
             'trainers.freedom_fighter_status',
             'trainers.present_address_division_id',
-            'loc_divisions.title_bn as division_title_bn_present_address',
-            'loc_divisions.title_en as division_title_en_present_address',
+            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts.title_bn as district_title_bn_present_address',
-            'loc_districts.title_en as district_title_en_present_address',
+            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn_present_address',
-            'loc_upazilas.title_en as upazila_title_en_present_address',
+            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
             'trainers.permanent_address_division_id',
+            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
+            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
+            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
             'trainers.educational_qualification',
             'trainers.skills',
@@ -242,19 +278,34 @@ class TrainerService
                 ->whereNull('branches.deleted_at');
         });
 
-        $trainerBuilder->leftJoin('loc_divisions', function ($join) {
-            $join->on('loc_divisions.id', '=', 'trainers.present_address_division_id')
-                ->whereNull('loc_divisions.deleted_at');
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
+            $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
+                ->whereNull('loc_divisions_present.deleted_at');
         });
 
-        $trainerBuilder->leftJoin('loc_districts', function ($join) {
-            $join->on('loc_districts.id', '=', 'trainers.present_address_district_id')
-                ->whereNull('loc_districts.deleted_at');
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) {
+            $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
+                ->whereNull('loc_districts_present.deleted_at');
         });
 
-        $trainerBuilder->leftJoin('loc_upazilas', function ($join) {
-            $join->on('loc_upazilas.id', '=', 'trainers.present_address_upazila_id')
-                ->whereNull('loc_upazilas.deleted_at');
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) {
+            $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
+                ->whereNull('loc_upazilas_present.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) {
+            $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
+                ->whereNull('loc_divisions_permanent.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) {
+            $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
+                ->whereNull('loc_districts_permanent.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) {
+            $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
+                ->whereNull('loc_upazilas_permanent.deleted_at');
         });
 
         $trainerBuilder->where('trainers.id', $id);
