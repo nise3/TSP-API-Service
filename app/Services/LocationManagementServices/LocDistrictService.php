@@ -164,6 +164,7 @@ class LocDistrictService
                 'message' => 'Row status must be within 1 or 0'
             ]
         ];
+
         return Validator::make($request->all(), [
             'loc_division_id' => 'required|numeric|exists:loc_divisions,id',
             'title_en' => 'required|min:2',
