@@ -90,7 +90,7 @@ class Handler extends ExceptionHandler
             $errors['errors'] = $e->errors();
             $errors['_response_status'] = [
                 'success' => false,
-                "code" => ResponseAlias::HTTP_FORBIDDEN,
+                "code" => ResponseAlias::HTTP_BAD_REQUEST,
                 "message" => "validation Error",
                 "query_time" => 0
             ];
