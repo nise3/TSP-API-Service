@@ -204,6 +204,13 @@ class InstituteService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+
         $rules = [
             'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
@@ -238,7 +245,7 @@ class InstituteService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
@@ -366,8 +373,14 @@ class InstituteService
             $request['order'] = strtoupper($request['order']);
         }
         $customMessage = [
-            'order.in' => 'Order must be within ASC or DESC',
-            'row_status.in' => 'Row status must be within 1 or 0'
+            'order.in' => [
+                'code' => 30000,
+                "message" => 'Order must be within ASC or DESC',
+            ],
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [

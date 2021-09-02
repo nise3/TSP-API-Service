@@ -374,6 +374,13 @@ class TrainerService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+
         $rules = [
             'trainer_name_en' => [
                 'required',
@@ -508,10 +515,10 @@ class TrainerService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public function batchValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function batchValidator(Request $request): Validator
     {
         $data["batchIds"] = is_array($request['batchIds']) ? $request['batchIds'] : explode(',', $request['batchIds']);
 
@@ -614,8 +621,14 @@ class TrainerService
             $request['order'] = strtoupper($request['order']);
         }
         $customMessage = [
-            'order.in' => 'Order must be within ASC or DESC',
-            'row_status.in' => 'Row status must be within 1 or 0'
+            'order.in' => [
+                'code' => 30000,
+                "message" => 'Order must be within ASC or DESC',
+            ],
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
