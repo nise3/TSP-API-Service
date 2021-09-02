@@ -124,7 +124,7 @@ class BranchService
         $response['data'] = $branches->toArray()['data'] ?? $branches->toArray();
 
 
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -241,46 +241,6 @@ class BranchService
     }
 
 
-    /**
-     * @param Request $request
-     * @param int|null $id
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            'title_en' => [
-                'required',
-                'string',
-                'max:191',
-            ],
-            'title_bn' => [
-                'required',
-                'string',
-                'max: 600',
-            ],
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id',
-            ],
-            'address' => [
-                'nullable',
-                'string',
-                'max:1000'
-            ],
-            'google_map_src' => [
-                'nullable',
-                'string'
-            ],
-            'row_status' => [
-                'required_if:' . $id . ',!=,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
-            ],
-        ];
-
-        return Validator::make($request->all(), $rules);
-    }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
     {
@@ -339,7 +299,7 @@ class BranchService
         $response['data'] = $branches->toArray()['data'] ?? $branches->toArray();
 
 
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -357,14 +317,67 @@ class BranchService
         return $branch->forceDelete();
     }
 
+    /**
+     * @param Request $request
+     * @param int|null $id
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+        $rules = [
+            'title_en' => [
+                'required',
+                'string',
+                'max:191',
+            ],
+            'title_bn' => [
+                'required',
+                'string',
+                'max: 600',
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id',
+            ],
+            'address' => [
+                'nullable',
+                'string',
+                'max:1000'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
+    }
+
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if (!empty($request['order'])) {
             $request['order'] = strtoupper($request['order']);
         }
         $customMessage = [
-            'order.in' => 'Order must be within ASC or DESC',
-            'row_status.in' => 'Row status must be within 1 or 0'
+            'order.in' => [
+                'code' => 30000,
+                "message" => 'Order must be within ASC or DESC',
+            ],
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
         ];
 
         return Validator::make($request->all(), [

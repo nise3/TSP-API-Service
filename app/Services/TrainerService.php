@@ -193,7 +193,7 @@ class TrainerService
 
         $response['order'] = $order;
         $response['data'] = $trainers->toArray()['data'] ?? $trainers->toArray();
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -589,7 +589,7 @@ class TrainerService
 
         $response['order'] = $order;
         $response['data'] = $trainers->toArray()['data'] ?? $trainers->toArray();
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),

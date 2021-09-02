@@ -158,6 +158,12 @@ class LocDistrictService
 
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
         return Validator::make($request->all(), [
             'loc_division_id' => 'required|numeric|exists:loc_divisions,id',
             'title_en' => 'required|min:2',
@@ -168,7 +174,7 @@ class LocDistrictService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ]);
+        ], $customMessage);
     }
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
@@ -177,8 +183,14 @@ class LocDistrictService
             $request['order'] = strtoupper($request['order']);
         }
         $customMessage = [
-            'order.in' => 'Order must be within ASC or DESC',
-            'row_status.in' => 'Row status must be within 1 or 0'
+            'order.in' => [
+                'code' => 30000,
+                "message" => 'Order must be within ASC or DESC',
+            ],
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
         ];
 
         return Validator::make($request->all(), [

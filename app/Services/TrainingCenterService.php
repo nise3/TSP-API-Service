@@ -136,7 +136,7 @@ class TrainingCenterService
 
         $response['order'] = $order;
         $response['data'] = $trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -348,7 +348,7 @@ class TrainingCenterService
 
         $response['order'] = $order;
         $response['data'] = $trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
-        $response['response_status'] = [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
