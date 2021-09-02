@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Classes\CustomExceptionHandler;
 use App\Models\Course;
 use App\Services\CourseService;
 use Carbon\Carbon;
@@ -40,12 +39,15 @@ class CourseController extends Controller
     /**
      * Display a listing of the resource.
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->courseService->filterValidator($request)->validate();
+
         try {
-            $response = $this->courseService->getCourseList($request, $this->startTime);
+            $response = $this->courseService->getCourseList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }
@@ -71,7 +73,7 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     function store(Request $request): JsonResponse
@@ -99,7 +101,7 @@ class CourseController extends Controller
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
@@ -126,7 +128,7 @@ class CourseController extends Controller
     /**
      *  *  remove the specified resource from storage
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
@@ -139,6 +141,54 @@ class CourseController extends Controller
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Course deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->courseService->getCourseTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $course = Course::onlyTrashed()->findOrFail($id);
+        try {
+            $this->courseService->restore($course);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Course restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $course = Course::onlyTrashed()->findOrFail($id);
+        try {
+            $this->courseService->forceDelete($course);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Course permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];
         } catch (Throwable $e) {

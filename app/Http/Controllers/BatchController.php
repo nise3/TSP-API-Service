@@ -42,13 +42,15 @@ class BatchController extends Controller
      * * Display a listing of the resource.
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
-    public function getList(Request $request): JsonResponse
+    public function getList(Request $request)
     {
+        $filter = $this->batchService->filterValidator($request)->validate();
         try {
-            $response = $this->batchService->getBatchList($request,  $this->startTime);
+            $response = $this->batchService->getBatchList($filter, $this->startTime);
         } catch (Throwable $e) {
-            return  $e;
+            return $e;
         }
         return Response::json($response);
     }
@@ -56,7 +58,7 @@ class BatchController extends Controller
     /**
      * @param int $id
      *  * Display the specified resource
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function read(int $id): JsonResponse
     {
@@ -73,7 +75,7 @@ class BatchController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
@@ -100,7 +102,7 @@ class BatchController extends Controller
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
@@ -127,7 +129,7 @@ class BatchController extends Controller
     /**
      *  *  remove the specified resource from storage
      * @param int $id
-     *  @return Exception|JsonResponse|Throwable
+     * @return Exception|JsonResponse|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
@@ -141,6 +143,54 @@ class BatchController extends Controller
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "Batch Delete successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->batchService->getBatchTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $batch = Batch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->batchService->restore($batch);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "batch restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function forceDelete(int $id)
+    {
+        $institute = Batch::onlyTrashed()->findOrFail($id);
+        try {
+            $this->batchService->forceDelete($institute);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Batch permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];
         } catch (Throwable $e) {

@@ -41,11 +41,14 @@ class TrainerController extends Controller
      * * Display a listing of the resource.
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
+        $filter = $this->trainerService->filterValidator($request)->validate();
+
         try {
-            $response = $this->trainerService->getTrainerList($request, $this->startTime);
+            $response = $this->trainerService->getTrainerList($filter, $this->startTime);
         } catch (Throwable $e) {
             return $e;
         }
@@ -163,6 +166,55 @@ class TrainerController extends Controller
                     "code" => ResponseAlias::HTTP_OK,
                     "message" => "trainer added to batch successfully",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getTrashedData(Request $request)
+    {
+        try {
+            $response = $this->trainerService->getTrainerTrashList($request, $this->startTime);
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response);
+    }
+
+    public function restore(int $id)
+    {
+        $trainer = Trainer::onlyTrashed()->findOrFail($id);
+        try {
+            $this->trainerService->restore($trainer);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Trainer restored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+
+    public function forceDelete(int $id)
+    {
+        $trainer = Trainer::onlyTrashed()->findOrFail($id);
+        try {
+            $this->trainerService->forceDelete($trainer);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Trainer permanently deleted successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];
         } catch (Throwable $e) {

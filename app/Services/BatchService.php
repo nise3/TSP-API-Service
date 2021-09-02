@@ -6,7 +6,8 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\Trainer;
+
+//use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -23,11 +24,251 @@ class BatchService
 {
 
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
-    public function getBatchList(Request $request, Carbon $startTime): array
+    public function getBatchList(array $request, Carbon $startTime): array
+    {
+
+        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
+        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
+        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
+        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
+
+
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::select([
+            'batches.id',
+            'batches.course_id',
+            'courses.title_en as course_title_en',
+            'courses.title_bn as course_title_bn',
+            'batches.institute_id',
+            'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
+            'batches.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
+            'batches.programme_id',
+            'programmes.title_en as programme_title_en',
+            'programmes.title_bn as programme_title_bn',
+            'batches.number_of_seats',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_seats',
+            'batches.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title_bn as training_center_title_bn',
+            'batches.in_ethnic_group',
+            'batches.is_freedom_fighter',
+            'batches.disability_status',
+            'batches.ssc_passing_status',
+            'batches.hsc_passing_status',
+            'batches.honors_passing_status',
+            'batches.masters_passing_status',
+            'batches.is_occupation_needed',
+            'batches.is_guardian_info_needed',
+            'batches.row_status',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at'
+        ]);
+
+        $batchBuilder->join("courses", function ($join) use ($rowStatus) {
+            $join->on('batches.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('courses.row_status', $rowStatus);
+            }
+        });
+        $batchBuilder->leftjoin("institutes", function ($join) use ($rowStatus) {
+            $join->on('batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('institutes.row_status', $rowStatus);
+            }
+        });
+
+        $batchBuilder->leftjoin("programmes", function ($join) use ($rowStatus) {
+            $join->on('batches.programme_id', '=', 'programmes.id')
+                ->whereNull('programmes.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('programmes.row_status', $rowStatus);
+            }
+        });
+
+        $batchBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
+            $join->on('batches.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('branches.row_status', $rowStatus);
+            }
+        });
+
+        $batchBuilder->join("training_centers", function ($join) use ($rowStatus) {
+            $join->on('batches.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('training_centers.row_status', $rowStatus);
+            }
+        });
+
+        $batchBuilder->orderBy('batches.id', $order);
+
+        if (is_numeric($rowStatus)) {
+            $batchBuilder->where('batches.row_status', $rowStatus);
+        }
+
+        /** @var Collection $courseConfigBuilder */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $batches = $batchBuilder->paginate($pageSize);
+            $paginateData = (object)$batches->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $batches = $batchBuilder->get();
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $batches->toArray()['data'] ?? $batches->toArray();
+
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    /**
+     * @param int $id
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getBatch(int $id, Carbon $startTime): array
+    {
+        /** @var Batch|Builder $batchBuilder */
+
+        $batchBuilder = Batch::select([
+            'batches.id',
+            'batches.course_id',
+            'courses.title_en as course_title_en',
+            'courses.title_bn as course_title_bn',
+            'batches.institute_id',
+            'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
+            'batches.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
+            'batches.programme_id',
+            'programmes.title_en as programme_title_en',
+            'programmes.title_bn as programme_title_bn',
+            'batches.number_of_seats',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_seats',
+            'batches.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title_bn as training_center_title_bn',
+            'batches.in_ethnic_group',
+            'batches.is_freedom_fighter',
+            'batches.disability_status',
+            'batches.ssc_passing_status',
+            'batches.hsc_passing_status',
+            'batches.honors_passing_status',
+            'batches.masters_passing_status',
+            'batches.is_occupation_needed',
+            'batches.is_guardian_info_needed',
+            'batches.row_status',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at'
+        ]);
+
+        $batchBuilder->join("courses", function ($join) {
+            $join->on('batches.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at');
+        });
+        $batchBuilder->leftjoin("institutes", function ($join) {
+            $join->on('batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+        $batchBuilder->leftjoin("programmes", function ($join) {
+            $join->on('batches.programme_id', '=', 'programmes.id')
+                ->whereNull('programmes.deleted_at');
+        });
+
+        $batchBuilder->leftjoin("branches", function ($join) {
+            $join->on('batches.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+        });
+        $batchBuilder->join("training_centers", function ($join) {
+            $join->on('batches.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+
+        $batchBuilder->where('batches.id', $id);
+
+        /** @var Batch $instituteBuilder */
+        $batch = $batchBuilder->first();
+
+        return [
+            "data" => $batch ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => Response::HTTP_OK,
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+    }
+
+
+    /**
+     * @param array $data
+     * @return Batch
+     */
+    public function store(array $data): Batch
+    {
+        $courseConfig = new Batch();
+        $courseConfig->fill($data);
+        $courseConfig->save();
+        return $courseConfig;
+    }
+
+    /**
+     * @param Batch $courseConfig
+     * @param array $data
+     * @return Batch
+     */
+    public function update(Batch $courseConfig, array $data): Batch
+    {
+        $courseConfig->fill($data);
+        $courseConfig->save();
+        return $courseConfig;
+
+    }
+
+    /**
+     * @param Batch $batch
+     * @return bool
+     */
+    public function destroy(Batch $batch): bool
+    {
+        return $batch->delete();
+    }
+
+
+    public function getBatchTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title_bn');
@@ -36,7 +277,7 @@ class BatchService
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Batch|Builder $batchBuilder */
-        $batchBuilder = Batch::select([
+        $batchBuilder = Batch::onlyTrashed()->select([
             'batches.id as id',
             'batches.course_id',
             'courses.title_en as course_title',
@@ -99,10 +340,10 @@ class BatchService
             $batches = $batchBuilder->get();
         }
 
-        $response['order']=$order;
-        $response['data']=$batches->toArray()['data'] ?? $batches->toArray();
+        $response['order'] = $order;
+        $response['data'] = $batches->toArray()['data'] ?? $batches->toArray();
 
-        $response['response_status']= [
+        $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
             "query_time" => $startTime->diffInSeconds(Carbon::now()),
@@ -110,107 +351,15 @@ class BatchService
         return $response;
     }
 
-    /**
-     * @param int $id
-     * @param Carbon $startTime
-     * @return array
-     */
-    public function getBatch(int $id, Carbon $startTime): array
+    public function restore(Batch $batch): bool
     {
-        /** @var Batch|Builder $batchBuilder */
-
-        $batchBuilder = Batch::select([
-            'batches.id as id',
-            'batches.course_id',
-            'courses.title_en as course_title',
-            'batches.institute_id',
-            'institutes.title_en as institute_title',
-            'institutes.id as institute_id',
-            'branches.id as branch_id',
-            'branches.title_en as branch_name',
-            'batches.programme_id',
-            'programmes.title_en as programme_name',
-            'batches.number_of_seats',
-            'batches.registration_start_date',
-            'batches.registration_end_date',
-            'batches.batch_start_date',
-            'batches.batch_end_date',
-            'batches.available_seats',
-            'training_centers.id as training_center_id',
-            'training_centers.title_en as training_center_name',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
-            'batches.row_status',
-            'batches.created_by',
-            'batches.updated_by',
-            'batches.created_at',
-            'batches.updated_at'
-        ]);
-
-        $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
-        $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
-        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
-        $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
-        $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
-        $batchBuilder->where('batches.id', $id);
-
-        /** @var Batch $instituteBuilder */
-        $batch = $batchBuilder->first();
-
-        return [
-            "data" => $batch ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-
+        return $batch->restore();
     }
 
-    /**
-     * @param array $data
-     * @return Batch
-     */
-    public function store(array $data): Batch
+    public function forceDelete(Batch $batch): bool
     {
-        $courseConfig = new Batch();
-        $courseConfig->fill($data);
-        $courseConfig->save();
-        return $courseConfig;
+        return $batch->forceDelete();
     }
-
-    /**
-     * @param Batch $courseConfig
-     * @param array $data
-     * @return Batch
-     */
-    public function update(Batch $courseConfig, array $data): Batch
-    {
-        $courseConfig->fill($data);
-        $courseConfig->save();
-        return $courseConfig;
-
-    }
-
-    /**
-     * @param Batch $batch
-     * @return bool
-     */
-    public function destroy(Batch $batch): bool
-    {
-        return $batch->delete();
-    }
-
-
-
 
 
     /**
@@ -220,6 +369,12 @@ class BatchService
      */
     public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
         $rules = [
             'institute_id' => [
                 'nullable',
@@ -313,9 +468,41 @@ class BatchService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        return Validator::make($request->all(), $rules);
+        return Validator::make($request->all(), $rules,$customMessage);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        if (!empty($request['order'])) {
+            $request['order'] = strtoupper($request['order']);
+        }
+        $customMessage = [
+            'order.in' => [
+                'code' => 30000,
+                "message" => 'Order must be within ASC or DESC',
+            ],
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+        return Validator::make($request->all(), [
+            'page_size' => 'numeric',
+            'page' => 'numeric',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                "numeric",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ], $customMessage);
+    }
 
 
 }
