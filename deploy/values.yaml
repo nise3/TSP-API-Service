@@ -9,7 +9,7 @@ variables:
 
   # app version, changing version will auto deploy the app to current version
 
-  imageAppVersion: "1.0.6"
+  imageAppVersion: "1.0.8"
 
   # increase this when you need scale up
   replicaCount: 1

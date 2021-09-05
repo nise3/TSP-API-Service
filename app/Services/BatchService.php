@@ -426,42 +426,13 @@ class BatchService
                 'int',
                 'nullable'
             ],
-            'in_ethnic_group' => [
-                'boolean',
-                'nullable'
-            ],
-            'is_freedom_fighter' => [
+            "dynamic_form_field"=>[
                 'nullable',
-                'boolean'
+                "string"
             ],
-            'disability_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'ssc_passing_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'hsc_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'honors_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'masters_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_occupation_needed' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_guardian_info_needed' => [
-                'nullable',
-                'boolean',
-            ],
+            'loc_district_id'=>'nullable|exists:loc_districts,id',
+            'loc_division_id'=>'nullable|exists:loc_divisions,id',
+            'loc_upazila_id'=>'nullable|exists:loc_upazilas,id',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
