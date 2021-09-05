@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Services\BatchService;
 use Exception;
@@ -78,7 +79,7 @@ class BatchController extends Controller
      * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         $validatedData = $this->batchService->validator($request)->validate();
         try {

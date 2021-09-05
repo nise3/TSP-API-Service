@@ -401,72 +401,44 @@ class BatchService
                 'int',
                 'exists:branches,id'
             ],
-            'number_of_vacancies' => [
-                'int',
-                'nullable'
+            'number_of_seats' => [
+                'required',
+                'int'
             ],
             'registration_start_date' => [
-                'date_format:d/m/Y',
-                'nullable'
+                'required',
+//                'date_format:d/m/Y'
             ],
             'registration_end_date' => [
-                'date_format:d/m/Y',
-                'nullable'
+                'required',
+//                'date_format:d/m/Y'
             ],
             'batch_start_date' => [
-                'date_format:d/m/Y',
-                'nullable'
+                'required',
+//                'date_format:d/m/Y'
             ],
 
             'batch_end_date' => [
-                'date_format:d/m/Y',
-                'nullable'
+                'required',
+//                'date_format:d/m/Y',
             ],
-            'available_vacancies' => [
+            'available_seats' => [
                 'int',
                 'nullable'
             ],
-
-            'in_ethnic_group' => [
-                'boolean',
-                'nullable'
-            ],
-            'is_freedom_fighter' => [
+            "dynamic_form_field"=>[
                 'nullable',
-                'boolean'
+                "string"
             ],
-            'disability_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'ssc_passing_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'hsc_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'honors_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'masters_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_occupation_needed' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_guardian_info_needed' => [
-                'nullable',
-                'boolean',
-            ],
+            'loc_district_id'=>'nullable|exists:loc_districts,id',
+            'loc_division_id'=>'nullable|exists:loc_divisions,id',
+            'loc_upazila_id'=>'nullable|exists:loc_upazilas,id',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
         return Validator::make($request->all(), $rules,$customMessage);
     }

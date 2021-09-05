@@ -67,11 +67,4 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->patch('trainers-restore-data/{id}', ['as' => 'branches.restore-data', 'uses' => 'TrainerController@restore']);
     $router->delete('trainers-force-delete/{id}', ['as' => 'branches.restore-data', 'uses' => 'TrainerController@forceDelete']);
 
-    //division data
-    $router->get('divisions', ['as' => 'divisions.get-list', 'uses' => 'LocDivisionController@getList']);
-    $router->get('divisions/{id}', ['as' => 'divisions.read', 'uses' => 'LocDivisionController@read']);
-
-
-
-
 });

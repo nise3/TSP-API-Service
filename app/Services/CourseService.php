@@ -295,10 +295,10 @@ class CourseService
             'title_en' => [
                 'required',
                 'string',
-                'max:191'
+                'max:255'
             ],
             'title_bn' => [
-                'required',
+                'nullable',
                 'string',
                 'max:1000'
             ],
@@ -308,6 +308,10 @@ class CourseService
                 'max:191',
                 'unique:courses,code,' . $id
             ],
+            'institute_id' => [
+                'required',
+                'int'
+            ],
             'course_fee' => [
                 'required',
                 'min:0'
@@ -316,6 +320,11 @@ class CourseService
                 'nullable',
                 'string',
                 'max: 30',
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:500'
             ],
             'target_group' => [
                 'nullable',
@@ -340,12 +349,7 @@ class CourseService
             'evaluation_system' => [
                 'nullable',
                 'string',
-                'max: 300',
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:500'
+                'max: 600',
             ],
             'prerequisite' => [
                 'nullable',
@@ -357,10 +361,6 @@ class CourseService
                 'string',
                 'max:300'
             ],
-            'institute_id' => [
-                'required',
-                'int'
-            ],
             'cover_image' => [
                 'nullable',
                 'string',
@@ -369,6 +369,16 @@ class CourseService
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+            'created_by' => [
+                'nullable',
+                'string',
+                'max:191',
+            ],
+            'updated_by' => [
+                'nullable',
+                'string',
+                'max:191',
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);

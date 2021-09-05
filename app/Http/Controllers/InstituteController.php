@@ -74,7 +74,7 @@ class InstituteController extends Controller
      * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request):JsonResponse
     {
         $validatedData = $this->instituteService->validator($request)->validate();
 
