@@ -408,23 +408,24 @@ class TrainerService
                 'exists:training_centers,id'
             ],
             'trainer_registration_number' => [
-                'nullable',
+                'required',
                 'string',
                 'unique:trainers,trainer_registration_number,' . $id
             ],
             'email' => [
-                'nullable',
+                'required',
                 'string',
                 'unique:trainers,email,' . $id
             ],
             'mobile' => [
-                'nullable',
+                'required',
                 'string',
                 'unique:trainers,mobile,' . $id
             ],
             'date_of_birth' => [
-                'nullable',
-                'date-time'
+                'required',
+//                'date-time'
+                'date'
             ],
             'about_me' => [
                 'nullable',
@@ -443,7 +444,7 @@ class TrainerService
                 'int'
             ],
             'nationality' => [
-                'nullable',
+                'required',
                 'string'
             ],
             'nid' => [
@@ -514,6 +515,8 @@ class TrainerService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }

@@ -2600,6 +2600,7 @@ paths:
           example: '1'
         - name: trainer_registration_number
           in: query
+          required: true
           schema:
             type: string
           example: '4455'
@@ -2611,11 +2612,13 @@ paths:
           example: asdf@gmail.com
         - name: mobile
           in: query
+          required: true
           schema:
             type: string
           example: '01844676535'
         - name: date_of_birth
           in: query
+          required: true
           schema:
             type: string
         - name: about_me
@@ -2673,6 +2676,10 @@ paths:
           in: query
           schema:
             type: string
+        - name: permanent_address_division_id
+          in: query
+          schema:
+            type: integer
         - name: permanent_address_district_id
           in: query
           schema:
@@ -2706,6 +2713,16 @@ paths:
           schema:
             type: integer
           example: '1'
+        - name: created_by
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: updated_by
+          in: query
+          schema:
+            type: integer
+          example: '1'
       responses:
         '201':
           description: Created
@@ -2715,21 +2732,42 @@ paths:
                 $ref: '#/components/schemas/trainers'
               example:
                 data:
-                  trainer_name_en: Tikka Khan
+                  trainer_name_en: Tikka Khan post
                   trainer_name_bn: আরএমজি
                   institute_id: '1'
                   branch_id: '1'
                   training_center_id: '1'
-                  trainer_registration_number: '445511'
-                  email: asdfsdf@gmail.com
-                  mobile: '01804676535'
+                  trainer_registration_number: A4455
+                  email: asdf@gmail.com
+                  mobile: '01844676535'
+                  date_of_birth: 1/2/2001
+                  about_me: adfd
                   gender: '1'
                   marital_status: '0'
                   religion: '1'
+                  nationality: bang
+                  nid: '0303'
+                  passport_number: '0300303'
+                  physical_disabilities_status: '0'
+                  freedom_fighter_status: '0'
+                  present_address_division_id: '1'
+                  present_address_district_id: '1'
+                  present_address_upazila_id: '1'
+                  present_house_address: sd
+                  permanent_address_division_id: '1'
+                  permanent_address_district_id: '1'
+                  permanent_address_upazila_id: '1'
+                  permanent_house_address: '1'
+                  educational_qualification: adf
+                  skills: sda
+                  photo: asdf
+                  signature: sadf
                   row_status: '1'
-                  updated_at: '2021-08-23T04:46:11.000000Z'
-                  created_at: '2021-08-23T04:46:11.000000Z'
-                  id: 20
+                  created_by: '1'
+                  updated_by: '1'
+                  updated_at: '2021-09-05T07:14:55.000000Z'
+                  created_at: '2021-09-05T07:14:55.000000Z'
+                  id: 31
                 _response_status:
                   success: true
                   code: 201
@@ -2863,6 +2901,7 @@ paths:
           example: '1'
         - name: trainer_registration_number
           in: query
+          required: true
           schema:
             type: string
           example: '4455'
@@ -2874,11 +2913,13 @@ paths:
           example: asdf@gmail.com
         - name: mobile
           in: query
+          required: true
           schema:
             type: string
           example: '01844676535'
         - name: date_of_birth
           in: query
+          required: true
           schema:
             type: string
         - name: about_me
@@ -2936,6 +2977,10 @@ paths:
           in: query
           schema:
             type: string
+        - name: permanent_address_division_id
+          in: query
+          schema:
+            type: integer
         - name: permanent_address_district_id
           in: query
           schema:
@@ -2969,6 +3014,16 @@ paths:
           schema:
             type: integer
           example: '1'
+        - name: created_by
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: updated_by
+          in: query
+          schema:
+            type: integer
+          example: '1'
       responses:
         '201':
           description: Created
@@ -2996,8 +3051,8 @@ paths:
                   eligibility: null
                   cover_image: null
                   row_status: 1
-                  created_by: null
-                  updated_by: null
+                  created_by: 1
+                  updated_by: 1
                   created_at: '2021-08-17T10:34:07.000000Z'
                   updated_at: '2021-08-17T10:34:07.000000Z'
                 _response_status:
