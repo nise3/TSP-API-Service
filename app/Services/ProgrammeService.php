@@ -188,12 +188,12 @@ class ProgrammeService
             'title_en' => [
                 'required',
                 'string',
-                'max:191'
+                'max:300'
             ],
             'title_bn' => [
-                'required',
+                'nullable',
                 'string',
-                'max:1000'
+                'max:800'
             ],
             'institute_id' => [
                 'required',
@@ -201,7 +201,7 @@ class ProgrammeService
                 'exists:institutes,id'
             ],
             'code' => [
-                'required',
+                'nullable',
                 'string',
                 'max:191',
                 'unique:programmes,code,' . $id,
@@ -219,6 +219,8 @@ class ProgrammeService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }

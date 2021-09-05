@@ -158,12 +158,12 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "4455"
+                        "example": "AE455"
                     },
                     {
                         "name": "domain",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -172,6 +172,7 @@
                     {
                         "name": "address",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -180,6 +181,7 @@
                     {
                         "name": "google_map_src",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -188,6 +190,7 @@
                     {
                         "name": "logo",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -196,6 +199,7 @@
                     {
                         "name": "primary_phone",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -204,6 +208,7 @@
                     {
                         "name": "phone_numbers",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -211,7 +216,7 @@
                     {
                         "name": "primary_mobile",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -220,13 +225,78 @@
                     {
                         "name": "mobile_numbers",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "01845654543"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "example@gmail.com"
+                    },
+                    {
+                        "name": "config",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "This is config"
                     },
                     {
                         "name": "row_status",
                         "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         },
@@ -243,25 +313,34 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "code": "4455",
-                                        "logo": null,
+                                        "id": 13,
+                                        "title_en": "PROGRAMME ON RMG45",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম45",
+                                        "code": "AE4555",
+                                        "logo": "defaults.jpg",
                                         "primary_phone": "01845654543",
-                                        "phone_numbers": null,
+                                        "phone_numbers": "01845654543",
                                         "primary_mobile": "01845654543",
-                                        "mobile_numbers": null,
-                                        "email": null,
-                                        "config": null,
-                                        "domain": "https://developer.chrome.com",
-                                        "address": "Dhaka mirpur road 4 block 2",
-                                        "google_map_src": null,
+                                        "mobile_numbers": "01845654543",
+                                        "email": "example@gmail.com",
+                                        "config": "This is config",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "domain": "https://developesr.com",
+                                        "address": "Dhaka mirpur road 4 block 2s",
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
                                         "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-18T14:39:55.000000Z",
-                                        "updated_at": "2021-08-18T14:39:55.000000Z",
-                                        "id": 1
+                                        "created_by": 1,
+                                        "updated_by": 1,
+                                        "created_at": "2021-09-05T04:27:43.000000Z",
+                                        "updated_at": "2021-09-05T04:27:43.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -385,12 +464,12 @@
                         "schema": {
                             "type": "string"
                         },
-                        "example": "4455"
+                        "example": "AE455"
                     },
                     {
                         "name": "domain",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -399,6 +478,7 @@
                     {
                         "name": "address",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -407,6 +487,7 @@
                     {
                         "name": "google_map_src",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -415,6 +496,7 @@
                     {
                         "name": "logo",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -423,6 +505,7 @@
                     {
                         "name": "primary_phone",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -431,6 +514,7 @@
                     {
                         "name": "phone_numbers",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -438,7 +522,7 @@
                     {
                         "name": "primary_mobile",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -447,13 +531,78 @@
                     {
                         "name": "mobile_numbers",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "01845654543"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "example@gmail.com"
+                    },
+                    {
+                        "name": "config",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "This is config"
                     },
                     {
                         "name": "row_status",
                         "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         },
@@ -470,26 +619,34 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 4,
-                                        "code": "4455",
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "domain": "https://developer.com",
-                                        "address": "Dhaka mirpur road 4 block 2",
-                                        "google_map_src": null,
-                                        "logo": "default.jpg",
+                                        "id": 13,
+                                        "title_en": "PROGRAMME ON RMG45",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম45",
+                                        "code": "AE4555",
+                                        "logo": "defaults.jpg",
                                         "primary_phone": "01845654543",
-                                        "phone_numbers": null,
+                                        "phone_numbers": "01845654543",
                                         "primary_mobile": "01845654543",
-                                        "mobile_numbers": null,
-                                        "email": "sammy93@yahoo.com",
-                                        "config": null,
-                                        "row_status": "0",
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-22T06:40:17.000000Z",
-                                        "updated_at": "2021-08-22T06:43:23.000000Z",
-                                        "deleted_at": null
+                                        "mobile_numbers": "01845654543",
+                                        "email": "example@gmail.com",
+                                        "config": "This is config",
+                                        "loc_division_id": 1,
+                                        "division_title_bn": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title_bn": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title_en": "AMTALI",
+                                        "domain": "https://developesr.com",
+                                        "address": "Dhaka mirpur road 4 block 2s",
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "row_status": 1,
+                                        "created_by": 1,
+                                        "updated_by": 1,
+                                        "created_at": "2021-09-05T04:27:43.000000Z",
+                                        "updated_at": "2021-09-05T04:27:43.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -640,7 +797,7 @@
                     },
                     {
                         "name": "title_bn",
-                        "required": true,
+                        "required": false,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -689,7 +846,47 @@
                         "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -709,23 +906,25 @@
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": 1,
-                                        "institute_name": "yews",
-                                        "branch_id": null,
-                                        "branch_name": null,
+                                        "institute_id": "1",
+                                        "branch_id": "1",
+                                        "center_location_type": "1",
                                         "address": "Dhaka firm gate block 2",
-                                        "google_map_src": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-18T23:33:05.000000Z",
-                                        "updated_at": "2021-08-18T23:33:05.000000Z",
-                                        "id": 1
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "updated_at": "2021-09-05T06:20:17.000000Z",
+                                        "created_at": "2021-09-05T06:20:17.000000Z",
+                                        "id": 32
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Training Center added successfully.",
+                                        "message": "Training center added successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -828,7 +1027,7 @@
                     },
                     {
                         "name": "title_bn",
-                        "required": true,
+                        "required": false,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -877,7 +1076,47 @@
                         "example": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6"
                     },
                     {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -895,25 +1134,28 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
+                                        "id": 31,
                                         "institute_id": "1",
                                         "branch_id": "1",
                                         "center_location_type": "1",
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
                                         "address": "Dhaka firm gate block 2",
                                         "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "row_status": "0",
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-22T08:35:49.000000Z",
-                                        "updated_at": "2021-08-22T08:54:34.000000Z",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "created_at": "2021-09-05T06:17:52.000000Z",
+                                        "updated_at": "2021-09-05T06:21:50.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Training Center update successfully.",
+                                        "message": "Training center updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -1055,7 +1297,7 @@
                     },
                     {
                         "name": "title_bn",
-                        "required": true,
+                        "required": false,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1072,8 +1314,36 @@
                         "example": "1"
                     },
                     {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "address",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1082,6 +1352,7 @@
                     {
                         "name": "google_map_src",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1089,6 +1360,22 @@
                     },
                     {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -1106,21 +1393,20 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
-                                        "institute_id": 1,
-                                        "row_status": 1,
+                                        "title_en": "PROGRAMME ON RMG4ss",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4ss",
+                                        "institute_id": "1",
                                         "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z",
-                                        "id": 1
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "row_status": "1",
+                                        "updated_at": "2021-09-05T05:44:33.000000Z",
+                                        "created_at": "2021-09-05T05:44:33.000000Z",
+                                        "id": 31
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Branch added successfully.",
+                                        "message": "Branch added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -1218,7 +1504,7 @@
                     },
                     {
                         "name": "title_bn",
-                        "required": true,
+                        "required": false,
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1235,8 +1521,36 @@
                         "example": "1"
                     },
                     {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "address",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1245,6 +1559,7 @@
                     {
                         "name": "google_map_src",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1252,6 +1567,22 @@
                     },
                     {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -1269,21 +1600,26 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
+                                        "id": 31,
+                                        "institute_id": "1",
+                                        "title_en": "PROGRAMME ON RMG4 update",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "yews",
-                                        "institute_id": 1,
-                                        "row_status": 1,
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
                                         "address": "dhaka 1112",
-                                        "google_map_src": "branch under bitac institute",
-                                        "created_at": "2021-08-19T00:00:01.000000Z",
-                                        "updated_at": "2021-08-19T00:00:01.000000Z"
+                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "created_at": "2021-09-05T05:44:33.000000Z",
+                                        "updated_at": "2021-09-05T05:56:07.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Branch update successfully.",
+                                        "message": "Branch updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -1445,7 +1781,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1463,14 +1799,14 @@
                     {
                         "name": "code",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
-                        "example": "4455"
+                        "example": "A4455"
                     },
                     {
-                        "name": "discription",
+                        "name": "description",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1492,6 +1828,22 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -1507,10 +1859,15 @@
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
                                         "institute_id": "1",
-                                        "code": "4455",
-                                        "updated_at": "2021-07-26T06:53:00.000000Z",
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "id": 1
+                                        "code": "A4455ss",
+                                        "description": "programme under bitac institute",
+                                        "logo": "default.jpg",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "updated_at": "2021-09-05T06:07:52.000000Z",
+                                        "created_at": "2021-09-05T06:07:52.000000Z",
+                                        "id": 33
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1604,7 +1961,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -1622,14 +1979,14 @@
                     {
                         "name": "code",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
-                        "example": "4455"
+                        "example": "A4455"
                     },
                     {
-                        "name": "discription",
+                        "name": "description",
                         "in": "query",
                         "schema": {
                             "type": "string"
@@ -1651,6 +2008,22 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -1663,17 +2036,19 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
+                                        "id": 31,
+                                        "code": "A4455",
+                                        "institute_id": "1",
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "code": "4456",
-                                        "description": null,
-                                        "logo": "",
-                                        "created_by": null,
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "updated_at": "2021-07-26T06:56:12.000000Z",
-                                        "row_status": 1
+                                        "description": "programme under bitac institute",
+                                        "logo": "default.jpg",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "created_at": "2021-09-05T06:03:18.000000Z",
+                                        "updated_at": "2021-09-05T06:09:41.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1867,6 +2242,7 @@
                     {
                         "name": "number_of_seats",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -1875,6 +2251,7 @@
                     {
                         "name": "registration_start_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1882,6 +2259,7 @@
                     {
                         "name": "registration_end_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1889,6 +2267,7 @@
                     {
                         "name": "batch_start_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1896,6 +2275,7 @@
                     {
                         "name": "batch_end_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -1913,66 +2293,91 @@
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "disability_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -1990,41 +2395,37 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "course_id": 1,
-                                        "course_title": "sdf",
-                                        "institute_id": 1,
-                                        "institute_title": "asdf",
-                                        "branch_id": null,
-                                        "branch_name": null,
-                                        "programme_id": null,
-                                        "programme_name": null,
-                                        "number_of_seats": 0,
-                                        "registration_start_date": "0000-00-00 00:00:00",
-                                        "registration_end_date": "0000-00-00 00:00:00",
-                                        "batch_start_date": "0000-00-00 00:00:00",
-                                        "batch_end_date": "0000-00-00 00:00:00",
-                                        "available_seats": 0,
-                                        "training_center_id": 1,
-                                        "training_center_name": "wer",
-                                        "in_ethnic_group": 0,
-                                        "is_freedom_fighter": 0,
-                                        "disability_status": 0,
-                                        "ssc_passing_status": 0,
-                                        "hsc_passing_status": 0,
-                                        "honors_passing_status": 0,
-                                        "masters_passing_status": 0,
-                                        "is_occupation_needed": 0,
-                                        "is_guardian_info_needed": 0,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T11:18:09.000000Z",
-                                        "updated_at": "2021-08-17T11:18:09.000000Z",
-                                        "id": 1
+                                        "institute_id": "1",
+                                        "course_id": "1",
+                                        "training_center_id": "1",
+                                        "programme_id": "1",
+                                        "branch_id": "1",
+                                        "number_of_seats": "44",
+                                        "registration_start_date": "12/1/2022",
+                                        "registration_end_date": "12/1/2022",
+                                        "batch_start_date": "12/1/2022",
+                                        "batch_end_date": "12/1/2022",
+                                        "available_seats": "20",
+                                        "in_ethnic_group": "0",
+                                        "is_freedom_fighter": "0",
+                                        "disability_status": "0",
+                                        "ssc_passing_status": "0",
+                                        "hsc_passing_status": "0",
+                                        "honors_passing_status": "0",
+                                        "masters_passing_status": "0",
+                                        "is_occupation_needed": "0",
+                                        "is_guardian_info_needed": "0",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "updated_at": "2021-09-05T06:52:18.000000Z",
+                                        "created_at": "2021-09-05T06:52:18.000000Z",
+                                        "id": 91
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Batch added successfully.",
+                                        "message": "Batch added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -2172,6 +2573,7 @@
                     {
                         "name": "number_of_seats",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "integer"
                         },
@@ -2180,6 +2582,7 @@
                     {
                         "name": "registration_start_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2187,6 +2590,7 @@
                     {
                         "name": "registration_end_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2194,6 +2598,7 @@
                     {
                         "name": "batch_start_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2201,6 +2606,7 @@
                     {
                         "name": "batch_end_date",
                         "in": "query",
+                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -2218,66 +2624,91 @@
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_freedom_fighter",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "disability_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "ssc_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "hsc_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "honors_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "masters_passing_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_occupation_needed",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "is_guardian_info_needed",
                         "in": "query",
                         "schema": {
                             "type": "integer"
-                        }
+                        },
+                        "example": "0"
                     },
                     {
                         "name": "row_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
                         "in": "query",
                         "schema": {
                             "type": "integer"
@@ -2321,8 +2752,8 @@
                                         "masters_passing_status": 0,
                                         "is_occupation_needed": 0,
                                         "is_guardian_info_needed": 0,
-                                        "created_by": null,
-                                        "updated_by": null,
+                                        "created_by": 1,
+                                        "updated_by": 1,
                                         "created_at": "2021-08-17T11:18:09.000000Z",
                                         "updated_at": "2021-08-17T11:18:09.000000Z"
                                     },
@@ -2475,7 +2906,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2495,9 +2926,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
-                        "example": "4455"
+                        "example": "AE445"
                     },
                     {
                         "name": "course_fee",
@@ -2511,14 +2942,16 @@
                     {
                         "name": "duration",
                         "in": "query",
+                        "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "example": "5"
                     },
                     {
                         "name": "description",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2527,6 +2960,7 @@
                     {
                         "name": "target_group",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2535,20 +2969,25 @@
                     {
                         "name": "objectives",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "An objective"
                     },
                     {
                         "name": "contents",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "An contents"
                     },
                     {
                         "name": "training_methodology",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2556,6 +2995,7 @@
                     {
                         "name": "evaluation_system",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2563,6 +3003,7 @@
                     {
                         "name": "prerequisite",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2570,6 +3011,7 @@
                     {
                         "name": "eligibility",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2577,6 +3019,7 @@
                     {
                         "name": "cover_image",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2585,6 +3028,24 @@
                     {
                         "name": "row_status",
                         "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         },
@@ -2601,28 +3062,27 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z",
-                                        "id": 1
+                                        "title_en": "PROGRAMME ON RMG4ss",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4ss",
+                                        "code": "AE445",
+                                        "institute_id": "1",
+                                        "course_fee": "11",
+                                        "duration": "5",
+                                        "description": "very good courses",
+                                        "target_group": "5",
+                                        "objectives": "An objective",
+                                        "contents": "An contents",
+                                        "training_methodology": "dfd",
+                                        "evaluation_system": "ddf",
+                                        "prerequisite": "dfdf",
+                                        "eligibility": "dfdf",
+                                        "cover_image": "default.jpg",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "updated_at": "2021-09-05T05:19:55.000000Z",
+                                        "created_at": "2021-09-05T05:19:55.000000Z",
+                                        "id": 31
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -2729,7 +3189,7 @@
                     {
                         "name": "title_bn",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2749,9 +3209,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
-                        "example": "4455"
+                        "example": "AE445"
                     },
                     {
                         "name": "course_fee",
@@ -2765,14 +3225,16 @@
                     {
                         "name": "duration",
                         "in": "query",
+                        "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         },
                         "example": "5"
                     },
                     {
                         "name": "description",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2781,6 +3243,7 @@
                     {
                         "name": "target_group",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
@@ -2789,20 +3252,25 @@
                     {
                         "name": "objectives",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "An objective"
                     },
                     {
                         "name": "contents",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
-                        }
+                        },
+                        "example": "An contents"
                     },
                     {
                         "name": "training_methodology",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2810,6 +3278,7 @@
                     {
                         "name": "evaluation_system",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2817,6 +3286,7 @@
                     {
                         "name": "prerequisite",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2824,6 +3294,7 @@
                     {
                         "name": "eligibility",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -2831,14 +3302,33 @@
                     {
                         "name": "cover_image",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         },
-                        "example": "default.jph"
+                        "example": "default.jpg"
                     },
                     {
                         "name": "row_status",
                         "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "created_by",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "updated_by",
+                        "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         },
@@ -2855,33 +3345,33 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title_bn": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                        "id": 31,
+                                        "code": "AE445",
+                                        "institute_id": "1",
+                                        "title_en": "PROGRAMME ON RMG4 ei",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4 ei",
+                                        "course_fee": "123",
+                                        "duration": "5",
+                                        "description": "very good courses",
+                                        "target_group": "5",
+                                        "objectives": "An objective",
+                                        "contents": "An contents",
+                                        "training_methodology": "methodo",
+                                        "evaluation_system": "eval",
+                                        "prerequisite": "prere",
+                                        "eligibility": "elig",
+                                        "cover_image": "defaults.jpg",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "created_at": "2021-09-05T05:19:55.000000Z",
+                                        "updated_at": "2021-09-05T05:25:07.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Course update successfully.",
+                                        "message": "Course updated successfully.",
                                         "query_time": 0
                                     }
                                 }
