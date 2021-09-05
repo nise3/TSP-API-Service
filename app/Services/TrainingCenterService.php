@@ -278,17 +278,22 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'title_en' => 'required|string|max: 191',
-            'title_bn' => 'required|string|max: 1000',
+            'title_en' => 'required|string|max: 400',
+            'title_bn' => 'nullable|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
             'center_location_type' => 'nullable|int',
             'address' => ['nullable', 'string', 'max:1000'],
             'google_map_src' => ['nullable', 'string'],
+            'loc_division_id' => ['nullable', 'integer', 'max:191'],
+            'loc_district_id' => ['nullable', 'integer', 'max:191'],
+            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }

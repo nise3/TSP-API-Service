@@ -197,6 +197,62 @@ class InstituteService
         ];
     }
 
+    /**
+     * @param Request $request
+     * @param int|null $id
+     * @return Validator
+     */
+    public function validator(Request $request, int $id = null): Validator
+    {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+
+        $rules = [
+            'title_en' => ['required', 'string', 'max:400'],
+            'title_bn' => ['required', 'string', 'max:1000'],
+            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
+            'domain' => [
+                'nullable',
+                'string',
+                'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
+                'max:191',
+                'unique:institutes,domain,' . $id
+            ],
+            'address' => ['nullable', 'string', 'max:500'],
+            'google_map_src' => ['nullable', 'string'],
+            'primary_phone' => [
+                'nullable',
+                'regex:/^[0-9]*$/'
+            ],
+            /*'phone_numbers' => ['array'],
+            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],*/
+            'phone_numbers' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
+            'primary_mobile' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            /*'mobile_numbers' => ['array'],
+            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],*/
+            'mobile_numbers' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'logo' => [
+                'nullable',
+                'string',
+            ],
+            'email' => ['nullable', 'string', 'max:191'],
+            'config' => ['nullable', 'string'],
+            'loc_division_id' => ['nullable', 'integer', 'max:191'],
+            'loc_district_id' => ['nullable', 'integer', 'max:191'],
+            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+    }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
     {
@@ -315,61 +371,6 @@ class InstituteService
     public function forceDelete(Institute $institute): bool
     {
         return $institute->forceDelete();
-    }
-
-    /**
-     * @param Request $request
-     * @param int|null $id
-     * @return Validator
-     */
-    public function validator(Request $request, int $id = null): Validator
-    {
-        $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
-        ];
-
-        $rules = [
-            'title_en' => ['required', 'string', 'max:400'],
-            'title_bn' => ['required', 'string', 'max:1000'],
-            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
-            'domain' => [
-                'required',
-                'string',
-                'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
-                'max:191',
-                'unique:institutes,domain,' . $id
-            ],
-            'address' => ['nullable', 'string', 'max:500'],
-            'google_map_src' => ['nullable', 'string'],
-            'primary_phone' => [
-                'nullable',
-                'regex:/^[0-9]*$/'
-            ],
-            'phone_numbers' => ['array'],
-            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
-            'primary_mobile' => ['required', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
-            'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
-            'logo' => [
-                'nullable',
-                'string',
-            ],
-            'email' => 'nullable|email',
-            'is_training_center' => 'nullable|boolean',
-            'training_center_name_en' => 'nullable|string|max: 191',
-            'training_center_name_bn' => 'nullable|string|max: 191',
-            'loc_district_id' => 'nullable|numeric|exists:loc_districts,id',
-            'loc_division_id' => 'nullable|numeric|exists:loc_divisions,id',
-            'loc_upazila_id' => 'nullable|numeric|exists:loc_upazilas,id',
-            'row_status' => [
-                'required_if:' . $id . ',!=,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
-            ],
-        ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
     public function filterValidator(Request $request): Validator
