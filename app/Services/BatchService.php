@@ -426,42 +426,6 @@ class BatchService
                 'int',
                 'nullable'
             ],
-            'in_ethnic_group' => [
-                'boolean',
-                'nullable'
-            ],
-            'is_freedom_fighter' => [
-                'nullable',
-                'boolean'
-            ],
-            'disability_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'ssc_passing_status' => [
-                'nullable',
-                'boolean'
-            ],
-            'hsc_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'honors_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'masters_passing_status' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_occupation_needed' => [
-                'nullable',
-                'boolean',
-            ],
-            'is_guardian_info_needed' => [
-                'nullable',
-                'boolean',
-            ],
             "dynamic_form_field"=>[
                 'nullable',
                 "string"

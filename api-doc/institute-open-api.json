@@ -250,14 +250,6 @@
                         "example": "This is config"
                     },
                     {
-                        "name": "email",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "email"
-                        }
-                    },
-                    {
                         "name": "row_status",
                         "in": "query",
                         "schema": {
@@ -2261,7 +2253,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/05"
                         }
                     },
                     {
@@ -2269,7 +2263,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/20"
                         }
                     },
                     {
@@ -2277,7 +2273,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/10/05"
                         }
                     },
                     {
@@ -2285,7 +2283,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/11/05"
                         }
                     },
                     {
@@ -2297,76 +2297,7 @@
                         "example": "20"
                     },
                     {
-                        "name": "in_ethnic_group",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_freedom_fighter",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "disability_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "ssc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "hsc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "honors_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "masters_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_occupation_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_guardian_info_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                        "$ref": "#/components/parameters/dynamic_form_field"
                     },
                     {
                         "name": "row_status",
@@ -2391,9 +2322,6 @@
                             "type": "integer"
                         },
                         "example": "1"
-                    },
-                    {
-                        "$ref": "#/components/parameters/dynamic_form_field"
                     }
                 ],
                 "responses": {
@@ -2595,7 +2523,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/05"
                         }
                     },
                     {
@@ -2603,7 +2533,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/05"
                         }
                     },
                     {
@@ -2611,7 +2543,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/05"
                         }
                     },
                     {
@@ -2619,7 +2553,9 @@
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date",
+                            "example": "2021/09/05"
                         }
                     },
                     {
@@ -2631,76 +2567,7 @@
                         "example": "20"
                     },
                     {
-                        "name": "in_ethnic_group",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_freedom_fighter",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "disability_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "ssc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "hsc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "honors_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "masters_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_occupation_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
-                    },
-                    {
-                        "name": "is_guardian_info_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "0"
+                        "$ref": "#/components/parameters/dynamic_form_field"
                     },
                     {
                         "name": "row_status",
