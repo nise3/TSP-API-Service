@@ -356,18 +356,6 @@ class TrainerService
     }
 
     /**
-     * @param Trainer $trainer
-     * @param array $batchIds
-     * @return Trainer
-     */
-    public function assignTrainer(Trainer $trainer, array $batchIds): Trainer
-    {
-        $validTrainers = Batch::whereIn('id', $batchIds)->orderBy('id', 'ASC')->pluck('id')->toArray();
-        $trainer->batches()->syncWithoutDetaching($validTrainers);
-        return $trainer;
-    }
-
-    /**
      * @param Request $request
      * @param int|null $id
      * @return Validator
@@ -518,16 +506,6 @@ class TrainerService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public function batchValidator(Request $request): Validator
-    {
-        $data["batchIds"] = is_array($request['batchIds']) ? $request['batchIds'] : explode(',', $request['batchIds']);
-
-        $rules = [
-            'batchIds' => 'required|array|min:1',
-            'batchIds.*' => 'required|integer|distinct|min:1'
-        ];
-        return \Illuminate\Support\Facades\Validator::make($data, $rules);
-    }
 
     public function getTrainerTrashList(Request $request, Carbon $startTime): array
     {

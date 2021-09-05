@@ -10,8 +10,6 @@ $customRouter = function (string $as = '') use ($router) {
 };
 
 
-
-
 $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($router, $customRouter) {
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
@@ -22,9 +20,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('branches', 'BranchController')->render();
     $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
 
-
-    $router->post('trainers/{id}/assign-trainer-to-batch', ['as' => 'trainers.assign-trainer-to-batch', 'uses' => 'TrainerController@assignTrainerToBatch']);
-
+    /** Assign Trainers to Batch */
+    $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
 
     //institutes trashed
