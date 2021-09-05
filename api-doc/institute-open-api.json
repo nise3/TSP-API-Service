@@ -225,6 +225,14 @@
                         }
                     },
                     {
+                        "name": "email",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
                         "name": "row_status",
                         "in": "query",
                         "schema": {
@@ -1909,75 +1917,15 @@
                         "example": "20"
                     },
                     {
-                        "name": "in_ethnic_group",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "is_freedom_fighter",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "disability_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "ssc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "hsc_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "honors_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "masters_passing_status",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "is_occupation_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "is_guardian_info_needed",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
                         "name": "row_status",
                         "in": "query",
                         "schema": {
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "$ref": "#/components/parameters/dynamic_form_field"
                     }
                 ],
                 "responses": {
@@ -5348,6 +5296,52 @@
                 "required": false,
                 "schema": {
                     "type": "integer"
+                }
+            },
+            "dynamic_form_field": {
+                "name": "dynamic_form_field",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": {
+                        "ethnic_group_info": [
+                            true,
+                            false
+                        ],
+                        "freedom_fighter_info": [
+                            true,
+                            false
+                        ],
+                        "disability_info": [
+                            true,
+                            false
+                        ],
+                        "ssc_passing_info": [
+                            true,
+                            false
+                        ],
+                        "hsc_passing_status": [
+                            true,
+                            false
+                        ],
+                        "honors_passing_info": [
+                            true,
+                            false
+                        ],
+                        "masters_passing_info": [
+                            true,
+                            false
+                        ],
+                        "occupation_info": [
+                            true,
+                            false
+                        ],
+                        "guardian_info": [
+                            true,
+                            false
+                        ]
+                    }
                 }
             }
         }

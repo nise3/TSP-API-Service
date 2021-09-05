@@ -463,6 +463,13 @@ class BatchService
                 'nullable',
                 'boolean',
             ],
+            "dynamic_form_field"=>[
+                'nullable',
+                "string"
+            ],
+            'loc_district_id'=>'nullable|exists:loc_districts,id',
+            'loc_division_id'=>'nullable|exists:loc_divisions,id',
+            'loc_upazila_id'=>'nullable|exists:loc_upazilas,id',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
