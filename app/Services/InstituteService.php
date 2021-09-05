@@ -204,6 +204,11 @@ class InstituteService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $data = $request->all();
+
+        $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+        $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,
@@ -228,13 +233,11 @@ class InstituteService
                 'nullable',
                 'regex:/^[0-9]*$/'
             ],
-            /*'phone_numbers' => ['array'],
-            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],*/
-            'phone_numbers' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
+            'phone_numbers' => ['array'],
+            'phone_numbers.*' => ['string', 'regex:/^[0-9]*$/'],
             'primary_mobile' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
-            /*'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],*/
-            'mobile_numbers' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'mobile_numbers' => ['array'],
+            'mobile_numbers.*' => ['string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
                 'nullable',
                 'string',
@@ -251,7 +254,7 @@ class InstituteService
             'created_by' => ['nullable', 'integer', 'max:10'],
             'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string

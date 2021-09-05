@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 
 //use App\Models\Trainer;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -351,6 +352,18 @@ class BatchService
         return $response;
     }
 
+    /**
+     * @param Trainer $trainer
+     * @param array $batchIds
+     * @return Trainer
+     */
+    public function assignTrainer(Batch $batch, array $trainerIds): Batch
+    {
+        $validTrainers = Trainer::whereIn('id', $trainerIds)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $batch->trainers()->sync($validTrainers);
+        return $batch;
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -369,6 +382,7 @@ class BatchService
      */
     public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
+
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,
@@ -474,6 +488,22 @@ class BatchService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function trainerValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data["trainerIds"] = is_array($request['trainerIds']) ? $request['trainerIds'] : explode(',', $request['trainerIds']);
+
+        $rules = [
+            'trainerIds' => 'required|array|min:1',
+            'trainerIds.*' => 'required|integer|distinct|min:1'
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 
 
