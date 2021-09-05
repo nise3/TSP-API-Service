@@ -211,6 +211,9 @@ class InstituteService
             ]
         ];
 
+        $request["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+        $request["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+
         $rules = [
             'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
@@ -228,13 +231,11 @@ class InstituteService
                 'nullable',
                 'regex:/^[0-9]*$/'
             ],
-            /*'phone_numbers' => ['array'],
-            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],*/
-            'phone_numbers' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
+            'phone_numbers' => ['array'],
+            'phone_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'primary_mobile' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
-            /*'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],*/
-            'mobile_numbers' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'mobile_numbers' => ['array'],
+            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
                 'nullable',
                 'string',

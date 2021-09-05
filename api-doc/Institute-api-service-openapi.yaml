@@ -150,9 +150,13 @@ paths:
           example: '01845654543'
         - name: phone_numbers
           in: query
-          required: false
-          schema:
-            type: string
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: primary_mobile
           in: query
           required: false
@@ -161,10 +165,13 @@ paths:
           example: '01845654543'
         - name: mobile_numbers
           in: query
-          required: false
-          schema:
-            type: string
-          example: '01845654543'
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: email
           in: query
           required: false
@@ -221,38 +228,36 @@ paths:
                 $ref: '#/components/schemas/institutes'
               example:
                 data:
-                  id: 13
-                  title_en: PROGRAMME ON RMG45
-                  title_bn: আরএমজি-প্রোগ্রাম45
-                  code: AE4555
-                  logo: defaults.jpg
-                  primary_phone: '01845654543'
-                  phone_numbers: '01845654543'
-                  primary_mobile: '01845654543'
-                  mobile_numbers: '01845654543'
-                  email: example@gmail.com
-                  config: This is config
-                  loc_division_id: 1
-                  division_title_bn: বরিশাল
-                  division_title_en: Barisal
-                  loc_district_id: 1
-                  district_title_bn: বরগুনা
-                  district_title_en: BARGUNA
-                  loc_upazila_id: 1
-                  upazila_title_bn: 'আমতলী '
-                  upazila_title_en: AMTALI
-                  domain: https://developesr.com
+                  title_en: PROGRAMME ON RMG4s
+                  title_bn: আরএমজি-প্রোগ্রাম4s
+                  code: AE455K
+                  domain: https://develosper.com
                   address: Dhaka mirpur road 4 block 2s
-                  google_map_src: https://goo.gl/maps/fkjNYmWfEXLQUDnm6
-                  row_status: 1
-                  created_by: 1
-                  updated_by: 1
-                  created_at: '2021-09-05T04:27:43.000000Z'
-                  updated_at: '2021-09-05T04:27:43.000000Z'
+                  google_map_src: https://goo.gl/maps/fkjNYsmWfEXLQUDnm6
+                  primary_phone: '01845654541'
+                  phone_numbers:
+                    - '01845654542'
+                    - '01845654544'
+                  primary_mobile: '01845654543'
+                  mobile_numbers:
+                    - '01845654545'
+                    - '01845654546'
+                  logo: defasult.jpg
+                  email: exampsle@gmail.com
+                  config: This is configs
+                  loc_division_id: '1'
+                  loc_district_id: '1'
+                  loc_upazila_id: '1'
+                  row_status: '1'
+                  created_by: '1'
+                  updated_by: '1'
+                  updated_at: '2021-09-05T09:59:59.000000Z'
+                  created_at: '2021-09-05T09:59:59.000000Z'
+                  id: 11
                 _response_status:
                   success: true
                   code: 201
-                  message: Institute added successfully.
+                  message: Institute added successfully
                   query_time: 0
   /institutes/{instituteId}:
     get:
@@ -378,9 +383,13 @@ paths:
           example: '01845654543'
         - name: phone_numbers
           in: query
-          required: false
-          schema:
-            type: string
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: primary_mobile
           in: query
           required: false
@@ -389,10 +398,13 @@ paths:
           example: '01845654543'
         - name: mobile_numbers
           in: query
-          required: false
-          schema:
-            type: string
-          example: '01845654543'
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: email
           in: query
           required: false
@@ -454,10 +466,14 @@ paths:
                   title_bn: আরএমজি-প্রোগ্রাম45
                   code: AE4555
                   logo: defaults.jpg
-                  primary_phone: '01845654543'
-                  phone_numbers: '01845654543'
+                  primary_phone: '01845654541'
+                  phone_numbers:
+                    - '01845654542'
+                    - '01845654544'
                   primary_mobile: '01845654543'
-                  mobile_numbers: '01845654543'
+                  mobile_numbers:
+                    - '01845654545'
+                    - '01845654546'
                   email: example@gmail.com
                   config: This is config
                   loc_division_id: 1
@@ -479,8 +495,8 @@ paths:
                   updated_at: '2021-09-05T04:27:43.000000Z'
                 _response_status:
                   success: true
-                  code: 200
-                  message: Institute update successfully.
+                  code: 201
+                  message: Institute added successfully
                   query_time: 0
     delete:
       tags:
