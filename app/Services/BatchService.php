@@ -62,15 +62,7 @@ class BatchService
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title_bn as training_center_title_bn',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
+            'batches.dynamic_form_field',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -179,15 +171,7 @@ class BatchService
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title_bn as training_center_title_bn',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
+            'batches.dynamic_form_field',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -218,6 +202,8 @@ class BatchService
         });
 
         $batchBuilder->where('batches.id', $id);
+
+        $batchBuilder->with('trainers');
 
         /** @var Batch $instituteBuilder */
         $batch = $batchBuilder->first();
