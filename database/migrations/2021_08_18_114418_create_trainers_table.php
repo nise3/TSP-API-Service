@@ -25,6 +25,8 @@ class CreateTrainersTable extends Migration
             $table->string('mobile', 15)->unique();
             $table->date("date_of_birth")->nullable();
             $table->text('about_me')->nullable();
+            $table->text('educational_qualification')->nullable();
+            $table->text('skills')->nullable();
 
             $table->unsignedTinyInteger('gender')->comment('1=>male,2=>female,3=>others')->default(1);
             $table->unsignedTinyInteger('marital_status')->comment('0=>No,1=>Yes')->default(0);
@@ -32,18 +34,21 @@ class CreateTrainersTable extends Migration
             $table->string('nationality', 100)->default('Bangladeshi');
             $table->string('nid', 30)->nullable();
             $table->string('passport_number', 50)->nullable();
+
             $table->unsignedMediumInteger('present_address_division_id')->nullable();
             $table->unsignedMediumInteger('present_address_district_id')->nullable();
             $table->unsignedMediumInteger('present_address_upazila_id')->nullable();
-            $table->string('present_house_address', 255)->nullable();
+            $table->text('present_house_address')->nullable();
+
             $table->unsignedMediumInteger('permanent_address_division_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_district_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_upazila_id')->nullable();
-            $table->string('permanent_house_address', 1000)->nullable();
-            $table->text('educational_qualification')->nullable();
-            $table->text('skills', 191)->nullable();
+            $table->text('permanent_house_address')->nullable();
+
+
             $table->text('photo')->nullable();
             $table->text('signature')->nullable();
+
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
