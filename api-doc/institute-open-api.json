@@ -3376,6 +3376,12 @@
                                         "institute_id": 1,
                                         "institutes_title_en": "Hellen Mante",
                                         "institutes_title_bn": "Brenda McDermott",
+                                        "training_center_id": 2,
+                                        "training_centers_title_en": "Ms. Shanel Hayes",
+                                        "training_centers_title_bn": "Karli Fisher",
+                                        "branch_id": 1,
+                                        "branches_title_en": "Annamae Rippin",
+                                        "branches_title_bn": "Hanna McLaughlin",
                                         "email": "ernestina.predovic@example.org",
                                         "date_of_birth": null,
                                         "about_me": "Quis sit saepe expedita officiis et totam molestiae.",
@@ -3385,6 +3391,8 @@
                                         "nationality": "Reprehenderit labore error provident ut et voluptatem.",
                                         "nid": "Eaque dignissimos placeat deleniti eius quibusdam ",
                                         "passport_number": "839251467",
+                                        "physical_disabilities_status": 1,
+                                        "freedom_fighter_status": 0,
                                         "present_address_division_id": 4,
                                         "division_title_bn_present_address": "খুলনা",
                                         "division_title_en_present_address": "Khulna",
@@ -3461,9 +3469,24 @@
                         "example": "1"
                     },
                     {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "trainer_registration_number",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -3481,7 +3504,6 @@
                     {
                         "name": "mobile",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -3490,7 +3512,6 @@
                     {
                         "name": "date_of_birth",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -3548,6 +3569,20 @@
                         }
                     },
                     {
+                        "name": "physical_disabilities_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "freedom_fighter_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "present_address_division_id",
                         "in": "query",
                         "schema": {
@@ -3573,13 +3608,6 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
                         }
                     },
                     {
@@ -3638,22 +3666,6 @@
                             "type": "integer"
                         },
                         "example": "1"
-                    },
-                    {
-                        "name": "created_by",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "updated_by",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -3666,38 +3678,21 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "trainer_name_en": "Tikka Khan post",
+                                        "trainer_name_en": "Tikka Khan",
                                         "trainer_name_bn": "আরএমজি",
                                         "institute_id": "1",
-                                        "trainer_registration_number": "A4455",
-                                        "email": "asdf@gmail.com",
-                                        "mobile": "01844676535",
-                                        "date_of_birth": "1/2/2001",
-                                        "about_me": "adfd",
+                                        "branch_id": "1",
+                                        "training_center_id": "1",
+                                        "trainer_registration_number": "445511",
+                                        "email": "asdfsdf@gmail.com",
+                                        "mobile": "01804676535",
                                         "gender": "1",
                                         "marital_status": "0",
                                         "religion": "1",
-                                        "nationality": "bang",
-                                        "nid": "0303",
-                                        "passport_number": "0300303",
-                                        "present_address_division_id": "1",
-                                        "present_address_district_id": "1",
-                                        "present_address_upazila_id": "1",
-                                        "present_house_address": "sd",
-                                        "permanent_address_division_id": "1",
-                                        "permanent_address_district_id": "1",
-                                        "permanent_address_upazila_id": "1",
-                                        "permanent_house_address": "1",
-                                        "educational_qualification": "adf",
-                                        "skills": "sda",
-                                        "photo": "asdf",
-                                        "signature": "sadf",
                                         "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T07:14:55.000000Z",
-                                        "created_at": "2021-09-05T07:14:55.000000Z",
-                                        "id": 31
+                                        "updated_at": "2021-08-23T04:46:11.000000Z",
+                                        "created_at": "2021-08-23T04:46:11.000000Z",
+                                        "id": 20
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -3747,6 +3742,12 @@
                                         "institute_id": 1,
                                         "institutes_title_en": "Hellen Mante",
                                         "institutes_title_bn": "Brenda McDermott",
+                                        "training_center_id": 2,
+                                        "training_centers_title_en": "Ms. Shanel Hayes",
+                                        "training_centers_title_bn": "Karli Fisher",
+                                        "branch_id": 1,
+                                        "branches_title_en": "Annamae Rippin",
+                                        "branches_title_bn": "Hanna McLaughlin",
                                         "email": "ernestina.predovic@example.org",
                                         "date_of_birth": null,
                                         "about_me": "Quis sit saepe expedita officiis et totam molestiae.",
@@ -3756,6 +3757,8 @@
                                         "nationality": "Reprehenderit labore error provident ut et voluptatem.",
                                         "nid": "Eaque dignissimos placeat deleniti eius quibusdam ",
                                         "passport_number": "839251467",
+                                        "physical_disabilities_status": 1,
+                                        "freedom_fighter_status": 0,
                                         "present_address_division_id": 4,
                                         "division_title_bn_present_address": "খুলনা",
                                         "division_title_en_present_address": "Khulna",
@@ -3838,9 +3841,24 @@
                         "example": "1"
                     },
                     {
+                        "name": "branch_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "trainer_registration_number",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -3858,7 +3876,6 @@
                     {
                         "name": "mobile",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         },
@@ -3867,7 +3884,6 @@
                     {
                         "name": "date_of_birth",
                         "in": "query",
-                        "required": true,
                         "schema": {
                             "type": "string"
                         }
@@ -3925,6 +3941,20 @@
                         }
                     },
                     {
+                        "name": "physical_disabilities_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "freedom_fighter_status",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "present_address_division_id",
                         "in": "query",
                         "schema": {
@@ -3950,13 +3980,6 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
                         }
                     },
                     {
@@ -4015,22 +4038,6 @@
                             "type": "integer"
                         },
                         "example": "1"
-                    },
-                    {
-                        "name": "created_by",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "updated_by",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
                     }
                 ],
                 "responses": {
@@ -4061,8 +4068,8 @@
                                         "eligibility": null,
                                         "cover_image": null,
                                         "row_status": 1,
-                                        "created_by": 1,
-                                        "updated_by": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
                                         "created_at": "2021-08-17T10:34:07.000000Z",
                                         "updated_at": "2021-08-17T10:34:07.000000Z"
                                     },
@@ -4165,6 +4172,8 @@
                                     "data": {
                                         "id": 13,
                                         "institute_id": 1,
+                                        "branch_id": 1,
+                                        "training_center_id": null,
                                         "trainer_name_en": "assdsddf",
                                         "trainer_name_bn": "asfsdfsdf",
                                         "trainer_registration_number": "434235232",
@@ -4178,6 +4187,8 @@
                                         "nationality": "",
                                         "nid": null,
                                         "passport_number": null,
+                                        "physical_disabilities_status": 0,
+                                        "freedom_fighter_status": 0,
                                         "present_address_division_id": null,
                                         "present_address_district_id": null,
                                         "present_address_upazila_id": null,
@@ -4572,6 +4583,12 @@
                     "institute_id": {
                         "type": "integer"
                     },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
                     "trainer_name_en": {
                         "type": "integer"
                     },
@@ -4633,6 +4650,24 @@
                     },
                     "passport_number": {
                         "type": "string"
+                    },
+                    "physical_disabilities_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
+                    },
+                    "freedom_fighter_status": {
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "default": 0
                     },
                     "present_address_division_id": {
                         "type": "integer"

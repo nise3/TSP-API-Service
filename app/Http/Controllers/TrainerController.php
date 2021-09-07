@@ -148,31 +148,6 @@ class TrainerController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return Exception|JsonResponse|Throwable
-     */
-    public function assignTrainerToBatch(Request $request, int $id): JsonResponse
-    {
-        $trainer = Trainer::findOrFail($id);
-        $validated = $this->trainerService->batchValidator($request)->validated();
-        try {
-            $trainer = $this->trainerService->assignTrainer($trainer, $validated['batchIds']);
-            $response = [
-                'data' => $trainer,
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "trainer added to batch successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            return $e;
-        }
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
 
     public function getTrashedData(Request $request)
     {

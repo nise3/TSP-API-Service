@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 
 //use App\Models\Trainer;
+use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -61,15 +62,7 @@ class BatchService
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title_bn as training_center_title_bn',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
+            'batches.dynamic_form_field',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -178,15 +171,7 @@ class BatchService
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title_bn as training_center_title_bn',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
+            'batches.dynamic_form_field',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -217,6 +202,8 @@ class BatchService
         });
 
         $batchBuilder->where('batches.id', $id);
+
+        $batchBuilder->with('trainers');
 
         /** @var Batch $instituteBuilder */
         $batch = $batchBuilder->first();
@@ -351,6 +338,18 @@ class BatchService
         return $response;
     }
 
+    /**
+     * @param Trainer $trainer
+     * @param array $batchIds
+     * @return Trainer
+     */
+    public function assignTrainer(Batch $batch, array $trainerIds): Batch
+    {
+        $validTrainers = Trainer::whereIn('id', $trainerIds)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $batch->trainers()->sync($validTrainers);
+        return $batch;
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -369,6 +368,7 @@ class BatchService
      */
     public function validator(Request $request, int $id = Null): \Illuminate\Contracts\Validation\Validator
     {
+
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,
@@ -474,6 +474,22 @@ class BatchService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function trainerValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data["trainerIds"] = is_array($request['trainerIds']) ? $request['trainerIds'] : explode(',', $request['trainerIds']);
+
+        $rules = [
+            'trainerIds' => 'required|array|min:1',
+            'trainerIds.*' => 'required|integer|distinct|min:1'
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 
 

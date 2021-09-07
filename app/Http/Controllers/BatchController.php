@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Trainer;
 use App\Services\BatchService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -152,6 +153,32 @@ class BatchController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return Exception|JsonResponse|Throwable
+     */
+    public function assignTrainerToBatch(Request $request, int $id): JsonResponse
+    {
+        $batch = Batch::findOrFail($id);
+        $validated = $this->batchService->trainerValidator($request)->validated();
+        try {
+            $batch = $this->batchService->assignTrainer($batch, $validated['trainerIds']);
+            $response = [
+                'data' => $batch->trainers()->get(),
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "trainer added to batch successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            return $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
     public function getTrashedData(Request $request)
     {
         try {
@@ -180,6 +207,8 @@ class BatchController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+
 
     public function forceDelete(int $id)
     {
