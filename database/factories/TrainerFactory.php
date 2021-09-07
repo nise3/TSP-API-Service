@@ -13,12 +13,7 @@ class TrainerFactory extends Factory
 
     public function definition(): array
     {
-        $trainingCenter = TrainingCenter::inRandomOrder()->first();
-        $branch = Branch::inRandomOrder()->first();
-
     	return [
-            'training_center_id' => $trainingCenter->id,
-            'branch_id' => $branch->id,
             'trainer_name_en' => $this->faker->name,
             'trainer_name_bn' => $this->faker->name,
             'trainer_registration_number' => $this->faker->uuid(),
@@ -31,8 +26,6 @@ class TrainerFactory extends Factory
             'gender' => $this->faker->randomElement([1,2,3]),
             'marital_status' => $this->faker->randomElement([0,1]),
             'religion' => $this->faker->randomElement([1,2,3,4,5]),
-            'physical_disabilities_status' => $this->faker->randomElement([0,1]),
-            'freedom_fighter_status' => $this->faker->randomElement([0,1]),
             'present_address_division_id' => $this->faker->randomDigit(),
             'present_address_district_id' => $this->faker->randomDigit(),
             'present_house_address' => $this->faker->address,
