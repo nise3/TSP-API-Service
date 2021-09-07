@@ -2,9 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Branch;
 use App\Models\Trainer;
-use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TrainerFactory extends Factory
