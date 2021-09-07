@@ -15,9 +15,11 @@ class CreateTrainersTable extends Migration
     {
         Schema::create('trainers', function (Blueprint $table) {
             $table->increments('id');
+
             $table->unsignedInteger('institute_id');
             $table->unsignedInteger('branch_id')->nullable();
             $table->unsignedInteger('training_center_id')->nullable();
+
             $table->string('trainer_name_en', 191);
             $table->string('trainer_name_bn', 500);
             $table->string('trainer_registration_number', 100)->unique();
