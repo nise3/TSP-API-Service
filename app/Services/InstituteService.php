@@ -135,7 +135,7 @@ class InstituteService
     {
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
-            'institutes.id as id',
+            'institutes.id',
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',

@@ -16,8 +16,6 @@ class CreateTrainersTable extends Migration
         Schema::create('trainers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('institute_id');
-            $table->unsignedInteger('branch_id')->nullable();
-            $table->unsignedInteger('training_center_id')->nullable();
             $table->string('trainer_name_en', 191);
             $table->string('trainer_name_bn', 500);
             $table->string('trainer_registration_number', 191)->unique();
@@ -31,8 +29,6 @@ class CreateTrainersTable extends Migration
             $table->string('nationality', 191);
             $table->string('nid', 50)->nullable();
             $table->string('passport_number', 50)->nullable();
-            $table->tinyInteger('physical_disabilities_status')->comment('0=>No,1=>Yes')->default(0);
-            $table->tinyInteger('freedom_fighter_status')->comment('1=>Yes,0=>No')->default(0);
             $table->tinyInteger('present_address_division_id')->nullable();
             $table->tinyInteger('present_address_district_id')->nullable();
             $table->smallInteger('present_address_upazila_id')->nullable();

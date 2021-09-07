@@ -2452,12 +2452,6 @@ paths:
                   institute_id: 1
                   institutes_title_en: Hellen Mante
                   institutes_title_bn: Brenda McDermott
-                  training_center_id: 2
-                  training_centers_title_en: Ms. Shanel Hayes
-                  training_centers_title_bn: Karli Fisher
-                  branch_id: 1
-                  branches_title_en: Annamae Rippin
-                  branches_title_bn: Hanna McLaughlin
                   email: ernestina.predovic@example.org
                   date_of_birth: null
                   about_me: Quis sit saepe expedita officiis et totam molestiae.
@@ -2467,8 +2461,6 @@ paths:
                   nationality: Reprehenderit labore error provident ut et voluptatem.
                   nid: 'Eaque dignissimos placeat deleniti eius quibusdam '
                   passport_number: '839251467'
-                  physical_disabilities_status: 1
-                  freedom_fighter_status: 0
                   present_address_division_id: 4
                   division_title_bn_present_address: খুলনা
                   division_title_en_present_address: Khulna
@@ -2532,16 +2524,6 @@ paths:
           schema:
             type: integer
           example: '1'
-        - name: branch_id
-          in: query
-          schema:
-            type: integer
-          example: '1'
-        - name: training_center_id
-          in: query
-          schema:
-            type: integer
-          example: '1'
         - name: trainer_registration_number
           in: query
           required: true
@@ -2596,14 +2578,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: physical_disabilities_status
-          in: query
-          schema:
-            type: integer
-        - name: freedom_fighter_status
-          in: query
-          schema:
-            type: integer
         - name: present_address_division_id
           in: query
           schema:
@@ -2679,8 +2653,6 @@ paths:
                   trainer_name_en: Tikka Khan post
                   trainer_name_bn: আরএমজি
                   institute_id: '1'
-                  branch_id: '1'
-                  training_center_id: '1'
                   trainer_registration_number: A4455
                   email: asdf@gmail.com
                   mobile: '01844676535'
@@ -2692,8 +2664,6 @@ paths:
                   nationality: bang
                   nid: '0303'
                   passport_number: '0300303'
-                  physical_disabilities_status: '0'
-                  freedom_fighter_status: '0'
                   present_address_division_id: '1'
                   present_address_district_id: '1'
                   present_address_upazila_id: '1'
@@ -2749,12 +2719,6 @@ paths:
                   institute_id: 1
                   institutes_title_en: Hellen Mante
                   institutes_title_bn: Brenda McDermott
-                  training_center_id: 2
-                  training_centers_title_en: Ms. Shanel Hayes
-                  training_centers_title_bn: Karli Fisher
-                  branch_id: 1
-                  branches_title_en: Annamae Rippin
-                  branches_title_bn: Hanna McLaughlin
                   email: ernestina.predovic@example.org
                   date_of_birth: null
                   about_me: Quis sit saepe expedita officiis et totam molestiae.
@@ -2764,8 +2728,6 @@ paths:
                   nationality: Reprehenderit labore error provident ut et voluptatem.
                   nid: 'Eaque dignissimos placeat deleniti eius quibusdam '
                   passport_number: '839251467'
-                  physical_disabilities_status: 1
-                  freedom_fighter_status: 0
                   present_address_division_id: 4
                   division_title_bn_present_address: খুলনা
                   division_title_en_present_address: Khulna
@@ -2833,16 +2795,6 @@ paths:
           schema:
             type: integer
           example: '1'
-        - name: branch_id
-          in: query
-          schema:
-            type: integer
-          example: '1'
-        - name: training_center_id
-          in: query
-          schema:
-            type: integer
-          example: '1'
         - name: trainer_registration_number
           in: query
           required: true
@@ -2897,14 +2849,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: physical_disabilities_status
-          in: query
-          schema:
-            type: integer
-        - name: freedom_fighter_status
-          in: query
-          schema:
-            type: integer
         - name: present_address_division_id
           in: query
           schema:
@@ -3071,8 +3015,6 @@ paths:
                 data:
                   id: 13
                   institute_id: 1
-                  branch_id: 1
-                  training_center_id: null
                   trainer_name_en: assdsddf
                   trainer_name_bn: asfsdfsdf
                   trainer_registration_number: '434235232'
@@ -3086,8 +3028,6 @@ paths:
                   nationality: ''
                   nid: null
                   passport_number: null
-                  physical_disabilities_status: 0
-                  freedom_fighter_status: 0
                   present_address_division_id: null
                   present_address_district_id: null
                   present_address_upazila_id: null
@@ -3375,10 +3315,6 @@ components:
           readOnly: true
         institute_id:
           type: integer
-        branch_id:
-          type: integer
-        training_center_id:
-          type: integer
         trainer_name_en:
           type: integer
         trainer_name_bn:
@@ -3425,20 +3361,6 @@ components:
           type: string
         passport_number:
           type: string
-        physical_disabilities_status:
-          type: integer
-          enum:
-            - 0
-            - 1
-          description: 0=>No, 1=>Yes
-          default: 0
-        freedom_fighter_status:
-          type: integer
-          enum:
-            - 0
-            - 1
-          description: 0=>No, 1=>Yes
-          default: 0
         present_address_division_id:
           type: integer
         present_address_district_id:

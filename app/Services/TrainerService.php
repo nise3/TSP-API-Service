@@ -44,12 +44,6 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
-            'trainers.training_center_id',
-            'training_centers.title_en as training_centers_title_en',
-            'training_centers.title_bn as training_centers_title_bn',
-            'trainers.branch_id',
-            'branches.title_en as branches_title_en',
-            'branches.title_bn as branches_title_bn',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
@@ -95,22 +89,6 @@ class TrainerService
                 ->whereNull('institutes.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
-        });
-
-        $trainerBuilder->leftjoin("training_centers", function ($join) use ($rowStatus) {
-            $join->on('trainers.training_center_id', '=', 'training_centers.id')
-                ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('training_centers.row_status', $rowStatus);
-            }
-        });
-
-        $trainerBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
-            $join->on('trainers.branch_id', '=', 'branches.id')
-                ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
             }
         });
 
@@ -217,12 +195,6 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
-            'trainers.training_center_id',
-            'training_centers.title_en as training_centers_title_en',
-            'training_centers.title_bn as training_centers_title_bn',
-            'trainers.branch_id',
-            'branches.title_en as branches_title_en',
-            'branches.title_bn as branches_title_bn',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
@@ -266,16 +238,6 @@ class TrainerService
         $trainerBuilder->join("institutes", function ($join) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-        });
-
-        $trainerBuilder->leftJoin("training_centers", function ($join) {
-            $join->on('trainers.training_center_id', '=', 'training_centers.id')
-                ->whereNull('training_centers.deleted_at');
-        });
-
-        $trainerBuilder->leftjoin("branches", function ($join) {
-            $join->on('trainers.branch_id', '=', 'branches.id')
-                ->whereNull('branches.deleted_at');
         });
 
         $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
@@ -397,16 +359,6 @@ class TrainerService
                 'int',
                 'exists:institutes,id'
             ],
-            'branch_id' => [
-                'nullable',
-                'int',
-                'exists:branches,id'
-            ],
-            'training_center_id' => [
-                'nullable',
-                'int',
-                'exists:training_centers,id'
-            ],
             'trainer_registration_number' => [
                 'required',
                 'string',
@@ -454,14 +406,6 @@ class TrainerService
             'passport_number' => [
                 'nullable',
                 'string'
-            ],
-            'physical_disabilities_status' => [
-                'nullable',
-                'int'
-            ],
-            'freedom_fighter_status' => [
-                'nullable',
-                'int'
             ],
             'present_address_division_id' => [
                 'nullable',
@@ -546,8 +490,6 @@ class TrainerService
             'trainers.trainer_name_en',
             'trainers.trainer_name_bn',
             'trainers.institute_id',
-            'trainers.training_center_id',
-            'trainers.branch_id',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
@@ -557,8 +499,6 @@ class TrainerService
             'trainers.nationality as nationality',
             'trainers.nid',
             'trainers.passport_number as passport_number',
-            'trainers.physical_disabilities_status as physical_disabilities_status',
-            'trainers.freedom_fighter_status as freedom_fighter_status',
             'trainers.present_address_division_id as present_address_division_id',
             'trainers.present_address_district_id as present_address_district_id',
             'trainers.present_address_upazila_id as present_address_upazila_id',
