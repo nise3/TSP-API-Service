@@ -313,149 +313,6 @@ class TrainerService
         return $trainer->delete();
     }
 
-    /**
-     * @param Request $request
-     * @param int|null $id
-     * @return Validator
-     */
-    public function validator(Request $request, int $id = null): Validator
-    {
-        $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
-        ];
-
-        $rules = [
-            'trainer_name_en' => [
-                'required',
-                'string',
-                'max:191'
-            ],
-            'trainer_name_bn' => [
-                'required',
-                'string',
-                'max:1000'
-            ],
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id'
-            ],
-            'trainer_registration_number' => [
-                'required',
-                'string',
-                'unique:trainers,trainer_registration_number,' . $id
-            ],
-            'email' => [
-                'required',
-                'string',
-                'unique:trainers,email,' . $id
-            ],
-            'mobile' => [
-                'required',
-                'string',
-                'unique:trainers,mobile,' . $id
-            ],
-            'date_of_birth' => [
-                'required',
-//                'date-time'
-                'date'
-            ],
-            'about_me' => [
-                'nullable',
-                'string'
-            ],
-            'gender' => [
-                'nullable',
-                'int'
-            ],
-            'marital_status' => [
-                'nullable',
-                'int'
-            ],
-            'religion' => [
-                'nullable',
-                'int'
-            ],
-            'nationality' => [
-                'required',
-                'string'
-            ],
-            'nid' => [
-                'nullable',
-                'string'
-            ],
-            'passport_number' => [
-                'nullable',
-                'string'
-            ],
-            'present_address_division_id' => [
-                'nullable',
-                'int',
-                'exists:divisions,id'
-            ],
-            'present_address_district_id' => [
-                'nullable',
-                'int',
-                'exists:districts,id'
-            ],
-            'present_address_upazila_id' => [
-                'nullable',
-                'int',
-                'exists:upazilas,id'
-            ],
-            'present_house_address' => [
-                'nullable',
-                'string'
-            ],
-            'permanent_address_division_id' => [
-                'nullable',
-                'int',
-                'exists:divisions,id'
-            ],
-            'permanent_address_district_id' => [
-                'nullable',
-                'int',
-                'exists:districts,id'
-            ],
-            'permanent_address_upazila_id' => [
-                'nullable',
-                'int',
-                'exists:upazilas,id'
-            ],
-            'permanent_house_address' => [
-                'nullable',
-                'string'
-            ],
-            'educational_qualification' => [
-                'nullable',
-                'string'
-            ],
-            'skills' => [
-                'nullable',
-                'string'
-            ],
-            'photo' => [
-                'nullable',
-                'string'
-            ],
-            'signature' => [
-                'nullable',
-                'string'
-            ],
-            'row_status' => [
-                'required_if:' . $id . ',!=,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
-            ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
-        ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
-    }
-
-
     public function getTrainerTrashList(Request $request, Carbon $startTime): array
     {
         $limit = $request->query('limit', 10);
@@ -536,6 +393,148 @@ class TrainerService
     public function forceDelete(Trainer $trainer): bool
     {
         return $trainer->forceDelete();
+    }
+
+
+    /**
+     * @param Request $request
+     * @param int|null $id
+     * @return Validator
+     */
+    public function validator(Request $request, int $id = null): Validator
+    {
+        $customMessage = [
+            'row_status.in' => [
+                'code' => 30000,
+                'message' => 'Row status must be within 1 or 0'
+            ]
+        ];
+
+        $rules = [
+            'trainer_name_en' => [
+                'required',
+                'string',
+                'max:191'
+            ],
+            'trainer_name_bn' => [
+                'required',
+                'string',
+                'max:1000'
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id'
+            ],
+            'trainer_registration_number' => [
+                'required',
+                'string',
+                'unique:trainers,trainer_registration_number,' . $id
+            ],
+            'email' => [
+                'required',
+                'string',
+                'unique:trainers,email,' . $id
+            ],
+            'mobile' => [
+                'required',
+                'string',
+                'unique:trainers,mobile,' . $id
+            ],
+            'date_of_birth' => [
+                'required',
+                'date'
+            ],
+            'about_me' => [
+                'nullable',
+                'string'
+            ],
+            'gender' => [
+                'nullable',
+                'int'
+            ],
+            'marital_status' => [
+                'nullable',
+                'int'
+            ],
+            'religion' => [
+                'nullable',
+                'int'
+            ],
+            'nationality' => [
+                'required',
+                'string'
+            ],
+            'nid' => [
+                'nullable',
+                'string'
+            ],
+            'passport_number' => [
+                'nullable',
+                'string'
+            ],
+            'present_address_division_id' => [
+                'nullable',
+                'int',
+                'exists:loc_divisions,id'
+            ],
+            'present_address_district_id' => [
+                'nullable',
+                'int',
+                'exists:loc_districts,id'
+            ],
+            'present_address_upazila_id' => [
+                'nullable',
+                'int',
+                'exists:loc_upazilas,id'
+            ],
+            'present_house_address' => [
+                'nullable',
+                'string'
+            ],
+            'permanent_address_division_id' => [
+                'nullable',
+                'int',
+                'exists:loc_divisions,id'
+            ],
+            'permanent_address_district_id' => [
+                'nullable',
+                'int',
+                'exists:loc_districts,id'
+            ],
+            'permanent_address_upazila_id' => [
+                'nullable',
+                'int',
+                'exists:loc_upazilas,id'
+            ],
+            'permanent_house_address' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification' => [
+                'nullable',
+                'string'
+            ],
+            'skills' => [
+                'nullable',
+                'string'
+            ],
+            'photo' => [
+                'nullable',
+                'string'
+            ],
+            'signature' => [
+                'nullable',
+                'string'
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+            'created_by' => ['nullable', 'integer', 'max:10'],
+            'updated_by' => ['nullable', 'integer', 'max:10'],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
     public function filterValidator(Request $request): Validator

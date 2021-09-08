@@ -3691,6 +3691,13 @@
                         }
                     },
                     {
+                        "name": "permanent_address_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "permanent_address_district_id",
                         "in": "query",
                         "schema": {
@@ -4049,6 +4056,13 @@
                         "in": "query",
                         "schema": {
                             "type": "string"
+                        }
+                    },
+                    {
+                        "name": "permanent_address_division_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
                         }
                     },
                     {
