@@ -135,7 +135,7 @@ class InstituteService
     {
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
-            'institutes.id as id',
+            'institutes.id',
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
@@ -234,10 +234,10 @@ class InstituteService
                 'regex:/^[0-9]*$/'
             ],
             'phone_numbers' => ['array'],
-            'phone_numbers.*' => ['string', 'regex:/^[0-9]*$/'],
+            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
             'primary_mobile' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
                 'nullable',
                 'string',

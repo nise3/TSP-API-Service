@@ -148,14 +148,30 @@ paths:
           schema:
             type: string
           example: '01845654543'
-        - $ref: '#/components/parameters/phone_numbers'
+        - name: phone_numbers
+          in: query
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: primary_mobile
           in: query
           required: false
           schema:
             type: string
           example: '01845654543'
-        - $ref: '#/components/parameters/mobile_numbers'
+        - name: mobile_numbers
+          in: query
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: email
           in: query
           required: false
@@ -212,38 +228,36 @@ paths:
                 $ref: '#/components/schemas/institutes'
               example:
                 data:
-                  id: 13
-                  title_en: PROGRAMME ON RMG45
-                  title_bn: আরএমজি-প্রোগ্রাম45
-                  code: AE4555
-                  logo: defaults.jpg
-                  primary_phone: '01845654543'
-                  phone_numbers: '01845654543'
-                  primary_mobile: '01845654543'
-                  mobile_numbers: '01845654543'
-                  email: example@gmail.com
-                  config: This is config
-                  loc_division_id: 1
-                  division_title_bn: বরিশাল
-                  division_title_en: Barisal
-                  loc_district_id: 1
-                  district_title_bn: বরগুনা
-                  district_title_en: BARGUNA
-                  loc_upazila_id: 1
-                  upazila_title_bn: 'আমতলী '
-                  upazila_title_en: AMTALI
-                  domain: https://developesr.com
+                  title_en: PROGRAMME ON RMG4s
+                  title_bn: আরএমজি-প্রোগ্রাম4s
+                  code: AE455K
+                  domain: https://develosper.com
                   address: Dhaka mirpur road 4 block 2s
-                  google_map_src: https://goo.gl/maps/fkjNYmWfEXLQUDnm6
-                  row_status: 1
-                  created_by: 1
-                  updated_by: 1
-                  created_at: '2021-09-05T04:27:43.000000Z'
-                  updated_at: '2021-09-05T04:27:43.000000Z'
+                  google_map_src: https://goo.gl/maps/fkjNYsmWfEXLQUDnm6
+                  primary_phone: '01845654541'
+                  phone_numbers:
+                    - '01845654542'
+                    - '01845654544'
+                  primary_mobile: '01845654543'
+                  mobile_numbers:
+                    - '01845654545'
+                    - '01845654546'
+                  logo: defasult.jpg
+                  email: exampsle@gmail.com
+                  config: This is configs
+                  loc_division_id: '1'
+                  loc_district_id: '1'
+                  loc_upazila_id: '1'
+                  row_status: '1'
+                  created_by: '1'
+                  updated_by: '1'
+                  updated_at: '2021-09-05T09:59:59.000000Z'
+                  created_at: '2021-09-05T09:59:59.000000Z'
+                  id: 11
                 _response_status:
                   success: true
                   code: 201
-                  message: Institute added successfully.
+                  message: Institute added successfully
                   query_time: 0
   /institutes/{instituteId}:
     get:
@@ -367,14 +381,30 @@ paths:
           schema:
             type: string
           example: '01845654543'
-        - $ref: '#/components/parameters/phone_numbers'
+        - name: phone_numbers
+          in: query
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: primary_mobile
           in: query
           required: false
           schema:
             type: string
           example: '01845654543'
-        - $ref: '#/components/parameters/mobile_numbers'
+        - name: mobile_numbers
+          in: query
+          content:
+            multipart/form-data:
+              schema:
+                type: array
+                items:
+                  type: integer
+                  uniqueItems: true
         - name: email
           in: query
           required: false
@@ -436,10 +466,14 @@ paths:
                   title_bn: আরএমজি-প্রোগ্রাম45
                   code: AE4555
                   logo: defaults.jpg
-                  primary_phone: '01845654543'
-                  phone_numbers: '01845654543'
+                  primary_phone: '01845654541'
+                  phone_numbers:
+                    - '01845654542'
+                    - '01845654544'
                   primary_mobile: '01845654543'
-                  mobile_numbers: '01845654543'
+                  mobile_numbers:
+                    - '01845654545'
+                    - '01845654546'
                   email: example@gmail.com
                   config: This is config
                   loc_division_id: 1
@@ -461,8 +495,8 @@ paths:
                   updated_at: '2021-09-05T04:27:43.000000Z'
                 _response_status:
                   success: true
-                  code: 200
-                  message: Institute update successfully.
+                  code: 201
+                  message: Institute added successfully
                   query_time: 0
     delete:
       tags:
@@ -1982,94 +2016,43 @@ paths:
                 $ref: '#/components/schemas/trainerBatch'
               example:
                 data:
-                  - id: 1
-                    institute_id: 1
-                    branch_id: 2
-                    training_center_id: 1
-                    trainer_name_en: Demond McCullough
-                    trainer_name_bn: Tyra Anderson PhD
-                    trainer_registration_number: 9332a6d9-779d-3703-b973-6711b9fc5c5a
-                    email: jzboncak@example.com
-                    mobile: 484-747-7626
-                    date_of_birth: null
-                    about_me: Voluptatum et pariatur itaque occaecati molestiae incidunt.
-                    gender: 2
-                    marital_status: 1
-                    religion: 1
-                    nationality: Voluptatem nihil quaerat aspernatur blanditiis voluptatem sed.
-                    nid: Occaecati dolores molestias est.
-                    passport_number: '647281539'
-                    physical_disabilities_status: 1
-                    freedom_fighter_status: 0
-                    present_address_division_id: 1
-                    present_address_district_id: 8
-                    present_address_upazila_id: 720
-                    present_house_address: |-
-                      355 Spinka Mountains
-                      West Kaylahburgh, WI 36197
-                    permanent_address_division_id: 1
-                    permanent_address_district_id: 6
-                    permanent_address_upazila_id: 9
-                    permanent_house_address: |-
-                      933 McKenzie Radial
-                      South Casper, SC 39841-7989
-                    educational_qualification: Id voluptatem consectetur ex sed vero et.
-                    skills: Doloremque odit nemo ex quo sunt.
-                    photo: softbd.jpg
-                    signature: Kelley Brakus
-                    row_status: 1
-                    created_by: null
-                    updated_by: null
-                    deleted_at: null
-                    created_at: '2021-09-05T05:42:55.000000Z'
-                    updated_at: '2021-09-05T05:42:55.000000Z'
-                    pivot:
-                      batch_id: 1
-                      trainer_id: 1
-                  - id: 2
-                    institute_id: 1
-                    branch_id: 1
-                    training_center_id: 1
-                    trainer_name_en: Beau Dibbert
-                    trainer_name_bn: Clementine VonRueden Jr.
-                    trainer_registration_number: cd3e70a7-66af-341a-b65b-81ec005960d4
-                    email: mohr.cecelia@example.net
-                    mobile: (520) 822-9719
-                    date_of_birth: null
-                    about_me: Repellat excepturi inventore laboriosam eius occaecati neque cumque vero.
-                    gender: 3
-                    marital_status: 0
-                    religion: 4
-                    nationality: Et molestias esse quidem cumque voluptatem tempora.
-                    nid: Explicabo harum et velit iste tempora in vitae.
-                    passport_number: '974835621'
-                    physical_disabilities_status: 0
-                    freedom_fighter_status: 0
-                    present_address_division_id: 0
-                    present_address_district_id: 5
-                    present_address_upazila_id: 24591
-                    present_house_address: |-
-                      154 Nash Dale Suite 651
-                      East Carlotown, AR 23986
-                    permanent_address_division_id: 9
-                    permanent_address_district_id: 0
-                    permanent_address_upazila_id: 3
-                    permanent_house_address: |-
-                      79986 Yundt Locks Apt. 633
-                      New Marvinview, RI 94880
-                    educational_qualification: Repellat ipsum consequatur commodi nobis.
-                    skills: Voluptates aut repellat sit ut officiis ducimus sequi.
-                    photo: softbd.jpg
-                    signature: River Pfannerstill
-                    row_status: 1
-                    created_by: null
-                    updated_by: null
-                    deleted_at: null
-                    created_at: '2021-09-05T05:42:55.000000Z'
-                    updated_at: '2021-09-05T05:42:55.000000Z'
-                    pivot:
-                      batch_id: 1
-                      trainer_id: 2
+                  id: 13
+                  institute_id: 1
+                  branch_id: 1
+                  training_center_id: null
+                  trainer_name_en: assdsddf
+                  trainer_name_bn: asfsdfsdf
+                  trainer_registration_number: '434235232'
+                  email: asdfqwr@gmailcom
+                  mobile: '09877654321'
+                  date_of_birth: null
+                  about_me: null
+                  gender: 1
+                  marital_status: 0
+                  religion: null
+                  nationality: ''
+                  nid: null
+                  passport_number: null
+                  physical_disabilities_status: 0
+                  freedom_fighter_status: 0
+                  present_address_division_id: null
+                  present_address_district_id: null
+                  present_address_upazila_id: null
+                  present_house_address: null
+                  permanent_address_division_id: null
+                  permanent_address_district_id: null
+                  permanent_address_upazila_id: null
+                  permanent_house_address: null
+                  educational_qualification: null
+                  skills: null
+                  photo: null
+                  signature: null
+                  row_status: 1
+                  created_by: null
+                  updated_by: null
+                  deleted_at: null
+                  created_at: '2021-08-22T12:32:35.000000Z'
+                  updated_at: '2021-08-22T12:32:35.000000Z'
                 _response_status:
                   success: true
                   code: 200
@@ -2609,12 +2592,7 @@ paths:
 
         A successful request response will show 201 HTTP status code
       parameters:
-        - name: trainer_name_en
-          in: query
-          required: true
-          schema:
-            type: string
-          example: Tikka Khan
+        - $ref: '#/components/parameters/trainer_name_en'
         - name: trainer_name_bn
           in: query
           required: true
@@ -2657,6 +2635,8 @@ paths:
           in: query
           schema:
             type: string
+            format: date
+            example: '2000-01-01'
         - name: about_me
           in: query
           schema:
@@ -2678,6 +2658,7 @@ paths:
           example: '1'
         - name: nationality
           in: query
+          required: true
           schema:
             type: string
         - name: nid
@@ -2688,14 +2669,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: physical_disabilities_status
-          in: query
-          schema:
-            type: integer
-        - name: freedom_fighter_status
-          in: query
-          schema:
-            type: integer
         - name: present_address_division_id
           in: query
           schema:
@@ -2920,6 +2893,8 @@ paths:
           in: query
           schema:
             type: string
+            format: date
+            example: '2021-01-01'
         - name: about_me
           in: query
           schema:
@@ -2941,6 +2916,7 @@ paths:
           example: '1'
         - name: nationality
           in: query
+          required: true
           schema:
             type: string
         - name: nid
@@ -2951,14 +2927,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: physical_disabilities_status
-          in: query
-          schema:
-            type: integer
-        - name: freedom_fighter_status
-          in: query
-          schema:
-            type: integer
         - name: present_address_division_id
           in: query
           schema:
@@ -3711,25 +3679,3 @@ components:
           guardian_info:
             - true
             - false
-    phone_numbers:
-      name: phone_numbers
-      in: query
-      content:
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              type: string
-              uniqueItems: true
-              example: 1-239-374-1854
-    mobile_numbers:
-      name: mobile_numbers
-      in: query
-      content:
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              type: string
-              uniqueItems: true
-              example: '017671113324'
