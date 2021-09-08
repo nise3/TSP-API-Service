@@ -12,6 +12,9 @@ $customRouter = function (string $as = '') use ($router) {
 
 $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($router, $customRouter) {
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
+
+    $router->post('/file-upload', ['as' => 'api-info', 'uses' => 'ApiInfoController@fileUpload']);
+
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     $customRouter()->resourceRoute('programmes', 'ProgrammeController')->render();
     $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();

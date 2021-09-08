@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Helpers\Classes\FileHandler;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class ApiInfoController extends Controller
 {
@@ -31,5 +36,23 @@ class ApiInfoController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function fileUpload(Request $request)
+    {
+        try {
+            $directory='uploads/'.date('Y/F');
+            $fileHandler=new FileHandler();
+            $path=$fileHandler->storePhoto($request->file,$directory);
+            $response= [
+                "data"=>url('/').'/api/v1/'.$path,
+                '_response_status'=>[
+                    "success"=>true
+                ]
+            ];
+        }catch (Throwable $e){
+            return $e;
+        }
+        return Response::json($response);
     }
 }
