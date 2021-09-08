@@ -2016,94 +2016,43 @@ paths:
                 $ref: '#/components/schemas/trainerBatch'
               example:
                 data:
-                  - id: 1
-                    institute_id: 1
-                    branch_id: 2
-                    training_center_id: 1
-                    trainer_name_en: Demond McCullough
-                    trainer_name_bn: Tyra Anderson PhD
-                    trainer_registration_number: 9332a6d9-779d-3703-b973-6711b9fc5c5a
-                    email: jzboncak@example.com
-                    mobile: 484-747-7626
-                    date_of_birth: null
-                    about_me: Voluptatum et pariatur itaque occaecati molestiae incidunt.
-                    gender: 2
-                    marital_status: 1
-                    religion: 1
-                    nationality: Voluptatem nihil quaerat aspernatur blanditiis voluptatem sed.
-                    nid: Occaecati dolores molestias est.
-                    passport_number: '647281539'
-                    physical_disabilities_status: 1
-                    freedom_fighter_status: 0
-                    present_address_division_id: 1
-                    present_address_district_id: 8
-                    present_address_upazila_id: 720
-                    present_house_address: |-
-                      355 Spinka Mountains
-                      West Kaylahburgh, WI 36197
-                    permanent_address_division_id: 1
-                    permanent_address_district_id: 6
-                    permanent_address_upazila_id: 9
-                    permanent_house_address: |-
-                      933 McKenzie Radial
-                      South Casper, SC 39841-7989
-                    educational_qualification: Id voluptatem consectetur ex sed vero et.
-                    skills: Doloremque odit nemo ex quo sunt.
-                    photo: softbd.jpg
-                    signature: Kelley Brakus
-                    row_status: 1
-                    created_by: null
-                    updated_by: null
-                    deleted_at: null
-                    created_at: '2021-09-05T05:42:55.000000Z'
-                    updated_at: '2021-09-05T05:42:55.000000Z'
-                    pivot:
-                      batch_id: 1
-                      trainer_id: 1
-                  - id: 2
-                    institute_id: 1
-                    branch_id: 1
-                    training_center_id: 1
-                    trainer_name_en: Beau Dibbert
-                    trainer_name_bn: Clementine VonRueden Jr.
-                    trainer_registration_number: cd3e70a7-66af-341a-b65b-81ec005960d4
-                    email: mohr.cecelia@example.net
-                    mobile: (520) 822-9719
-                    date_of_birth: null
-                    about_me: Repellat excepturi inventore laboriosam eius occaecati neque cumque vero.
-                    gender: 3
-                    marital_status: 0
-                    religion: 4
-                    nationality: Et molestias esse quidem cumque voluptatem tempora.
-                    nid: Explicabo harum et velit iste tempora in vitae.
-                    passport_number: '974835621'
-                    physical_disabilities_status: 0
-                    freedom_fighter_status: 0
-                    present_address_division_id: 0
-                    present_address_district_id: 5
-                    present_address_upazila_id: 24591
-                    present_house_address: |-
-                      154 Nash Dale Suite 651
-                      East Carlotown, AR 23986
-                    permanent_address_division_id: 9
-                    permanent_address_district_id: 0
-                    permanent_address_upazila_id: 3
-                    permanent_house_address: |-
-                      79986 Yundt Locks Apt. 633
-                      New Marvinview, RI 94880
-                    educational_qualification: Repellat ipsum consequatur commodi nobis.
-                    skills: Voluptates aut repellat sit ut officiis ducimus sequi.
-                    photo: softbd.jpg
-                    signature: River Pfannerstill
-                    row_status: 1
-                    created_by: null
-                    updated_by: null
-                    deleted_at: null
-                    created_at: '2021-09-05T05:42:55.000000Z'
-                    updated_at: '2021-09-05T05:42:55.000000Z'
-                    pivot:
-                      batch_id: 1
-                      trainer_id: 2
+                  id: 13
+                  institute_id: 1
+                  branch_id: 1
+                  training_center_id: null
+                  trainer_name_en: assdsddf
+                  trainer_name_bn: asfsdfsdf
+                  trainer_registration_number: '434235232'
+                  email: asdfqwr@gmailcom
+                  mobile: '09877654321'
+                  date_of_birth: null
+                  about_me: null
+                  gender: 1
+                  marital_status: 0
+                  religion: null
+                  nationality: ''
+                  nid: null
+                  passport_number: null
+                  physical_disabilities_status: 0
+                  freedom_fighter_status: 0
+                  present_address_division_id: null
+                  present_address_district_id: null
+                  present_address_upazila_id: null
+                  present_house_address: null
+                  permanent_address_division_id: null
+                  permanent_address_district_id: null
+                  permanent_address_upazila_id: null
+                  permanent_house_address: null
+                  educational_qualification: null
+                  skills: null
+                  photo: null
+                  signature: null
+                  row_status: 1
+                  created_by: null
+                  updated_by: null
+                  deleted_at: null
+                  created_at: '2021-08-22T12:32:35.000000Z'
+                  updated_at: '2021-08-22T12:32:35.000000Z'
                 _response_status:
                   success: true
                   code: 200
@@ -2581,6 +2530,12 @@ paths:
                   institute_id: 1
                   institutes_title_en: Hellen Mante
                   institutes_title_bn: Brenda McDermott
+                  training_center_id: 2
+                  training_centers_title_en: Ms. Shanel Hayes
+                  training_centers_title_bn: Karli Fisher
+                  branch_id: 1
+                  branches_title_en: Annamae Rippin
+                  branches_title_bn: Hanna McLaughlin
                   email: ernestina.predovic@example.org
                   date_of_birth: null
                   about_me: Quis sit saepe expedita officiis et totam molestiae.
@@ -2590,6 +2545,8 @@ paths:
                   nationality: Reprehenderit labore error provident ut et voluptatem.
                   nid: 'Eaque dignissimos placeat deleniti eius quibusdam '
                   passport_number: '839251467'
+                  physical_disabilities_status: 1
+                  freedom_fighter_status: 0
                   present_address_division_id: 4
                   division_title_bn_present_address: খুলনা
                   division_title_en_present_address: Khulna
@@ -2635,12 +2592,7 @@ paths:
 
         A successful request response will show 201 HTTP status code
       parameters:
-        - name: trainer_name_en
-          in: query
-          required: true
-          schema:
-            type: string
-          example: Tikka Khan
+        - $ref: '#/components/parameters/trainer_name_en'
         - name: trainer_name_bn
           in: query
           required: true
@@ -2653,9 +2605,18 @@ paths:
           schema:
             type: integer
           example: '1'
+        - name: branch_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: training_center_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
         - name: trainer_registration_number
           in: query
-          required: true
           schema:
             type: string
           example: '4455'
@@ -2667,15 +2628,15 @@ paths:
           example: asdf@gmail.com
         - name: mobile
           in: query
-          required: true
           schema:
             type: string
           example: '01844676535'
         - name: date_of_birth
           in: query
-          required: true
           schema:
             type: string
+            format: date
+            example: '2000-01-01'
         - name: about_me
           in: query
           schema:
@@ -2697,6 +2658,7 @@ paths:
           example: '1'
         - name: nationality
           in: query
+          required: true
           schema:
             type: string
         - name: nid
@@ -2723,10 +2685,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: permanent_address_division_id
-          in: query
-          schema:
-            type: integer
         - name: permanent_address_district_id
           in: query
           schema:
@@ -2760,16 +2718,6 @@ paths:
           schema:
             type: integer
           example: '1'
-        - name: created_by
-          in: query
-          schema:
-            type: integer
-          example: '1'
-        - name: updated_by
-          in: query
-          schema:
-            type: integer
-          example: '1'
       responses:
         '201':
           description: Created
@@ -2779,38 +2727,21 @@ paths:
                 $ref: '#/components/schemas/trainers'
               example:
                 data:
-                  trainer_name_en: Tikka Khan post
+                  trainer_name_en: Tikka Khan
                   trainer_name_bn: আরএমজি
                   institute_id: '1'
-                  trainer_registration_number: A4455
-                  email: asdf@gmail.com
-                  mobile: '01844676535'
-                  date_of_birth: 1/2/2001
-                  about_me: adfd
+                  branch_id: '1'
+                  training_center_id: '1'
+                  trainer_registration_number: '445511'
+                  email: asdfsdf@gmail.com
+                  mobile: '01804676535'
                   gender: '1'
                   marital_status: '0'
                   religion: '1'
-                  nationality: bang
-                  nid: '0303'
-                  passport_number: '0300303'
-                  present_address_division_id: '1'
-                  present_address_district_id: '1'
-                  present_address_upazila_id: '1'
-                  present_house_address: sd
-                  permanent_address_division_id: '1'
-                  permanent_address_district_id: '1'
-                  permanent_address_upazila_id: '1'
-                  permanent_house_address: '1'
-                  educational_qualification: adf
-                  skills: sda
-                  photo: asdf
-                  signature: sadf
                   row_status: '1'
-                  created_by: '1'
-                  updated_by: '1'
-                  updated_at: '2021-09-05T07:14:55.000000Z'
-                  created_at: '2021-09-05T07:14:55.000000Z'
-                  id: 31
+                  updated_at: '2021-08-23T04:46:11.000000Z'
+                  created_at: '2021-08-23T04:46:11.000000Z'
+                  id: 20
                 _response_status:
                   success: true
                   code: 201
@@ -2848,6 +2779,12 @@ paths:
                   institute_id: 1
                   institutes_title_en: Hellen Mante
                   institutes_title_bn: Brenda McDermott
+                  training_center_id: 2
+                  training_centers_title_en: Ms. Shanel Hayes
+                  training_centers_title_bn: Karli Fisher
+                  branch_id: 1
+                  branches_title_en: Annamae Rippin
+                  branches_title_bn: Hanna McLaughlin
                   email: ernestina.predovic@example.org
                   date_of_birth: null
                   about_me: Quis sit saepe expedita officiis et totam molestiae.
@@ -2857,6 +2794,8 @@ paths:
                   nationality: Reprehenderit labore error provident ut et voluptatem.
                   nid: 'Eaque dignissimos placeat deleniti eius quibusdam '
                   passport_number: '839251467'
+                  physical_disabilities_status: 1
+                  freedom_fighter_status: 0
                   present_address_division_id: 4
                   division_title_bn_present_address: খুলনা
                   division_title_en_present_address: Khulna
@@ -2924,9 +2863,18 @@ paths:
           schema:
             type: integer
           example: '1'
+        - name: branch_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
+        - name: training_center_id
+          in: query
+          schema:
+            type: integer
+          example: '1'
         - name: trainer_registration_number
           in: query
-          required: true
           schema:
             type: string
           example: '4455'
@@ -2938,15 +2886,15 @@ paths:
           example: asdf@gmail.com
         - name: mobile
           in: query
-          required: true
           schema:
             type: string
           example: '01844676535'
         - name: date_of_birth
           in: query
-          required: true
           schema:
             type: string
+            format: date
+            example: '2021-01-01'
         - name: about_me
           in: query
           schema:
@@ -2968,6 +2916,7 @@ paths:
           example: '1'
         - name: nationality
           in: query
+          required: true
           schema:
             type: string
         - name: nid
@@ -2994,10 +2943,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: permanent_address_division_id
-          in: query
-          schema:
-            type: integer
         - name: permanent_address_district_id
           in: query
           schema:
@@ -3031,16 +2976,6 @@ paths:
           schema:
             type: integer
           example: '1'
-        - name: created_by
-          in: query
-          schema:
-            type: integer
-          example: '1'
-        - name: updated_by
-          in: query
-          schema:
-            type: integer
-          example: '1'
       responses:
         '201':
           description: Created
@@ -3068,8 +3003,8 @@ paths:
                   eligibility: null
                   cover_image: null
                   row_status: 1
-                  created_by: 1
-                  updated_by: 1
+                  created_by: null
+                  updated_by: null
                   created_at: '2021-08-17T10:34:07.000000Z'
                   updated_at: '2021-08-17T10:34:07.000000Z'
                 _response_status:
@@ -3105,80 +3040,6 @@ paths:
                   success: true
                   code: 200
                   message: Trainer delete successfully.
-                  query_time: 0
-  /trainers/{trainerId}/assign-trainer-to-batch:
-    post:
-      parameters:
-        - name: trainerId
-          in: path
-          description: trainer id
-          required: true
-          schema:
-            type: integer
-            example: '1'
-        - name: batchIds
-          in: query
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: array
-                items:
-                  type: integer
-                  uniqueItems: true
-      tags:
-        - trainers
-      summary: get_one
-      description: |-
-        ###### API endpoint to get a programme by trainer id
-
-        A successful request response will show 200 HTTP status code
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/trainerBatch'
-              example:
-                data:
-                  id: 13
-                  institute_id: 1
-                  trainer_name_en: assdsddf
-                  trainer_name_bn: asfsdfsdf
-                  trainer_registration_number: '434235232'
-                  email: asdfqwr@gmailcom
-                  mobile: '09877654321'
-                  date_of_birth: null
-                  about_me: null
-                  gender: 1
-                  marital_status: 0
-                  religion: null
-                  nationality: ''
-                  nid: null
-                  passport_number: null
-                  present_address_division_id: null
-                  present_address_district_id: null
-                  present_address_upazila_id: null
-                  present_house_address: null
-                  permanent_address_division_id: null
-                  permanent_address_district_id: null
-                  permanent_address_upazila_id: null
-                  permanent_house_address: null
-                  educational_qualification: null
-                  skills: null
-                  photo: null
-                  signature: null
-                  row_status: 1
-                  created_by: null
-                  updated_by: null
-                  deleted_at: null
-                  created_at: '2021-08-22T12:32:35.000000Z'
-                  updated_at: '2021-08-22T12:32:35.000000Z'
-                _response_status:
-                  success: true
-                  code: 200
-                  message: trainer added to batch successfully
                   query_time: 0
 components:
   schemas:
@@ -3444,6 +3305,10 @@ components:
           readOnly: true
         institute_id:
           type: integer
+        branch_id:
+          type: integer
+        training_center_id:
+          type: integer
         trainer_name_en:
           type: integer
         trainer_name_bn:
@@ -3490,6 +3355,20 @@ components:
           type: string
         passport_number:
           type: string
+        physical_disabilities_status:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: 0=>No, 1=>Yes
+          default: 0
+        freedom_fighter_status:
+          type: integer
+          enum:
+            - 0
+            - 1
+          description: 0=>No, 1=>Yes
+          default: 0
         present_address_division_id:
           type: integer
         present_address_district_id:
@@ -3800,25 +3679,3 @@ components:
           guardian_info:
             - true
             - false
-    phone_numbers:
-      name: phone_numbers
-      in: query
-      content:
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              type: string
-              uniqueItems: true
-              example: 1-239-374-1854
-    mobile_numbers:
-      name: mobile_numbers
-      in: query
-      content:
-        multipart/form-data:
-          schema:
-            type: array
-            items:
-              type: string
-              uniqueItems: true
-              example: '017671113324'

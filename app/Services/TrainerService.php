@@ -393,15 +393,18 @@ class TrainerService
             ],
             'present_address_division_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:divisions,id'
             ],
             'present_address_district_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:districts,id'
             ],
             'present_address_upazila_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:upazilas,id'
             ],
             'present_house_address' => [
                 'nullable',
@@ -409,15 +412,18 @@ class TrainerService
             ],
             'permanent_address_division_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:divisions,id'
             ],
             'permanent_address_district_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:districts,id'
             ],
             'permanent_address_upazila_id' => [
                 'nullable',
-                'int'
+                'int',
+                'exists:upazilas,id'
             ],
             'permanent_house_address' => [
                 'nullable',
