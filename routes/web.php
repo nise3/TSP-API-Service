@@ -3,6 +3,9 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
+use App\Models\BaseModel;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Http;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -13,7 +16,64 @@ $customRouter = function (string $as = '') use ($router) {
 $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($router, $customRouter) {
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
-    $router->post('/file-upload', ['as' => 'api-info', 'uses' => 'ApiInfoController@fileUpload']);
+    $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
+
+    $router->post('/auth-idp',function (){
+//        $curl =  Http::dd()->asForm()->contentType("application/json")
+//            ->withoutVerifying()
+//            ->post("https://admin:admin@identity.bus.softbd.xyz/scim2/user",
+//                [
+//                    "schemas" => [
+//                    ],
+//                    "name" => [
+//                        "familyName" => "Test User Name",
+//                        "givenName" => "Test User Name",
+//                    ],
+//                    "userName" =>  "piyal",
+//                    "password" => "123456",
+//                    "emails" => [
+//                        0 => [
+//                            "primary" => true,
+//                            "value" => "testuser.work@gmail.com",
+//                            "type" => "work",
+//                        ],
+//                        1 => [
+//                            "value" => "testuser.home@gmail.com",
+//                            "type" => "home"
+//                        ],
+//                    ],
+//                ]
+//            );
+
+        $client   = new Client();
+        $config=[
+            'verify'=>false,
+            'data'=>[
+                'schemas' => [
+                ],
+                'name' => [
+                    'familyName' => 'title_en',
+                    'givenName' => 'title_en',
+                ],
+                'userName' =>  'title_en',
+                'password' => "123456",
+                'emails' => [
+                    0 => [
+                        'primary' => true,
+                        'value' => 'email',
+                        'type' => 'work',
+                    ],
+                    1 => [
+                        'value' => 'email',
+                        'type' => 'home',
+                    ],
+                ],
+            ]
+        ];
+        $client=$client->post(BaseModel::INSTITUTE_IDP_REGISTRATION_ENDPOINT,$config);
+        return json_decode($client->getBody());
+
+    });
 
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     $customRouter()->resourceRoute('programmes', 'ProgrammeController')->render();

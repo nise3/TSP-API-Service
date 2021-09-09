@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
@@ -269,16 +272,80 @@ class InstituteService
      * @param array $data
      * @return Institute
      */
-    public function store(array $data): Institute
+    public function store(array $data)
     {
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+        $client   = new Client([
+            'base_uri' => BaseModel::INSTITUTE_IDP_REGISTRATION_ENDPOINT
+        ]);
 
-        $institute = new Institute();
-        $institute->fill($data);
-        $institute->save();
-        return $institute;
+        $username="admin";
+        $password="admin";
+
+        $config=[
+            'auth' => ["admin", "admin"],
+            'data'=>[
+                'schemas' => [
+                ],
+                'name' => [
+                    'familyName' => $data['title_en'],
+                    'givenName' => $data['title_en'],
+                ],
+                'userName' =>  $data['title_en'],
+                'password' => "123456",
+                'emails' => [
+                    0 => [
+                        'primary' => true,
+                        'value' => $data['email'],
+                        'type' => 'work',
+                    ],
+                    1 => [
+                        'value' => $data['email'],
+                        'type' => 'home',
+                    ],
+                ],
+            ]
+        ];
+//        $client=$client->request("POST",'users', [
+//            'auth' => ['user', 'pass'],
+//            'verify' => false
+//        ],   $config);
+//        dd($client);
+
+        $curl =  Http::withBasicAuth("admin", "admin")
+            ->withBody(json_encode([
+                'schemas' => [
+                ],
+                'name' => [
+                    'familyName' => $data['title_en'],
+                    'givenName' => $data['title_en'],
+                ],
+                'userName' =>  $data['title_en'],
+                'password' => "123456",
+                'emails' => [
+                    0 => [
+                        'primary' => true,
+                        'value' => $data['email'],
+                        'type' => 'work',
+                    ],
+                    1 => [
+                        'value' => $data['email'],
+                        'type' => 'home',
+                    ],
+                ],
+            ]), "json")
+            ->contentType("application/json")
+            ->withoutVerifying()
+            ->post("https://identity.bus.softbd.xyz/scim2/user");
+
+
+
+//        $institute = new Institute();
+//        $institute->fill($data);
+//        $institute->save();
+        return $curl->json();
     }
 
     /**
