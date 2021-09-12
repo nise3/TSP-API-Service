@@ -39,13 +39,17 @@ class ProgrammeService
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
             'institutes.id as institute_id',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
             'programmes.row_status',
+            'programmes.created_by',
+            'programmes.updated_by',
             'programmes.created_at',
             'programmes.updated_at',
+            'programmes.deleted_at',
         ]);
 
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -109,13 +113,17 @@ class ProgrammeService
             'programmes.title_en',
             'programmes.title_bn',
             'institutes.title_en as institute_title_en',
+            'institutes.title_bn as institute_title_bn',
             'institutes.id as institute_id',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
             'programmes.row_status',
+            'programmes.created_by',
+            'programmes.updated_by',
             'programmes.created_at',
             'programmes.updated_at',
+            'programmes.deleted_at',
         ]);
         $programmeBuilder->join("institutes", function ($join) {
             $join->on('programmes.institute_id', '=', 'institutes.id')

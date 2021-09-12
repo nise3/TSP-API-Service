@@ -36,6 +36,7 @@ class TrainingCenterService
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id',
+            'training_centers.center_location_type',
             'training_centers.title_en',
             'training_centers.title_bn',
             'training_centers.loc_division_id',
@@ -59,7 +60,8 @@ class TrainingCenterService
             'training_centers.created_by',
             'training_centers.updated_by',
             'training_centers.created_at',
-            'training_centers.updated_at'
+            'training_centers.updated_at',
+            'training_centers.deleted_at',
         ]);
 
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -155,6 +157,7 @@ class TrainingCenterService
         /** @var TrainingCenter|Builder $trainingCenterBuilder */
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
+            'training_centers.center_location_type',
             'training_centers.title_en',
             'training_centers.title_bn',
             'training_centers.loc_division_id',
@@ -178,7 +181,8 @@ class TrainingCenterService
             'training_centers.created_by',
             'training_centers.updated_by',
             'training_centers.created_at',
-            'training_centers.updated_at'
+            'training_centers.updated_at',
+            'training_centers.deleted_at',
         ]);
 
         $trainingCenterBuilder->join("institutes", function ($join) {

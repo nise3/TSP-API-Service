@@ -67,7 +67,8 @@ class BatchService
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
-            'batches.updated_at'
+            'batches.updated_at',
+            'batches.deleted_at',
         ]);
 
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -176,7 +177,8 @@ class BatchService
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
-            'batches.updated_at'
+            'batches.updated_at',
+            'batches.deleted_at',
         ]);
 
         $batchBuilder->join("courses", function ($join) {

@@ -51,12 +51,14 @@ class BranchService
             'branches.loc_upazila_id',
             'loc_upazilas.title_bn as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
-            'branches.row_status',
             'branches.address',
             'branches.google_map_src',
             'branches.row_status',
+            'branches.created_by',
+            'branches.updated_by',
             'branches.created_at',
             'branches.updated_at',
+            'branches.deleted_at',
         ]);
 
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -156,12 +158,14 @@ class BranchService
             'branches.loc_upazila_id',
             'loc_upazilas.title_bn as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
-            'branches.row_status',
             'branches.address',
             'branches.google_map_src',
             'branches.row_status',
+            'branches.created_by',
+            'branches.updated_by',
             'branches.created_at',
             'branches.updated_at',
+            'branches.deleted_at',
         ]);
 
         $branchBuilder->join("institutes", function ($join) {

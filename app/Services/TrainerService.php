@@ -44,7 +44,9 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
+            'trainers.trainer_registration_number',
             'trainers.email',
+            'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
             'trainers.gender',
@@ -78,8 +80,11 @@ class TrainerService
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
+            'trainers.created_by',
+            'trainers.updated_by',
             'trainers.created_at',
             'trainers.updated_at',
+            'trainers.deleted_at',
         ]);
 
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -193,7 +198,9 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
+            'trainers.trainer_registration_number',
             'trainers.email',
+            'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
             'trainers.gender',
@@ -227,8 +234,11 @@ class TrainerService
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
+            'trainers.created_by',
+            'trainers.updated_by',
             'trainers.created_at',
             'trainers.updated_at',
+            'trainers.deleted_at',
         ]);
 
         $trainerBuilder->join("institutes", function ($join) {
