@@ -300,7 +300,7 @@ class CourseService
                 'max:255'
             ],
             'title_bn' => [
-                'nullable',
+                'required',
                 'string',
                 'max:1000'
             ],

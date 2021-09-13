@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ProgrammeService
 {
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
@@ -35,12 +35,12 @@ class ProgrammeService
 
         /** @var Programme|Builder $programmesBuilder */
         $programmesBuilder = Programme::select([
-            'programmes.id as id',
+            'programmes.id',
             'programmes.title_en',
             'programmes.title_bn',
+            'programmes.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title_bn as institute_title_bn',
-            'institutes.id as institute_id',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
@@ -109,12 +109,12 @@ class ProgrammeService
     {
         /** @var Programme|Builder $programmeBuilder */
         $programmeBuilder = Programme::select([
-            'programmes.id as id',
+            'programmes.id',
             'programmes.title_en',
             'programmes.title_bn',
+            'programmes.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title_bn as institute_title_bn',
-            'institutes.id as institute_id',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
@@ -199,7 +199,7 @@ class ProgrammeService
                 'max:300'
             ],
             'title_bn' => [
-                'nullable',
+                'required',
                 'string',
                 'max:800'
             ],

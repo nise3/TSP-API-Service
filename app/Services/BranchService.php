@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 class BranchService
 {
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
@@ -341,7 +341,7 @@ class BranchService
                 'max:191',
             ],
             'title_bn' => [
-                'nullable',
+                'required',
                 'string',
                 'max: 600',
             ],
