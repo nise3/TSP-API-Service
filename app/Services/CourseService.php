@@ -60,6 +60,7 @@ class CourseService
                 'courses.updated_by',
                 'courses.created_at',
                 'courses.updated_at',
+                'courses.deleted_at',
             ]
         );
 
@@ -143,6 +144,7 @@ class CourseService
                 'courses.updated_by',
                 'courses.created_at',
                 'courses.updated_at',
+                'courses.deleted_at',
             ]
         );
 
@@ -298,7 +300,7 @@ class CourseService
                 'max:255'
             ],
             'title_bn' => [
-                'nullable',
+                'required',
                 'string',
                 'max:1000'
             ],

@@ -51,7 +51,10 @@ class ApiInfoController extends Controller
                 ]
             ];
         }catch (Throwable $e){
-            return $e;
+            echo "<pre>";
+            print_r($e->getMessage());
+            echo "</pre>";
+            die;
         }
         return Response::json($response);
     }

@@ -27,6 +27,14 @@ abstract class BaseModel extends Model
     public const OCCUPATION_INFO='occupation_info';
     public const GUARDIAN_INFO='guardian_info';
 
+    /** Institute User Type*/
+    public const INSTITUTE_USER = 3;
+
+    /** Idp registration url for institute */
+
+    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL='http://localhost:8001/api/v1/';
+    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE='https://api.bus.softbd.xyz/institute/api/v1/';
+
     public const DYNAMIC_FORM_FIELD_INFO=[
         self::ETHNIC_GROUP_INFO=>[
             true,

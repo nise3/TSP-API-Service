@@ -3,6 +3,10 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
+use App\Models\BaseModel;
+use GuzzleHttp\Client;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -13,7 +17,32 @@ $customRouter = function (string $as = '') use ($router) {
 $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($router, $customRouter) {
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
-    $router->post('/file-upload', ['as' => 'api-info', 'uses' => 'ApiInfoController@fileUpload']);
+    $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
+
+    $router->post('/auth-idp', function () {
+
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'users';
+        $userPostField = [
+            'user_type' => 'institute',
+            'username'=>'Piyal_Hasan_2021',
+            'institute_id' => '1',
+            'name_en' => 'testing',
+            'name_bn' => 'testing_en',
+            'email' =>'piyalemail@gmail.com',
+            'mobile' => '01767111434',
+            'loc_division_id' => 1,
+            'loc_district_id' => 1,
+            'loc_upazila_id' => 1
+        ];
+
+        return Http::retry(3, 100, function ($exception) {
+            return $exception instanceof ConnectionException;
+        })->post($url, $userPostField)->throw(function ($response, $e) {
+            return $e;
+        })->json();
+
+
+    });
 
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     $customRouter()->resourceRoute('programmes', 'ProgrammeController')->render();

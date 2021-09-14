@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TrainingCenterService
 {
     /**
-     * @param Request $request
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
@@ -36,6 +36,7 @@ class TrainingCenterService
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id',
+            'training_centers.center_location_type',
             'training_centers.title_en',
             'training_centers.title_bn',
             'training_centers.loc_division_id',
@@ -59,7 +60,8 @@ class TrainingCenterService
             'training_centers.created_by',
             'training_centers.updated_by',
             'training_centers.created_at',
-            'training_centers.updated_at'
+            'training_centers.updated_at',
+            'training_centers.deleted_at',
         ]);
 
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -76,18 +78,6 @@ class TrainingCenterService
                 $join->where('branches.row_status', $rowStatus);
             }
         });
-
-        $trainingCentersBuilder->orderBy('training_centers.id', $order);
-
-        if (is_numeric($rowStatus)) {
-            $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
-        }
-
-        if (!empty($titleEn)) {
-            $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
-        }
 
         $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
             $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
@@ -112,17 +102,24 @@ class TrainingCenterService
                 $join->where('loc_upazilas.row_status', $rowStatus);
             }
         });
+        $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-
         if (is_numeric($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
+        if (!empty($titleEn)) {
+            $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
+        } elseif (!empty($titleBn)) {
+            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+
+
         /** @var Collection $trainingCentersBuilder */
-        if (!is_null($paginate) || !is_null($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -155,6 +152,7 @@ class TrainingCenterService
         /** @var TrainingCenter|Builder $trainingCenterBuilder */
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
+            'training_centers.center_location_type',
             'training_centers.title_en',
             'training_centers.title_bn',
             'training_centers.loc_division_id',
@@ -178,7 +176,8 @@ class TrainingCenterService
             'training_centers.created_by',
             'training_centers.updated_by',
             'training_centers.created_at',
-            'training_centers.updated_at'
+            'training_centers.updated_at',
+            'training_centers.deleted_at',
         ]);
 
         $trainingCenterBuilder->join("institutes", function ($join) {
@@ -191,9 +190,6 @@ class TrainingCenterService
                 ->whereNull('branches.deleted_at');
         });
 
-        if (!empty($id)) {
-            $trainingCenterBuilder->where('training_centers.id', '=', $id);
-        }
 
         $trainingCenterBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
@@ -209,7 +205,9 @@ class TrainingCenterService
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
         });
-
+        if (!empty($id)) {
+            $trainingCenterBuilder->where('training_centers.id', '=', $id);
+        }
         /** @var TrainingCenter $trainingCenterBuilder */
         $trainingCenter = $trainingCenterBuilder->first();
 
@@ -266,9 +264,9 @@ class TrainingCenterService
     /**
      * @param Request $request
      * @param null $id
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request, $id = null): Validator
+    public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $customMessage = [
             'row_status.in' => [
@@ -279,7 +277,7 @@ class TrainingCenterService
 
         $rules = [
             'title_en' => 'required|string|max: 400',
-            'title_bn' => 'nullable|string|max: 1000',
+            'title_bn' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
             'center_location_type' => 'nullable|int',
@@ -295,7 +293,7 @@ class TrainingCenterService
             'created_by' => ['nullable', 'integer', 'max:10'],
             'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+        return Validator::make($request->all(), $rules, $customMessage);
     }
 
     /**
@@ -379,7 +377,7 @@ class TrainingCenterService
         return $trainingCenter->forceDelete();
     }
 
-    public function filterValidator(Request $request): Validator
+    public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if (!empty($request['order'])) {
             $request['order'] = strtoupper($request['order']);
@@ -396,7 +394,7 @@ class TrainingCenterService
             ]
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+        return Validator::make($request->all(), [
             'title_en' => 'nullable|min:1',
             'title_bn' => 'nullable|min:1',
             'page_size' => 'numeric',

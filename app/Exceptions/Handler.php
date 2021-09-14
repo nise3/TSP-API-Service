@@ -5,8 +5,11 @@ namespace App\Exceptions;
 use BadMethodCallException;
 use ErrorException;
 use Exception;
+
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use ParseError;
@@ -132,6 +135,15 @@ class Handler extends ExceptionHandler
                 'success' => false,
                 "code" => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
                 "message" => "Call a Bad Method",
+                "query_time" => 0
+            ];
+            return response()->json($errors);
+        }
+        elseif ($e instanceof RequestException) {
+            $errors['_response_status'] = [
+                'success' => false,
+                "code" => ResponseAlias::HTTP_CONFLICT,
+                "message" => $e->getMessage(),
                 "query_time" => 0
             ];
             return response()->json($errors);

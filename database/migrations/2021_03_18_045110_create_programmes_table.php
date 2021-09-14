@@ -22,7 +22,7 @@ class CreateProgrammesTable extends Migration
             $table->string('code', 191)->nullable();
             $table->unsignedInteger('institute_id');
             $table->string('title_en', 300);
-            $table->string('title_bn', 800)->nullable();
+            $table->string('title_bn', 800);
             $table->text('description')->nullable();
             $table->text('logo')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);

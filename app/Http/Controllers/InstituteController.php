@@ -74,14 +74,12 @@ class InstituteController extends Controller
      * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
-    public function store(Request $request):JsonResponse
+    public function store(Request $request)
     {
         $validatedData = $this->instituteService->validator($request)->validate();
 
-        DB::beginTransaction();
         try {
             $data = $this->instituteService->store($validatedData);
-            DB::commit();
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [
@@ -92,7 +90,6 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            DB::rollBack();
             return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
