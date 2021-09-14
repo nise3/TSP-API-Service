@@ -5,6 +5,7 @@
 use App\Helpers\Classes\CustomRouter;
 use App\Models\BaseModel;
 use GuzzleHttp\Client;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 $customRouter = function (string $as = '') use ($router) {
@@ -18,60 +19,28 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
 
-    $router->post('/auth-idp',function (){
-//        $curl =  Http::dd()->asForm()->contentType("application/json")
-//            ->withoutVerifying()
-//            ->post("https://admin:admin@identity.bus.softbd.xyz/scim2/user",
-//                [
-//                    "schemas" => [
-//                    ],
-//                    "name" => [
-//                        "familyName" => "Test User Name",
-//                        "givenName" => "Test User Name",
-//                    ],
-//                    "userName" =>  "piyal",
-//                    "password" => "123456",
-//                    "emails" => [
-//                        0 => [
-//                            "primary" => true,
-//                            "value" => "testuser.work@gmail.com",
-//                            "type" => "work",
-//                        ],
-//                        1 => [
-//                            "value" => "testuser.home@gmail.com",
-//                            "type" => "home"
-//                        ],
-//                    ],
-//                ]
-//            );
+    $router->post('/auth-idp', function () {
 
-        $client   = new Client();
-        $config=[
-            'verify'=>false,
-            'data'=>[
-                'schemas' => [
-                ],
-                'name' => [
-                    'familyName' => 'title_en',
-                    'givenName' => 'title_en',
-                ],
-                'userName' =>  'title_en',
-                'password' => "123456",
-                'emails' => [
-                    0 => [
-                        'primary' => true,
-                        'value' => 'email',
-                        'type' => 'work',
-                    ],
-                    1 => [
-                        'value' => 'email',
-                        'type' => 'home',
-                    ],
-                ],
-            ]
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'users';
+        $userPostField = [
+            'user_type' => 'institute',
+            'username'=>'Piyal_Hasan_2021',
+            'institute_id' => '1',
+            'name_en' => 'testing',
+            'name_bn' => 'testing_en',
+            'email' =>'piyalemail@gmail.com',
+            'mobile' => '01767111434',
+            'loc_division_id' => 1,
+            'loc_district_id' => 1,
+            'loc_upazila_id' => 1
         ];
-        $client=$client->post(BaseModel::INSTITUTE_IDP_REGISTRATION_ENDPOINT,$config);
-        return json_decode($client->getBody());
+
+        return Http::retry(3, 100, function ($exception) {
+            return $exception instanceof ConnectionException;
+        })->post($url, $userPostField)->throw(function ($response, $e) {
+            return $e;
+        })->json();
+
 
     });
 
