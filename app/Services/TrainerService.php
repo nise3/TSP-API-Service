@@ -3,13 +3,10 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
-use App\Models\Batch;
 use App\Models\Trainer;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
-
-//use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -44,7 +41,15 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
+            'trainers.trainer_registration_number',
+            'trainers.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
+            'trainers.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title_bn as training_center_title_bn',
             'trainers.email',
+            'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
             'trainers.gender',
@@ -78,8 +83,11 @@ class TrainerService
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
+            'trainers.created_by',
+            'trainers.updated_by',
             'trainers.created_at',
             'trainers.updated_at',
+            'trainers.deleted_at',
         ]);
 
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
@@ -87,6 +95,20 @@ class TrainerService
                 ->whereNull('institutes.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
+            }
+        });
+        $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
+            $join->on('trainers.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('training_centers.row_status', $rowStatus);
+            }
+        });
+        $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
+            $join->on('trainers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('branches.row_status', $rowStatus);
             }
         });
 
@@ -150,7 +172,7 @@ class TrainerService
             $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
@@ -193,7 +215,15 @@ class TrainerService
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title_bn as institutes_title_bn',
+            'trainers.trainer_registration_number',
+            'trainers.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title_bn as branch_title_bn',
+            'trainers.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title_bn as training_center_title_bn',
             'trainers.email',
+            'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
             'trainers.gender',
@@ -227,13 +257,24 @@ class TrainerService
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
+            'trainers.created_by',
+            'trainers.updated_by',
             'trainers.created_at',
             'trainers.updated_at',
+            'trainers.deleted_at',
         ]);
 
         $trainerBuilder->join("institutes", function ($join) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
+        });
+        $trainerBuilder->leftJoin("training_centers", function ($join) {
+            $join->on('trainers.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+        $trainerBuilder->leftJoin("branches", function ($join) {
+            $join->on('trainers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
         });
 
         $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
@@ -420,6 +461,16 @@ class TrainerService
                 'required',
                 'string',
                 'max:1000'
+            ],
+            'branch_id' => [
+                'nullable',
+                'int',
+                'exists:branches,id'
+            ],
+            'training_center_id' => [
+                'nullable',
+                'int',
+                'exists:training_centers,id'
             ],
             'institute_id' => [
                 'required',

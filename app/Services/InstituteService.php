@@ -43,7 +43,7 @@ class InstituteService
 
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
-            'institutes.id as id',
+            'institutes.id',
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
@@ -71,6 +71,7 @@ class InstituteService
             'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
+            'institutes.deleted_at',
         ]);
 
         $instituteBuilder->orderBy('institutes.id', $order);
@@ -169,6 +170,7 @@ class InstituteService
             'institutes.updated_by',
             'institutes.created_at',
             'institutes.updated_at',
+            'institutes.deleted_at',
         ]);
 
         $instituteBuilder->leftJoin('loc_divisions', function ($join) {

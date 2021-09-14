@@ -6,8 +6,6 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
-
-//use App\Models\Trainer;
 use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -67,7 +65,8 @@ class BatchService
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
-            'batches.updated_at'
+            'batches.updated_at',
+            'batches.deleted_at',
         ]);
 
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -176,7 +175,8 @@ class BatchService
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
-            'batches.updated_at'
+            'batches.updated_at',
+            'batches.deleted_at',
         ]);
 
         $batchBuilder->join("courses", function ($join) {
@@ -314,7 +314,7 @@ class BatchService
             $batchBuilder->where('batches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        /** @var Collection $courseConfigBuilder */
+        /** @var Collection $batches */
         if ($paginate || $limit) {
             $limit = $limit ?: 10;
             $batches = $batchBuilder->paginate($limit);
@@ -339,9 +339,9 @@ class BatchService
     }
 
     /**
-     * @param Trainer $trainer
-     * @param array $batchIds
-     * @return Trainer
+     * @param Batch $batch
+     * @param array $trainerIds
+     * @return Batch
      */
     public function assignTrainer(Batch $batch, array $trainerIds): Batch
     {
@@ -489,7 +489,7 @@ class BatchService
             'trainerIds' => 'required|array|min:1',
             'trainerIds.*' => 'required|integer|distinct|min:1'
         ];
-        return \Illuminate\Support\Facades\Validator::make($data, $rules);
+        return Validator::make($data, $rules);
     }
 
 
