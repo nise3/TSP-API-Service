@@ -8,6 +8,7 @@ use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
@@ -76,20 +77,54 @@ class InstituteController extends Controller
      */
     public function store(Request $request)
     {
+        DB::beginTransaction();
+        $institute = new Institute();
         $validatedData = $this->instituteService->validator($request)->validate();
-
         try {
-            $data = $this->instituteService->store($validatedData);
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Institute added successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
+            $institute = $this->instituteService->store($institute, $validatedData);
+            if ($institute) {
+                $validatedData['institute_id'] = $institute->id;
+                $createUser = $this->instituteService->createUser($validatedData);
+                Log::channel('idp_user')->info('idp_user_info:'.json_encode($createUser));
+                if ($createUser && $createUser['_response_status']['success']) {
+                    $response = [
+                        'data' => $institute ?: [],
+                        '_response_status' => [
+                            "success" => true,
+                            "code" => ResponseAlias::HTTP_CREATED,
+                            "message" => "Institute added successfully",
+                            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                        ]
+                    ];
+                    DB::commit();
+                } else {
+                    if ($createUser && $createUser['_response_status']['code'] == 400) {
+                        $response = [
+                            'errors' => $createUser['errors'] ?? [],
+                            '_response_status' => [
+                                "success" => false,
+                                "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                                "message" => "Validation Error",
+                                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                            ]
+                        ];
+                    } else {
+                        $response = [
+                            '_response_status' => [
+                                "success" => false,
+                                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                                "message" => "Unprocessable Request,Please contact",
+                                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                            ]
+                        ];
+                    }
+
+                    DB::rollBack();
+                }
+            }
+
         } catch (Throwable $e) {
+            DB::rollBack();
             return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
