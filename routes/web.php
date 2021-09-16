@@ -4,7 +4,6 @@
 
 use App\Helpers\Classes\CustomRouter;
 use App\Models\BaseModel;
-use GuzzleHttp\Client;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
@@ -21,10 +20,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/auth-idp', function () {
 
-        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'users';
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'register-users';
         $userPostField = [
+            'permission_sub_group_id'=>2,
             'user_type' => 'institute',
-            'username'=>'Piyal_Hasan_2021',
+            'username'=>'Piyal_Hasan-'.time(),
             'institute_id' => '1',
             'name_en' => 'testing',
             'name_bn' => 'testing_en',

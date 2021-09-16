@@ -4,18 +4,15 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
-use GuzzleHttp\Client;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
-use League\Flysystem\ConnectionErrorException;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -206,7 +203,6 @@ class InstituteService
     }
 
 
-
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
     {
         if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
@@ -217,16 +213,15 @@ class InstituteService
 
     /**
      * @param array $data
-     * @return Institute
      * @throws RequestException
      */
-    public function store(array $data):Institute
+    public function store(Institute $institute, array $data)
     {
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
-        $institute = new Institute();
         $institute->fill($data);
+        $institute->save();
         return $institute;
     }
 
@@ -257,34 +252,32 @@ class InstituteService
 
     /**
      * @param array $data
-     * @return void
+     * @return PromiseInterface|\Illuminate\Http\Client\Response
      * @throws RequestException
      */
-    private function __createUser(array $data): void
+    public function createUser(array $data)
     {
-        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'users';
-        if (request()->getHost() != 'localhost' || request()->getHost() != '127.0.0.1') {
-            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE . 'users';
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'register-users';
+        if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
+            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE . 'register-users';
         }
-        $username=str_replace(' ', '_', $data['title_en']);
+
+        $username = str_replace(' ', '_', $data['title_en']);
+
         $userPostField = [
+            'permission_sub_group_id' => $data['permission_sub_group_id'],
             'user_type' => BaseModel::INSTITUTE_USER,
-            'username'=>$username,
+            'username' => strtolower($username),
             'institute_id' => $data['institute_id'],
             'name_en' => $data['title_en'],
             'name_bn' => $data['title_bn'],
             'email' => $data['email'],
             'mobile' => $data['primary_mobile'],
-            'loc_division_id' => $data['loc_division_id'],
-            'loc_district_id' => $data['loc_district_id'],
-            'loc_upazila_id' => $data['loc_upazila_id']
         ];
 
-        Http::retry(3, 100, function ($exception) {
-            return $exception instanceof ConnectionException;
-        })->post($url, $userPostField)->throw(function ($response, $e) {
+        return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
             return $e;
-        });
+        })->json();
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
@@ -357,6 +350,7 @@ class InstituteService
     {
         return $institute->forceDelete();
     }
+
     /**
      * @param Request $request
      * @param int|null $id
@@ -365,9 +359,15 @@ class InstituteService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
-        Log::info(json_encode($data));
         $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
         $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+
+//        if (!empty($data['phone_numbers'])) {
+//            $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+//        }
+//        if (!empty($data['mobile_numbers'])) {
+//            $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+//        }
 
         $customMessage = [
             'row_status.in' => [
@@ -377,6 +377,7 @@ class InstituteService
         ];
 
         $rules = [
+            'permission_sub_group_id'=>'required|numeric',
             'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
@@ -395,14 +396,14 @@ class InstituteService
             ],
             'phone_numbers' => ['array'],
             'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
-            'primary_mobile' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'primary_mobile' => ['required', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'mobile_numbers' => ['array'],
             'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
             'logo' => [
                 'nullable',
                 'string',
             ],
-            'email' => ['nullable', 'string', 'max:191'],
+            'email' => ['required', 'string', 'max:191'],
             'config' => ['nullable', 'string'],
             'loc_division_id' => ['nullable', 'integer', 'max:191'],
             'loc_district_id' => ['nullable', 'integer', 'max:191'],
