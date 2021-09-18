@@ -414,6 +414,7 @@ class InstituteService
             ],
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
+
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
