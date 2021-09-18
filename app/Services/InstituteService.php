@@ -405,15 +405,15 @@ class InstituteService
             ],
             'email' => ['required', 'string', 'max:191'],
             'config' => ['nullable', 'string'],
-            'loc_division_id' => ['nullable', 'integer', 'max:191'],
-            'loc_district_id' => ['nullable', 'integer', 'max:191'],
-            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'loc_division_id' => ['nullable', 'integer'],
+            'loc_district_id' => ['nullable', 'integer'],
+            'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
