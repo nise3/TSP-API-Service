@@ -134,6 +134,9 @@
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
+                        "$ref": "#/components/parameters/permission_sub_group_id"
+                    },
+                    {
                         "$ref": "#/components/parameters/code"
                     },
                     {
@@ -184,17 +187,24 @@
                     {
                         "name": "phone_numbers",
                         "in": "query",
+                        "explode": true,
                         "content": {
                             "multipart/form-data": {
                                 "schema": {
-                                    "type": "array",
+                                    "type": "object",
                                     "items": {
-                                        "type": "integer",
+                                        "type": "string",
                                         "uniqueItems": true
-                                    }
+                                    },
+                                    "example": [
+                                        "9299292",
+                                        "2828828",
+                                        "3773737"
+                                    ]
                                 }
                             }
                         }
+
                     },
                     {
                         "name": "primary_mobile",
@@ -208,14 +218,20 @@
                     {
                         "name": "mobile_numbers",
                         "in": "query",
+                        "explode": true,
                         "content": {
                             "multipart/form-data": {
                                 "schema": {
-                                    "type": "array",
+                                    "type": "object",
                                     "items": {
-                                        "type": "integer",
+                                        "type": "string",
                                         "uniqueItems": true
-                                    }
+                                    },
+                                    "example": [
+                                        "01767111434",
+                                        "01767111433",
+                                        "01767111432"
+                                    ]
                                 }
                             }
                         }
@@ -405,6 +421,9 @@
                             "type": "integer",
                             "example": "1"
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/permission_sub_group_id"
                     },
                     {
                         "$ref": "#/components/parameters/code"
@@ -657,6 +676,9 @@
                     },
                     {
                         "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title_en_optional"
@@ -1784,6 +1806,21 @@
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/programme_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id_optional"
                     }
                 ],
                 "responses": {
@@ -2878,6 +2915,12 @@
                     },
                     {
                         "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/course_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/trainer_name_en_optional"
@@ -4484,6 +4527,14 @@
                     "type": "integer"
                 }
             },
+            "permission_sub_group_id": {
+                "name": "permission_sub_group_id",
+                "in": "query",
+                "schema": {
+                    "type": "integer",
+                    "example": 3
+                }
+            },
             "upazila_id": {
                 "name": "upazila_id",
                 "in": "query",
@@ -4507,8 +4558,7 @@
                 "in": "query",
                 "schema": {
                     "type": "integer"
-                },
-                "example": "1"
+                }
             },
             "training_center_id": {
                 "name": "training_center_id",
@@ -4525,8 +4575,7 @@
                 "in": "query",
                 "schema": {
                     "type": "integer"
-                },
-                "example": "1"
+                }
             },
             "code": {
                 "name": "code",
@@ -4534,7 +4583,8 @@
                 "required": true,
                 "schema": {
                     "type": "string"
-                }
+                },
+                "example": "uuid"
             },
             "code_optional": {
                 "name": "code",
@@ -4567,8 +4617,7 @@
                 "required": false,
                 "in": "query",
                 "schema": {
-                    "type": "integer",
-                    "example": "1"
+                    "type": "integer"
                 }
             },
             "course_id": {
@@ -4586,8 +4635,7 @@
                 "required": false,
                 "schema": {
                     "type": "integer"
-                },
-                "example": "1"
+                }
             },
             "google_map_src": {
                 "name": "google_map_src",

@@ -30,10 +30,15 @@ class BatchService
     public function getBatchList(array $request, Carbon $startTime): array
     {
 
-        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
-        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
-        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
-        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $instituteId = $request['institute_id'] ?? "";
+        $batchId = $request['batch_id'] ?? "";
+        $programId = $request['programme_id'] ?? "";
+        $courseId = $request['course_id'] ?? "";
+        $trainingCenterId = $request['training_center_id'] ?? "";
 
 
         /** @var Batch|Builder $batchBuilder */
@@ -112,6 +117,26 @@ class BatchService
 
         if (is_numeric($rowStatus)) {
             $batchBuilder->where('batches.row_status', $rowStatus);
+        }
+
+        if (is_numeric($instituteId)) {
+            $batchBuilder->where('batches.institute_id', $instituteId);
+        }
+
+        if (is_numeric($batchId)) {
+            $batchBuilder->where('batches.batch_id', $batchId);
+        }
+
+        if (is_numeric($programId)) {
+            $batchBuilder->where('batches.programme_id', $programId);
+        }
+
+        if (is_numeric($courseId)) {
+            $batchBuilder->where('batches.course_id', $courseId);
+        }
+
+        if(is_numeric($trainingCenterId)){
+            $batchBuilder->where('batches.training_center_id',$trainingCenterId);
         }
 
         /** @var Collection $courseConfigBuilder */
@@ -426,13 +451,13 @@ class BatchService
                 'int',
                 'nullable'
             ],
-            "dynamic_form_field"=>[
+            "dynamic_form_field" => [
                 'nullable',
                 "string"
             ],
-            'loc_district_id'=>'nullable|exists:loc_districts,id',
-            'loc_division_id'=>'nullable|exists:loc_divisions,id',
-            'loc_upazila_id'=>'nullable|exists:loc_upazilas,id',
+            'loc_district_id' => 'nullable|exists:loc_districts,id',
+            'loc_division_id' => 'nullable|exists:loc_divisions,id',
+            'loc_upazila_id' => 'nullable|exists:loc_upazilas,id',
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
@@ -440,7 +465,7 @@ class BatchService
             'created_by' => ['nullable', 'integer', 'max:10'],
             'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
-        return Validator::make($request->all(), $rules,$customMessage);
+        return Validator::make($request->all(), $rules, $customMessage);
     }
 
     /**
@@ -452,6 +477,7 @@ class BatchService
         if (!empty($request['order'])) {
             $request['order'] = strtoupper($request['order']);
         }
+
         $customMessage = [
             'order.in' => [
                 'code' => 30000,
@@ -465,6 +491,11 @@ class BatchService
         return Validator::make($request->all(), [
             'page_size' => 'numeric',
             'page' => 'numeric',
+            'institute_id'=>'numeric',
+            'batch_id'=>'numeric',
+            'programme_id'=>'numeric',
+            'course_id'=>'numeric',
+            'training_center_id'=>'numeric',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -494,3 +525,4 @@ class BatchService
 
 
 }
+

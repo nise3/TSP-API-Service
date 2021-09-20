@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,13 +26,14 @@ class TrainingCenterService
      */
     public function getTrainingCenterList(array $request, Carbon $startTime): array
     {
-        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
-        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
-        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
-        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
-        $instituteId = array_key_exists('institute_id', $request) ? $request['institute_id'] : "";
-        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
-        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
+        $titleEn = $request['title_en'] ?? "";
+        $titleBn = $request['title_bn'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate =  $request['page'] ?? "";
+        $rowStatus =  $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $instituteId = $request['institute_id'] ?? "";
+        $branchId = $request['branch_id'] ?? "";
 
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
@@ -107,6 +109,11 @@ class TrainingCenterService
         if (is_numeric($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
+        Log::info($branchId);
+        if (is_numeric($branchId)) {
+            $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
+        }
+
         if (is_numeric($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
@@ -400,6 +407,7 @@ class TrainingCenterService
             'page_size' => 'numeric',
             'page' => 'numeric',
             'institute_id' => 'numeric',
+            'branch_id'=>'numeric',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

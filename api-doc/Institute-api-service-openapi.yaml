@@ -93,6 +93,7 @@ paths:
       summary: create
       description: API endpoint to create a institute.A successful request response will show 201 HTTP status code
       parameters:
+        - $ref: '#/components/parameters/permission_sub_group_id'
         - $ref: '#/components/parameters/code'
         - $ref: '#/components/parameters/title_en'
         - $ref: '#/components/parameters/title_bn'
@@ -285,6 +286,7 @@ paths:
           schema:
             type: integer
             example: '1'
+        - $ref: '#/components/parameters/permission_sub_group_id'
         - $ref: '#/components/parameters/code'
         - $ref: '#/components/parameters/title_en'
         - $ref: '#/components/parameters/title_bn'
@@ -3134,6 +3136,12 @@ components:
       required: true
       schema:
         type: integer
+    permission_sub_group_id:
+      name: permission_sub_group_id
+      in: query
+      schema:
+        type: integer
+        example: 3
     upazila_id:
       name: upazila_id
       in: query
