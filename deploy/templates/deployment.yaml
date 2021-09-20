@@ -58,7 +58,7 @@ spec:
                     sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
-                    php artisan migrate:fresh --seed;
+                    php artisan migrate;
           volumeMounts:
           - name: "{{ .Chart.Name }}"
             mountPath: /app/storage

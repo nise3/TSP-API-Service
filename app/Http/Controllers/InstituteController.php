@@ -77,6 +77,7 @@ class InstituteController extends Controller
      */
     public function store(Request $request)
     {
+
         DB::beginTransaction();
         $institute = new Institute();
         $validatedData = $this->instituteService->validator($request)->validate();

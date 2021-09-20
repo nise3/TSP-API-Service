@@ -31,12 +31,12 @@ class InstituteService
      */
     public function getInstituteList(array $request, Carbon $startTime): array
     {
-        $titleEn = array_key_exists('title_en', $request) ? $request['title_en'] : "";
-        $titleBn = array_key_exists('title_bn', $request) ? $request['title_bn'] : "";
-        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
-        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
-        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
-        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
+        $titleEn = $request['title_en'] ?? "";
+        $titleBn = $request['title_bn'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
 
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
@@ -359,15 +359,13 @@ class InstituteService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
-        $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
-        $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
 
-//        if (!empty($data['phone_numbers'])) {
-//            $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
-//        }
-//        if (!empty($data['mobile_numbers'])) {
-//            $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
-//        }
+        if (!empty($data['phone_numbers'])) {
+            $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+        }
+        if (!empty($data['mobile_numbers'])) {
+            $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+        }
 
         $customMessage = [
             'row_status.in' => [
@@ -377,7 +375,7 @@ class InstituteService
         ];
 
         $rules = [
-            'permission_sub_group_id'=>'required|numeric',
+            'permission_sub_group_id' => 'required|numeric',
             'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],

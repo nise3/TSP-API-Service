@@ -25,13 +25,16 @@ class TrainerService
      */
     public function getTrainerList(array $request, Carbon $startTime): array
     {
-        $titleEn = array_key_exists('trainer_name_en', $request) ? $request['title_en'] : "";
-        $titleBn = array_key_exists('trainer_name_bn', $request) ? $request['title_bn'] : "";
-        $pageSize = array_key_exists('page_size', $request) ? $request['page_size'] : "";
-        $paginate = array_key_exists('page', $request) ? $request['page'] : "";
-        $instituteId = array_key_exists('institute_id', $request) ? $request['institute_id'] : "";
-        $rowStatus = array_key_exists('row_status', $request) ? $request['row_status'] : "";
-        $order = array_key_exists('order', $request) ? $request['order'] : "ASC";
+        $titleEn = $request['title_en'] ?? "";
+        $titleBn = $request['title_bn'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $instituteId = $request['institute_id'] ?? "";
+        $branchId = $request['branch_id'] ?? "";
+        $trainingCenterId = $request['training_center_id'] ?? "";
+
 
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
@@ -174,6 +177,14 @@ class TrainerService
 
         if (is_numeric($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
+        }
+
+        if (is_numeric($branchId)) {
+            $trainerBuilder->where('trainers.branch_id', '=', $branchId);
+        }
+
+        if (is_numeric($trainingCenterId)) {
+            $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
         /** @var Collection $trainerBuilder */
@@ -610,6 +621,8 @@ class TrainerService
             'page_size' => 'numeric',
             'page' => 'numeric',
             'institute_id' => 'numeric',
+            'branch_id'=>'numeric',
+            'training_center_id'=>'numeric',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
