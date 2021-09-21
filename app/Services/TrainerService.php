@@ -471,7 +471,7 @@ class TrainerService
             'trainer_name_bn' => [
                 'required',
                 'string',
-                'max:1000'
+                'max:500'
             ],
             'branch_id' => [
                 'nullable',
@@ -496,11 +496,13 @@ class TrainerService
             'email' => [
                 'required',
                 'string',
+                'max:150',
                 'unique:trainers,email,' . $id
             ],
             'mobile' => [
                 'required',
                 'string',
+                'max:15',
                 'unique:trainers,mobile,' . $id
             ],
             'date_of_birth' => [
@@ -525,15 +527,18 @@ class TrainerService
             ],
             'nationality' => [
                 'required',
-                'string'
+                'string',
+                'max:100'
             ],
             'nid' => [
                 'nullable',
-                'string'
+                'string',
+                'max:30',
             ],
             'passport_number' => [
                 'nullable',
-                'string'
+                'string',
+                'max:50'
             ],
             'present_address_division_id' => [
                 'nullable',
@@ -616,13 +621,13 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
-            'branch_id'=>'numeric',
-            'training_center_id'=>'numeric',
+            'title_en' => 'nullable|max:191|min:2',
+            'title_bn' => 'nullable|max:500|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
+            'branch_id' => 'numeric|exists:branches,id',
+            'training_center_id' => 'numeric|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

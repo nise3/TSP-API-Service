@@ -2917,7 +2917,7 @@
                         "$ref": "#/components/parameters/institute_id_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/course_id_optional"
+                        "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/training_center_id_optional"

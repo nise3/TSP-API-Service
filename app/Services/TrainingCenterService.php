@@ -29,8 +29,8 @@ class TrainingCenterService
         $titleEn = $request['title_en'] ?? "";
         $titleBn = $request['title_bn'] ?? "";
         $pageSize = $request['page_size'] ?? "";
-        $paginate =  $request['page'] ?? "";
-        $rowStatus =  $request['row_status'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
@@ -402,12 +402,12 @@ class TrainingCenterService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
-            'branch_id'=>'numeric',
+            'title_en' => 'nullable|max:400|min:2',
+            'title_bn' => 'nullable|max:1000|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
+            'branch_id' => 'numeric|exists:branches,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

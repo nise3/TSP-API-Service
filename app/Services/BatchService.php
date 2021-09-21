@@ -135,8 +135,8 @@ class BatchService
             $batchBuilder->where('batches.course_id', $courseId);
         }
 
-        if(is_numeric($trainingCenterId)){
-            $batchBuilder->where('batches.training_center_id',$trainingCenterId);
+        if (is_numeric($trainingCenterId)) {
+            $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
         /** @var Collection $courseConfigBuilder */
@@ -432,20 +432,21 @@ class BatchService
             ],
             'registration_start_date' => [
                 'required',
-//                'date_format:d/m/Y'
             ],
             'registration_end_date' => [
                 'required',
-//                'date_format:d/m/Y'
+                'after:registration_start_date',
+                'date_format:Y-m-d',
             ],
             'batch_start_date' => [
                 'required',
-//                'date_format:d/m/Y'
+                'date_format:Y-m-d',
             ],
 
             'batch_end_date' => [
                 'required',
-//                'date_format:d/m/Y',
+                'date_format:Y-m-d',
+                'after:batch_start_date'
             ],
             'available_seats' => [
                 'int',
@@ -489,13 +490,13 @@ class BatchService
             ]
         ];
         return Validator::make($request->all(), [
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id'=>'numeric',
-            'batch_id'=>'numeric',
-            'programme_id'=>'numeric',
-            'course_id'=>'numeric',
-            'training_center_id'=>'numeric',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
+            'batch_id' => 'numeric|exists:batches,id',
+            'programme_id' => 'numeric|exists:programmes,id',
+            'course_id' => 'numeric|exists:courses,id',
+            'training_center_id' => 'numeric|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
