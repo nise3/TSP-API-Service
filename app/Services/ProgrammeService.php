@@ -71,7 +71,7 @@ class ProgrammeService
         } elseif (!empty($titleBn)) {
             $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $programmesBuilder->where('programmes.institute_id', '=', $instituteId);
         }
 
@@ -318,8 +318,8 @@ class ProgrammeService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|string|max:300|min:2',
-            'title_bn' => 'nullable|string|max:800|min:2',
+            'title_en' => 'nullable|max:300|min:2',
+            'title_bn' => 'nullable|max:800|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',
