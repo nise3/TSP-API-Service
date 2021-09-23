@@ -103,11 +103,12 @@ class InstituteService
 
         if (!empty($titleEn)) {
             $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        /** @var Collection $instituteBuilder */
+        /** @var Collection $institutes */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $institutes = $instituteBuilder->paginate($pageSize);
@@ -189,7 +190,7 @@ class InstituteService
             $instituteBuilder->where('institutes.id', $id);
         }
 
-        /** @var Institute $instituteBuilder */
+        /** @var Institute $institute */
         $institute = $instituteBuilder->first();
 
         return [
@@ -212,10 +213,11 @@ class InstituteService
     }
 
     /**
+     * @param Institute $institute
      * @param array $data
-     * @throws RequestException
+     * @return Institute
      */
-    public function store(Institute $institute, array $data)
+    public function store(Institute $institute, array $data): Institute
     {
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);

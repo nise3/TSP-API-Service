@@ -25,8 +25,8 @@ class TrainerService
      */
     public function getTrainerList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $nameEn = $request['trainer_name_en'] ?? "";
+        $nameBn = $request['trainer_name_bn'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -169,10 +169,11 @@ class TrainerService
             $trainerBuilder->where('trainers.row_status', $rowStatus);
         }
 
-        if (!empty($titleEn)) {
-            $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $titleBn . '%');
+        if (!empty($nameEn)) {
+            $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $nameEn . '%');
+        }
+        if (!empty($nameBn)) {
+            $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $nameBn . '%');
         }
 
         if (is_numeric($instituteId)) {
@@ -187,7 +188,7 @@ class TrainerService
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
-        /** @var Collection $trainerBuilder */
+        /** @var Collection $trainers */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $trainerBuilder->paginate($pageSize);
@@ -320,7 +321,7 @@ class TrainerService
 
         $trainerBuilder->where('trainers.id', $id);
 
-        /** @var Trainer $trainerBuilder */
+        /** @var Trainer $trainer */
         $trainer = $trainerBuilder->first();
         return [
             "data" => $trainer ?: [],
@@ -621,8 +622,8 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|max:191|min:2',
-            'title_bn' => 'nullable|max:500|min:2',
+            'trainer_name_en' => 'nullable|max:191|min:2',
+            'trainer_name_bn' => 'nullable|max:500|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',

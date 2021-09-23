@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -109,7 +108,6 @@ class TrainingCenterService
         if (is_numeric($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        Log::info($branchId);
         if (is_numeric($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
@@ -120,7 +118,8 @@ class TrainingCenterService
 
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
 

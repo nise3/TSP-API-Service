@@ -68,7 +68,8 @@ class ProgrammeService
 
         if (!empty($titleEn)) {
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
         if (is_numeric($instituteId)) {
@@ -76,7 +77,7 @@ class ProgrammeService
         }
 
 
-        /** @var Collection $programmesBuilder */
+        /** @var Collection $programmes */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $programmes = $programmesBuilder->paginate($pageSize);
@@ -132,9 +133,9 @@ class ProgrammeService
 
         $programmeBuilder->where('programmes.id', '=', $id);
 
-        /** @var Programme $programmeBuilder */
+        /** @var Programme $programme */
         $programme = $programmeBuilder->first();
-        $links = [];
+
         return [
             "data" => $programme ?: [],
             "_response_status" => [

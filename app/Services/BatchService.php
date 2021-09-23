@@ -35,7 +35,7 @@ class BatchService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
-        $batchId = $request['batch_id'] ?? "";
+        $branchId = $request['branch_id'] ?? "";
         $programId = $request['programme_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
@@ -123,8 +123,8 @@ class BatchService
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
 
-        if (is_numeric($batchId)) {
-            $batchBuilder->where('batches.batch_id', $batchId);
+        if (is_numeric($branchId)) {
+            $batchBuilder->where('batches.branch_id', $branchId);
         }
 
         if (is_numeric($programId)) {
@@ -139,7 +139,7 @@ class BatchService
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
-        /** @var Collection $courseConfigBuilder */
+        /** @var Collection $batches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $batches = $batchBuilder->paginate($pageSize);
@@ -230,7 +230,7 @@ class BatchService
 
         $batchBuilder->with('trainers');
 
-        /** @var Batch $instituteBuilder */
+        /** @var Batch $batch */
         $batch = $batchBuilder->first();
 
         return [
@@ -456,15 +456,32 @@ class BatchService
                 'nullable',
                 "string"
             ],
-            'loc_district_id' => 'nullable|exists:loc_districts,id',
-            'loc_division_id' => 'nullable|exists:loc_divisions,id',
-            'loc_upazila_id' => 'nullable|exists:loc_upazilas,id',
+            'loc_district_id' => [
+                'nullable',
+                'exists:loc_districts,id'
+            ],
+            'loc_division_id' => [
+                'nullable',
+                'exists:loc_divisions,id'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'exists:loc_upazilas,id'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => [
+                'nullable',
+                'integer',
+                'max:10'
+            ],
+            'updated_by' => [
+                'nullable',
+                'integer',
+                'max:10'
+            ],
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -493,7 +510,7 @@ class BatchService
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',
-            'batch_id' => 'numeric|exists:batches,id',
+            'branch_id' => 'numeric|exists:branches,id',
             'programme_id' => 'numeric|exists:programmes,id',
             'course_id' => 'numeric|exists:courses,id',
             'training_center_id' => 'numeric|exists:training_centers,id',

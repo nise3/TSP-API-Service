@@ -102,7 +102,8 @@ class BranchService
 
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
@@ -110,7 +111,7 @@ class BranchService
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
-        /** @var Collection $branchBuilder */
+        /** @var Collection $branches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
@@ -190,7 +191,7 @@ class BranchService
 
         $branchBuilder->where('branches.id', $id);
 
-        /** @var Branch $branchBuilder */
+        /** @var Branch $branch */
         $branch = $branchBuilder->first();
 
         return [

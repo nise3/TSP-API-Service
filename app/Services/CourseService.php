@@ -80,15 +80,16 @@ class CourseService
 
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        /** @var Collection $coursesBuilder */
+        /** @var Collection $courses */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
@@ -155,7 +156,7 @@ class CourseService
 
         $courseBuilder->where('courses.id', '=', $id);
 
-        /** @var Course $courseBuilder */
+        /** @var Course $course */
         $course = $courseBuilder->first();
 
         return [
@@ -242,11 +243,12 @@ class CourseService
 
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        /** @var Collection $coursesBuilder */
+        /** @var Collection $courses */
         if ($paginate || $limit) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
