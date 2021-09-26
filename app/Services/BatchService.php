@@ -432,19 +432,26 @@ class BatchService
             ],
             'registration_start_date' => [
                 'required',
+                'date',
+                'date_format:Y-m-d',
+                'before:registration_end_date'
             ],
             'registration_end_date' => [
                 'required',
+                'date',
                 'after:registration_start_date',
                 'date_format:Y-m-d',
             ],
             'batch_start_date' => [
                 'required',
+                'date',
                 'date_format:Y-m-d',
+                'before:batch_end_date'
             ],
 
             'batch_end_date' => [
                 'required',
+                'date',
                 'date_format:Y-m-d',
                 'after:batch_start_date'
             ],
