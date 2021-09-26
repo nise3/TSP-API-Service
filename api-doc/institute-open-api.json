@@ -187,7 +187,6 @@
                     {
                         "name": "phone_numbers",
                         "in": "query",
-                        "explode": true,
                         "content": {
                             "multipart/form-data": {
                                 "schema": {
@@ -218,7 +217,6 @@
                     {
                         "name": "mobile_numbers",
                         "in": "query",
-                        "explode": true,
                         "content": {
                             "multipart/form-data": {
                                 "schema": {

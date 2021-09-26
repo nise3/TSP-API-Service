@@ -124,13 +124,18 @@ paths:
             example: '01845654543'
         - name: phone_numbers
           in: query
+
           content:
             multipart/form-data:
               schema:
-                type: array
+                type: object
                 items:
-                  type: integer
+                  type: string
                   uniqueItems: true
+                example:
+                  - '9299292'
+                  - '2828828'
+                  - '3773737'
         - name: primary_mobile
           in: query
           required: false
@@ -142,10 +147,14 @@ paths:
           content:
             multipart/form-data:
               schema:
-                type: array
+                type: object
                 items:
-                  type: integer
+                  type: string
                   uniqueItems: true
+                example:
+                  - '01767111434'
+                  - '01767111433'
+                  - '01767111432'
         - name: email
           in: query
           required: false
@@ -452,6 +461,7 @@ paths:
         - $ref: '#/components/parameters/order'
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/institute_id_optional'
+        - $ref: '#/components/parameters/branch_id_optional'
         - $ref: '#/components/parameters/title_en_optional'
         - $ref: '#/components/parameters/title_bn_optional'
         - $ref: '#/components/parameters/row_status_optional'
@@ -1213,6 +1223,11 @@ paths:
         - $ref: '#/components/parameters/title_en_optional'
         - $ref: '#/components/parameters/title_bn_optional'
         - $ref: '#/components/parameters/row_status_optional'
+        - $ref: '#/components/parameters/institute_id_optional'
+        - $ref: '#/components/parameters/branch_id_optional'
+        - $ref: '#/components/parameters/programme_id_optional'
+        - $ref: '#/components/parameters/course_id_optional'
+        - $ref: '#/components/parameters/training_center_id_optional'
       responses:
         '200':
           description: success
@@ -1987,6 +2002,8 @@ paths:
         - $ref: '#/components/parameters/order'
         - $ref: '#/components/parameters/page_size'
         - $ref: '#/components/parameters/institute_id_optional'
+        - $ref: '#/components/parameters/course_id_optional'
+        - $ref: '#/components/parameters/training_center_id_optional'
         - $ref: '#/components/parameters/trainer_name_en_optional'
         - $ref: '#/components/parameters/trainer_name_bn_optional'
         - $ref: '#/components/parameters/row_status_optional'
@@ -3161,7 +3178,6 @@ components:
       in: query
       schema:
         type: integer
-      example: '1'
     training_center_id:
       name: training_center_id
       required: true
@@ -3175,13 +3191,13 @@ components:
       in: query
       schema:
         type: integer
-      example: '1'
     code:
       name: code
       in: query
       required: true
       schema:
         type: string
+      example: uuid
     code_optional:
       name: code
       in: query
@@ -3208,7 +3224,6 @@ components:
       in: query
       schema:
         type: integer
-        example: '1'
     course_id:
       name: course_id
       in: query
@@ -3222,7 +3237,6 @@ components:
       required: false
       schema:
         type: integer
-      example: '1'
     google_map_src:
       name: google_map_src
       in: query
