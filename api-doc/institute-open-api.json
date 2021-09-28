@@ -655,6 +655,39 @@
                 }
             }
         },
+        "/register-institute": {
+            "post": {
+                "summary": "Register an Organization",
+                "description": "Register an Organization",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegister"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/instituteRegister"
+                                },
+                                "example": {
+
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "institutes"
+                ]
+            }
+        },
         "/training-centers": {
             "get": {
                 "tags": [
@@ -3794,6 +3827,88 @@
                     "title_en",
                     "title_bn",
                     "code"
+                ]
+            },
+            "instituteRegister": {
+                "type": "object",
+                "properties": {
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 300
+                    },
+                    "title_bn": {
+                        "type": "string",
+                        "description": " title in Bengali",
+                        "minLength": 2,
+                        "maxLength": 1000
+                    },
+                    "institute_type_id": {
+                        "type": "integer",
+                        "description": "Organization type id",
+                        "enum": [0,1]
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "email address"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "description": "Mobile number of organization"
+                    },
+                    "name_of_the_office_head": {
+                        "type": "string",
+                        "description": "Head of office"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string",
+                        "description": "Head of office Designation "
+                    },
+                    "address": {
+                        "type": "string",
+                        "maximum": 1000,
+                        "minimum": 2,
+                        "description": "organization address"
+                    },
+                    "contact_person_name": {
+                        "type": "string",
+                        "description": "Contact person name"
+                    },
+                    "contact_person_designation": {
+                        "type": "string",
+                        "description": "Contact person's designation"
+                    },
+                    "contact_person_email": {
+                        "type": "string",
+                        "description": "Contact person email address"
+                    },
+                    "contact_person_mobile": {
+                        "type": "string",
+                        "description": "Contact person mobile number"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    }
+                },
+                "required": [
+                    "institute_type_id",
+                    "title_en",
+                    "title_bn",
+                    "email",
+                    "head_of_office",
+                    "contact_person_name",
+                    "contact_person_designation",
+                    "contact_person_email",
+                    "contact_person_mobile",
+                    "password",
+                    "password_confirmation",
+                    "mobile"
                 ]
             },
             "training-centers": {

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use Faker\Provider\Base;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Client\RequestException;
@@ -41,6 +42,7 @@ class InstituteService
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
             'institutes.id',
+            "institutes.institute_type_id",
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
@@ -140,6 +142,7 @@ class InstituteService
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
             'institutes.id',
+            "institutes.institute_type_id",
             'institutes.title_en',
             'institutes.title_bn',
             'institutes.code',
@@ -257,9 +260,9 @@ class InstituteService
      */
     public function createUser(array $data)
     {
-        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'register-users';
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL .  'organization-or-institute-user-create';
         if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
-            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE . 'register-users';
+            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE .  'organization-or-institute-user-create';
         }
 
         $username = str_replace(' ', '_', $data['title_en']);
@@ -273,6 +276,29 @@ class InstituteService
             'name_bn' => $data['title_bn'],
             'email' => $data['email'],
             'mobile' => $data['primary_mobile'],
+        ];
+
+        return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
+            return $e;
+        })->json();
+    }
+
+    public function createRegisterUser(array $data)
+    {
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'register-user';
+        if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
+            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE . 'register-user';
+        }
+
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER,
+            'username' => $data['contact_person_mobile'],
+            'institute_id' => $data['institute_id'],
+            'name_en' => $data['contact_person_name'],
+            'name_bn' => $data['contact_person_name'],
+            'email' => $data['contact_person_email'],
+            'mobile' => $data['contact_person_mobile'],
+            'password' => $data['password']
         ];
 
         return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
@@ -378,6 +404,10 @@ class InstituteService
             'permission_sub_group_id' => 'required|numeric',
             'title_en' => ['required', 'string', 'max:400'],
             'title_bn' => ['required', 'string', 'max:1000'],
+            "institute_type_id" => [
+                "required",
+                "numeric"
+            ],
             'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
             'domain' => [
                 'nullable',
@@ -394,12 +424,38 @@ class InstituteService
             ],
             'phone_numbers' => ['array'],
             'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
-            'primary_mobile' => ['required', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'primary_mobile' => ['required', 'string', BaseModel::MOBILE_REGEX],
             'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['nullable', 'string', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'mobile_numbers.*' => ['nullable', 'string', BaseModel::MOBILE_REGEX],
             'logo' => [
                 'nullable',
                 'string',
+            ],
+            "name_of_the_office_head" => [
+                "required",
+                "string"
+            ],
+            "name_of_the_office_head_designation" => [
+                "nullable",
+                "string"
+            ],
+            'contact_person_mobile' => [
+                'required',
+                BaseModel::MOBILE_REGEX
+            ],
+            'contact_person_name' => [
+                'required',
+                'max: 500',
+                'min:2'
+            ],
+            'contact_person_designation' => [
+                'required',
+                'max: 300',
+                "min:2"
+            ],
+            'contact_person_email' => [
+                'required',
+                'email'
             ],
             'email' => ['required', 'string', 'max:191'],
             'config' => ['nullable', 'string'],
@@ -415,6 +471,75 @@ class InstituteService
 
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
+    public function registerOrganizationvalidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'title_en' => [
+                'required',
+                'string',
+                'max:300',
+                'min:2',
+            ],
+            'title_bn' => [
+                'required',
+                'string',
+                'max:1000',
+                'min:2'
+            ],
+            'institute_type_id' => [
+                'required',
+                'int'
+            ],
+            "name_of_the_office_head" => [
+                "required",
+                "string"
+            ],
+            "name_of_the_office_head_designation" => [
+                "nullable",
+                "string"
+            ],
+            'email' => [
+                'required',
+                'email',
+            ],
+            'mobile' => [
+                'required',
+                BaseModel::MOBILE_REGEX
+            ],
+            'contact_person_mobile' => [
+                'required',
+                BaseModel::MOBILE_REGEX
+            ],
+            'contact_person_name' => [
+                'required',
+                'max: 500',
+                'min:2'
+            ],
+            'contact_person_designation' => [
+                'required',
+                'max: 300',
+                "min:2"
+            ],
+            'contact_person_email' => [
+                'required',
+                'email'
+            ],
+            'address' => [
+                'required',
+                'max: 1000',
+                'min:2'
+            ],
+            "password" => [
+                'required_with:password_confirmation',
+                'string',
+                'confirmed'
+            ],
+            "password_confirmation" => 'required_with:password',
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
 
     /**
@@ -442,6 +567,9 @@ class InstituteService
             'title_bn' => 'nullable|min:1',
             'page_size' => 'numeric',
             'page' => 'numeric',
+            "institute_type_id" => [
+                "numeric"
+            ],
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

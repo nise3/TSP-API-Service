@@ -55,6 +55,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Assign Trainers to Batch */
     $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
+    /** institute registration */
+    $router->post("register-institute",["as"=>"register.organization","uses"=>"InstituteController@instituteRegister"]);
+
+
 
     //institutes trashed
     $router->get('institutes-trashed-data', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
