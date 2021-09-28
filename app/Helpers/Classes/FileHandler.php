@@ -26,6 +26,7 @@ class FileHandler
         }
         $fileName = $fileName ?: md5(time()) . '.' . $file->getClientOriginalExtension();
         if ($dir) {
+            $dir=$dir."/".date('Y/F');
             if (file_exists($dir)) {
                 mkdir($dir, 0777);
             }

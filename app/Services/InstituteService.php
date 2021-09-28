@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
-use Faker\Provider\Base;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Client\RequestException;
@@ -43,15 +42,26 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            'institutes.code',
             'institutes.title_en',
             'institutes.title_bn',
-            'institutes.code',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
             'institutes.logo',
+            'institutes.country',
+            'institutes.phone_code',
             'institutes.primary_phone',
             'institutes.phone_numbers',
             'institutes.primary_mobile',
             'institutes.mobile_numbers',
             'institutes.email',
+            'institutes.name_of_the_office_head',
+            'institutes.name_of_the_office_head_designation',
+            'institutes.contact_person_name',
+            'institutes.contact_person_mobile',
+            'institutes.contact_person_email',
+            'institutes.contact_person_designation',
             'institutes.config',
             'institutes.loc_division_id',
             'loc_divisions.title_bn as division_title_bn',
@@ -62,9 +72,6 @@ class InstituteService
             'institutes.loc_upazila_id',
             'loc_upazilas.title_bn as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
-            'institutes.domain',
-            'institutes.address',
-            'institutes.google_map_src',
             'institutes.row_status',
             'institutes.created_by',
             'institutes.updated_by',
@@ -143,15 +150,26 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            'institutes.code',
             'institutes.title_en',
             'institutes.title_bn',
-            'institutes.code',
+            'institutes.domain',
+            'institutes.address',
+            'institutes.google_map_src',
             'institutes.logo',
+            'institutes.country',
+            'institutes.phone_code',
             'institutes.primary_phone',
             'institutes.phone_numbers',
             'institutes.primary_mobile',
             'institutes.mobile_numbers',
             'institutes.email',
+            'institutes.name_of_the_office_head',
+            'institutes.name_of_the_office_head_designation',
+            'institutes.contact_person_name',
+            'institutes.contact_person_mobile',
+            'institutes.contact_person_email',
+            'institutes.contact_person_designation',
             'institutes.config',
             'institutes.loc_division_id',
             'loc_divisions.title_bn as division_title_bn',
@@ -162,9 +180,6 @@ class InstituteService
             'institutes.loc_upazila_id',
             'loc_upazilas.title_bn as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
-            'institutes.domain',
-            'institutes.address',
-            'institutes.google_map_src',
             'institutes.row_status',
             'institutes.created_by',
             'institutes.updated_by',
@@ -215,10 +230,11 @@ class InstituteService
     }
 
     /**
+     * @param Institute $institute
      * @param array $data
-     * @throws RequestException
+     * @return Institute
      */
-    public function store(Institute $institute, array $data)
+    public function store(Institute $institute, array $data): Institute
     {
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
@@ -260,9 +276,9 @@ class InstituteService
      */
     public function createUser(array $data)
     {
-        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL .  'organization-or-institute-user-create';
+        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'organization-or-institute-user-create';
         if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
-            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE .  'organization-or-institute-user-create';
+            $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE . 'organization-or-institute-user-create';
         }
 
         $username = str_replace(' ', '_', $data['title_en']);

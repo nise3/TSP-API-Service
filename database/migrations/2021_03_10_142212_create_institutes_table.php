@@ -30,14 +30,12 @@ class CreateInstitutesTable extends Migration
             $table->string('primary_mobile', 15);
             $table->string('mobile_numbers', 255)->nullable();
             $table->string('email', 191);
-
             $table->string("name_of_the_office_head")->nullable();
             $table->string("name_of_the_office_head_designation")->nullable();
-            $table->string('contact_person_name', 500)->nullable();
-            $table->string('contact_person_mobile', 15)->nullable();
-            $table->string('contact_person_email', 191)->nullable();
-            $table->string('contact_person_designation', 300)->nullable();
-
+            $table->string('contact_person_name', 500);
+            $table->string('contact_person_mobile', 15);
+            $table->string('contact_person_email', 191);
+            $table->string('contact_person_designation', 300);
             $table->text('config')->nullable();
             $table->unsignedInteger("loc_division_id")->nullable();
             $table->unsignedInteger("loc_district_id")->nullable();

@@ -134,6 +134,9 @@
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
+                        "$ref": "#/components/parameters/institute_type_id"
+                    },
+                    {
                         "$ref": "#/components/parameters/permission_sub_group_id"
                     },
                     {
@@ -203,7 +206,6 @@
                                 }
                             }
                         }
-
                     },
                     {
                         "name": "primary_mobile",
@@ -242,6 +244,30 @@
                             "type": "string",
                             "example": "example@gmail.com"
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/country"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_email"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_designation"
                     },
                     {
                         "name": "config",
@@ -412,6 +438,9 @@
                 "description": " API endpoint to update a institute.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
+                        "$ref": "#/components/parameters/institute_type_id"
+                    },
+                    {
                         "name": "instituteId",
                         "required": true,
                         "in": "path",
@@ -431,6 +460,30 @@
                     },
                     {
                         "$ref": "#/components/parameters/title_bn"
+                    },
+                    {
+                        "$ref": "#/components/parameters/country"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_code"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_email"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_designation"
                     },
                     {
                         "name": "domain",
@@ -677,7 +730,6 @@
                                     "$ref": "#/components/schemas/instituteRegister"
                                 },
                                 "example": {
-
                                 }
                             }
                         }
@@ -3756,6 +3808,10 @@
                         "type": "integer",
                         "readOnly": true
                     },
+                    "institute_type_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
                     "code": {
                         "type": "string"
                     },
@@ -3781,6 +3837,14 @@
                     "logo": {
                         "type": "string"
                     },
+                    "country": {
+                        "type": "string",
+                        "example": "BD"
+                    },
+                    "phone_code": {
+                        "type": "string",
+                        "example": "880"
+                    },
                     "primary_phone": {
                         "type": "string"
                     },
@@ -3796,11 +3860,46 @@
                     "email": {
                         "type": "string"
                     },
+                    "name_of_the_office_head": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string"
+                    },
+                    "contact_person_name": {
+                        "type": "string"
+                    },
+                    "contact_person_mobile": {
+                        "type": "string"
+                    },
+                    "contact_person_email": {
+                        "type": "string"
+                    },
+                    "contact_person_designation": {
+                        "type": "string"
+                    },
                     "config": {
                         "type": "string"
                     },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     },
                     "create_by": {
                         "type": "string",
@@ -3824,9 +3923,14 @@
                     }
                 },
                 "required": [
+                    "institute_type_id",
                     "title_en",
                     "title_bn",
-                    "code"
+                    "code",
+                    "contact_person_name",
+                    "contact_person_mobile",
+                    "contact_person_email",
+                    "contact_person_designation"
                 ]
             },
             "instituteRegister": {
@@ -3847,7 +3951,10 @@
                     "institute_type_id": {
                         "type": "integer",
                         "description": "Organization type id",
-                        "enum": [0,1]
+                        "enum": [
+                            0,
+                            1
+                        ]
                     },
                     "email": {
                         "type": "string",
@@ -4459,6 +4566,78 @@
             }
         },
         "parameters": {
+            "country": {
+                "name": "country",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "880"
+                }
+            },
+            "phone_code": {
+                "name": "phone_code",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "880"
+                }
+            },
+            "name_of_the_office_head": {
+                "name": "name_of_the_office_head",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Mr x"
+                }
+            },
+            "name_of_the_office_head_designation": {
+                "name": "name_of_the_office_head_designation",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Chairman"
+                }
+            },
+            "contact_person_name": {
+                "name": "contact_person_name",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Mr y"
+                }
+            },
+            "contact_person_mobile": {
+                "name": "contact_person_mobile",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "01711123456"
+                }
+            },
+            "contact_person_email": {
+                "name": "contact_person_email",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "mr.y@gmail.com"
+                }
+            },
+            "contact_person_designation": {
+                "name": "contact_person_designation",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Co-ordinator"
+                }
+            },
             "page": {
                 "in": "query",
                 "name": "page",
@@ -4484,6 +4663,15 @@
                 "in": "query",
                 "required": true,
                 "name": "institute_id",
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "institute_type_id": {
+                "in": "query",
+                "required": true,
+                "name": "institute_type_id",
                 "schema": {
                     "type": "integer",
                     "example": "1"
