@@ -35,7 +35,7 @@ class BatchService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
-        $batchId = $request['batch_id'] ?? "";
+        $branchId = $request['branch_id'] ?? "";
         $programId = $request['programme_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
@@ -123,8 +123,8 @@ class BatchService
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
 
-        if (is_numeric($batchId)) {
-            $batchBuilder->where('batches.batch_id', $batchId);
+        if (is_numeric($branchId)) {
+            $batchBuilder->where('batches.branch_id', $branchId);
         }
 
         if (is_numeric($programId)) {
@@ -135,11 +135,11 @@ class BatchService
             $batchBuilder->where('batches.course_id', $courseId);
         }
 
-        if(is_numeric($trainingCenterId)){
-            $batchBuilder->where('batches.training_center_id',$trainingCenterId);
+        if (is_numeric($trainingCenterId)) {
+            $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
-        /** @var Collection $courseConfigBuilder */
+        /** @var Collection $batches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $batches = $batchBuilder->paginate($pageSize);
@@ -230,7 +230,7 @@ class BatchService
 
         $batchBuilder->with('trainers');
 
-        /** @var Batch $instituteBuilder */
+        /** @var Batch $batch */
         $batch = $batchBuilder->first();
 
         return [
@@ -432,20 +432,28 @@ class BatchService
             ],
             'registration_start_date' => [
                 'required',
-//                'date_format:d/m/Y'
+                'date',
+                'date_format:Y-m-d',
+                'before:registration_end_date'
             ],
             'registration_end_date' => [
                 'required',
-//                'date_format:d/m/Y'
+                'date',
+                'after:registration_start_date',
+                'date_format:Y-m-d',
             ],
             'batch_start_date' => [
                 'required',
-//                'date_format:d/m/Y'
+                'date',
+                'date_format:Y-m-d',
+                'before:batch_end_date'
             ],
 
             'batch_end_date' => [
                 'required',
-//                'date_format:d/m/Y',
+                'date',
+                'date_format:Y-m-d',
+                'after:batch_start_date'
             ],
             'available_seats' => [
                 'int',
@@ -455,15 +463,32 @@ class BatchService
                 'nullable',
                 "string"
             ],
-            'loc_district_id' => 'nullable|exists:loc_districts,id',
-            'loc_division_id' => 'nullable|exists:loc_divisions,id',
-            'loc_upazila_id' => 'nullable|exists:loc_upazilas,id',
+            'loc_district_id' => [
+                'nullable',
+                'exists:loc_districts,id'
+            ],
+            'loc_division_id' => [
+                'nullable',
+                'exists:loc_divisions,id'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'exists:loc_upazilas,id'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => [
+                'nullable',
+                'integer',
+                'max:10'
+            ],
+            'updated_by' => [
+                'nullable',
+                'integer',
+                'max:10'
+            ],
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -489,13 +514,13 @@ class BatchService
             ]
         ];
         return Validator::make($request->all(), [
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id'=>'numeric',
-            'batch_id'=>'numeric',
-            'programme_id'=>'numeric',
-            'course_id'=>'numeric',
-            'training_center_id'=>'numeric',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
+            'branch_id' => 'numeric|exists:branches,id',
+            'programme_id' => 'numeric|exists:programmes,id',
+            'course_id' => 'numeric|exists:courses,id',
+            'training_center_id' => 'numeric|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

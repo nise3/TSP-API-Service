@@ -80,15 +80,16 @@ class CourseService
 
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        /** @var Collection $coursesBuilder */
+        /** @var Collection $courses */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
@@ -155,7 +156,7 @@ class CourseService
 
         $courseBuilder->where('courses.id', '=', $id);
 
-        /** @var Course $courseBuilder */
+        /** @var Course $course */
         $course = $courseBuilder->first();
 
         return [
@@ -242,11 +243,12 @@ class CourseService
 
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        /** @var Collection $coursesBuilder */
+        /** @var Collection $courses */
         if ($paginate || $limit) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
@@ -297,12 +299,14 @@ class CourseService
             'title_en' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
+                'min:2'
             ],
             'title_bn' => [
                 'required',
                 'string',
-                'max:1000'
+                'max:1000',
+                'min:2'
             ],
             'code' => [
                 'required',
@@ -312,7 +316,8 @@ class CourseService
             ],
             'institute_id' => [
                 'required',
-                'int'
+                'int',
+                'exists:institutes,id'
             ],
             'course_fee' => [
                 'required',
@@ -321,32 +326,29 @@ class CourseService
             'duration' => [
                 'nullable',
                 'string',
-                'max: 30',
+                'max: 14',
             ],
             'description' => [
                 'nullable',
-                'string',
-                'max:500'
+                'string'
             ],
             'target_group' => [
                 'nullable',
                 'string',
-                'max: 300',
+                'max: 500',
             ],
             'objectives' => [
                 'nullable',
-                'string',
-                'max: 1000',
+                'string'
             ],
             'contents' => [
                 'nullable',
-                'string',
-                'max: 300',
+                'string'
             ],
             'training_methodology' => [
                 'nullable',
                 'string',
-                'max: 300',
+                'max: 600',
             ],
             'evaluation_system' => [
                 'nullable',
@@ -355,13 +357,11 @@ class CourseService
             ],
             'prerequisite' => [
                 'nullable',
-                'string',
-                'max:300'
+                'string'
             ],
             'eligibility' => [
                 'nullable',
                 'string',
-                'max:300'
             ],
             'cover_image' => [
                 'nullable',
@@ -372,16 +372,8 @@ class CourseService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => [
-                'nullable',
-                'string',
-                'max:191',
-            ],
-            'updated_by' => [
-                'nullable',
-                'string',
-                'max:191',
-            ],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
@@ -408,11 +400,11 @@ class CourseService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
+            'title_en' => 'nullable|max:255|min:2',
+            'title_bn' => 'nullable|max:1000|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

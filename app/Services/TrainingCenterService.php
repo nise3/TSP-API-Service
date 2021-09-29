@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,8 +28,8 @@ class TrainingCenterService
         $titleEn = $request['title_en'] ?? "";
         $titleBn = $request['title_bn'] ?? "";
         $pageSize = $request['page_size'] ?? "";
-        $paginate =  $request['page'] ?? "";
-        $rowStatus =  $request['row_status'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
@@ -109,7 +108,6 @@ class TrainingCenterService
         if (is_numeric($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        Log::info($branchId);
         if (is_numeric($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
@@ -120,7 +118,8 @@ class TrainingCenterService
 
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
         }
 
@@ -402,12 +401,12 @@ class TrainingCenterService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
-            'branch_id'=>'numeric',
+            'title_en' => 'nullable|max:400|min:2',
+            'title_bn' => 'nullable|max:1000|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
+            'branch_id' => 'numeric|exists:branches,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

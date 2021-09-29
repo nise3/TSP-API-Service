@@ -203,7 +203,6 @@
                                 }
                             }
                         }
-
                     },
                     {
                         "name": "primary_mobile",
@@ -1530,32 +1529,6 @@
                                             "row_status": 1,
                                             "created_at": "2021-08-22T08:35:49.000000Z",
                                             "updated_at": "2021-08-22T08:35:49.000000Z"
-                                        },
-                                        {
-                                            "id": 2,
-                                            "title_en": "Hector Conroy",
-                                            "title_bn": "Shyanne Trantow",
-                                            "institute_title_en": "Shannon Kshlerin",
-                                            "institute_id": 1,
-                                            "programme_code": "68731-6509",
-                                            "programme_logo": null,
-                                            "description": "Quia rerum dolores voluptas cum quis rerum fugiat.",
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
-                                        },
-                                        {
-                                            "id": 3,
-                                            "title_en": "Dessie Murphy V",
-                                            "title_bn": "Rylan Mueller",
-                                            "institute_title_en": "Shannon Kshlerin",
-                                            "institute_id": 1,
-                                            "programme_code": "15620-6934",
-                                            "programme_logo": null,
-                                            "description": "Ex consequuntur optio tenetur quis voluptas.",
-                                            "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
                                         }
                                     ],
                                     "response_status": {
@@ -1828,12 +1801,6 @@
                     },
                     {
                         "$ref": "#/components/parameters/page_size"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -2948,7 +2915,7 @@
                         "$ref": "#/components/parameters/institute_id_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/course_id_optional"
+                        "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/training_center_id_optional"

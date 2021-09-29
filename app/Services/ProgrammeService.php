@@ -68,15 +68,16 @@ class ProgrammeService
 
         if (!empty($titleEn)) {
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
         }
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $programmesBuilder->where('programmes.institute_id', '=', $instituteId);
         }
 
 
-        /** @var Collection $programmesBuilder */
+        /** @var Collection $programmes */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $programmes = $programmesBuilder->paginate($pageSize);
@@ -132,9 +133,9 @@ class ProgrammeService
 
         $programmeBuilder->where('programmes.id', '=', $id);
 
-        /** @var Programme $programmeBuilder */
+        /** @var Programme $programme */
         $programme = $programmeBuilder->first();
-        $links = [];
+
         return [
             "data" => $programme ?: [],
             "_response_status" => [
@@ -196,12 +197,14 @@ class ProgrammeService
             'title_en' => [
                 'required',
                 'string',
-                'max:300'
+                'max:300',
+                'min:2'
             ],
             'title_bn' => [
                 'required',
                 'string',
-                'max:800'
+                'max:800',
+                'min:2'
             ],
             'institute_id' => [
                 'required',
@@ -220,8 +223,7 @@ class ProgrammeService
             ],
             'logo' => [
                 'nullable',
-                'string',
-                'max:191',
+                'string'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -317,11 +319,11 @@ class ProgrammeService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
+            'title_en' => 'nullable|max:300|min:2',
+            'title_bn' => 'nullable|max:800|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

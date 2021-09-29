@@ -21,10 +21,10 @@ class CreateBatchesTable extends Migration
             $table->unsignedInteger('branch_id')->nullable();
             $table->unsignedInteger('training_center_id');
             $table->unsignedSmallInteger('number_of_seats');
-            $table->dateTime('registration_start_date');
-            $table->dateTime('registration_end_date');
-            $table->dateTime('batch_start_date');
-            $table->dateTime('batch_end_date');
+            $table->date('registration_start_date')->comment('Date format = Y-m-d');
+            $table->date('registration_end_date')->comment('Date format = Y-m-d');
+            $table->date('batch_start_date')->comment('Date format = Y-m-d');
+            $table->date('batch_end_date')->comment('Date format = Y-m-d');
             $table->unsignedSmallInteger('available_seats')->default(0);
             $table->text('dynamic_form_field')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);

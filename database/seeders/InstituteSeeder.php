@@ -29,7 +29,8 @@ class InstituteSeeder extends Seeder
             ->has(TrainingCenter::factory()->count(3))
             ->has(Programme::factory()->count(3))
             ->has(
-                Course::factory()->count(3)->has(Batch::factory()->count(3)
+                Course::factory()->count(3)
+                    ->has(Batch::factory()->count(3)
                ))
             ->has(Trainer::factory()->count(3))
             ->create();

@@ -102,15 +102,16 @@ class BranchService
 
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
+        }
+        if (!empty($titleBn)) {
             $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
         }
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
-        /** @var Collection $branchBuilder */
+        /** @var Collection $branches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
@@ -190,7 +191,7 @@ class BranchService
 
         $branchBuilder->where('branches.id', $id);
 
-        /** @var Branch $branchBuilder */
+        /** @var Branch $branch */
         $branch = $branchBuilder->first();
 
         return [
@@ -338,11 +339,13 @@ class BranchService
                 'required',
                 'string',
                 'max:191',
+                'min:2'
             ],
             'title_bn' => [
                 'required',
                 'string',
                 'max: 600',
+                'min:2'
             ],
             'institute_id' => [
                 'required',
@@ -351,8 +354,7 @@ class BranchService
             ],
             'address' => [
                 'nullable',
-                'string',
-                'max:1000'
+                'string'
             ],
             'google_map_src' => [
                 'nullable',
@@ -389,11 +391,11 @@ class BranchService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
+            'title_en' => 'nullable|max:191|min:2',
+            'title_bn' => 'nullable|max:600|min:2',
+            'page_size' => 'numeric|gt:0',
+            'page' => 'numeric|gt:0',
+            'institute_id' => 'numeric|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
