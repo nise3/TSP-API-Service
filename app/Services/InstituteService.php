@@ -270,12 +270,12 @@ class InstituteService
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
             'user_type' => BaseModel::INSTITUTE_USER,
-            'username' => strtolower($username),
             'institute_id' => $data['institute_id'],
-            'name_en' => $data['title_en'],
-            'name_bn' => $data['title_bn'],
-            'email' => $data['email'],
-            'mobile' => $data['primary_mobile'],
+            'username' => $data['contact_person_mobile'],
+            'name_en' => $data['contact_person_name'],
+            'name_bn' => $data['contact_person_name'],
+            'email' => $data['contact_person_email'],
+            'mobile' => $data['contact_person_mobile'],
         ];
 
         return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
