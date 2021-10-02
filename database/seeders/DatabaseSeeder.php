@@ -14,9 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            LocDivisionsTableSeeder::class,
-            LocDistrictsTableSeeder::class,
-            LocUpazilasTableSeeder::class,
+            GeoLocationDatabaseSeeder::class,
             InstituteSeeder::class
         ]);
     }
