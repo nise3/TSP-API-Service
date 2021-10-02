@@ -402,7 +402,7 @@ class TrainingCenterService
 
         return Validator::make($request->all(), [
             'title_en' => 'nullable|max:400|min:2',
-            'title_bn' => 'nullable|max:1000|min:2',
+            'title_bn' => 'nullable|max:600|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',

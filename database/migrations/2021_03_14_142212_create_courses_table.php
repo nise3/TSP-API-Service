@@ -17,7 +17,7 @@ class CreateCoursesTable extends Migration
             $table->increments('id');
             $table->string('code', 191);
             $table->unsignedInteger('institute_id');
-            $table->string('title_en', 255);
+            $table->string('title_en', 500);
             $table->string('title_bn', 1000);
             $table->unsignedDecimal('course_fee', 14)->default(0);
             $table->string('duration', 14)->nullable()->comment('Duration in hours');
@@ -29,7 +29,7 @@ class CreateCoursesTable extends Migration
             $table->string('evaluation_system', 600)->nullable();
             $table->text('prerequisite')->nullable();
             $table->text('eligibility')->nullable();
-            $table->string('cover_image', 191)->nullable();
+            $table->string('cover_image', 500)->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
