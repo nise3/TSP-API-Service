@@ -33,7 +33,7 @@ abstract class BaseModel extends Model
     /** Idp registration url for institute */
 
     public const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL='http://localhost:8000/api/v1/';
-    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE= "https://core.local:8008/api/v1/";
+    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE= "http://core.local:8008/api/v1/";
 
     public const DYNAMIC_FORM_FIELD_INFO=[
         self::ETHNIC_GROUP_INFO=>[
