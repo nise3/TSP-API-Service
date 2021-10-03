@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Institute;
-use App\Models\Organization;
 use Exception;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;

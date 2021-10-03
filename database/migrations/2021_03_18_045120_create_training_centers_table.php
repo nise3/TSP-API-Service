@@ -24,7 +24,7 @@ class CreateTrainingCentersTable extends Migration
             $table->unsignedInteger("loc_division_id")->nullable();
             $table->unsignedInteger("loc_district_id")->nullable();
             $table->unsignedInteger("loc_upazila_id")->nullable();
-            $table->text('address')->nullable();
+            $table->text('address')->nullable(); // TODO: need separate column for english
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active');
             $table->unsignedInteger('created_by')->nullable();

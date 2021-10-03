@@ -21,14 +21,14 @@ class CreateCoursesTable extends Migration
             $table->string('title_bn', 1000);
             $table->unsignedDecimal('course_fee', 14)->default(0);
             $table->string('duration', 14)->nullable()->comment('Duration in hours');
-            $table->text('description')->nullable();
+            $table->text('description')->nullable(); // TODO: need separate column for english
             $table->string('target_group', 500)->nullable();
-            $table->text('objectives')->nullable();
-            $table->text('contents')->nullable();
-            $table->string('training_methodology', 600)->nullable();
-            $table->string('evaluation_system', 600)->nullable();
-            $table->text('prerequisite')->nullable();
-            $table->text('eligibility')->nullable();
+            $table->text('objectives')->nullable(); // TODO: need separate column for english
+            $table->text('contents')->nullable(); // TODO: need separate column for english
+            $table->string('training_methodology', 600)->nullable(); // TODO: need separate column for english
+            $table->string('evaluation_system', 600)->nullable(); // TODO: need separate column for english
+            $table->text('prerequisite')->nullable();  // TODO: need separate column for english
+            $table->text('eligibility')->nullable(); // TODO: need separate column for english
             $table->string('cover_image', 500)->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();

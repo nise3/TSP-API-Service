@@ -26,9 +26,9 @@ class CreateTrainersTable extends Migration
             $table->string('email', 150)->unique();
             $table->string('mobile', 15)->unique();
             $table->date("date_of_birth")->nullable();
-            $table->text('about_me')->nullable();
-            $table->text('educational_qualification')->nullable();
-            $table->text('skills')->nullable();
+            $table->text('about_me')->nullable(); // TODO: need separate column for english
+            $table->text('educational_qualification')->nullable(); // TODO: need separate column for english
+            $table->text('skills')->nullable(); // TODO: need separate column for english
 
             $table->unsignedTinyInteger('gender')->comment('1=>male,2=>female,3=>others')->default(1);
             $table->unsignedTinyInteger('marital_status')->comment('0=>No,1=>Yes')->default(0);
@@ -40,12 +40,12 @@ class CreateTrainersTable extends Migration
             $table->unsignedMediumInteger('present_address_division_id')->nullable();
             $table->unsignedMediumInteger('present_address_district_id')->nullable();
             $table->unsignedMediumInteger('present_address_upazila_id')->nullable();
-            $table->text('present_house_address')->nullable();
+            $table->text('present_house_address')->nullable(); // TODO: need separate column for english
 
             $table->unsignedMediumInteger('permanent_address_division_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_district_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_upazila_id')->nullable();
-            $table->text('permanent_house_address')->nullable();
+            $table->text('permanent_house_address')->nullable(); // TODO: need separate column for english
 
 
             $table->text('photo')->nullable();
