@@ -17,7 +17,7 @@ class BranchFactory extends Factory
             'address' => $this->faker->address,
             'loc_division_id' => "1",
             'loc_district_id' =>"1",
-            'loc_upazila_id' => "1",
+            'loc_upazila_id' => "18",
             'google_map_src' => $this->faker->address,
     	];
     }

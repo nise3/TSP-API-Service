@@ -20,7 +20,7 @@ class TrainingCenterFactory extends Factory
             'branch_id' => $branch->id,
             'loc_division_id' => "1",
             'loc_district_id' =>"1",
-            'loc_upazila_id' => "1",
+            'loc_upazila_id' => "18",
             'address' => $this->faker->address,
             'center_location_type' => $this->faker->randomElement([1,2,3]),
             'google_map_src' => $this->faker->sentence
