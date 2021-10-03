@@ -3,8 +3,7 @@ info:
   title: Institute root
   version: 1.0.0
 servers:
-  - url: http://localhost:8000/api/v1
-  - url: https://api.bus.softbd.xyz/institute/api/v1/
+  - url: https://institute.local:8009/api/v1/
 paths:
   /:
     get:
