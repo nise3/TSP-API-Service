@@ -24,7 +24,6 @@ $app = new Laravel\Lumen\Application(
 );
 
 $app->withFacades();
-
 $app->withEloquent();
 
 /*
@@ -60,9 +59,9 @@ $app->singleton(
 */
 
 $app->configure('app');
-$app->configure('database');
+$app->configure('auth');
+$app->configure('services');
 $app->configure('httpclientendpoint');
-//$app->configure('services');
 
 /*
 |--------------------------------------------------------------------------
@@ -82,9 +81,9 @@ $app->middleware([
     LumenMiddlewareTrimOrConvertString\ConvertEmptyStringsToNull::class,
 ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -98,9 +97,9 @@ $app->middleware([
 */
 
 $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
-// $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 /*
