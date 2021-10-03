@@ -30,10 +30,8 @@ abstract class BaseModel extends Model
     /** Institute User Type*/
     public const INSTITUTE_USER = 3;
 
-    /** Idp registration url for institute */
-
-    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL='http://localhost:8001/api/v1/';
-    public const INSTITUTE_USER_REGISTRATION_ENDPOINT_REMOTE='http://nise3-core-api-service.default/api/v1/';
+    /** Client Url End Point Type*/
+    public const CORE_CLIENT_URL_TYPE = "CORE";
 
     public const DYNAMIC_FORM_FIELD_INFO=[
         self::ETHNIC_GROUP_INFO=>[
