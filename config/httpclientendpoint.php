@@ -18,7 +18,7 @@ return [
     ],
     "idp_server" => [
         "local" => "",
-        "dev" => "https://is.local:3443/scim2/Users",
+        "dev" => "https://is.local:9453/scim2/Users",
         "prod" => "https://identity.bus.softbd.xyz/scim2/Users"
     ]
 ];

@@ -211,12 +211,10 @@ class TrainingCenterService
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
         });
-        if (!empty($id)) {
-            $trainingCenterBuilder->where('training_centers.id', '=', $id);
-        }
+
+        $trainingCenterBuilder->where('training_centers.id', '=', $id);
         /** @var TrainingCenter $trainingCenterBuilder */
         $trainingCenter = $trainingCenterBuilder->first();
-
 
         return [
             "data" => $trainingCenter ?: [],

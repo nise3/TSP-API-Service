@@ -204,12 +204,9 @@ class InstituteController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
-
         $validated = $this->instituteService->validator($request, $id)->validate();
-
         try {
             $data = $this->instituteService->update($institute, $validated);
-
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [

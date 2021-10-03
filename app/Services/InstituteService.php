@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
@@ -288,6 +289,8 @@ class InstituteService
             'email' => $data['contact_person_email'],
             'mobile' => $data['contact_person_mobile'],
         ];
+
+        Log::info(json_encode($userPostField));
 
         return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
             return $e;
