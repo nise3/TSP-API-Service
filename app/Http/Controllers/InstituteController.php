@@ -86,7 +86,7 @@ class InstituteController extends Controller
             if ($institute) {
                 $validatedData['institute_id'] = $institute->id;
                 $createUser = $this->instituteService->createUser($validatedData);
-                Log::channel('idp_user')->info('idp_user_info:'.json_encode($createUser));
+                Log::channel('idp_user')->info('idp_user_info:' . json_encode($createUser));
                 if ($createUser && $createUser['_response_status']['success']) {
                     $response = [
                         'data' => $institute ?: [],
@@ -136,16 +136,16 @@ class InstituteController extends Controller
      * @return Exception|JsonResponse|Throwable
      * @throws ValidationException
      */
-    public function instituteRegister(Request $request)
+    public function instituteRegistration(Request $request)
     {
 
         $institute = new Institute();
 
-        $validated = $this->instituteService->registerOrganizationvalidator($request)->validate();
-
+        $validated = $this->instituteService->registerInstituteValidator($request)->validate();
         DB::beginTransaction();
         try {
             $institute = $this->instituteService->store($institute, $validated);
+
             if ($institute) {
 
                 $validated['institute_id'] = $institute->id;
@@ -194,6 +194,7 @@ class InstituteController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
+
     /**
      * * Update the specified resource in storage.
      * @param Request $request
