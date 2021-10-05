@@ -299,7 +299,7 @@ class InstituteService
 
     public function createRegisterUser(array $data)
     {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'register-user';
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-registration';
 
         $userPostField = [
             'user_type' => BaseModel::INSTITUTE_USER,
@@ -484,7 +484,7 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
-    public function registerOrganizationvalidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    public function registerInstituteValidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'title_en' => [
