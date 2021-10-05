@@ -708,36 +708,135 @@
                 }
             }
         },
-        "/register-institute": {
+        "/institute-registration": {
             "post": {
-                "summary": "Register an Organization",
-                "description": "Register an Organization",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/instituteRegister"
-                            }
+                "tags": [
+                    "institute Registration"
+                ],
+                "summary": "Registration",
+                "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_bn"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_type_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "example@gmail.com"
+                        }
+                    },
+                    {
+                        "name": "mobile",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "01845654543"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_email"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_designation"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dhaka mirpur road 4 block 2"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
-                },
+                ],
                 "responses": {
-                    "200": {
-                        "description": "success",
+                    "201": {
+                        "description": "Created",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/instituteRegister"
+                                    "$ref": "#/components/schemas/institutes"
                                 },
                                 "example": {
+                                    "data": {
+                                        "title_en": "PROGRAMME ON RMG4s",
+                                        "title_bn": "আরএমজি-প্রোগ্রাম4s",
+                                        "code": "AE455K",
+                                        "domain": "https://develosper.com",
+                                        "address": "Dhaka mirpur road 4 block 2s",
+                                        "google_map_src": "https://goo.gl/maps/fkjNYsmWfEXLQUDnm6",
+                                        "primary_phone": "01845654541",
+                                        "phone_numbers": [
+                                            "01845654542",
+                                            "01845654544"
+                                        ],
+                                        "primary_mobile": "01845654543",
+                                        "mobile_numbers": [
+                                            "01845654545",
+                                            "01845654546"
+                                        ],
+                                        "logo": "defasult.jpg",
+                                        "email": "exampsle@gmail.com",
+                                        "config": "This is configs",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
+                                        "row_status": "1",
+                                        "created_by": "1",
+                                        "updated_by": "1",
+                                        "updated_at": "2021-09-05T09:59:59.000000Z",
+                                        "created_at": "2021-09-05T09:59:59.000000Z",
+                                        "id": 11
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Institute added successfully",
+                                        "query_time": 0
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                "tags": [
-                    "institutes"
-                ]
+                }
             }
         },
         "/training-centers": {
@@ -4555,7 +4654,7 @@
             "name_of_the_office_head": {
                 "name": "name_of_the_office_head",
                 "in": "query",
-                "required": false,
+                "required": true,
                 "schema": {
                     "type": "string",
                     "example": "Mr x"
