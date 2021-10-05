@@ -31,7 +31,10 @@ abstract class BaseModel extends Model
     public const INSTITUTE_USER = 3;
 
     /** Client Url End Point Type*/
+    public const ORGANIZATION_CLIENT_URL_TYPE = "ORGANIZATION";
+    public const INSTITUTE_URL_CLIENT_TYPE = "INSTITUTE";
     public const CORE_CLIENT_URL_TYPE = "CORE";
+    public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
 
     public const DYNAMIC_FORM_FIELD_INFO=[
         self::ETHNIC_GROUP_INFO=>[
