@@ -40,20 +40,20 @@ class CourseService
                 'courses.id',
                 'courses.code',
                 'courses.title_en',
-                'courses.title_bn',
+                'courses.title',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title_bn as institute_title_bn',
+                'institutes.title as institute_title_bn',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
+                'courses.description_en',
                 'courses.target_group',
-                'courses.objectives',
-                'courses.contents',
-                'courses.training_methodology',
-                'courses.evaluation_system',
+                'courses.target_group_en',
                 'courses.prerequisite',
+                'courses.prerequisite_en',
                 'courses.eligibility',
+                'courses.eligibility_en',
                 'courses.cover_image',
                 'courses.row_status',
                 'courses.created_by',
@@ -82,7 +82,7 @@ class CourseService
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
+            $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
         if (is_numeric($instituteId)) {
@@ -125,20 +125,28 @@ class CourseService
                 'courses.id',
                 'courses.code',
                 'courses.title_en',
-                'courses.title_bn',
+                'courses.title',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title_bn as institute_title_bn',
+                'institutes.title as institute_title_bn',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
+                'courses.description_en',
                 'courses.target_group',
+                'courses.target_group_en',
                 'courses.objectives',
+                'courses.objectives_en',
                 'courses.contents',
+                'courses.contents_en',
                 'courses.training_methodology',
+                'courses.training_methodology_en',
                 'courses.evaluation_system',
+                'courses.evaluation_system_en',
                 'courses.prerequisite',
+                'courses.prerequisite_en',
                 'courses.eligibility',
+                'courses.eligibility_en',
                 'courses.cover_image',
                 'courses.row_status',
                 'courses.created_by',
@@ -218,9 +226,9 @@ class CourseService
                 'courses.code',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title_en as institute_title_bn',
+                'institutes.title as institute_title_bn',
                 'courses.title_en',
-                'courses.title_bn',
+                'courses.title',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -245,7 +253,7 @@ class CourseService
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $coursesBuilder->where('courses.title_bn', 'like', '%' . $titleBn . '%');
+            $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $courses */
@@ -297,12 +305,12 @@ class CourseService
         ];
         $rules = [
             'title_en' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255',
                 'min:2'
             ],
-            'title_bn' => [
+            'title' => [
                 'required',
                 'string',
                 'max:1000',
@@ -311,7 +319,7 @@ class CourseService
             'code' => [
                 'required',
                 'string',
-                'max:191',
+                'max:150',
                 'unique:courses,code,' . $id
             ],
             'institute_id' => [
@@ -321,23 +329,37 @@ class CourseService
             ],
             'course_fee' => [
                 'required',
+                'numeric',
                 'min:0'
             ],
             'duration' => [
                 'nullable',
-                'string',
+                'numeric',
                 'max: 14',
             ],
             'description' => [
                 'nullable',
                 'string'
             ],
-            'target_group' => [
+            'description_en' => [
+                'nullable',
+                'string'
+            ],
+            'target_group_en' => [
                 'nullable',
                 'string',
                 'max: 500',
             ],
+            'target_group' => [
+                'nullable',
+                'string',
+                'max: 1000',
+            ],
             'objectives' => [
+                'nullable',
+                'string'
+            ],
+            'objectives_en' => [
                 'nullable',
                 'string'
             ],
@@ -345,7 +367,16 @@ class CourseService
                 'nullable',
                 'string'
             ],
+            'contents_en' => [
+                'nullable',
+                'string'
+            ],
             'training_methodology' => [
+                'nullable',
+                'string',
+                'max: 1000',
+            ],
+            'training_methodology_en' => [
                 'nullable',
                 'string',
                 'max: 600',
@@ -353,13 +384,26 @@ class CourseService
             'evaluation_system' => [
                 'nullable',
                 'string',
-                'max: 600',
+                'max: 1000',
+            ],
+            'evaluation_system_en' => [
+                'nullable',
+                'string',
+                'max: 500',
             ],
             'prerequisite' => [
                 'nullable',
                 'string'
             ],
+            'prerequisite_en' => [
+                'nullable',
+                'string'
+            ],
             'eligibility' => [
+                'nullable',
+                'string',
+            ],
+            'eligibility_en' => [
                 'nullable',
                 'string',
             ],
@@ -401,7 +445,7 @@ class CourseService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|max:500|min:2',
-            'title_bn' => 'nullable|max:1000|min:2',
+            'title' => 'nullable|max:1000|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|gt:0',

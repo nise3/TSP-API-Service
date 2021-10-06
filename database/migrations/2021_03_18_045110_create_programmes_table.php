@@ -21,8 +21,8 @@ class CreateProgrammesTable extends Migration
             $table->increments('id');
             $table->string('code', 100)->nullable();
             $table->unsignedInteger('institute_id');
-            $table->string('title', 600);
-            $table->string('title_en', 300);
+            $table->string('title', 1000);
+            $table->string('title_en', 500);
             $table->text('description')->nullable();
             $table->text('description_en')->nullable();
             $table->string('logo', 600)->nullable();

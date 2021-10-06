@@ -38,10 +38,10 @@ class BranchService
         $branchBuilder = Branch::select([
             'branches.id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'branches.loc_division_id',
             'loc_divisions.title_bn as division_title_bn',
             'loc_divisions.title_en as division_title_en',
@@ -52,6 +52,7 @@ class BranchService
             'loc_upazilas.title_bn as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_by',
@@ -104,7 +105,7 @@ class BranchService
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
         if (is_numeric($instituteId)) {
@@ -146,20 +147,21 @@ class BranchService
         $branchBuilder = Branch::select([
             'branches.id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'branches.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title_bn',
             'loc_divisions.title_en as division_title_en',
             'branches.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title_bn',
             'loc_districts.title_en as district_title_en',
             'branches.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title_bn',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_by',
@@ -266,11 +268,12 @@ class BranchService
         $branchBuilder = Branch::onlyTrashed()->select([
             'branches.id as id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'branches.row_status',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_at',
@@ -284,7 +287,7 @@ class BranchService
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $branchBuilder */
@@ -341,7 +344,7 @@ class BranchService
                 'max:191',
                 'min:2'
             ],
-            'title_bn' => [
+            'title' => [
                 'required',
                 'string',
                 'max: 600',
@@ -356,19 +359,23 @@ class BranchService
                 'nullable',
                 'string'
             ],
+            'address_en' => [
+                'nullable',
+                'string'
+            ],
             'google_map_src' => [
                 'nullable',
                 'string'
             ],
-            'loc_division_id' => ['nullable', 'integer', 'max:191'],
-            'loc_district_id' => ['nullable', 'integer', 'max:191'],
-            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'loc_division_id' => ['nullable', 'integer'],
+            'loc_district_id' => ['nullable', 'integer'],
+            'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);
@@ -391,8 +398,8 @@ class BranchService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|max:191|min:2',
-            'title_bn' => 'nullable|max:600|min:2',
+            'title_en' => 'nullable|max:250|min:2',
+            'title' => 'nullable|max:600|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',

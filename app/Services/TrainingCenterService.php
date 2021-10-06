@@ -39,7 +39,7 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title as title_bn',
             'training_centers.loc_division_id',
             'loc_divisions.title_bn as division_title_bn',
             'loc_divisions.title_en as division_title_en',
@@ -51,10 +51,10 @@ class TrainingCenterService
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title_bn',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -120,7 +120,7 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $titleBn . '%');
         }
 
 
@@ -160,7 +160,7 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title as title_bn',
             'training_centers.loc_division_id',
             'loc_divisions.title_bn as division_title_bn',
             'loc_divisions.title_en as division_title_en',
@@ -177,6 +177,7 @@ class TrainingCenterService
             'branches.title_en as branch_title_en',
             'branches.title_bn as branch_title_bn',
             'training_centers.address',
+            'training_centers.address_en',
             'training_centers.google_map_src',
             'training_centers.row_status',
             'training_centers.created_by',
@@ -280,22 +281,23 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'title_en' => 'required|string|max: 400',
-            'title_bn' => 'required|string|max: 1000',
+            'title_en' => 'required|string|max: 500',
+            'title' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
             'center_location_type' => 'nullable|int',
-            'address' => ['nullable', 'string', 'max:1000'],
+            'address' => ['nullable', 'string'],
+            'address_en' => ['nullable', 'string'],
             'google_map_src' => ['nullable', 'string'],
-            'loc_division_id' => ['nullable', 'integer', 'max:191'],
-            'loc_district_id' => ['nullable', 'integer', 'max:191'],
-            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'loc_division_id' => ['nullable', 'integer'],
+            'loc_district_id' => ['nullable', 'integer'],
+            'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -324,13 +326,15 @@ class TrainingCenterService
         $trainingCentersBuilder = TrainingCenter::onlyTrashed()->select([
             'training_centers.id as id',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title as title_bn',
             'training_centers.institute_id',
             'institutes.title_en as institute_name',
+            'institutes.title as institute_name_bn',
             'training_centers.branch_id',
             'branches.title_en as branch_name',
+            'branches.title as branch_name_bn',
             'training_centers.address',
-            'training_centers.address',
+            'training_centers.address_en',
             'training_centers.google_map_src',
             'training_centers.row_status',
             'training_centers.created_by',
@@ -344,7 +348,7 @@ class TrainingCenterService
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $trainingCentersBuilder */
@@ -399,18 +403,18 @@ class TrainingCenterService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|max:400|min:2',
-            'title_bn' => 'nullable|max:600|min:2',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
-            'branch_id' => 'numeric|exists:branches,id',
+            'title_en' => 'nullable|max:500|min:2',
+            'title' => 'nullable|max:1000|min:2',
+            'page_size' => 'integer|gt:0',
+            'page' => 'integer|gt:0',
+            'institute_id' => 'integer|exists:institutes,id',
+            'branch_id' => 'integer|exists:branches,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

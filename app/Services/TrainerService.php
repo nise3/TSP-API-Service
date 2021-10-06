@@ -40,21 +40,22 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
+            'trainers.trainer_name as trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title_bn as institutes_title_bn',
+            'institutes.title as institutes_title_bn',
             'trainers.trainer_registration_number',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title_bn',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
+            'training_centers.title as training_center_title_bn',
             'trainers.email',
             'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
             'trainers.about_me',
+            'trainers.about_me_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -173,7 +174,7 @@ class TrainerService
             $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $nameEn . '%');
         }
         if (!empty($nameBn)) {
-            $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $nameBn . '%');
+            $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $nameBn . '%');
         }
 
         if (is_numeric($instituteId)) {
@@ -223,17 +224,17 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
+            'trainers.trainer_name as trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title_bn as institutes_title_bn',
+            'institutes.title as institutes_title_bn',
             'trainers.trainer_registration_number',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title_bn',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
+            'training_centers.title as training_center_title_bn',
             'trainers.email',
             'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
@@ -254,6 +255,7 @@ class TrainerService
             'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
             'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
+            'trainers.present_house_address_en',
             'trainers.permanent_address_division_id',
             'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
             'loc_divisions_permanent.title_en as division_title_en_permanent_address',
@@ -264,8 +266,11 @@ class TrainerService
             'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
             'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
+            'trainers.permanent_house_address_en',
             'trainers.educational_qualification',
+            'trainers.educational_qualification_en',
             'trainers.skills',
+            'trainers.skills_en',
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
@@ -378,7 +383,7 @@ class TrainerService
         $trainerBuilder = Trainer::onlyTrashed()->select([
             'trainers.id as id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
+            'trainers.trainer_name as trainer_name_bn',
             'trainers.institute_id',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
@@ -411,7 +416,7 @@ class TrainerService
         if (!empty($titleEn)) {
             $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainerBuilder->where('trainers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainerBuilder->where('trainers.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $trainerBuilder */
@@ -465,9 +470,9 @@ class TrainerService
 
         $rules = [
             'trainer_name_en' => [
-                'required',
+                'nullable',
                 'string',
-                'max:191'
+                'max:250'
             ],
             'trainer_name_bn' => [
                 'required',
@@ -516,15 +521,15 @@ class TrainerService
             ],
             'gender' => [
                 'nullable',
-                'int'
+                'integer'
             ],
             'marital_status' => [
                 'nullable',
-                'int'
+                'integer'
             ],
             'religion' => [
                 'nullable',
-                'int'
+                'integer'
             ],
             'nationality' => [
                 'required',
@@ -543,39 +548,47 @@ class TrainerService
             ],
             'present_address_division_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_divisions,id'
             ],
             'present_address_district_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_districts,id'
             ],
             'present_address_upazila_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_upazilas,id'
             ],
             'present_house_address' => [
                 'nullable',
                 'string'
             ],
+            'present_house_address_en' => [
+                'nullable',
+                'string'
+            ],
             'permanent_address_division_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_divisions,id'
             ],
             'permanent_address_district_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_districts,id'
             ],
             'permanent_address_upazila_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_upazilas,id'
             ],
             'permanent_house_address' => [
+                'nullable',
+                'string'
+            ],
+            'permanent_house_address_en' => [
                 'nullable',
                 'string'
             ],
@@ -583,7 +596,15 @@ class TrainerService
                 'nullable',
                 'string'
             ],
+            'educational_qualification_en' => [
+                'nullable',
+                'string'
+            ],
             'skills' => [
+                'nullable',
+                'string'
+            ],
+            'skills_en' => [
                 'nullable',
                 'string'
             ],
@@ -622,19 +643,19 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'trainer_name_en' => 'nullable|max:191|min:2',
-            'trainer_name_bn' => 'nullable|max:500|min:2',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
-            'branch_id' => 'numeric|exists:branches,id',
-            'training_center_id' => 'numeric|exists:training_centers,id',
+            'trainer_name_en' => 'nullable|max:250|min:2',
+            'trainer_name' => 'nullable|max:500|min:2',
+            'page_size' => 'integer|gt:0',
+            'page' => 'integer|gt:0',
+            'institute_id' => 'integer|exists:institutes,id',
+            'branch_id' => 'integer|exists:branches,id',
+            'training_center_id' => 'integer|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

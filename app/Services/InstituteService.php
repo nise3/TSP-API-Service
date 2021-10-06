@@ -575,11 +575,12 @@ class InstituteService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
+            'title' => 'nullable|min:1',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
             "institute_type_id" => [
-                "numeric"
+                "nullable",
+                "integer"
             ],
             'order' => [
                 'string',

@@ -46,16 +46,16 @@ class BatchService
             'batches.id',
             'batches.course_id',
             'courses.title_en as course_title_en',
-            'courses.title_bn as course_title_bn',
+            'courses.title as course_title_bn',
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
-            'batches.programme_id',
+            'branches.title as branch_title_bn',
+            'courses.programme_id',
             'programmes.title_en as programme_title_en',
-            'programmes.title_bn as programme_title_bn',
+            'programmes.title as programme_title_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -64,8 +64,8 @@ class BatchService
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
-            'batches.dynamic_form_field',
+            'training_centers.title as training_center_title_bn',
+            'courses.application_form_settings',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -90,7 +90,7 @@ class BatchService
         });
 
         $batchBuilder->leftjoin("programmes", function ($join) use ($rowStatus) {
-            $join->on('batches.programme_id', '=', 'programmes.id')
+            $join->on('courses.programme_id', '=', 'programmes.id')
                 ->whereNull('programmes.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('programmes.row_status', $rowStatus);
@@ -128,7 +128,7 @@ class BatchService
         }
 
         if (is_numeric($programId)) {
-            $batchBuilder->where('batches.programme_id', $programId);
+            $batchBuilder->where('courses.programme_id', $programId);
         }
 
         if (is_numeric($courseId)) {
@@ -176,16 +176,16 @@ class BatchService
             'batches.id',
             'batches.course_id',
             'courses.title_en as course_title_en',
-            'courses.title_bn as course_title_bn',
+            'courses.title as course_title_bn',
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
-            'batches.programme_id',
+            'branches.title as branch_title_bn',
+            'courses.programme_id',
             'programmes.title_en as programme_title_en',
-            'programmes.title_bn as programme_title_bn',
+            'programmes.title as programme_title_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -194,8 +194,8 @@ class BatchService
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
-            'batches.dynamic_form_field',
+            'training_centers.title as training_center_title_bn',
+            'courses.application_form_settings',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -213,7 +213,7 @@ class BatchService
                 ->whereNull('institutes.deleted_at');
         });
         $batchBuilder->leftjoin("programmes", function ($join) {
-            $join->on('batches.programme_id', '=', 'programmes.id')
+            $join->on('courses.programme_id', '=', 'programmes.id')
                 ->whereNull('programmes.deleted_at');
         });
 
@@ -283,7 +283,7 @@ class BatchService
     public function getBatchTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $title = $request->query('title');
         $paginate = $request->query('page');
         $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
@@ -298,8 +298,9 @@ class BatchService
             'institutes.id as institute_id',
             'branches.id as branch_id',
             'branches.title_en as branch_name',
-            'batches.programme_id',
+            'courses.programme_id',
             'programmes.title_en as programme_name',
+            'programmes.title as programme_name_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -308,15 +309,6 @@ class BatchService
             'batches.available_seats',
             'training_centers.id as training_center_id',
             'training_centers.title_en as training_center_name',
-            'batches.in_ethnic_group',
-            'batches.is_freedom_fighter',
-            'batches.disability_status',
-            'batches.ssc_passing_status',
-            'batches.hsc_passing_status',
-            'batches.honors_passing_status',
-            'batches.masters_passing_status',
-            'batches.is_occupation_needed',
-            'batches.is_guardian_info_needed',
             'batches.row_status',
             'batches.created_by',
             'batches.updated_by',
@@ -326,7 +318,7 @@ class BatchService
 
         $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
         $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
-        $batchBuilder->leftJoin('programmes', 'batches.programme_id', '=', 'programmes.id');
+        $batchBuilder->leftJoin('programmes', 'courses.programme_id', '=', 'programmes.id');
         $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
         $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
 
@@ -335,8 +327,8 @@ class BatchService
 
         if (!empty($titleEn)) {
             $batchBuilder->where('batches.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $batchBuilder->where('batches.title_bn', 'like', '%' . $titleBn . '%');
+        } elseif (!empty($title)) {
+            $batchBuilder->where('batches.title', 'like', '%' . $title . '%');
         }
 
         /** @var Collection $batches */
@@ -402,7 +394,7 @@ class BatchService
         ];
         $rules = [
             'institute_id' => [
-                'nullable',
+                'required',
                 'int',
                 'exists:institutes,id',
             ],
@@ -415,11 +407,6 @@ class BatchService
                 'required',
                 'int',
                 'exists:training_centers,id'
-            ],
-            'programme_id' => [
-                'nullable',
-                'int',
-                'exists:programmes,id'
             ],
             'branch_id' => [
                 'nullable',
@@ -448,7 +435,6 @@ class BatchService
                 'date_format:Y-m-d',
                 'before:batch_end_date'
             ],
-
             'batch_end_date' => [
                 'required',
                 'date',
@@ -458,10 +444,6 @@ class BatchService
             'available_seats' => [
                 'int',
                 'nullable'
-            ],
-            "dynamic_form_field" => [
-                'nullable',
-                "string"
             ],
             'loc_district_id' => [
                 'nullable',
@@ -518,7 +500,6 @@ class BatchService
             'page' => 'numeric|gt:0',
             'institute_id' => 'numeric|exists:institutes,id',
             'branch_id' => 'numeric|exists:branches,id',
-            'programme_id' => 'numeric|exists:programmes,id',
             'course_id' => 'numeric|exists:courses,id',
             'training_center_id' => 'numeric|exists:training_centers,id',
             'order' => [

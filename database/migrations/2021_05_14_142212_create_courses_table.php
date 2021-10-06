@@ -31,9 +31,9 @@ class CreateCoursesTable extends Migration
             $table->text('contents')->nullable();
             $table->text('contents_en')->nullable();
             $table->string('training_methodology', 600)->nullable();
-            $table->string('training_methodology_en', 600)->nullable();
-            $table->string('evaluation_system', 600)->nullable();
-            $table->string('evaluation_system_en', 600)->nullable();
+            $table->string('training_methodology_en', 1000)->nullable();
+            $table->string('evaluation_system', 1000)->nullable();
+            $table->string('evaluation_system_en', 500)->nullable();
             $table->text('prerequisite')->nullable();
             $table->text('prerequisite_en')->nullable();
             $table->text('eligibility')->nullable();

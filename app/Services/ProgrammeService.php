@@ -37,10 +37,10 @@ class ProgrammeService
         $programmesBuilder = Programme::select([
             'programmes.id',
             'programmes.title_en',
-            'programmes.title_bn',
+            'programmes.title',
             'programmes.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
@@ -70,7 +70,7 @@ class ProgrammeService
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programmes.title', 'like', '%' . $titleBn . '%');
         }
         if (is_numeric($instituteId)) {
             $programmesBuilder->where('programmes.institute_id', '=', $instituteId);
@@ -112,10 +112,10 @@ class ProgrammeService
         $programmeBuilder = Programme::select([
             'programmes.id',
             'programmes.title_en',
-            'programmes.title_bn',
+            'programmes.title',
             'programmes.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title_bn',
             'programmes.code',
             'programmes.logo',
             'programmes.description',
@@ -195,15 +195,15 @@ class ProgrammeService
 
         $rules = [
             'title_en' => [
-                'required',
+                'nullable',
                 'string',
-                'max:300',
+                'max:500',
                 'min:2'
             ],
-            'title_bn' => [
+            'title' => [
                 'required',
                 'string',
-                'max:800',
+                'max:1000',
                 'min:2'
             ],
             'institute_id' => [
@@ -214,10 +214,14 @@ class ProgrammeService
             'code' => [
                 'nullable',
                 'string',
-                'max:191',
+                'max:100',
                 'unique:programmes,code,' . $id,
             ],
             'description' => [
+                'nullable',
+                'string'
+            ],
+            'description_en' => [
                 'nullable',
                 'string'
             ],
@@ -248,7 +252,7 @@ class ProgrammeService
         $programmesBuilder = Programme::onlyTrashed()->select([
             'programmes.id as id',
             'programmes.title_en',
-            'programmes.title_bn',
+            'programmes.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'programmes.code as programme_code',
@@ -264,7 +268,7 @@ class ProgrammeService
         if (!empty($titleEn)) {
             $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $programmesBuilder->where('programmes.title_bn', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programmes.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $programmesBuilder */
@@ -319,17 +323,17 @@ class ProgrammeService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|max:300|min:2',
-            'title_bn' => 'nullable|max:800|min:2',
+            'title_en' => 'nullable|max:500|min:2',
+            'title' => 'nullable|max:1000|min:2',
             'page_size' => 'numeric|gt:0',
             'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
+            'institute_id' => 'integer|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

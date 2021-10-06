@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,9 +13,10 @@ use Illuminate\Support\Facades\File;
  * Class Course
  * @package App\Models
  * @property string|null title_en
- * @property string|null title_bn
+ * @property string|null title
  * @property string code
  * @property int institute_id
+ * @property int programme_id
  * @property double course_fee
  * @property string duration
  * @property string target_group
@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\File;
  * @property string eligibility_en
  * @property array application_form_settings
  * @property File cover_image
+ * @property-read Programme programme
  */
 class Course extends BaseModel
 {
@@ -65,5 +66,13 @@ class Course extends BaseModel
     public function batch(): HasMany
     {
         return $this->hasMany(Batch::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function programme(): BelongsTo
+    {
+        return $this->belongsTo(Programme::class); // TODO: specifically mention columns
     }
 }
