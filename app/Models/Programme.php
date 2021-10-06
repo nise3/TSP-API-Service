@@ -36,7 +36,7 @@ class Programme extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class); // TODO: specifically mention columns
     }
 
     /**
@@ -44,6 +44,6 @@ class Programme extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(Batch::class); // TODO: specifically mention columns
     }
 }

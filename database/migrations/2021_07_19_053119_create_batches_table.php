@@ -26,7 +26,6 @@ class CreateBatchesTable extends Migration
             $table->date('batch_start_date')->comment('Date format = Y-m-d');
             $table->date('batch_end_date')->comment('Date format = Y-m-d');
             $table->unsignedSmallInteger('available_seats')->default(0);
-            $table->text('dynamic_form_field')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();

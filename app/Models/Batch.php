@@ -6,7 +6,6 @@ use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -44,7 +43,7 @@ class Batch extends BaseModel
      */
     public function course(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class); // TODO: specifically mention columns
     }
 
     /**
@@ -52,7 +51,7 @@ class Batch extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class); // TODO: specifically mention columns
     }
 
     /**
@@ -60,7 +59,7 @@ class Batch extends BaseModel
      */
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class); // TODO: specifically mention columns
     }
 
     /**
@@ -68,7 +67,7 @@ class Batch extends BaseModel
      */
     public function trainingCenter(): BelongsTo
     {
-        return $this->belongsTo(TrainingCenter::class);
+        return $this->belongsTo(TrainingCenter::class); // TODO: specifically mention columns
     }
 
     /**
@@ -76,7 +75,7 @@ class Batch extends BaseModel
      */
     public function programme(): BelongsTo
     {
-        return $this->belongsTo(Programme::class);
+        return $this->belongsTo(Programme::class); // TODO: specifically mention columns
     }
 
     /**
@@ -84,7 +83,7 @@ class Batch extends BaseModel
      */
     public function trainers():BelongsToMany
     {
-        return $this->belongsToMany(Trainer::class,'trainer_batch');
+        return $this->belongsToMany(Trainer::class,'trainer_batch'); // TODO: specifically mention columns
     }
 
 }

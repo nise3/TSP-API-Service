@@ -20,13 +20,22 @@ use Illuminate\Support\Facades\File;
  * @property double course_fee
  * @property string duration
  * @property string target_group
+ * @property string target_group_en
  * @property string contents
+ * @property string contents_en
  * @property string training_methodology
+ * @property string training_methodology_en
  * @property string evaluation_system
+ * @property string evaluation_system_en
  * @property string description
+ * @property string description_en
  * @property string objectives
+ * @property string objectives_en
  * @property string prerequisite
+ * @property string prerequisite_en
  * @property string eligibility
+ * @property string eligibility_en
+ * @property array application_form_settings
  * @property File cover_image
  */
 class Course extends BaseModel
@@ -37,6 +46,10 @@ class Course extends BaseModel
     protected $guarded = ['id'];
 
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
+
+    protected $casts = [
+        'application_form_settings' => 'array'
+    ];
 
     /**
      * @return BelongsTo

@@ -37,7 +37,7 @@ class TrainingCenter extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class); // TODO: specifically mention columns
     }
 
     /**
@@ -45,7 +45,7 @@ class TrainingCenter extends BaseModel
      */
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class); // TODO: specifically mention columns
     }
 
     /**
@@ -53,6 +53,6 @@ class TrainingCenter extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(Batch::class); // TODO: specifically mention columns
     }
 }

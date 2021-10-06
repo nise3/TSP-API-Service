@@ -16,12 +16,13 @@ class CreateBranchesTable extends Migration
         Schema::create('branches', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('institute_id');
+            $table->string('title', 600);
             $table->string('title_en', 191);
-            $table->string('title_bn', 600);
-            $table->unsignedInteger("loc_division_id")->nullable();
-            $table->unsignedInteger("loc_district_id")->nullable();
-            $table->unsignedInteger("loc_upazila_id")->nullable();
-            $table->text('address')->nullable(); // TODO: need separate column for english
+            $table->unsignedMediumInteger("loc_division_id")->nullable();
+            $table->unsignedMediumInteger("loc_district_id")->nullable();
+            $table->unsignedMediumInteger("loc_upazila_id")->nullable();
+            $table->text('address')->nullable();
+            $table->text('address_en')->nullable();
             $table->text('google_map_src')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();

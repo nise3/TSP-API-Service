@@ -12,4 +12,8 @@ class Trainer extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'skills' => 'array',
+        'skills_en' => 'array',
+    ];
 }
