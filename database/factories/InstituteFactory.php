@@ -23,18 +23,21 @@ class InstituteFactory extends Factory
      */
     public function definition(): array
     {
+        $address = $this->faker->address;
+
         return [
+            'title' => $this->faker->name,
             'title_en' => $this->faker->name,
-            'title_bn' => $this->faker->name,
             'loc_division_id' => "1",
-            'loc_district_id' =>"1",
-            'loc_upazila_id' => "1",
-            'code' => $this->faker->unique()->countryCode,
-            'domain' => 'http://' . $this->faker->domainName,
-            'address' => $this->faker->address,
+            'loc_district_id' => "1",
+            'loc_upazila_id' => "18",
+            'code' =>  $this->faker->slug(20, false),
+            'domain' => 'https://' . $this->faker->domainName,
+            'address' => $address,
+            'address_en' => $address,
             'primary_phone' => $this->faker->phoneNumber,
-            'phone_numbers' => $this->faker->phoneNumber,
-            'primary_mobile' => $this->faker->phoneNumber,
+            'mobile_numbers' => "" . $this->faker->numerify('017########') . "," . $this->faker->numerify('017########'),
+            'primary_mobile' => $this->faker->numerify('017########'),
             'email' => $this->faker->email(),
             'config' => $this->faker->sentence,
             'google_map_src' => $this->faker->sentence,

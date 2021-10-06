@@ -11,14 +11,16 @@ class BranchFactory extends Factory
 
     public function definition(): array
     {
-    	return [
+        $address = $this->faker->address;
+        return [
+            'title' => $this->faker->name,
             'title_en' => $this->faker->name,
-            'title_bn' => $this->faker->name,
-            'address' => $this->faker->address,
+            'address' => $address,
+            'address_en' => $address,
             'loc_division_id' => "1",
-            'loc_district_id' =>"1",
-            'loc_upazila_id' => "1",
+            'loc_district_id' => "1",
+            'loc_upazila_id' => "18",
             'google_map_src' => $this->faker->address,
-    	];
+        ];
     }
 }

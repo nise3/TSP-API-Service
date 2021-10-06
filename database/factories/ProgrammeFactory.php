@@ -13,9 +13,9 @@ class ProgrammeFactory extends Factory
     {
     	return [
             'title_en' => $this->faker->name,
-            'title_bn' => $this->faker->name,
-            'code' => $this->faker->unique()->postcode,
-            'description' => $this->faker->sentence,
+            'title' => $this->faker->name,
+            'code' => $this->faker->slug(25, false),
+            'description' => $this->faker->paragraph,
             'logo' => "softBd.jpg"
     	];
     }

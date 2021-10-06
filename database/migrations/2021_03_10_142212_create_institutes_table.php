@@ -29,10 +29,10 @@ class CreateInstitutesTable extends Migration
             $table->string('logo', 600)->nullable();
             $table->string("country")->default("BD")->comment('ISO country code');
             $table->string("phone_code")->default("880")->comment('Country phone code');
-            $table->string('primary_phone', 15)->nullable();
-            $table->string('phone_numbers', 20)->nullable();
+            $table->string('primary_phone', 20)->nullable();
+            $table->string('phone_numbers', 400)->nullable();
             $table->string('primary_mobile', 15);
-            $table->string('mobile_numbers', 15)->nullable();
+            $table->string('mobile_numbers', 400)->nullable();
             $table->string('email', 150);
             $table->string("name_of_the_office_head", 500)->nullable();
             $table->string("name_of_the_office_head_en")->nullable();

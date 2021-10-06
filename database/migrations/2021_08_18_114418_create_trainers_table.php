@@ -43,15 +43,16 @@ class CreateTrainersTable extends Migration
             $table->unsignedMediumInteger('present_address_division_id')->nullable();
             $table->unsignedMediumInteger('present_address_district_id')->nullable();
             $table->unsignedMediumInteger('present_address_upazila_id')->nullable();
+
             $table->text('present_house_address')->nullable();
             $table->text('present_house_address_en')->nullable();
 
             $table->unsignedMediumInteger('permanent_address_division_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_district_id')->nullable();
             $table->unsignedMediumInteger('permanent_address_upazila_id')->nullable();
+
             $table->text('permanent_house_address')->nullable();
             $table->text('permanent_house_address_en')->nullable();
-
 
             $table->text('photo')->nullable();
             $table->text('signature')->nullable();
