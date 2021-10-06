@@ -9,6 +9,7 @@ use App\Models\Institute;
 use App\Models\Programme;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use Database\Factories\BatchFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
@@ -30,11 +31,14 @@ class InstituteSeeder extends Seeder
             ->has(Programme::factory()->count(3))
             ->has(
                 Course::factory()->count(3)
-                    ->has(Batch::factory()->count(3)
-               ))
+                    ->has(
+                        Batch::factory()->count(3)
+                    )
+            )
             ->has(Trainer::factory()->count(10))
             ->create();
 
         Schema::disableForeignKeyConstraints();
     }
+
 }

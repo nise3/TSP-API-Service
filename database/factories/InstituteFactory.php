@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 
+use App\Models\Batch;
 use App\Models\Institute;
+use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
@@ -44,4 +46,18 @@ class InstituteFactory extends Factory
             'logo' => "softbd.jpg"
         ];
     }
+    /**
+     * Configure the model factory.
+     * @return $this
+     **/
+/*
+    public function configure()
+    {
+        return $this->afterCreating(function (Institute $institute) {
+            $trainingCenterId = TrainingCenter::where('institute_id', $institute->id)->random()->id;
+            $batch->training_center_id = $trainingCenterId;
+            $batch->save();
+        });
+    }
+*/
 }

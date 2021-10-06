@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Course;
+use App\Models\Programme;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CourseFactory extends Factory
@@ -11,7 +12,7 @@ class CourseFactory extends Factory
 
     public function definition(): array
     {
-    	return [
+        return [
             'title_en' => $this->faker->name,
             'title' => $this->faker->name,
             'code' => $this->faker->slug(30, false),
@@ -35,6 +36,7 @@ class CourseFactory extends Factory
             'eligibility_en' => $this->faker->sentence,
             'cover_image' => "softbd.jpg"
 
-    	];
+        ];
     }
+
 }

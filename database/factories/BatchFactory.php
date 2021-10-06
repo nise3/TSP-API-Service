@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Batch;
+use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BatchFactory extends Factory
@@ -19,4 +20,6 @@ class BatchFactory extends Factory
             'batch_end_date' => $this->faker->date('2021-11-21')
         ];
     }
+
+
 }
