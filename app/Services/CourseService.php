@@ -44,7 +44,10 @@ class CourseService
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
                 'institutes.title as institute_title_bn',
+                'programs.title_en as program_title_en',
+                'programs.title as program_title_bn',
                 'courses.course_fee',
+                'courses.program_id',
                 'courses.duration',
                 'courses.description',
                 'courses.description_en',
@@ -69,6 +72,14 @@ class CourseService
                 ->whereNull('institutes.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
+            }
+        });
+
+        $coursesBuilder->join("programs", function ($join) use ($rowStatus) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('programs.row_status', $rowStatus);
             }
         });
 
@@ -129,6 +140,9 @@ class CourseService
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
                 'institutes.title as institute_title_bn',
+                'programs.title_en as program_title_en',
+                'programs.title as program_title_bn',
+                'courses.program_id',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -160,6 +174,11 @@ class CourseService
         $courseBuilder->join("institutes", function ($join) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
+        });
+
+        $courseBuilder->join("programs", function ($join)  {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
         });
 
         $courseBuilder->where('courses.id', '=', $id);
@@ -327,6 +346,11 @@ class CourseService
                 'int',
                 'exists:institutes,id'
             ],
+            'program_id' => [
+                'nullable',
+                'int',
+                'exists:programs,id'
+            ],
             'course_fee' => [
                 'required',
                 'numeric',
@@ -446,15 +470,16 @@ class CourseService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|gt:0',
+            'page_size' => 'integer|gt:0',
+            'page' => 'integer|gt:0',
+            'institute_id' => 'integer|gt:0',
+            'program_id' => 'nullable|integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

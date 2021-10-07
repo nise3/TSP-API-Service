@@ -30,7 +30,7 @@
                                         "Batch",
                                         "Course",
                                         "Institute",
-                                        "Programme",
+                                        "Program",
                                         "TrainingCenter"
                                     ],
                                     "description": [
@@ -67,7 +67,7 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn_optional"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -85,7 +85,7 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Hellen Mante",
-                                        "title_bn": "Brenda McDermott",
+                                        "title": "Brenda McDermott",
                                         "code": "PG",
                                         "logo": "softbd.jpg",
                                         "primary_phone": "641.838.9521",
@@ -146,7 +146,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "domain",
@@ -320,7 +320,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4s",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4s",
+                                        "title": "আরএমজি-প্রোগ্রাম4s",
                                         "code": "AE455K",
                                         "domain": "https://develosper.com",
                                         "address": "Dhaka mirpur road 4 block 2s",
@@ -367,7 +367,7 @@
                     "institutes"
                 ],
                 "summary": "get_one",
-                "description": "API endpoint to get a institute by programme id.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get a institute by program id.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "name": "instituteId",
@@ -392,7 +392,7 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Hellen Mante",
-                                        "title_bn": "Brenda McDermott",
+                                        "title": "Brenda McDermott",
                                         "code": "PG",
                                         "logo": "softbd.jpg",
                                         "primary_phone": "641.838.9521",
@@ -459,7 +459,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/country"
@@ -624,7 +624,7 @@
                                     "data": {
                                         "id": 13,
                                         "title_en": "PROGRAMME ON RMG45",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম45",
+                                        "title": "আরএমজি-প্রোগ্রাম45",
                                         "code": "AE4555",
                                         "logo": "defaults.jpg",
                                         "primary_phone": "01845654541",
@@ -1181,7 +1181,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -1629,13 +1629,13 @@
                 }
             }
         },
-        "/programmes": {
+        "/programs": {
             "get": {
                 "tags": [
-                    "programmes"
+                    "programs"
                 ],
                 "summary": "get_list",
-                "description": " API endpoint to get list of  programmes.A successful request response will show 200 HTTP status code",
+                "description": " API endpoint to get list of  programs.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
@@ -1665,7 +1665,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": [
@@ -1675,8 +1675,8 @@
                                             "title_bn": "Prof. Neoma Gusikowski",
                                             "institute_title_en": "Shannon Kshlerin",
                                             "institute_id": 1,
-                                            "programme_code": "16026",
-                                            "programme_logo": null,
+                                            "program_code": "16026",
+                                            "program_logo": null,
                                             "description": "Blanditiis itaque reiciendis molestias est iusto.",
                                             "row_status": 1,
                                             "created_at": "2021-08-22T08:35:49.000000Z",
@@ -1699,10 +1699,10 @@
             },
             "post": {
                 "tags": [
-                    "programmes"
+                    "programs"
                 ],
                 "summary": "create",
-                "description": " API endpoint to create a programme.A successful request response will show 201 HTTP status code",
+                "description": " API endpoint to create a program.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/code_optional"
@@ -1737,7 +1737,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -1745,7 +1745,7 @@
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
                                         "institute_id": "1",
                                         "code": "A4455ss",
-                                        "description": "programme under bitac institute",
+                                        "description": "program under bitac institute",
                                         "logo": "default.jpg",
                                         "row_status": "1",
                                         "created_by": "1",
@@ -1767,13 +1767,13 @@
                 }
             }
         },
-        "/programmes/{programmeId}": {
+        "/programs/{programId}": {
             "get": {
                 "parameters": [
                     {
-                        "name": "programmeId",
+                        "name": "programId",
                         "in": "path",
-                        "description": "programme id to get one",
+                        "description": "program id to get one",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1782,17 +1782,17 @@
                     }
                 ],
                 "tags": [
-                    "programmes"
+                    "programs"
                 ],
                 "summary": "get_one",
-                "description": "API endpoint to get a programme by programme id.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get a program by program id.A successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -1800,8 +1800,8 @@
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
                                         "institute_title_en": "BITAC",
-                                        "programme_code": "4456",
-                                        "programme_logo": "",
+                                        "program_code": "4456",
+                                        "program_logo": "",
                                         "row_status": 1,
                                         "created_at": "2021-07-26T06:53:00.000000Z",
                                         "updated_at": "2021-07-26T06:56:12.000000Z"
@@ -1820,13 +1820,13 @@
             },
             "put": {
                 "tags": [
-                    "programmes"
+                    "programs"
                 ],
                 "summary": "update",
-                "description": "API endpoint to update a programme.A successful request response will show 201 HTTP status code",
+                "description": "API endpoint to update a program.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
-                        "name": "programmeId",
+                        "name": "programId",
                         "required": true,
                         "in": "path",
                         "schema": {
@@ -1867,7 +1867,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -1876,7 +1876,7 @@
                                         "institute_id": "1",
                                         "title_en": "PROGRAMME ON RMG4",
                                         "title_bn": "আরএমজি-প্রোগ্রাম4",
-                                        "description": "programme under bitac institute",
+                                        "description": "program under bitac institute",
                                         "logo": "default.jpg",
                                         "row_status": "1",
                                         "created_by": "1",
@@ -1899,13 +1899,13 @@
             },
             "delete": {
                 "tags": [
-                    "programmes"
+                    "programs"
                 ],
                 "summary": "delete",
-                "description": " API endpoint to delete a programme.A successful request response will show 200 HTTP status code",
+                "description": " API endpoint to delete a program.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "name": "programmeId",
+                        "name": "programId",
                         "in": "path",
                         "description": "Programme id to delete",
                         "required": true,
@@ -1921,7 +1921,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "_response_status": {
@@ -1964,7 +1964,7 @@
                         "$ref": "#/components/parameters/branch_id_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/programme_id_optional"
+                        "$ref": "#/components/parameters/program_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/course_id_optional"
@@ -1993,9 +1993,9 @@
                                         "branch_id": null,
                                         "branch_title_en": null,
                                         "branch_title_bn": null,
-                                        "programme_id": null,
-                                        "programme_title_en": null,
-                                        "programme_title_bn": null,
+                                        "program_id": null,
+                                        "program_title_en": null,
+                                        "program_title_bn": null,
                                         "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
@@ -2045,7 +2045,7 @@
                         "$ref": "#/components/parameters/course_id"
                     },
                     {
-                        "$ref": "#/components/parameters/programme_id_optional"
+                        "$ref": "#/components/parameters/program_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/institute_id_optional"
@@ -2134,7 +2134,7 @@
                                         "institute_id": "1",
                                         "course_id": "1",
                                         "training_center_id": "1",
-                                        "programme_id": "1",
+                                        "program_id": "1",
                                         "branch_id": "1",
                                         "number_of_seats": "44",
                                         "registration_start_date": "12/1/2022",
@@ -2177,7 +2177,7 @@
                     {
                         "name": "batchId",
                         "in": "path",
-                        "description": "programme id to get one",
+                        "description": "program id to get one",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -2210,9 +2210,9 @@
                                         "branch_id": null,
                                         "branch_title_en": null,
                                         "branch_title_bn": null,
-                                        "programme_id": null,
-                                        "programme_title_en": null,
-                                        "programme_title_bn": null,
+                                        "program_id": null,
+                                        "program_title_en": null,
+                                        "program_title_bn": null,
                                         "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
@@ -2268,7 +2268,7 @@
                         "$ref": "#/components/parameters/course_id"
                     },
                     {
-                        "$ref": "#/components/parameters/programme_id_optional"
+                        "$ref": "#/components/parameters/program_id_optional"
                     },
                     {
                         "$ref": "#/components/parameters/institute_id_optional"
@@ -2361,8 +2361,8 @@
                                         "institute_title": "asdf",
                                         "branch_id": null,
                                         "branch_name": null,
-                                        "programme_id": null,
-                                        "programme_name": null,
+                                        "program_id": null,
+                                        "program_name": null,
                                         "number_of_vacancies": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
@@ -2471,7 +2471,7 @@
                     "batches"
                 ],
                 "summary": "get_one",
-                "description": "###### API endpoint to get a programme by trainer id\n\nA successful request response will show 200 HTTP status code",
+                "description": "###### API endpoint to get a program by trainer id\n\nA successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2733,7 +2733,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -2797,7 +2797,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/programmes"
+                                    "$ref": "#/components/schemas/programs"
                                 },
                                 "example": {
                                     "data": {
@@ -3806,7 +3806,7 @@
     },
     "components": {
         "schemas": {
-            "programmes": {
+            "programs": {
                 "type": "object",
                 "description": "Programmes management Service",
                 "properties": {
@@ -4490,7 +4490,7 @@
                     "institute_id": {
                         "type": "integer"
                     },
-                    "programme_id": {
+                    "program_id": {
                         "type": "integer"
                     },
                     "branch_id": {
@@ -4971,8 +4971,8 @@
                     "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
                 }
             },
-            "programme_id": {
-                "name": "programme_id",
+            "program_id": {
+                "name": "program_id",
                 "required": true,
                 "in": "query",
                 "schema": {
@@ -4980,8 +4980,8 @@
                     "example": "1"
                 }
             },
-            "programme_id_optional": {
-                "name": "programme_id",
+            "program_id_optional": {
+                "name": "program_id",
                 "required": false,
                 "in": "query",
                 "schema": {

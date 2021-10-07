@@ -27,6 +27,16 @@ class InstituteFactory extends Factory
     {
         $address = $this->faker->address;
 
+        // Dhaka: 23.777176, 90.399452.
+        // chittagong : 22.341900, 91.815536.
+        // sylhet: 24.886436, 91.880722.
+        // Dinajpur : 25.636574, 88.636322.
+        // khulna: 22.820000, 89.550003 // 4, 39,
+        // Mymensingh: 24.743448, 90.398384. // 8, 27, 294
+
+        $randomNum = $this->faker->numerify('');
+        $lat = '23.777176';
+
         return [
             'title' => $this->faker->name,
             'title_en' => $this->faker->name,
@@ -38,7 +48,7 @@ class InstituteFactory extends Factory
             'address' => $address,
             'address_en' => $address,
             'primary_phone' => $this->faker->phoneNumber,
-            'mobile_numbers' => "" . $this->faker->numerify('017########') . "," . $this->faker->numerify('017########'),
+            'mobile_numbers' => '["' . $this->faker->numerify('017########') . '","' . $this->faker->numerify('017########') . '"]',
             'primary_mobile' => $this->faker->numerify('017########'),
             'email' => $this->faker->email(),
             'config' => $this->faker->sentence,

@@ -23,7 +23,7 @@ paths:
                   - Batch
                   - Course
                   - Institute
-                  - Programme
+                  - Program
                   - TrainingCenter
                 description:
                   - It is a institute management api service that manages services related to a institute
@@ -1095,7 +1095,7 @@ paths:
                 _response_status:
                   success: true
                   code: 201
-                  message: Programme added successfully.
+                  message: Program added successfully.
                   query_time: 0
   /programmes/{programmeId}:
     get:
@@ -1182,7 +1182,7 @@ paths:
                 _response_status:
                   success: true
                   code: 200
-                  message: Programme updated successfully.
+                  message: Program updated successfully.
                   query_time: 0
     delete:
       tags:
@@ -1192,7 +1192,7 @@ paths:
       parameters:
         - name: programmeId
           in: path
-          description: Programme id to delete
+          description: Program id to delete
           required: true
           schema:
             type: integer
@@ -1208,7 +1208,7 @@ paths:
                 _response_status:
                   success: true
                   code: 200
-                  message: Programme delete successfully.
+                  message: Program delete successfully.
                   query_time: 0
   /batches:
     get:

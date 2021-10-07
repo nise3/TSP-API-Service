@@ -45,7 +45,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     });
 
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
-    $customRouter()->resourceRoute('programmes', 'ProgrammeController')->render();
+    $customRouter()->resourceRoute('programs', 'ProgramController')->render();
     $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();
     $customRouter()->resourceRoute('batches', 'BatchController')->render();
     $customRouter()->resourceRoute('courses', 'CourseController')->render();
@@ -64,10 +64,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->patch('institutes-restore-data/{id}', ['as' => 'institutes.restore-data', 'uses' => 'InstituteController@restore']);
     $router->delete('institutes-force-delete/{id}', ['as' => 'institutes.restore-data', 'uses' => 'InstituteController@forceDelete']);
 
-    //programmes trashed
-    $router->get('programmes-trashed-data', ['as' => 'programmes.get-trashed-data', 'uses' => 'ProgrammeController@getTrashedData']);
-    $router->patch('programmes-restore-data/{id}', ['as' => 'programmes.restore-data', 'uses' => 'ProgrammeController@restore']);
-    $router->delete('programmes-force-delete/{id}', ['as' => 'programmes.restore-data', 'uses' => 'ProgrammeController@forceDelete']);
+    //programs trashed
+    $router->get('programs-trashed-data', ['as' => 'programs.get-trashed-data', 'uses' => 'ProgramController@getTrashedData']);
+    $router->patch('programs-restore-data/{id}', ['as' => 'programs.restore-data', 'uses' => 'ProgramController@restore']);
+    $router->delete('programs-force-delete/{id}', ['as' => 'programs.restore-data', 'uses' => 'ProgramController@forceDelete']);
 
 
     //training-centers trashed

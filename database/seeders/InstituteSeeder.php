@@ -6,7 +6,7 @@ use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Institute;
-use App\Models\Programme;
+use App\Models\Program;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Seeder;
@@ -27,7 +27,7 @@ class InstituteSeeder extends Seeder
         Institute::factory()->count(10)
             ->has(Branch::factory()->count(3))
             ->has(TrainingCenter::factory()->count(3))
-            ->has(Programme::factory()->count(3))
+            ->has(Program::factory()->count(3))
             ->has(
                 Course::factory()->count(3)
                     ->has(

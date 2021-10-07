@@ -74,7 +74,7 @@ class Institute extends BaseModel
      */
     public function programmes(): HasMany
     {
-        return $this->hasMany(Programme::class); // TODO: specifically mention columns
+        return $this->hasMany(Program::class); // TODO: specifically mention columns
     }
 
     /**

@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class CreateProgrammesTable
  */
-class CreateProgrammesTable extends Migration
+class CreateProgramsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -17,7 +17,7 @@ class CreateProgrammesTable extends Migration
 
     public function up()
     {
-        Schema::create('programmes', function (Blueprint $table) {
+        Schema::create('programs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code', 100)->nullable();
             $table->unsignedInteger('institute_id');
@@ -43,6 +43,6 @@ class CreateProgrammesTable extends Migration
     public
     function down()
     {
-        Schema::dropIfExists('programmes');
+        Schema::dropIfExists('programs');
     }
 }

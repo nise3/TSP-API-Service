@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\File;
  * @property string|null title
  * @property string code
  * @property int institute_id
- * @property int programme_id
+ * @property int program_id
  * @property double course_fee
  * @property string duration
  * @property string target_group
@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\File;
  * @property string eligibility_en
  * @property array application_form_settings
  * @property File cover_image
- * @property-read Programme programme
+ * @property-read Program programme
  */
 class Course extends BaseModel
 {
@@ -73,6 +73,6 @@ class Course extends BaseModel
      */
     public function programme(): BelongsTo
     {
-        return $this->belongsTo(Programme::class); // TODO: specifically mention columns
+        return $this->belongsTo(Program::class); // TODO: specifically mention columns
     }
 }

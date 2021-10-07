@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
-use App\Models\Programme;
+use App\Models\Program;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -13,10 +13,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ProgrammeService
+ * Class ProgramService
  * @package App\Services
  */
-class ProgrammeService
+class ProgramService
 {
     /**
      * @param array $request
@@ -33,47 +33,47 @@ class ProgrammeService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var Programme|Builder $programmesBuilder */
-        $programmesBuilder = Programme::select([
-            'programmes.id',
-            'programmes.title_en',
-            'programmes.title',
-            'programmes.institute_id',
+        /** @var Program|Builder $programmesBuilder */
+        $programmesBuilder = Program::select([
+            'programs.id',
+            'programs.title_en',
+            'programs.title',
+            'programs.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title_bn',
-            'programmes.code',
-            'programmes.logo',
-            'programmes.description',
-            'programmes.row_status',
-            'programmes.created_by',
-            'programmes.updated_by',
-            'programmes.created_at',
-            'programmes.updated_at',
-            'programmes.deleted_at',
+            'programs.code',
+            'programs.logo',
+            'programs.description',
+            'programs.row_status',
+            'programs.created_by',
+            'programs.updated_by',
+            'programs.created_at',
+            'programs.updated_at',
+            'programs.deleted_at',
         ]);
 
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
-            $join->on('programmes.institute_id', '=', 'institutes.id')
+            $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
 
-        $programmesBuilder->orderBy('programmes.id', $order);
+        $programmesBuilder->orderBy('programs.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $programmesBuilder->where('programmes.row_status', $rowStatus);
+            $programmesBuilder->where('programs.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
-            $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
+            $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($titleBn)) {
-            $programmesBuilder->where('programmes.title', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
         }
         if (is_numeric($instituteId)) {
-            $programmesBuilder->where('programmes.institute_id', '=', $instituteId);
+            $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
@@ -108,32 +108,32 @@ class ProgrammeService
      */
     public function getOneProgramme(int $id, Carbon $startTime): array
     {
-        /** @var Programme|Builder $programmeBuilder */
-        $programmeBuilder = Programme::select([
-            'programmes.id',
-            'programmes.title_en',
-            'programmes.title',
-            'programmes.institute_id',
+        /** @var Program|Builder $programmeBuilder */
+        $programmeBuilder = Program::select([
+            'programs.id',
+            'programs.title_en',
+            'programs.title',
+            'programs.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title_bn',
-            'programmes.code',
-            'programmes.logo',
-            'programmes.description',
-            'programmes.row_status',
-            'programmes.created_by',
-            'programmes.updated_by',
-            'programmes.created_at',
-            'programmes.updated_at',
-            'programmes.deleted_at',
+            'programs.code',
+            'programs.logo',
+            'programs.description',
+            'programs.row_status',
+            'programs.created_by',
+            'programs.updated_by',
+            'programs.created_at',
+            'programs.updated_at',
+            'programs.deleted_at',
         ]);
         $programmeBuilder->join("institutes", function ($join) {
-            $join->on('programmes.institute_id', '=', 'institutes.id')
+            $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
 
-        $programmeBuilder->where('programmes.id', '=', $id);
+        $programmeBuilder->where('programs.id', '=', $id);
 
-        /** @var Programme $programme */
+        /** @var Program $programme */
         $programme = $programmeBuilder->first();
 
         return [
@@ -148,22 +148,22 @@ class ProgrammeService
 
     /**
      * @param array $data
-     * @return Programme
+     * @return Program
      */
-    public function store(array $data): Programme
+    public function store(array $data): Program
     {
-        $programme = new Programme();
+        $programme = new Program();
         $programme->fill($data);
         $programme->Save();
         return $programme;
     }
 
     /**
-     * @param Programme $programme
+     * @param Program $programme
      * @param array $data
-     * @return Programme
+     * @return Program
      */
-    public function update(Programme $programme, array $data): Programme
+    public function update(Program $programme, array $data): Program
     {
         $programme->fill($data);
         $programme->save();
@@ -171,10 +171,10 @@ class ProgrammeService
     }
 
     /**
-     * @param Programme $programme
+     * @param Program $programme
      * @return bool
      */
-    public function destroy(Programme $programme): bool
+    public function destroy(Program $programme): bool
     {
         return $programme->delete();
     }
@@ -215,7 +215,7 @@ class ProgrammeService
                 'nullable',
                 'string',
                 'max:100',
-                'unique:programmes,code,' . $id,
+                'unique:programs,code,' . $id,
             ],
             'description' => [
                 'nullable',
@@ -248,27 +248,27 @@ class ProgrammeService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Programme|Builder $programmesBuilder */
-        $programmesBuilder = Programme::onlyTrashed()->select([
-            'programmes.id as id',
-            'programmes.title_en',
-            'programmes.title',
+        /** @var Program|Builder $programmesBuilder */
+        $programmesBuilder = Program::onlyTrashed()->select([
+            'programs.id as id',
+            'programs.title_en',
+            'programs.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
-            'programmes.code as programme_code',
-            'programmes.logo as programme_logo',
-            'programmes.description',
-            'programmes.row_status',
-            'programmes.created_at',
-            'programmes.updated_at',
+            'programs.code as program_code',
+            'programs.logo as program_logo',
+            'programs.description',
+            'programs.row_status',
+            'programs.created_at',
+            'programs.updated_at',
         ]);
-        $programmesBuilder->join('institutes', 'programmes.institute_id', '=', 'institutes.id');
-        $programmesBuilder->orderBy('programmes.id', $order);
+        $programmesBuilder->join('institutes', 'programs.institute_id', '=', 'institutes.id');
+        $programmesBuilder->orderBy('programs.id', $order);
 
         if (!empty($titleEn)) {
-            $programmesBuilder->where('programmes.title_en', 'like', '%' . $titleEn . '%');
+            $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $programmesBuilder->where('programmes.title', 'like', '%' . $titleBn . '%');
+            $programmesBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $programmesBuilder */
@@ -296,12 +296,12 @@ class ProgrammeService
     }
 
 
-    public function restore(Programme $programmes): bool
+    public function restore(Program $programmes): bool
     {
         return $programmes->restore();
     }
 
-    public function forceDelete(Programme $programmes): bool
+    public function forceDelete(Program $programmes): bool
     {
         return $programmes->forceDelete();
     }
