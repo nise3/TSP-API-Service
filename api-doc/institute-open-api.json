@@ -134,16 +134,13 @@
                         "$ref": "#/components/parameters/institute_type_id"
                     },
                     {
-                        "$ref": "#/components/parameters/permission_sub_group_id"
-                    },
-                    {
                         "$ref": "#/components/parameters/code"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
-                        "$ref": "#/components/parameters/title"
+                        "$ref": "#/components/parameters/title_en"
                     },
                     {
                         "name": "domain",
@@ -155,6 +152,33 @@
                         }
                     },
                     {
+                        "name": "loc_division_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "1"
+                    },
+                    {
                         "name": "address",
                         "in": "query",
                         "required": false,
@@ -162,6 +186,21 @@
                             "type": "string",
                             "example": "Dhaka mirpur road 4 block 2"
                         }
+                    },
+                    {
+                        "name": "address_en",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dhaka mirpur road 4 block 2"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/location_latitude"
+                    },
+                    {
+                        "$ref": "#/components/parameters/location_longitude"
                     },
                     {
                         "$ref": "#/components/parameters/google_map_src"
@@ -174,6 +213,12 @@
                             "type": "string",
                             "example": "default.jpg"
                         }
+                    },
+                    {
+                        "$ref": "#/components/parameters/country"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_code"
                     },
                     {
                         "name": "primary_phone",
@@ -243,19 +288,22 @@
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/country"
-                    },
-                    {
-                        "$ref": "#/components/parameters/phone_code"
-                    },
-                    {
                         "$ref": "#/components/parameters/name_of_the_office_head"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_en"
                     },
                     {
                         "$ref": "#/components/parameters/name_of_the_office_head_designation"
                     },
                     {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation_en"
+                    },
+                    {
                         "$ref": "#/components/parameters/contact_person_name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name_en"
                     },
                     {
                         "$ref": "#/components/parameters/contact_person_mobile"
@@ -267,6 +315,9 @@
                         "$ref": "#/components/parameters/contact_person_designation"
                     },
                     {
+                        "$ref": "#/components/parameters/contact_person_designation_en"
+                    },
+                    {
                         "name": "config",
                         "in": "query",
                         "required": false,
@@ -274,33 +325,6 @@
                             "type": "string",
                             "example": "This is config"
                         }
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -315,40 +339,58 @@
                                     "$ref": "#/components/schemas/institutes"
                                 },
                                 "example": {
-                                    "data": {
-                                        "title_en": "PROGRAMME ON RMG4s",
-                                        "title": "আরএমজি-প্রোগ্রাম4s",
-                                        "code": "AE455K",
-                                        "domain": "https://develosper.com",
-                                        "address": "Dhaka mirpur road 4 block 2s",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYsmWfEXLQUDnm6",
-                                        "primary_phone": "01845654541",
-                                        "phone_numbers": [
-                                            "01845654542",
-                                            "01845654544"
-                                        ],
-                                        "primary_mobile": "01845654543",
-                                        "mobile_numbers": [
-                                            "01845654545",
-                                            "01845654546"
-                                        ],
-                                        "logo": "defasult.jpg",
-                                        "email": "exampsle@gmail.com",
-                                        "config": "This is configs",
-                                        "loc_division_id": "1",
-                                        "loc_district_id": "1",
-                                        "loc_upazila_id": "1",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T09:59:59.000000Z",
-                                        "created_at": "2021-09-05T09:59:59.000000Z",
-                                        "id": 11
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "institute_type_id": null,
+                                            "code": "libero-adipisci-nesciunt-officia-hic-ipsam-animi-voluptates-doloremque-totam-dolor-eos-quia-eum-modi-molestias-quo-consequatur-magnam-placeat",
+                                            "title": "Mckenna Wisozk IV",
+                                            "title_en": "Tianna Hodkiewicz",
+                                            "domain": "https://walker.com",
+                                            "loc_division_id": 3,
+                                            "division_title_bn": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title_bn": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
+                                            "loc_upazila_id": null,
+                                            "upazila_title_bn": null,
+                                            "upazila_title_en": null,
+                                            "address": "6835 Triston Point\nSouth Burnice, CO 09375",
+                                            "address_en": "6835 Triston Point\nSouth Burnice, CO 09375",
+                                            "location_latitude": "90.399482",
+                                            "location_longitude": "90.399482",
+                                            "google_map_src": "Ipsa explicabo veniam vero.",
+                                            "logo": "softbd.jpg",
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": "904.641.4062",
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01785993885",
+                                            "mobile_numbers": "[\"01760268145\",\"01743588318\"]",
+                                            "email": "dolores62@rodriguez.org",
+                                            "name_of_the_office_head": null,
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": null,
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "",
+                                            "contact_person_name_en": "",
+                                            "contact_person_mobile": "",
+                                            "contact_person_email": "",
+                                            "contact_person_designation": "",
+                                            "contact_person_designation_en": "",
+                                            "config": "Autem nulla laboriosam molestiae alias facere.",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-07T11:12:26.000000Z",
+                                            "updated_at": "2021-10-07T11:12:26.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "Institute added successfully",
+                                        "code": 200,
                                         "query_time": 0
                                     }
                                 }
@@ -619,45 +661,55 @@
                                 },
                                 "example": {
                                     "data": {
-                                        "id": 13,
-                                        "title_en": "PROGRAMME ON RMG45",
-                                        "title": "আরএমজি-প্রোগ্রাম45",
-                                        "code": "AE4555",
-                                        "logo": "defaults.jpg",
-                                        "primary_phone": "01845654541",
-                                        "phone_numbers": [
-                                            "01845654542",
-                                            "01845654544"
-                                        ],
-                                        "primary_mobile": "01845654543",
-                                        "mobile_numbers": [
-                                            "01845654545",
-                                            "01845654546"
-                                        ],
-                                        "email": "example@gmail.com",
-                                        "config": "This is config",
-                                        "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
-                                        "domain": "https://developesr.com",
-                                        "address": "Dhaka mirpur road 4 block 2s",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
+                                        "id": 1,
+                                        "institute_type_id": null,
+                                        "code": "libero-adipisci-nesciunt-officia-hic-ipsam-animi-voluptates-doloremque-totam-dolor-eos-quia-eum-modi-molestias-quo-consequatur-magnam-placeat",
+                                        "title": "Mckenna Wisozk IV",
+                                        "title_en": "Tianna Hodkiewicz",
+                                        "domain": "https://walker.com",
+                                        "loc_division_id": 3,
+                                        "division_title_bn": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title_bn": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title_bn": null,
+                                        "upazila_title_en": null,
+                                        "address": "6835 Triston Point\nSouth Burnice, CO 09375",
+                                        "address_en": "6835 Triston Point\nSouth Burnice, CO 09375",
+                                        "location_latitude": "90.399482",
+                                        "location_longitude": "90.399482",
+                                        "google_map_src": "Ipsa explicabo veniam vero.",
+                                        "logo": "softbd.jpg",
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": "904.641.4062",
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01785993885",
+                                        "mobile_numbers": "[\"01760268145\",\"01743588318\"]",
+                                        "email": "dolores62@rodriguez.org",
+                                        "name_of_the_office_head": null,
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": null,
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "",
+                                        "contact_person_name_en": "",
+                                        "contact_person_mobile": "",
+                                        "contact_person_email": "",
+                                        "contact_person_designation": "",
+                                        "contact_person_designation_en": "",
+                                        "config": "Autem nulla laboriosam molestiae alias facere.",
                                         "row_status": 1,
-                                        "created_by": 1,
-                                        "updated_by": 1,
-                                        "created_at": "2021-09-05T04:27:43.000000Z",
-                                        "updated_at": "2021-09-05T04:27:43.000000Z"
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-07T11:12:26.000000Z",
+                                        "updated_at": "2021-10-07T11:12:26.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "Institute added successfully",
+                                        "code": 200,
                                         "query_time": 0
                                     }
                                 }
@@ -945,7 +997,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "loc_division_id",
@@ -3877,22 +3929,44 @@
                         "example": 1
                     },
                     "code": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 300
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 1000,
+                        "minLength": 2
                     },
                     "title_en": {
                         "type": "string",
-                        "maxLength": 300,
-                        "minLength": 2
-                    },
-                    "title_bn": {
-                        "type": "string",
-                        "maxLength": 800,
+                        "maxLength": 500,
                         "minLength": 2
                     },
                     "domain": {
                         "type": "string"
                     },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
                     "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
                         "type": "string"
                     },
                     "google_map_src": {
@@ -3927,10 +4001,19 @@
                     "name_of_the_office_head": {
                         "type": "string"
                     },
+                    "name_of_the_office_head_en": {
+                        "type": "string"
+                    },
                     "name_of_the_office_head_designation": {
                         "type": "string"
                     },
+                    "name_of_the_office_head_designation_en": {
+                        "type": "string"
+                    },
                     "contact_person_name": {
+                        "type": "string"
+                    },
+                    "contact_person_name_en": {
                         "type": "string"
                     },
                     "contact_person_mobile": {
@@ -3942,20 +4025,11 @@
                     "contact_person_designation": {
                         "type": "string"
                     },
-                    "config": {
+                    "contact_person_designation_en": {
                         "type": "string"
                     },
-                    "loc_division_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "loc_district_id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "loc_upazila_id": {
-                        "type": "integer",
-                        "example": 1
+                    "config": {
+                        "type": "string"
                     },
                     "row_status": {
                         "type": "integer",
@@ -3989,12 +4063,15 @@
                 "required": [
                     "institute_type_id",
                     "title_en",
-                    "title_bn",
+                    "title",
                     "code",
+                    "email",
                     "contact_person_name",
+                    "contact_person_name_en",
                     "contact_person_mobile",
                     "contact_person_email",
-                    "contact_person_designation"
+                    "contact_person_designation",
+                    "contact_person_designation_en"
                 ]
             },
             "instituteRegister": {
@@ -4651,7 +4728,16 @@
             "name_of_the_office_head": {
                 "name": "name_of_the_office_head",
                 "in": "query",
-                "required": true,
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Mr x"
+                }
+            },
+            "name_of_the_office_head_en": {
+                "name": "name_of_the_office_head_en",
+                "in": "query",
+                "required": false,
                 "schema": {
                     "type": "string",
                     "example": "Mr x"
@@ -4666,8 +4752,26 @@
                     "example": "Chairman"
                 }
             },
+            "name_of_the_office_head_designation_en": {
+                "name": "name_of_the_office_head_designation_en",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Chairman"
+                }
+            },
             "contact_person_name": {
                 "name": "contact_person_name",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Mr y"
+                }
+            },
+            "contact_person_name_en": {
+                "name": "contact_person_name_en",
                 "in": "query",
                 "required": true,
                 "schema": {
@@ -4695,6 +4799,15 @@
             },
             "contact_person_designation": {
                 "name": "contact_person_designation",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "example": "Co-ordinator"
+                }
+            },
+            "contact_person_designation_en": {
+                "name": "contact_person_designation_en",
                 "in": "query",
                 "required": true,
                 "schema": {
@@ -4866,6 +4979,22 @@
                         0,
                         1
                     ]
+                }
+            },
+            "location_latitude": {
+                "name": "location_latitude",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "location_longitude": {
+                "name": "location_longitude",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "divisionId": {

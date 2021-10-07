@@ -33,7 +33,7 @@ class InstituteService
     public function getInstituteList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -121,8 +121,8 @@ class InstituteService
         if (!empty($titleEn)) {
             $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         }
-        if (!empty($titleBn)) {
-            $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
+        if (!empty($title)) {
+            $instituteBuilder->where('institutes.title', 'like', '%' . $title . '%');
         }
 
         /** @var Collection $institutes */
@@ -426,6 +426,10 @@ class InstituteService
         ];
 
         $rules = [
+            'permission_sub_group_id' => [
+                'required',
+                'int'
+            ],
             "institute_type_id" => [
                 "required",
                 "numeric"
@@ -468,7 +472,6 @@ class InstituteService
                 'nullable',
                 'int'
             ],
-
             'address' => [
                 'nullable',
                 'string'
@@ -508,7 +511,7 @@ class InstituteService
             'phone_numbers.*' => [
                 'nullable',
                 'string',
-                'regex:/^[0-9]*$/'
+//                'regex:/^[0-9]*$/'
             ],
             'primary_mobile' => [
                 'required',

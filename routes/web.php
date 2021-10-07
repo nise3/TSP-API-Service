@@ -34,6 +34,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->get('courses', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
 
+    /** institute registration */
+    $router->post("institute-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
+
     //institutes trashed
     $router->get('institutes-trashed-data', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
     $router->patch('institutes-restore-data/{id}', ['as' => 'institutes.restore-data', 'uses' => 'InstituteController@restore']);
