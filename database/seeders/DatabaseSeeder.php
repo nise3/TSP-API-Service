@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             GeoLocationDatabaseSeeder::class,
-            InstituteSeeder::class
+            InstituteSeeder::class,
+            CourseBatchCompositeSeeder::class,
         ]);
     }
 }

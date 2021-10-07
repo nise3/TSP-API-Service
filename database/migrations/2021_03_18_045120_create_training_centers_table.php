@@ -26,7 +26,6 @@ class CreateTrainingCentersTable extends Migration
             $table->unsignedMediumInteger("loc_upazila_id")->nullable();
             $table->text('address')->nullable();
             $table->text('address_en')->nullable();
-            $table->text('google_map_src')->nullable();
 
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
