@@ -6,14 +6,14 @@ use App\Models\BaseModel;
 use App\Models\Institute;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -44,10 +44,22 @@ class InstituteService
             'institutes.id',
             "institutes.institute_type_id",
             'institutes.code',
+            'institutes.title',
             'institutes.title_en',
-            'institutes.title_bn',
             'institutes.domain',
+            'institutes.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
+            'institutes.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
+            'institutes.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'institutes.address',
+            'institutes.address_en',
+            'institutes.location_latitude',
+            'institutes.location_longitude',
             'institutes.google_map_src',
             'institutes.logo',
             'institutes.country',
@@ -58,21 +70,16 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.name_of_the_office_head',
+            'institutes.name_of_the_office_head_en',
             'institutes.name_of_the_office_head_designation',
+            'institutes.name_of_the_office_head_designation_en',
             'institutes.contact_person_name',
+            'institutes.contact_person_name_en',
             'institutes.contact_person_mobile',
             'institutes.contact_person_email',
             'institutes.contact_person_designation',
+            'institutes.contact_person_designation_en',
             'institutes.config',
-            'institutes.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
-            'loc_divisions.title_en as division_title_en',
-            'institutes.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
-            'loc_districts.title_en as district_title_en',
-            'institutes.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
-            'loc_upazilas.title_en as upazila_title_en',
             'institutes.row_status',
             'institutes.created_by',
             'institutes.updated_by',
@@ -153,10 +160,22 @@ class InstituteService
             'institutes.id',
             "institutes.institute_type_id",
             'institutes.code',
+            'institutes.title',
             'institutes.title_en',
-            'institutes.title_bn',
             'institutes.domain',
+            'institutes.loc_division_id',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title_en as division_title_en',
+            'institutes.loc_district_id',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title_en as district_title_en',
+            'institutes.loc_upazila_id',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title_en as upazila_title_en',
             'institutes.address',
+            'institutes.address_en',
+            'institutes.location_latitude',
+            'institutes.location_longitude',
             'institutes.google_map_src',
             'institutes.logo',
             'institutes.country',
@@ -167,21 +186,16 @@ class InstituteService
             'institutes.mobile_numbers',
             'institutes.email',
             'institutes.name_of_the_office_head',
+            'institutes.name_of_the_office_head_en',
             'institutes.name_of_the_office_head_designation',
+            'institutes.name_of_the_office_head_designation_en',
             'institutes.contact_person_name',
+            'institutes.contact_person_name_en',
             'institutes.contact_person_mobile',
             'institutes.contact_person_email',
             'institutes.contact_person_designation',
+            'institutes.contact_person_designation_en',
             'institutes.config',
-            'institutes.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
-            'loc_divisions.title_en as division_title_en',
-            'institutes.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
-            'loc_districts.title_en as district_title_en',
-            'institutes.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
-            'loc_upazilas.title_en as upazila_title_en',
             'institutes.row_status',
             'institutes.created_by',
             'institutes.updated_by',
@@ -412,14 +426,29 @@ class InstituteService
         ];
 
         $rules = [
-            'permission_sub_group_id' => 'required|numeric',
-            'title_en' => ['required', 'string', 'max:400'],
-            'title_bn' => ['required', 'string', 'max:1000'],
             "institute_type_id" => [
                 "required",
                 "numeric"
             ],
-            'code' => ['required', 'string', 'max:191', 'unique:institutes,code,' . $id],
+            'title' => [
+                'required',
+                'string',
+                'max:1000',
+
+            ],
+            'title_en' => [
+                'required',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+
+            'code' => [
+                'required',
+                'string',
+                'max:150',
+                'unique:institutes,code,' . $id
+            ],
             'domain' => [
                 'nullable',
                 'string',
@@ -427,58 +456,138 @@ class InstituteService
                 'max:191',
                 'unique:institutes,domain,' . $id
             ],
-            'address' => ['nullable', 'string', 'max:500'],
-            'google_map_src' => ['nullable', 'string'],
-            'primary_phone' => [
+            'loc_division_id' => [
                 'nullable',
-                'regex:/^[0-9]*$/'
+                'int'
             ],
-            'phone_numbers' => ['array'],
-            'phone_numbers.*' => ['nullable', 'string', 'regex:/^[0-9]*$/'],
-            'primary_mobile' => ['required', 'string', BaseModel::MOBILE_REGEX],
-            'mobile_numbers' => ['array'],
-            'mobile_numbers.*' => ['nullable', 'string', BaseModel::MOBILE_REGEX],
+            'loc_district_id' => [
+                'nullable',
+                'int'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'int'
+            ],
+
+            'address' => [
+                'nullable',
+                'string'
+            ],
+            'address_en' => [
+                'nullable',
+                'string'
+            ],
+            'location_latitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'location_longitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
             'logo' => [
                 'nullable',
                 'string',
             ],
-            "name_of_the_office_head" => [
-                "required",
-                "string"
+            'primary_phone' => [
+                'nullable',
+                'string',
+                'max:20',
+                'regex:/^[0-9]*$/'
             ],
-            "name_of_the_office_head_designation" => [
-                "nullable",
-                "string"
+            'phone_numbers' => [
+                'nullable',
+                'array'
             ],
-            'contact_person_mobile' => [
+            'phone_numbers.*' => [
+                'nullable',
+                'string',
+                'regex:/^[0-9]*$/'
+            ],
+            'primary_mobile' => [
                 'required',
+                'string',
                 BaseModel::MOBILE_REGEX
+            ],
+            'mobile_numbers' => [
+                'array'
+            ],
+            'mobile_numbers.*' => [
+                'nullable',
+                'string',
+                BaseModel::MOBILE_REGEX
+            ],
+
+            'email' => [
+                'required',
+                'string',
+                'max:19'
+            ],
+
+            'name_of_the_office_head' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'name_of_the_office_head_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head_designation' => [
+                "required",
+                "string",
+                "max:500"
+            ],
+            'name_of_the_office_head_designation_en' => [
+                "required",
+                "string",
+                "max:500"
             ],
             'contact_person_name' => [
                 'required',
                 'max: 500',
                 'min:2'
             ],
-            'contact_person_designation' => [
+            'contact_person_name_en' => [
                 'required',
-                'max: 300',
-                "min:2"
+                'max: 250',
+                'min:2'
+            ],
+            'contact_person_mobile' => [
+                'required',
+                BaseModel::MOBILE_REGEX
             ],
             'contact_person_email' => [
                 'required',
                 'email'
             ],
-            'email' => ['required', 'string', 'max:191'],
-            'config' => ['nullable', 'string'],
-            'loc_division_id' => ['nullable', 'integer'],
-            'loc_district_id' => ['nullable', 'integer'],
-            'loc_upazila_id' => ['nullable', 'integer'],
+            'contact_person_designation' => [
+                'required',
+                'max: 500',
+                "min:2"
+            ],
+            'contact_person_designation_en' => [
+                'required',
+                'max: 300',
+                "min:2"
+            ],
+            'config' => [
+                'nullable',
+                'string'
+            ],
+
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer'],
-            'updated_by' => ['nullable', 'integer'],
+            'created_by' => ['nullable', 'int'],
+            'updated_by' => ['nullable', 'int'],
 
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
@@ -487,16 +596,16 @@ class InstituteService
     public function registerInstituteValidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
-            'title_en' => [
-                'required',
-                'string',
-                'max:300',
-                'min:2',
-            ],
-            'title_bn' => [
+            'title' => [
                 'required',
                 'string',
                 'max:1000',
+                'min:2',
+            ],
+            'title_en' => [
+                'required',
+                'string',
+                'max:500',
                 'min:2'
             ],
             'institute_type_id' => [
@@ -574,20 +683,20 @@ class InstituteService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title' => 'nullable|min:1',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
+            'title_en' => 'nullable|min:2',
+            'title' => 'nullable|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
             "institute_type_id" => [
                 "nullable",
-                "integer"
+                "int"
             ],
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

@@ -120,9 +120,6 @@
                                 }
                             }
                         }
-                    },
-                    "default": {
-                        "description": "Unexpected error"
                     }
                 }
             },
@@ -4785,6 +4782,22 @@
                 "in": "query",
                 "required": true,
                 "name": "title_bn",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "title": {
+                "in": "query",
+                "required": true,
+                "name": "title",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "title_optional": {
+                "in": "query",
+                "required": false,
+                "name": "title",
                 "schema": {
                     "type": "string"
                 }
