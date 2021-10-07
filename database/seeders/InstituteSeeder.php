@@ -9,7 +9,6 @@ use App\Models\Institute;
 use App\Models\Programme;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
-use Database\Factories\BatchFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
 
