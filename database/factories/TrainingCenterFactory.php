@@ -21,7 +21,6 @@ class TrainingCenterFactory extends Factory
             'address' => $this->faker->address,
             'address_en' => $this->faker->address,
             'center_location_type' => $this->faker->randomElement([1, 2, 3]),
-            'google_map_src' => $this->faker->sentence
         ];
     }
 }

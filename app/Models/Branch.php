@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends BaseModel
 {
-    use SoftDeletes, HasFactory;
 
     protected $guarded = ['id'];
 

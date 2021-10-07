@@ -41,8 +41,6 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
-
     protected $table = 'courses';
     protected $guarded = ['id'];
 
@@ -63,7 +61,7 @@ class Course extends BaseModel
     /**
      * @return HasMany
      */
-    public function batch(): HasMany
+    public function batches(): HasMany
     {
         return $this->hasMany(Batch::class);
     }
@@ -71,7 +69,7 @@ class Course extends BaseModel
     /**
      * @return BelongsTo
      */
-    public function programme(): BelongsTo
+    public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class); // TODO: specifically mention columns
     }

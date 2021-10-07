@@ -15,8 +15,9 @@ class BatchFactory extends Factory
      */
     public function definition(): array
     {
-        /** @var Carbon $registrationStartDate */
+        /** @var \DateTime $registrationStartDate */
         $registrationStartDate = $this->faker->dateTimeBetween('-8 months', '-1 months');
+        $registrationStartDate = Carbon::parse($registrationStartDate); //createFromDate($registrationStartDate);
         $intRand = random_int(7, 30);
         $registrationEndDate = $registrationStartDate->addDays($intRand);
         $intRand = random_int(7, 14);

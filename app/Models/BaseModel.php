@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class BaseModel
@@ -11,7 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class BaseModel extends Model
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, HasFactory ,SoftDeletes;
+
     public const ROW_STATUS_ACTIVE = '1';
     public const ROW_STATUS_INACTIVE = '0';
     public const ROW_ORDER_ASC='ASC';
@@ -29,6 +32,9 @@ abstract class BaseModel extends Model
 
     /** Institute User Type*/
     public const INSTITUTE_USER = 3;
+
+
+    public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
     public const ORGANIZATION_CLIENT_URL_TYPE = "ORGANIZATION";

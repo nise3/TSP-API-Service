@@ -18,32 +18,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
 
-    $router->post('/auth-idp', function () {
-
-        $url = BaseModel::INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL . 'register-users';
-        $userPostField = [
-            'permission_sub_group_id' => 2,
-            'user_type' => 'institute',
-            'username' => 'Piyal_Hasan-' . time(),
-            'institute_id' => '1',
-            'name_en' => 'testing',
-            'name_bn' => 'testing_en',
-            'email' => 'piyalemail@gmail.com',
-            'mobile' => '01767111434',
-            'loc_division_id' => 1,
-            'loc_district_id' => 1,
-            'loc_upazila_id' => 1
-        ];
-
-        return Http::retry(3, 100, function ($exception) {
-            return $exception instanceof ConnectionException;
-        })->post($url, $userPostField)->throw(function ($response, $e) {
-            return $e;
-        })->json();
-
-
-    });
-
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
     $customRouter()->resourceRoute('programs', 'ProgramController')->render();
     $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();
@@ -55,9 +29,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Assign Trainers to Batch */
     $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
-    /** institute registration */
-    $router->post("institute-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
+    /** Course Filter */
+    $router->get('course-list/{name}', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
 
+    $router->get('courses', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
 
     //institutes trashed
     $router->get('institutes-trashed-data', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
