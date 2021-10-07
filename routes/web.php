@@ -41,7 +41,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             return $e;
         })->json();
 
-
     });
 
     $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
