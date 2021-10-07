@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Programme;
+use App\Models\Program;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ProgrammeFactory extends Factory
+class ProgramFactory extends Factory
 {
-    protected $model = Programme::class;
+    protected $model = Program::class;
 
     public function definition(): array
     {

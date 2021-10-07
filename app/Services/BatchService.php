@@ -36,7 +36,7 @@ class BatchService
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
-        $programId = $request['programme_id'] ?? "";
+        $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
 
@@ -53,9 +53,9 @@ class BatchService
             'batches.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title_bn',
-            'courses.programme_id',
-            'programmes.title_en as programme_title_en',
-            'programmes.title as programme_title_bn',
+            'courses.program_id',
+            'programs.title_en as program_title_en',
+            'programs.title as program_title_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -89,11 +89,11 @@ class BatchService
             }
         });
 
-        $batchBuilder->leftjoin("programmes", function ($join) use ($rowStatus) {
-            $join->on('courses.programme_id', '=', 'programmes.id')
-                ->whereNull('programmes.deleted_at');
+        $batchBuilder->leftjoin("programs", function ($join) use ($rowStatus) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
             if (is_numeric($rowStatus)) {
-                $join->where('programmes.row_status', $rowStatus);
+                $join->where('programs.row_status', $rowStatus);
             }
         });
 
@@ -128,7 +128,7 @@ class BatchService
         }
 
         if (is_numeric($programId)) {
-            $batchBuilder->where('courses.programme_id', $programId);
+            $batchBuilder->where('courses.program_id', $programId);
         }
 
         if (is_numeric($courseId)) {
@@ -183,9 +183,9 @@ class BatchService
             'batches.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title_bn',
-            'courses.programme_id',
-            'programmes.title_en as programme_title_en',
-            'programmes.title as programme_title_bn',
+            'courses.program_id',
+            'programs.title_en as program_title_en',
+            'programs.title as program_title_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -212,9 +212,9 @@ class BatchService
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
-        $batchBuilder->leftjoin("programmes", function ($join) {
-            $join->on('courses.programme_id', '=', 'programmes.id')
-                ->whereNull('programmes.deleted_at');
+        $batchBuilder->leftjoin("programs", function ($join) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
         });
 
         $batchBuilder->leftjoin("branches", function ($join) {
@@ -298,9 +298,9 @@ class BatchService
             'institutes.id as institute_id',
             'branches.id as branch_id',
             'branches.title_en as branch_name',
-            'courses.programme_id',
-            'programmes.title_en as programme_name',
-            'programmes.title as programme_name_bn',
+            'courses.program_id',
+            'programs.title_en as program_name',
+            'programs.title as program_name_bn',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -318,7 +318,7 @@ class BatchService
 
         $batchBuilder->join('courses', 'batches.course_id', '=', 'courses.id');
         $batchBuilder->join('institutes', 'batches.institute_id', '=', 'institutes.id');
-        $batchBuilder->leftJoin('programmes', 'courses.programme_id', '=', 'programmes.id');
+        $batchBuilder->leftJoin('programs', 'courses.program_id', '=', 'programs.id');
         $batchBuilder->leftJoin('branches', 'batches.branch_id', '=', 'branches.id');
         $batchBuilder->leftJoin('training_centers', 'batches.training_center_id', '=', 'training_centers.id');
 

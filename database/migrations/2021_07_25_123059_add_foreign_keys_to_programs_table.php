@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class AddForeignKeysToProgrammesTable
  */
-class AddForeignKeysToProgrammesTable extends Migration
+class AddForeignKeysToProgramsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,8 +16,8 @@ class AddForeignKeysToProgrammesTable extends Migration
      */
     public function up()
     {
-        Schema::table('programmes', function (Blueprint $table) {
-            $table->foreign('institute_id', 'programmes_fk_institute_id')
+        Schema::table('programs', function (Blueprint $table) {
+            $table->foreign('institute_id', 'programs_fk_institute_id')
                 ->references('id')
                 ->on('institutes')
                 ->onUpdate('CASCADE')
@@ -32,8 +32,8 @@ class AddForeignKeysToProgrammesTable extends Migration
      */
     public function down()
     {
-        Schema::table('programmes', function (Blueprint $table) {
-            $table->dropForeign('programmes_fk_institute_id');
+        Schema::table('programs', function (Blueprint $table) {
+            $table->dropForeign('programs_fk_institute_id');
         });
     }
 }

@@ -4,25 +4,25 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\Programme;
+use App\Models\Program;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
-use App\Services\ProgrammeService;
+use App\Services\ProgramService;
 
 /**
- * Class ProgrammeController
+ * Class ProgramController
  * @package App\Http\Controllers
  */
-class ProgrammeController extends Controller
+class ProgramController extends Controller
 {
     /**
-     * @var ProgrammeService
+     * @var ProgramService
      */
-    public ProgrammeService $programmeService;
+    public ProgramService $programmeService;
 
     /**
      * @var Carbon
@@ -30,10 +30,10 @@ class ProgrammeController extends Controller
     private Carbon $startTime;
 
     /**
-     * ProgrammeController constructor.
-     * @param ProgrammeService $programmeService
+     * ProgramController constructor.
+     * @param ProgramService $programmeService
      */
-    public function __construct(ProgrammeService $programmeService)
+    public function __construct(ProgramService $programmeService)
     {
         $this->programmeService = $programmeService;
         $this->startTime = Carbon::now();
@@ -88,7 +88,7 @@ class ProgrammeController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Programme added successfully.",
+                    "message" => "Program added successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -107,7 +107,7 @@ class ProgrammeController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $programme = Programme::findOrFail($id);
+        $programme = Program::findOrFail($id);
         $validated = $this->programmeService->validator($request, $id)->validate();
         try {
             $data = $this->programmeService->update($programme, $validated);
@@ -116,7 +116,7 @@ class ProgrammeController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Programme updated successfully.",
+                    "message" => "Program updated successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -133,14 +133,14 @@ class ProgrammeController extends Controller
      */
     public function destroy(int $id)
     {
-        $programme = Programme::findOrFail($id);
+        $programme = Program::findOrFail($id);
         try {
             $this->programmeService->destroy($programme);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Programme deleted successfully.",
+                    "message" => "Program deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -163,14 +163,14 @@ class ProgrammeController extends Controller
 
     public function restore(int $id)
     {
-        $programme = Programme::onlyTrashed()->findOrFail($id);
+        $programme = Program::onlyTrashed()->findOrFail($id);
         try {
             $this->programmeService->restore($programme);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Programme restored successfully",
+                    "message" => "Program restored successfully",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];
@@ -182,14 +182,14 @@ class ProgrammeController extends Controller
 
     public function forceDelete(int $id)
     {
-        $programme = Programme::onlyTrashed()->findOrFail($id);
+        $programme = Program::onlyTrashed()->findOrFail($id);
         try {
             $this->programmeService->forceDelete($programme);
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Programme permanently deleted successfully",
+                    "message" => "Program permanently deleted successfully",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now())
                 ]
             ];

@@ -18,7 +18,7 @@ class CreateCoursesTable extends Migration
             $table->string('code', 150);
             $table->unsignedInteger('institute_id');
             $table->unsignedInteger('branch_id')->nullable();
-            $table->unsignedInteger('programme_id')->nullable();
+            $table->unsignedInteger('program_id')->nullable();
             $table->string('title', 1000);
             $table->string('title_en', 500);
             $table->float('course_fee')->default(0);

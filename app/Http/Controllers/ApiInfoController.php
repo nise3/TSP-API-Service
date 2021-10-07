@@ -28,7 +28,7 @@ class ApiInfoController extends Controller
                 'Batch',
                 'Course',
                 'Institute',
-                'Programme',
+                'Program',
                 'TrainingCenter',
             ],
             'description'=>[
