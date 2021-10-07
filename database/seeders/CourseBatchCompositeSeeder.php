@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\Program;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Seeder;
@@ -45,19 +46,19 @@ class CourseBatchCompositeSeeder extends Seeder
             }
 
 
-            $programmes = TrainingCenter::select(['institute_id', 'id'])->get()->groupBy('institute_id');
+            $programmes = Program::select(['institute_id', 'id'])->get()->groupBy('institute_id');
 
-            $courses = Course::select(['institute_id', 'programme_id', 'id'])->get();
+            $courses = Course::select(['institute_id', 'program_id', 'id'])->get();
 
             foreach ($courses as $course) {
-                if (!$course->programme_id && $programmes->has($course->institute_id)) {
+                if (!$course->program_id && $programmes->has($course->institute_id)) {
                     $innerProgrammes = $programmes->get($course->institute_id);
                     //                  Log::debug($innerProgrammes->toArray());
                     $len = $innerProgrammes->count();
                     $index = random_int(0, $len - 1);
                     $programmeId = $innerProgrammes->get($index)->id;
                     //                   Log::debug($programmeId);
-                    $course->programme_id = $programmeId;
+                    $course->program_id = $programmeId;
                     $course->save();
                 }
             }
@@ -95,6 +96,7 @@ class CourseBatchCompositeSeeder extends Seeder
             DB::commit();
         } catch (\Exception $exception) {
             DB::rollBack();
+            Log::debug($exception);
         }
 
 
