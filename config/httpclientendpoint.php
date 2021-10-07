@@ -16,6 +16,11 @@ return [
         "dev" => "https://organization.local:8010/api/v1/",
         "prod" => "http://nise3-org-management.default/api/v1/"
     ],
+    "youth" => [
+        "local" => "http://localhost:8003/api/v1/",
+        "dev" => "https://organization.local:8011/api/v1/",
+        "prod" => "http://nise3-youth-management.default/api/v1/"
+    ],
     "idp_server" => [
         "local" => "",
         "dev" => "https://is.local:9453/scim2/Users",
