@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Course;
 use App\Models\Trainer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -527,6 +528,33 @@ class BatchService
             'trainerIds.*' => 'required|integer|distinct|min:1'
         ];
         return Validator::make($data, $rules);
+    }
+
+    public function batchesWithTrainingInstitute($request, $id, $start_time){
+        /** @var Course|Builder $courseBuilder */
+        $courseBuilder = Course::select([
+            'courses.id',
+            'courses.code',
+            'courses.institute_id',
+            'courses.branch_id',
+            'courses.program_id'
+        ]);
+
+        $courseBuilder->join('training_centers', function ($join){
+            $join->on('training_centers.institute_id','=','courses.institute_id')
+                ->whereNull('training_centers.deleted_at');
+        });
+
+        $courseBuilder->join('batches', function($join) use ($id){
+            $join->on('batches.id','=','training_centers.branch_id')
+                ->whereNull('batches.deleted_at');
+        });
+
+        $result = $courseBuilder->get();
+        dd($result);
+
+        return $result;
+
     }
 
 

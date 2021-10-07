@@ -228,4 +228,12 @@ class BatchController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    public function getBatchesByCourseId(Request $request, $id){
+        try {
+            $response = $this->batchService->batchesWithTrainingInstitute($request, $id, $this->startTime);
+        } catch (Throwable $error){
+
+        }
+    }
 }
