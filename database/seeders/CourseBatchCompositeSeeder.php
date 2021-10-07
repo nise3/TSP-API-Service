@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,7 @@ class CourseBatchCompositeSeeder extends Seeder
 
 
             $branches = Branch::select(['institute_id', 'id'])->get()->groupBy('institute_id');
-     //       Log::debug($branches->all());
+            //       Log::debug($branches->all());
             $trainingCenters = TrainingCenter::select(['institute_id', 'id', 'branch_id'])->get();
 
             foreach ($trainingCenters as $trainingCenter) {
@@ -44,7 +45,6 @@ class CourseBatchCompositeSeeder extends Seeder
             }
 
 
-
             $programmes = TrainingCenter::select(['institute_id', 'id'])->get()->groupBy('institute_id');
 
             $courses = Course::select(['institute_id', 'programme_id', 'id'])->get();
@@ -52,11 +52,11 @@ class CourseBatchCompositeSeeder extends Seeder
             foreach ($courses as $course) {
                 if (!$course->programme_id && $programmes->has($course->institute_id)) {
                     $innerProgrammes = $programmes->get($course->institute_id);
-  //                  Log::debug($innerProgrammes->toArray());
+                    //                  Log::debug($innerProgrammes->toArray());
                     $len = $innerProgrammes->count();
                     $index = random_int(0, $len - 1);
                     $programmeId = $innerProgrammes->get($index)->id;
- //                   Log::debug($programmeId);
+                    //                   Log::debug($programmeId);
                     $course->programme_id = $programmeId;
                     $course->save();
                 }
@@ -66,6 +66,7 @@ class CourseBatchCompositeSeeder extends Seeder
                 ->get()
                 ->groupBy('institute_id');
 
+            $trainers = Trainer::select(['id', 'institute_id'])->get()->groupBy('institute_id');
             $courses = Course::select(['institute_id', 'id'])->get()->keyBy('id');
             $batches = Batch::select(['course_id', 'id'])->get();
 
@@ -81,6 +82,13 @@ class CourseBatchCompositeSeeder extends Seeder
                         $batch->training_center_id = $centerId;
                     }
                     $batch->save();
+                    if ($trainers->has($course->institute_id)) {
+                        $innerTrainers = $trainers->get($course->institute_id);
+                        $len = $innerTrainers->count();
+                        $index = random_int(0, $len - 1);
+                        $trainerId = $innerTrainers->get($index)->id;
+                        $batch->trainers()->attach($trainerId);
+                    }
                 }
             }
 

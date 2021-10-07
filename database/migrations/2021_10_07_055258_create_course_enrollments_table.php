@@ -15,9 +15,6 @@ class CreateCourseEnrollmentsTable extends Migration
     {
         Schema::create('course_enrollments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('institute_id');
-            $table->unsignedInteger('branch_id');
-            $table->unsignedInteger('program_id')->nullable();
             $table->unsignedInteger('course_id');
             $table->unsignedInteger('youth_id');
             $table->timestamps();
