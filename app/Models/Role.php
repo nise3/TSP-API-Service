@@ -21,5 +21,5 @@ use Carbon\Carbon;
  */
 class Role extends BaseModel
 {
-    protected $guarded =[];
+    protected $guarded =['id'];
 }

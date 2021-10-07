@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             GeoLocationDatabaseSeeder::class,
             InstituteSeeder::class,
             CourseBatchCompositeSeeder::class,
+            CourseEnrollmentSeeder::class
         ]);
     }
 }

@@ -196,4 +196,17 @@ class CourseController extends Controller
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    public function getFilterCourseList(Request $request,string $name): JsonResponse
+    {
+
+        $filter = $this->courseService->filterValidator($request)->validate();
+
+        try {
+            $response = $this->courseService->getFilterCourses($filter, $this->startTime, $name);
+        } catch (Throwable $e) {
+           throw $e;
+        }
+        return Response::json($response);
+    }
 }

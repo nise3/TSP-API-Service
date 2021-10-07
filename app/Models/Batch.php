@@ -30,7 +30,6 @@ use Illuminate\Support\Carbon;
  */
 class Batch extends BaseModel
 {
-    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
 
     protected $guarded = ['id'];
 

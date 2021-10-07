@@ -33,10 +33,8 @@ use Illuminate\Support\Carbon;
  * @property-read Batch $batch
  * @property-read Institute $institute
  */
-class Trainer extends Model
+class Trainer extends BaseModel
 {
-    use HasFactory, SoftDeletes;
-
     protected $guarded = ['id'];
 
     protected $casts = [

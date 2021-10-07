@@ -9,6 +9,7 @@ use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -306,6 +307,104 @@ class CourseService
     public function forceDelete(Course $courses): bool
     {
         return $courses->forceDelete();
+    }
+
+
+    /**Filter courses by popular, recent, nearby, skill matching*/
+    public function getFilterCourses(array $request, Carbon $startTime, string $name): array
+    {
+        $title = $request['title'] ?? "";
+        $titleEn = $request['title_en'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $instituteId = $request['institute_id'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+
+        /** @var Course|Builder $coursesBuilder */
+        $coursesBuilder = Course::select(
+            [
+                'courses.id',
+                'courses.code',
+                'courses.title_en',
+                'courses.title',
+                'courses.institute_id',
+                'institutes.title as institute_title',
+                'institutes.title_en as institute_title_en',
+                'courses.course_fee',
+                'courses.duration',
+                'courses.description',
+                'courses.description_en',
+                'courses.target_group',
+                'courses.target_group_en',
+                'courses.prerequisite',
+                'courses.prerequisite_en',
+                'courses.eligibility',
+                'courses.eligibility_en',
+                'courses.cover_image',
+                'courses.row_status',
+                'courses.created_by',
+                'courses.updated_by',
+                'courses.created_at',
+                'courses.updated_at',
+                'courses.deleted_at',
+                 DB::raw('COUNT(courses.id) as enroll_number')
+            ]
+        );
+
+        $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
+            $join->on('courses.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('institutes.row_status', $rowStatus);
+            }
+        });
+
+        //$coursesBuilder->orderBy('courses.id', $order);
+
+        if (is_numeric($rowStatus)) {
+            $coursesBuilder->where('courses.row_status', $rowStatus);
+        }
+
+        if (!empty($title)) {
+            $coursesBuilder->where('courses.title', 'like', '%' . $title . '%');
+        }
+        if (!empty($titleEn)) {
+            $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
+        }
+
+        if (is_numeric($instituteId)) {
+            $coursesBuilder->where('courses.institute_id', '=', $instituteId);
+        }
+
+        if ($name == "popular") {
+            $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+            $coursesBuilder->groupBy("courses.id");
+            $coursesBuilder->orderByDesc('enroll_number');
+        }
+
+        /** @var Collection $courses */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courses = $coursesBuilder->paginate($pageSize);
+            $paginateData = (object)$courses->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courses = $coursesBuilder->get()->take(BaseModel::DEFAULT_PAGE_SIZE);
+        }
+
+        //dd($courses);
+
+        $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
     }
 
     /**
