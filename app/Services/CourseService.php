@@ -177,7 +177,7 @@ class CourseService
                 ->whereNull('institutes.deleted_at');
         });
 
-        $courseBuilder->join("programs", function ($join)  {
+        $courseBuilder->join("programs", function ($join) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
         });
@@ -318,6 +318,7 @@ class CourseService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
+        $programId = $request['program_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
 
         /** @var Course|Builder $coursesBuilder */
@@ -330,6 +331,9 @@ class CourseService
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
+                'courses.program_id',
+                'programs.title as program_title',
+                'programs.title_en as program_title_en',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -347,7 +351,7 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'courses.deleted_at',
-                 DB::raw('COUNT(courses.id) as enroll_number')
+                DB::raw('COUNT(distinct course_enrollments.id) as total_enroll')
             ]
         );
 
@@ -359,7 +363,13 @@ class CourseService
             }
         });
 
-        //$coursesBuilder->orderBy('courses.id', $order);
+        $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('programs.row_status', $rowStatus);
+            }
+        });
 
         if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
@@ -376,11 +386,28 @@ class CourseService
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
+        if (is_numeric($programId)) {
+            $coursesBuilder->where('courses.program_id', '=', $programId);
+        }
+
         if ($name == "popular") {
             $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+            $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
+            $coursesBuilder->whereDate('batches.registration_start_date', '<=', date("Y-m-d"));
+            $coursesBuilder->whereDate('batches.registration_end_date', '>=', date("Y-m-d"));
             $coursesBuilder->groupBy("courses.id");
-            $coursesBuilder->orderByDesc('enroll_number');
+            $coursesBuilder->orderByDesc('total_enroll');
+
+        } else if ($name == "recent") {
+            $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+            $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
+            $coursesBuilder->whereDate('batches.registration_start_date', '<=', date("Y-m-d"));
+            $coursesBuilder->whereDate('batches.registration_end_date', '>=', date("Y-m-d"));
         }
+
+        //dd($coursesBuilder->toSql());
+
+
 
         /** @var Collection $courses */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -392,7 +419,7 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $courses = $coursesBuilder->get()->take(BaseModel::DEFAULT_PAGE_SIZE);
+            $courses = $coursesBuilder->get()->take(20);
         }
 
         //dd($courses);
