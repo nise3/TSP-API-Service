@@ -31,8 +31,6 @@ class CreateTrainingCentersTable extends Migration
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
 
-            $table->text('google_map_src')->nullable();
-
             $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active');
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
