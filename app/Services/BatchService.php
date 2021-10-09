@@ -531,9 +531,9 @@ class BatchService
         return Validator::make($data, $rules);
     }
 
-    public function batchesWithTrainingInstitute($request, $id, $start_time){
-        $active = $request['active'] === "true";
-        $upcoming = $request['upcoming'] === "true";
+    public function batchesWithTrainingInstitute($request, $id, $current_time){
+        $active = $request['active'] == "true";
+        $upcoming = $request['upcoming'] == "true";
 
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select([
@@ -574,15 +574,15 @@ class BatchService
             DB::raw('GROUP_CONCAT(batches.row_status) as batchRowStatus')
         ])
             ->leftJoin('training_centers','training_centers.institute_id','=','courses.institute_id')
-            ->leftJoin('batches', function ($join) use ($start_time, $active, $upcoming){
+            ->leftJoin('batches', function ($join) use ($current_time, $active, $upcoming){
                 $join->on('batches.training_center_id','=','training_centers.id');
                 if($active && !$upcoming){
-                    $join->whereDate('batches.registration_start_date', '<=', $start_time);
-                    $join->whereDate('batches.registration_end_date', '>=', $start_time);
+                    $join->whereDate('batches.registration_start_date', '<=', $current_time);
+                    $join->whereDate('batches.registration_end_date', '>=', $current_time);
                 } else if (!$active && $upcoming){
-                    $join->whereDate('batches.registration_start_date', '>', $start_time);
+                    $join->whereDate('batches.registration_start_date', '>', $current_time);
                 } else {
-                    $join->whereDate('batches.registration_end_date', '>=', $start_time);
+                    $join->whereDate('batches.registration_end_date', '>=', $current_time);
                 }
             })
             ->leftJoin('loc_divisions','loc_divisions.id','=','training_centers.loc_division_id')
@@ -593,6 +593,7 @@ class BatchService
                 ['batches.course_id','=',$id]
             ])
             ->groupBy('training_centers.id')
+
             ->whereNull('courses.deleted_at')
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
@@ -638,7 +639,7 @@ class BatchService
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "query_time" => $start_time->diffInSeconds(Carbon::now()),
+            "query_time" => $current_time->diffInSeconds(Carbon::now(BaseModel::NATIVE_TIME_ZONE)),
         ];
 
         return $response;
