@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Trainer;
+use App\Models\TrainingCenter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -531,38 +532,39 @@ class BatchService
         return Validator::make($data, $rules);
     }
 
-    public function batchesWithTrainingCenter($request, $id, $currentTime){
+    public function batchesWithTrainingCenters($request, $id, $currentTime){
         $active = $request['active'] == "true";
         $upcoming = $request['upcoming'] == "true";
 
+        $course = Course::find($id);
+        $instituteId = $course['institute_id'];
+
         /** @var Course|Builder $courseBuilder */
-        $courseBuilder = Course::select([
-            'courses.id',
-            'courses.code',
-            'courses.institute_id',
-            'training_centers.title as training_center_title',
-            'training_centers.title_en as training_center_title_en',
+        $courseBuilder = TrainingCenter::select([
+            'training_centers.id',
+            'training_centers.title',
+            'training_centers.title_en',
 
-            'loc_divisions.title_en as training_center_division_title_en',
-            'loc_divisions.title_bn as training_center_division_title_bn',
-            'loc_divisions.bbs_code as training_center_division_bbs_code',
+            'loc_divisions.title_en as division_title_en',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.bbs_code as division_bbs_code',
 
-            'loc_districts.title_en as training_center_district_title_en',
-            'loc_districts.title_bn as training_center_district_title_bn',
-            'loc_districts.bbs_code as training_center_district_bbs_code',
-            'loc_districts.is_sadar_district as training_center_is_sadar_district',
+            'loc_districts.title_en as district_title_en',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.bbs_code as district_bbs_code',
+            'loc_districts.is_sadar_district',
 
-            'loc_upazilas.title_en as training_center_upazila_title_en',
-            'loc_upazilas.title_bn as training_center_upazila_title_bn',
-            'loc_upazilas.bbs_code as training_center_upazila_bbs_code',
-            'loc_upazilas.is_sadar_upazila as training_center_is_sadar_upazila',
+            'loc_upazilas.title_en as upazila_title_en',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.bbs_code as upazila_bbs_code',
+            'loc_upazilas.is_sadar_upazila',
 
-            'training_centers.address as training_center_address',
-            'training_centers.address_en as training_center_address_en',
-            'training_centers.location_latitude as training_center_location_latitude',
-            'training_centers.location_longitude as training_center_location_longitude',
-            'training_centers.google_map_src as training_center_google_map_src',
-            'training_centers.row_status as training_center_row_status',
+            'training_centers.address',
+            'training_centers.address_en',
+            'training_centers.location_latitude',
+            'training_centers.location_longitude',
+            'training_centers.google_map_src',
+            'training_centers.row_status',
 
             DB::raw('GROUP_CONCAT(batches.id) as batch_ids'),
             DB::raw('GROUP_CONCAT(batches.number_of_seats) as number_of_seats'),
@@ -573,7 +575,6 @@ class BatchService
             DB::raw('GROUP_CONCAT(batches.available_seats) as available_seats'),
             DB::raw('GROUP_CONCAT(batches.row_status) as batch_row_statuses')
         ])
-            ->join('training_centers','training_centers.institute_id','=','courses.institute_id')
             ->join('batches', function ($join) use ($currentTime, $active, $upcoming){
                 $join->on('batches.training_center_id','=','training_centers.id');
                 if($active && !$upcoming){
