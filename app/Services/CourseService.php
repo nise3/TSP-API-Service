@@ -75,7 +75,7 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -83,14 +83,14 @@ class CourseService
         $coursesBuilder->join("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
@@ -101,12 +101,12 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $courses */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -363,7 +363,7 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -371,7 +371,7 @@ class CourseService
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
@@ -411,7 +411,7 @@ class CourseService
 
 
         /** @var Collection $courses */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();

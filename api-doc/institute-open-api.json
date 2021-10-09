@@ -7,7 +7,8 @@
     "servers": [
         {
             "url": "http://institute.local:8009/api/v1/"
-        }, {
+        },
+        {
             "url": "http://localhost:8001/api/v1"
         },
         {
@@ -2455,7 +2456,7 @@
                                         "branch_id": 1,
                                         "training_center_id": null,
                                         "trainer_name_en": "assdsddf",
-                                        "trainer_name_bn": "asfsdfsdf",
+                                        "trainer_name": "asfsdfsdf",
                                         "trainer_registration_number": "434235232",
                                         "email": "asdfqwr@gmailcom",
                                         "mobile": "09877654321",
@@ -2585,116 +2586,15 @@
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a course.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courses"
+                            }
                         }
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "5"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -2819,116 +2719,17 @@
                             "type": "integer"
                         },
                         "example": "1"
-                    },
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
-                        }
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "5"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courses"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -3044,7 +2845,7 @@
                         "$ref": "#/components/parameters/trainer_name_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/trainer_name_bn_optional"
+                        "$ref": "#/components/parameters/trainer_name_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -3062,7 +2863,7 @@
                                     "data": {
                                         "id": 1,
                                         "trainer_name_en": "Hester Crona",
-                                        "trainer_name_bn": "Enid Jones",
+                                        "trainer_name": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
                                         "institutes_title": "Cynthia Bogisich",
@@ -3347,7 +3148,7 @@
                                 "example": {
                                     "data": {
                                         "trainer_name_en": "Tikka Khan",
-                                        "trainer_name_bn": "আরএমজি",
+                                        "trainer_name": "আরএমজি",
                                         "institute_id": "1",
                                         "branch_id": "1",
                                         "training_center_id": "1",
@@ -3406,7 +3207,7 @@
                                     "data": {
                                         "id": 1,
                                         "trainer_name_en": "Hester Crona",
-                                        "trainer_name_bn": "Enid Jones",
+                                        "trainer_name": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
                                         "institutes_title": "Cynthia Bogisich",
@@ -4311,7 +4112,12 @@
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     },
                     "application_form_settings": {
                         "type": "string",
@@ -4392,7 +4198,7 @@
                             3
                         ],
                         "description": "1=>male, 2=>females, 3=>others",
-                        "default": 1
+                        "example": 1
                     },
                     "marital_status": {
                         "type": "integer",
@@ -4510,7 +4316,7 @@
                 },
                 "required": [
                     "institute_id",
-                    "trainer_name_bn",
+                    "trainer_name",
                     "trainer_name_en",
                     "email",
                     "mobile",
@@ -4913,9 +4719,9 @@
                     "example": "মিলাদুল ইসলাম"
                 }
             },
-            "trainer_name_bn_optional": {
+            "trainer_name_optional": {
                 "in": "query",
-                "name": "trainer_name_bn",
+                "name": "trainer_name",
                 "required": false,
                 "schema": {
                     "type": "string"

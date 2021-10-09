@@ -58,9 +58,9 @@ class CourseController extends Controller
      * Display the specified resource
      * @param Request $request
      * @param int $id
-     * @return JsonResponse
+     * @return Exception|JsonResponse|Throwable
      */
-    public function read(Request $request, int $id): JsonResponse
+    public function read(Request $request, int $id)
     {
         try {
             $response = $this->courseService->getOneCourse($id, $this->startTime);

@@ -224,7 +224,7 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name as trainer_name_bn',
+            'trainers.trainer_name',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
@@ -383,7 +383,7 @@ class TrainerService
         $trainerBuilder = Trainer::onlyTrashed()->select([
             'trainers.id as id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name as trainer_name_bn',
+            'trainers.trainer_name',
             'trainers.institute_id',
             'trainers.email',
             'trainers.date_of_birth as date_of_birth',
