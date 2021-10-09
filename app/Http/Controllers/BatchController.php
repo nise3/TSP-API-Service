@@ -37,7 +37,7 @@ class BatchController extends Controller
     public function __construct(BatchService $batchService)
     {
         $this->batchService = $batchService;
-        $this->startTime = Carbon::now();
+        $this->startTime = Carbon::now(BaseModel::NATIVE_TIME_ZONE);
     }
 
     /**
@@ -227,5 +227,15 @@ class BatchController extends Controller
             return $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getBatchesByCourseId(Request $request, $id){
+        try {
+            $response = $this->batchService->batchesWithTrainingInstitute($request, $id, $this->startTime);
+        } catch (Throwable $error){
+            return $error;
+        }
+
+        return Response::json($response);
     }
 }

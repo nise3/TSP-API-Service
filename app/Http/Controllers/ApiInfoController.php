@@ -30,8 +30,9 @@ class ApiInfoController extends Controller
                 'Institute',
                 'Program',
                 'TrainingCenter',
+                'Trainer'
             ],
-            'description'=>[
+            'description' => [
                 'It is a institute management api service that manages services related to a institute'
             ]
         ];
@@ -41,16 +42,16 @@ class ApiInfoController extends Controller
     public function fileUpload(Request $request)
     {
         try {
-            $directory='uploads/'.date('Y/F');
-            $fileHandler=new FileHandler();
-            $path=$fileHandler->storePhoto($request->file,$directory);
-            $response= [
-                "data"=>url('/').'/api/v1/'.$path,
-                '_response_status'=>[
-                    "success"=>true
+            $directory = 'uploads/' . date('Y/F');
+            $fileHandler = new FileHandler();
+            $path = $fileHandler->storePhoto($request->file, $directory);
+            $response = [
+                "data" => url('/') . '/api/v1/' . $path,
+                '_response_status' => [
+                    "success" => true
                 ]
             ];
-        }catch (Throwable $e){
+        } catch (Throwable $e) {
             echo "<pre>";
             print_r($e->getMessage());
             echo "</pre>";
