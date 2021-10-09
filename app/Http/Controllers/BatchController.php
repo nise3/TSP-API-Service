@@ -37,7 +37,7 @@ class BatchController extends Controller
     public function __construct(BatchService $batchService)
     {
         $this->batchService = $batchService;
-        $this->startTime = Carbon::now(BaseModel::NATIVE_TIME_ZONE);
+        $this->startTime = Carbon::now();
     }
 
     /**

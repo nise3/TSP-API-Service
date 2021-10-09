@@ -320,7 +320,7 @@ class CourseService
         $instituteId = $request['institute_id'] ?? "";
         $programId = $request['program_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
-        $curDate = date("Y-m-d");
+        $curDate = Carbon::now();
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
@@ -406,9 +406,11 @@ class CourseService
             $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
             $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
             $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
+            $coursesBuilder->groupBy("courses.id");
+            $coursesBuilder->orderByDesc('total_enroll');
         }
 
-        //dd($coursesBuilder->toSql());
+        dd($coursesBuilder->get()->toArray());
 
 
 

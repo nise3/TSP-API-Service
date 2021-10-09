@@ -92,6 +92,4 @@ abstract class BaseModel extends Model
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
 
-    public const NATIVE_TIME_ZONE = 'Asia/Dhaka';
-
 }
