@@ -43,7 +43,7 @@ class Institute extends BaseModel
      */
     public function title(): ?string
     {
-        return $this->title_bn || $this->title_en;
+        return $this->title || $this->title_en;
     }
 
     /**

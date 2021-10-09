@@ -320,7 +320,7 @@ class TrainingCenterService
     {
         $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -328,7 +328,7 @@ class TrainingCenterService
         $trainingCentersBuilder = TrainingCenter::onlyTrashed()->select([
             'training_centers.id as id',
             'training_centers.title_en',
-            'training_centers.title as title_bn',
+            'training_centers.title as title',
             'training_centers.institute_id',
             'institutes.title_en as institute_name',
             'institutes.title as institute_name_bn',

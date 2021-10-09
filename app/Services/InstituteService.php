@@ -334,7 +334,7 @@ class InstituteService
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
@@ -343,7 +343,7 @@ class InstituteService
         $instituteBuilder = Institute::onlyTrashed()->select([
             'institutes.id as id',
             'institutes.title_en',
-            'institutes.title_bn',
+            'institutes.title',
             'institutes.code',
             'institutes.logo',
             'institutes.primary_phone',
@@ -366,7 +366,7 @@ class InstituteService
         if (!empty($titleEn)) {
             $instituteBuilder->where('institutes.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $instituteBuilder->where('institutes.title_bn', 'like', '%' . $titleBn . '%');
+            $instituteBuilder->where('institutes.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $instituteBuilder */

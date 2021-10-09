@@ -32,7 +32,7 @@ class CourseService
     public function getCourseList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $titleBn = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -48,9 +48,9 @@ class CourseService
                 'courses.title',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title as institute_title_bn',
+                'institutes.title as institute_title',
                 'programs.title_en as program_title_en',
-                'programs.title as program_title_bn',
+                'programs.title as program_title',
                 'courses.course_fee',
                 'courses.program_id',
                 'courses.duration',
@@ -144,9 +144,9 @@ class CourseService
                 'courses.title',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title as institute_title_bn',
+                'institutes.title as institute_title',
                 'programs.title_en as program_title_en',
-                'programs.title as program_title_bn',
+                'programs.title as program_title',
                 'courses.program_id',
                 'courses.course_fee',
                 'courses.duration',
@@ -239,7 +239,7 @@ class CourseService
     {
         $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -250,7 +250,7 @@ class CourseService
                 'courses.code',
                 'courses.institute_id',
                 'institutes.title_en as institute_title_en',
-                'institutes.title as institute_title_bn',
+                'institutes.title as institute_title',
                 'courses.title_en',
                 'courses.title',
                 'courses.course_fee',
