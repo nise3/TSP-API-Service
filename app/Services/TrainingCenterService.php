@@ -39,7 +39,7 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title as title',
+            'training_centers.title',
             'training_centers.loc_division_id',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
@@ -47,14 +47,14 @@ class TrainingCenterService
             'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'training_centers.loc_upazila_id',
-            'loc_upazilas.title as upazilatitle',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institutetitle',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title as branchtitle',
+            'branches.title as branch_title',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -119,8 +119,8 @@ class TrainingCenterService
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         }
-        if (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $titleBn . '%');
+        if (!empty($title)) {
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
         }
 
 
@@ -160,7 +160,7 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title as title',
+            'training_centers.title',
             'training_centers.loc_division_id',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
@@ -292,6 +292,8 @@ class TrainingCenterService
             'loc_division_id' => ['nullable', 'integer'],
             'loc_district_id' => ['nullable', 'integer'],
             'loc_upazila_id' => ['nullable', 'integer'],
+            'location_latitude' => ['nullable', 'string'],
+            'location_longitude' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),

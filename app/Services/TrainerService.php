@@ -40,10 +40,10 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.trainer_name_en',
-            'trainers.trainer_name as trainer_name_bn',
+            'trainers.trainer_name',
             'trainers.institute_id',
-            'institutes.title_en as institutes_title_en',
-            'institutes.title as institutes_title',
+            'institutes.title_en as institute_title_en',
+            'institutes.title as institute_title',
             'trainers.trainer_registration_number',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
@@ -53,7 +53,7 @@ class TrainerService
             'training_centers.title as training_center_title',
             'trainers.email',
             'trainers.mobile',
-            'trainers.date_of_birth as date_of_birth',
+            'trainers.date_of_birth',
             'trainers.about_me',
             'trainers.about_me_en',
             'trainers.gender',
@@ -516,6 +516,10 @@ class TrainerService
                 'date'
             ],
             'about_me' => [
+                'nullable',
+                'string'
+            ],
+            'about_me_en' => [
                 'nullable',
                 'string'
             ],
