@@ -18,14 +18,17 @@ class CreateBranchesTable extends Migration
             $table->unsignedInteger('institute_id');
             $table->string('title', 600);
             $table->string('title_en', 250);
-            $table->unsignedMediumInteger("loc_division_id")->nullable();
-            $table->unsignedMediumInteger("loc_district_id")->nullable();
-            $table->unsignedMediumInteger("loc_upazila_id")->nullable();
-            $table->text('address')->nullable();
-            $table->text('address_en')->nullable();
+
+            $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_branch_loc_division_id_inx');
+            $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_branch_loc_district_id_inx');
+            $table->unsignedMediumInteger('loc_upazila_id')->nullable()->index('tsp_branch_loc_upazila_id_inx');
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
             $table->text('google_map_src')->nullable();
+
+            $table->text('address')->nullable();
+            $table->text('address_en')->nullable();
+
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();

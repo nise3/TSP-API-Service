@@ -20,15 +20,16 @@ class CreateInstitutesTable extends Migration
             $table->string('title', 1000);
             $table->string('title_en', 500);
             $table->string('domain', 191)->nullable();
-            $table->unsignedMediumInteger("loc_division_id")->nullable();
-            $table->unsignedMediumInteger("loc_district_id")->nullable();
-            $table->unsignedMediumInteger("loc_upazila_id")->nullable();
-            $table->text('address')->nullable();
-            $table->text('address_en')->nullable();
 
+            $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_ins_loc_division_id_inx');
+            $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_ins_loc_district_id_inx');
+            $table->unsignedMediumInteger('loc_upazila_id')->nullable()->index('tsp_ins_loc_upazila_id_inx');
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
             $table->text('google_map_src')->nullable();
+
+            $table->text('address_en')->nullable();
+            $table->text('address')->nullable();
 
             $table->string('logo', 600)->nullable();
             $table->string("country")->default("BD")->comment('ISO country code');

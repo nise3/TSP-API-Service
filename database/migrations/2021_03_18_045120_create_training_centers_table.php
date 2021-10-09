@@ -21,15 +21,16 @@ class CreateTrainingCentersTable extends Migration
                 ->comment('1 => On Institute Premises, 2 => On Branch Premises, 3 => On Training Center Premises');
             $table->string('title', 1000);
             $table->string('title_en', 500);
-            $table->unsignedMediumInteger("loc_division_id")->nullable();
-            $table->unsignedMediumInteger("loc_district_id")->nullable();
-            $table->unsignedMediumInteger("loc_upazila_id")->nullable();
-            $table->text('address')->nullable();
-            $table->text('address_en')->nullable();
 
+            $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_tc_loc_division_id_inx');
+            $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_tc_loc_district_id_inx');
+            $table->unsignedMediumInteger('loc_upazila_id')->nullable()->index('tsp_tc_loc_upazila_id_inx');
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
             $table->text('google_map_src')->nullable();
+
+            $table->text('address')->nullable();
+            $table->text('address_en')->nullable();
 
             $table->unsignedTinyInteger('row_status')->default(1)->comment('0 -> inactive, 1 ->active');
             $table->unsignedInteger('created_by')->nullable();
