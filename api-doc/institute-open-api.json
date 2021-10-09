@@ -134,6 +134,9 @@
                         "$ref": "#/components/parameters/institute_type_id"
                     },
                     {
+                        "$ref": "#/components/parameters/permission_sub_group_id"
+                    },
+                    {
                         "$ref": "#/components/parameters/code"
                     },
                     {
@@ -235,15 +238,14 @@
                         "content": {
                             "multipart/form-data": {
                                 "schema": {
-                                    "type": "object",
+                                    "type": "array",
                                     "items": {
                                         "type": "string",
                                         "uniqueItems": true
                                     },
                                     "example": [
                                         "9299292",
-                                        "2828828",
-                                        "3773737"
+                                        "9299293"
                                     ]
                                 }
                             }
@@ -264,15 +266,14 @@
                         "content": {
                             "multipart/form-data": {
                                 "schema": {
-                                    "type": "object",
+                                    "type": "array",
                                     "items": {
                                         "type": "string",
                                         "uniqueItems": true
                                     },
                                     "example": [
                                         "01767111434",
-                                        "01767111433",
-                                        "01767111432"
+                                        "01767111444"
                                     ]
                                 }
                             }
@@ -477,52 +478,25 @@
                 "description": " API endpoint to update a institute.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/institute_type_id"
-                    },
-                    {
                         "name": "instituteId",
-                        "required": true,
                         "in": "path",
+                        "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": "1"
+                            "example": 1
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/permission_sub_group_id"
+                        "$ref": "#/components/parameters/institute_type_id"
                     },
                     {
                         "$ref": "#/components/parameters/code"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
                         "$ref": "#/components/parameters/title"
                     },
                     {
-                        "$ref": "#/components/parameters/country"
-                    },
-                    {
-                        "$ref": "#/components/parameters/phone_code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_mobile"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_email"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation"
+                        "$ref": "#/components/parameters/title_en"
                     },
                     {
                         "name": "domain",
@@ -531,93 +505,6 @@
                         "schema": {
                             "type": "string",
                             "example": "https://www.developer.com"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "name": "primary_phone",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "phone_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "integer",
-                                        "uniqueItems": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "primary_mobile",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "mobile_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "integer",
-                                        "uniqueItems": true
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "example@gmail.com"
-                        }
-                    },
-                    {
-                        "name": "config",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "This is config"
                         }
                     },
                     {
@@ -646,6 +533,152 @@
                             "type": "integer"
                         },
                         "example": "1"
+                    },
+                    {
+                        "name": "address",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dhaka mirpur road 4 block 2"
+                        }
+                    },
+                    {
+                        "name": "address_en",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dhaka mirpur road 4 block 2"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/location_latitude"
+                    },
+                    {
+                        "$ref": "#/components/parameters/location_longitude"
+                    },
+                    {
+                        "$ref": "#/components/parameters/google_map_src"
+                    },
+                    {
+                        "name": "logo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "default.jpg"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/country"
+                    },
+                    {
+                        "$ref": "#/components/parameters/phone_code"
+                    },
+                    {
+                        "name": "primary_phone",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "01845654543"
+                        }
+                    },
+                    {
+                        "name": "phone_numbers",
+                        "in": "query",
+                        "content": {
+                            "multipart/form-data": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "uniqueItems": true
+                                    },
+                                    "example": [
+                                        "9299292",
+                                        "9299293"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "primary_mobile",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "01845654543"
+                        }
+                    },
+                    {
+                        "name": "mobile_numbers",
+                        "in": "query",
+                        "content": {
+                            "multipart/form-data": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "uniqueItems": true
+                                    },
+                                    "example": [
+                                        "01767111434",
+                                        "01767111444"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "example@gmail.com"
+                        }
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/name_of_the_office_head_designation_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_name_en"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_mobile"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_email"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_designation"
+                    },
+                    {
+                        "$ref": "#/components/parameters/contact_person_designation_en"
+                    },
+                    {
+                        "name": "config",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "This is config"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -2094,10 +2127,7 @@
                         "$ref": "#/components/parameters/course_id"
                     },
                     {
-                        "$ref": "#/components/parameters/program_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id_optional"
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/branch_id_optional"
@@ -2162,9 +2192,6 @@
                             "type": "integer",
                             "example": "20"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/dynamic_form_field"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -2317,10 +2344,7 @@
                         "$ref": "#/components/parameters/course_id"
                     },
                     {
-                        "$ref": "#/components/parameters/program_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id_optional"
+                        "$ref": "#/components/parameters/institute_id"
                     },
                     {
                         "$ref": "#/components/parameters/branch_id_optional"
@@ -2385,9 +2409,6 @@
                             "type": "integer",
                             "example": "20"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/dynamic_form_field"
                     },
                     {
                         "$ref": "#/components/parameters/row_status"
@@ -4966,7 +4987,8 @@
                     "enum": [
                         0,
                         1
-                    ]
+                    ],
+                    "example": 1
                 }
             },
             "row_status_optional": {
@@ -5040,6 +5062,7 @@
             "permission_sub_group_id": {
                 "name": "permission_sub_group_id",
                 "in": "query",
+                "required": true,
                 "schema": {
                     "type": "integer",
                     "example": 3

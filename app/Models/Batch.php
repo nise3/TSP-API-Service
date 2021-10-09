@@ -46,7 +46,7 @@ class Batch extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class); // TODO: specifically mention columns
+        return $this->belongsTo(Institute::class, 'batch_id', 'id'); // TODO: specifically mention columns
     }
 
     /**
@@ -54,7 +54,7 @@ class Batch extends BaseModel
      */
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class); // TODO: specifically mention columns
+        return $this->belongsTo(Branch::class, 'batch_id', 'id'); // TODO: specifically mention columns
     }
 
     /**
@@ -62,15 +62,15 @@ class Batch extends BaseModel
      */
     public function trainingCenter(): BelongsTo
     {
-        return $this->belongsTo(TrainingCenter::class); // TODO: specifically mention columns
+        return $this->belongsTo(TrainingCenter::class, 'batch_id', 'id'); // TODO: specifically mention columns
     }
 
     /**
      * @return BelongsToMany
      */
-    public function trainers():BelongsToMany
+    public function trainers(): BelongsToMany
     {
-        return $this->belongsToMany(Trainer::class,'trainer_batch'); // TODO: specifically mention columns
+        return $this->belongsToMany(Trainer::class, 'trainer_batch', 'batch_id', 'trainer_id'); // TODO: specifically mention columns
     }
 
 }

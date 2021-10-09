@@ -395,25 +395,25 @@ class BatchService
             ]
         ];
         $rules = [
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id',
-            ],
             'course_id' => [
                 'required',
                 'int',
                 'exists:courses,id'
             ],
-            'training_center_id' => [
+            'institute_id' => [
                 'required',
                 'int',
-                'exists:training_centers,id'
+                'exists:institutes,id',
             ],
             'branch_id' => [
                 'nullable',
                 'int',
                 'exists:branches,id'
+            ],
+            'training_center_id' => [
+                'required',
+                'int',
+                'exists:training_centers,id'
             ],
             'number_of_seats' => [
                 'required',
@@ -445,19 +445,7 @@ class BatchService
             ],
             'available_seats' => [
                 'int',
-                'nullable'
-            ],
-            'loc_district_id' => [
-                'nullable',
-                'exists:loc_districts,id'
-            ],
-            'loc_division_id' => [
-                'nullable',
-                'exists:loc_divisions,id'
-            ],
-            'loc_upazila_id' => [
-                'nullable',
-                'exists:loc_upazilas,id'
+                'required'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -498,12 +486,12 @@ class BatchService
             ]
         ];
         return Validator::make($request->all(), [
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
-            'branch_id' => 'numeric|exists:branches,id',
-            'course_id' => 'numeric|exists:courses,id',
-            'training_center_id' => 'numeric|exists:training_centers,id',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
+            'branch_id' => 'int|exists:branches,id',
+            'course_id' => 'int|exists:courses,id',
+            'training_center_id' => 'int|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

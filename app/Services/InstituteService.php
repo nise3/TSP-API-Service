@@ -427,7 +427,7 @@ class InstituteService
 
         $rules = [
             'permission_sub_group_id' => [
-                'required',
+                'required_if:' . $id . ',==,null',
                 'int'
             ],
             "institute_type_id" => [
@@ -511,7 +511,7 @@ class InstituteService
             'phone_numbers.*' => [
                 'nullable',
                 'string',
-//                'regex:/^[0-9]*$/'
+                'regex:/^[0-9]*$/'
             ],
             'primary_mobile' => [
                 'required',

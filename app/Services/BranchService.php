@@ -400,9 +400,9 @@ class BranchService
         return Validator::make($request->all(), [
             'title_en' => 'nullable|max:250|min:2',
             'title' => 'nullable|max:600|min:2',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
