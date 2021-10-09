@@ -2509,38 +2509,18 @@
         },
         "/batches/{batchId}/assign-trainer-to-batch": {
             "post": {
+                "summary": "assign trainer to batch",
                 "parameters": [
                     {
-                        "name": "batchId",
-                        "in": "path",
-                        "description": "trainer id",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
+                        "$ref": "#/components/parameters/batchId"
                     },
                     {
-                        "name": "trainerIds",
-                        "in": "query",
-                        "required": true,
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "integer",
-                                        "uniqueItems": true
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/components/parameters/trainerIds"
                     }
                 ],
                 "tags": [
                     "batches"
                 ],
-                "summary": "get_one",
                 "description": "###### API endpoint to get a program by trainer id\n\nA successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
@@ -5222,6 +5202,32 @@
                             true,
                             false
                         ]
+                    }
+                }
+            },
+            "batchId": {
+                "name": "batchId",
+                "in": "path",
+                "description": "trainer id",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "trainerIds": {
+                "name": "trainerIds",
+                "in": "query",
+                "required": true,
+                "content": {
+                    "multipart/form-data": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "uniqueItems": true
+                            }
+                        }
                     }
                 }
             }

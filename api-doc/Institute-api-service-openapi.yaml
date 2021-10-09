@@ -1702,27 +1702,12 @@ paths:
                   query_time: 0
   /batches/{batchId}/assign-trainer-to-batch:
     post:
+      summary: assign trainer to batch
       parameters:
-        - name: batchId
-          in: path
-          description: trainer id
-          required: true
-          schema:
-            type: integer
-            example: '1'
-        - name: trainerIds
-          in: query
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: array
-                items:
-                  type: integer
-                  uniqueItems: true
+        - $ref: '#/components/parameters/batchId'
+        - $ref: '#/components/parameters/trainerIds'
       tags:
         - batches
-      summary: get_one
       description: |-
         ###### API endpoint to get a program by trainer id
 
@@ -3655,3 +3640,22 @@ components:
           guardian_info:
             - true
             - false
+    batchId:
+      name: batchId
+      in: path
+      description: trainer id
+      required: true
+      schema:
+        type: integer
+        example: '1'
+    trainerIds:
+      name: trainerIds
+      in: query
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: array
+            items:
+              type: integer
+              uniqueItems: true
