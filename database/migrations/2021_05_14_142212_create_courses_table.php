@@ -22,7 +22,7 @@ class CreateCoursesTable extends Migration
             $table->unsignedInteger('program_id')
                 ->nullable();
             $table->string('title', 1000);
-            $table->string('title_en', 500);
+            $table->string('title_en', 500)->nullable();
             $table->float('course_fee')->default(0);
             $table->float('duration')->nullable()
                 ->comment('Duration in hours');

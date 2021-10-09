@@ -49,16 +49,16 @@ class BatchService
             'batches.id',
             'batches.course_id',
             'courses.title_en as course_title_en',
-            'courses.title as course_title_bn',
+            'courses.title as course_title',
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institute_title',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title as branch_title_bn',
+            'branches.title as branch_title',
             'courses.program_id',
             'programs.title_en as program_title_en',
-            'programs.title as program_title_bn',
+            'programs.title as program_title',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -67,7 +67,7 @@ class BatchService
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title as training_center_title_bn',
+            'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
             'batches.created_by',
@@ -80,14 +80,14 @@ class BatchService
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('courses.row_status', $rowStatus);
             }
         });
         $batchBuilder->leftjoin("institutes", function ($join) use ($rowStatus) {
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -95,7 +95,7 @@ class BatchService
         $batchBuilder->leftjoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
@@ -103,7 +103,7 @@ class BatchService
         $batchBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
             $join->on('batches.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -111,39 +111,39 @@ class BatchService
         $batchBuilder->join("training_centers", function ($join) use ($rowStatus) {
             $join->on('batches.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
             }
         });
 
         $batchBuilder->orderBy('batches.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $batchBuilder->where('batches.row_status', $rowStatus);
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
 
-        if (is_numeric($branchId)) {
+        if (is_int($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
-        if (is_numeric($programId)) {
+        if (is_int($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
         }
 
-        if (is_numeric($courseId)) {
+        if (is_int($courseId)) {
             $batchBuilder->where('batches.course_id', $courseId);
         }
 
-        if (is_numeric($trainingCenterId)) {
+        if (is_int($trainingCenterId)) {
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
         /** @var Collection $batches */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $batches = $batchBuilder->paginate($pageSize);
             $paginateData = (object)$batches->toArray();
@@ -179,16 +179,16 @@ class BatchService
             'batches.id',
             'batches.course_id',
             'courses.title_en as course_title_en',
-            'courses.title as course_title_bn',
+            'courses.title as course_title',
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institute_title',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title as branch_title_bn',
+            'branches.title as branch_title',
             'courses.program_id',
             'programs.title_en as program_title_en',
-            'programs.title as program_title_bn',
+            'programs.title as program_title',
             'batches.number_of_seats',
             'batches.registration_start_date',
             'batches.registration_end_date',
@@ -197,7 +197,7 @@ class BatchService
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title as training_center_title_bn',
+            'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
             'batches.created_by',
@@ -498,7 +498,7 @@ class BatchService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);
@@ -520,7 +520,15 @@ class BatchService
         return Validator::make($data, $rules);
     }
 
-    public function batchesWithTrainingCenters($request, $id, $currentTime){
+
+    /**
+     * @param $request
+     * @param $id
+     * @param $currentTime
+     * @return array
+     */
+    public function batchesWithTrainingCenters($request, $id, $currentTime): array
+    {
         $active = $request['active'] == "true";
         $upcoming = $request['upcoming'] == "true";
 
@@ -534,16 +542,16 @@ class BatchService
             'training_centers.title_en',
 
             'loc_divisions.title_en as division_title_en',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.bbs_code as division_bbs_code',
 
             'loc_districts.title_en as district_title_en',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.bbs_code as district_bbs_code',
             'loc_districts.is_sadar_district',
 
             'loc_upazilas.title_en as upazila_title_en',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.bbs_code as upazila_bbs_code',
             'loc_upazilas.is_sadar_upazila',
 

@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -38,7 +36,7 @@ class Batch extends BaseModel
      */
     public function course(): BelongsTo
     {
-        return $this->belongsTo(Course::class); // TODO: specifically mention columns
+        return $this->belongsTo(Course::class, 'batch_id', 'id');
     }
 
     /**
@@ -46,7 +44,7 @@ class Batch extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class, 'batch_id', 'id'); // TODO: specifically mention columns
+        return $this->belongsTo(Institute::class, 'batch_id', 'id');
     }
 
     /**
@@ -54,7 +52,7 @@ class Batch extends BaseModel
      */
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class, 'batch_id', 'id'); // TODO: specifically mention columns
+        return $this->belongsTo(Branch::class, 'batch_id', 'id');
     }
 
     /**
@@ -62,7 +60,7 @@ class Batch extends BaseModel
      */
     public function trainingCenter(): BelongsTo
     {
-        return $this->belongsTo(TrainingCenter::class, 'batch_id', 'id'); // TODO: specifically mention columns
+        return $this->belongsTo(TrainingCenter::class, 'batch_id', 'id');
     }
 
     /**
@@ -70,7 +68,7 @@ class Batch extends BaseModel
      */
     public function trainers(): BelongsToMany
     {
-        return $this->belongsToMany(Trainer::class, 'trainer_batch', 'batch_id', 'trainer_id'); // TODO: specifically mention columns
+        return $this->belongsToMany(Trainer::class, 'trainer_batch', 'batch_id', 'trainer_id');
     }
 
 }

@@ -18,7 +18,7 @@ class CreateInstitutesTable extends Migration
             $table->unsignedInteger('institute_type_id')->nullable();
             $table->string('code', 150);
             $table->string('title', 1000);
-            $table->string('title_en', 500);
+            $table->string('title_en', 500)->nullable();
             $table->string('domain', 191)->nullable();
 
             $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_ins_loc_division_id_inx');

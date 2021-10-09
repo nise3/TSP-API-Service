@@ -26,7 +26,7 @@ class ProgramService
     public function getProgrammeList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -40,7 +40,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institutetitle',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -55,30 +55,30 @@ class ProgramService
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
 
         $programmesBuilder->orderBy('programs.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $programmesBuilder->where('programs.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
             $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
-        if (!empty($titleBn)) {
-            $programmesBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
+        if (!empty($title)) {
+            $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
         /** @var Collection $programmes */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $programmes = $programmesBuilder->paginate($pageSize);
             $paginateData = (object)$programmes->toArray();
@@ -115,7 +115,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institutetitle',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -325,15 +325,15 @@ class ProgramService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
             'institute_id' => 'integer|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "integer",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

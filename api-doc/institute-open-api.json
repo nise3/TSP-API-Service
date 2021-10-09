@@ -84,36 +84,39 @@
                                     "$ref": "#/components/schemas/institutes"
                                 },
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "Hellen Mante",
-                                        "title": "Brenda McDermott",
-                                        "code": "PG",
-                                        "logo": "softbd.jpg",
-                                        "primary_phone": "641.838.9521",
-                                        "phone_numbers": "781.736.9309",
-                                        "primary_mobile": "1-678-953-7447",
-                                        "mobile_numbers": null,
-                                        "email": "runolfsson.stefan@shanahan.com",
-                                        "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
-                                        "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
-                                        "domain": "http://graham.net",
-                                        "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
-                                        "google_map_src": "Inventore earum nihil velit magni.",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
-                                    },
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Hellen Mante",
+                                            "title": "Brenda McDermott",
+                                            "code": "PG",
+                                            "logo": "softbd.jpg",
+                                            "primary_phone": "641.838.9521",
+                                            "phone_numbers": "781.736.9309",
+                                            "primary_mobile": "1-678-953-7447",
+                                            "mobile_numbers": null,
+                                            "email": "runolfsson.stefan@shanahan.com",
+                                            "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
+                                            "loc_division_id": 1,
+                                            "division_title": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "loc_district_id": 1,
+                                            "district_title": "বরগুনা",
+                                            "district_title_en": "BARGUNA",
+                                            "loc_upazila_id": 1,
+                                            "upazila_title": "আমতলী ",
+                                            "upazila_title_en": "AMTALI",
+                                            "domain": "http://graham.net",
+                                            "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
+                                            "google_map_src": "Inventore earum nihil velit magni.",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-08-31T08:52:04.000000Z",
+                                            "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -351,13 +354,13 @@
                                             "title_en": "Tianna Hodkiewicz",
                                             "domain": "https://walker.com",
                                             "loc_division_id": 3,
-                                            "division_title_bn": "ঢাকা",
+                                            "division_title": "ঢাকা",
                                             "division_title_en": "Dhaka",
                                             "loc_district_id": 18,
-                                            "district_title_bn": "ঢাকা ",
+                                            "district_title": "ঢাকা ",
                                             "district_title_en": "DHAKA",
                                             "loc_upazila_id": null,
-                                            "upazila_title_bn": null,
+                                            "upazila_title": null,
                                             "upazila_title_en": null,
                                             "address": "6835 Triston Point\nSouth Burnice, CO 09375",
                                             "address_en": "6835 Triston Point\nSouth Burnice, CO 09375",
@@ -394,6 +397,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
+                                        "message": "Institute added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -433,33 +437,50 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Hellen Mante",
-                                        "title": "Brenda McDermott",
-                                        "code": "PG",
+                                        "institute_type_id": null,
+                                        "code": "aut-dicta-optio-consequatur-quibusdam-accusantium-doloremque-dolorem-molestias-necessitatibus-et-sed-et-sunt-est-iusto-fugit-dolore-dolorum-molestiae",
+                                        "title": "Dr. Vaughn Bayer",
+                                        "title_en": "Columbus Stroman",
+                                        "domain": "https://nicolas.com",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
+                                        "address_en": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Quis vel eos voluptas earum.",
                                         "logo": "softbd.jpg",
-                                        "primary_phone": "641.838.9521",
-                                        "phone_numbers": "781.736.9309",
-                                        "primary_mobile": "1-678-953-7447",
-                                        "mobile_numbers": null,
-                                        "email": "runolfsson.stefan@shanahan.com",
-                                        "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
-                                        "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
-                                        "domain": "http://graham.net",
-                                        "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
-                                        "google_map_src": "Inventore earum nihil velit magni.",
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": "+1 (707) 380-8336",
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01771829077",
+                                        "mobile_numbers": "[\"01778304350\",\"01726745158\"]",
+                                        "email": "wunsch.lawrence@abshire.net",
+                                        "name_of_the_office_head": null,
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": null,
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "",
+                                        "contact_person_name_en": "",
+                                        "contact_person_mobile": "",
+                                        "contact_person_email": "",
+                                        "contact_person_designation": "",
+                                        "contact_person_designation_en": "",
+                                        "config": "Beatae officiis doloremque ut rerum autem aliquam dolorem.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        "created_at": "2021-10-09T10:01:25.000000Z",
+                                        "updated_at": "2021-10-09T10:01:25.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -698,32 +719,32 @@
                                     "data": {
                                         "id": 1,
                                         "institute_type_id": null,
-                                        "code": "libero-adipisci-nesciunt-officia-hic-ipsam-animi-voluptates-doloremque-totam-dolor-eos-quia-eum-modi-molestias-quo-consequatur-magnam-placeat",
-                                        "title": "Mckenna Wisozk IV",
-                                        "title_en": "Tianna Hodkiewicz",
-                                        "domain": "https://walker.com",
+                                        "code": "aut-dicta-optio-consequatur-quibusdam-accusantium-doloremque-dolorem-molestias-necessitatibus-et-sed-et-sunt-est-iusto-fugit-dolore-dolorum-molestiae",
+                                        "title": "Dr. Vaughn Bayer",
+                                        "title_en": "Columbus Stroman",
+                                        "domain": "https://nicolas.com",
                                         "loc_division_id": 3,
-                                        "division_title_bn": "ঢাকা",
+                                        "division_title": "ঢাকা",
                                         "division_title_en": "Dhaka",
                                         "loc_district_id": 18,
-                                        "district_title_bn": "ঢাকা ",
+                                        "district_title": "ঢাকা ",
                                         "district_title_en": "DHAKA",
                                         "loc_upazila_id": null,
-                                        "upazila_title_bn": null,
+                                        "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "6835 Triston Point\nSouth Burnice, CO 09375",
-                                        "address_en": "6835 Triston Point\nSouth Burnice, CO 09375",
-                                        "location_latitude": "90.399482",
-                                        "location_longitude": "90.399482",
-                                        "google_map_src": "Ipsa explicabo veniam vero.",
+                                        "address": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
+                                        "address_en": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Quis vel eos voluptas earum.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "904.641.4062",
+                                        "primary_phone": "+1 (707) 380-8336",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01785993885",
-                                        "mobile_numbers": "[\"01760268145\",\"01743588318\"]",
-                                        "email": "dolores62@rodriguez.org",
+                                        "primary_mobile": "01771829077",
+                                        "mobile_numbers": "[\"01778304350\",\"01726745158\"]",
+                                        "email": "wunsch.lawrence@abshire.net",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
@@ -734,16 +755,17 @@
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
                                         "contact_person_designation_en": "",
-                                        "config": "Autem nulla laboriosam molestiae alias facere.",
+                                        "config": "Beatae officiis doloremque ut rerum autem aliquam dolorem.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-07T11:12:26.000000Z",
-                                        "updated_at": "2021-10-07T11:12:26.000000Z",
+                                        "created_at": "2021-10-09T10:01:25.000000Z",
+                                        "updated_at": "2021-10-09T10:01:25.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
+                                        "message": "Institute updated successfully",
                                         "code": 200,
                                         "query_time": 0
                                     }
@@ -804,7 +826,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/institute_type_id"
@@ -882,7 +904,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4s",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4s",
+                                        "title": "আরএমজি-প্রোগ্রাম4s",
                                         "code": "AE455K",
                                         "domain": "https://develosper.com",
                                         "address": "Dhaka mirpur road 4 block 2s",
@@ -950,7 +972,7 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn_optional"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -968,22 +990,22 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Thaddeus Kohler Jr.",
-                                        "title_bn": "Alison Kassulke",
+                                        "title": "Alison Kassulke",
                                         "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
+                                        "division_title": "বরিশাল",
                                         "division_title_en": "Barisal",
                                         "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
+                                        "district_title": "বরগুনা",
                                         "district_title_en": "BARGUNA",
                                         "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title": "আমতলী ",
                                         "upazila_title_en": "AMTALI",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "branch_id": 2,
                                         "branch_title_en": "Bettie Halvorson",
-                                        "branch_title_bn": "Oma Hammes",
+                                        "branch_title": "Oma Hammes",
                                         "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
                                         "google_map_src": "Est omnis temporibus expedita odit.",
                                         "row_status": 1,
@@ -1012,71 +1034,15 @@
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a training center.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "name": "center_location_type",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "3"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/training-centers"
+                            }
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka firm gate block 2"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -1088,7 +1054,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "institute_id": "1",
                                         "branch_id": "1",
                                         "center_location_type": "1",
@@ -1148,22 +1114,22 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Thaddeus Kohler Jr.",
-                                        "title_bn": "Alison Kassulke",
+                                        "title": "Alison Kassulke",
                                         "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
+                                        "division_title": "বরিশাল",
                                         "division_title_en": "Barisal",
                                         "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
+                                        "district_title": "বরগুনা",
                                         "district_title_en": "BARGUNA",
                                         "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title": "আমতলী ",
                                         "upazila_title_en": "AMTALI",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "branch_id": 2,
                                         "branch_title_en": "Bettie Halvorson",
-                                        "branch_title_bn": "Oma Hammes",
+                                        "branch_title": "Oma Hammes",
                                         "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
                                         "google_map_src": "Est omnis temporibus expedita odit.",
                                         "row_status": 1,
@@ -1198,67 +1164,17 @@
                             "type": "integer",
                             "example": "1"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "name": "center_location_type",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "3"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_bn"
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka firm gate block 2"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/training-centers"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -1274,7 +1190,7 @@
                                         "branch_id": "1",
                                         "center_location_type": "1",
                                         "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "loc_division_id": "1",
                                         "loc_district_id": "1",
                                         "loc_upazila_id": "1",
@@ -1363,7 +1279,7 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn_optional"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -1381,18 +1297,18 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Annamae Rippin",
-                                        "title_bn": "Hanna McLaughlin",
+                                        "title": "Hanna McLaughlin",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
+                                        "division_title": "বরিশাল",
                                         "division_title_en": "Barisal",
                                         "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
+                                        "district_title": "বরগুনা",
                                         "district_title_en": "BARGUNA",
                                         "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title": "আমতলী ",
                                         "upazila_title_en": "AMTALI",
                                         "row_status": 1,
                                         "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
@@ -1428,7 +1344,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "loc_division_id",
@@ -1484,7 +1400,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4ss",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4ss",
+                                        "title": "আরএমজি-প্রোগ্রাম4ss",
                                         "institute_id": "1",
                                         "address": "dhaka 1112",
                                         "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
@@ -1537,18 +1453,18 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "Annamae Rippin",
-                                        "title_bn": "Hanna McLaughlin",
+                                        "title": "Hanna McLaughlin",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "loc_division_id": 1,
-                                        "division_title_bn": "বরিশাল",
+                                        "division_title": "বরিশাল",
                                         "division_title_en": "Barisal",
                                         "loc_district_id": 1,
-                                        "district_title_bn": "বরগুনা",
+                                        "district_title": "বরগুনা",
                                         "district_title_en": "BARGUNA",
                                         "loc_upazila_id": 1,
-                                        "upazila_title_bn": "আমতলী ",
+                                        "upazila_title": "আমতলী ",
                                         "upazila_title_en": "AMTALI",
                                         "row_status": 1,
                                         "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
@@ -1590,7 +1506,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "loc_division_id",
@@ -1648,7 +1564,7 @@
                                         "id": 31,
                                         "institute_id": "1",
                                         "title_en": "PROGRAMME ON RMG4 update",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "loc_division_id": "1",
                                         "loc_district_id": "1",
                                         "loc_upazila_id": "1",
@@ -1737,7 +1653,7 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn_optional"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -1756,7 +1672,7 @@
                                         {
                                             "id": 1,
                                             "title_en": "Dr. Ransom Wehner",
-                                            "title_bn": "Prof. Neoma Gusikowski",
+                                            "title": "Prof. Neoma Gusikowski",
                                             "institute_title_en": "Shannon Kshlerin",
                                             "institute_id": 1,
                                             "program_code": "16026",
@@ -1798,7 +1714,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
@@ -1826,7 +1742,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "institute_id": "1",
                                         "code": "A4455ss",
                                         "description": "program under bitac institute",
@@ -1882,7 +1798,7 @@
                                     "data": {
                                         "id": 1,
                                         "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "institute_title_en": "BITAC",
                                         "program_code": "4456",
                                         "program_logo": "",
@@ -1928,7 +1844,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
@@ -1959,7 +1875,7 @@
                                         "code": "A4455",
                                         "institute_id": "1",
                                         "title_en": "PROGRAMME ON RMG4",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4",
+                                        "title": "আরএমজি-প্রোগ্রাম4",
                                         "description": "program under bitac institute",
                                         "logo": "default.jpg",
                                         "row_status": "1",
@@ -2070,16 +1986,16 @@
                                         "id": 1,
                                         "course_id": 1,
                                         "course_title_en": "Delores Leffler",
-                                        "course_title_bn": "Ashtyn Schulist",
+                                        "course_title": "Ashtyn Schulist",
                                         "institute_id": null,
                                         "institute_title_en": null,
-                                        "institute_title_bn": null,
+                                        "institute_title": null,
                                         "branch_id": null,
                                         "branch_title_en": null,
-                                        "branch_title_bn": null,
+                                        "branch_title": null,
                                         "program_id": null,
                                         "program_title_en": null,
-                                        "program_title_bn": null,
+                                        "program_title": null,
                                         "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
@@ -2088,7 +2004,7 @@
                                         "available_seats": 0,
                                         "training_center_id": 3,
                                         "training_center_title_en": "Miss Deanna Swaniawski",
-                                        "training_center_title_bn": "Mrs. Jewell Feest",
+                                        "training_center_title": "Mrs. Jewell Feest",
                                         "in_ethnic_group": 0,
                                         "is_freedom_fighter": 0,
                                         "disability_status": 0,
@@ -2281,16 +2197,16 @@
                                         "id": 1,
                                         "course_id": 1,
                                         "course_title_en": "Delores Leffler",
-                                        "course_title_bn": "Ashtyn Schulist",
+                                        "course_title": "Ashtyn Schulist",
                                         "institute_id": null,
                                         "institute_title_en": null,
-                                        "institute_title_bn": null,
+                                        "institute_title": null,
                                         "branch_id": null,
                                         "branch_title_en": null,
-                                        "branch_title_bn": null,
+                                        "branch_title": null,
                                         "program_id": null,
                                         "program_title_en": null,
-                                        "program_title_bn": null,
+                                        "program_title": null,
                                         "number_of_seats": 0,
                                         "registration_start_date": "0000-00-00 00:00:00",
                                         "registration_end_date": "0000-00-00 00:00:00",
@@ -2299,7 +2215,7 @@
                                         "available_seats": 0,
                                         "training_center_id": 3,
                                         "training_center_title_en": "Miss Deanna Swaniawski",
-                                        "training_center_title_bn": "Mrs. Jewell Feest",
+                                        "training_center_title": "Mrs. Jewell Feest",
                                         "in_ethnic_group": 0,
                                         "is_freedom_fighter": 0,
                                         "disability_status": 0,
@@ -2609,7 +2525,7 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn_optional"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -2628,10 +2544,10 @@
                                         "id": 2,
                                         "code": "ZM",
                                         "title_en": "Miss Heath Ondricka",
-                                        "title_bn": "Tessie Stark PhD",
+                                        "title": "Tessie Stark PhD",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "course_fee": "0.00",
                                         "duration": "19:53:32",
                                         "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
@@ -2680,7 +2596,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "course_fee",
@@ -2790,7 +2706,7 @@
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4ss",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4ss",
+                                        "title": "আরএমজি-প্রোগ্রাম4ss",
                                         "code": "AE445",
                                         "institute_id": "1",
                                         "course_fee": "11",
@@ -2856,10 +2772,10 @@
                                         "id": 2,
                                         "code": "ZM",
                                         "title_en": "Miss Heath Ondricka",
-                                        "title_bn": "Tessie Stark PhD",
+                                        "title": "Tessie Stark PhD",
                                         "institute_id": 1,
                                         "institute_title_en": "Hellen Mante",
-                                        "institute_title_bn": "Brenda McDermott",
+                                        "institute_title": "Brenda McDermott",
                                         "course_fee": "0.00",
                                         "duration": "19:53:32",
                                         "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
@@ -2914,7 +2830,7 @@
                         "$ref": "#/components/parameters/title_en"
                     },
                     {
-                        "$ref": "#/components/parameters/title_bn"
+                        "$ref": "#/components/parameters/title"
                     },
                     {
                         "name": "course_fee",
@@ -3027,7 +2943,7 @@
                                         "code": "AE445",
                                         "institute_id": "1",
                                         "title_en": "PROGRAMME ON RMG4 ei",
-                                        "title_bn": "আরএমজি-প্রোগ্রাম4 ei",
+                                        "title": "আরএমজি-প্রোগ্রাম4 ei",
                                         "course_fee": "123",
                                         "duration": "5",
                                         "description": "very good courses",
@@ -3149,14 +3065,14 @@
                                         "trainer_name_bn": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
-                                        "institutes_title_bn": "Cynthia Bogisich",
+                                        "institutes_title": "Cynthia Bogisich",
                                         "trainer_registration_number": "e03c6b1b-7f70-35de-b32a-0b46ee275b95",
                                         "branch_id": null,
                                         "branch_title_en": null,
-                                        "branch_title_bn": null,
+                                        "branch_title": null,
                                         "training_center_id": null,
                                         "training_center_title_en": null,
-                                        "training_center_title_bn": null,
+                                        "training_center_title": null,
                                         "email": "macie79@example.org",
                                         "mobile": "+1 (706) 835-99",
                                         "date_of_birth": null,
@@ -3168,22 +3084,22 @@
                                         "nid": "Magnam autem numquam vel paria",
                                         "passport_number": "546139782",
                                         "present_address_division_id": 6,
-                                        "division_title_bn_present_address": "রংপুর",
+                                        "division_title_present_address": "রংপুর",
                                         "division_title_en_present_address": "Rangpur",
                                         "present_address_district_id": 4,
-                                        "district_title_bn_present_address": "ঝালকাঠি",
+                                        "district_title_present_address": "ঝালকাঠি",
                                         "district_title_en_present_address": "BRAHMANBARIA",
                                         "present_address_upazila_id": 88063,
-                                        "upazila_title_bn_present_address": null,
+                                        "upazila_title_present_address": null,
                                         "upazila_title_en_present_address": null,
                                         "present_house_address": "129 Rhianna Knolls Apt. 189\nPort Aileen, MN 29175-6108",
                                         "permanent_address_division_id": 0,
-                                        "division_title_bn_permanent_address": null,
+                                        "division_title_permanent_address": null,
                                         "division_title_en_permanent_address": null,
                                         "permanent_address_district_id": 8,
-                                        "district_title_bn_permanent_address": "ব্রাহ্মণবাড়িয়া",
+                                        "district_title_permanent_address": "ব্রাহ্মণবাড়িয়া",
                                         "permanent_address_upazila_id": 1,
-                                        "upazila_title_bn_permanent_address": "আমতলী ",
+                                        "upazila_title_permanent_address": "আমতলী ",
                                         "upazila_title_en_permanent_address": "AMTALI",
                                         "permanent_house_address": "88521 Joseph Ferry\nLake Hollie, MT 11128",
                                         "educational_qualification": "Ex dolore neque ipsum a non odit.",
@@ -3231,7 +3147,7 @@
                         "$ref": "#/components/parameters/trainer_name_en"
                     },
                     {
-                        "$ref": "#/components/parameters/trainer_name_bn"
+                        "$ref": "#/components/parameters/trainer_name"
                     },
                     {
                         "name": "trainer_registration_number",
@@ -3262,7 +3178,7 @@
                     },
                     {
                         "name": "date_of_birth",
-                        "required": false,
+                        "required": true,
                         "in": "query",
                         "schema": {
                             "type": "string",
@@ -3493,14 +3409,14 @@
                                         "trainer_name_bn": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
-                                        "institutes_title_bn": "Cynthia Bogisich",
+                                        "institutes_title": "Cynthia Bogisich",
                                         "trainer_registration_number": "e03c6b1b-7f70-35de-b32a-0b46ee275b95",
                                         "branch_id": null,
                                         "branch_title_en": null,
-                                        "branch_title_bn": null,
+                                        "branch_title": null,
                                         "training_center_id": null,
                                         "training_center_title_en": null,
-                                        "training_center_title_bn": null,
+                                        "training_center_title": null,
                                         "email": "macie79@example.org",
                                         "mobile": "+1 (706) 835-99",
                                         "date_of_birth": null,
@@ -3512,22 +3428,22 @@
                                         "nid": "Magnam autem numquam vel paria",
                                         "passport_number": "546139782",
                                         "present_address_division_id": 6,
-                                        "division_title_bn_present_address": "রংপুর",
+                                        "division_title_present_address": "রংপুর",
                                         "division_title_en_present_address": "Rangpur",
                                         "present_address_district_id": 4,
-                                        "district_title_bn_present_address": "ঝালকাঠি",
+                                        "district_title_present_address": "ঝালকাঠি",
                                         "district_title_en_present_address": "BRAHMANBARIA",
                                         "present_address_upazila_id": 88063,
-                                        "upazila_title_bn_present_address": null,
+                                        "upazila_title_present_address": null,
                                         "upazila_title_en_present_address": null,
                                         "present_house_address": "129 Rhianna Knolls Apt. 189\nPort Aileen, MN 29175-6108",
                                         "permanent_address_division_id": 0,
-                                        "division_title_bn_permanent_address": null,
+                                        "division_title_permanent_address": null,
                                         "division_title_en_permanent_address": null,
                                         "permanent_address_district_id": 8,
-                                        "district_title_bn_permanent_address": "ব্রাহ্মণবাড়িয়া",
+                                        "district_title_permanent_address": "ব্রাহ্মণবাড়িয়া",
                                         "permanent_address_upazila_id": 1,
-                                        "upazila_title_bn_permanent_address": "আমতলী ",
+                                        "upazila_title_permanent_address": "আমতলী ",
                                         "upazila_title_en_permanent_address": "AMTALI",
                                         "permanent_house_address": "88521 Joseph Ferry\nLake Hollie, MT 11128",
                                         "educational_qualification": "Ex dolore neque ipsum a non odit.",
@@ -3581,7 +3497,7 @@
                         "$ref": "#/components/parameters/trainer_name_en"
                     },
                     {
-                        "$ref": "#/components/parameters/trainer_name_bn"
+                        "$ref": "#/components/parameters/trainer_name"
                     },
                     {
                         "name": "trainer_registration_number",
@@ -3785,7 +3701,7 @@
                                         "institute_id": 2,
                                         "institute_title": "asdf",
                                         "title_en": "sdf",
-                                        "title_bn": "asdf",
+                                        "title": "asdf",
                                         "course_fee": "344.00",
                                         "duration": null,
                                         "description": null,
@@ -3877,7 +3793,7 @@
                         "maxLength": 300,
                         "minLength": 2
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
                         "maxLength": 800,
                         "minLength": 2
@@ -3915,7 +3831,7 @@
                 "required": [
                     "code",
                     "institute_id",
-                    "title_bn",
+                    "title",
                     "title_en"
                 ]
             },
@@ -3933,7 +3849,7 @@
                     },
                     "code": {
                         "type": "string",
-                        "maxLength": 300
+                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -4065,10 +3981,10 @@
                 },
                 "required": [
                     "institute_type_id",
-                    "title_en",
                     "title",
                     "code",
                     "email",
+                    "primary_mobile",
                     "contact_person_name",
                     "contact_person_name_en",
                     "contact_person_mobile",
@@ -4086,7 +4002,7 @@
                         "minLength": 2,
                         "maxLength": 300
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
                         "description": " title in Bengali",
                         "minLength": 2,
@@ -4150,7 +4066,7 @@
                 "required": [
                     "institute_type_id",
                     "title_en",
-                    "title_bn",
+                    "title",
                     "email",
                     "head_of_office",
                     "contact_person_name",
@@ -4176,20 +4092,45 @@
                     "branch_id": {
                         "type": "integer"
                     },
+                    "center_location_type": {
+                        "type": "integer",
+                        "description": "1 => On Institute Premises, 2 => On Branch Premises, 3 => On Training Center Premises",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "example": 1
+                    },
                     "title_en": {
                         "type": "string",
-                        "maxLength": 400,
+                        "maxLength": 500,
                         "minLength": 2
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
-                        "maxLength": 900,
+                        "maxLength": 1000,
                         "minLength": 2
                     },
-                    "center_location_type": {
+                    "loc_division_id": {
+                        "type": "integer"
+                    },
+                    "loc_district_id": {
+                        "type": "integer"
+                    },
+                    "loc_upazila_id": {
                         "type": "integer"
                     },
                     "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
                         "type": "string"
                     },
                     "google_map_src": {
@@ -4198,17 +4139,14 @@
                     "row_status": {
                         "type": "integer"
                     },
-                    "create_by": {
-                        "type": "string",
-                        "format": "date-time"
+                    "created_by": {
+                        "type": "integer"
                     },
                     "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "created_at": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "string"
                     },
                     "updated_at": {
                         "type": "string",
@@ -4221,8 +4159,8 @@
                 },
                 "required": [
                     "institute_id",
-                    "title_bn",
-                    "title_en"
+                    "title",
+                    "center_location_type"
                 ]
             },
             "branches": {
@@ -4235,15 +4173,27 @@
                     },
                     "title_en": {
                         "type": "string",
-                        "maxLength": 300,
+                        "maxLength": 250,
                         "minLength": 2
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
-                        "maxLength": 800,
+                        "maxLength": 600,
                         "minLength": 2
+                    },
+                    "loc_division_id": {
+                        "type": "integer"
+                    },
+                    "loc_district_id": {
+                        "type": "integer"
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer"
                     },
                     "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
                         "type": "string"
                     },
                     "google_map_src": {
@@ -4252,7 +4202,7 @@
                     "row_status": {
                         "type": "integer"
                     },
-                    "create_by": {
+                    "created_by": {
                         "type": "string",
                         "format": "date-time"
                     },
@@ -4276,7 +4226,7 @@
                 "required": [
                     "institute_id",
                     "title_en",
-                    "title_bn"
+                    "title"
                 ]
             },
             "courses": {
@@ -4295,12 +4245,12 @@
                     },
                     "title_en": {
                         "type": "string",
-                        "maxLength": 300,
+                        "maxLength": 500,
                         "minLength": 2
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
-                        "maxLength": 800,
+                        "maxLength": 1000,
                         "minLength": 2
                     },
                     "course_fee": {
@@ -4312,25 +4262,49 @@
                     "description": {
                         "type": "string"
                     },
+                    "description_en": {
+                        "type": "string"
+                    },
                     "target_group": {
+                        "type": "string"
+                    },
+                    "target_group_en": {
                         "type": "string"
                     },
                     "objectives": {
                         "type": "string"
                     },
+                    "objectives_en": {
+                        "type": "string"
+                    },
                     "contents": {
+                        "type": "string"
+                    },
+                    "contents_en": {
                         "type": "string"
                     },
                     "training_methodology": {
                         "type": "string"
                     },
+                    "training_methodology_en": {
+                        "type": "string"
+                    },
                     "evaluation_system": {
+                        "type": "string"
+                    },
+                    "evaluation_system_en": {
                         "type": "string"
                     },
                     "prerequisite": {
                         "type": "string"
                     },
+                    "prerequisite_en": {
+                        "type": "string"
+                    },
                     "eligibility": {
+                        "type": "string"
+                    },
+                    "eligibility_en": {
                         "type": "string"
                     },
                     "cover_image": {
@@ -4339,7 +4313,11 @@
                     "row_status": {
                         "type": "integer"
                     },
-                    "create_by": {
+                    "application_form_settings": {
+                        "type": "string",
+                        "format": "json"
+                    },
+                    "created_by": {
                         "type": "string",
                         "format": "date-time"
                     },
@@ -4363,8 +4341,7 @@
                 "required": [
                     "code",
                     "institute_id",
-                    "title_en",
-                    "title_bn",
+                    "title",
                     "course_fee"
                 ]
             },
@@ -4388,7 +4365,7 @@
                     "trainer_name_en": {
                         "type": "integer"
                     },
-                    "trainer_name_bn": {
+                    "trainer_name": {
                         "type": "integer"
                     },
                     "trainer_registration_number": {
@@ -4402,7 +4379,7 @@
                     },
                     "date_of_birth": {
                         "type": "string",
-                        "format": "date-time"
+                        "format": "date"
                     },
                     "about_me": {
                         "type": "string"
@@ -4894,14 +4871,6 @@
                     "type": "string"
                 }
             },
-            "title_bn": {
-                "in": "query",
-                "required": true,
-                "name": "title_bn",
-                "schema": {
-                    "type": "string"
-                }
-            },
             "title": {
                 "in": "query",
                 "required": true,
@@ -4918,18 +4887,10 @@
                     "type": "string"
                 }
             },
-            "title_bn_optional": {
-                "in": "query",
-                "required": false,
-                "name": "title_bn",
-                "schema": {
-                    "type": "string"
-                }
-            },
             "trainer_name_en": {
                 "in": "query",
                 "name": "trainer_name_en",
-                "required": true,
+                "required": false,
                 "schema": {
                     "type": "string",
                     "example": "Miladul Islam"
@@ -4943,9 +4904,9 @@
                     "type": "string"
                 }
             },
-            "trainer_name_bn": {
+            "trainer_name": {
                 "in": "query",
-                "name": "trainer_name_bn",
+                "name": "trainer_name",
                 "required": true,
                 "schema": {
                     "type": "string",
@@ -4990,7 +4951,7 @@
                 "in": "query",
                 "required": false,
                 "schema": {
-                    "type": "integer"
+                    "type": "string"
                 }
             },
             "location_longitude": {
@@ -4998,7 +4959,7 @@
                 "in": "query",
                 "required": false,
                 "schema": {
-                    "type": "integer"
+                    "type": "string"
                 }
             },
             "divisionId": {

@@ -17,6 +17,9 @@ class CreateBranchesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('institute_id');
             $table->string('title', 600);
+            $table->string('title_en', 250)->nullable();
+            $table->text('address')->nullable();
+            $table->text('address_en')->nullable();
             $table->string('title_en', 250);
 
             $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_branch_loc_division_id_inx');

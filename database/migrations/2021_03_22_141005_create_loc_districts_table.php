@@ -18,7 +18,7 @@ class CreateLocDistrictsTable extends Migration {
 			$table->mediumIncrements('id');
 			$table->unsignedMediumInteger('loc_division_id');
 			$table->string('title_en');
-			$table->string('title_bn', 500);
+			$table->string('title', 500);
 			$table->unsignedTinyInteger('is_sadar_district')->default(0);
 			$table->char('bbs_code', 5)->nullable();
 			$table->unsignedTinyInteger('row_status')->default(1);

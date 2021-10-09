@@ -20,7 +20,7 @@ class CreateTrainingCentersTable extends Migration
             $table->unsignedTinyInteger('center_location_type')->default(3)
                 ->comment('1 => On Institute Premises, 2 => On Branch Premises, 3 => On Training Center Premises');
             $table->string('title', 1000);
-            $table->string('title_en', 500);
+            $table->string('title_en', 500)->nullable();
 
             $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_tc_loc_division_id_inx');
             $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_tc_loc_district_id_inx');
