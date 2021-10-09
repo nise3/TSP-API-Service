@@ -197,9 +197,8 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getFilterCourseList(Request $request,string $name): JsonResponse
+    public function getFilterCourseList(Request $request,string $name = null): JsonResponse
     {
-
         $filter = $this->courseService->filterValidator($request)->validate();
 
         try {
