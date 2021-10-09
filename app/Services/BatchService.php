@@ -579,7 +579,8 @@ class BatchService
             ->join('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
             ->where([
                 ['training_centers.institute_id','=',$instituteId],
-                ['batches.course_id','=',$id]
+                ['batches.course_id','=',$id],
+                ['batches.institute_id','=',$instituteId]
             ])
             ->groupBy('training_centers.id')
 
