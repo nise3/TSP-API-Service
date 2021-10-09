@@ -822,78 +822,15 @@
                 ],
                 "summary": "Registration",
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_type_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "example@gmail.com"
-                        }
-                    },
-                    {
-                        "name": "mobile",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_mobile"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_email"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password_confirmation",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegister"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -3880,33 +3817,26 @@
             "instituteRegister": {
                 "type": "object",
                 "properties": {
-                    "title_en": {
-                        "type": "string",
-                        "description": "title in English",
-                        "minLength": 2,
-                        "maxLength": 300
-                    },
                     "title": {
                         "type": "string",
                         "description": " title in Bengali",
                         "minLength": 2,
                         "maxLength": 1000
                     },
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 300
+                    },
                     "institute_type_id": {
                         "type": "integer",
-                        "description": "Organization type id",
+                        "description": "0 => Non Govt, 1 => Govt",
                         "enum": [
                             0,
                             1
-                        ]
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "email address"
-                    },
-                    "mobile": {
-                        "type": "string",
-                        "description": "Mobile number of organization"
+                        ],
+                        "example": 0
                     },
                     "name_of_the_office_head": {
                         "type": "string",
@@ -3916,27 +3846,39 @@
                         "type": "string",
                         "description": "Head of office Designation "
                     },
-                    "address": {
+                    "email": {
                         "type": "string",
-                        "maximum": 1000,
-                        "minimum": 2,
-                        "description": "organization address"
+                        "description": "email address"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "description": "Mobile number of organization"
+                    },
+                    "contact_person_mobile": {
+                        "type": "string",
+                        "description": "Contact person mobile number"
                     },
                     "contact_person_name": {
                         "type": "string",
-                        "description": "Contact person name"
+                        "description": "Contact person name",
+                        "minLength": 2,
+                        "maxLength": 500
                     },
                     "contact_person_designation": {
                         "type": "string",
-                        "description": "Contact person's designation"
+                        "description": "Contact person's designation",
+                        "minLength": 2,
+                        "maxLength": 300
                     },
                     "contact_person_email": {
                         "type": "string",
                         "description": "Contact person email address"
                     },
-                    "contact_person_mobile": {
+                    "address": {
                         "type": "string",
-                        "description": "Contact person mobile number"
+                        "maxLength": 1000,
+                        "minLength": 2,
+                        "description": "organization address"
                     },
                     "password": {
                         "type": "string",
@@ -3948,18 +3890,19 @@
                     }
                 },
                 "required": [
-                    "institute_type_id",
-                    "title_en",
                     "title",
+                    "title_en",
+                    "institute_type_id",
+                    "name_of_the_office_head",
                     "email",
-                    "head_of_office",
+                    "mobile",
+                    "contact_person_mobile",
                     "contact_person_name",
                     "contact_person_designation",
                     "contact_person_email",
-                    "contact_person_mobile",
+                    "address",
                     "password",
-                    "password_confirmation",
-                    "mobile"
+                    "password_confirmation"
                 ]
             },
             "training-centers": {
