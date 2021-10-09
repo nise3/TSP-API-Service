@@ -93,7 +93,7 @@ class InstituteService
         $instituteBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
             $join->on('loc_divisions.id', '=', 'institutes.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_divisions.row_status', $rowStatus);
             }
         });
@@ -101,7 +101,7 @@ class InstituteService
         $instituteBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
             $join->on('loc_districts.id', '=', 'institutes.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_districts.row_status', $rowStatus);
             }
         });
@@ -109,12 +109,12 @@ class InstituteService
         $instituteBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas.id', '=', 'institutes.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_upazilas.row_status', $rowStatus);
             }
         });
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $instituteBuilder->where('institutes.row_status', $rowStatus);
         }
 
@@ -126,7 +126,7 @@ class InstituteService
         }
 
         /** @var Collection $institutes */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $institutes = $instituteBuilder->paginate($pageSize);
             $paginateData = (object)$institutes->toArray();
@@ -370,7 +370,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (is_numeric($paginate) || is_numeric($limit)) {
+        if (is_int($paginate) || is_int($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
@@ -689,7 +689,7 @@ class InstituteService
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
-            'page' => 'int|gt:0',
+            'page' => 'numeric|gt:0',
             "institute_type_id" => [
                 "nullable",
                 "int"

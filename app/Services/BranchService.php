@@ -65,7 +65,7 @@ class BranchService
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -73,7 +73,7 @@ class BranchService
         $branchBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
             $join->on('loc_divisions.id', '=', 'branches.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_divisions.row_status', $rowStatus);
             }
         });
@@ -81,7 +81,7 @@ class BranchService
         $branchBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
             $join->on('loc_districts.id', '=', 'branches.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_districts.row_status', $rowStatus);
             }
         });
@@ -89,7 +89,7 @@ class BranchService
         $branchBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_upazilas.row_status', $rowStatus);
             }
         });
@@ -97,7 +97,7 @@ class BranchService
 
         $branchBuilder->orderBy('branches.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $branchBuilder->where('branches.row_status', $rowStatus);
         }
 
@@ -108,12 +108,12 @@ class BranchService
             $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $branches */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
             $paginateData = (object)$branches->toArray();
@@ -339,9 +339,9 @@ class BranchService
         ];
         $rules = [
             'title_en' => [
-                'required',
+                'nullable',
                 'string',
-                'max:191',
+                'max:250',
                 'min:2'
             ],
             'title' => [
@@ -408,7 +408,7 @@ class BranchService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

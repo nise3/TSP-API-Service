@@ -68,14 +68,14 @@ class TrainingCenterService
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -83,7 +83,7 @@ class TrainingCenterService
         $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
             $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_divisions.row_status', $rowStatus);
             }
         });
@@ -91,7 +91,7 @@ class TrainingCenterService
         $trainingCentersBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
             $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_districts.row_status', $rowStatus);
             }
         });
@@ -99,20 +99,20 @@ class TrainingCenterService
         $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_upazilas.row_status', $rowStatus);
             }
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        if (is_numeric($branchId)) {
+        if (is_int($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
@@ -125,7 +125,7 @@ class TrainingCenterService
 
 
         /** @var Collection $trainingCentersBuilder */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -405,16 +405,16 @@ class TrainingCenterService
         return Validator::make($request->all(), [
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
-            'page_size' => 'integer|gt:0',
-            'page' => 'integer|gt:0',
-            'institute_id' => 'integer|exists:institutes,id',
-            'branch_id' => 'integer|exists:branches,id',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
+            'branch_id' => 'int|exists:branches,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "integer",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

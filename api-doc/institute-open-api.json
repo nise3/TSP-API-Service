@@ -4253,15 +4253,27 @@
                     },
                     "title_en": {
                         "type": "string",
-                        "maxLength": 300,
+                        "maxLength": 250,
                         "minLength": 2
                     },
-                    "title_bn": {
+                    "title": {
                         "type": "string",
-                        "maxLength": 800,
+                        "maxLength": 600,
                         "minLength": 2
+                    },
+                    "loc_division_id": {
+                        "type": "integer"
+                    },
+                    "loc_district_id": {
+                        "type": "integer"
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer"
                     },
                     "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
                         "type": "string"
                     },
                     "google_map_src": {
@@ -4294,7 +4306,7 @@
                 "required": [
                     "institute_id",
                     "title_en",
-                    "title_bn"
+                    "title"
                 ]
             },
             "courses": {
@@ -5008,7 +5020,7 @@
                 "in": "query",
                 "required": false,
                 "schema": {
-                    "type": "integer"
+                    "type": "string"
                 }
             },
             "location_longitude": {
@@ -5016,7 +5028,7 @@
                 "in": "query",
                 "required": false,
                 "schema": {
-                    "type": "integer"
+                    "type": "string"
                 }
             },
             "divisionId": {

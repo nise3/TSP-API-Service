@@ -21,7 +21,7 @@ class CreateTrainersTable extends Migration
             $table->unsignedInteger('training_center_id')->nullable();
 
             $table->string('trainer_name', 500);
-            $table->string('trainer_name_en', 250);
+            $table->string('trainer_name_en', 250)->nullable();
             $table->string('trainer_registration_number', 100)->unique();
             $table->string('email', 150)->unique();
             $table->string('mobile', 15)->unique();
