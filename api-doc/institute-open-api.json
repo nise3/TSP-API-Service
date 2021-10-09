@@ -3571,6 +3571,89 @@
                     }
                 }
             }
+        },
+        "/courses/{courseId}/training_centers/batches": {
+            "get": {
+                "summary": "training centers with batches",
+                "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/active"
+                    },
+                    {
+                        "$ref": "#/components/parameters/upcoming"
+                    }
+                ],
+                "tags": [
+                    "Training Centers with Batches"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCentersWithBatches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 13,
+                                        "title": "Leanna Mayer",
+                                        "title_en": "Mrs. Sylvia Considine",
+                                        "division_title_en": "Barisal",
+                                        "division_title_bn": "বরিশাল",
+                                        "division_bbs_code": "10",
+                                        "district_title_en": "BARGUNA",
+                                        "district_title_bn": "বরগুনা",
+                                        "district_bbs_code": "04",
+                                        "is_sadar_district": 0,
+                                        "upazila_title_en": "BAMNA",
+                                        "upazila_title_bn": "বামনা",
+                                        "upazila_bbs_code": null,
+                                        "is_sadar_upazila": 0,
+                                        "address": "271 Delmer Harbor Apt. 133 Keatontown, WI 70536-1415",
+                                        "address_en": "763 Dickinson Row Apt. 641 New Niko, OH 56397",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": "5836 Beahan Extension Hegmannfort, VT 82074",
+                                        "row_status": 1,
+                                        "batches": [
+                                            {
+                                                "id": "1",
+                                                "number_of_seat": "43",
+                                                "registration_start_date": "2021-10-27",
+                                                "registration_end_date": "2021-10-27",
+                                                "batch_start_date": "2021-10-27",
+                                                "batch_end_date": "2021-10-27",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            },
+                                            {
+                                                "id": "6",
+                                                "number_of_seat": "57",
+                                                "registration_start_date": "2021-11-16",
+                                                "registration_end_date": "2021-11-16",
+                                                "batch_start_date": "2021-11-16",
+                                                "batch_end_date": "2021-11-16",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -4490,6 +4573,104 @@
                     "training_center_id",
                     "course_id"
                 ]
+            },
+            "trainingCentersWithBatches": {
+                "type": "object",
+                "description": "Training Center with active OR/AND upcoming batches",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "division_title_en": {
+                        "type": "string"
+                    },
+                    "division_title_bn": {
+                        "type": "string"
+                    },
+                    "division_bbs_code": {
+                        "type": "string"
+                    },
+                    "district_title_en": {
+                        "type": "string"
+                    },
+                    "district_title_bn": {
+                        "type": "string"
+                    },
+                    "district_bbs_code": {
+                        "type": "string"
+                    },
+                    "is_sadar_district": {
+                        "type": "integer"
+                    },
+                    "upazila_title_en": {
+                        "type": "string"
+                    },
+                    "upazila_title_bn": {
+                        "type": "string"
+                    },
+                    "upazila_bbs_code": {
+                        "type": "string"
+                    },
+                    "is_sadar_upazila": {
+                        "type": "integer"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
+                        "type": "string"
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "batches": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "number_of_seat": {
+                                    "type": "integer"
+                                },
+                                "registration_start_date": {
+                                    "type": "string"
+                                },
+                                "registration_end_date": {
+                                    "type": "string"
+                                },
+                                "batch_start_date": {
+                                    "type": "string"
+                                },
+                                "batch_end_date": {
+                                    "type": "string"
+                                },
+                                "available_seats": {
+                                    "type": "integer"
+                                },
+                                "batch_row_status": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "parameters": {
@@ -4998,6 +5179,34 @@
                             }
                         }
                     }
+                }
+            },
+            "courseId": {
+                "name": "courseId",
+                "in": "path",
+                "description": "course id to get training centers with batches",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "active": {
+                "name": "active",
+                "in": "query",
+                "description": "get all active batches",
+                "schema": {
+                    "type": "boolean",
+                    "example": true
+                }
+            },
+            "upcoming": {
+                "name": "upcoming",
+                "in": "query",
+                "description": "get all upcoming batches",
+                "schema": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         }
