@@ -54,7 +54,7 @@ class Institute extends BaseModel
      */
     public function branches(): HasMany
     {
-        return $this->hasMany(Branch::class); // TODO: specifically mention columns
+        return $this->hasMany(Branch::class, 'institute_id', 'id');
     }
 
     /**
@@ -62,7 +62,7 @@ class Institute extends BaseModel
      */
     public function courses(): HasMany
     {
-        return $this->hasMany(Course::class); // TODO: specifically mention columns
+        return $this->hasMany(Course::class, 'institute_id', 'id');
     }
 
     /**
@@ -70,7 +70,7 @@ class Institute extends BaseModel
      */
     public function programs(): HasMany
     {
-        return $this->hasMany(Program::class); // TODO: specifically mention columns
+        return $this->hasMany(Program::class, 'institute_id', 'id');
     }
 
     /**
@@ -78,7 +78,7 @@ class Institute extends BaseModel
      */
     public function trainingCenters(): HasMany
     {
-        return $this->hasMany(TrainingCenter::class); // TODO: specifically mention columns
+        return $this->hasMany(TrainingCenter::class, 'institute_id', 'id');
     }
 
     /**
@@ -86,11 +86,11 @@ class Institute extends BaseModel
      */
     public function batches(): HasMany
     {
-        return $this->hasMany(Batch::class); // TODO: specifically mention columns
+        return $this->hasMany(Batch::class, 'institute_id', 'id');
     }
 
     public function trainers(): HasMany
     {
-        return $this->hasMany(Trainer::class); // TODO: specifically mention columns
+        return $this->hasMany(Trainer::class, 'institute_id', 'id');
     }
 }

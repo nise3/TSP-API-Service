@@ -3,9 +3,6 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
-use App\Models\BaseModel;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Facades\Http;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
