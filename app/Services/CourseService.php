@@ -311,7 +311,7 @@ class CourseService
 
 
     /**Filter courses by popular, recent, nearby, skill matching*/
-    public function getFilterCourses(array $request, Carbon $startTime, string $name): array
+    public function getFilterCourses(array $request, Carbon $startTime, string $name = null): array
     {
         $title = $request['title'] ?? "";
         $titleEn = $request['title_en'] ?? "";
@@ -391,27 +391,19 @@ class CourseService
             $coursesBuilder->where('courses.program_id', '=', $programId);
         }
 
+        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
 
-        if ($name == "popular") {
-            $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+        if ($name == "popular" || $name == "recent") {
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
             $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
             $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
-            $coursesBuilder->groupBy("courses.id");
-            $coursesBuilder->orderByDesc('total_enroll');
-
-        } else if ($name == "recent") {
-            $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
-            $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
-            $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
-            $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
-            $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
-            $coursesBuilder->groupBy("courses.id");
-            $coursesBuilder->orderByDesc('total_enroll');
+            if ($name == "recent") {
+                $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
+            }
         }
 
-        dd($coursesBuilder->get()->toArray());
-
+        $coursesBuilder->groupBy("courses.id");
+        $coursesBuilder->orderByDesc('total_enroll');
 
 
         /** @var Collection $courses */
@@ -423,11 +415,11 @@ class CourseService
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
-        } else {
+        } else if ($name == "popular" || $name == "recent") {
             $courses = $coursesBuilder->get()->take(20);
+        } else {
+            $courses = $coursesBuilder->get();
         }
-
-        //dd($courses);
 
         $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
         $response['_response_status'] = [
@@ -601,10 +593,10 @@ class CourseService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
-            'page_size' => 'integer|gt:0',
-            'page' => 'integer|gt:0',
-            'institute_id' => 'integer|gt:0',
-            'program_id' => 'nullable|integer|gt:0',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|gt:0',
+            'program_id' => 'nullable|int|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
