@@ -26,7 +26,7 @@ class ProgramService
     public function getProgrammeList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -40,7 +40,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institutetitle',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -69,8 +69,8 @@ class ProgramService
         if (!empty($titleEn)) {
             $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
-        if (!empty($titleBn)) {
-            $programmesBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
+        if (!empty($title)) {
+            $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
         if (is_int($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
@@ -115,7 +115,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institutetitle',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -333,7 +333,7 @@ class ProgramService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "integer",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

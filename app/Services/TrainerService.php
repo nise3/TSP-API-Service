@@ -26,7 +26,7 @@ class TrainerService
     public function getTrainerList(array $request, Carbon $startTime): array
     {
         $nameEn = $request['trainer_name_en'] ?? "";
-        $nameBn = $request['trainer_name_bn'] ?? "";
+        $name = $request['trainer_name'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -43,14 +43,14 @@ class TrainerService
             'trainers.trainer_name as trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title as institutes_title_bn',
+            'institutes.title as institutes_title',
             'trainers.trainer_registration_number',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title as branch_title_bn',
+            'branches.title as branch_title',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title as training_center_title_bn',
+            'training_centers.title as training_center_title',
             'trainers.email',
             'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
@@ -63,23 +63,23 @@ class TrainerService
             'trainers.nid',
             'trainers.passport_number',
             'trainers.present_address_division_id',
-            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title as division_title_present_address',
             'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title as district_title_present_address',
             'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title as upazila_title_present_address',
             'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
             'trainers.permanent_address_division_id',
-            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title as division_title_permanent_address',
             'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
-            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title as district_title_permanent_address',
             'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
-            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title as upazila_title_permanent_address',
             'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
             'trainers.educational_qualification',
@@ -173,8 +173,8 @@ class TrainerService
         if (!empty($nameEn)) {
             $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $nameEn . '%');
         }
-        if (!empty($nameBn)) {
-            $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $nameBn . '%');
+        if (!empty($name)) {
+            $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $name . '%');
         }
 
         if (is_int($instituteId)) {
@@ -227,14 +227,14 @@ class TrainerService
             'trainers.trainer_name as trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title as institutes_title_bn',
+            'institutes.title as institutes_title',
             'trainers.trainer_registration_number',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title as branch_title_bn',
+            'branches.title as branch_title',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title as training_center_title_bn',
+            'training_centers.title as training_center_title',
             'trainers.email',
             'trainers.mobile',
             'trainers.date_of_birth as date_of_birth',
@@ -246,24 +246,24 @@ class TrainerService
             'trainers.nid',
             'trainers.passport_number',
             'trainers.present_address_division_id',
-            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title as division_title_present_address',
             'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title as district_title_present_address',
             'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title as upazila_title_present_address',
             'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
             'trainers.present_house_address_en',
             'trainers.permanent_address_division_id',
-            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title as division_title_permanent_address',
             'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
-            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title as district_title_permanent_address',
             'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
-            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title as upazila_title_permanent_address',
             'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
             'trainers.permanent_house_address_en',
@@ -474,7 +474,7 @@ class TrainerService
                 'string',
                 'max:250'
             ],
-            'trainer_name_bn' => [
+            'trainer_name' => [
                 'required',
                 'string',
                 'max:500'

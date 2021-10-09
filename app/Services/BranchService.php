@@ -27,7 +27,7 @@ class BranchService
     public function getBranchList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $titleBn = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -41,15 +41,15 @@ class BranchService
             'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institute_title',
             'branches.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'branches.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'branches.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
             'branches.address_en',
@@ -150,15 +150,15 @@ class BranchService
             'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title_bn',
+            'institutes.title as institute_title',
             'branches.loc_division_id',
-            'loc_divisions.title as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'branches.loc_district_id',
-            'loc_districts.title as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'branches.loc_upazila_id',
-            'loc_upazilas.title as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
             'branches.address_en',
