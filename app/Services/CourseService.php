@@ -25,6 +25,10 @@ class CourseService
      * @param Carbon $startTime
      * @return array
      */
+
+    public const COURSE_FILTER_POPULAR = "popular";
+    public const COURSE_FILTER_RECENT = "recent";
+
     public function getCourseList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
@@ -393,7 +397,7 @@ class CourseService
 
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
 
-        if ($name == "popular" || $name == "recent") {
+        if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
             $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
             $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
@@ -415,7 +419,8 @@ class CourseService
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
-        } else if ($name == "popular" || $name == "recent") {
+
+        } else if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
             $courses = $coursesBuilder->get()->take(20);
         } else {
             $courses = $coursesBuilder->get();
