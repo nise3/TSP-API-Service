@@ -231,7 +231,7 @@ class BatchController extends Controller
 
     public function getBatchesByCourseId(Request $request, $id){
         try {
-            $response = $this->batchService->batchesWithTrainingInstitute($request, $id, $this->startTime);
+            $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
         } catch (Throwable $error){
             return $error;
         }
