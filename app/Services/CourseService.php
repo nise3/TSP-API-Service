@@ -320,6 +320,7 @@ class CourseService
         $instituteId = $request['institute_id'] ?? "";
         $programId = $request['program_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
+        $curDate = date("Y-m-d");
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
@@ -371,7 +372,7 @@ class CourseService
             }
         });
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
@@ -382,27 +383,29 @@ class CourseService
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        if (is_numeric($programId)) {
+        if (is_int($programId)) {
             $coursesBuilder->where('courses.program_id', '=', $programId);
         }
+
 
         if ($name == "popular") {
             $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
-            $coursesBuilder->whereDate('batches.registration_start_date', '<=', date("Y-m-d"));
-            $coursesBuilder->whereDate('batches.registration_end_date', '>=', date("Y-m-d"));
+            $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
             $coursesBuilder->groupBy("courses.id");
             $coursesBuilder->orderByDesc('total_enroll');
 
         } else if ($name == "recent") {
             $coursesBuilder->join("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
-            $coursesBuilder->whereDate('batches.registration_start_date', '<=', date("Y-m-d"));
-            $coursesBuilder->whereDate('batches.registration_end_date', '>=', date("Y-m-d"));
+            $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
+            $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
         }
 
         //dd($coursesBuilder->toSql());
