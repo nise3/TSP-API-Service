@@ -590,12 +590,11 @@ class BatchService
             ->join('loc_districts','loc_districts.id','=','training_centers.loc_district_id')
             ->join('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
             ->where([
-                ['courses.id','=',$id],
+                ['training_centers.institute_id','=',$instituteId],
                 ['batches.course_id','=',$id]
             ])
             ->groupBy('training_centers.id')
 
-            ->whereNull('courses.deleted_at')
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
 
@@ -652,7 +651,7 @@ class BatchService
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "query_time" => $currentTime->diffInSeconds(Carbon::now(BaseModel::NATIVE_TIME_ZONE)),
+            "query_time" => $currentTime->diffInSeconds(Carbon::now()),
         ];
 
         return $response;
