@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Trainer;
+use App\Models\TrainingCenter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -395,25 +396,25 @@ class BatchService
             ]
         ];
         $rules = [
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id',
-            ],
             'course_id' => [
                 'required',
                 'int',
                 'exists:courses,id'
             ],
-            'training_center_id' => [
+            'institute_id' => [
                 'required',
                 'int',
-                'exists:training_centers,id'
+                'exists:institutes,id',
             ],
             'branch_id' => [
                 'nullable',
                 'int',
                 'exists:branches,id'
+            ],
+            'training_center_id' => [
+                'required',
+                'int',
+                'exists:training_centers,id'
             ],
             'number_of_seats' => [
                 'required',
@@ -445,19 +446,7 @@ class BatchService
             ],
             'available_seats' => [
                 'int',
-                'nullable'
-            ],
-            'loc_district_id' => [
-                'nullable',
-                'exists:loc_districts,id'
-            ],
-            'loc_division_id' => [
-                'nullable',
-                'exists:loc_divisions,id'
-            ],
-            'loc_upazila_id' => [
-                'nullable',
-                'exists:loc_upazilas,id'
+                'required'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -498,12 +487,12 @@ class BatchService
             ]
         ];
         return Validator::make($request->all(), [
-            'page_size' => 'numeric|gt:0',
-            'page' => 'numeric|gt:0',
-            'institute_id' => 'numeric|exists:institutes,id',
-            'branch_id' => 'numeric|exists:branches,id',
-            'course_id' => 'numeric|exists:courses,id',
-            'training_center_id' => 'numeric|exists:training_centers,id',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
+            'branch_id' => 'int|exists:branches,id',
+            'course_id' => 'int|exists:courses,id',
+            'training_center_id' => 'int|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -531,70 +520,70 @@ class BatchService
         return Validator::make($data, $rules);
     }
 
-    public function batchesWithTrainingInstitute($request, $id, $current_time){
+    public function batchesWithTrainingCenters($request, $id, $currentTime){
         $active = $request['active'] == "true";
         $upcoming = $request['upcoming'] == "true";
 
+        $course = Course::find($id);
+        $instituteId = $course['institute_id'];
+
         /** @var Course|Builder $courseBuilder */
-        $courseBuilder = Course::select([
-            'courses.id',
-            'courses.code',
-            'courses.institute_id',
-            'training_centers.title as trainingCenter_title',
-            'training_centers.title_en as trainingCenter_title_en',
+        $courseBuilder = TrainingCenter::select([
+            'training_centers.id',
+            'training_centers.title',
+            'training_centers.title_en',
 
-            'loc_divisions.title_en as trainingCenter_division_title_en',
-            'loc_divisions.title_bn as trainingCenter_division_title_bn',
-            'loc_divisions.bbs_code as trainingCenter_division_bbs_code',
+            'loc_divisions.title_en as division_title_en',
+            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.bbs_code as division_bbs_code',
 
-            'loc_districts.title_en as trainingCenter_district_title_en',
-            'loc_districts.title_bn as trainingCenter_district_title_bn',
-            'loc_districts.bbs_code as trainingCenter_district_bbs_code',
-            'loc_districts.is_sadar_district as trainingCenter_is_sadar_district',
+            'loc_districts.title_en as district_title_en',
+            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.bbs_code as district_bbs_code',
+            'loc_districts.is_sadar_district',
 
-            'loc_upazilas.title_en as trainingCenter_upazila_title_en',
-            'loc_upazilas.title_bn as trainingCenter_upazila_title_bn',
-            'loc_upazilas.bbs_code as trainingCenter_upazila_bbs_code',
-            'loc_upazilas.is_sadar_upazila as trainingCenter_is_sadar_upazila',
+            'loc_upazilas.title_en as upazila_title_en',
+            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.bbs_code as upazila_bbs_code',
+            'loc_upazilas.is_sadar_upazila',
 
-            'training_centers.address as trainingCenter_address',
-            'training_centers.address_en as trainingCenter_address_en',
-            'training_centers.location_latitude as trainingCenter_location_latitude',
-            'training_centers.location_longitude as trainingCenter_location_longitude',
-            'training_centers.google_map_src as trainingCenter_google_map_src',
-            'training_centers.row_status as trainingCenter_row_status',
+            'training_centers.address',
+            'training_centers.address_en',
+            'training_centers.location_latitude',
+            'training_centers.location_longitude',
+            'training_centers.google_map_src',
+            'training_centers.row_status',
 
-            DB::raw('GROUP_CONCAT(batches.id) as batchIds'),
-            DB::raw('GROUP_CONCAT(batches.number_of_seats) as numberOfSeats'),
-            DB::raw('GROUP_CONCAT(batches.registration_start_date) as registration_start_date'),
-            DB::raw('GROUP_CONCAT(batches.registration_end_date) as registration_end_date'),
-            DB::raw('GROUP_CONCAT(batches.batch_start_date) as batch_start_date'),
-            DB::raw('GROUP_CONCAT(batches.batch_end_date) as batch_end_date'),
+            DB::raw('GROUP_CONCAT(batches.id) as batch_ids'),
+            DB::raw('GROUP_CONCAT(batches.number_of_seats) as number_of_seats'),
+            DB::raw('GROUP_CONCAT(batches.registration_start_date) as registration_start_dates'),
+            DB::raw('GROUP_CONCAT(batches.registration_end_date) as registration_end_dates'),
+            DB::raw('GROUP_CONCAT(batches.batch_start_date) as batch_start_dates'),
+            DB::raw('GROUP_CONCAT(batches.batch_end_date) as batch_end_dates'),
             DB::raw('GROUP_CONCAT(batches.available_seats) as available_seats'),
-            DB::raw('GROUP_CONCAT(batches.row_status) as batchRowStatus')
+            DB::raw('GROUP_CONCAT(batches.row_status) as batch_row_statuses')
         ])
-            ->leftJoin('training_centers','training_centers.institute_id','=','courses.institute_id')
-            ->leftJoin('batches', function ($join) use ($current_time, $active, $upcoming){
+            ->join('batches', function ($join) use ($currentTime, $active, $upcoming){
                 $join->on('batches.training_center_id','=','training_centers.id');
                 if($active && !$upcoming){
-                    $join->whereDate('batches.registration_start_date', '<=', $current_time);
-                    $join->whereDate('batches.registration_end_date', '>=', $current_time);
+                    $join->whereDate('batches.registration_start_date', '<=', $currentTime);
+                    $join->whereDate('batches.registration_end_date', '>=', $currentTime);
                 } else if (!$active && $upcoming){
-                    $join->whereDate('batches.registration_start_date', '>', $current_time);
+                    $join->whereDate('batches.registration_start_date', '>', $currentTime);
                 } else {
-                    $join->whereDate('batches.registration_end_date', '>=', $current_time);
+                    $join->whereDate('batches.registration_end_date', '>=', $currentTime);
                 }
             })
-            ->leftJoin('loc_divisions','loc_divisions.id','=','training_centers.loc_division_id')
-            ->leftJoin('loc_districts','loc_districts.id','=','training_centers.loc_district_id')
-            ->leftJoin('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
+            ->join('loc_divisions','loc_divisions.id','=','training_centers.loc_division_id')
+            ->join('loc_districts','loc_districts.id','=','training_centers.loc_district_id')
+            ->join('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
             ->where([
-                ['courses.id','=',$id],
-                ['batches.course_id','=',$id]
+                ['training_centers.institute_id','=',$instituteId],
+                ['batches.course_id','=',$id],
+                ['batches.institute_id','=',$instituteId]
             ])
             ->groupBy('training_centers.id')
 
-            ->whereNull('courses.deleted_at')
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
 
@@ -602,35 +591,47 @@ class BatchService
 
         $trainingCenterWiseBatches = $result->toArray()['data'] ?? $result->toArray();
 
+        /** Generate batches from GROUP_CONCAT results */
         if(count($trainingCenterWiseBatches) > 0){
             $length = count($trainingCenterWiseBatches);
             for ($index = 0; $index < $length; ++$index){
 
-                $batchIds = explode(',',$trainingCenterWiseBatches[$index]['batchIds']);
-                $numberOfSeats = explode(',',$trainingCenterWiseBatches[$index]['numberOfSeats']);
-                $registrationStartDates = explode(',',$trainingCenterWiseBatches[$index]['registration_start_date']);
-                $registrationEndDate = explode(',',$trainingCenterWiseBatches[$index]['registration_end_date']);
-                $batchStartDate = explode(',',$trainingCenterWiseBatches[$index]['batch_start_date']);
-                $batchEndDate = explode(',',$trainingCenterWiseBatches[$index]['batch_end_date']);
+                $batchIds = explode(',',$trainingCenterWiseBatches[$index]['batch_ids']);
+                $numberOfSeats = explode(',',$trainingCenterWiseBatches[$index]['number_of_seats']);
+                $registrationStartDates = explode(',',$trainingCenterWiseBatches[$index]['registration_start_dates']);
+                $registrationEndDate = explode(',',$trainingCenterWiseBatches[$index]['registration_end_dates']);
+                $batchStartDate = explode(',',$trainingCenterWiseBatches[$index]['batch_start_dates']);
+                $batchEndDate = explode(',',$trainingCenterWiseBatches[$index]['batch_end_dates']);
                 $availableSeats = explode(',',$trainingCenterWiseBatches[$index]['available_seats']);
-                $batchRowStatus = explode(',',$trainingCenterWiseBatches[$index]['batchRowStatus']);
+                $batchRowStatus = explode(',',$trainingCenterWiseBatches[$index]['batch_row_statuses']);
 
-                $trainingCenterWiseBatches[$index]['batchInfo'] = [];
+                $trainingCenterWiseBatches[$index]['batches'] = [];
 
+                /** Generate all batches under a Training_Center with required information */
                 $batchCount = count($batchIds);
                 for($i = 0; $i < $batchCount; ++$i){
                     $batchInfo = [
                         "id"=>$batchIds[$i],
-                        "numberOfSeat"=>$numberOfSeats[$i],
-                        "registrationStartDate"=>$registrationStartDates[$i],
-                        "registrationEndDate"=>$registrationEndDate[$i],
-                        "batchStartDate"=>$batchStartDate[$i],
-                        "batchEndDate"=>$batchEndDate[$i],
-                        "availableSeats"=>$availableSeats[$i],
-                        "batchRowStatus"=>$batchRowStatus[$i]
+                        "number_of_seat"=>$numberOfSeats[$i],
+                        "registration_start_date"=>$registrationStartDates[$i],
+                        "registration_end_date"=>$registrationEndDate[$i],
+                        "batch_start_date"=>$batchStartDate[$i],
+                        "batch_end_date"=>$batchEndDate[$i],
+                        "available_seats"=>$availableSeats[$i],
+                        "batch_row_status"=>$batchRowStatus[$i]
                     ];
-                    $trainingCenterWiseBatches[$index]['batchInfo'][$i] = $batchInfo;
+                    $trainingCenterWiseBatches[$index]['batches'][$i] = $batchInfo;
                 }
+
+                /** Delete all unused elements from Final Array */
+                unset($trainingCenterWiseBatches[$index]['batch_ids']);
+                unset($trainingCenterWiseBatches[$index]['number_of_seats']);
+                unset($trainingCenterWiseBatches[$index]['registration_start_dates']);
+                unset($trainingCenterWiseBatches[$index]['registration_end_dates']);
+                unset($trainingCenterWiseBatches[$index]['batch_start_dates']);
+                unset($trainingCenterWiseBatches[$index]['batch_end_dates']);
+                unset($trainingCenterWiseBatches[$index]['available_seats']);
+                unset($trainingCenterWiseBatches[$index]['batch_row_statuses']);
             }
         }
 
@@ -639,7 +640,7 @@ class BatchService
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
-            "query_time" => $current_time->diffInSeconds(Carbon::now(BaseModel::NATIVE_TIME_ZONE)),
+            "query_time" => $currentTime->diffInSeconds(Carbon::now()),
         ];
 
         return $response;
