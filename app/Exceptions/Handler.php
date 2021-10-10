@@ -113,7 +113,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['message'] = $e->getMessage();
         }
 
-        return response()->json($errors);
+        return response()->json($errors, $errors['_response_status']['code']);
 
     }
     /**
