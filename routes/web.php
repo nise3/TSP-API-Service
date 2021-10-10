@@ -27,7 +27,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
     /** Course Filter */
-    $router->get('course-list[/{name}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
+    $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
 
     //$router->get('courses', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
 

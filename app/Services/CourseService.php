@@ -315,7 +315,7 @@ class CourseService
 
 
     /**Filter courses by popular, recent, nearby, skill matching*/
-    public function getFilterCourses(array $request, Carbon $startTime, string $name = null): array
+    public function getFilterCourses(array $request, Carbon $startTime, string $type = null): array
     {
         $title = $request['title'] ?? "";
         $titleEn = $request['title_en'] ?? "";
@@ -397,11 +397,11 @@ class CourseService
 
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
 
-        if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
+        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
             $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
             $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
-            if ($name == "recent") {
+            if ($type == "recent") {
                 $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
             }
         }
@@ -420,7 +420,7 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
 
-        } else if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
+        } else if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
             $courses = $coursesBuilder->get()->take(20);
         } else {
             $courses = $coursesBuilder->get();
