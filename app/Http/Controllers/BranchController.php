@@ -50,7 +50,7 @@ class BranchController extends Controller
         try {
             $response = $this->branchService->getBranchList($filter, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
 
         return Response::json($response);
@@ -65,7 +65,7 @@ class BranchController extends Controller
         try {
             $response = $this->branchService->getOneBranch($id, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
 
@@ -92,7 +92,7 @@ class BranchController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -125,7 +125,7 @@ class BranchController extends Controller
             ];
 
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -152,7 +152,7 @@ class BranchController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
 
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -163,7 +163,7 @@ class BranchController extends Controller
         try {
             $response = $this->branchService->getBranchTrashList($request, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -182,7 +182,7 @@ class BranchController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -201,7 +201,7 @@ class BranchController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
