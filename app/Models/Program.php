@@ -34,7 +34,7 @@ class Program extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class); // TODO: specifically mention columns
+        return $this->belongsTo(Institute::class, 'institute_id', 'id');
     }
 
     /**
@@ -42,6 +42,6 @@ class Program extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class); // TODO: specifically mention columns
+        return $this->hasMany(Batch::class, 'institute_id', 'id');
     }
 }

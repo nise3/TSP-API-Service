@@ -75,7 +75,7 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -83,14 +83,14 @@ class CourseService
         $coursesBuilder->join("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
@@ -101,12 +101,12 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $courses */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -315,7 +315,7 @@ class CourseService
 
 
     /**Filter courses by popular, recent, nearby, skill matching*/
-    public function getFilterCourses(array $request, Carbon $startTime, string $name = null): array
+    public function getFilterCourses(array $request, Carbon $startTime, string $type = null): array
     {
         $title = $request['title'] ?? "";
         $titleEn = $request['title_en'] ?? "";
@@ -363,7 +363,7 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -371,7 +371,7 @@ class CourseService
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
@@ -397,11 +397,11 @@ class CourseService
 
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
 
-        if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
+        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
             $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
             $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
             $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
-            if ($name == "recent") {
+            if ($type == "recent") {
                 $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
             }
         }
@@ -411,7 +411,7 @@ class CourseService
 
 
         /** @var Collection $courses */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -420,7 +420,7 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
 
-        } else if ($name == self::COURSE_FILTER_POPULAR || $name == self::COURSE_FILTER_RECENT) {
+        } else if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
             $courses = $coursesBuilder->get()->take(20);
         } else {
             $courses = $coursesBuilder->get();
@@ -444,6 +444,8 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+
+        $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,
@@ -509,6 +511,13 @@ class CourseService
             ],
             'objectives' => [
                 'nullable',
+                'string'
+            ],
+            'application_form_settings' => [
+                'array',
+                'nullable'
+            ],
+            'application_form_settings.*' => [
                 'string'
             ],
             'objectives_en' => [

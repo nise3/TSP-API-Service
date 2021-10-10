@@ -58,9 +58,9 @@ class CourseController extends Controller
      * Display the specified resource
      * @param Request $request
      * @param int $id
-     * @return JsonResponse
+     * @return Exception|JsonResponse|Throwable
      */
-    public function read(Request $request, int $id): JsonResponse
+    public function read(Request $request, int $id)
     {
         try {
             $response = $this->courseService->getOneCourse($id, $this->startTime);
@@ -197,12 +197,12 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getFilterCourseList(Request $request,string $name = null): JsonResponse
+    public function getFilterCourseList(Request $request,string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request)->validate();
 
         try {
-            $response = $this->courseService->getFilterCourses($filter, $this->startTime, $name);
+            $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
         } catch (Throwable $e) {
            throw $e;
         }

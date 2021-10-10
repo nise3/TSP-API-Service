@@ -6,9 +6,10 @@
     },
     "servers": [
         {
-            "url": "http://institute.local:8009/api/v1/"
-        }, {
             "url": "http://localhost:8001/api/v1"
+        },
+        {
+            "url": "http://institute.local:8009/api/v1/"
         },
         {
             "url": "https://api.bus.softbd.xyz/institute/api/v1/"
@@ -821,78 +822,15 @@
                 ],
                 "summary": "Registration",
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_type_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "example@gmail.com"
-                        }
-                    },
-                    {
-                        "name": "mobile",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_mobile"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_email"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "name": "password",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "password_confirmation",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegister"
+                            }
                         }
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -1711,13 +1649,16 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description_en"
                     },
                     {
                         "name": "logo",
@@ -1841,13 +1782,16 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description_en"
                     },
                     {
                         "name": "logo",
@@ -2455,7 +2399,7 @@
                                         "branch_id": 1,
                                         "training_center_id": null,
                                         "trainer_name_en": "assdsddf",
-                                        "trainer_name_bn": "asfsdfsdf",
+                                        "trainer_name": "asfsdfsdf",
                                         "trainer_registration_number": "434235232",
                                         "email": "asdfqwr@gmailcom",
                                         "mobile": "09877654321",
@@ -2585,116 +2529,15 @@
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a course.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courses"
+                            }
                         }
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "5"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -2819,116 +2662,17 @@
                             "type": "integer"
                         },
                         "example": "1"
-                    },
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "course_fee",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
-                        }
-                    },
-                    {
-                        "name": "duration",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "5"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "name": "target_group",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "objectives",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "contents",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "training_methodology",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "evaluation_system",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text"
-                        }
-                    },
-                    {
-                        "name": "prerequisite",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "eligibility",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry"
-                        }
-                    },
-                    {
-                        "name": "cover_image",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courses"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -3044,7 +2788,7 @@
                         "$ref": "#/components/parameters/trainer_name_en_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/trainer_name_bn_optional"
+                        "$ref": "#/components/parameters/trainer_name_optional"
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
@@ -3062,7 +2806,7 @@
                                     "data": {
                                         "id": 1,
                                         "trainer_name_en": "Hester Crona",
-                                        "trainer_name_bn": "Enid Jones",
+                                        "trainer_name": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
                                         "institutes_title": "Cynthia Bogisich",
@@ -3347,7 +3091,7 @@
                                 "example": {
                                     "data": {
                                         "trainer_name_en": "Tikka Khan",
-                                        "trainer_name_bn": "আরএমজি",
+                                        "trainer_name": "আরএমজি",
                                         "institute_id": "1",
                                         "branch_id": "1",
                                         "training_center_id": "1",
@@ -3406,7 +3150,7 @@
                                     "data": {
                                         "id": 1,
                                         "trainer_name_en": "Hester Crona",
-                                        "trainer_name_bn": "Enid Jones",
+                                        "trainer_name": "Enid Jones",
                                         "institute_id": 1,
                                         "institutes_title_en": "Deven Powlowski",
                                         "institutes_title": "Cynthia Bogisich",
@@ -3770,6 +3514,89 @@
                     }
                 }
             }
+        },
+        "/courses/{courseId}/training_centers/batches": {
+            "get": {
+                "summary": "training centers with batches",
+                "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/active"
+                    },
+                    {
+                        "$ref": "#/components/parameters/upcoming"
+                    }
+                ],
+                "tags": [
+                    "Training Centers with Batches"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCentersWithBatches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 13,
+                                        "title": "Leanna Mayer",
+                                        "title_en": "Mrs. Sylvia Considine",
+                                        "division_title_en": "Barisal",
+                                        "division_title_bn": "বরিশাল",
+                                        "division_bbs_code": "10",
+                                        "district_title_en": "BARGUNA",
+                                        "district_title_bn": "বরগুনা",
+                                        "district_bbs_code": "04",
+                                        "is_sadar_district": 0,
+                                        "upazila_title_en": "BAMNA",
+                                        "upazila_title_bn": "বামনা",
+                                        "upazila_bbs_code": null,
+                                        "is_sadar_upazila": 0,
+                                        "address": "271 Delmer Harbor Apt. 133 Keatontown, WI 70536-1415",
+                                        "address_en": "763 Dickinson Row Apt. 641 New Niko, OH 56397",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": "5836 Beahan Extension Hegmannfort, VT 82074",
+                                        "row_status": 1,
+                                        "batches": [
+                                            {
+                                                "id": "1",
+                                                "number_of_seat": "43",
+                                                "registration_start_date": "2021-10-27",
+                                                "registration_end_date": "2021-10-27",
+                                                "batch_start_date": "2021-10-27",
+                                                "batch_end_date": "2021-10-27",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            },
+                                            {
+                                                "id": "6",
+                                                "number_of_seat": "57",
+                                                "registration_start_date": "2021-11-16",
+                                                "registration_end_date": "2021-11-16",
+                                                "batch_start_date": "2021-11-16",
+                                                "batch_end_date": "2021-11-16",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -3996,33 +3823,26 @@
             "instituteRegister": {
                 "type": "object",
                 "properties": {
-                    "title_en": {
-                        "type": "string",
-                        "description": "title in English",
-                        "minLength": 2,
-                        "maxLength": 300
-                    },
                     "title": {
                         "type": "string",
                         "description": " title in Bengali",
                         "minLength": 2,
                         "maxLength": 1000
                     },
+                    "title_en": {
+                        "type": "string",
+                        "description": "title in English",
+                        "minLength": 2,
+                        "maxLength": 300
+                    },
                     "institute_type_id": {
                         "type": "integer",
-                        "description": "Organization type id",
+                        "description": "0 => Non Govt, 1 => Govt",
                         "enum": [
                             0,
                             1
-                        ]
-                    },
-                    "email": {
-                        "type": "string",
-                        "description": "email address"
-                    },
-                    "mobile": {
-                        "type": "string",
-                        "description": "Mobile number of organization"
+                        ],
+                        "example": 0
                     },
                     "name_of_the_office_head": {
                         "type": "string",
@@ -4032,27 +3852,39 @@
                         "type": "string",
                         "description": "Head of office Designation "
                     },
-                    "address": {
+                    "email": {
                         "type": "string",
-                        "maximum": 1000,
-                        "minimum": 2,
-                        "description": "organization address"
+                        "description": "email address"
+                    },
+                    "mobile": {
+                        "type": "string",
+                        "description": "Mobile number of organization"
+                    },
+                    "contact_person_mobile": {
+                        "type": "string",
+                        "description": "Contact person mobile number"
                     },
                     "contact_person_name": {
                         "type": "string",
-                        "description": "Contact person name"
+                        "description": "Contact person name",
+                        "minLength": 2,
+                        "maxLength": 500
                     },
                     "contact_person_designation": {
                         "type": "string",
-                        "description": "Contact person's designation"
+                        "description": "Contact person's designation",
+                        "minLength": 2,
+                        "maxLength": 300
                     },
                     "contact_person_email": {
                         "type": "string",
                         "description": "Contact person email address"
                     },
-                    "contact_person_mobile": {
+                    "address": {
                         "type": "string",
-                        "description": "Contact person mobile number"
+                        "maxLength": 1000,
+                        "minLength": 2,
+                        "description": "organization address"
                     },
                     "password": {
                         "type": "string",
@@ -4064,18 +3896,19 @@
                     }
                 },
                 "required": [
-                    "institute_type_id",
-                    "title_en",
                     "title",
+                    "title_en",
+                    "institute_type_id",
+                    "name_of_the_office_head",
                     "email",
-                    "head_of_office",
+                    "mobile",
+                    "contact_person_mobile",
                     "contact_person_name",
                     "contact_person_designation",
                     "contact_person_email",
-                    "contact_person_mobile",
+                    "address",
                     "password",
-                    "password_confirmation",
-                    "mobile"
+                    "password_confirmation"
                 ]
             },
             "training-centers": {
@@ -4137,7 +3970,12 @@
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     },
                     "created_by": {
                         "type": "integer"
@@ -4243,6 +4081,12 @@
                     "institute_id": {
                         "type": "integer"
                     },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
                     "title_en": {
                         "type": "string",
                         "maxLength": 500,
@@ -4311,11 +4155,18 @@
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     },
                     "application_form_settings": {
-                        "type": "string",
-                        "format": "json"
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "created_by": {
                         "type": "string",
@@ -4392,7 +4243,7 @@
                             3
                         ],
                         "description": "1=>male, 2=>females, 3=>others",
-                        "default": 1
+                        "example": 1
                     },
                     "marital_status": {
                         "type": "integer",
@@ -4510,7 +4361,7 @@
                 },
                 "required": [
                     "institute_id",
-                    "trainer_name_bn",
+                    "trainer_name",
                     "trainer_name_en",
                     "email",
                     "mobile",
@@ -4684,6 +4535,104 @@
                     "training_center_id",
                     "course_id"
                 ]
+            },
+            "trainingCentersWithBatches": {
+                "type": "object",
+                "description": "Training Center with active OR/AND upcoming batches",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "division_title_en": {
+                        "type": "string"
+                    },
+                    "division_title_bn": {
+                        "type": "string"
+                    },
+                    "division_bbs_code": {
+                        "type": "string"
+                    },
+                    "district_title_en": {
+                        "type": "string"
+                    },
+                    "district_title_bn": {
+                        "type": "string"
+                    },
+                    "district_bbs_code": {
+                        "type": "string"
+                    },
+                    "is_sadar_district": {
+                        "type": "integer"
+                    },
+                    "upazila_title_en": {
+                        "type": "string"
+                    },
+                    "upazila_title_bn": {
+                        "type": "string"
+                    },
+                    "upazila_bbs_code": {
+                        "type": "string"
+                    },
+                    "is_sadar_upazila": {
+                        "type": "integer"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
+                        "type": "string"
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "batches": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "number_of_seat": {
+                                    "type": "integer"
+                                },
+                                "registration_start_date": {
+                                    "type": "string"
+                                },
+                                "registration_end_date": {
+                                    "type": "string"
+                                },
+                                "batch_start_date": {
+                                    "type": "string"
+                                },
+                                "batch_end_date": {
+                                    "type": "string"
+                                },
+                                "available_seats": {
+                                    "type": "integer"
+                                },
+                                "batch_row_status": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "parameters": {
@@ -4913,9 +4862,9 @@
                     "example": "মিলাদুল ইসলাম"
                 }
             },
-            "trainer_name_bn_optional": {
+            "trainer_name_optional": {
                 "in": "query",
-                "name": "trainer_name_bn",
+                "name": "trainer_name",
                 "required": false,
                 "schema": {
                     "type": "string"
@@ -5079,6 +5028,15 @@
                     "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
                 }
             },
+            "description_en": {
+                "name": "description_en",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                }
+            },
             "program_id": {
                 "name": "program_id",
                 "required": true,
@@ -5192,6 +5150,34 @@
                             }
                         }
                     }
+                }
+            },
+            "courseId": {
+                "name": "courseId",
+                "in": "path",
+                "description": "course id to get training centers with batches",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "active": {
+                "name": "active",
+                "in": "query",
+                "description": "get all active batches",
+                "schema": {
+                    "type": "boolean",
+                    "example": true
+                }
+            },
+            "upcoming": {
+                "name": "upcoming",
+                "in": "query",
+                "description": "get all upcoming batches",
+                "schema": {
+                    "type": "boolean",
+                    "example": true
                 }
             }
         }

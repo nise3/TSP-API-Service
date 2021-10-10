@@ -582,9 +582,9 @@ class BatchService
                     $join->whereDate('batches.registration_end_date', '>=', $currentTime);
                 }
             })
-            ->join('loc_divisions','loc_divisions.id','=','training_centers.loc_division_id')
-            ->join('loc_districts','loc_districts.id','=','training_centers.loc_district_id')
-            ->join('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
+            ->leftJoin('loc_divisions','loc_divisions.id','=','training_centers.loc_division_id')
+            ->leftJoin('loc_districts','loc_districts.id','=','training_centers.loc_district_id')
+            ->leftJoin('loc_upazilas','loc_upazilas.id','=','training_centers.loc_upazila_id')
             ->where([
                 ['training_centers.institute_id','=',$instituteId],
                 ['batches.course_id','=',$id],

@@ -320,7 +320,7 @@ class InstituteService
      */
     public function createRegisterUser(array $data)
     {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-registration';
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-open-registration';
 
         $userPostField = [
             'user_type' => BaseModel::INSTITUTE_USER,
