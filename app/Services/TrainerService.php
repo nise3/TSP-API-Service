@@ -501,13 +501,13 @@ class TrainerService
             ],
             'email' => [
                 'required',
-                'string',
+                'email',
                 'max:150',
                 'unique:trainers,email,' . $id
             ],
             'mobile' => [
                 'required',
-                'string',
+                BaseModel::MOBILE_REGEX,
                 'max:15',
                 'unique:trainers,mobile,' . $id
             ],

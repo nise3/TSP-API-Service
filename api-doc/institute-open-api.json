@@ -4081,6 +4081,12 @@
                     "institute_id": {
                         "type": "integer"
                     },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
                     "title_en": {
                         "type": "string",
                         "maxLength": 500,
@@ -4158,7 +4164,9 @@
                     },
                     "application_form_settings": {
                         "type": "array",
-                        "example": 1
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "created_by": {
                         "type": "string",

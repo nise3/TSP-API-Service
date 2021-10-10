@@ -514,10 +514,10 @@ class CourseService
                 'string'
             ],
             'application_form_settings' => [
-                'array'
+                'array',
+                'nullable'
             ],
             'application_form_settings.*' => [
-                'nullable',
                 'string'
             ],
             'objectives_en' => [

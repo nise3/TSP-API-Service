@@ -55,7 +55,7 @@ class Course extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class, 'course_id', 'id');
     }
 
     /**
@@ -63,7 +63,7 @@ class Course extends BaseModel
      */
     public function batches(): HasMany
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(Batch::class, 'course_id', 'id');
     }
 
     /**
@@ -71,6 +71,6 @@ class Course extends BaseModel
      */
     public function program(): BelongsTo
     {
-        return $this->belongsTo(Program::class); // TODO: specifically mention columns
+        return $this->belongsTo(Program::class, 'course_id', 'id');
     }
 }

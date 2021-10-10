@@ -3,8 +3,8 @@ info:
   title: Institute root
   version: 1.0.0
 servers:
-  - url: http://institute.local:8009/api/v1/
   - url: http://localhost:8001/api/v1
+  - url: http://institute.local:8009/api/v1/
   - url: https://api.bus.softbd.xyz/institute/api/v1/
 paths:
   /:
@@ -559,44 +559,11 @@ paths:
         - institute Registration
       summary: Registration
       description: API endpoint to create a institute.A successful request response will show 201 HTTP status code
-      parameters:
-        - $ref: '#/components/parameters/title_en'
-        - $ref: '#/components/parameters/title'
-        - $ref: '#/components/parameters/institute_type_id'
-        - $ref: '#/components/parameters/name_of_the_office_head'
-        - $ref: '#/components/parameters/name_of_the_office_head_designation'
-        - name: email
-          in: query
-          required: true
-          schema:
-            type: string
-            example: example@gmail.com
-        - name: mobile
-          in: query
-          required: true
-          schema:
-            type: string
-            example: '01845654543'
-        - $ref: '#/components/parameters/contact_person_name'
-        - $ref: '#/components/parameters/contact_person_mobile'
-        - $ref: '#/components/parameters/contact_person_email'
-        - $ref: '#/components/parameters/contact_person_designation'
-        - name: address
-          in: query
-          required: true
-          schema:
-            type: string
-            example: Dhaka mirpur road 4 block 2
-        - name: password
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: password_confirmation
-          in: query
-          required: true
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/instituteRegister'
       responses:
         '201':
           description: Created
@@ -1168,9 +1135,10 @@ paths:
       parameters:
         - $ref: '#/components/parameters/code_optional'
         - $ref: '#/components/parameters/institute_id'
-        - $ref: '#/components/parameters/title_en'
+        - $ref: '#/components/parameters/title_en_optional'
         - $ref: '#/components/parameters/title'
         - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/description_en'
         - name: logo
           in: query
           schema:
@@ -1254,9 +1222,10 @@ paths:
             example: '1'
         - $ref: '#/components/parameters/code_optional'
         - $ref: '#/components/parameters/institute_id'
-        - $ref: '#/components/parameters/title_en'
+        - $ref: '#/components/parameters/title_en_optional'
         - $ref: '#/components/parameters/title'
         - $ref: '#/components/parameters/description'
+        - $ref: '#/components/parameters/description_en'
         - name: logo
           in: query
           schema:
@@ -2472,6 +2441,66 @@ paths:
                   code: 200
                   message: Trainer delete successfully.
                   query_time: 0
+  /courses/{courseId}/training_centers/batches:
+    get:
+      summary: training centers with batches
+      description: API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code
+      parameters:
+        - $ref: '#/components/parameters/courseId'
+        - $ref: '#/components/parameters/active'
+        - $ref: '#/components/parameters/upcoming'
+      tags:
+        - Training Centers with Batches
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/trainingCentersWithBatches'
+              example:
+                data:
+                  id: 13
+                  title: Leanna Mayer
+                  title_en: Mrs. Sylvia Considine
+                  division_title_en: Barisal
+                  division_title_bn: বরিশাল
+                  division_bbs_code: '10'
+                  district_title_en: BARGUNA
+                  district_title_bn: বরগুনা
+                  district_bbs_code: '04'
+                  is_sadar_district: 0
+                  upazila_title_en: BAMNA
+                  upazila_title_bn: বামনা
+                  upazila_bbs_code: null
+                  is_sadar_upazila: 0
+                  address: 271 Delmer Harbor Apt. 133 Keatontown, WI 70536-1415
+                  address_en: 763 Dickinson Row Apt. 641 New Niko, OH 56397
+                  location_latitude: null
+                  location_longitude: null
+                  google_map_src: 5836 Beahan Extension Hegmannfort, VT 82074
+                  row_status: 1
+                  batches:
+                    - id: '1'
+                      number_of_seat: '43'
+                      registration_start_date: '2021-10-27'
+                      registration_end_date: '2021-10-27'
+                      batch_start_date: '2021-10-27'
+                      batch_end_date: '2021-10-27'
+                      available_seats: '0'
+                      batch_row_status: '1'
+                    - id: '6'
+                      number_of_seat: '57'
+                      registration_start_date: '2021-11-16'
+                      registration_end_date: '2021-11-16'
+                      batch_start_date: '2021-11-16'
+                      batch_end_date: '2021-11-16'
+                      available_seats: '0'
+                      batch_row_status: '1'
+                _response_status:
+                  success: true
+                  code: 200
+                  query_time: 0
 components:
   schemas:
     programs:
@@ -2637,51 +2666,56 @@ components:
     instituteRegister:
       type: object
       properties:
-        title_en:
-          type: string
-          description: title in English
-          minLength: 2
-          maxLength: 300
         title:
           type: string
           description: ' title in Bengali'
           minLength: 2
           maxLength: 1000
+        title_en:
+          type: string
+          description: title in English
+          minLength: 2
+          maxLength: 300
         institute_type_id:
           type: integer
-          description: Organization type id
+          description: 0 => Non Govt, 1 => Govt
           enum:
             - 0
             - 1
-        email:
-          type: string
-          description: email address
-        mobile:
-          type: string
-          description: Mobile number of organization
+          example: 0
         name_of_the_office_head:
           type: string
           description: Head of office
         name_of_the_office_head_designation:
           type: string
           description: 'Head of office Designation '
-        address:
+        email:
           type: string
-          maximum: 1000
-          minimum: 2
-          description: organization address
-        contact_person_name:
+          description: email address
+        mobile:
           type: string
-          description: Contact person name
-        contact_person_designation:
-          type: string
-          description: Contact person's designation
-        contact_person_email:
-          type: string
-          description: Contact person email address
+          description: Mobile number of organization
         contact_person_mobile:
           type: string
           description: Contact person mobile number
+        contact_person_name:
+          type: string
+          description: Contact person name
+          minLength: 2
+          maxLength: 500
+        contact_person_designation:
+          type: string
+          description: Contact person's designation
+          minLength: 2
+          maxLength: 300
+        contact_person_email:
+          type: string
+          description: Contact person email address
+        address:
+          type: string
+          maxLength: 1000
+          minLength: 2
+          description: organization address
         password:
           type: string
           format: password
@@ -2689,18 +2723,19 @@ components:
           type: string
           format: password
       required:
-        - institute_type_id
-        - title_en
         - title
+        - title_en
+        - institute_type_id
+        - name_of_the_office_head
         - email
-        - head_of_office
+        - mobile
+        - contact_person_mobile
         - contact_person_name
         - contact_person_designation
         - contact_person_email
-        - contact_person_mobile
+        - address
         - password
         - password_confirmation
-        - mobile
     training-centers:
       type: object
       description: Training Center management Service
@@ -2746,6 +2781,10 @@ components:
           type: string
         row_status:
           type: integer
+          enum:
+            - 1
+            - 0
+          example: 1
         created_by:
           type: integer
         updated_by:
@@ -2821,6 +2860,10 @@ components:
           type: string
         institute_id:
           type: integer
+        branch_id:
+          type: integer
+        program_id:
+          type: integer
         title_en:
           type: string
           maxLength: 500
@@ -2874,8 +2917,9 @@ components:
             - 0
           example: 1
         application_form_settings:
-          type: string
-          format: json
+          type: array
+          items:
+            type: string
         created_by:
           type: string
           format: date-time
@@ -3147,6 +3191,71 @@ components:
       required:
         - training_center_id
         - course_id
+    trainingCentersWithBatches:
+      type: object
+      description: Training Center with active OR/AND upcoming batches
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        title_en:
+          type: string
+        division_title_en:
+          type: string
+        division_title_bn:
+          type: string
+        division_bbs_code:
+          type: string
+        district_title_en:
+          type: string
+        district_title_bn:
+          type: string
+        district_bbs_code:
+          type: string
+        is_sadar_district:
+          type: integer
+        upazila_title_en:
+          type: string
+        upazila_title_bn:
+          type: string
+        upazila_bbs_code:
+          type: string
+        is_sadar_upazila:
+          type: integer
+        address:
+          type: string
+        address_en:
+          type: string
+        location_latitude:
+          type: string
+        location_longitude:
+          type: string
+        google_map_src:
+          type: string
+        row_status:
+          type: integer
+        batches:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              number_of_seat:
+                type: integer
+              registration_start_date:
+                type: string
+              registration_end_date:
+                type: string
+              batch_start_date:
+                type: string
+              batch_end_date:
+                type: string
+              available_seats:
+                type: integer
+              batch_row_status:
+                type: integer
   parameters:
     country:
       name: country
@@ -3447,6 +3556,13 @@ components:
       schema:
         type: string
         example: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+    description_en:
+      name: description_en
+      in: query
+      required: false
+      schema:
+        type: string
+        example: Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
     program_id:
       name: program_id
       required: true
@@ -3533,3 +3649,25 @@ components:
             items:
               type: integer
               uniqueItems: true
+    courseId:
+      name: courseId
+      in: path
+      description: course id to get training centers with batches
+      required: true
+      schema:
+        type: integer
+        example: '1'
+    active:
+      name: active
+      in: query
+      description: get all active batches
+      schema:
+        type: boolean
+        example: true
+    upcoming:
+      name: upcoming
+      in: query
+      description: get all upcoming batches
+      schema:
+        type: boolean
+        example: true
