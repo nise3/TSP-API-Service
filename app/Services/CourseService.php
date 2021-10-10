@@ -444,6 +444,8 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+
+        $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,

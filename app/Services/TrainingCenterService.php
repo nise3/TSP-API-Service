@@ -281,7 +281,7 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'title_en' => 'required|string|max: 500',
+            'title_en' => 'nullable|string|max: 500',
             'title' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',

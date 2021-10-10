@@ -6,10 +6,10 @@
     },
     "servers": [
         {
-            "url": "http://institute.local:8009/api/v1/"
+            "url": "http://localhost:8001/api/v1"
         },
         {
-            "url": "http://localhost:8001/api/v1"
+            "url": "http://institute.local:8009/api/v1/"
         },
         {
             "url": "https://api.bus.softbd.xyz/institute/api/v1/"
@@ -1712,13 +1712,16 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description_en"
                     },
                     {
                         "name": "logo",
@@ -1842,13 +1845,16 @@
                         "$ref": "#/components/parameters/institute_id"
                     },
                     {
-                        "$ref": "#/components/parameters/title_en"
+                        "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title"
                     },
                     {
                         "$ref": "#/components/parameters/description"
+                    },
+                    {
+                        "$ref": "#/components/parameters/description_en"
                     },
                     {
                         "name": "logo",
@@ -3938,7 +3944,12 @@
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     },
                     "created_by": {
                         "type": "integer"
@@ -4120,8 +4131,8 @@
                         "example": 1
                     },
                     "application_form_settings": {
-                        "type": "string",
-                        "format": "json"
+                        "type": "array",
+                        "example": 1
                     },
                     "created_by": {
                         "type": "string",
@@ -4878,6 +4889,15 @@
             },
             "description": {
                 "name": "description",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string",
+                    "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                }
+            },
+            "description_en": {
+                "name": "description_en",
                 "in": "query",
                 "required": false,
                 "schema": {
