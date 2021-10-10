@@ -306,11 +306,18 @@ class InstituteService
 
         Log::info(json_encode($userPostField));
 
-        return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
-            return $e;
-        })->json();
+        return Http::retry(3)
+            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->post($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
     }
 
+    /**
+     * @throws RequestException
+     */
     public function createRegisterUser(array $data)
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-registration';
@@ -326,9 +333,13 @@ class InstituteService
             'password' => $data['password']
         ];
 
-        return Http::retry(3)->post($url, $userPostField)->throw(function ($response, $e) {
-            return $e;
-        })->json();
+        return Http::retry(3)
+            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->post($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
