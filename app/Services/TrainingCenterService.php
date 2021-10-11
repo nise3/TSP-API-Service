@@ -281,19 +281,19 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'title_en' => 'nullable|string|max: 500',
-            'title' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
             'center_location_type' => 'nullable|int',
-            'address' => ['nullable', 'string'],
-            'address_en' => ['nullable', 'string'],
-            'google_map_src' => ['nullable', 'string'],
+            'title' => 'required|string|max: 1000',
+            'title_en' => 'nullable|string|max: 500',
             'loc_division_id' => ['nullable', 'integer'],
             'loc_district_id' => ['nullable', 'integer'],
             'loc_upazila_id' => ['nullable', 'integer'],
             'location_latitude' => ['nullable', 'string'],
             'location_longitude' => ['nullable', 'string'],
+            'google_map_src' => ['nullable', 'string'],
+            'address' => ['nullable', 'string'],
+            'address_en' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
