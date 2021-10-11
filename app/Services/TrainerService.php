@@ -469,15 +469,10 @@ class TrainerService
         ];
 
         $rules = [
-            'trainer_name_en' => [
-                'nullable',
-                'string',
-                'max:250'
-            ],
-            'trainer_name' => [
+            'institute_id' => [
                 'required',
-                'string',
-                'max:500'
+                'int',
+                'exists:institutes,id'
             ],
             'branch_id' => [
                 'nullable',
@@ -489,10 +484,15 @@ class TrainerService
                 'int',
                 'exists:training_centers,id'
             ],
-            'institute_id' => [
+            'trainer_name' => [
                 'required',
-                'int',
-                'exists:institutes,id'
+                'string',
+                'max:500'
+            ],
+            'trainer_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
             ],
             'trainer_registration_number' => [
                 'required',
@@ -520,6 +520,22 @@ class TrainerService
                 'string'
             ],
             'about_me_en' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification_en' => [
+                'nullable',
+                'string'
+            ],
+            'skills' => [
+                'nullable',
+                'string'
+            ],
+            'skills_en' => [
                 'nullable',
                 'string'
             ],
@@ -596,22 +612,6 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'educational_qualification' => [
-                'nullable',
-                'string'
-            ],
-            'educational_qualification_en' => [
-                'nullable',
-                'string'
-            ],
-            'skills' => [
-                'nullable',
-                'string'
-            ],
-            'skills_en' => [
-                'nullable',
-                'string'
-            ],
             'photo' => [
                 'nullable',
                 'string'
@@ -624,8 +624,14 @@ class TrainerService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => [
+                'nullable',
+                'integer',
+            ],
+            'updated_by' => [
+                'nullable',
+                'integer',
+            ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
