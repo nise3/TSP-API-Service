@@ -540,11 +540,11 @@ class TrainerService
                 'string'
             ],
             'gender' => [
-                'nullable',
+                'required',
                 'integer'
             ],
             'marital_status' => [
-                'nullable',
+                'required',
                 'integer'
             ],
             'religion' => [
