@@ -26,6 +26,36 @@ abstract class BaseModel extends Model
     public const INSTITUTE_TYPE_NON_GOVT = 2;
     public const INSTITUTE_TYPE_OTHERS_ = 3;
 
+    /** Religions Mapping  */
+    public const RELIGION_ISLAM = 1;
+    public const RELIGION_HINDUISM = 2;
+    public const RELIGION_CHRISTIANITY = 3;
+    public const RELIGION_BUDDHISM = 4;
+    public const RELIGION_JUDAISM  = 5;
+    public const RELIGION_SIKHISM  = 6;
+    public const RELIGION_ETHNIC  = 7;
+    public const RELIGION_AGNOSTIC_ATHEIST = 8;
+
+    /** Youth Identity Type */
+    public const IDENTITY_TYPE_NID = 1;
+    public const IDENTITY_TYPE_BCERT = 2;
+    public const IDENTITY_TYPE_PASSPORT = 3;
+
+    /** Marital Statuses */
+    public const MARITAL_STATUS_SINGLE = 1;
+    public const MARITAL_STATUS_MARRIED = 2;
+    public const MARITAL_STATUS_WIDOWED = 3;
+    public const MARITAL_STATUS_DIVORCED = 4;
+
+    /** Gender Statuses */
+    public const MALE = 1;
+    public const FEMALE = 2;
+    public const OTHERS = 3;
+    public const GENDERS = [
+        self::MALE,
+        self::FEMALE,
+        self::OTHERS
+    ];
 
     public const ETHNIC_GROUP_INFO = 'ethnic_group_info';
     public const FREEDOM_FIGHTER_INFO = 'freedom_fighter_info';
@@ -39,8 +69,6 @@ abstract class BaseModel extends Model
 
     /** Institute User Type*/
     public const INSTITUTE_USER = 3;
-
-
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
