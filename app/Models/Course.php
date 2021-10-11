@@ -41,6 +41,8 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
+    use ScopeRowStatusTrait;
+
     protected $table = 'courses';
     protected $guarded = ['id'];
 

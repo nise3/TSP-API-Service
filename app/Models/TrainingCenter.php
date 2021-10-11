@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrainingCenter extends BaseModel
 {
-
+    use ScopeRowStatusTrait;
     /**
      * @var string[]
      */

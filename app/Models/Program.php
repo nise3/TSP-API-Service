@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Program extends BaseModel
 {
-
+    use ScopeRowStatusTrait;
     /**
      * @var string[]
      */
