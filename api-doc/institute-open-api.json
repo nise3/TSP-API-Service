@@ -3856,14 +3856,15 @@
                     "program_id": {
                         "type": "integer"
                     },
-                    "title_en": {
-                        "type": "string",
-                        "maxLength": 500,
-                        "minLength": 2
-                    },
                     "title": {
                         "type": "string",
                         "maxLength": 1000,
+                        "minLength": 2
+                    },
+
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
                         "minLength": 2
                     },
                     "course_fee": {
@@ -3923,6 +3924,12 @@
                     "cover_image": {
                         "type": "string"
                     },
+                    "application_form_settings": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
                     "row_status": {
                         "type": "integer",
                         "enum": [
@@ -3930,12 +3937,6 @@
                             0
                         ],
                         "example": 1
-                    },
-                    "application_form_settings": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
                     },
                     "created_by": {
                         "type": "string",
@@ -3961,8 +3962,7 @@
                 "required": [
                     "code",
                     "institute_id",
-                    "title",
-                    "course_fee"
+                    "title"
                 ]
             },
             "trainers": {

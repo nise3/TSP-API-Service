@@ -205,12 +205,12 @@ class CourseService
                 ->whereNull('institutes.deleted_at');
         });
 
-        $courseBuilder->join("branches", function ($join) {
+        $courseBuilder->leftJoin("branches", function ($join) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
         });
 
-        $courseBuilder->join("programs", function ($join) {
+        $courseBuilder->leftJoin("programs", function ($join) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
         });
@@ -482,18 +482,6 @@ class CourseService
             ]
         ];
         $rules = [
-            'title_en' => [
-                'nullable',
-                'string',
-                'max:255',
-                'min:2'
-            ],
-            'title' => [
-                'required',
-                'string',
-                'max:1000',
-                'min:2'
-            ],
             'code' => [
                 'required',
                 'string',
@@ -505,20 +493,36 @@ class CourseService
                 'int',
                 'exists:institutes,id'
             ],
+
+            'branch_id' => [
+                'nullable',
+                'int',
+                'exists:programs,id'
+            ],
             'program_id' => [
                 'nullable',
                 'int',
                 'exists:programs,id'
             ],
-            'course_fee' => [
+            'title' => [
                 'required',
+                'string',
+                'max:1000',
+                'min:2'
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:255',
+                'min:2'
+            ],
+            'course_fee' => [
+                'nullable',
                 'numeric',
-                'min:0'
             ],
             'duration' => [
                 'nullable',
                 'numeric',
-                'max: 14',
             ],
             'description' => [
                 'nullable',
@@ -528,25 +532,18 @@ class CourseService
                 'nullable',
                 'string'
             ],
-            'target_group_en' => [
-                'nullable',
-                'string',
-                'max: 500',
-            ],
             'target_group' => [
                 'nullable',
                 'string',
                 'max: 1000',
             ],
+            'target_group_en' => [
+                'nullable',
+                'string',
+                'max: 500',
+            ],
             'objectives' => [
                 'nullable',
-                'string'
-            ],
-            'application_form_settings' => [
-                'array',
-                'nullable'
-            ],
-            'application_form_settings.*' => [
                 'string'
             ],
             'objectives_en' => [
@@ -561,6 +558,7 @@ class CourseService
                 'nullable',
                 'string'
             ],
+
             'training_methodology' => [
                 'nullable',
                 'string',
@@ -600,7 +598,14 @@ class CourseService
             'cover_image' => [
                 'nullable',
                 'string',
-                'max:191',
+                'max:500',
+            ],
+            'application_form_settings' => [
+                'array',
+                'nullable'
+            ],
+            'application_form_settings.*' => [
+                'string'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
