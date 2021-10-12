@@ -101,33 +101,33 @@
                                     "data": [
                                         {
                                             "id": 1,
-                                            "institute_type_id": null,
-                                            "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
-                                            "title": "Johnathon Monahan",
-                                            "title_en": "Prof. Johann Kuhic V",
-                                            "domain": "https://leannon.com",
-                                            "loc_division_id": 2,
-                                            "division_title": "চট্টগ্রাম",
-                                            "division_title_en": "Chittagong",
-                                            "loc_district_id": 10,
-                                            "district_title": "চট্টগ্রাম",
-                                            "district_title_en": "CHITTAGONG",
+                                            "institute_type_id": 0,
+                                            "code": "aut-consequatur-beatae-ipsa-qui-perferendis-porro-eos-reprehenderit-fugiat-soluta-unde-quis-quis-vero-iure-nobis-officiis-modi-porro",
+                                            "title": "Miss Leslie Spencer",
+                                            "title_en": "Tiara Gleichner",
+                                            "domain": "https://nicolas.com",
+                                            "loc_division_id": 3,
+                                            "division_title": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
                                             "loc_upazila_id": null,
                                             "upazila_title": null,
                                             "upazila_title_en": null,
-                                            "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                            "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                            "location_latitude": "91.815526",
-                                            "location_longitude": "91.815526",
-                                            "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                            "address": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "address_en": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "location_latitude": "90.399402",
+                                            "location_longitude": "90.399402",
+                                            "google_map_src": "Rerum eum quae repellendus sunt.",
                                             "logo": "softbd.jpg",
                                             "country": "BD",
                                             "phone_code": "880",
-                                            "primary_phone": "848-784-6590",
+                                            "primary_phone": "+1-351-372-0784",
                                             "phone_numbers": null,
-                                            "primary_mobile": "01730550213",
-                                            "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
-                                            "email": "robel.meghan@gmail.com",
+                                            "primary_mobile": "01769141689",
+                                            "mobile_numbers": "[\"01760981346\",\"01787431992\"]",
+                                            "email": "ellsworth.dickens@hauck.info",
                                             "name_of_the_office_head": null,
                                             "name_of_the_office_head_en": null,
                                             "name_of_the_office_head_designation": null,
@@ -138,12 +138,12 @@
                                             "contact_person_email": "",
                                             "contact_person_designation": "",
                                             "contact_person_designation_en": "",
-                                            "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                            "config": "Adipisci enim voluptas hic quaerat quibusdam ex ad.",
                                             "row_status": 1,
                                             "created_by": null,
                                             "updated_by": null,
-                                            "created_at": "2021-10-11T09:59:48.000000Z",
-                                            "updated_at": "2021-10-11T09:59:48.000000Z",
+                                            "created_at": "2021-10-12T13:15:03.000000Z",
+                                            "updated_at": "2021-10-12T13:15:03.000000Z",
                                             "deleted_at": null
                                         }
                                     ],
@@ -181,33 +181,33 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "institute_type_id": null,
-                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
-                                        "title": "Johnathon Monahan",
-                                        "title_en": "Prof. Johann Kuhic V",
-                                        "domain": "https://leannon.com",
-                                        "loc_division_id": 2,
-                                        "division_title": "চট্টগ্রাম",
-                                        "division_title_en": "Chittagong",
-                                        "loc_district_id": 10,
-                                        "district_title": "চট্টগ্রাম",
-                                        "district_title_en": "CHITTAGONG",
+                                        "institute_type_id": 0,
+                                        "code": "aut-consequatur-beatae-ipsa-qui-perferendis-porro-eos-reprehenderit-fugiat-soluta-unde-quis-quis-vero-iure-nobis-officiis-modi-porro",
+                                        "title": "Miss Leslie Spencer",
+                                        "title_en": "Tiara Gleichner",
+                                        "domain": "https://nicolas.com",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "location_latitude": "91.815526",
-                                        "location_longitude": "91.815526",
-                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "address": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                        "address_en": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                        "location_latitude": "90.399402",
+                                        "location_longitude": "90.399402",
+                                        "google_map_src": "Rerum eum quae repellendus sunt.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "848-784-6590",
+                                        "primary_phone": "+1-351-372-0784",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01730550213",
-                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
-                                        "email": "robel.meghan@gmail.com",
+                                        "primary_mobile": "01769141689",
+                                        "mobile_numbers": "[\"01760981346\",\"01787431992\"]",
+                                        "email": "ellsworth.dickens@hauck.info",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
@@ -218,12 +218,12 @@
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
                                         "contact_person_designation_en": "",
-                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "config": "Adipisci enim voluptas hic quaerat quibusdam ex ad.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-11T09:59:48.000000Z",
-                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "created_at": "2021-10-12T13:15:03.000000Z",
+                                        "updated_at": "2021-10-12T13:15:03.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -537,7 +537,7 @@
                     "training-centers"
                 ],
                 "summary": "get_list",
-                "description": "API endpoint to get list of  training centers.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get list of training centers.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
@@ -569,9 +569,6 @@
                         "description": "success",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -624,7 +621,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/training-centers"
+                                "$ref": "#/components/schemas/trainingCenters"
                             }
                         }
                     }
@@ -634,9 +631,6 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4",
@@ -687,15 +681,12 @@
                     "training-centers"
                 ],
                 "summary": "get_one",
-                "description": " API endpoint to get a  training center id.A successful request response will show 200 HTTP status code",
+                "description": " API endpoint to get a  training center id. A successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -756,7 +747,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/training-centers"
+                                "$ref": "#/components/schemas/trainingCenters"
                             }
                         }
                     }
@@ -766,9 +757,6 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 31,
@@ -824,9 +812,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/training-centers"
-                                },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
@@ -876,9 +861,6 @@
                         "description": "success",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -975,14 +957,20 @@
                         "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/branches"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4ss",
@@ -1032,9 +1020,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -1084,67 +1069,22 @@
                             "type": "integer",
                             "example": "1"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "dhaka 1112"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/branches"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Update",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 31,
@@ -1198,9 +1138,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/branches"
-                                },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
@@ -1250,9 +1187,6 @@
                         "description": "success",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": [
                                         {
@@ -1289,45 +1223,20 @@
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a program.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/code_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "$ref": "#/components/parameters/description_en"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/programs"
+                            }
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": {
                                         "title_en": "PROGRAMME ON RMG4",
@@ -1380,9 +1289,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -1422,45 +1328,22 @@
                             "type": "integer",
                             "example": "1"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/code_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/description"
-                    },
-                    {
-                        "$ref": "#/components/parameters/description_en"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/programs"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 31,
@@ -1512,9 +1395,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
@@ -1570,9 +1450,6 @@
                         "description": "success",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/batches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -1632,89 +1509,20 @@
                 ],
                 "summary": "create",
                 "description": "API endpoint to create a course.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/course_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/training_center_id"
-                    },
-                    {
-                        "name": "number_of_seats",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "44"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batches"
+                            }
                         }
-                    },
-                    {
-                        "name": "registration_start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-09-05"
-                        }
-                    },
-                    {
-                        "name": "registration_end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-09-20"
-                        }
-                    },
-                    {
-                        "name": "batch_start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-10-05"
-                        }
-                    },
-                    {
-                        "name": "batch_end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-11-05"
-                        }
-                    },
-                    {
-                        "name": "available_seats",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "20"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/batches"
-                                },
                                 "example": {
                                     "data": {
                                         "institute_id": "1",
@@ -1781,9 +1589,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/batches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -1849,89 +1654,22 @@
                             "type": "integer",
                             "example": "1"
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/course_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/training_center_id"
-                    },
-                    {
-                        "name": "number_of_seats",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "example": "44"
-                        }
-                    },
-                    {
-                        "name": "registration_start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-09-05"
-                        }
-                    },
-                    {
-                        "name": "registration_end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-09-20"
-                        }
-                    },
-                    {
-                        "name": "batch_start_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-10-05"
-                        }
-                    },
-                    {
-                        "name": "batch_end_date",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2021-11-05"
-                        }
-                    },
-                    {
-                        "name": "available_seats",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "20"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batches"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Updated",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/batches"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
@@ -2000,9 +1738,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/batches"
-                                },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
@@ -2023,11 +1758,17 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
-                    },
-                    {
-                        "$ref": "#/components/parameters/trainerIds"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainerBatch"
+                            }
+                        }
+                    }
+                },
                 "tags": [
                     "batches"
                 ],
@@ -2037,9 +1778,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/trainerBatch"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 13,
@@ -3260,16 +2998,6 @@
                 "type": "object",
                 "description": "Programmes management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": true
-                    },
-                    "code": {
-                        "type": "string"
-                    },
-                    "institute_id": {
-                        "type": "integer"
-                    },
                     "title_en": {
                         "type": "string",
                         "maxLength": 300,
@@ -3280,41 +3008,33 @@
                         "maxLength": 800,
                         "minLength": 2
                     },
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "code": {
+                        "type": "string"
+                    },
                     "description": {
+                        "type": "string"
+                    },
+                    "description_en": {
                         "type": "string"
                     },
                     "logo": {
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
-                    },
-                    "create_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     }
                 },
                 "required": [
-                    "code",
                     "institute_id",
-                    "title",
-                    "title_en"
+                    "title"
                 ]
             },
             "institutesCreate": {
@@ -3584,6 +3304,14 @@
                     },
                     "config": {
                         "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     }
                 },
                 "required": [
@@ -3680,14 +3408,10 @@
                     "password_confirmation"
                 ]
             },
-            "training-centers": {
+            "trainingCenters": {
                 "type": "object",
                 "description": "Training Center management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": true
-                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -3704,14 +3428,14 @@
                         ],
                         "example": 1
                     },
-                    "title_en": {
-                        "type": "string",
-                        "maxLength": 500,
-                        "minLength": 2
-                    },
                     "title": {
                         "type": "string",
                         "maxLength": 1000,
+                        "minLength": 2
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
                         "minLength": 2
                     },
                     "loc_division_id": {
@@ -3722,12 +3446,6 @@
                     },
                     "loc_upazila_id": {
                         "type": "integer"
-                    },
-                    "address": {
-                        "type": "string"
-                    },
-                    "address_en": {
-                        "type": "string"
                     },
                     "location_latitude": {
                         "type": "string"
@@ -3738,6 +3456,12 @@
                     "google_map_src": {
                         "type": "string"
                     },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
                     "row_status": {
                         "type": "integer",
                         "enum": [
@@ -3745,39 +3469,17 @@
                             0
                         ],
                         "example": 1
-                    },
-                    "created_by": {
-                        "type": "integer"
-                    },
-                    "updated_by": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
                     }
                 },
                 "required": [
                     "institute_id",
-                    "title",
-                    "center_location_type"
+                    "title"
                 ]
             },
             "branches": {
                 "type": "object",
                 "description": "Branches management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": true
-                    },
                     "title_en": {
                         "type": "string",
                         "maxLength": 250,
@@ -3788,13 +3490,7 @@
                         "maxLength": 600,
                         "minLength": 2
                     },
-                    "loc_division_id": {
-                        "type": "integer"
-                    },
-                    "loc_district_id": {
-                        "type": "integer"
-                    },
-                    "loc_upazila_id": {
+                    "institute_id": {
                         "type": "integer"
                     },
                     "address": {
@@ -3806,33 +3502,26 @@
                     "google_map_src": {
                         "type": "string"
                     },
-                    "row_status": {
+                    "loc_division_id": {
                         "type": "integer"
                     },
-                    "created_by": {
-                        "type": "string",
-                        "format": "date-time"
+                    "loc_district_id": {
+                        "type": "integer"
                     },
-                    "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
+                    "loc_upazila_id": {
+                        "type": "integer"
                     },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
                     }
                 },
                 "required": [
                     "institute_id",
-                    "title_en",
                     "title"
                 ]
             },
@@ -4157,14 +3846,7 @@
                 "type": "object",
                 "description": "Batch management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": false
-                    },
                     "institute_id": {
-                        "type": "integer"
-                    },
-                    "program_id": {
                         "type": "integer"
                     },
                     "branch_id": {
@@ -4198,78 +3880,6 @@
                     "available_seats": {
                         "type": "integer"
                     },
-                    "in_ethnic_group": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "disability_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "ssc_passing_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "hsc_passing_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "honors_passing_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "masters_passing_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "is_occupation_needed": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "is_guardian_info_needed": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
                     "row_status": {
                         "type": "integer",
                         "enum": [
@@ -4277,32 +3887,19 @@
                             1
                         ],
                         "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "create_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
+                        "default": 1
                     }
                 },
                 "required": [
+                    "institute_id",
                     "training_center_id",
-                    "course_id"
+                    "course_id",
+                    "number_of_seats",
+                    "registration_start_date",
+                    "registration_end_date",
+                    "batch_start_date",
+                    "batch_end_date",
+                    "available_seats"
                 ]
             },
             "trainingCentersWithBatches": {

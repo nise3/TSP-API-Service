@@ -14,6 +14,7 @@ use Illuminate\Http\Client\RequestException as IlluminateRequestException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use ParseError;
@@ -96,6 +97,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof BadMethodCallException) {
             $errors['_response_status']['message'] = "Bad Method has been Called";
         } elseif ($e instanceof ErrorException) {
+            Log::info($e);
             $errors['_response_status']['message'] = "Internal Server Side Error";
         } elseif ($e instanceof TypeError) {
             $errors['_response_status']['message'] = "Type Error";

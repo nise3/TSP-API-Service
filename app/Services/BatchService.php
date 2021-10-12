@@ -396,11 +396,6 @@ class BatchService
             ]
         ];
         $rules = [
-            'course_id' => [
-                'required',
-                'int',
-                'exists:courses,id'
-            ],
             'institute_id' => [
                 'required',
                 'int',
@@ -415,6 +410,11 @@ class BatchService
                 'required',
                 'int',
                 'exists:training_centers,id'
+            ],
+            'course_id' => [
+                'required',
+                'int',
+                'exists:courses,id'
             ],
             'number_of_seats' => [
                 'required',

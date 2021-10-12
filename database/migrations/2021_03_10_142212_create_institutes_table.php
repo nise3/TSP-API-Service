@@ -44,11 +44,11 @@ class CreateInstitutesTable extends Migration
             $table->string("name_of_the_office_head_designation", 500)->nullable();
             $table->string("name_of_the_office_head_designation_en")->nullable();
             $table->string('contact_person_name', 500);
-            $table->string('contact_person_name_en', 250);
+            $table->string('contact_person_name_en', 250)->nullable();
             $table->string('contact_person_mobile', 15);
             $table->string('contact_person_email', 191);
             $table->string('contact_person_designation', 500);
-            $table->string('contact_person_designation_en', 300);
+            $table->string('contact_person_designation_en', 300)->nullable();
             $table->text('config')->nullable();
 
             $table->unsignedTinyInteger('row_status')->default(1);

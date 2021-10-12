@@ -457,10 +457,10 @@ class InstituteService
             ],
 
             'code' => [
+                'unique:institutes,code,' . $id,
                 'required',
                 'string',
                 'max:150',
-                'unique:institutes,code,' . $id
             ],
 
             'title' => [
@@ -476,9 +476,9 @@ class InstituteService
             ],
 
             'domain' => [
+                'unique:institutes,domain,' . $id,
                 'nullable',
                 'string',
-                'unique:institutes,domain,' . $id,
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191'
             ],
@@ -606,7 +606,6 @@ class InstituteService
                 'nullable',
                 'string'
             ],
-
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
