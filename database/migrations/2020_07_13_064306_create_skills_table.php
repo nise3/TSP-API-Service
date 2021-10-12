@@ -15,7 +15,7 @@ class CreateSkillsTable extends Migration
         Schema::create('skills', function (Blueprint $table) {
             $table->mediumIncrements('id');
             $table->string('title', 400);
-            $table->string('title_en', 191)->nullable();
+            $table->string('title_en', 200)->nullable();
             $table->softDeletes();
         });
     }
