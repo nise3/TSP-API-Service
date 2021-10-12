@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,6 +36,7 @@ use Illuminate\Support\Carbon;
  */
 class Trainer extends BaseModel
 {
+    use ScopeRowStatusTrait;
     protected $guarded = ['id'];
 
     protected $casts = [
