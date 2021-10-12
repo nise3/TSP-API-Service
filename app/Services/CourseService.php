@@ -44,25 +44,37 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
-                'courses.title_en',
-                'courses.title',
                 'courses.institute_id',
-                'institutes.title_en as institute_title_en',
                 'institutes.title as institute_title',
-                'programs.title_en as program_title_en',
-                'programs.title as program_title',
-                'courses.course_fee',
+                'institutes.title_en as institute_title_en',
+                'courses.branch_id',
+                'branches.title as branch_title',
+                'branches.title_en as branch_title_en',
                 'courses.program_id',
+                'programs.title as program_title',
+                'programs.title_en as program_title_en',
+                'courses.title',
+                'courses.title_en',
+                'courses.course_fee',
                 'courses.duration',
                 'courses.description',
                 'courses.description_en',
                 'courses.target_group',
                 'courses.target_group_en',
+                'courses.objectives',
+                'courses.objectives_en',
+                'courses.contents',
+                'courses.contents_en',
+                'courses.training_methodology',
+                'courses.training_methodology_en',
+                'courses.evaluation_system',
+                'courses.evaluation_system_en',
                 'courses.prerequisite',
                 'courses.prerequisite_en',
                 'courses.eligibility',
                 'courses.eligibility_en',
                 'courses.cover_image',
+                'courses.application_form_settings',
                 'courses.row_status',
                 'courses.created_by',
                 'courses.updated_by',
@@ -80,7 +92,15 @@ class CourseService
             }
         });
 
-        $coursesBuilder->join("programs", function ($join) use ($rowStatus) {
+        $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
+            $join->on('courses.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            if (is_int($rowStatus)) {
+                $join->where('branches.row_status', $rowStatus);
+            }
+        });
+
+        $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
             if (is_int($rowStatus)) {
@@ -140,14 +160,17 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
-                'courses.title_en',
-                'courses.title',
                 'courses.institute_id',
-                'institutes.title_en as institute_title_en',
                 'institutes.title as institute_title',
-                'programs.title_en as program_title_en',
-                'programs.title as program_title',
+                'institutes.title_en as institute_title_en',
+                'courses.branch_id',
+                'branches.title as branch_title',
+                'branches.title_en as branch_title_en',
                 'courses.program_id',
+                'programs.title as program_title',
+                'programs.title_en as program_title_en',
+                'courses.title',
+                'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.description',
@@ -167,6 +190,7 @@ class CourseService
                 'courses.eligibility',
                 'courses.eligibility_en',
                 'courses.cover_image',
+                'courses.application_form_settings',
                 'courses.row_status',
                 'courses.created_by',
                 'courses.updated_by',
@@ -179,6 +203,11 @@ class CourseService
         $courseBuilder->join("institutes", function ($join) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
+        });
+
+        $courseBuilder->join("branches", function ($join) {
+            $join->on('courses.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
         });
 
         $courseBuilder->join("programs", function ($join) {
