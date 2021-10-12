@@ -433,6 +433,16 @@ class InstituteService
             'row_status.in' => [
                 'code' => 30000,
                 'message' => 'Row status must be within 1 or 0'
+            ],
+            "password.regex" => [
+                "code" => "",
+                "message" => [
+                    "Have At least one Uppercase letter",
+                    "At least one Lower case letter",
+                    "Also,At least one numeric value",
+                    "And, At least one special character",
+                    "Must be more than 8 characters long"
+                ]
             ]
         ];
 
@@ -443,19 +453,7 @@ class InstituteService
             ],
             "institute_type_id" => [
                 "required",
-                "numeric"
-            ],
-            'title' => [
-                'required',
-                'string',
-                'max:1000',
-
-            ],
-            'title_en' => [
-                'required',
-                'string',
-                'max:500',
-                'min:2'
+                "int"
             ],
 
             'code' => [
@@ -464,12 +462,25 @@ class InstituteService
                 'max:150',
                 'unique:institutes,code,' . $id
             ],
+
+            'title' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+
             'domain' => [
                 'nullable',
                 'string',
+                'unique:institutes,domain,' . $id,
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
-                'max:191',
-                'unique:institutes,domain,' . $id
+                'max:191'
             ],
             'loc_division_id' => [
                 'nullable',
@@ -483,14 +494,6 @@ class InstituteService
                 'nullable',
                 'int'
             ],
-            'address' => [
-                'nullable',
-                'string'
-            ],
-            'address_en' => [
-                'nullable',
-                'string'
-            ],
             'location_latitude' => [
                 'nullable',
                 'string',
@@ -502,6 +505,14 @@ class InstituteService
                 'max:50'
             ],
             'google_map_src' => [
+                'nullable',
+                'string'
+            ],
+            'address' => [
+                'nullable',
+                'string'
+            ],
+            'address_en' => [
                 'nullable',
                 'string'
             ],
@@ -559,7 +570,7 @@ class InstituteService
                 "max:500"
             ],
             'name_of_the_office_head_designation_en' => [
-                "required",
+                "nullable",
                 "string",
                 "max:500"
             ],
@@ -569,7 +580,7 @@ class InstituteService
                 'min:2'
             ],
             'contact_person_name_en' => [
-                'required',
+                'nullable',
                 'max: 250',
                 'min:2'
             ],
@@ -587,7 +598,7 @@ class InstituteService
                 "min:2"
             ],
             'contact_person_designation_en' => [
-                'required',
+                'nullable',
                 'max: 300',
                 "min:2"
             ],
@@ -617,7 +628,7 @@ class InstituteService
                 'min:2',
             ],
             'title_en' => [
-                'required',
+                'nullable',
                 'string',
                 'max:500',
                 'min:2'
@@ -638,7 +649,7 @@ class InstituteService
                 'required',
                 'email',
             ],
-            'mobile' => [
+            'primary_mobile' => [
                 'required',
                 BaseModel::MOBILE_REGEX
             ],
@@ -700,7 +711,7 @@ class InstituteService
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
-            'page' => 'numeric|gt:0',
+            'page' => 'integer|gt:0',
             "institute_type_id" => [
                 "nullable",
                 "int"

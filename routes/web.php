@@ -31,7 +31,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     //$router->get('courses', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
 
     /** institute registration */
-    $router->post("institute-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
+    $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
 
     /** Course All batches / Active batches / Up-coming batches */
     $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);

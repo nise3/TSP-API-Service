@@ -1,12 +1,26 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Institute root",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "title": "Institute management api service",
+        "description": "",
+        "termsOfService": "",
+        "contact": {},
+        "license": {
+            "name": ""
+        }
     },
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
     "servers": [
         {
             "url": "http://localhost:8001/api/v1"
+        },
+        {
+            "url": "http://localhost:8002/api/v1"
         },
         {
             "url": "http://institute.local:8009/api/v1/"
@@ -18,7 +32,8 @@
     "paths": {
         "/": {
             "get": {
-                "summary": "Institute Api Service Information",
+                "summary": "Institute Api Service",
+                "description": "Institute management API service",
                 "responses": {
                     "200": {
                         "description": "success",
@@ -81,41 +96,55 @@
                         "description": "success",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title_en": "Hellen Mante",
-                                            "title": "Brenda McDermott",
-                                            "code": "PG",
+                                            "institute_type_id": null,
+                                            "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
+                                            "title": "Johnathon Monahan",
+                                            "title_en": "Prof. Johann Kuhic V",
+                                            "domain": "https://leannon.com",
+                                            "loc_division_id": 2,
+                                            "division_title": "চট্টগ্রাম",
+                                            "division_title_en": "Chittagong",
+                                            "loc_district_id": 10,
+                                            "district_title": "চট্টগ্রাম",
+                                            "district_title_en": "CHITTAGONG",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                            "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                            "location_latitude": "91.815526",
+                                            "location_longitude": "91.815526",
+                                            "google_map_src": "Natus error et illum eos nam dolorum quis.",
                                             "logo": "softbd.jpg",
-                                            "primary_phone": "641.838.9521",
-                                            "phone_numbers": "781.736.9309",
-                                            "primary_mobile": "1-678-953-7447",
-                                            "mobile_numbers": null,
-                                            "email": "runolfsson.stefan@shanahan.com",
-                                            "config": "Quia sapiente quaerat molestiae repudiandae quo maiores non.",
-                                            "loc_division_id": 1,
-                                            "division_title": "বরিশাল",
-                                            "division_title_en": "Barisal",
-                                            "loc_district_id": 1,
-                                            "district_title": "বরগুনা",
-                                            "district_title_en": "BARGUNA",
-                                            "loc_upazila_id": 1,
-                                            "upazila_title": "আমতলী ",
-                                            "upazila_title_en": "AMTALI",
-                                            "domain": "https://graham.net",
-                                            "address": "32553 Vilma Trace Apt. 827\nNorth Erinburgh, KY 30756-5747",
-                                            "google_map_src": "Inventore earum nihil velit magni.",
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": "848-784-6590",
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01730550213",
+                                            "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
+                                            "email": "robel.meghan@gmail.com",
+                                            "name_of_the_office_head": null,
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": null,
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "",
+                                            "contact_person_name_en": "",
+                                            "contact_person_mobile": "",
+                                            "contact_person_email": "",
+                                            "contact_person_designation": "",
+                                            "contact_person_designation_en": "",
+                                            "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
                                             "row_status": 1,
                                             "created_by": null,
                                             "updated_by": null,
-                                            "created_at": "2021-08-31T08:52:04.000000Z",
-                                            "updated_at": "2021-08-31T08:52:04.000000Z"
+                                            "created_at": "2021-10-11T09:59:48.000000Z",
+                                            "updated_at": "2021-10-11T09:59:48.000000Z",
+                                            "deleted_at": null
                                         }
                                     ],
                                     "_response_status": {
@@ -135,266 +164,68 @@
                 ],
                 "summary": "create",
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_type_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/permission_sub_group_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "name": "domain",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "https://www.developer.com"
-                        }
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "name": "address_en",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/location_latitude"
-                    },
-                    {
-                        "$ref": "#/components/parameters/location_longitude"
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/country"
-                    },
-                    {
-                        "$ref": "#/components/parameters/phone_code"
-                    },
-                    {
-                        "name": "primary_phone",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "phone_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "uniqueItems": true
-                                    },
-                                    "example": [
-                                        "9299292",
-                                        "9299293"
-                                    ]
-                                }
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/institutesCreate"
                             }
                         }
-                    },
-                    {
-                        "name": "primary_mobile",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "mobile_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "uniqueItems": true
-                                    },
-                                    "example": [
-                                        "01767111434",
-                                        "01767111444"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "example@gmail.com"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_mobile"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_email"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation_en"
-                    },
-                    {
-                        "name": "config",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "This is config"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "institute_type_id": null,
-                                            "code": "libero-adipisci-nesciunt-officia-hic-ipsam-animi-voluptates-doloremque-totam-dolor-eos-quia-eum-modi-molestias-quo-consequatur-magnam-placeat",
-                                            "title": "Mckenna Wisozk IV",
-                                            "title_en": "Tianna Hodkiewicz",
-                                            "domain": "https://walker.com",
-                                            "loc_division_id": 3,
-                                            "division_title": "ঢাকা",
-                                            "division_title_en": "Dhaka",
-                                            "loc_district_id": 18,
-                                            "district_title": "ঢাকা ",
-                                            "district_title_en": "DHAKA",
-                                            "loc_upazila_id": null,
-                                            "upazila_title": null,
-                                            "upazila_title_en": null,
-                                            "address": "6835 Triston Point\nSouth Burnice, CO 09375",
-                                            "address_en": "6835 Triston Point\nSouth Burnice, CO 09375",
-                                            "location_latitude": "90.399482",
-                                            "location_longitude": "90.399482",
-                                            "google_map_src": "Ipsa explicabo veniam vero.",
-                                            "logo": "softbd.jpg",
-                                            "country": "BD",
-                                            "phone_code": "880",
-                                            "primary_phone": "904.641.4062",
-                                            "phone_numbers": null,
-                                            "primary_mobile": "01785993885",
-                                            "mobile_numbers": "[\"01760268145\",\"01743588318\"]",
-                                            "email": "dolores62@rodriguez.org",
-                                            "name_of_the_office_head": null,
-                                            "name_of_the_office_head_en": null,
-                                            "name_of_the_office_head_designation": null,
-                                            "name_of_the_office_head_designation_en": null,
-                                            "contact_person_name": "",
-                                            "contact_person_name_en": "",
-                                            "contact_person_mobile": "",
-                                            "contact_person_email": "",
-                                            "contact_person_designation": "",
-                                            "contact_person_designation_en": "",
-                                            "config": "Autem nulla laboriosam molestiae alias facere.",
-                                            "row_status": 1,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "created_at": "2021-10-07T11:12:26.000000Z",
-                                            "updated_at": "2021-10-07T11:12:26.000000Z",
-                                            "deleted_at": null
-                                        }
-                                    ],
+                                    "data": {
+                                        "id": 1,
+                                        "institute_type_id": null,
+                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
+                                        "title": "Johnathon Monahan",
+                                        "title_en": "Prof. Johann Kuhic V",
+                                        "domain": "https://leannon.com",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "location_latitude": "91.815526",
+                                        "location_longitude": "91.815526",
+                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "logo": "softbd.jpg",
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": "848-784-6590",
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01730550213",
+                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
+                                        "email": "robel.meghan@gmail.com",
+                                        "name_of_the_office_head": null,
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": null,
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "",
+                                        "contact_person_name_en": "",
+                                        "contact_person_mobile": "",
+                                        "contact_person_email": "",
+                                        "contact_person_designation": "",
+                                        "contact_person_designation_en": "",
+                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-11T09:59:48.000000Z",
+                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "deleted_at": null
+                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -432,39 +263,36 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
                                         "institute_type_id": null,
-                                        "code": "aut-dicta-optio-consequatur-quibusdam-accusantium-doloremque-dolorem-molestias-necessitatibus-et-sed-et-sunt-est-iusto-fugit-dolore-dolorum-molestiae",
-                                        "title": "Dr. Vaughn Bayer",
-                                        "title_en": "Columbus Stroman",
-                                        "domain": "https://nicolas.com",
-                                        "loc_division_id": 3,
-                                        "division_title": "ঢাকা",
-                                        "division_title_en": "Dhaka",
-                                        "loc_district_id": 18,
-                                        "district_title": "ঢাকা ",
-                                        "district_title_en": "DHAKA",
+                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
+                                        "title": "Johnathon Monahan",
+                                        "title_en": "Prof. Johann Kuhic V",
+                                        "domain": "https://leannon.com",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
-                                        "address_en": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
-                                        "location_latitude": "90.399452",
-                                        "location_longitude": "90.399452",
-                                        "google_map_src": "Quis vel eos voluptas earum.",
+                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "location_latitude": "91.815526",
+                                        "location_longitude": "91.815526",
+                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "+1 (707) 380-8336",
+                                        "primary_phone": "848-784-6590",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01771829077",
-                                        "mobile_numbers": "[\"01778304350\",\"01726745158\"]",
-                                        "email": "wunsch.lawrence@abshire.net",
+                                        "primary_mobile": "01730550213",
+                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
+                                        "email": "robel.meghan@gmail.com",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
@@ -475,12 +303,12 @@
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
                                         "contact_person_designation_en": "",
-                                        "config": "Beatae officiis doloremque ut rerum autem aliquam dolorem.",
+                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-09T10:01:25.000000Z",
-                                        "updated_at": "2021-10-09T10:01:25.000000Z",
+                                        "created_at": "2021-10-11T09:59:48.000000Z",
+                                        "updated_at": "2021-10-11T09:59:48.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -509,243 +337,52 @@
                             "type": "integer",
                             "example": 1
                         }
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_type_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/code"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "name": "domain",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "https://www.developer.com"
-                        }
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "name": "address_en",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "Dhaka mirpur road 4 block 2"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/location_latitude"
-                    },
-                    {
-                        "$ref": "#/components/parameters/location_longitude"
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "name": "logo",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "default.jpg"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/country"
-                    },
-                    {
-                        "$ref": "#/components/parameters/phone_code"
-                    },
-                    {
-                        "name": "primary_phone",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "phone_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "uniqueItems": true
-                                    },
-                                    "example": [
-                                        "9299292",
-                                        "9299293"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "primary_mobile",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "01845654543"
-                        }
-                    },
-                    {
-                        "name": "mobile_numbers",
-                        "in": "query",
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string",
-                                        "uniqueItems": true
-                                    },
-                                    "example": [
-                                        "01767111434",
-                                        "01767111444"
-                                    ]
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "example@gmail.com"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation"
-                    },
-                    {
-                        "$ref": "#/components/parameters/name_of_the_office_head_designation_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_name_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_mobile"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_email"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation"
-                    },
-                    {
-                        "$ref": "#/components/parameters/contact_person_designation_en"
-                    },
-                    {
-                        "name": "config",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "This is config"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/institutesUpdate"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "updated",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
-                                    "data": {
+                                    "data":  {
                                         "id": 1,
                                         "institute_type_id": null,
-                                        "code": "aut-dicta-optio-consequatur-quibusdam-accusantium-doloremque-dolorem-molestias-necessitatibus-et-sed-et-sunt-est-iusto-fugit-dolore-dolorum-molestiae",
-                                        "title": "Dr. Vaughn Bayer",
-                                        "title_en": "Columbus Stroman",
-                                        "domain": "https://nicolas.com",
-                                        "loc_division_id": 3,
-                                        "division_title": "ঢাকা",
-                                        "division_title_en": "Dhaka",
-                                        "loc_district_id": 18,
-                                        "district_title": "ঢাকা ",
-                                        "district_title_en": "DHAKA",
+                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
+                                        "title": "Johnathon Monahan",
+                                        "title_en": "Prof. Johann Kuhic V",
+                                        "domain": "https://leannon.com",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
-                                        "address_en": "88096 Adelle Lane\nBrakusshire, WV 73556-9893",
-                                        "location_latitude": "90.399452",
-                                        "location_longitude": "90.399452",
-                                        "google_map_src": "Quis vel eos voluptas earum.",
+                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "location_latitude": "91.815526",
+                                        "location_longitude": "91.815526",
+                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "+1 (707) 380-8336",
+                                        "primary_phone": "848-784-6590",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01771829077",
-                                        "mobile_numbers": "[\"01778304350\",\"01726745158\"]",
-                                        "email": "wunsch.lawrence@abshire.net",
+                                        "primary_mobile": "01730550213",
+                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
+                                        "email": "robel.meghan@gmail.com",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
@@ -756,12 +393,12 @@
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
                                         "contact_person_designation_en": "",
-                                        "config": "Beatae officiis doloremque ut rerum autem aliquam dolorem.",
+                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-09T10:01:25.000000Z",
-                                        "updated_at": "2021-10-09T10:01:25.000000Z",
+                                        "created_at": "2021-10-11T09:59:48.000000Z",
+                                        "updated_at": "2021-10-11T09:59:48.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -798,9 +435,6 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
                                     "_response_status": {
                                         "success": true,
@@ -815,10 +449,10 @@
                 }
             }
         },
-        "/institute-registration": {
+        "/institute-open-registration": {
             "post": {
                 "tags": [
-                    "institute Registration"
+                    "institute Open Registration"
                 ],
                 "summary": "Registration",
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
@@ -826,7 +460,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/instituteRegister"
+                                "$ref": "#/components/schemas/instituteOpenRegistration"
                             }
                         }
                     }
@@ -836,39 +470,53 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/institutes"
-                                },
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4s",
-                                        "title": "আরএমজি-প্রোগ্রাম4s",
-                                        "code": "AE455K",
-                                        "domain": "https://develosper.com",
-                                        "address": "Dhaka mirpur road 4 block 2s",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYsmWfEXLQUDnm6",
-                                        "primary_phone": "01845654541",
-                                        "phone_numbers": [
-                                            "01845654542",
-                                            "01845654544"
-                                        ],
-                                        "primary_mobile": "01845654543",
-                                        "mobile_numbers": [
-                                            "01845654545",
-                                            "01845654546"
-                                        ],
-                                        "logo": "defasult.jpg",
-                                        "email": "exampsle@gmail.com",
-                                        "config": "This is configs",
-                                        "loc_division_id": "1",
-                                        "loc_district_id": "1",
-                                        "loc_upazila_id": "1",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T09:59:59.000000Z",
-                                        "created_at": "2021-09-05T09:59:59.000000Z",
-                                        "id": 11
+                                        "id": 1,
+                                        "institute_type_id": null,
+                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
+                                        "title": "Johnathon Monahan",
+                                        "title_en": "Prof. Johann Kuhic V",
+                                        "domain": "https://leannon.com",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
+                                        "location_latitude": "91.815526",
+                                        "location_longitude": "91.815526",
+                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "logo": "softbd.jpg",
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": "848-784-6590",
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01730550213",
+                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
+                                        "email": "robel.meghan@gmail.com",
+                                        "name_of_the_office_head": null,
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": null,
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "",
+                                        "contact_person_name_en": "",
+                                        "contact_person_mobile": "",
+                                        "contact_person_email": "",
+                                        "contact_person_designation": "",
+                                        "contact_person_designation_en": "",
+                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-11T09:59:48.000000Z",
+                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -3600,6 +3248,13 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
         "schemas": {
             "programs": {
                 "type": "object",
@@ -3662,17 +3317,17 @@
                     "title_en"
                 ]
             },
-            "institutes": {
+            "institutesCreate": {
                 "type": "object",
                 "description": "Institutes management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": true
+                    "permission_sub_group_id": {
+                        "type": "integer"
                     },
                     "institute_type_id": {
                         "type": "integer",
-                        "example": 1
+                        "example": 1,
+                        "description": "0 => Non Govt, 1 => Govt"
                     },
                     "code": {
                         "type": "string",
@@ -3689,7 +3344,8 @@
                         "minLength": 2
                     },
                     "domain": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 191
                     },
                     "loc_division_id": {
                         "type": "integer",
@@ -3703,205 +3359,318 @@
                         "type": "integer",
                         "example": 1
                     },
+                    "location_latitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "location_longitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
                     "address": {
                         "type": "string"
                     },
                     "address_en": {
                         "type": "string"
                     },
-                    "location_latitude": {
-                        "type": "string"
-                    },
-                    "location_longitude": {
-                        "type": "string"
-                    },
-                    "google_map_src": {
-                        "type": "string"
-                    },
                     "logo": {
-                        "type": "string"
-                    },
-                    "country": {
                         "type": "string",
-                        "example": "BD"
-                    },
-                    "phone_code": {
-                        "type": "string",
-                        "example": "880"
+                        "maxLength": 600
                     },
                     "primary_phone": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 20
                     },
                     "phone_numbers": {
-                        "type": "string"
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "primary_mobile": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 15
                     },
                     "mobile_numbers": {
-                        "type": "string"
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     },
                     "email": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 150
                     },
                     "name_of_the_office_head": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 500
                     },
                     "name_of_the_office_head_en": {
                         "type": "string"
                     },
                     "name_of_the_office_head_designation": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 500
                     },
                     "name_of_the_office_head_designation_en": {
                         "type": "string"
                     },
                     "contact_person_name": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 500
                     },
                     "contact_person_name_en": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 250
                     },
                     "contact_person_mobile": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 15
                     },
                     "contact_person_email": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 191
                     },
                     "contact_person_designation": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 500
                     },
                     "contact_person_designation_en": {
-                        "type": "string"
+                        "type": "string",
+                        "maxLength": 300
                     },
                     "config": {
                         "type": "string"
-                    },
-                    "row_status": {
+                    }
+                },
+                "required": [
+                    "permission_sub_group_id",
+                    "institute_type_id",
+                    "code",
+                    "title",
+                    "primary_mobile",
+                    "email",
+                    "name_of_the_office_head_designation",
+                    "contact_person_name",
+                    "contact_person_mobile",
+                    "contact_person_email",
+                    "contact_person_designation"
+                ]
+            },
+            "institutesUpdate": {
+                "type": "object",
+                "description": "Institutes management Service",
+                "properties": {
+                    "institute_type_id": {
                         "type": "integer",
-                        "enum": [
-                            1,
-                            0
-                        ],
+                        "example": 1,
+                        "description": "0 => Non Govt, 1 => Govt"
+                    },
+                    "code": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 1000,
+                        "minLength": 2
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 2
+                    },
+                    "domain": {
+                        "type": "string",
+                        "maxLength": 191
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
                         "example": 1
                     },
-                    "create_by": {
-                        "type": "string",
-                        "format": "date-time"
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
                     },
-                    "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
                     },
-                    "created_at": {
+                    "location_latitude": {
                         "type": "string",
-                        "format": "date-time"
+                        "maxLength": 50
                     },
-                    "updated_at": {
+                    "location_longitude": {
                         "type": "string",
-                        "format": "date-time"
+                        "maxLength": 50
                     },
-                    "deleted_at": {
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "logo": {
                         "type": "string",
-                        "format": "date-time"
+                        "maxLength": 600
+                    },
+                    "primary_phone": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "phone_numbers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "primary_mobile": {
+                        "type": "string",
+                        "maxLength": 15
+                    },
+                    "mobile_numbers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "email": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "name_of_the_office_head": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_designation_en": {
+                        "type": "string"
+                    },
+                    "contact_person_name": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_name_en": {
+                        "type": "string",
+                        "maxLength": 250
+                    },
+                    "contact_person_mobile": {
+                        "type": "string",
+                        "maxLength": 15
+                    },
+                    "contact_person_email": {
+                        "type": "string",
+                        "maxLength": 191
+                    },
+                    "contact_person_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_designation_en": {
+                        "type": "string",
+                        "maxLength": 300
+                    },
+                    "config": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "institute_type_id",
-                    "title",
                     "code",
-                    "email",
+                    "title",
                     "primary_mobile",
+                    "email",
+                    "name_of_the_office_head_designation",
                     "contact_person_name",
-                    "contact_person_name_en",
                     "contact_person_mobile",
                     "contact_person_email",
-                    "contact_person_designation",
-                    "contact_person_designation_en"
+                    "contact_person_designation"
                 ]
             },
-            "instituteRegister": {
+            "instituteOpenRegistration": {
                 "type": "object",
                 "properties": {
                     "title": {
                         "type": "string",
-                        "description": " title in Bengali",
-                        "minLength": 2,
-                        "maxLength": 1000
+                        "maxLength": 1000,
+                        "minLength": 2
                     },
                     "title_en": {
                         "type": "string",
-                        "description": "title in English",
-                        "minLength": 2,
-                        "maxLength": 300
+                        "maxLength": 500,
+                        "minLength": 2
                     },
                     "institute_type_id": {
                         "type": "integer",
-                        "description": "0 => Non Govt, 1 => Govt",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "example": 0
+                        "example": 0,
+                        "description": "0 => Non Govt, 1 => Govt"
                     },
                     "name_of_the_office_head": {
                         "type": "string",
-                        "description": "Head of office"
+                        "maxLength": 500
                     },
                     "name_of_the_office_head_designation": {
                         "type": "string",
-                        "description": "Head of office Designation "
+                        "maxLength": 500
                     },
                     "email": {
                         "type": "string",
-                        "description": "email address"
+                        "maxLength": 150
                     },
-                    "mobile": {
+                    "primary_mobile": {
                         "type": "string",
-                        "description": "Mobile number of organization"
+                        "maxLength": 11,
+                        "uniqueItems": true
                     },
                     "contact_person_mobile": {
                         "type": "string",
-                        "description": "Contact person mobile number"
+                        "maxLength": 15
                     },
                     "contact_person_name": {
                         "type": "string",
-                        "description": "Contact person name",
-                        "minLength": 2,
                         "maxLength": 500
                     },
                     "contact_person_designation": {
                         "type": "string",
-                        "description": "Contact person's designation",
-                        "minLength": 2,
-                        "maxLength": 300
+                        "maxLength": 500
                     },
                     "contact_person_email": {
                         "type": "string",
-                        "description": "Contact person email address"
+                        "maxLength": 191
                     },
                     "address": {
                         "type": "string",
-                        "maxLength": 1000,
-                        "minLength": 2,
-                        "description": "organization address"
+                        "maxLength": 1000
                     },
                     "password": {
                         "type": "string",
-                        "format": "password"
+                        "format": "password",
+                        "example": "Aa!1sS3#"
                     },
                     "password_confirmation": {
                         "type": "string",
-                        "format": "password"
+                        "format": "password",
+                        "example": "Aa!1sS3#"
                     }
                 },
                 "required": [
                     "title",
-                    "title_en",
                     "institute_type_id",
                     "name_of_the_office_head",
                     "email",
-                    "mobile",
+                    "primary_mobile",
                     "contact_person_mobile",
                     "contact_person_name",
                     "contact_person_designation",
@@ -4745,8 +4514,9 @@
                 }
             },
             "page": {
-                "in": "query",
                 "name": "page",
+                "in": "query",
+                "required": false,
                 "schema": {
                     "type": "integer"
                 }
@@ -4761,6 +4531,7 @@
             "page_size": {
                 "in": "query",
                 "name": "page_size",
+                "required": false,
                 "schema": {
                     "type": "integer"
                 }
@@ -4792,8 +4563,8 @@
                 }
             },
             "order": {
-                "in": "query",
                 "name": "order",
+                "in": "query",
                 "required": false,
                 "style": "form",
                 "schema": {
