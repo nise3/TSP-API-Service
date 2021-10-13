@@ -4281,22 +4281,6 @@
                     "example": "1"
                 }
             },
-            "trainerIds": {
-                "name": "trainerIds",
-                "in": "query",
-                "required": true,
-                "content": {
-                    "multipart/form-data": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "uniqueItems": true
-                            }
-                        }
-                    }
-                }
-            },
             "courseId": {
                 "name": "courseId",
                 "in": "path",
