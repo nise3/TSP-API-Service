@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
             '_response_status' => [
                 'success' => false,
                 'code' => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
-                "message" => "Unknown Error",
+                "message" => "Internal Server Error!",
                 "query_time" => 0
             ]
         ];
@@ -98,7 +98,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['message'] = 'Entry or Row for ' . str_replace('App\\', '', $e->getModel()) . ' was not Found'; //$e->getMessage();
         } elseif ($e instanceof NotFoundHttpException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
-            $errors['_response_status']['message'] = "dkdkkd";
+            $errors['_response_status']['message'] = "Not Found";
         } elseif ($e instanceof BadMethodCallException) {
             $errors['_response_status']['message'] = "Bad Method has been Called";
         } elseif ($e instanceof ErrorException) {
@@ -115,7 +115,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['message'] = "PDO Error";
         } elseif ($e instanceof Exception) {
             $errors['_response_status']['code'] = $e->getCode() ?? ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
-            $errors['_response_status']['message'] = "dhdhhdhdhdhhd";
+            $errors['_response_status']['message'] = "Internal Sever Error";
         }
         return response()->json($errors, $errors['_response_status']['code']);
 
