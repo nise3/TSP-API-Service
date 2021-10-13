@@ -9,7 +9,12 @@ $customRouter = function (string $as = '') use ($router) {
     return $custom->as($as);
 };
 
+$router->get('/', function () use ($router) {
+    return $router->app->version();
+});
+
 $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($router, $customRouter) {
+
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
