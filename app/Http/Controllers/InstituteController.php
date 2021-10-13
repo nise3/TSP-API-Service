@@ -133,14 +133,13 @@ class InstituteController extends Controller
 
     /**
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function instituteRegistration(Request $request)
     {
 
         $institute = new Institute();
-
         $validated = $this->instituteService->registerInstituteValidator($request)->validate();
         DB::beginTransaction();
         try {

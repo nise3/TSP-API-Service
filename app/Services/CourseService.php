@@ -474,13 +474,17 @@ class CourseService
     public function validator(Request $request, int $id = null): Validator
     {
 
-        $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
+        if($request['application_form_settings']){
+            $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
+        }
+
         $customMessage = [
             'row_status.in' => [
                 'code' => 30000,
                 'message' => 'Row status must be either 1 or 0'
             ]
         ];
+
         $rules = [
             'title_en' => [
                 'nullable',
@@ -542,10 +546,7 @@ class CourseService
                 'nullable',
                 'string'
             ],
-            'application_form_settings' => [
-                'array',
-                'nullable'
-            ],
+
             'application_form_settings.*' => [
                 'string'
             ],
