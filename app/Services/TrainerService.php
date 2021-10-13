@@ -601,22 +601,6 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'educational_qualification' => [
-                'nullable',
-                'string'
-            ],
-            'educational_qualification_en' => [
-                'nullable',
-                'string'
-            ],
-            'skills' => [
-                'nullable',
-                'string'
-            ],
-            'skills_en' => [
-                'nullable',
-                'string'
-            ],
             'gender' => [
                 'required',
                 'integer'
@@ -643,6 +627,22 @@ class TrainerService
                 'nullable',
                 'string',
                 'max:50'
+            ],
+            'educational_qualification' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification_en' => [
+                'nullable',
+                'string'
+            ],
+            'skills' => [
+                'nullable',
+                'string'
+            ],
+            'skills_en' => [
+                'nullable',
+                'string'
             ],
             'present_address_division_id' => [
                 'nullable',

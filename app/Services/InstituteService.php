@@ -270,6 +270,7 @@ class InstituteService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
         $institute->fill($data);
         $institute->save();
         return $institute;
@@ -304,10 +305,8 @@ class InstituteService
             'mobile' => $data['contact_person_mobile'],
         ];
 
-        Log::info(json_encode($userPostField));
-
         return Http::retry(3)
-            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->withOptions(['verify' => false])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
@@ -334,7 +333,7 @@ class InstituteService
         ];
 
         return Http::retry(3)
-            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->withOptions(['verify' => false])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
@@ -541,6 +540,7 @@ class InstituteService
                 BaseModel::MOBILE_REGEX
             ],
             'mobile_numbers' => [
+                'nullable',
                 'array'
             ],
             'mobile_numbers.*' => [
