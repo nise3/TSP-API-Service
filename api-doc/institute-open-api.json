@@ -3,11 +3,11 @@
     "info": {
         "version": "1.0.0",
         "title": "Institute Api Service",
-        "description": "",
+        "description": " 'It is a institute management api service that manages services related to institute'",
         "termsOfService": "",
         "contact": {},
         "license": {
-            "name": ""
+            "name": "MIT"
         }
     },
     "security": [
