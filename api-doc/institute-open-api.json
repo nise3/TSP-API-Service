@@ -24,6 +24,9 @@
         },
         {
             "url": "http://institute.local:8009/api/v1"
+        },
+        {
+            "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         }
     ],
     "paths": {
@@ -179,10 +182,10 @@
                                     "data": {
                                         "id": 1,
                                         "institute_type_id": 0,
-                                        "code": "aut-consequatur-beatae-ipsa-qui-perferendis-porro-eos-reprehenderit-fugiat-soluta-unde-quis-quis-vero-iure-nobis-officiis-modi-porro",
-                                        "title": "Miss Leslie Spencer",
-                                        "title_en": "Tiara Gleichner",
-                                        "domain": "https://nicolas.com",
+                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
+                                        "title": "Dr. Cristopher Schiller V",
+                                        "title_en": "Prof. Shyann Armstrong",
+                                        "domain": "https://cummings.info",
                                         "loc_division_id": 3,
                                         "division_title": "ঢাকা",
                                         "division_title_en": "Dhaka",
@@ -192,35 +195,35 @@
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
-                                        "address_en": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
-                                        "location_latitude": "90.399402",
-                                        "location_longitude": "90.399402",
-                                        "google_map_src": "Rerum eum quae repellendus sunt.",
+                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Sed saepe aut aut enim eum.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "+1-351-372-0784",
+                                        "primary_phone": "1-843-507-1994",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01769141689",
-                                        "mobile_numbers": "[\"01760981346\",\"01787431992\"]",
-                                        "email": "ellsworth.dickens@hauck.info",
+                                        "primary_mobile": "01715665360",
+                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
+                                        "email": "xbergstrom@corwin.biz",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
                                         "name_of_the_office_head_designation_en": null,
                                         "contact_person_name": "",
-                                        "contact_person_name_en": "",
+                                        "contact_person_name_en": null,
                                         "contact_person_mobile": "",
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
-                                        "contact_person_designation_en": "",
-                                        "config": "Adipisci enim voluptas hic quaerat quibusdam ex ad.",
+                                        "contact_person_designation_en": null,
+                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-12T13:15:03.000000Z",
-                                        "updated_at": "2021-10-12T13:15:03.000000Z",
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -263,49 +266,49 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "institute_type_id": null,
-                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
-                                        "title": "Johnathon Monahan",
-                                        "title_en": "Prof. Johann Kuhic V",
-                                        "domain": "https://leannon.com",
-                                        "loc_division_id": 2,
-                                        "division_title": "চট্টগ্রাম",
-                                        "division_title_en": "Chittagong",
-                                        "loc_district_id": 10,
-                                        "district_title": "চট্টগ্রাম",
-                                        "district_title_en": "CHITTAGONG",
+                                        "institute_type_id": 0,
+                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
+                                        "title": "Dr. Cristopher Schiller V",
+                                        "title_en": "Prof. Shyann Armstrong",
+                                        "domain": "https://cummings.info",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "location_latitude": "91.815526",
-                                        "location_longitude": "91.815526",
-                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Sed saepe aut aut enim eum.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "848-784-6590",
+                                        "primary_phone": "1-843-507-1994",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01730550213",
-                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
-                                        "email": "robel.meghan@gmail.com",
+                                        "primary_mobile": "01715665360",
+                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
+                                        "email": "xbergstrom@corwin.biz",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
                                         "name_of_the_office_head_designation_en": null,
                                         "contact_person_name": "",
-                                        "contact_person_name_en": "",
+                                        "contact_person_name_en": null,
                                         "contact_person_mobile": "",
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
-                                        "contact_person_designation_en": "",
-                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "contact_person_designation_en": null,
+                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-11T09:59:48.000000Z",
-                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -353,49 +356,49 @@
                                 "example": {
                                     "data":  {
                                         "id": 1,
-                                        "institute_type_id": null,
-                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
-                                        "title": "Johnathon Monahan",
-                                        "title_en": "Prof. Johann Kuhic V",
-                                        "domain": "https://leannon.com",
-                                        "loc_division_id": 2,
-                                        "division_title": "চট্টগ্রাম",
-                                        "division_title_en": "Chittagong",
-                                        "loc_district_id": 10,
-                                        "district_title": "চট্টগ্রাম",
-                                        "district_title_en": "CHITTAGONG",
+                                        "institute_type_id": 0,
+                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
+                                        "title": "Dr. Cristopher Schiller V",
+                                        "title_en": "Prof. Shyann Armstrong",
+                                        "domain": "https://cummings.info",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "location_latitude": "91.815526",
-                                        "location_longitude": "91.815526",
-                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Sed saepe aut aut enim eum.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "848-784-6590",
+                                        "primary_phone": "1-843-507-1994",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01730550213",
-                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
-                                        "email": "robel.meghan@gmail.com",
+                                        "primary_mobile": "01715665360",
+                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
+                                        "email": "xbergstrom@corwin.biz",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
                                         "name_of_the_office_head_designation_en": null,
                                         "contact_person_name": "",
-                                        "contact_person_name_en": "",
+                                        "contact_person_name_en": null,
                                         "contact_person_mobile": "",
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
-                                        "contact_person_designation_en": "",
-                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "contact_person_designation_en": null,
+                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-11T09:59:48.000000Z",
-                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -470,49 +473,49 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "institute_type_id": null,
-                                        "code": "quaerat-fugit-tempore-quia-quisquam-et-aut-quam-voluptatibus-dignissimos-fuga-doloremque-veritatis-molestiae-fugit-aut-voluptas-modi-quis-ullam",
-                                        "title": "Johnathon Monahan",
-                                        "title_en": "Prof. Johann Kuhic V",
-                                        "domain": "https://leannon.com",
-                                        "loc_division_id": 2,
-                                        "division_title": "চট্টগ্রাম",
-                                        "division_title_en": "Chittagong",
-                                        "loc_district_id": 10,
-                                        "district_title": "চট্টগ্রাম",
-                                        "district_title_en": "CHITTAGONG",
+                                        "institute_type_id": 0,
+                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
+                                        "title": "Dr. Cristopher Schiller V",
+                                        "title_en": "Prof. Shyann Armstrong",
+                                        "domain": "https://cummings.info",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
                                         "loc_upazila_id": null,
                                         "upazila_title": null,
                                         "upazila_title_en": null,
-                                        "address": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "address_en": "728 Rowena Coves Apt. 523\nPort Britney, WY 79215-6967",
-                                        "location_latitude": "91.815526",
-                                        "location_longitude": "91.815526",
-                                        "google_map_src": "Natus error et illum eos nam dolorum quis.",
+                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
+                                        "location_latitude": "90.399452",
+                                        "location_longitude": "90.399452",
+                                        "google_map_src": "Sed saepe aut aut enim eum.",
                                         "logo": "softbd.jpg",
                                         "country": "BD",
                                         "phone_code": "880",
-                                        "primary_phone": "848-784-6590",
+                                        "primary_phone": "1-843-507-1994",
                                         "phone_numbers": null,
-                                        "primary_mobile": "01730550213",
-                                        "mobile_numbers": "[\"01797282204\",\"01752186746\"]",
-                                        "email": "robel.meghan@gmail.com",
+                                        "primary_mobile": "01715665360",
+                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
+                                        "email": "xbergstrom@corwin.biz",
                                         "name_of_the_office_head": null,
                                         "name_of_the_office_head_en": null,
                                         "name_of_the_office_head_designation": null,
                                         "name_of_the_office_head_designation_en": null,
                                         "contact_person_name": "",
-                                        "contact_person_name_en": "",
+                                        "contact_person_name_en": null,
                                         "contact_person_mobile": "",
                                         "contact_person_email": "",
                                         "contact_person_designation": "",
-                                        "contact_person_designation_en": "",
-                                        "config": "Aliquid qui eum doloribus exercitationem consequatur qui aperiam repellendus.",
+                                        "contact_person_designation_en": null,
+                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-10-11T09:59:48.000000Z",
-                                        "updated_at": "2021-10-11T09:59:48.000000Z",
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -567,33 +570,37 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "Thaddeus Kohler Jr.",
-                                        "title": "Alison Kassulke",
-                                        "loc_division_id": 1,
-                                        "division_title": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
-                                        "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
-                                        "branch_id": 2,
-                                        "branch_title_en": "Bettie Halvorson",
-                                        "branch_title": "Oma Hammes",
-                                        "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
-                                        "google_map_src": "Est omnis temporibus expedita odit.",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "center_location_type": 1,
+                                            "title_en": "Alejandra Dach",
+                                            "title": "Lupe Veum",
+                                            "loc_division_id": 2,
+                                            "division_title": "চট্টগ্রাম",
+                                            "division_title_en": "Chittagong",
+                                            "loc_district_id": 10,
+                                            "district_title": "চট্টগ্রাম",
+                                            "district_title_en": "CHITTAGONG",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "institute_id": 1,
+                                            "institute_title_en": "Prof. Shyann Armstrong",
+                                            "institutetitle": "Dr. Cristopher Schiller V",
+                                            "branch_id": 2,
+                                            "branch_title_en": "Trevion Gutmann",
+                                            "branch_title": "Mr. Davin Yundt PhD",
+                                            "address": "325 Joanny Ridge Apt. 279\nNew Deshaunburgh, VT 24460",
+                                            "google_map_src": "89263 Smith Point Apt. 452\nSouth Marlinberg, UT 65416-4517",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:10.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -630,22 +637,33 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "branch_id": "1",
-                                        "center_location_type": "1",
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "loc_division_id": "1",
-                                        "loc_district_id": "1",
-                                        "loc_upazila_id": "1",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T06:20:17.000000Z",
-                                        "created_at": "2021-09-05T06:20:17.000000Z",
-                                        "id": 32
+                                        "id": 1,
+                                        "center_location_type": 1,
+                                        "title_en": "Alejandra Dach",
+                                        "title": "Lupe Veum",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
+                                        "branch_id": 2,
+                                        "branch_title_en": "Trevion Gutmann",
+                                        "branch_title": "Mr. Davin Yundt PhD",
+                                        "address": "325 Joanny Ridge Apt. 279\nNew Deshaunburgh, VT 24460",
+                                        "google_map_src": "89263 Smith Point Apt. 452\nSouth Marlinberg, UT 65416-4517",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -687,30 +705,32 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Thaddeus Kohler Jr.",
-                                        "title": "Alison Kassulke",
-                                        "loc_division_id": 1,
-                                        "division_title": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
+                                        "center_location_type": 1,
+                                        "title_en": "Alejandra Dach",
+                                        "title": "Lupe Veum",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
                                         "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
                                         "branch_id": 2,
-                                        "branch_title_en": "Bettie Halvorson",
-                                        "branch_title": "Oma Hammes",
-                                        "address": "1435 Reinger Loaf\nLake Leanne, MT 40085",
-                                        "google_map_src": "Est omnis temporibus expedita odit.",
+                                        "branch_title_en": "Trevion Gutmann",
+                                        "branch_title": "Mr. Davin Yundt PhD",
+                                        "address": "325 Joanny Ridge Apt. 279\nNew Deshaunburgh, VT 24460",
+                                        "google_map_src": "89263 Smith Point Apt. 452\nSouth Marlinberg, UT 65416-4517",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -756,22 +776,32 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 31,
-                                        "institute_id": "1",
-                                        "branch_id": "1",
-                                        "center_location_type": "1",
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "loc_division_id": "1",
-                                        "loc_district_id": "1",
-                                        "loc_upazila_id": "1",
-                                        "address": "Dhaka firm gate block 2",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "created_at": "2021-09-05T06:17:52.000000Z",
-                                        "updated_at": "2021-09-05T06:21:50.000000Z",
+                                        "id": 1,
+                                        "center_location_type": 1,
+                                        "title_en": "Alejandra Dach",
+                                        "title": "Lupe Veum",
+                                        "loc_division_id": 2,
+                                        "division_title": "চট্টগ্রাম",
+                                        "division_title_en": "Chittagong",
+                                        "loc_district_id": 10,
+                                        "district_title": "চট্টগ্রাম",
+                                        "district_title_en": "CHITTAGONG",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
+                                        "branch_id": 2,
+                                        "branch_title_en": "Trevion Gutmann",
+                                        "branch_title": "Mr. Davin Yundt PhD",
+                                        "address": "325 Joanny Ridge Apt. 279\nNew Deshaunburgh, VT 24460",
+                                        "google_map_src": "89263 Smith Point Apt. 452\nSouth Marlinberg, UT 65416-4517",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -859,28 +889,34 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title_en": "Annamae Rippin",
-                                        "title": "Hanna McLaughlin",
-                                        "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
-                                        "loc_division_id": 1,
-                                        "division_title": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
-                                        "row_status": 1,
-                                        "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
-                                        "google_map_src": "3170 Kautzer Trace Apt. 887\nSouth Laisha, MT 90797",
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title_en": "Dr. Winnifred Goodwin Sr.",
+                                            "title": "Cindy Tillman DDS",
+                                            "institute_id": 1,
+                                            "institute_title_en": "Prof. Shyann Armstrong",
+                                            "institute_title": "Dr. Cristopher Schiller V",
+                                            "loc_division_id": 3,
+                                            "division_title": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                            "address_en": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                            "google_map_src": "1735 Koss Stream Suite 134\nLeolaberg, OK 78919-1617",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:09.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -901,59 +937,6 @@
                 ],
                 "summary": "create",
                 "description": "API endpoint to create a branch.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/title"
-                    },
-                    {
-                        "name": "loc_division_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_district_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "loc_upazila_id",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "address",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "example": "dhaka 1112"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/google_map_src"
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -970,15 +953,30 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4ss",
-                                        "title": "আরএমজি-প্রোগ্রাম4ss",
-                                        "institute_id": "1",
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "row_status": "1",
-                                        "updated_at": "2021-09-05T05:44:33.000000Z",
-                                        "created_at": "2021-09-05T05:44:33.000000Z",
-                                        "id": 31
+                                        "id": 1,
+                                        "title_en": "Dr. Winnifred Goodwin Sr.",
+                                        "title": "Cindy Tillman DDS",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "address_en": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "google_map_src": "1735 Koss Stream Suite 134\nLeolaberg, OK 78919-1617",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1020,25 +1018,29 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "Annamae Rippin",
-                                        "title": "Hanna McLaughlin",
+                                        "title_en": "Dr. Winnifred Goodwin Sr.",
+                                        "title": "Cindy Tillman DDS",
                                         "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
-                                        "loc_division_id": 1,
-                                        "division_title": "বরিশাল",
-                                        "division_title_en": "Barisal",
-                                        "loc_district_id": 1,
-                                        "district_title": "বরগুনা",
-                                        "district_title_en": "BARGUNA",
-                                        "loc_upazila_id": 1,
-                                        "upazila_title": "আমতলী ",
-                                        "upazila_title_en": "AMTALI",
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "address_en": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "google_map_src": "1735 Koss Stream Suite 134\nLeolaberg, OK 78919-1617",
                                         "row_status": 1,
-                                        "address": "16256 Halvorson Harbors\nLake Lillianfort, GA 00742-4537",
-                                        "google_map_src": "3170 Kautzer Trace Apt. 887\nSouth Laisha, MT 90797",
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1084,20 +1086,29 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 31,
-                                        "institute_id": "1",
-                                        "title_en": "PROGRAMME ON RMG4 update",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "loc_division_id": "1",
-                                        "loc_district_id": "1",
-                                        "loc_upazila_id": "1",
-                                        "address": "dhaka 1112",
-                                        "google_map_src": "https://goo.gl/maps/fkjNYmWfEXLQUDnm6",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "created_at": "2021-09-05T05:44:33.000000Z",
-                                        "updated_at": "2021-09-05T05:56:07.000000Z",
+                                        "id": 1,
+                                        "title_en": "Dr. Winnifred Goodwin Sr.",
+                                        "title": "Cindy Tillman DDS",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "address_en": "32464 Olga Crest Apt. 340\nSouth Humbertoborough, ME 61161",
+                                        "google_map_src": "1735 Koss Stream Suite 134\nLeolaberg, OK 78919-1617",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -1188,16 +1199,20 @@
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title_en": "Dr. Ransom Wehner",
-                                            "title": "Prof. Neoma Gusikowski",
-                                            "institute_title_en": "Shannon Kshlerin",
+                                            "title_en": "Carolyn Beer",
+                                            "title": "Eulah Green",
                                             "institute_id": 1,
-                                            "program_code": "16026",
-                                            "program_logo": null,
-                                            "description": "Blanditiis itaque reiciendis molestias est iusto.",
+                                            "institute_title_en": "Prof. Shyann Armstrong",
+                                            "institutetitle": "Dr. Cristopher Schiller V",
+                                            "code": "aliquid-enim-quisquam-qui-quia-id-tenetur-optio-voluptatem-sequi-maiores-neque-non-voluptatem-modi-n",
+                                            "logo": "softBd.jpg",
+                                            "description": "Non sint aut sunt odio amet. Architecto laboriosam aut quos error totam ea sed quos. Dolore perferendis laboriosam maxime qui rerum.",
                                             "row_status": 1,
-                                            "created_at": "2021-08-22T08:35:49.000000Z",
-                                            "updated_at": "2021-08-22T08:35:49.000000Z"
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:09.000000Z",
+                                            "deleted_at": null
                                         }
                                     ],
                                     "response_status": {
@@ -1236,18 +1251,21 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_id": "1",
-                                        "code": "A4455ss",
-                                        "description": "program under bitac institute",
-                                        "logo": "default.jpg",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T06:07:52.000000Z",
-                                        "created_at": "2021-09-05T06:07:52.000000Z",
-                                        "id": 33
+                                        "id": 1,
+                                        "title_en": "Carolyn Beer",
+                                        "title": "Eulah Green",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
+                                        "code": "aliquid-enim-quisquam-qui-quia-id-tenetur-optio-voluptatem-sequi-maiores-neque-non-voluptatem-modi-n",
+                                        "logo": "softBd.jpg",
+                                        "description": "Non sint aut sunt odio amet. Architecto laboriosam aut quos error totam ea sed quos. Dolore perferendis laboriosam maxime qui rerum.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1289,14 +1307,20 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "institute_title_en": "BITAC",
-                                        "program_code": "4456",
-                                        "program_logo": "",
+                                        "title_en": "Carolyn Beer",
+                                        "title": "Eulah Green",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
+                                        "code": "aliquid-enim-quisquam-qui-quia-id-tenetur-optio-voluptatem-sequi-maiores-neque-non-voluptatem-modi-n",
+                                        "logo": "softBd.jpg",
+                                        "description": "Non sint aut sunt odio amet. Architecto laboriosam aut quos error totam ea sed quos. Dolore perferendis laboriosam maxime qui rerum.",
                                         "row_status": 1,
-                                        "created_at": "2021-07-26T06:53:00.000000Z",
-                                        "updated_at": "2021-07-26T06:56:12.000000Z"
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1343,18 +1367,20 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 31,
-                                        "code": "A4455",
-                                        "institute_id": "1",
-                                        "title_en": "PROGRAMME ON RMG4",
-                                        "title": "আরএমজি-প্রোগ্রাম4",
-                                        "description": "program under bitac institute",
-                                        "logo": "default.jpg",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "created_at": "2021-09-05T06:03:18.000000Z",
-                                        "updated_at": "2021-09-05T06:09:41.000000Z",
+                                        "id": 1,
+                                        "title_en": "Carolyn Beer",
+                                        "title": "Eulah Green",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institutetitle": "Dr. Cristopher Schiller V",
+                                        "code": "aliquid-enim-quisquam-qui-quia-id-tenetur-optio-voluptatem-sequi-maiores-neque-non-voluptatem-modi-n",
+                                        "logo": "softBd.jpg",
+                                        "description": "Non sint aut sunt odio amet. Architecto laboriosam aut quos error totam ea sed quos. Dolore perferendis laboriosam maxime qui rerum.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -1448,44 +1474,39 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "course_id": 1,
-                                        "course_title_en": "Delores Leffler",
-                                        "course_title": "Ashtyn Schulist",
-                                        "institute_id": null,
-                                        "institute_title_en": null,
-                                        "institute_title": null,
-                                        "branch_id": null,
-                                        "branch_title_en": null,
-                                        "branch_title": null,
-                                        "program_id": null,
-                                        "program_title_en": null,
-                                        "program_title": null,
-                                        "number_of_seats": 0,
-                                        "registration_start_date": "0000-00-00 00:00:00",
-                                        "registration_end_date": "0000-00-00 00:00:00",
-                                        "batch_start_date": "0000-00-00 00:00:00",
-                                        "batch_end_date": "0000-00-00 00:00:00",
-                                        "available_seats": 0,
-                                        "training_center_id": 3,
-                                        "training_center_title_en": "Miss Deanna Swaniawski",
-                                        "training_center_title": "Mrs. Jewell Feest",
-                                        "in_ethnic_group": 0,
-                                        "is_freedom_fighter": 0,
-                                        "disability_status": 0,
-                                        "ssc_passing_status": 0,
-                                        "hsc_passing_status": 0,
-                                        "honors_passing_status": 0,
-                                        "masters_passing_status": 0,
-                                        "is_occupation_needed": 0,
-                                        "is_guardian_info_needed": 0,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 2,
+                                            "course_id": 1,
+                                            "course_title_en": "Mrs. Lindsay Bernhard I",
+                                            "course_title": "Tyreek Koelpin",
+                                            "institute_id": 1,
+                                            "institute_title_en": "Prof. Shyann Armstrong",
+                                            "institute_title": "Dr. Cristopher Schiller V",
+                                            "branch_id": null,
+                                            "branch_title_en": null,
+                                            "branch_title": null,
+                                            "program_id": 2,
+                                            "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                            "program_title": "Trey Nader I",
+                                            "number_of_seats": 100,
+                                            "registration_start_date": "2021-11-15",
+                                            "registration_end_date": "2021-11-15",
+                                            "batch_start_date": "2021-11-15",
+                                            "batch_end_date": "2021-11-15",
+                                            "available_seats": 0,
+                                            "training_center_id": 2,
+                                            "training_center_title_en": "Mr. Javonte Conn IV",
+                                            "training_center_title": "Whitney Leuschke",
+                                            "application_form_settings": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:10.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -1522,32 +1543,35 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "institute_id": "1",
-                                        "course_id": "1",
-                                        "training_center_id": "1",
-                                        "program_id": "1",
-                                        "branch_id": "1",
-                                        "number_of_seats": "44",
-                                        "registration_start_date": "12/1/2022",
-                                        "registration_end_date": "12/1/2022",
-                                        "batch_start_date": "12/1/2022",
-                                        "batch_end_date": "12/1/2022",
-                                        "available_seats": "20",
-                                        "in_ethnic_group": "0",
-                                        "is_freedom_fighter": "0",
-                                        "disability_status": "0",
-                                        "ssc_passing_status": "0",
-                                        "hsc_passing_status": "0",
-                                        "honors_passing_status": "0",
-                                        "masters_passing_status": "0",
-                                        "is_occupation_needed": "0",
-                                        "is_guardian_info_needed": "0",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T06:52:18.000000Z",
-                                        "created_at": "2021-09-05T06:52:18.000000Z",
-                                        "id": 91
+                                        "id": 2,
+                                        "course_id": 1,
+                                        "course_title_en": "Mrs. Lindsay Bernhard I",
+                                        "course_title": "Tyreek Koelpin",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "program_id": 2,
+                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                        "program_title": "Trey Nader I",
+                                        "number_of_seats": 100,
+                                        "registration_start_date": "2021-11-15",
+                                        "registration_end_date": "2021-11-15",
+                                        "batch_start_date": "2021-11-15",
+                                        "batch_end_date": "2021-11-15",
+                                        "available_seats": 0,
+                                        "training_center_id": 2,
+                                        "training_center_title_en": "Mr. Javonte Conn IV",
+                                        "training_center_title": "Whitney Leuschke",
+                                        "application_form_settings": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1588,42 +1612,83 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 1,
-                                        "course_id": 1,
-                                        "course_title_en": "Delores Leffler",
-                                        "course_title": "Ashtyn Schulist",
-                                        "institute_id": null,
-                                        "institute_title_en": null,
-                                        "institute_title": null,
+                                        "id": 40,
+                                        "course_id": 14,
+                                        "course_title_en": "Miss Geraldine Vandervort",
+                                        "course_title": "Jazlyn Dooley",
+                                        "institute_id": 5,
+                                        "institute_title_en": "Della Batz",
+                                        "institute_title": "Prof. Gavin Johns MD",
                                         "branch_id": null,
                                         "branch_title_en": null,
                                         "branch_title": null,
-                                        "program_id": null,
-                                        "program_title_en": null,
-                                        "program_title": null,
-                                        "number_of_seats": 0,
-                                        "registration_start_date": "0000-00-00 00:00:00",
-                                        "registration_end_date": "0000-00-00 00:00:00",
-                                        "batch_start_date": "0000-00-00 00:00:00",
-                                        "batch_end_date": "0000-00-00 00:00:00",
+                                        "program_id": 14,
+                                        "program_title_en": "Mafalda Ratke",
+                                        "program_title": "Demetris Rutherford",
+                                        "number_of_seats": 62,
+                                        "registration_start_date": "2021-08-08",
+                                        "registration_end_date": "2021-08-08",
+                                        "batch_start_date": "2021-08-08",
+                                        "batch_end_date": "2021-08-08",
                                         "available_seats": 0,
-                                        "training_center_id": 3,
-                                        "training_center_title_en": "Miss Deanna Swaniawski",
-                                        "training_center_title": "Mrs. Jewell Feest",
-                                        "in_ethnic_group": 0,
-                                        "is_freedom_fighter": 0,
-                                        "disability_status": 0,
-                                        "ssc_passing_status": 0,
-                                        "hsc_passing_status": 0,
-                                        "honors_passing_status": 0,
-                                        "masters_passing_status": 0,
-                                        "is_occupation_needed": 0,
-                                        "is_guardian_info_needed": 0,
+                                        "training_center_id": 14,
+                                        "training_center_title_en": "Gideon Gibson",
+                                        "training_center_title": "Miss Dejah Mosciski",
+                                        "application_form_settings": null,
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null,
+                                        "trainers": [
+                                            {
+                                                "id": 48,
+                                                "institute_id": 5,
+                                                "branch_id": null,
+                                                "training_center_id": null,
+                                                "trainer_name": "Michale Cronin",
+                                                "trainer_name_en": "Ms. Veda Boehm DDS",
+                                                "trainer_registration_number": "67379243-2698-3330-abe9-8288008b118a",
+                                                "email": "adams.pascale@example.org",
+                                                "mobile": "01761964270",
+                                                "date_of_birth": null,
+                                                "about_me": "Laboriosam non est odit magni qui.",
+                                                "about_me_en": null,
+                                                "educational_qualification": "Ex explicabo sit possimus quos.",
+                                                "educational_qualification_en": "Nostrum voluptatem magni dolores delectus magnam eos dolorum.",
+                                                "skills": "ea alias id vero quaerat quasi",
+                                                "skills_en": null,
+                                                "gender": 2,
+                                                "marital_status": 0,
+                                                "religion": 3,
+                                                "nationality": "Bangladeshi",
+                                                "nid": "5734381691493",
+                                                "passport_number": "590721010310772792",
+                                                "present_address_division_id": 1,
+                                                "present_address_district_id": 1,
+                                                "present_address_upazila_id": 18,
+                                                "present_house_address": "2632 Dannie Circle\nPort Makenna, HI 20664-4139",
+                                                "present_house_address_en": "5370 Mills Crescent\nEast Cathrine, LA 97110",
+                                                "permanent_address_division_id": 1,
+                                                "permanent_address_district_id": 1,
+                                                "permanent_address_upazila_id": 18,
+                                                "permanent_house_address": "69378 Evans Dam\nNikolausburgh, RI 90470-5545",
+                                                "permanent_house_address_en": "3234 Joanny Branch\nSouth Jewelfort, MI 23699",
+                                                "photo": "softbd.jpg",
+                                                "signature": "Celia Schinner",
+                                                "row_status": 1,
+                                                "created_by": null,
+                                                "updated_by": null,
+                                                "created_at": "2021-10-13T08:48:09.000000Z",
+                                                "updated_at": "2021-10-13T08:48:09.000000Z",
+                                                "deleted_at": null,
+                                                "pivot": {
+                                                    "batch_id": 40,
+                                                    "trainer_id": 48
+                                                }
+                                            }
+                                        ]
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1669,36 +1734,35 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 1,
+                                        "id": 2,
                                         "course_id": 1,
-                                        "course_title": "sdf",
+                                        "course_title_en": "Mrs. Lindsay Bernhard I",
+                                        "course_title": "Tyreek Koelpin",
                                         "institute_id": 1,
-                                        "institute_title": "asdf",
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
                                         "branch_id": null,
-                                        "branch_name": null,
-                                        "program_id": null,
-                                        "program_name": null,
-                                        "number_of_vacancies": 0,
-                                        "registration_start_date": "0000-00-00 00:00:00",
-                                        "registration_end_date": "0000-00-00 00:00:00",
-                                        "batch_start_date": "0000-00-00 00:00:00",
-                                        "batch_end_date": "0000-00-00 00:00:00",
-                                        "available_vacancies": 0,
-                                        "training_center_id": 1,
-                                        "training_center_name": "wer",
-                                        "in_ethnic_group": 0,
-                                        "is_freedom_fighter": 0,
-                                        "disability_status": 0,
-                                        "ssc_passing_status": 0,
-                                        "hsc_passing_status": 0,
-                                        "honors_passing_status": 0,
-                                        "masters_passing_status": 0,
-                                        "is_occupation_needed": 0,
-                                        "is_guardian_info_needed": 0,
-                                        "created_by": 1,
-                                        "updated_by": 1,
-                                        "created_at": "2021-08-17T11:18:09.000000Z",
-                                        "updated_at": "2021-08-17T11:18:09.000000Z"
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "program_id": 2,
+                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                        "program_title": "Trey Nader I",
+                                        "number_of_seats": 100,
+                                        "registration_start_date": "2021-11-15",
+                                        "registration_end_date": "2021-11-15",
+                                        "batch_start_date": "2021-11-15",
+                                        "batch_end_date": "2021-11-15",
+                                        "available_seats": 0,
+                                        "training_center_id": 2,
+                                        "training_center_title_en": "Mr. Javonte Conn IV",
+                                        "training_center_title": "Whitney Leuschke",
+                                        "application_form_settings": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1777,43 +1841,50 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 13,
+                                        "id": 1,
                                         "institute_id": 1,
-                                        "branch_id": 1,
+                                        "branch_id": null,
                                         "training_center_id": null,
-                                        "trainer_name_en": "assdsddf",
-                                        "trainer_name": "asfsdfsdf",
-                                        "trainer_registration_number": "434235232",
-                                        "email": "asdfqwr@gmailcom",
-                                        "mobile": "09877654321",
+                                        "trainer_name": "Erich Murray",
+                                        "trainer_name_en": "Leopold Bogisich",
+                                        "trainer_registration_number": "6d25901f-75fe-340a-9d18-2a39c69b42f3",
+                                        "email": "dylan.keeling@example.net",
+                                        "mobile": "01753765757",
                                         "date_of_birth": null,
-                                        "about_me": null,
-                                        "gender": 1,
-                                        "marital_status": 0,
-                                        "religion": null,
-                                        "nationality": "",
-                                        "nid": null,
-                                        "passport_number": null,
-                                        "physical_disabilities_status": 0,
-                                        "freedom_fighter_status": 0,
-                                        "present_address_division_id": null,
-                                        "present_address_district_id": null,
-                                        "present_address_upazila_id": null,
-                                        "present_house_address": null,
-                                        "permanent_address_division_id": null,
-                                        "permanent_address_district_id": null,
-                                        "permanent_address_upazila_id": null,
-                                        "permanent_house_address": null,
-                                        "educational_qualification": null,
-                                        "skills": null,
-                                        "photo": null,
-                                        "signature": null,
+                                        "about_me": "Nobis quis qui unde libero molestiae quae.",
+                                        "about_me_en": null,
+                                        "educational_qualification": "Autem eligendi impedit similique nostrum molestias deleniti corrupti.",
+                                        "educational_qualification_en": "Aut vero distinctio assumenda aut in et nobis.",
+                                        "skills": "nostrum ipsam rerum corporis voluptas est",
+                                        "skills_en": null,
+                                        "gender": 3,
+                                        "marital_status": 1,
+                                        "religion": 2,
+                                        "nationality": "Bangladeshi",
+                                        "nid": "1481952995099",
+                                        "passport_number": "718190897240411984",
+                                        "present_address_division_id": 1,
+                                        "present_address_district_id": 1,
+                                        "present_address_upazila_id": 18,
+                                        "present_house_address": "3367 Thompson Springs Apt. 997\nBoyershire, RI 95631-1853",
+                                        "present_house_address_en": "890 Kling Port\nLurabury, MO 03892",
+                                        "permanent_address_division_id": 1,
+                                        "permanent_address_district_id": 1,
+                                        "permanent_address_upazila_id": 18,
+                                        "permanent_house_address": "32628 Isaias Causeway Apt. 684\nRickyview, SC 74593",
+                                        "permanent_house_address_en": "16262 Norberto Shore\nWest Angeloberg, AL 24542-2334",
+                                        "photo": "softbd.jpg",
+                                        "signature": "Arden Hettinger",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null,
-                                        "created_at": "2021-08-22T12:32:35.000000Z",
-                                        "updated_at": "2021-08-22T12:32:35.000000Z"
+                                        "pivot": {
+                                            "batch_id": 1,
+                                            "trainer_id": 1
+                                        }
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -1867,31 +1938,49 @@
                                     "$ref": "#/components/schemas/courses"
                                 },
                                 "example": {
-                                    "data": {
-                                        "id": 2,
-                                        "code": "ZM",
-                                        "title_en": "Miss Heath Ondricka",
-                                        "title": "Tessie Stark PhD",
-                                        "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
-                                        "course_fee": "0.00",
-                                        "duration": "19:53:32",
-                                        "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
-                                        "target_group": "3",
-                                        "objectives": "Voluptas consequatur similique dignissimos.",
-                                        "contents": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
-                                        "training_methodology": "Qui sit quia qui rerum accusantium amet non.",
-                                        "evaluation_system": "Repellendus amet maxime facere porro.",
-                                        "prerequisite": "Voluptatem non sed nesciunt ab voluptatibus.",
-                                        "eligibility": "Accusamus voluptates nemo eum temporibus.",
-                                        "cover_image": "softbd.jpg",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "code": "inventore-magnam-quasi-est-perspiciatis-et-consequatur-voluptatem-repudiandae-eaque-et-quia-dolores-et-accusantium-reprehenderit-expedita-velit-iure-i",
+                                            "institute_id": 1,
+                                            "institute_title": "Dr. Cristopher Schiller V",
+                                            "institute_title_en": "Prof. Shyann Armstrong",
+                                            "branch_id": null,
+                                            "branch_title": null,
+                                            "branch_title_en": null,
+                                            "program_id": 2,
+                                            "program_title": "Trey Nader I",
+                                            "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                            "title": "Tyreek Koelpin",
+                                            "title_en": "Mrs. Lindsay Bernhard I",
+                                            "course_fee": 13268,
+                                            "duration": 47,
+                                            "description": "Dicta asperiores et ex quod laborum corrupti. Debitis ipsum mollitia quia ut ipsum iusto. Ipsam non enim amet voluptas id ullam. Itaque neque quis modi est ut voluptatibus sapiente.",
+                                            "description_en": "Sit sed molestiae laudantium voluptas sapiente quo. Et laboriosam libero sunt nihil. Fugiat voluptas quisquam aut iusto consequatur perferendis repellendus deleniti.",
+                                            "target_group": "dolores facere numquam",
+                                            "target_group_en": "possimus magnam quod",
+                                            "objectives": "Labore totam quisquam est rerum. Cum earum sed doloremque qui nam. Aut sequi voluptas accusamus in dolorem.",
+                                            "objectives_en": "Ea deleniti corrupti optio nemo dolorum assumenda delectus. Sunt id labore et ipsam quae. Nisi voluptatem consequatur et consequatur. Iste corrupti blanditiis voluptas facilis quae nobis.",
+                                            "contents": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
+                                            "contents_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
+                                            "training_methodology": "Nesciunt magnam aut dolor nam blanditiis autem laboriosam.",
+                                            "training_methodology_en": "Eaque laudantium voluptatem et quis et omnis.",
+                                            "evaluation_system": "Minima quia tempora molestiae sequi provident numquam maxime.",
+                                            "evaluation_system_en": "Asperiores aut suscipit quod id eum.",
+                                            "prerequisite": "Et numquam cum eaque itaque provident architecto est quas.",
+                                            "prerequisite_en": "Deserunt alias voluptatibus exercitationem autem.",
+                                            "eligibility": "Et pariatur ut sit maxime quia.",
+                                            "eligibility_en": "Dolores ducimus id quia deleniti ut.",
+                                            "cover_image": "softbd.jpg",
+                                            "application_form_settings": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:10.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -1926,32 +2015,47 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/programs"
-                                },
                                 "example": {
                                     "data": {
-                                        "title_en": "PROGRAMME ON RMG4ss",
-                                        "title": "আরএমজি-প্রোগ্রাম4ss",
-                                        "code": "AE445",
-                                        "institute_id": "1",
-                                        "course_fee": "11",
-                                        "duration": "5",
-                                        "description": "very good courses",
-                                        "target_group": "5",
-                                        "objectives": "An objective",
-                                        "contents": "An contents",
-                                        "training_methodology": "dfd",
-                                        "evaluation_system": "ddf",
-                                        "prerequisite": "dfdf",
-                                        "eligibility": "dfdf",
-                                        "cover_image": "default.jpg",
-                                        "row_status": "1",
-                                        "created_by": "1",
-                                        "updated_by": "1",
-                                        "updated_at": "2021-09-05T05:19:55.000000Z",
-                                        "created_at": "2021-09-05T05:19:55.000000Z",
-                                        "id": 31
+                                        "id": 1,
+                                        "code": "inventore-magnam-quasi-est-perspiciatis-et-consequatur-voluptatem-repudiandae-eaque-et-quia-dolores-et-accusantium-reprehenderit-expedita-velit-iure-i",
+                                        "institute_id": 1,
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "branch_id": null,
+                                        "branch_title": null,
+                                        "branch_title_en": null,
+                                        "program_id": 2,
+                                        "program_title": "Trey Nader I",
+                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                        "title": "Tyreek Koelpin",
+                                        "title_en": "Mrs. Lindsay Bernhard I",
+                                        "course_fee": 13268,
+                                        "duration": 47,
+                                        "description": "Dicta asperiores et ex quod laborum corrupti. Debitis ipsum mollitia quia ut ipsum iusto. Ipsam non enim amet voluptas id ullam. Itaque neque quis modi est ut voluptatibus sapiente.",
+                                        "description_en": "Sit sed molestiae laudantium voluptas sapiente quo. Et laboriosam libero sunt nihil. Fugiat voluptas quisquam aut iusto consequatur perferendis repellendus deleniti.",
+                                        "target_group": "dolores facere numquam",
+                                        "target_group_en": "possimus magnam quod",
+                                        "objectives": "Labore totam quisquam est rerum. Cum earum sed doloremque qui nam. Aut sequi voluptas accusamus in dolorem.",
+                                        "objectives_en": "Ea deleniti corrupti optio nemo dolorum assumenda delectus. Sunt id labore et ipsam quae. Nisi voluptatem consequatur et consequatur. Iste corrupti blanditiis voluptas facilis quae nobis.",
+                                        "contents": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
+                                        "contents_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
+                                        "training_methodology": "Nesciunt magnam aut dolor nam blanditiis autem laboriosam.",
+                                        "training_methodology_en": "Eaque laudantium voluptatem et quis et omnis.",
+                                        "evaluation_system": "Minima quia tempora molestiae sequi provident numquam maxime.",
+                                        "evaluation_system_en": "Asperiores aut suscipit quod id eum.",
+                                        "prerequisite": "Et numquam cum eaque itaque provident architecto est quas.",
+                                        "prerequisite_en": "Deserunt alias voluptatibus exercitationem autem.",
+                                        "eligibility": "Et pariatur ut sit maxime quia.",
+                                        "eligibility_en": "Dolores ducimus id quia deleniti ut.",
+                                        "cover_image": "softbd.jpg",
+                                        "application_form_settings": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -2186,60 +2290,67 @@
                                     "$ref": "#/components/schemas/trainers"
                                 },
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "trainer_name_en": "Hester Crona",
-                                        "trainer_name": "Enid Jones",
-                                        "institute_id": 1,
-                                        "institutes_title_en": "Deven Powlowski",
-                                        "institutes_title": "Cynthia Bogisich",
-                                        "trainer_registration_number": "e03c6b1b-7f70-35de-b32a-0b46ee275b95",
-                                        "branch_id": null,
-                                        "branch_title_en": null,
-                                        "branch_title": null,
-                                        "training_center_id": null,
-                                        "training_center_title_en": null,
-                                        "training_center_title": null,
-                                        "email": "macie79@example.org",
-                                        "mobile": "+1 (706) 835-99",
-                                        "date_of_birth": null,
-                                        "about_me": "Et laborum vitae veniam aspernatur quae.",
-                                        "gender": 2,
-                                        "marital_status": 1,
-                                        "religion": 5,
-                                        "nationality": "Esse sit voluptas harum fugiat sed delectus.",
-                                        "nid": "Magnam autem numquam vel paria",
-                                        "passport_number": "546139782",
-                                        "present_address_division_id": 6,
-                                        "division_title_present_address": "রংপুর",
-                                        "division_title_en_present_address": "Rangpur",
-                                        "present_address_district_id": 4,
-                                        "district_title_present_address": "ঝালকাঠি",
-                                        "district_title_en_present_address": "BRAHMANBARIA",
-                                        "present_address_upazila_id": 88063,
-                                        "upazila_title_present_address": null,
-                                        "upazila_title_en_present_address": null,
-                                        "present_house_address": "129 Rhianna Knolls Apt. 189\nPort Aileen, MN 29175-6108",
-                                        "permanent_address_division_id": 0,
-                                        "division_title_permanent_address": null,
-                                        "division_title_en_permanent_address": null,
-                                        "permanent_address_district_id": 8,
-                                        "district_title_permanent_address": "ব্রাহ্মণবাড়িয়া",
-                                        "permanent_address_upazila_id": 1,
-                                        "upazila_title_permanent_address": "আমতলী ",
-                                        "upazila_title_en_permanent_address": "AMTALI",
-                                        "permanent_house_address": "88521 Joseph Ferry\nLake Hollie, MT 11128",
-                                        "educational_qualification": "Ex dolore neque ipsum a non odit.",
-                                        "skills": "Necessitatibus eius consequatur est non dolores.",
-                                        "photo": "softbd.jpg",
-                                        "signature": "Garnet Ziemann",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-09-13T05:04:13.000000Z",
-                                        "updated_at": "2021-09-13T05:04:13.000000Z",
-                                        "deleted_at": null
-                                    },
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "institute_id": 1,
+                                            "institutes_title_en": "Prof. Shyann Armstrong",
+                                            "institutes_title": "Dr. Cristopher Schiller V",
+                                            "branch_id": null,
+                                            "branch_title_en": null,
+                                            "branch_title": null,
+                                            "training_center_id": null,
+                                            "training_center_title_en": null,
+                                            "training_center_title": null,
+                                            "trainer_name": "Erich Murray",
+                                            "trainer_name_en": "Leopold Bogisich",
+                                            "trainer_registration_number": "6d25901f-75fe-340a-9d18-2a39c69b42f3",
+                                            "email": "dylan.keeling@example.net",
+                                            "mobile": "01753765757",
+                                            "date_of_birth": null,
+                                            "about_me": "Nobis quis qui unde libero molestiae quae.",
+                                            "about_me_en": null,
+                                            "educational_qualification": "Autem eligendi impedit similique nostrum molestias deleniti corrupti.",
+                                            "educational_qualification_en": "Aut vero distinctio assumenda aut in et nobis.",
+                                            "skills": "nostrum ipsam rerum corporis voluptas est",
+                                            "skills_en": null,
+                                            "gender": 3,
+                                            "marital_status": 1,
+                                            "religion": 2,
+                                            "nationality": "Bangladeshi",
+                                            "nid": "1481952995099",
+                                            "passport_number": "718190897240411984",
+                                            "present_address_division_id": 1,
+                                            "division_title_present_address": "বরিশাল",
+                                            "division_title_en_present_address": "Barisal",
+                                            "present_address_district_id": 1,
+                                            "district_title_present_address": "বরগুনা",
+                                            "district_title_en_present_address": "BARGUNA",
+                                            "present_address_upazila_id": 18,
+                                            "upazila_title_present_address": "বামনা",
+                                            "upazila_title_en_present_address": "BAMNA",
+                                            "present_house_address": "3367 Thompson Springs Apt. 997\nBoyershire, RI 95631-1853",
+                                            "present_house_address_en": "890 Kling Port\nLurabury, MO 03892",
+                                            "permanent_address_division_id": 1,
+                                            "division_title_permanent_address": "বরিশাল",
+                                            "division_title_en_permanent_address": "Barisal",
+                                            "permanent_address_district_id": 1,
+                                            "district_title_permanent_address": "বরগুনা",
+                                            "permanent_address_upazila_id": 18,
+                                            "upazila_title_permanent_address": "বামনা",
+                                            "upazila_title_en_permanent_address": "BAMNA",
+                                            "permanent_house_address": "32628 Isaias Causeway Apt. 684\nRickyview, SC 74593",
+                                            "permanent_house_address_en": "16262 Norberto Shore\nWest Angeloberg, AL 24542-2334",
+                                            "photo": "softbd.jpg",
+                                            "signature": "Arden Hettinger",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-13T08:48:09.000000Z",
+                                            "updated_at": "2021-10-13T08:48:09.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -2260,234 +2371,79 @@
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a trainer.A successful request response will show 201 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/training_center_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/trainer_name_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/trainer_name"
-                    },
-                    {
-                        "name": "trainer_registration_number",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "123456"
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainers"
+                            }
                         }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "asdf@gmail.com"
-                        }
-                    },
-                    {
-                        "name": "mobile",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "01844676535"
-                        }
-                    },
-                    {
-                        "name": "date_of_birth",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2000-01-01"
-                        }
-                    },
-                    {
-                        "name": "about_me",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-                        }
-                    },
-                    {
-                        "name": "educational_qualification",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "gender",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "marital_status",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
-                        }
-                    },
-                    {
-                        "name": "religion",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "nationality",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "Bangladeshi"
-                        }
-                    },
-                    {
-                        "name": "nid",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "passport_number",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "present_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_address_district_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_address_upazila_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_house_address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_district_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_upazila_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_house_address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "skills",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "photo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "signature",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
-                ],
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/trainers"
-                                },
                                 "example": {
                                     "data": {
-                                        "trainer_name_en": "Tikka Khan",
-                                        "trainer_name": "আরএমজি",
-                                        "institute_id": "1",
-                                        "branch_id": "1",
-                                        "training_center_id": "1",
-                                        "trainer_registration_number": "445511",
-                                        "email": "asdfsdf@gmail.com",
-                                        "mobile": "01804676535",
-                                        "gender": "1",
-                                        "marital_status": "0",
-                                        "religion": "1",
-                                        "row_status": "1",
-                                        "updated_at": "2021-08-23T04:46:11.000000Z",
-                                        "created_at": "2021-08-23T04:46:11.000000Z",
-                                        "id": 20
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "institutes_title_en": "Prof. Shyann Armstrong",
+                                        "institutes_title": "Dr. Cristopher Schiller V",
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "training_center_id": null,
+                                        "training_center_title_en": null,
+                                        "training_center_title": null,
+                                        "trainer_name": "Erich Murray",
+                                        "trainer_name_en": "Leopold Bogisich",
+                                        "trainer_registration_number": "6d25901f-75fe-340a-9d18-2a39c69b42f3",
+                                        "email": "dylan.keeling@example.net",
+                                        "mobile": "01753765757",
+                                        "date_of_birth": null,
+                                        "about_me": "Nobis quis qui unde libero molestiae quae.",
+                                        "about_me_en": null,
+                                        "educational_qualification": "Autem eligendi impedit similique nostrum molestias deleniti corrupti.",
+                                        "educational_qualification_en": "Aut vero distinctio assumenda aut in et nobis.",
+                                        "skills": "nostrum ipsam rerum corporis voluptas est",
+                                        "skills_en": null,
+                                        "gender": 3,
+                                        "marital_status": 1,
+                                        "religion": 2,
+                                        "nationality": "Bangladeshi",
+                                        "nid": "1481952995099",
+                                        "passport_number": "718190897240411984",
+                                        "present_address_division_id": 1,
+                                        "division_title_present_address": "বরিশাল",
+                                        "division_title_en_present_address": "Barisal",
+                                        "present_address_district_id": 1,
+                                        "district_title_present_address": "বরগুনা",
+                                        "district_title_en_present_address": "BARGUNA",
+                                        "present_address_upazila_id": 18,
+                                        "upazila_title_present_address": "বামনা",
+                                        "upazila_title_en_present_address": "BAMNA",
+                                        "present_house_address": "3367 Thompson Springs Apt. 997\nBoyershire, RI 95631-1853",
+                                        "present_house_address_en": "890 Kling Port\nLurabury, MO 03892",
+                                        "permanent_address_division_id": 1,
+                                        "division_title_permanent_address": "বরিশাল",
+                                        "division_title_en_permanent_address": "Barisal",
+                                        "permanent_address_district_id": 1,
+                                        "district_title_permanent_address": "বরগুনা",
+                                        "permanent_address_upazila_id": 18,
+                                        "upazila_title_permanent_address": "বামনা",
+                                        "upazila_title_en_permanent_address": "BAMNA",
+                                        "permanent_house_address": "32628 Isaias Causeway Apt. 684\nRickyview, SC 74593",
+                                        "permanent_house_address_en": "16262 Norberto Shore\nWest Angeloberg, AL 24542-2334",
+                                        "photo": "softbd.jpg",
+                                        "signature": "Arden Hettinger",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -2526,62 +2482,64 @@
                         "description": "OK",
                         "content": {
                             "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/trainers"
-                                },
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "trainer_name_en": "Hester Crona",
-                                        "trainer_name": "Enid Jones",
                                         "institute_id": 1,
-                                        "institutes_title_en": "Deven Powlowski",
-                                        "institutes_title": "Cynthia Bogisich",
-                                        "trainer_registration_number": "e03c6b1b-7f70-35de-b32a-0b46ee275b95",
+                                        "institutes_title_en": "Prof. Shyann Armstrong",
+                                        "institutes_title": "Dr. Cristopher Schiller V",
                                         "branch_id": null,
                                         "branch_title_en": null,
                                         "branch_title": null,
                                         "training_center_id": null,
                                         "training_center_title_en": null,
                                         "training_center_title": null,
-                                        "email": "macie79@example.org",
-                                        "mobile": "+1 (706) 835-99",
+                                        "trainer_name": "Erich Murray",
+                                        "trainer_name_en": "Leopold Bogisich",
+                                        "trainer_registration_number": "6d25901f-75fe-340a-9d18-2a39c69b42f3",
+                                        "email": "dylan.keeling@example.net",
+                                        "mobile": "01753765757",
                                         "date_of_birth": null,
-                                        "about_me": "Et laborum vitae veniam aspernatur quae.",
-                                        "gender": 2,
+                                        "about_me": "Nobis quis qui unde libero molestiae quae.",
+                                        "about_me_en": null,
+                                        "educational_qualification": "Autem eligendi impedit similique nostrum molestias deleniti corrupti.",
+                                        "educational_qualification_en": "Aut vero distinctio assumenda aut in et nobis.",
+                                        "skills": "nostrum ipsam rerum corporis voluptas est",
+                                        "skills_en": null,
+                                        "gender": 3,
                                         "marital_status": 1,
-                                        "religion": 5,
-                                        "nationality": "Esse sit voluptas harum fugiat sed delectus.",
-                                        "nid": "Magnam autem numquam vel paria",
-                                        "passport_number": "546139782",
-                                        "present_address_division_id": 6,
-                                        "division_title_present_address": "রংপুর",
-                                        "division_title_en_present_address": "Rangpur",
-                                        "present_address_district_id": 4,
-                                        "district_title_present_address": "ঝালকাঠি",
-                                        "district_title_en_present_address": "BRAHMANBARIA",
-                                        "present_address_upazila_id": 88063,
-                                        "upazila_title_present_address": null,
-                                        "upazila_title_en_present_address": null,
-                                        "present_house_address": "129 Rhianna Knolls Apt. 189\nPort Aileen, MN 29175-6108",
-                                        "permanent_address_division_id": 0,
-                                        "division_title_permanent_address": null,
-                                        "division_title_en_permanent_address": null,
-                                        "permanent_address_district_id": 8,
-                                        "district_title_permanent_address": "ব্রাহ্মণবাড়িয়া",
-                                        "permanent_address_upazila_id": 1,
-                                        "upazila_title_permanent_address": "আমতলী ",
-                                        "upazila_title_en_permanent_address": "AMTALI",
-                                        "permanent_house_address": "88521 Joseph Ferry\nLake Hollie, MT 11128",
-                                        "educational_qualification": "Ex dolore neque ipsum a non odit.",
-                                        "skills": "Necessitatibus eius consequatur est non dolores.",
+                                        "religion": 2,
+                                        "nationality": "Bangladeshi",
+                                        "nid": "1481952995099",
+                                        "passport_number": "718190897240411984",
+                                        "present_address_division_id": 1,
+                                        "division_title_present_address": "বরিশাল",
+                                        "division_title_en_present_address": "Barisal",
+                                        "present_address_district_id": 1,
+                                        "district_title_present_address": "বরগুনা",
+                                        "district_title_en_present_address": "BARGUNA",
+                                        "present_address_upazila_id": 18,
+                                        "upazila_title_present_address": "বামনা",
+                                        "upazila_title_en_present_address": "BAMNA",
+                                        "present_house_address": "3367 Thompson Springs Apt. 997\nBoyershire, RI 95631-1853",
+                                        "present_house_address_en": "890 Kling Port\nLurabury, MO 03892",
+                                        "permanent_address_division_id": 1,
+                                        "division_title_permanent_address": "বরিশাল",
+                                        "division_title_en_permanent_address": "Barisal",
+                                        "permanent_address_district_id": 1,
+                                        "district_title_permanent_address": "বরগুনা",
+                                        "permanent_address_upazila_id": 18,
+                                        "upazila_title_permanent_address": "বামনা",
+                                        "upazila_title_en_permanent_address": "BAMNA",
+                                        "permanent_house_address": "32628 Isaias Causeway Apt. 684\nRickyview, SC 74593",
+                                        "permanent_house_address_en": "16262 Norberto Shore\nWest Angeloberg, AL 24542-2334",
                                         "photo": "softbd.jpg",
-                                        "signature": "Garnet Ziemann",
+                                        "signature": "Arden Hettinger",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-09-13T05:04:13.000000Z",
-                                        "updated_at": "2021-09-13T05:04:13.000000Z",
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -2610,209 +2568,17 @@
                             "type": "integer"
                         },
                         "example": "2"
-                    },
-                    {
-                        "$ref": "#/components/parameters/institute_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/branch_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/training_center_id_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/trainer_name_en"
-                    },
-                    {
-                        "$ref": "#/components/parameters/trainer_name"
-                    },
-                    {
-                        "name": "trainer_registration_number",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "123456"
-                        }
-                    },
-                    {
-                        "name": "email",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "asdf@gmail.com"
-                        }
-                    },
-                    {
-                        "name": "mobile",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "01844676535"
-                        }
-                    },
-                    {
-                        "name": "date_of_birth",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2000-01-01"
-                        }
-                    },
-                    {
-                        "name": "about_me",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "example": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"
-                        }
-                    },
-                    {
-                        "name": "educational_qualification",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "gender",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "1"
-                        }
-                    },
-                    {
-                        "name": "marital_status",
-                        "required": true,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer",
-                            "example": "0"
-                        }
-                    },
-                    {
-                        "name": "religion",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        },
-                        "example": "1"
-                    },
-                    {
-                        "name": "nationality",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "example": "Bangladeshi"
-                        }
-                    },
-                    {
-                        "name": "nid",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "passport_number",
-                        "required": false,
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "present_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_address_district_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_address_upazila_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "present_house_address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_division_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_district_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_address_upazila_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "permanent_house_address",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "skills",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "photo",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "signature",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainers"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -2824,27 +2590,62 @@
                                 "example": {
                                     "data": {
                                         "id": 1,
-                                        "code": "1234",
-                                        "institute_id": 2,
-                                        "institute_title": "asdf",
-                                        "title_en": "sdf",
-                                        "title": "asdf",
-                                        "course_fee": "344.00",
-                                        "duration": null,
-                                        "description": null,
-                                        "target_group": null,
-                                        "objectives": null,
-                                        "contents": null,
-                                        "training_methodology": null,
-                                        "evaluation_system": null,
-                                        "prerequisite": null,
-                                        "eligibility": null,
-                                        "cover_image": null,
+                                        "institute_id": 1,
+                                        "institutes_title_en": "Prof. Shyann Armstrong",
+                                        "institutes_title": "Dr. Cristopher Schiller V",
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "training_center_id": null,
+                                        "training_center_title_en": null,
+                                        "training_center_title": null,
+                                        "trainer_name": "Erich Murray",
+                                        "trainer_name_en": "Leopold Bogisich",
+                                        "trainer_registration_number": "6d25901f-75fe-340a-9d18-2a39c69b42f3",
+                                        "email": "dylan.keeling@example.net",
+                                        "mobile": "01753765757",
+                                        "date_of_birth": null,
+                                        "about_me": "Nobis quis qui unde libero molestiae quae.",
+                                        "about_me_en": null,
+                                        "educational_qualification": "Autem eligendi impedit similique nostrum molestias deleniti corrupti.",
+                                        "educational_qualification_en": "Aut vero distinctio assumenda aut in et nobis.",
+                                        "skills": "nostrum ipsam rerum corporis voluptas est",
+                                        "skills_en": null,
+                                        "gender": 3,
+                                        "marital_status": 1,
+                                        "religion": 2,
+                                        "nationality": "Bangladeshi",
+                                        "nid": "1481952995099",
+                                        "passport_number": "718190897240411984",
+                                        "present_address_division_id": 1,
+                                        "division_title_present_address": "বরিশাল",
+                                        "division_title_en_present_address": "Barisal",
+                                        "present_address_district_id": 1,
+                                        "district_title_present_address": "বরগুনা",
+                                        "district_title_en_present_address": "BARGUNA",
+                                        "present_address_upazila_id": 18,
+                                        "upazila_title_present_address": "বামনা",
+                                        "upazila_title_en_present_address": "BAMNA",
+                                        "present_house_address": "3367 Thompson Springs Apt. 997\nBoyershire, RI 95631-1853",
+                                        "present_house_address_en": "890 Kling Port\nLurabury, MO 03892",
+                                        "permanent_address_division_id": 1,
+                                        "division_title_permanent_address": "বরিশাল",
+                                        "division_title_en_permanent_address": "Barisal",
+                                        "permanent_address_district_id": 1,
+                                        "district_title_permanent_address": "বরগুনা",
+                                        "permanent_address_upazila_id": 18,
+                                        "upazila_title_permanent_address": "বামনা",
+                                        "upazila_title_en_permanent_address": "BAMNA",
+                                        "permanent_house_address": "32628 Isaias Causeway Apt. 684\nRickyview, SC 74593",
+                                        "permanent_house_address_en": "16262 Norberto Shore\nWest Angeloberg, AL 24542-2334",
+                                        "photo": "softbd.jpg",
+                                        "signature": "Arden Hettinger",
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-17T10:34:07.000000Z",
-                                        "updated_at": "2021-08-17T10:34:07.000000Z"
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:09.000000Z",
+                                        "deleted_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -3104,7 +2905,8 @@
                     "phone_numbers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "01376728953"
                         }
                     },
                     "primary_mobile": {
@@ -3114,7 +2916,8 @@
                     "mobile_numbers": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "01276128953"
                         }
                     },
                     "email": {
@@ -3554,7 +3357,8 @@
                         "minLength": 2
                     },
                     "course_fee": {
-                        "type": "integer"
+                        "type": "integer",
+                        "example": 0
                     },
                     "duration": {
                         "type": "integer"
@@ -3613,7 +3417,8 @@
                     "application_form_settings": {
                         "type": "array",
                         "items": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "usidvyfu sdifu"
                         }
                     },
                     "row_status": {
@@ -3655,10 +3460,6 @@
                 "type": "object",
                 "description": "Batch management Service",
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "readOnly": true
-                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -3688,6 +3489,9 @@
                         "format": "date"
                     },
                     "about_me": {
+                        "type": "string"
+                    },
+                    "about_me_en": {
                         "type": "string"
                     },
                     "gender": {
@@ -3730,23 +3534,17 @@
                     "passport_number": {
                         "type": "string"
                     },
-                    "physical_disabilities_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "educational_qualification": {
+                        "type": "string"
                     },
-                    "freedom_fighter_status": {
-                        "type": "integer",
-                        "enum": [
-                            0,
-                            1
-                        ],
-                        "description": "0=>No, 1=>Yes",
-                        "default": 0
+                    "educational_qualification_en": {
+                        "type": "string"
+                    },
+                    "skills": {
+                        "type": "string"
+                    },
+                    "skills_en": {
+                        "type": "string"
                     },
                     "present_address_division_id": {
                         "type": "integer"
@@ -3758,6 +3556,9 @@
                         "type": "integer"
                     },
                     "present_house_address": {
+                        "type": "string"
+                    },
+                    "present_house_address_en": {
                         "type": "string"
                     },
                     "permanent_address_division_id": {
@@ -3772,10 +3573,7 @@
                     "permanent_house_address": {
                         "type": "string"
                     },
-                    "educational_qualification": {
-                        "type": "string"
-                    },
-                    "skills": {
+                    "permanent_house_address_en": {
                         "type": "string"
                     },
                     "photo": {
@@ -3791,52 +3589,34 @@
                             1
                         ],
                         "description": "0=>No, 1=>Yes",
-                        "default": 0
-                    },
-                    "create_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
+                        "default": 1
                     }
                 },
                 "required": [
                     "institute_id",
                     "trainer_name",
-                    "trainer_name_en",
+                    "trainer_registration_number",
                     "email",
                     "mobile",
-                    "trainer_registration_number"
+                    "date_of_birth",
+                    "gender",
+                    "marital_status",
+                    "nationality"
                 ]
             },
             "trainerBatch": {
                 "type": "object",
                 "description": "Associate Model",
                 "properties": {
-                    "trainer_id": {
-                        "type": "integer"
-                    },
-                    "batch_id": {
-                        "type": "integer"
+                    "trainerIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     }
                 },
                 "required": [
-                    "trainer_id",
-                    "batch_id"
+                    "trainerIds"
                 ]
             },
             "batches": {

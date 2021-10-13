@@ -540,6 +540,7 @@ class InstituteService
                 BaseModel::MOBILE_REGEX
             ],
             'mobile_numbers' => [
+                'nullable',
                 'array'
             ],
             'mobile_numbers.*' => [
