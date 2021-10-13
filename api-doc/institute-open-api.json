@@ -24,9 +24,6 @@
         },
         {
             "url": "http://institute.local:8009/api/v1"
-        },
-        {
-            "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         }
     ],
     "paths": {
