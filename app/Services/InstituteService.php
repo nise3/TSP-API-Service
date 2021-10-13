@@ -270,6 +270,7 @@ class InstituteService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
         $institute->fill($data);
         $institute->save();
         return $institute;
