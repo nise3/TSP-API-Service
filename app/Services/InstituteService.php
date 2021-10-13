@@ -304,10 +304,8 @@ class InstituteService
             'mobile' => $data['contact_person_mobile'],
         ];
 
-        Log::info(json_encode($userPostField));
-
         return Http::retry(3)
-            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->withOptions(['verify' => false])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
@@ -334,7 +332,7 @@ class InstituteService
         ];
 
         return Http::retry(3)
-            ->withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+            ->withOptions(['verify' => false])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
