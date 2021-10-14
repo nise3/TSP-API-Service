@@ -2,12 +2,12 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "Institute management api service",
-        "description": "",
+        "title": "Institute Api Service",
+        "description": " 'It is a institute management api service that manages services related to institute'",
         "termsOfService": "",
         "contact": {},
         "license": {
-            "name": ""
+            "name": "MIT"
         }
     },
     "security": [
@@ -24,9 +24,6 @@
         },
         {
             "url": "http://institute.local:8009/api/v1"
-        },
-        {
-            "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         }
     ],
     "paths": {
@@ -4279,22 +4276,6 @@
                 "schema": {
                     "type": "integer",
                     "example": "1"
-                }
-            },
-            "trainerIds": {
-                "name": "trainerIds",
-                "in": "query",
-                "required": true,
-                "content": {
-                    "multipart/form-data": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "integer",
-                                "uniqueItems": true
-                            }
-                        }
-                    }
                 }
             },
             "courseId": {
