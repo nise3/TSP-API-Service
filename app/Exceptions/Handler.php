@@ -92,7 +92,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = "Binding Resolution Error";
         } else if ($e instanceof IlluminateRequestException || $e instanceof RequestException) {
-            $errors=idUserErrorMessage($e);
+            $errors = idUserErrorMessage($e);
         } elseif ($e instanceof ModelNotFoundException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
             $errors['_response_status']['message'] = 'Entry or Row for ' . str_replace('App\\', '', $e->getModel()) . ' was not Found'; //$e->getMessage();
