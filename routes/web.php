@@ -51,30 +51,25 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->patch('programs-restore-data/{id}', ['as' => 'programs.restore-data', 'uses' => 'ProgramController@restore']);
     $router->delete('programs-force-delete/{id}', ['as' => 'programs.restore-data', 'uses' => 'ProgramController@forceDelete']);
 
-
     //training-centers trashed
     $router->get('training-centers-trashed-data', ['as' => 'training-centers.get-trashed-data', 'uses' => 'TrainingCenterController@getTrashedData']);
     $router->patch('training-centers-restore-data/{id}', ['as' => 'training-centers.restore-data', 'uses' => 'TrainingCenterController@restore']);
     $router->delete('training-centers-force-delete/{id}', ['as' => 'training-centers.restore-data', 'uses' => 'TrainingCenterController@forceDelete']);
-
 
     //batches trashed
     $router->get('batches-trashed-data', ['as' => 'batches.get-trashed-data', 'uses' => 'BatchController@getTrashedData']);
     $router->patch('batches-restore-data/{id}', ['as' => 'batches.restore-data', 'uses' => 'BatchController@restore']);
     $router->delete('batches-force-delete/{id}', ['as' => 'batches.restore-data', 'uses' => 'BatchController@forceDelete']);
 
-
     //courses trashed
     $router->get('courses-trashed-data', ['as' => 'courses.get-trashed-data', 'uses' => 'CourseController@getTrashedData']);
     $router->patch('courses-restore-data/{id}', ['as' => 'courses.restore-data', 'uses' => 'CourseController@restore']);
     $router->delete('courses-force-delete/{id}', ['as' => 'courses.restore-data', 'uses' => 'CourseController@forceDelete']);
 
-
     //branches trashed
     $router->get('branches-trashed-data', ['as' => 'branches.get-trashed-data', 'uses' => 'BranchController@getTrashedData']);
     $router->patch('branches-restore-data/{id}', ['as' => 'branches.restore-data', 'uses' => 'BranchController@restore']);
     $router->delete('branches-force-delete/{id}', ['as' => 'branches.restore-data', 'uses' => 'BranchController@forceDelete']);
-
 
     //trainers trash
     $router->get('trainers-trashed-data', ['as' => 'branches.get-trashed-data', 'uses' => 'TrainerController@getTrashedData']);

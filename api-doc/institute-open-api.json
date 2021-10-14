@@ -452,7 +452,7 @@
         "/institute-open-registration": {
             "post": {
                 "tags": [
-                    "institute Open Registration"
+                    "Institute Open Registration"
                 ],
                 "summary": "Registration",
                 "description": "API endpoint to create a institute.A successful request response will show 201 HTTP status code",
@@ -1815,7 +1815,7 @@
         },
         "/batches/{batchId}/assign-trainer-to-batch": {
             "post": {
-                "summary": "assign trainer to batch",
+                "summary": "Assign Trainer to Batch",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
@@ -2701,7 +2701,7 @@
         },
         "/courses/{courseId}/training_centers/batches": {
             "get": {
-                "summary": "training centers with batches",
+                "summary": "Training Centers with Batches",
                 "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
