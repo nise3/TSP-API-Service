@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
@@ -139,59 +140,59 @@ class InstituteController extends Controller
     public function instituteRegistration(Request $request)
     {
 
-        $institute = new Institute();
+        $institute = app(Institute::class);
         $validated = $this->instituteService->registerInstituteValidator($request)->validate();
         DB::beginTransaction();
         try {
             $institute = $this->instituteService->store($institute, $validated);
 
-            if ($institute) {
+            throw_if(!$institute, new RuntimeException('Saving Institute to DB failed!', 500));
 
-                $validated['institute_id'] = $institute->id;
-                $createRegisterUser = $this->instituteService->createRegisterUser($validated);
+            $validated['institute_id'] = $institute->id;
+            $createRegisterUser = $this->instituteService->createRegisterUser($validated);
 
-                if ($createRegisterUser && $createRegisterUser['_response_status']['success']) {
-                    $response = [
-                        'data' => $institute ?: [],
-                        '_response_status' => [
-                            "success" => true,
-                            "code" => ResponseAlias::HTTP_CREATED,
-                            "message" => "Institute Successfully Create",
-                            "query_time" => $this->startTime->diffInSeconds(\Illuminate\Support\Carbon::now()),
-                        ]
-                    ];
-                    DB::commit();
-                } else {
-                    if ($createRegisterUser && $createRegisterUser['_response_status']['code'] == ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
-                        $response = [
-                            'errors' => $createRegisterUser['errors'] ?? [],
-                            '_response_status' => [
-                                "success" => false,
-                                "code" => ResponseAlias::HTTP_BAD_REQUEST,
-                                "message" => "Validation Error",
-                                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
-                            ]
-                        ];
-                    } else {
-                        $response = [
-                            '_response_status' => [
-                                "success" => false,
-                                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                                "message" => "Unprocessable Request,Please contact",
-                                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                            ]
-                        ];
-                    }
+            throw_if(!$createRegisterUser, new RuntimeException('Saving User to Core and IDP failed!', 500));
 
-                    DB::rollBack();
-                }
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Institute Successfully Created",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+
+            if ($createRegisterUser['_response_status']['success']) {
+                $response['data'] = $institute;
+                DB::commit();
+                return Response::json($response, $response['_response_status']['code']);
             }
+
+            DB::rollBack();
+
+            $response['_response_status'] = [
+                "success" => false,
+                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "message" => "Validation Error",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ];
+
+            if (!empty($createRegisterUser['errors'])) {
+                $response['errors'] = $createRegisterUser['errors'];
+            }
+
+            if ($createRegisterUser['_response_status']['code'] != ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
+                $response['_response_status']['code'] = ResponseAlias::HTTP_BAD_REQUEST;
+                $response['_response_status']['message'] = "Bad Request, Please contact";
+            }
+
+            return Response::json($response, $response['_response_status']['code']);
 
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+
     }
 
     /**
