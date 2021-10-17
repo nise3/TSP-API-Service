@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\scopes\ScopeRowStatusTrait;
+use App\Traits\Scopescopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
