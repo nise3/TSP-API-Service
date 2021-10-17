@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Branch
  * @package App\Models
  * @property string title_en
- * @property string title_bn
+ * @property string title
  * @property int institute_id
  * @property int row_status
  * @property string|null address
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends BaseModel
 {
-    use SoftDeletes, HasFactory;
+    use ScopeRowStatusTrait;
 
     protected $guarded = ['id'];
 
@@ -30,7 +30,7 @@ class Branch extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class, 'branch_id', 'id');
     }
 
     /**
@@ -38,6 +38,6 @@ class Branch extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(Batch::class, 'branch_id', 'id');
     }
 }

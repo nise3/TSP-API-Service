@@ -33,12 +33,6 @@ class AddForeignKeysToBatches extends Migration
                 ->onUpdate('CASCADE')
                 ->onDelete('RESTRICT');
 
-            $table->foreign('programme_id', 'batches_fk_programme_id')
-                ->references('id')
-                ->on('programmes')
-                ->onUpdate('CASCADE')
-                ->onDelete('SET NULL');
-
             $table->foreign('training_center_id', 'batches_fk_training_center_id')
                 ->references('id')
                 ->on('training_centers')
@@ -58,7 +52,6 @@ class AddForeignKeysToBatches extends Migration
             $table->dropForeign('batches_fk_branch_id');
             $table->dropForeign('batches_fk_course_id');
             $table->dropForeign('batches_fk_institute_id');
-            $table->dropForeign('batches_fk_programme_id');
             $table->dropForeign('batches_fk_training_center_id');
         });
     }

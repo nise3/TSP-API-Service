@@ -27,7 +27,7 @@ class BranchService
     public function getBranchList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $titleBn = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -38,20 +38,21 @@ class BranchService
         $branchBuilder = Branch::select([
             'branches.id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title',
             'branches.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'branches.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'branches.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_by',
@@ -64,54 +65,49 @@ class BranchService
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
 
-        $branchBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'branches.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_districts', function ($join) {
             $join->on('loc_districts.id', '=', 'branches.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_upazilas', function ($join){
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
+
         });
 
 
         $branchBuilder->orderBy('branches.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $branchBuilder->where('branches.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+        }
+        if (!empty($titleBn)) {
+            $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
-        if ($instituteId) {
+        if (is_int($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
-        /** @var Collection $branchBuilder */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        /** @var Collection $branches */
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
             $paginateData = (object)$branches->toArray();
@@ -145,20 +141,21 @@ class BranchService
         $branchBuilder = Branch::select([
             'branches.id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'branches.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title',
             'branches.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'branches.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'branches.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_by',
@@ -190,7 +187,7 @@ class BranchService
 
         $branchBuilder->where('branches.id', $id);
 
-        /** @var Branch $branchBuilder */
+        /** @var Branch $branch */
         $branch = $branchBuilder->first();
 
         return [
@@ -256,7 +253,7 @@ class BranchService
     public function getBranchTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $limit = $request->query('limit', 10);
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
@@ -265,11 +262,12 @@ class BranchService
         $branchBuilder = Branch::onlyTrashed()->select([
             'branches.id as id',
             'branches.title_en',
-            'branches.title_bn',
+            'branches.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'branches.row_status',
             'branches.address',
+            'branches.address_en',
             'branches.google_map_src',
             'branches.row_status',
             'branches.created_at',
@@ -283,7 +281,7 @@ class BranchService
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $branchBuilder->where('branches.title_bn', 'like', '%' . $titleBn . '%');
+            $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $branchBuilder */
@@ -335,14 +333,16 @@ class BranchService
         ];
         $rules = [
             'title_en' => [
-                'required',
+                'nullable',
                 'string',
-                'max:191',
+                'max:250',
+                'min:2'
             ],
-            'title_bn' => [
+            'title' => [
                 'required',
                 'string',
                 'max: 600',
+                'min:2'
             ],
             'institute_id' => [
                 'required',
@@ -351,22 +351,25 @@ class BranchService
             ],
             'address' => [
                 'nullable',
-                'string',
-                'max:1000'
+                'string'
+            ],
+            'address_en' => [
+                'nullable',
+                'string'
             ],
             'google_map_src' => [
                 'nullable',
                 'string'
             ],
-            'loc_division_id' => ['nullable', 'integer', 'max:191'],
-            'loc_district_id' => ['nullable', 'integer', 'max:191'],
-            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'loc_division_id' => ['nullable', 'integer'],
+            'loc_district_id' => ['nullable', 'integer'],
+            'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);
@@ -389,17 +392,17 @@ class BranchService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
+            'title_en' => 'nullable|max:250|min:2',
+            'title' => 'nullable|max:600|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

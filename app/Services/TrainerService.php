@@ -25,8 +25,8 @@ class TrainerService
      */
     public function getTrainerList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $nameEn = $request['trainer_name_en'] ?? "";
+        $name = $request['trainer_name'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -39,22 +39,27 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title_bn as institutes_title_bn',
-            'trainers.trainer_registration_number',
+            'institutes.title as institutes_title',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
+            'training_centers.title as training_center_title',
+            'trainers.trainer_name',
+            'trainers.trainer_name_en',
+            'trainers.trainer_registration_number',
             'trainers.email',
             'trainers.mobile',
-            'trainers.date_of_birth as date_of_birth',
+            'trainers.date_of_birth',
             'trainers.about_me',
+            'trainers.about_me_en',
+            'trainers.educational_qualification',
+            'trainers.educational_qualification_en',
+            'trainers.skills',
+            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -62,27 +67,27 @@ class TrainerService
             'trainers.nid',
             'trainers.passport_number',
             'trainers.present_address_division_id',
-            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title as division_title_present_address',
             'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title as district_title_present_address',
             'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title as upazila_title_present_address',
             'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
+            'trainers.present_house_address_en',
             'trainers.permanent_address_division_id',
-            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title as division_title_permanent_address',
             'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
-            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title as district_title_permanent_address',
             'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
-            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title as upazila_title_permanent_address',
             'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
-            'trainers.educational_qualification',
-            'trainers.skills',
+            'trainers.permanent_house_address_en',
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
@@ -96,61 +101,49 @@ class TrainerService
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
             }
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
             $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
                 ->whereNull('loc_divisions_present.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_divisions_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) {
             $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
                 ->whereNull('loc_districts_present.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_districts_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) {
             $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
                 ->whereNull('loc_upazilas_present.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_upazilas_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) {
             $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
                 ->whereNull('loc_divisions_permanent.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_divisions_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
                 ->whereNull('loc_districts_permanent.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_districts_permanent.row_status', $rowStatus);
             }
         });
@@ -158,37 +151,38 @@ class TrainerService
         $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
                 ->whereNull('loc_upazilas_permanent.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('loc_upazilas_permanent.row_status', $rowStatus);
             }
         });
 
         $trainerBuilder->orderBy('trainers.id', $order);
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $trainerBuilder->where('trainers.row_status', $rowStatus);
         }
 
-        if (!empty($titleEn)) {
-            $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $trainerBuilder->where('trainers.trainer_name_bn', 'like', '%' . $titleBn . '%');
+        if (!empty($nameEn)) {
+            $trainerBuilder->where('trainers.trainer_name_en', 'like', '%' . $nameEn . '%');
+        }
+        if (!empty($name)) {
+            $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $name . '%');
         }
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
-        if (is_numeric($branchId)) {
+        if (is_int($branchId)) {
             $trainerBuilder->where('trainers.branch_id', '=', $branchId);
         }
 
-        if (is_numeric($trainingCenterId)) {
+        if (is_int($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
-        /** @var Collection $trainerBuilder */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        /** @var Collection $trainers */
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $trainerBuilder->paginate($pageSize);
             $paginateData = (object)$trainers->toArray();
@@ -221,22 +215,27 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
             'trainers.institute_id',
             'institutes.title_en as institutes_title_en',
-            'institutes.title_bn as institutes_title_bn',
-            'trainers.trainer_registration_number',
+            'institutes.title as institutes_title',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title',
             'trainers.training_center_id',
             'training_centers.title_en as training_center_title_en',
-            'training_centers.title_bn as training_center_title_bn',
+            'training_centers.title as training_center_title',
+            'trainers.trainer_name',
+            'trainers.trainer_name_en',
+            'trainers.trainer_registration_number',
             'trainers.email',
             'trainers.mobile',
-            'trainers.date_of_birth as date_of_birth',
+            'trainers.date_of_birth',
             'trainers.about_me',
+            'trainers.about_me_en',
+            'trainers.educational_qualification',
+            'trainers.educational_qualification_en',
+            'trainers.skills',
+            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -244,27 +243,27 @@ class TrainerService
             'trainers.nid',
             'trainers.passport_number',
             'trainers.present_address_division_id',
-            'loc_divisions_present.title_bn as division_title_bn_present_address',
+            'loc_divisions_present.title as division_title_present_address',
             'loc_divisions_present.title_en as division_title_en_present_address',
             'trainers.present_address_district_id',
-            'loc_districts_present.title_bn as district_title_bn_present_address',
+            'loc_districts_present.title as district_title_present_address',
             'loc_districts_present.title_en as district_title_en_present_address',
             'trainers.present_address_upazila_id',
-            'loc_upazilas_present.title_bn as upazila_title_bn_present_address',
+            'loc_upazilas_present.title as upazila_title_present_address',
             'loc_upazilas_present.title_en as upazila_title_en_present_address',
             'trainers.present_house_address',
+            'trainers.present_house_address_en',
             'trainers.permanent_address_division_id',
-            'loc_divisions_permanent.title_bn as division_title_bn_permanent_address',
+            'loc_divisions_permanent.title as division_title_permanent_address',
             'loc_divisions_permanent.title_en as division_title_en_permanent_address',
             'trainers.permanent_address_district_id',
-            'loc_districts_permanent.title_bn as district_title_bn_permanent_address',
+            'loc_districts_permanent.title as district_title_permanent_address',
             'loc_districts_permanent.title_en as district_title_en_present_address',
             'trainers.permanent_address_upazila_id',
-            'loc_upazilas_permanent.title_bn as upazila_title_bn_permanent_address',
+            'loc_upazilas_permanent.title as upazila_title_permanent_address',
             'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
             'trainers.permanent_house_address',
-            'trainers.educational_qualification',
-            'trainers.skills',
+            'trainers.permanent_house_address_en',
             'trainers.photo',
             'trainers.signature',
             'trainers.row_status',
@@ -320,7 +319,7 @@ class TrainerService
 
         $trainerBuilder->where('trainers.id', $id);
 
-        /** @var Trainer $trainerBuilder */
+        /** @var Trainer $trainer */
         $trainer = $trainerBuilder->first();
         return [
             "data" => $trainer ?: [],
@@ -369,48 +368,121 @@ class TrainerService
     {
         $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::onlyTrashed()->select([
-            'trainers.id as id',
-            'trainers.trainer_name_en',
-            'trainers.trainer_name_bn',
+            'trainers.id',
             'trainers.institute_id',
+            'institutes.title_en as institutes_title_en',
+            'institutes.title as institutes_title',
+            'trainers.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title as branch_title',
+            'trainers.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title as training_center_title',
+            'trainers.trainer_name',
+            'trainers.trainer_name_en',
+            'trainers.trainer_registration_number',
             'trainers.email',
-            'trainers.date_of_birth as date_of_birth',
+            'trainers.mobile',
+            'trainers.date_of_birth',
             'trainers.about_me',
-            'trainers.gender as gender',
-            'trainers.marital_status as marital_status',
-            'trainers.religion as religion',
-            'trainers.nationality as nationality',
+            'trainers.about_me_en',
+            'trainers.educational_qualification',
+            'trainers.educational_qualification_en',
+            'trainers.skills',
+            'trainers.skills_en',
+            'trainers.gender',
+            'trainers.marital_status',
+            'trainers.religion',
+            'trainers.nationality',
             'trainers.nid',
-            'trainers.passport_number as passport_number',
-            'trainers.present_address_division_id as present_address_division_id',
-            'trainers.present_address_district_id as present_address_district_id',
-            'trainers.present_address_upazila_id as present_address_upazila_id',
-            'trainers.present_house_address as present_house_address',
-            'trainers.permanent_address_division_id as permanent_address_division_id',
-            'trainers.permanent_address_district_id as permanent_address_district_id',
-            'trainers.permanent_address_upazila_id as permanent_address_upazila_id',
-            'trainers.permanent_house_address as permanent_house_address',
-            'trainers.educational_qualification as educational_qualification',
-            'trainers.skills as skills',
-            'trainers.photo as photo',
-            'trainers.signature as signature',
+            'trainers.passport_number',
+            'trainers.present_address_division_id',
+            'loc_divisions_present.title as division_title_present_address',
+            'loc_divisions_present.title_en as division_title_en_present_address',
+            'trainers.present_address_district_id',
+            'loc_districts_present.title as district_title_present_address',
+            'loc_districts_present.title_en as district_title_en_present_address',
+            'trainers.present_address_upazila_id',
+            'loc_upazilas_present.title as upazila_title_present_address',
+            'loc_upazilas_present.title_en as upazila_title_en_present_address',
+            'trainers.present_house_address',
+            'trainers.present_house_address_en',
+            'trainers.permanent_address_division_id',
+            'loc_divisions_permanent.title as division_title_permanent_address',
+            'loc_divisions_permanent.title_en as division_title_en_permanent_address',
+            'trainers.permanent_address_district_id',
+            'loc_districts_permanent.title as district_title_permanent_address',
+            'loc_districts_permanent.title_en as district_title_en_present_address',
+            'trainers.permanent_address_upazila_id',
+            'loc_upazilas_permanent.title as upazila_title_permanent_address',
+            'loc_upazilas_permanent.title_en as upazila_title_en_permanent_address',
+            'trainers.permanent_house_address',
+            'trainers.permanent_house_address_en',
+            'trainers.photo',
+            'trainers.signature',
             'trainers.row_status',
+            'trainers.created_by',
+            'trainers.updated_by',
             'trainers.created_at',
             'trainers.updated_at',
+            'trainers.deleted_at',
         ]);
+
+        $trainerBuilder->join("institutes", function ($join) {
+            $join->on('trainers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+        $trainerBuilder->leftJoin("training_centers", function ($join) {
+            $join->on('trainers.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+        $trainerBuilder->leftJoin("branches", function ($join) {
+            $join->on('trainers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
+            $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
+                ->whereNull('loc_divisions_present.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) {
+            $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
+                ->whereNull('loc_districts_present.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) {
+            $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
+                ->whereNull('loc_upazilas_present.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) {
+            $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
+                ->whereNull('loc_divisions_permanent.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) {
+            $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
+                ->whereNull('loc_districts_permanent.deleted_at');
+        });
+
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) {
+            $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
+                ->whereNull('loc_upazilas_permanent.deleted_at');
+        });
 
         $trainerBuilder->orderBy('trainers.id', $order);
 
         if (!empty($titleEn)) {
             $trainerBuilder->where('trainers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainerBuilder->where('trainers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainerBuilder->where('trainers.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $trainerBuilder */
@@ -463,15 +535,10 @@ class TrainerService
         ];
 
         $rules = [
-            'trainer_name_en' => [
+            'institute_id' => [
                 'required',
-                'string',
-                'max:191'
-            ],
-            'trainer_name_bn' => [
-                'required',
-                'string',
-                'max:1000'
+                'int',
+                'exists:institutes,id'
             ],
             'branch_id' => [
                 'nullable',
@@ -483,10 +550,15 @@ class TrainerService
                 'int',
                 'exists:training_centers,id'
             ],
-            'institute_id' => [
+            'trainer_name' => [
                 'required',
-                'int',
-                'exists:institutes,id'
+                'string',
+                'max:500'
+            ],
+            'trainer_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
             ],
             'trainer_registration_number' => [
                 'required',
@@ -495,12 +567,14 @@ class TrainerService
             ],
             'email' => [
                 'required',
-                'string',
+                'email',
+                'max:150',
                 'unique:trainers,email,' . $id
             ],
             'mobile' => [
                 'required',
-                'string',
+                BaseModel::MOBILE_REGEX,
+                'max:15',
                 'unique:trainers,mobile,' . $id
             ],
             'date_of_birth' => [
@@ -511,73 +585,96 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'gender' => [
+            'about_me_en' => [
                 'nullable',
-                'int'
+                'string'
+            ],
+            'gender' => [
+                'required',
+                'integer'
             ],
             'marital_status' => [
-                'nullable',
-                'int'
+                'required',
+                'integer'
             ],
             'religion' => [
                 'nullable',
-                'int'
+                'integer'
             ],
             'nationality' => [
                 'required',
-                'string'
+                'string',
+                'max:100'
             ],
             'nid' => [
                 'nullable',
-                'string'
+                'string',
+                'max:30',
             ],
             'passport_number' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'educational_qualification' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification_en' => [
+                'nullable',
+                'string'
+            ],
+            'skills' => [
+                'nullable',
+                'string'
+            ],
+            'skills_en' => [
                 'nullable',
                 'string'
             ],
             'present_address_division_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_divisions,id'
             ],
             'present_address_district_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_districts,id'
             ],
             'present_address_upazila_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_upazilas,id'
             ],
             'present_house_address' => [
                 'nullable',
                 'string'
             ],
+            'present_house_address_en' => [
+                'nullable',
+                'string'
+            ],
             'permanent_address_division_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_divisions,id'
             ],
             'permanent_address_district_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_districts,id'
             ],
             'permanent_address_upazila_id' => [
                 'nullable',
-                'int',
+                'integer',
                 'exists:loc_upazilas,id'
             ],
             'permanent_house_address' => [
                 'nullable',
                 'string'
             ],
-            'educational_qualification' => [
-                'nullable',
-                'string'
-            ],
-            'skills' => [
+            'permanent_house_address_en' => [
                 'nullable',
                 'string'
             ],
@@ -593,8 +690,14 @@ class TrainerService
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => [
+                'nullable',
+                'integer',
+            ],
+            'updated_by' => [
+                'nullable',
+                'integer',
+            ],
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
@@ -616,19 +719,19 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
-            'branch_id'=>'numeric',
-            'training_center_id'=>'numeric',
+            'trainer_name_en' => 'nullable|max:250|min:2',
+            'trainer_name' => 'nullable|max:500|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
+            'branch_id' => 'int|exists:branches,id',
+            'training_center_id' => 'int|exists:training_centers,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);

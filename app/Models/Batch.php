@@ -2,41 +2,35 @@
 
 namespace App\Models;
 
+
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 /**
  * Class Batche
  * @package App\Models
  * @property int institute_id
  * @property int branch_id
- * @property int training_center
- * @property int programme_id
+ * @property int training_center_id
  * @property int course_id
  * @property int row_status
- * @property boolean ethnic
- * @property boolean freedom_fighter
- * @property boolean disable_status
- * @property boolean ssc
- * @property boolean hsc
- * @property boolean honors
- * @property boolean masters
- * @property boolean occupation
- * @property boolean guardian
+ * @property int number_of_seats
+ * @property int available_seats
+ * @property Carbon registration_start_date
+ * @property Carbon registration_end_date
+ * @property Carbon batch_start_date
+ * @property Carbon batch_end_date
  * @property-read Institute institute
  * @property-read Branch branch
  * @property-read TrainingCenter trainingCenter
- * @property-read Programme programme
  * @property-read Course course
  */
 class Batch extends BaseModel
 {
-    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
 
+    use ScopeRowStatusTrait;
     protected $guarded = ['id'];
 
     /**
@@ -44,7 +38,7 @@ class Batch extends BaseModel
      */
     public function course(): BelongsTo
     {
-        return $this->belongsTo(Course::class);
+        return $this->belongsTo(Course::class, 'batch_id', 'id');
     }
 
     /**
@@ -52,7 +46,7 @@ class Batch extends BaseModel
      */
     public function institute(): BelongsTo
     {
-        return $this->belongsTo(Institute::class);
+        return $this->belongsTo(Institute::class, 'batch_id', 'id');
     }
 
     /**
@@ -60,7 +54,7 @@ class Batch extends BaseModel
      */
     public function branch(): BelongsTo
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'batch_id', 'id');
     }
 
     /**
@@ -68,23 +62,15 @@ class Batch extends BaseModel
      */
     public function trainingCenter(): BelongsTo
     {
-        return $this->belongsTo(TrainingCenter::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function programme(): BelongsTo
-    {
-        return $this->belongsTo(Programme::class);
+        return $this->belongsTo(TrainingCenter::class, 'batch_id', 'id');
     }
 
     /**
      * @return BelongsToMany
      */
-    public function trainers():BelongsToMany
+    public function trainers(): BelongsToMany
     {
-        return $this->belongsToMany(Trainer::class,'trainer_batch');
+        return $this->belongsToMany(Trainer::class, 'trainer_batch', 'batch_id', 'trainer_id');
     }
 
 }

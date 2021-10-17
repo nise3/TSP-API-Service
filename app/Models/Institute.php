@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 /**
@@ -13,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  * @property int id
  * @property string title_en
- * @property string|null title_bn
+ * @property string|null title
  * @property string code
  * @property string domain
  * @property string|null address
@@ -23,10 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Institute extends BaseModel
 {
-
-    use ScopeRowStatusTrait, HasFactory, SoftDeletes;
-
-
     /**
      * @var string[]
      */
@@ -50,7 +43,7 @@ class Institute extends BaseModel
      */
     public function title(): ?string
     {
-        return $this->title_bn || $this->title_en;
+        return $this->title || $this->title_en;
     }
 
     /**
@@ -58,7 +51,7 @@ class Institute extends BaseModel
      */
     public function branches(): HasMany
     {
-        return $this->hasMany(Branch::class);
+        return $this->hasMany(Branch::class, 'institute_id', 'id');
     }
 
     /**
@@ -66,15 +59,15 @@ class Institute extends BaseModel
      */
     public function courses(): HasMany
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Course::class, 'institute_id', 'id');
     }
 
     /**
      * @return HasMany
      */
-    public function programmes(): HasMany
+    public function programs(): HasMany
     {
-        return $this->hasMany(Programme::class);
+        return $this->hasMany(Program::class, 'institute_id', 'id');
     }
 
     /**
@@ -82,7 +75,7 @@ class Institute extends BaseModel
      */
     public function trainingCenters(): HasMany
     {
-        return $this->hasMany(TrainingCenter::class);
+        return $this->hasMany(TrainingCenter::class, 'institute_id', 'id');
     }
 
     /**
@@ -90,11 +83,11 @@ class Institute extends BaseModel
      */
     public function batches(): HasMany
     {
-        return $this->hasMany(Batch::class);
+        return $this->hasMany(Batch::class, 'institute_id', 'id');
     }
 
     public function trainers(): HasMany
     {
-        return $this->hasMany(Trainer::class);
+        return $this->hasMany(Trainer::class, 'institute_id', 'id');
     }
 }

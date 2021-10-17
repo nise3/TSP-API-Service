@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use App\Services\InstituteService;
 use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
@@ -49,7 +50,7 @@ class InstituteController extends Controller
         try {
             $response = $this->instituteService->getInstituteList($filter, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -64,7 +65,7 @@ class InstituteController extends Controller
         try {
             $response = $this->instituteService->getOneInstitute($id, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -86,7 +87,7 @@ class InstituteController extends Controller
             if ($institute) {
                 $validatedData['institute_id'] = $institute->id;
                 $createUser = $this->instituteService->createUser($validatedData);
-                Log::channel('idp_user')->info('idp_user_info:'.json_encode($createUser));
+                Log::channel('idp_user')->info('idp_user_info:' . json_encode($createUser));
                 if ($createUser && $createUser['_response_status']['success']) {
                     $response = [
                         'data' => $institute ?: [],
@@ -126,9 +127,72 @@ class InstituteController extends Controller
 
         } catch (Throwable $e) {
             DB::rollBack();
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function instituteRegistration(Request $request)
+    {
+
+        $institute = app(Institute::class);
+        $validated = $this->instituteService->registerInstituteValidator($request)->validate();
+        DB::beginTransaction();
+        try {
+            $institute = $this->instituteService->store($institute, $validated);
+
+            throw_if(!$institute, new RuntimeException('Saving Institute to DB failed!', 500));
+
+            $validated['institute_id'] = $institute->id;
+            $createRegisterUser = $this->instituteService->createRegisterUser($validated);
+
+            throw_if(!$createRegisterUser, new RuntimeException('Saving User to Core and IDP failed!', 500));
+
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Institute Successfully Created",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+
+            if ($createRegisterUser['_response_status']['success']) {
+                $response['data'] = $institute;
+                DB::commit();
+                return Response::json($response, $response['_response_status']['code']);
+            }
+
+            DB::rollBack();
+
+            $response['_response_status'] = [
+                "success" => false,
+                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "message" => "Validation Error",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ];
+
+            if (!empty($createRegisterUser['errors'])) {
+                $response['errors'] = $createRegisterUser['errors'];
+            }
+
+            if ($createRegisterUser['_response_status']['code'] != ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
+                $response['_response_status']['code'] = ResponseAlias::HTTP_BAD_REQUEST;
+                $response['_response_status']['message'] = "Bad Request, Please contact";
+            }
+
+            return Response::json($response, $response['_response_status']['code']);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
     }
 
     /**
@@ -141,12 +205,9 @@ class InstituteController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
-
         $validated = $this->instituteService->validator($request, $id)->validate();
-
         try {
             $data = $this->instituteService->update($institute, $validated);
-
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [
@@ -157,7 +218,7 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -181,7 +242,7 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -191,7 +252,7 @@ class InstituteController extends Controller
         try {
             $response = $this->instituteService->getInstituteTrashList($request, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -210,7 +271,7 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -229,7 +290,7 @@ class InstituteController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }

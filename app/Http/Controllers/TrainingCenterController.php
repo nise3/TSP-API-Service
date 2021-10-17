@@ -52,7 +52,7 @@ class TrainingCenterController extends Controller
         try {
             $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -67,7 +67,7 @@ class TrainingCenterController extends Controller
         try {
             $response = $this->trainingCenterService->getOneTrainingCenter($id, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -93,7 +93,7 @@ class TrainingCenterController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -121,7 +121,7 @@ class TrainingCenterController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -145,7 +145,7 @@ class TrainingCenterController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -155,7 +155,7 @@ class TrainingCenterController extends Controller
         try {
             $response = $this->trainingCenterService->getTrainingCenterTrashList($request, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -174,7 +174,7 @@ class TrainingCenterController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -193,7 +193,7 @@ class TrainingCenterController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }

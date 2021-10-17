@@ -49,7 +49,7 @@ class CourseController extends Controller
         try {
             $response = $this->courseService->getCourseList($filter, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -58,14 +58,14 @@ class CourseController extends Controller
      * Display the specified resource
      * @param Request $request
      * @param int $id
-     * @return JsonResponse
+     * @return Exception|JsonResponse|Throwable
      */
-    public function read(Request $request, int $id): JsonResponse
+    public function read(Request $request, int $id)
     {
         try {
             $response = $this->courseService->getOneCourse($id, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -92,7 +92,7 @@ class CourseController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -120,7 +120,7 @@ class CourseController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
@@ -144,7 +144,7 @@ class CourseController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -154,7 +154,7 @@ class CourseController extends Controller
         try {
             $response = $this->courseService->getCourseTrashList($request, $this->startTime);
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response);
     }
@@ -173,7 +173,7 @@ class CourseController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -192,8 +192,20 @@ class CourseController extends Controller
                 ]
             ];
         } catch (Throwable $e) {
-            return $e;
+            throw $e;
         }
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    public function getFilterCourseList(Request $request,string $type = null): JsonResponse
+    {
+        $filter = $this->courseService->filterValidator($request)->validate();
+
+        try {
+            $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
+        } catch (Throwable $e) {
+           throw $e;
+        }
+        return Response::json($response);
     }
 }

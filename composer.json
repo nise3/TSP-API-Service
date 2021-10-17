@@ -5,12 +5,16 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.4|^8.0",
-        "flipbox/lumen-generator": "^8.2",
-        "guzzlehttp/guzzle": "^7.3",
-        "laravel/legacy-factories": "^1.1",
+        "php": "^8.0",
+        "ext-json": "*",
+        "ext-pdo": "*",
         "laravel/lumen-framework": "^8.0",
-        "league/flysystem": " ~1.0"
+        "laravel/tinker": "^2.6",
+        "guzzlehttp/guzzle": "^7.3",
+        "felixkiss/uniquewith-validator": "^3.4",
+        "flipbox/lumen-generator": "^8.2",
+        "irazasyed/larasupport": "^1.7",
+        "phabloraylan/lumen-middleware-trim-or-convert-strings": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -22,7 +26,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/functions/helpers.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

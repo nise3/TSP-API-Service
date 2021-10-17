@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,10 +26,10 @@ class TrainingCenterService
     public function getTrainingCenterList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title_bn'] ?? "";
+        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
-        $paginate =  $request['page'] ?? "";
-        $rowStatus =  $request['row_status'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
@@ -40,22 +39,22 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title',
             'training_centers.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'training_centers.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'training_centers.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institutetitle',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -69,64 +68,55 @@ class TrainingCenterService
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            if (is_int($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) {
             $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) {
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if (is_numeric($instituteId)) {
+        if (is_int($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        Log::info($branchId);
-        if (is_numeric($branchId)) {
+        if (is_int($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
 
-        if (is_numeric($rowStatus)) {
+        if (is_int($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
-        } elseif (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+        }
+        if (!empty($title)) {
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
         }
 
 
         /** @var Collection $trainingCentersBuilder */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
+        if (is_int($paginate) || is_int($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -161,23 +151,24 @@ class TrainingCenterService
             'training_centers.id',
             'training_centers.center_location_type',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title',
             'training_centers.loc_division_id',
-            'loc_divisions.title_bn as division_title_bn',
+            'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'training_centers.loc_district_id',
-            'loc_districts.title_bn as district_title_bn',
+            'loc_districts.title as district_title',
             'loc_districts.title_en as district_title_en',
             'training_centers.loc_upazila_id',
-            'loc_upazilas.title_bn as upazila_title_bn',
+            'loc_upazilas.title as upazila_title',
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title_bn as institute_title_bn',
+            'institutes.title as institute_title',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
-            'branches.title_bn as branch_title_bn',
+            'branches.title as branch_title',
             'training_centers.address',
+            'training_centers.address_en',
             'training_centers.google_map_src',
             'training_centers.row_status',
             'training_centers.created_by',
@@ -212,12 +203,10 @@ class TrainingCenterService
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
         });
-        if (!empty($id)) {
-            $trainingCenterBuilder->where('training_centers.id', '=', $id);
-        }
+
+        $trainingCenterBuilder->where('training_centers.id', '=', $id);
         /** @var TrainingCenter $trainingCenterBuilder */
         $trainingCenter = $trainingCenterBuilder->first();
-
 
         return [
             "data" => $trainingCenter ?: [],
@@ -283,22 +272,25 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'title_en' => 'required|string|max: 400',
-            'title_bn' => 'required|string|max: 1000',
             'institute_id' => 'required|int|exists:institutes,id',
             'branch_id' => 'nullable|int|exists:branches,id',
             'center_location_type' => 'nullable|int',
-            'address' => ['nullable', 'string', 'max:1000'],
+            'title' => 'required|string|max: 1000',
+            'title_en' => 'nullable|string|max: 500',
+            'loc_division_id' => ['nullable', 'integer'],
+            'loc_district_id' => ['nullable', 'integer'],
+            'loc_upazila_id' => ['nullable', 'integer'],
+            'location_latitude' => ['nullable', 'string'],
+            'location_longitude' => ['nullable', 'string'],
             'google_map_src' => ['nullable', 'string'],
-            'loc_division_id' => ['nullable', 'integer', 'max:191'],
-            'loc_district_id' => ['nullable', 'integer', 'max:191'],
-            'loc_upazila_id' => ['nullable', 'integer', 'max:10'],
+            'address' => ['nullable', 'string'],
+            'address_en' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'created_by' => ['nullable', 'integer', 'max:10'],
-            'updated_by' => ['nullable', 'integer', 'max:10'],
+            'created_by' => ['nullable', 'integer'],
+            'updated_by' => ['nullable', 'integer'],
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -319,7 +311,7 @@ class TrainingCenterService
     {
         $limit = $request->query('limit', 10);
         $titleEn = $request->query('title_en');
-        $titleBn = $request->query('title_bn');
+        $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
@@ -327,13 +319,15 @@ class TrainingCenterService
         $trainingCentersBuilder = TrainingCenter::onlyTrashed()->select([
             'training_centers.id as id',
             'training_centers.title_en',
-            'training_centers.title_bn',
+            'training_centers.title as title',
             'training_centers.institute_id',
             'institutes.title_en as institute_name',
+            'institutes.title as institute_name_bn',
             'training_centers.branch_id',
             'branches.title_en as branch_name',
+            'branches.title as branch_name_bn',
             'training_centers.address',
-            'training_centers.address',
+            'training_centers.address_en',
             'training_centers.google_map_src',
             'training_centers.row_status',
             'training_centers.created_by',
@@ -347,7 +341,7 @@ class TrainingCenterService
         if (!empty($titleEn)) {
             $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $trainingCentersBuilder->where('training_centers.title_bn', 'like', '%' . $titleBn . '%');
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $titleBn . '%');
         }
 
         /** @var Collection $trainingCentersBuilder */
@@ -402,18 +396,18 @@ class TrainingCenterService
         ];
 
         return Validator::make($request->all(), [
-            'title_en' => 'nullable|min:1',
-            'title_bn' => 'nullable|min:1',
-            'page_size' => 'numeric',
-            'page' => 'numeric',
-            'institute_id' => 'numeric',
-            'branch_id'=>'numeric',
+            'title_en' => 'nullable|max:500|min:2',
+            'title' => 'nullable|max:1000|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'institute_id' => 'int|exists:institutes,id',
+            'branch_id' => 'int|exists:branches,id',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
-                "numeric",
+                "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ], $customMessage);
