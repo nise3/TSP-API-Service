@@ -546,7 +546,7 @@ class InstituteService
             ],
 
             'name_of_the_office_head' => [
-                'nullable',
+                'required',
                 'string',
                 'max:500'
             ],
