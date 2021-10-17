@@ -12,7 +12,6 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -90,28 +89,19 @@ class InstituteService
 
         $instituteBuilder->orderBy('institutes.id', $order);
 
-        $instituteBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $instituteBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'institutes.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
         });
 
         $instituteBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
             $join->on('loc_districts.id', '=', 'institutes.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
         });
 
         $instituteBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas.id', '=', 'institutes.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
         });
 
         if (is_int($rowStatus)) {

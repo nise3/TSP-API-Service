@@ -23,6 +23,8 @@ class LocDivision extends BaseModel
     protected $table = 'loc_divisions';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
+    public $timestamps = false;
+
     public function locUpazilas(): HasMany
     {
         return $this->hasMany(LocUpazila::class, 'loc_district_id');

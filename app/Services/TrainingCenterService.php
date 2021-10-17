@@ -80,28 +80,19 @@ class TrainingCenterService
             }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) {
             $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
         });
 
-        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) {
             $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 

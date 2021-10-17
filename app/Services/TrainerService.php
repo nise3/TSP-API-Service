@@ -120,36 +120,24 @@ class TrainerService
             }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
             $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
                 ->whereNull('loc_divisions_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) {
             $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
                 ->whereNull('loc_districts_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) {
             $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
                 ->whereNull('loc_upazilas_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) {
             $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
                 ->whereNull('loc_divisions_permanent.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {

@@ -70,28 +70,22 @@ class BranchService
             }
         });
 
-        $branchBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'branches.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_districts', function ($join) {
             $join->on('loc_districts.id', '=', 'branches.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_upazilas', function ($join){
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
+
         });
 
 

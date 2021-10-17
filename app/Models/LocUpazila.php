@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class LocUpazila extends BaseModel
 {
     protected $table = 'loc_upazilas';
+    public $timestamps = false;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     public function locDistrict(): BelongsTo
