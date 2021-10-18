@@ -24,9 +24,9 @@ class CreateCourseEnrollmentsTable extends Migration
             $table->unsignedTinyInteger('payment_status')->default(0);
 
             $table->string('first_name', 300);
-            $table->string('first_name_en', 150);
+            $table->string('first_name_en', 150)->nullable();
             $table->string('last_name', 300);
-            $table->string('last_name_en', 150);
+            $table->string('last_name_en', 150)->nullable();
             $table->unsignedTinyInteger('gender')
                 ->comment('1=>male,2=>female,3=>others');
 
@@ -61,8 +61,8 @@ class CreateCourseEnrollmentsTable extends Migration
             $table->string('passport_photo_path', 600)->nullable();
             $table->string('signature_image_path', 600)->nullable();
 
-            $table->unsignedTinyInteger('row_status')
-                ->default(0)->comment('0 => Pending, 1 => approved, 2 => rejected');
+            $table->unsignedTinyInteger("row_status")->default(0)
+                ->comment('0=>inactive, 1=>active, 2=>pending, 3=>rejected');
 
             $table->timestamps();
             $table->softDeletes();

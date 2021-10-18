@@ -197,15 +197,37 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getFilterCourseList(Request $request,string $type = null): JsonResponse
+    public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request)->validate();
 
         try {
             $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
         } catch (Throwable $e) {
-           throw $e;
+            throw $e;
         }
         return Response::json($response);
+    }
+
+    public function courseEnrollment(Request $request): JsonResponse
+    {
+        $validated = $this->courseService->courseEnrollmentValidator($request)->validate();
+        dd($validated);
+        try {
+            $data = $this->courseService->store($validated);
+
+            $response = [
+                'data' => $data ?: [],
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Course added successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 }
