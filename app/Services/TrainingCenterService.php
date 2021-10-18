@@ -272,8 +272,8 @@ class TrainingCenterService
         ];
 
         $rules = [
-            'institute_id' => 'required|int|exists:institutes,id',
-            'branch_id' => 'nullable|int|exists:branches,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|required|int',
+            'branch_id' => 'exists:branches,id,deleted_at,NULL|nullable|int',
             'center_location_type' => 'nullable|int',
             'title' => 'required|string|max: 1000',
             'title_en' => 'nullable|string|max: 500',
@@ -400,8 +400,8 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
-            'branch_id' => 'int|exists:branches,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

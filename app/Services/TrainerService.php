@@ -536,19 +536,19 @@ class TrainerService
 
         $rules = [
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
                 'int',
-                'exists:institutes,id'
             ],
             'branch_id' => [
+                'exists:branches,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:branches,id'
             ],
             'training_center_id' => [
+                'exists:training_centers,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:training_centers,id'
             ],
             'trainer_name' => [
                 'required',
@@ -561,21 +561,21 @@ class TrainerService
                 'max:250'
             ],
             'trainer_registration_number' => [
+                'unique:trainers,trainer_registration_number,' . $id,
                 'required',
                 'string',
-                'unique:trainers,trainer_registration_number,' . $id
             ],
             'email' => [
+                'unique:trainers,email,' . $id,
                 'required',
                 'email',
                 'max:150',
-                'unique:trainers,email,' . $id
             ],
             'mobile' => [
+                'unique:trainers,mobile,' . $id,
                 'required',
                 BaseModel::MOBILE_REGEX,
                 'max:15',
-                'unique:trainers,mobile,' . $id
             ],
             'date_of_birth' => [
                 'required',
@@ -633,19 +633,22 @@ class TrainerService
                 'string'
             ],
             'present_address_division_id' => [
+                'exists:loc_divisions,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_divisions,id'
+
             ],
             'present_address_district_id' => [
+                'exists:loc_districts,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_districts,id'
+
             ],
             'present_address_upazila_id' => [
+                'exists:loc_upazilas,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_upazilas,id'
+
             ],
             'present_house_address' => [
                 'nullable',
@@ -656,19 +659,19 @@ class TrainerService
                 'string'
             ],
             'permanent_address_division_id' => [
+                'exists:loc_divisions,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_divisions,id'
             ],
             'permanent_address_district_id' => [
+                'exists:loc_districts,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_districts,id'
             ],
             'permanent_address_upazila_id' => [
+                'exists:loc_upazilas,id,deleted_at,NULL',
                 'nullable',
                 'integer',
-                'exists:loc_upazilas,id'
             ],
             'permanent_house_address' => [
                 'nullable',
@@ -723,9 +726,9 @@ class TrainerService
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
-            'branch_id' => 'int|exists:branches,id',
-            'training_center_id' => 'int|exists:training_centers,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
+            'training_center_id' => 'exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

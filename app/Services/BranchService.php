@@ -82,7 +82,7 @@ class BranchService
 
         });
 
-        $branchBuilder->leftJoin('loc_upazilas', function ($join){
+        $branchBuilder->leftJoin('loc_upazilas', function ($join) {
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
 
@@ -345,9 +345,9 @@ class BranchService
                 'min:2'
             ],
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
-                'int',
-                'exists:institutes,id',
+                'int'
             ],
             'address' => [
                 'nullable',
@@ -396,7 +396,7 @@ class BranchService
             'title' => 'nullable|max:600|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

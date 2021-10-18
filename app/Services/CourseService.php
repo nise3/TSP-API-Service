@@ -46,6 +46,8 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -162,6 +164,8 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -503,25 +507,25 @@ class CourseService
 
         $rules = [
             'code' => [
+                'unique:courses,code,' . $id,
                 'required',
                 'string',
                 'max:150',
-                'unique:courses,code,' . $id
             ],
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
                 'int',
-                'exists:institutes,id'
             ],
             'branch_id' => [
+                'exists:programs,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:programs,id'
             ],
             'program_id' => [
+                'exists:programs,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:programs,id'
             ],
             'title' => [
                 'required',
@@ -582,10 +586,9 @@ class CourseService
                 'nullable',
                 'string'
             ],
-            "language_medium"=>[
+            "language_medium" => [
                 "required",
                 Rule::in(Course::COURSE_LANGUAGE_MEDIUMS)
-
             ],
 
             'training_methodology' => [

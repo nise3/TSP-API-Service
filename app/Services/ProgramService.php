@@ -209,15 +209,16 @@ class ProgramService
                 'min:2'
             ],
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
                 'int',
-                'exists:institutes,id'
             ],
             'code' => [
+                'unique:programs,code,' . $id,
                 'nullable',
                 'string',
                 'max:100',
-                'unique:programs,code,' . $id,
+
             ],
             'description' => [
                 'nullable',
@@ -329,7 +330,7 @@ class ProgramService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'integer|exists:institutes,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|integer',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
