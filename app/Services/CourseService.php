@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Skill;
+use App\Models\Trainer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
@@ -155,9 +157,10 @@ class CourseService
     /**
      * @param int $id
      * @param Carbon $startTime
+     * @param bool $withTrainers
      * @return array
      */
-    public function getOneCourse(int $id, Carbon $startTime): array
+    public function getOneCourse(int $id, Carbon $startTime, bool $withTrainers = false): array
     {
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
@@ -225,6 +228,28 @@ class CourseService
 
         /** @var Course $course */
         $course = $courseBuilder->first();
+
+        if ($withTrainers == true) {
+            /** @var Builder $trainerBuilder */
+            $trainerBuilder = Trainer::select([
+                'trainers.trainer_name',
+                'trainers.trainer_name_en',
+                'trainers.email',
+                'trainers.mobile',
+            ]);
+            $trainerBuilder->join('trainer_batch', 'trainer_batch.trainer_id', '=', 'trainers.id');
+            $trainerBuilder->join('batches', 'trainer_batch.batch_id', '=', 'batches.id');
+            $trainerBuilder->where('batches.course_id', $id);
+            $trainerBuilder->orderBy('trainers.id', 'ASC');
+            $trainerBuilder->groupBy('trainers.id');
+
+            /** @var Collection $trainers */
+            $trainers = $trainerBuilder->get();
+
+            $course["trainers"] = $trainers->toArray();
+
+        }
+
 
         return [
             "data" => $course ?: [],

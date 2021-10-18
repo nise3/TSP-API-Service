@@ -2250,7 +2250,7 @@
                 }
             }
         },
-        "/courses/{courseId}/details": {
+        "/public/courses/{courseId}": {
             "get": {
                 "parameters": [
                     {
@@ -2279,28 +2279,66 @@
                                 "example": {
                                     "data": {
                                         "id": 2,
-                                        "code": "ZM",
-                                        "title_en": "Miss Heath Ondricka",
-                                        "title": "Tessie Stark PhD",
+                                        "code": "alias-vero-ut-iure-quia-sit-sint-doloremque-error-enim-voluptas-veritatis-quam-impedit-pariatur-quo-itaque-blanditiis-modi-quaerat-animi-et-autem-id-n",
+                                        "level": 2,
+                                        "language_medium": 1,
                                         "institute_id": 1,
-                                        "institute_title_en": "Hellen Mante",
-                                        "institute_title": "Brenda McDermott",
-                                        "course_fee": "0.00",
-                                        "duration": "19:53:32",
-                                        "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
-                                        "target_group": "3",
-                                        "objectives": "Voluptas consequatur similique dignissimos.",
-                                        "lessons": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
-                                        "training_methodology": "Qui sit quia qui rerum accusantium amet non.",
-                                        "evaluation_system": "Repellendus amet maxime facere porro.",
-                                        "prerequisite": "Voluptatem non sed nesciunt ab voluptatibus.",
-                                        "eligibility": "Accusamus voluptates nemo eum temporibus.",
+                                        "institute_title": "Lempi Johns",
+                                        "institute_title_en": "Krystel Ernser DVM",
+                                        "branch_id": null,
+                                        "branch_title": null,
+                                        "branch_title_en": null,
+                                        "program_id": 2,
+                                        "program_title": "Mose Yundt DVM",
+                                        "program_title_en": "Mr. Bryon Bernier",
+                                        "title": "Joanny Hayes",
+                                        "title_en": "Bertram Mitchell",
+                                        "course_fee": 10533,
+                                        "duration": 62,
+                                        "overview": "Nostrum nobis explicabo facilis iure illum cupiditate. Temporibus commodi expedita ducimus dolor. Temporibus accusamus optio quis eum. Accusantium facere ex eos et esse quis autem.",
+                                        "overview_en": "Aut sit nemo ut. Natus exercitationem cumque rerum rerum. A explicabo sit nesciunt in enim aut dolorem velit.",
+                                        "target_group": "et velit nobis",
+                                        "target_group_en": "molestiae quam inventore",
+                                        "objectives": "Assumenda numquam commodi minima dolore non impedit. Est pariatur sint deleniti dignissimos. Assumenda deleniti labore repudiandae ut.",
+                                        "objectives_en": "Rerum natus temporibus ut fugit doloribus dignissimos quo hic. Accusantium est sint eius sed cumque delectus beatae. Laboriosam cumque est dignissimos maxime.",
+                                        "lessons": "Nostrum libero consequatur molestiae magni eum voluptas omnis quam. At nostrum laudantium laboriosam. Dolores aut rerum voluptatum velit asperiores. Ut doloribus adipisci omnis accusantium non.",
+                                        "lessons_en": "Non qui sit alias dicta magnam. Delectus repellat est consequuntur architecto libero quis laboriosam. Soluta numquam rerum voluptatum esse laborum.",
+                                        "training_methodology": "Maiores saepe odit perferendis maxime.",
+                                        "training_methodology_en": "Quod in provident minus earum dolorem laborum.",
+                                        "evaluation_system": "Praesentium cupiditate maiores fugit omnis reprehenderit vitae.",
+                                        "evaluation_system_en": "Et qui magni ad aperiam.",
+                                        "prerequisite": "Ratione voluptate dolore et quod.",
+                                        "prerequisite_en": "Voluptas velit voluptates ea aut aliquam.",
+                                        "eligibility": "Ut quaerat officia fugiat dolor culpa sunt.",
+                                        "eligibility_en": "Odit voluptas nihil consequatur dolorum deleniti officia.",
                                         "cover_image": "softbd.jpg",
+                                        "application_form_settings": null,
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-08-31T08:52:04.000000Z",
-                                        "updated_at": "2021-08-31T08:52:04.000000Z"
+                                        "created_at": "2021-10-18T06:26:25.000000Z",
+                                        "updated_at": "2021-10-18T06:26:27.000000Z",
+                                        "deleted_at": null,
+                                        "trainers": [
+                                            {
+                                                "trainer_name": "Dr. Zion Crooks",
+                                                "trainer_name_en": "Verdie Ratke",
+                                                "email": "ozboncak@example.net",
+                                                "mobile": "01746620939"
+                                            },
+                                            {
+                                                "trainer_name": "Eve Goyette",
+                                                "trainer_name_en": "Olaf Muller",
+                                                "email": "marcelino45@example.org",
+                                                "mobile": "01775777392"
+                                            },
+                                            {
+                                                "trainer_name": "Chase Schuster",
+                                                "trainer_name_en": "Alberta Keebler",
+                                                "email": "augustus53@example.org",
+                                                "mobile": "01709394459"
+                                            }
+                                        ]
                                     },
                                     "_response_status": {
                                         "success": true,

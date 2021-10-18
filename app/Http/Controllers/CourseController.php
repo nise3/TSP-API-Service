@@ -81,7 +81,8 @@ class CourseController extends Controller
     public function courseDetails(int $id): JsonResponse
     {
         try {
-            $response = $this->courseService->getOneCourse($id, $this->startTime);
+            $withTrainers = true;
+            $response = $this->courseService->getOneCourse($id, $this->startTime, $withTrainers);
         } catch (Throwable $e) {
             throw $e;
         }
@@ -219,14 +220,14 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getFilterCourseList(Request $request,string $type = null): JsonResponse
+    public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request)->validate();
 
         try {
             $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
         } catch (Throwable $e) {
-           throw $e;
+            throw $e;
         }
         return Response::json($response);
     }
