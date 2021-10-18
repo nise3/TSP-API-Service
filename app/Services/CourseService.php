@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Course;
+use App\Models\Skill;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -239,6 +241,8 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
+        Log::info($course);
+        $this->assignSkills($course, $data["skills"]);
         return $course;
     }
 
@@ -251,6 +255,7 @@ class CourseService
     {
         $course->fill($data);
         $course->save();
+        $this->assignSkills($course, $data["skills"]);
         return $course;
     }
 
@@ -465,6 +470,14 @@ class CourseService
         return $response;
     }
 
+    private function assignSkills(Course $course, array $skills)
+    {
+        /** Assign skills to cOURSE */
+        $skillIds = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $course->skills()->sync($skillIds);
+
+    }
+
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
@@ -473,8 +486,11 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        if (!empty($data["skills"])) {
+            $data["skills"] = is_array($request['skills']) ? $request['skills'] : explode(',', $request['skills']);
+        }
 
-        if($request['application_form_settings']){
+        if ($request['application_form_settings']) {
             $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
         }
 
@@ -609,6 +625,18 @@ class CourseService
             ],
             'application_form_settings.*' => [
                 'string'
+            ],
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

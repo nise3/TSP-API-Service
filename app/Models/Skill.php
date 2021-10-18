@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Skill
@@ -23,5 +24,13 @@ class Skill extends BaseModel
      * @var string[]
      */
     protected $hidden = ["pivot"];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_skills');
+    }
 
 }
