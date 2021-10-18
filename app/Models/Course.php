@@ -6,6 +6,7 @@ use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -40,7 +41,7 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     protected $table = 'courses';
     protected $guarded = ['id'];
@@ -50,6 +51,25 @@ class Course extends BaseModel
     protected $casts = [
         'application_form_settings' => 'array'
     ];
+
+    const COURSE_LEVEL_BEGINNER = 1;
+    const COURSE_LEVEL_INTERMEDIATE = 2;
+    const COURSE_LEVEL_EXPERT = 3;
+
+    const COURSE_LEVELS = [
+        self::COURSE_LEVEL_BEGINNER,
+        self::COURSE_LEVEL_INTERMEDIATE,
+        self::COURSE_LEVEL_EXPERT
+    ];
+
+    const COURSE_LANGUAGE_MEDIUM_BENGALI = 1;
+    const COURSE_LANGUAGE_MEDIUM_ENGLISH = 2;
+
+    const COURSE_LANGUAGE_MEDIUMS = [
+        self::COURSE_LANGUAGE_MEDIUM_BENGALI,
+        self::COURSE_LANGUAGE_MEDIUM_ENGLISH,
+    ];
+
 
     /**
      * @return BelongsTo

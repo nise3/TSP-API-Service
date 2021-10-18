@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCourseSkillsTable extends Migration
+class CreateCourseSkillTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCourseSkillsTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_skills', function (Blueprint $table) {
+        Schema::create('course_skill', function (Blueprint $table) {
             $table->unsignedInteger('course_id');
             $table->unsignedMediumInteger('skill_id');
 

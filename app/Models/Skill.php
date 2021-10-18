@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Skill
@@ -13,7 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Skill extends BaseModel
 {
-    use HasFactory;
+
+    use SoftDeletes;
 
     public $timestamps = false;
     /**

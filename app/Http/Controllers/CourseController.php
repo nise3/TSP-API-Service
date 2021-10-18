@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -74,11 +75,12 @@ class CourseController extends Controller
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Exception|JsonResponse|Throwable
-     * @throws ValidationException
+     * @throws ValidationException|Throwable
      */
     function store(Request $request): JsonResponse
     {
         $validated = $this->courseService->validator($request)->validate();
+        Log::info(json_encode($validated));
         try {
             $data = $this->courseService->store($validated);
 

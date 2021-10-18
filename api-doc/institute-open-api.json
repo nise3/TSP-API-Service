@@ -1958,8 +1958,8 @@
                                             "target_group_en": "possimus magnam quod",
                                             "objectives": "Labore totam quisquam est rerum. Cum earum sed doloremque qui nam. Aut sequi voluptas accusamus in dolorem.",
                                             "objectives_en": "Ea deleniti corrupti optio nemo dolorum assumenda delectus. Sunt id labore et ipsam quae. Nisi voluptatem consequatur et consequatur. Iste corrupti blanditiis voluptas facilis quae nobis.",
-                                            "contents": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
-                                            "contents_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
+                                            "lessons": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
+                                            "lessons_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
                                             "training_methodology": "Nesciunt magnam aut dolor nam blanditiis autem laboriosam.",
                                             "training_methodology_en": "Eaque laudantium voluptatem et quis et omnis.",
                                             "evaluation_system": "Minima quia tempora molestiae sequi provident numquam maxime.",
@@ -2035,8 +2035,8 @@
                                         "target_group_en": "possimus magnam quod",
                                         "objectives": "Labore totam quisquam est rerum. Cum earum sed doloremque qui nam. Aut sequi voluptas accusamus in dolorem.",
                                         "objectives_en": "Ea deleniti corrupti optio nemo dolorum assumenda delectus. Sunt id labore et ipsam quae. Nisi voluptatem consequatur et consequatur. Iste corrupti blanditiis voluptas facilis quae nobis.",
-                                        "contents": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
-                                        "contents_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
+                                        "lessons": "Inventore nesciunt asperiores provident eligendi molestiae. Libero dignissimos veniam ipsam vitae. Qui ratione temporibus enim corporis alias non expedita.",
+                                        "lessons_en": "Quo possimus impedit ullam consequatur voluptatem aspernatur suscipit placeat. Repudiandae voluptatem deleniti modi molestias. Quas ut unde nulla.",
                                         "training_methodology": "Nesciunt magnam aut dolor nam blanditiis autem laboriosam.",
                                         "training_methodology_en": "Eaque laudantium voluptatem et quis et omnis.",
                                         "evaluation_system": "Minima quia tempora molestiae sequi provident numquam maxime.",
@@ -2108,7 +2108,7 @@
                                         "description": "Perspiciatis porro aut eligendi voluptas ea ullam similique.",
                                         "target_group": "3",
                                         "objectives": "Voluptas consequatur similique dignissimos.",
-                                        "contents": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
+                                        "lessons": "Laboriosam aut ab veritatis aperiam eligendi nihil ratione.",
                                         "training_methodology": "Qui sit quia qui rerum accusantium amet non.",
                                         "evaluation_system": "Repellendus amet maxime facere porro.",
                                         "prerequisite": "Voluptatem non sed nesciunt ab voluptatibus.",
@@ -2177,7 +2177,7 @@
                                         "description": "very good courses",
                                         "target_group": "5",
                                         "objectives": "An objective",
-                                        "contents": "An contents",
+                                        "lessons": "An lessons",
                                         "training_methodology": "methodo",
                                         "evaluation_system": "eval",
                                         "prerequisite": "prere",
@@ -3356,13 +3356,30 @@
                         "type": "integer",
                         "example": 0
                     },
+                    "level": {
+                        "type": "integer",
+                        "description": "1=>beginner,2=>intermediate,3=>expert",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "language_medium": {
+                        "type": "integer",
+                        "description": "1=Bengali,2=>English",
+                        "enum": [
+                            1,
+                            2
+                        ]
+                    },
                     "duration": {
                         "type": "integer"
                     },
-                    "description": {
+                    "overview": {
                         "type": "string"
                     },
-                    "description_en": {
+                    "overview_en": {
                         "type": "string"
                     },
                     "target_group": {
@@ -3377,10 +3394,10 @@
                     "objectives_en": {
                         "type": "string"
                     },
-                    "contents": {
+                    "lessons": {
                         "type": "string"
                     },
-                    "contents_en": {
+                    "lessons_en": {
                         "type": "string"
                     },
                     "training_methodology": {
@@ -3435,31 +3452,19 @@
                         "example": 1
                     },
                     "created_by": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "integer"
                     },
                     "updated_by": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "created_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "deleted_at": {
-                        "type": "string",
-                        "format": "date-time"
+                        "type": "integer"
                     }
                 },
                 "required": [
                     "code",
                     "institute_id",
                     "skills",
-                    "title"
+                    "title",
+                    "level",
+                    "language_medium"
                 ]
             },
             "trainers": {

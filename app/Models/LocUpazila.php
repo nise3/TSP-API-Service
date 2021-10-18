@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class LocUpazila extends BaseModel
 {
+    use SoftDeletes;
+
     protected $table = 'loc_upazilas';
     public $timestamps = false;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;

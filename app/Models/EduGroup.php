@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeRowStatusTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\EduGroup
@@ -18,6 +18,6 @@ use Carbon\Carbon;
  */
 class EduGroup extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use SoftDeletes;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 }

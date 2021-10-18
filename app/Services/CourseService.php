@@ -59,14 +59,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -175,14 +175,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -241,7 +241,6 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
-        Log::info($course);
         $this->assignSkills($course, $data["skills"]);
         return $course;
     }
@@ -289,10 +288,10 @@ class CourseService
                 'courses.title',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
+                'courses.overview',
                 'courses.target_group',
                 'courses.objectives',
-                'courses.contents',
+                'courses.lessons',
                 'courses.training_methodology',
                 'courses.evaluation_system',
                 'courses.prerequisite',
@@ -375,8 +374,8 @@ class CourseService
                 'programs.title_en as program_title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.prerequisite',
@@ -472,7 +471,7 @@ class CourseService
 
     private function assignSkills(Course $course, array $skills)
     {
-        /** Assign skills to cOURSE */
+        /** Assign skills to COURSE */
         $skillIds = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
         $course->skills()->sync($skillIds);
 
@@ -486,9 +485,10 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
-        if (!empty($data["skills"])) {
-            $data["skills"] = is_array($request['skills']) ? $request['skills'] : explode(',', $request['skills']);
+        if (!empty($request["skills"])) {
+            $request["skills"] = is_array($request['skills']) ? $request['skills'] : explode(',', $request['skills']);
         }
+        Log::info($request["skills"]);
 
         if ($request['application_form_settings']) {
             $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
@@ -513,7 +513,6 @@ class CourseService
                 'int',
                 'exists:institutes,id'
             ],
-
             'branch_id' => [
                 'nullable',
                 'int',
@@ -530,6 +529,11 @@ class CourseService
                 'max:1000',
                 'min:2'
             ],
+            "level" => [
+                'required',
+                'int',
+                Rule::in(Course::COURSE_LEVELS)
+            ],
             'title_en' => [
                 'nullable',
                 'string',
@@ -544,11 +548,11 @@ class CourseService
                 'nullable',
                 'numeric',
             ],
-            'description' => [
+            'overview' => [
                 'nullable',
                 'string'
             ],
-            'description_en' => [
+            'overview_en' => [
                 'nullable',
                 'string'
             ],
@@ -570,13 +574,18 @@ class CourseService
                 'nullable',
                 'string'
             ],
-            'contents' => [
+            'lessons' => [
                 'nullable',
                 'string'
             ],
-            'contents_en' => [
+            'lessons_en' => [
                 'nullable',
                 'string'
+            ],
+            "language_medium"=>[
+                "required",
+                Rule::in(Course::COURSE_LANGUAGE_MEDIUMS)
+
             ],
 
             'training_methodology' => [

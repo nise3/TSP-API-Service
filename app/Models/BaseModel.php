@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 abstract class BaseModel extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     public const COMMON_GUARDED_FIELDS_SIMPLE = ['id', 'created_at', 'updated_at'];
     public const COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE = ['id', 'created_at', 'updated_at', 'deleted_at'];
@@ -33,9 +33,9 @@ abstract class BaseModel extends Model
     public const RELIGION_HINDUISM = 2;
     public const RELIGION_CHRISTIANITY = 3;
     public const RELIGION_BUDDHISM = 4;
-    public const RELIGION_JUDAISM  = 5;
-    public const RELIGION_SIKHISM  = 6;
-    public const RELIGION_ETHNIC  = 7;
+    public const RELIGION_JUDAISM = 5;
+    public const RELIGION_SIKHISM = 6;
+    public const RELIGION_ETHNIC = 7;
     public const RELIGION_AGNOSTIC_ATHEIST = 8;
 
     /** Youth Identity Type */
