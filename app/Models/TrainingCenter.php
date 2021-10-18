@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -48,5 +49,13 @@ class TrainingCenter extends BaseModel
     public function batch(): HasMany
     {
         return $this->hasMany(Batch::class, 'training_center_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'training_center_skill');
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -82,6 +80,6 @@ class Course extends BaseModel
      */
     public function skills(): BelongsToMany
     {
-        return $this->belongsToMany(Skill::class, 'course_skills');
+        return $this->belongsToMany(Skill::class, 'course_skill');
     }
 }

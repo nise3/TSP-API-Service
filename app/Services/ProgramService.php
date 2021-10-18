@@ -69,9 +69,11 @@ class ProgramService
         if (!empty($titleEn)) {
             $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
+
         if (!empty($title)) {
             $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
+
         if (is_int($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }

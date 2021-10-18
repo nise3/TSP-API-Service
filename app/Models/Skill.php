@@ -28,9 +28,13 @@ class Skill extends BaseModel
     /**
      * @return BelongsToMany
      */
-    public function courses(): BelongsToMany
+    public function trainingCenters(): BelongsToMany
     {
-        return $this->belongsToMany(Course::class, 'course_skills');
+        return $this->belongsToMany(TrainingCenter::class, 'training_center_skill');
     }
 
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_skill');
+    }
 }
