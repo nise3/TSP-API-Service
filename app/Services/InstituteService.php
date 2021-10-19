@@ -12,6 +12,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -298,7 +299,8 @@ class InstituteService
         return Http::retry(3)
             ->withOptions(['verify' => false])
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) {
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array) $response);
                 return $e;
             })
             ->json();
