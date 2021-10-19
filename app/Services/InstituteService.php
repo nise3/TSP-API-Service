@@ -542,7 +542,7 @@ class InstituteService
             'email' => [
                 'required',
                 'string',
-                'max:19'
+                'max:254'
             ],
 
             'name_of_the_office_head' => [
