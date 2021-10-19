@@ -651,6 +651,7 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
+                'unique:institutes,contact_person_mobile',
                 BaseModel::MOBILE_REGEX
             ],
             'contact_person_name' => [
@@ -665,6 +666,7 @@ class InstituteService
             ],
             'contact_person_email' => [
                 'required',
+                'unique:institutes,contact_person_email',
                 'email'
             ],
             'address' => [
@@ -673,8 +675,8 @@ class InstituteService
                 'min:2'
             ],
             "password" => [
-                'required_with:password_confirmation',
                 'string',
+                'min:6',
                 'confirmed'
             ],
             "password_confirmation" => 'required_with:password',
