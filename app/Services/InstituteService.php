@@ -297,7 +297,10 @@ class InstituteService
         ];
 
         return Http::retry(3)
-            ->withOptions(['verify' => false])
+            ->withOptions([
+                'verify' => false,
+                'debug' => true,
+            ])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) use ($url) {
                 Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array) $response);
