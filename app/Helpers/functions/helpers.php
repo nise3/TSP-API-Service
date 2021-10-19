@@ -72,8 +72,8 @@ if (!function_exists("idpUserErrorMessage")) {
         $errors = [
             '_response_status' => [
                 'success' => false,
-                'code' => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
-                "message" => "Idp User unknown error",
+                'code' => $statusCode,
+                "message" => $exception->getMessage(),
                 "query_time" => 0
             ]
         ];
