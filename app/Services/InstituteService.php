@@ -321,7 +321,7 @@ class InstituteService
             'username' => $data['contact_person_mobile'],
             'institute_id' => $data['institute_id'],
             'name_en' => $data['contact_person_name'],
-            'name_bn' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
             'email' => $data['contact_person_email'],
             'mobile' => $data['contact_person_mobile'],
             'password' => $data['password']
