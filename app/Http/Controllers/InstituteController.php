@@ -40,7 +40,8 @@ class InstituteController extends Controller
     /**
      * * Display a listing of the resource.
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
@@ -137,7 +138,7 @@ class InstituteController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function instituteRegistration(Request $request)
+    public function instituteRegistration(Request $request): JsonResponse
     {
 
         $institute = app(Institute::class);
