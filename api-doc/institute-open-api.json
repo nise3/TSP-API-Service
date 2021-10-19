@@ -3276,6 +3276,7 @@
                     },
                     "contact_person_mobile": {
                         "type": "string",
+                        "uniqueItems": true,
                         "maxLength": 15
                     },
                     "contact_person_name": {
@@ -3288,6 +3289,7 @@
                     },
                     "contact_person_email": {
                         "type": "string",
+                        "uniqueItems": true,
                         "maxLength": 191
                     },
                     "address": {
@@ -3297,11 +3299,15 @@
                     "password": {
                         "type": "string",
                         "format": "password",
+                        "minLength": 6,
+                        "description": "Minimum length 6 ",
                         "example": "Aa!1sS3#"
                     },
                     "password_confirmation": {
                         "type": "string",
                         "format": "password",
+                        "minLength": 6,
+                        "description": "Minimum length 6 ",
                         "example": "Aa!1sS3#"
                     }
                 },
