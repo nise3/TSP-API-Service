@@ -15,7 +15,7 @@ class CreateInstitutesTable extends Migration
     {
         Schema::create('institutes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('institute_type_id')->default(0);
+            $table->unsignedInteger('institute_type_id')->default(2)->comment('1=> Govt, 2=> Non govt , 3=> Others');
             $table->string('code', 150);
             $table->string('title', 1000);
             $table->string('title_en', 500)->nullable();

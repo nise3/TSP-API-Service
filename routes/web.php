@@ -39,7 +39,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
 
     /* Course Enrollment */
-    $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseController@courseEnrollment"]);
+    $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
 
     /** Course All batches / Active batches / Up-coming batches */
     $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
