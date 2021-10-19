@@ -3250,7 +3250,11 @@
                     "institute_type_id": {
                         "type": "integer",
                         "example": 0,
-                        "description": "0 => Non Govt, 1 => Govt"
+                        "description": "0 => Non Govt, 1 => Govt",
+                        "enum": [
+                            0,
+                            1
+                        ]
                     },
                     "name_of_the_office_head": {
                         "type": "string",

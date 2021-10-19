@@ -12,6 +12,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -296,9 +297,13 @@ class InstituteService
         ];
 
         return Http::retry(3)
-            ->withOptions(['verify' => false])
+            ->withOptions([
+                'verify' => false,
+                'debug' => true,
+            ])
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) {
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array) $response);
                 return $e;
             })
             ->json();
@@ -316,7 +321,7 @@ class InstituteService
             'username' => $data['contact_person_mobile'],
             'institute_id' => $data['institute_id'],
             'name_en' => $data['contact_person_name'],
-            'name_bn' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
             'email' => $data['contact_person_email'],
             'mobile' => $data['contact_person_mobile'],
             'password' => $data['password']
@@ -542,7 +547,7 @@ class InstituteService
             'email' => [
                 'required',
                 'string',
-                'max:19'
+                'max:254'
             ],
 
             'name_of_the_office_head' => [
