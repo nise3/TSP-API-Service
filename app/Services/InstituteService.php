@@ -328,7 +328,7 @@ class InstituteService
         ];
 
         return Http::retry(3)
-            ->withOptions(['verify' => false, 'debug' => true])
+            ->withOptions(['verify' => false])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
