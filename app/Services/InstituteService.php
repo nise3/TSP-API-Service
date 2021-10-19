@@ -299,11 +299,11 @@ class InstituteService
         return Http::retry(3)
             ->withOptions([
                 'verify' => false,
-                'debug' => true,
+                'debug' => false,
             ])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array) $response);
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array)$response);
                 return $e;
             })
             ->json();
@@ -581,7 +581,9 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
-                BaseModel::MOBILE_REGEX
+                'unique:institutes,contact_person_mobile',
+                BaseModel::MOBILE_REGEX,
+
             ],
             'contact_person_email' => [
                 'required',
