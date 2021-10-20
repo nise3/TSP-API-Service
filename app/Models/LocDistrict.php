@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class LocDistrict
@@ -24,6 +25,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LocDistrict extends BaseModel
 {
+    use SoftDeletes;
+
     protected $table = 'loc_districts';
     public $timestamps = false;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;

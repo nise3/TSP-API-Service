@@ -40,7 +40,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institutetitle',
+            'institutes.title as institute_title',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -69,9 +69,11 @@ class ProgramService
         if (!empty($titleEn)) {
             $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
+
         if (!empty($title)) {
             $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
+
         if (is_int($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }
@@ -115,7 +117,7 @@ class ProgramService
             'programs.title',
             'programs.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institutetitle',
+            'institutes.title as institute_title',
             'programs.code',
             'programs.logo',
             'programs.description',
@@ -187,10 +189,7 @@ class ProgramService
     public function validator(Request $request, int $id = null): Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
         $rules = [
@@ -208,14 +207,14 @@ class ProgramService
             ],
             'institute_id' => [
                 'required',
+                'exists:institutes,id,deleted_at,NULL',
                 'int',
-                'exists:institutes,id'
             ],
             'code' => [
                 'nullable',
+                'unique:programs,code,' . $id,
                 'string',
                 'max:100',
-                'unique:programs,code,' . $id,
             ],
             'description' => [
                 'nullable',
@@ -231,6 +230,7 @@ class ProgramService
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer', 'max:10'],
@@ -308,18 +308,12 @@ class ProgramService
 
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -327,7 +321,7 @@ class ProgramService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'integer|exists:institutes,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|integer',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

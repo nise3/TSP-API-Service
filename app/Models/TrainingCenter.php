@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class TrainingCenter
@@ -21,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class TrainingCenter extends BaseModel
 {
+    use ScopeRowStatusTrait, SoftDeletes;
+
     /**
      * @var string[]
      */
@@ -48,5 +53,13 @@ class TrainingCenter extends BaseModel
     public function batch(): HasMany
     {
         return $this->hasMany(Batch::class, 'training_center_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'training_center_skill');
     }
 }

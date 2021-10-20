@@ -17,6 +17,8 @@ class CreateCoursesTable extends Migration
             $table->increments('id');
             $table->string('code', 150);
             $table->unsignedInteger('institute_id');
+            $table->unsignedTinyInteger('level')->comment("1=Beginner,2=>Intermediate,3=>Expert");
+            $table->unsignedTinyInteger('language_medium')->comment("1=Bengali,2=>English");
             $table->unsignedInteger('branch_id')
                 ->nullable();
             $table->unsignedInteger('program_id')
@@ -26,16 +28,16 @@ class CreateCoursesTable extends Migration
             $table->float('course_fee')->default(0);
             $table->float('duration')->nullable()
                 ->comment('Duration in hours');
-            $table->text('description')->nullable();
-            $table->text('description_en')->nullable();
+            $table->text('overview')->nullable();
+            $table->text('overview_en')->nullable();
             $table->string('target_group', 1000)
                 ->nullable();
             $table->string('target_group_en', 500)
                 ->nullable();
             $table->text('objectives')->nullable();
             $table->text('objectives_en')->nullable();
-            $table->text('contents')->nullable();
-            $table->text('contents_en')->nullable();
+            $table->text('lessons')->nullable();
+            $table->text('lessons_en')->nullable();
             $table->string('training_methodology', 600)
                 ->nullable();
             $table->string('training_methodology_en', 1000)

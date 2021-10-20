@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = ['id'];
 

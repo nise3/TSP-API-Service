@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -30,7 +31,7 @@ use Illuminate\Support\Carbon;
 class Batch extends BaseModel
 {
 
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait,SoftDeletes;
     protected $guarded = ['id'];
 
     /**

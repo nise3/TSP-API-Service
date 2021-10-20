@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Program
@@ -21,7 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Program extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes;
+
     /**
      * @var string[]
      */

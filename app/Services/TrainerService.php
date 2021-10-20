@@ -528,27 +528,24 @@ class TrainerService
     public function validator(Request $request, int $id = null): Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
         $rules = [
             'institute_id' => [
                 'required',
+                'exists:institutes,id,deleted_at,NULL',
                 'int',
-                'exists:institutes,id'
             ],
             'branch_id' => [
                 'nullable',
+                'exists:branches,id,deleted_at,NULL',
                 'int',
-                'exists:branches,id'
             ],
             'training_center_id' => [
                 'nullable',
+                'exists:training_centers,id,deleted_at,NULL',
                 'int',
-                'exists:training_centers,id'
             ],
             'trainer_name' => [
                 'required',
@@ -562,20 +559,20 @@ class TrainerService
             ],
             'trainer_registration_number' => [
                 'required',
+                'unique:trainers,trainer_registration_number,' . $id,
                 'string',
-                'unique:trainers,trainer_registration_number,' . $id
             ],
             'email' => [
                 'required',
+                'unique:trainers,email,' . $id,
                 'email',
                 'max:150',
-                'unique:trainers,email,' . $id
             ],
             'mobile' => [
                 'required',
+                'unique:trainers,mobile,' . $id,
                 BaseModel::MOBILE_REGEX,
                 'max:15',
-                'unique:trainers,mobile,' . $id
             ],
             'date_of_birth' => [
                 'required',
@@ -634,18 +631,19 @@ class TrainerService
             ],
             'present_address_division_id' => [
                 'nullable',
+                'exists:loc_divisions,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_divisions,id'
             ],
             'present_address_district_id' => [
                 'nullable',
+                'exists:loc_districts,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_districts,id'
+
             ],
             'present_address_upazila_id' => [
                 'nullable',
+                'exists:loc_upazilas,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_upazilas,id'
             ],
             'present_house_address' => [
                 'nullable',
@@ -657,18 +655,18 @@ class TrainerService
             ],
             'permanent_address_division_id' => [
                 'nullable',
+                'exists:loc_divisions,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_divisions,id'
             ],
             'permanent_address_district_id' => [
                 'nullable',
+                'exists:loc_districts,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_districts,id'
             ],
             'permanent_address_upazila_id' => [
                 'nullable',
+                'exists:loc_upazilas,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_upazilas,id'
             ],
             'permanent_house_address' => [
                 'nullable',
@@ -688,6 +686,7 @@ class TrainerService
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => [
@@ -704,18 +703,12 @@ class TrainerService
 
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -723,9 +716,9 @@ class TrainerService
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
-            'branch_id' => 'int|exists:branches,id',
-            'training_center_id' => 'int|exists:training_centers,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
+            'training_center_id' => 'exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

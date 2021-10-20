@@ -5,6 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class LocDivision
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class LocDivision extends BaseModel
 {
+    use SoftDeletes;
+
     protected $table = 'loc_divisions';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 

@@ -82,7 +82,7 @@ class BranchService
 
         });
 
-        $branchBuilder->leftJoin('loc_upazilas', function ($join){
+        $branchBuilder->leftJoin('loc_upazilas', function ($join) {
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
 
@@ -345,9 +345,9 @@ class BranchService
                 'min:2'
             ],
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
-                'int',
-                'exists:institutes,id',
+                'int'
             ],
             'address' => [
                 'nullable',
@@ -377,18 +377,13 @@ class BranchService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be within ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         return Validator::make($request->all(), [
@@ -396,7 +391,7 @@ class BranchService
             'title' => 'nullable|max:600|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

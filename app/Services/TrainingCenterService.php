@@ -265,15 +265,12 @@ class TrainingCenterService
     public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         $rules = [
-            'institute_id' => 'required|int|exists:institutes,id',
-            'branch_id' => 'nullable|int|exists:branches,id',
+            'institute_id' => 'required|exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'center_location_type' => 'nullable|int',
             'title' => 'required|string|max: 1000',
             'title_en' => 'nullable|string|max: 500',
@@ -287,6 +284,7 @@ class TrainingCenterService
             'address_en' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer'],
@@ -297,7 +295,7 @@ class TrainingCenterService
 
     /**
      * @param string|null $googleMapSrc
-     * @return string
+     * @return string|null
      */
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
     {
@@ -380,19 +378,12 @@ class TrainingCenterService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
-
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return Validator::make($request->all(), [
@@ -400,8 +391,8 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
-            'branch_id' => 'int|exists:branches,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

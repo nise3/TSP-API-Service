@@ -23,7 +23,8 @@ use Illuminate\Support\Collection;
  */
 class PhysicalDisability extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes;
+
     /**
      * @var string[]
      */

@@ -38,7 +38,7 @@ class CreateInstitutesTable extends Migration
             $table->string('phone_numbers', 400)->nullable();
             $table->string('primary_mobile', 15);
             $table->string('mobile_numbers', 400)->nullable();
-            $table->string('email', 150);
+            $table->string('email', 254);
             $table->string("name_of_the_office_head", 500)->nullable();
             $table->string("name_of_the_office_head_en")->nullable();
             $table->string("name_of_the_office_head_designation", 500)->nullable();
@@ -46,7 +46,7 @@ class CreateInstitutesTable extends Migration
             $table->string('contact_person_name', 500);
             $table->string('contact_person_name_en', 250)->nullable();
             $table->string('contact_person_mobile', 15);
-            $table->string('contact_person_email', 191);
+            $table->string('contact_person_email', 254);
             $table->string('contact_person_designation', 500);
             $table->string('contact_person_designation_en', 300)->nullable();
             $table->text('config')->nullable();

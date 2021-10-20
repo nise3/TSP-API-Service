@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Batch;
 use App\Models\Course;
-use App\Models\CourseEnrollment;
-use App\Models\Youth;
+use App\Models\Skill;
+use App\Models\Trainer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -46,6 +48,8 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -59,14 +63,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -153,15 +157,18 @@ class CourseService
     /**
      * @param int $id
      * @param Carbon $startTime
+     * @param bool $withTrainers
      * @return array
      */
-    public function getOneCourse(int $id, Carbon $startTime): array
+    public function getOneCourse(int $id, Carbon $startTime, bool $withTrainers = false): array
     {
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -175,14 +182,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -222,6 +229,28 @@ class CourseService
         /** @var Course $course */
         $course = $courseBuilder->first();
 
+        if ($withTrainers == true) {
+            /** @var Builder $trainerBuilder */
+            $trainerBuilder = Trainer::select([
+                'trainers.trainer_name',
+                'trainers.trainer_name_en',
+                'trainers.email',
+                'trainers.mobile',
+            ]);
+            $trainerBuilder->join('trainer_batch', 'trainer_batch.trainer_id', '=', 'trainers.id');
+            $trainerBuilder->join('batches', 'trainer_batch.batch_id', '=', 'batches.id');
+            $trainerBuilder->where('batches.course_id', $id);
+            $trainerBuilder->orderBy('trainers.id', 'ASC');
+            $trainerBuilder->groupBy('trainers.id');
+
+            /** @var Collection $trainers */
+            $trainers = $trainerBuilder->get();
+
+            $course["trainers"] = $trainers->toArray();
+
+        }
+
+
         return [
             "data" => $course ?: [],
             "_response_status" => [
@@ -241,6 +270,7 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
+        $this->assignSkills($course, $data["skills"]);
         return $course;
     }
 
@@ -253,6 +283,7 @@ class CourseService
     {
         $course->fill($data);
         $course->save();
+        $this->assignSkills($course, $data["skills"]);
         return $course;
     }
 
@@ -286,10 +317,10 @@ class CourseService
                 'courses.title',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
+                'courses.overview',
                 'courses.target_group',
                 'courses.objectives',
-                'courses.contents',
+                'courses.lessons',
                 'courses.training_methodology',
                 'courses.evaluation_system',
                 'courses.prerequisite',
@@ -372,8 +403,8 @@ class CourseService
                 'programs.title_en as program_title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.prerequisite',
@@ -467,6 +498,14 @@ class CourseService
         return $response;
     }
 
+    private function assignSkills(Course $course, array $skills)
+    {
+        /** Assign skills to COURSE */
+        $skillIds = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $course->skills()->sync($skillIds);
+
+    }
+
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
@@ -475,8 +514,12 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        if (!empty($request["skills"])) {
+            $request["skills"] = is_array($request['skills']) ? $request['skills'] : explode(',', $request['skills']);
+        }
+        Log::info($request["skills"]);
 
-        if($request['application_form_settings']){
+        if ($request['application_form_settings']) {
             $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
         }
 
@@ -489,32 +532,36 @@ class CourseService
 
         $rules = [
             'code' => [
+                'unique:courses,code,' . $id,
                 'required',
                 'string',
                 'max:150',
-                'unique:courses,code,' . $id
             ],
             'institute_id' => [
+                'exists:institutes,id,deleted_at,NULL',
                 'required',
                 'int',
-                'exists:institutes,id'
             ],
-
             'branch_id' => [
+                'exists:programs,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:programs,id'
             ],
             'program_id' => [
+                'exists:programs,id,deleted_at,NULL',
                 'nullable',
                 'int',
-                'exists:programs,id'
             ],
             'title' => [
                 'required',
                 'string',
                 'max:1000',
                 'min:2'
+            ],
+            "level" => [
+                'required',
+                'int',
+                Rule::in(Course::COURSE_LEVELS)
             ],
             'title_en' => [
                 'nullable',
@@ -530,11 +577,11 @@ class CourseService
                 'nullable',
                 'numeric',
             ],
-            'description' => [
+            'overview' => [
                 'nullable',
                 'string'
             ],
-            'description_en' => [
+            'overview_en' => [
                 'nullable',
                 'string'
             ],
@@ -556,13 +603,17 @@ class CourseService
                 'nullable',
                 'string'
             ],
-            'contents' => [
+            'lessons' => [
                 'nullable',
                 'string'
             ],
-            'contents_en' => [
+            'lessons_en' => [
                 'nullable',
                 'string'
+            ],
+            "language_medium" => [
+                "required",
+                Rule::in(Course::COURSE_LANGUAGE_MEDIUMS)
             ],
 
             'training_methodology' => [
@@ -612,6 +663,18 @@ class CourseService
             'application_form_settings.*' => [
                 'string'
             ],
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
@@ -629,18 +692,13 @@ class CourseService
      */
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
