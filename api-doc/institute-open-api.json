@@ -3080,6 +3080,7 @@
                     "title",
                     "primary_mobile",
                     "email",
+                    "name_of_the_office_head",
                     "name_of_the_office_head_designation",
                     "contact_person_name",
                     "contact_person_mobile",
@@ -3250,7 +3251,11 @@
                     "institute_type_id": {
                         "type": "integer",
                         "example": 0,
-                        "description": "0 => Non Govt, 1 => Govt"
+                        "description": "0 => Non Govt, 1 => Govt",
+                        "enum": [
+                            0,
+                            1
+                        ]
                     },
                     "name_of_the_office_head": {
                         "type": "string",
@@ -3271,6 +3276,7 @@
                     },
                     "contact_person_mobile": {
                         "type": "string",
+                        "uniqueItems": true,
                         "maxLength": 15
                     },
                     "contact_person_name": {
@@ -3283,6 +3289,7 @@
                     },
                     "contact_person_email": {
                         "type": "string",
+                        "uniqueItems": true,
                         "maxLength": 191
                     },
                     "address": {
@@ -3292,11 +3299,15 @@
                     "password": {
                         "type": "string",
                         "format": "password",
+                        "minLength": 6,
+                        "description": "Minimum length 6 ",
                         "example": "Aa!1sS3#"
                     },
                     "password_confirmation": {
                         "type": "string",
                         "format": "password",
+                        "minLength": 6,
+                        "description": "Minimum length 6 ",
                         "example": "Aa!1sS3#"
                     }
                 },

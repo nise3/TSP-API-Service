@@ -189,10 +189,7 @@ class ProgramService
     public function validator(Request $request, int $id = null): Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
         $rules = [
@@ -209,16 +206,15 @@ class ProgramService
                 'min:2'
             ],
             'institute_id' => [
-                'exists:institutes,id,deleted_at,NULL',
                 'required',
+                'exists:institutes,id,deleted_at,NULL',
                 'int',
             ],
             'code' => [
-                'unique:programs,code,' . $id,
                 'nullable',
+                'unique:programs,code,' . $id,
                 'string',
                 'max:100',
-
             ],
             'description' => [
                 'nullable',
@@ -234,6 +230,7 @@ class ProgramService
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer', 'max:10'],
@@ -311,18 +308,12 @@ class ProgramService
 
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [

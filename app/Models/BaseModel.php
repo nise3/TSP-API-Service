@@ -121,4 +121,6 @@ abstract class BaseModel extends Model
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
 
+    public const PASSWORD_MIN_LENGTH = 8;
+    public const PASSWORD_MAX_LENGTH = 50;
 }
