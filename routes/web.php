@@ -28,6 +28,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
 
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
+        /** Course Filter */
+        $router->get('courses[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
+
         /** Course details  */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
     });
@@ -36,8 +39,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Assign Trainers to Batch */
     $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
-    /** Course Filter */
-    $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
 
     //$router->get('courses', ['as' => 'institutes.get-trashed-data', 'uses' => 'InstituteController@getTrashedData']);
 
