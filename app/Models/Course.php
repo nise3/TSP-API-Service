@@ -74,7 +74,7 @@ class Course extends BaseModel
     const COURSE_FILTER_TYPE_RECENT = 'recent';
     const COURSE_FILTER_TYPE_POPULAR = 'popular';
     const COURSE_FILTER_TYPE_NEARBY = 'nearby';
-    const COURSE_FILTER_TYPE_SKILL_MATCHING = 'skillmatching';
+    const COURSE_FILTER_TYPE_SKILL_MATCHING = 'skill-matching';
     const COURSE_FILTER_TYPE_TRENDING = 'trending';
     const COURSE_FILTER_TYPES = [
         self::COURSE_FILTER_TYPE_RECENT,

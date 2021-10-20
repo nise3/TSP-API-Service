@@ -30,7 +30,7 @@ class CourseService
     public const COURSE_FILTER_POPULAR = "popular";
     public const COURSE_FILTER_RECENT = "recent";
     public const COURSE_FILTER_NEARBY = "nearby";
-    public const COURSE_FILTER_SKILL_MATCHING = "skillmatching";
+    public const COURSE_FILTER_SKILL_MATCHING = "skill-matching";
     public const COURSE_FILTER_TRENDING = "trending";
     public const COURSE_FILTER_AVAILABILITY_RUNNING = 1;
     public const COURSE_FILTER_AVAILABILITY_UPCOMING = 2;
