@@ -5,33 +5,6 @@ use App\Models\EducationLevel;
 return [
     "is_dev_mode" => env("IS_DEVELOPMENT_MOOD", false),
     "should_ssl_verify" => env("IS_SSL_VERIFY", false),
-    'physical_disabilities' => [
-        'VD' => [
-            "title" => "Visual Disabilities",
-            "title_en" => "Visual Disabilities",
-            'code' => 'VD'
-        ],
-        'HD' => [
-            "title" => "Hearing Disabilities",
-            "title_en" => "Hearing Disabilities",
-            'code' => 'HD'
-        ],
-        'MHD' => [
-            "title" => "Mental Health Disabilities",
-            "title_en" => "Mental Health Disabilities",
-            'code' => 'MHD'
-        ],
-        'ID' => [
-            "title" => "Intellectual Disabilities",
-            "title_en" => "Intellectual Disabilities",
-            'code' => 'ID'
-        ],
-        'SD' => [
-            "title" => "Social Disabilities",
-            "title_en" => "Social Disabilities",
-            'code' => 'SD'
-        ]
-    ],
     'nationalities' => [
         '1' => ['en' => 'Bangladeshi', 'bn' => 'Bangladeshi'],
         '2' => ['en' => 'Indian', 'bn' => 'Indian'],

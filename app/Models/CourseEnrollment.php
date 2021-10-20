@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -79,4 +80,12 @@ class CourseEnrollment extends BaseModel
         self::CHILD_OF_FREEDOM_FIGHTER,
         self::GRAND_CHILD_OF_FREEDOM_FIGHTER
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function physicalDisabilities(): BelongsToMany
+    {
+        return $this->belongsToMany(PhysicalDisability::class, 'enrollment_physical_disabilities');
+    }
 }

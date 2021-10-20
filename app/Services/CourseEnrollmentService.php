@@ -7,7 +7,13 @@ namespace App\Services;
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Models\EducationLevel;
+use App\Models\EnrollmentAddress;
 use App\Models\EnrollmentEducation;
+use App\Models\EnrollmentGuardian;
+use App\Models\EnrollmentMiscellaneous;
+use App\Models\EnrollmentProfessionalInfo;
+use App\Models\PhysicalDisability;
+use App\Models\Youth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -15,12 +21,124 @@ use Illuminate\Validation\Rule;
 class CourseEnrollmentService
 {
 
-    public function enrollCourse(array $data): CourseEnrollment {
+    public function enrollCourse(array $data): CourseEnrollment
+    {
         $courseEnrollment = app(CourseEnrollment::class);
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
 
         return $courseEnrollment;
+    }
+
+    public function storeEnrollmentAddresses(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if (!empty($data['address_info']['present_address'])) {
+
+            $presentAddress = app(EnrollmentAddress::class);
+
+            $addressValues = $data['address_info']['present_address'];
+            $addressValues['course_enrollment_id'] = $courseEnrollment->id;
+            $addressValues['address_type'] = EnrollmentAddress::ADDRESS_TYPE_PRESENT;
+
+            $presentAddress->fill($addressValues);
+            $presentAddress->save();
+        }
+        if ($data['address_info']['is_permanent_address'] == BaseModel::TRUE) {
+            $permanentAddress = app(EnrollmentAddress::class);
+
+            $addressValues = $data['address_info']['permanent_address'];
+
+            $addressValues['course_enrollment_id'] = $courseEnrollment->id;
+            $addressValues['address_type'] = EnrollmentAddress::ADDRESS_TYPE_PERMANENT;
+
+            $permanentAddress->fill($addressValues);
+            $permanentAddress->save();
+        }
+
+        return $courseEnrollment;
+    }
+
+    public function storeEnrollmentEducations(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if (!empty($data['education_info'])) {
+            foreach ($data['education_info'] as $eduLabelId => $values) {
+                $education = app(EnrollmentEducation::class);
+
+                $values['course_enrollment_id'] = $courseEnrollment->id;
+                $values['education_level_id'] = $eduLabelId;
+                $education->fill($values);
+                $education->save();
+            }
+        }
+
+        return $courseEnrollment;
+    }
+
+    public function storeEnrollmentProfessionalInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if (!empty($data['professional_info'])) {
+            $professionalInfo = app(EnrollmentProfessionalInfo::class);
+            $data['professional_info']['course_enrollment_id'] = $courseEnrollment->id;
+            $professionalInfo->fill($data['professional_info']);
+            $professionalInfo->save();
+        }
+
+        return $courseEnrollment;
+    }
+
+    public function storeEnrollmentGuardianInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if (!empty($data['guardian_info'])) {
+            $guardianInfo = app(EnrollmentGuardian::class);
+            $data['guardian_info']['course_enrollment_id'] = $courseEnrollment->id;
+            $guardianInfo->fill($data['guardian_info']);
+            $guardianInfo->save();
+        }
+
+        return $courseEnrollment;
+    }
+
+    public function storeEnrollmentMiscellaneousInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if (!empty($data['miscellaneous_info'])) {
+            $guardianInfo = app(EnrollmentMiscellaneous::class);
+            $data['miscellaneous_info']['course_enrollment_id'] = $courseEnrollment->id;
+            $guardianInfo->fill($data['miscellaneous_info']);
+            $guardianInfo->save();
+        }
+
+        return $courseEnrollment;
+    }
+
+    public function storeEnrollmentPhysicalDisabilities(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
+    {
+        if ($data['physical_disability_status'] == BaseModel::FALSE) {
+            $this->detachPhysicalDisabilities($courseEnrollment);
+        } else if ($data['physical_disability_status'] == BaseModel::TRUE) {
+            $this->assignPhysicalDisabilities($courseEnrollment, $data['physical_disabilities']);
+        }
+        return $courseEnrollment;
+    }
+
+    /**
+     * @param CourseEnrollment $courseEnrollment
+     * @param array $disabilities
+     */
+    private function assignPhysicalDisabilities(CourseEnrollment $courseEnrollment, array $disabilities)
+    {
+        /** Assign skills to Youth */
+        $disabilityIds = PhysicalDisability::whereIn("id", $disabilities)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $courseEnrollment->physicalDisabilities()->sync($disabilityIds);
+
+    }
+
+    /**
+     * @param CourseEnrollment $courseEnrollment
+     */
+    private function detachPhysicalDisabilities(CourseEnrollment $courseEnrollment)
+    {
+        $courseEnrollment->physicalDisabilities()->sync([]);
+
     }
 
     /**
@@ -31,6 +149,17 @@ class CourseEnrollmentService
      */
     public function courseEnrollmentValidator(Request $request, int $id = null): Validator
     {
+        $request->offsetSet('deleted_at', null);
+        $data = $request->all();
+
+        if (!empty($data["physical_disabilities"])) {
+            $data["physical_disabilities"] = isset($data['physical_disabilities']) && is_array($data['physical_disabilities']) ? $data['physical_disabilities'] : explode(',', $data['physical_disabilities']);
+        }
+
+        $customMessage = [
+            "course_id.unique_with" => "Course Already Enrolled"
+        ];
+
         $rules = [
             'youth_id' => [
                 'required',
@@ -66,7 +195,8 @@ class CourseEnrollmentService
                 'required',
                 'exists:courses,id,deleted_at,NULL',
                 'int',
-                'min:1'
+                'min:1',
+                'unique_with:course_enrollments,youth_id,deleted_at',
             ],
             'training_center_id' => [
                 'required',
@@ -138,228 +268,272 @@ class CourseEnrollmentService
                 'string',
                 'nullable',
             ],
-
-            'present_address' => [
+            "physical_disability_status" => [
+                "required",
+                "int",
+                Rule::in([BaseModel::TRUE,BaseModel::FALSE])
+            ],
+            'address_info' => [
+                'nullable',
                 'array',
-                'required'
+                'min:1'
             ],
-            'present_address.*.loc_division_id' => [
-                'required',
-                'integer',
+            'address_info.present_address' => [
+                Rule::requiredIf(!empty($data['address_info'])),
+                'nullable',
+                'array',
             ],
-            'present_address.*.loc_district_id' => [
-                'required',
-                'integer',
-            ],
-            'present_address.*.loc_upazila_id' => [
+            'address_info.present_address.loc_division_id' => [
+                Rule::requiredIf(!empty($data['address_info']['present_address'])),
                 'nullable',
                 'integer',
             ],
-            'present_address.*.village_or_area' => [
+            'address_info.present_address.loc_district_id' => [
+                Rule::requiredIf(!empty($data['address_info']['present_address'])),
+                'nullable',
+                'integer',
+            ],
+            'address_info.present_address.loc_upazila_id' => [
+                'nullable',
+                'integer',
+            ],
+            'address_info.present_address.village_or_area' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'present_address.*.village_or_area_en' => [
+            'address_info.present_address.village_or_area_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'present_address.*.house_n_road' => [
+            'address_info.present_address.house_n_road' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'present_address.*.house_n_road_en' => [
+            'address_info.present_address.house_n_road_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'present_address.*.zip_or_postal_code' => [
+            'address_info.present_address.zip_or_postal_code' => [
                 'nullable',
                 'string',
                 'max:5',
                 'min:4'
             ],
 
-            'is_permanent_address' => [
+            'address_info.is_permanent_address' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']);
+                }),
+                'nullable',
                 'int',
-                'required'
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
 
-            'permanent_address' => [
-                Rule::requiredIf(function () use ($request) {
-                    return $request['is_permanent_address'] == BaseModel::TRUE;
+            'address_info.permanent_address' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE;
                 }),
-                'array'
+                'nullable',
+                'array',
+                'min:1'
             ],
-            'permanent_address.*.loc_division_id' => [
-                Rule::requiredIf(function () use ($request) {
-                    return $request['is_permanent_address'] == BaseModel::TRUE;
+            'address_info.permanent_address.loc_division_id' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE;
                 }),
-                'integer',
-            ],
-            'permanent_address.*.loc_district_id' => [
-                Rule::requiredIf(function () use ($request) {
-                    return $request['is_permanent_address'] == BaseModel::TRUE;
-                }),
-                'integer',
-            ],
-            'permanent_address.*.loc_upazila_id' => [
                 'nullable',
                 'integer',
             ],
-            'permanent_address.*.village_or_area' => [
+            'address_info.permanent_address.loc_district_id' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE && !empty($data['address_info']['permanent_address']);
+                }),
+                'nullable',
+                'integer',
+            ],
+            'address_info.permanent_address.loc_upazila_id' => [
+                'nullable',
+                'integer',
+            ],
+            'address_info.permanent_address.village_or_area' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'permanent_address.*.village_or_area_en' => [
+            'address_info.permanent_address.village_or_area_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'permanent_address.*.house_n_road' => [
+            'address_info.permanent_address.house_n_road' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'permanent_address.*.house_n_road_en' => [
+            'address_info.permanent_address.house_n_road_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'permanent_address.*.zip_or_postal_code' => [
+            'address_info.permanent_address.zip_or_postal_code' => [
                 'nullable',
                 'string',
                 'max:5',
                 'min:4'
             ],
-
-            'main_profession' => [
-                'required',
-                'string',
-                'max:500'
-            ],
-            'main_profession_en' => [
+            "professional_info" => [
                 'nullable',
-                'string',
-                'max:250'
+                'array',
+                'min:1'
             ],
-            'other_profession' => [
+            'professional_info.main_profession' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
                 'nullable',
                 'string',
                 'max:500'
             ],
-            'other_profession_en' => [
+            'professional_info.main_profession_en' => [
                 'nullable',
                 'string',
                 'max:250'
             ],
-            'monthly_income' => [
-                'required',
+            'professional_info.other_profession' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'professional_info.other_profession_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'professional_info.monthly_income' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
                 'numeric'
             ],
-            'is_currently_employed' => [
+            'professional_info.is_currently_employed' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::FALSE, BaseModel::TRUE])
+            ],
+            'professional_info.years_of_experiences' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
                 'nullable',
                 'int'
             ],
-            'years_of_experiences' => [
+            "guardian_info" => [
                 'nullable',
-                'int'
+                'array',
+                'min:1'
             ],
-            'passing_year' => [
+            'guardian_info.father_name' => [
+                Rule::requiredIf(!empty($data['guardian_info'])),
                 'nullable',
-                'string'
-            ],
-            'father_name' => [
-                'required',
                 'string',
                 'max:500'
             ],
-            'father_name_en' => [
+            'guardian_info.father_name_en' => [
                 'nullable',
                 'string',
                 'max:250'
             ],
-            'father_nid' => [
+            'guardian_info.father_nid' => [
                 'nullable',
                 'string',
                 'max:30'
             ],
-            'father_mobile' => [
+            'guardian_info.father_mobile' => [
                 'nullable',
                 'max:11',
                 BaseModel::MOBILE_REGEX
             ],
-            'father_date_of_birth' => [
+            'guardian_info.father_date_of_birth' => [
                 'nullable',
                 'date'
             ],
-            'mother_name' => [
-                'required',
+            'guardian_info.mother_name' => [
+                Rule::requiredIf(!empty($data['guardian_info'])),
+                'nullable',
                 'string',
                 'max:500'
             ],
-            'mother_name_en' => [
+            'guardian_info.mother_name_en' => [
                 'nullable',
                 'string',
                 'max:250'
             ],
-            'mother_nid' => [
+            'guardian_info.mother_nid' => [
                 'nullable',
                 'string',
                 'max:30'
             ],
-            'mother_mobile' => [
+            'guardian_info.mother_mobile' => [
                 'nullable',
                 'max:11',
                 BaseModel::MOBILE_REGEX
             ],
-            'mother_date_of_birth' => [
+            'guardian_info.mother_date_of_birth' => [
                 'nullable',
                 'date'
             ],
-            'has_own_family_home' => [
+            "miscellaneous_info" => [
                 'nullable',
-                'int'
+                'array',
+                'min:1'
             ],
-            'has_own_family_land' => [
+            'miscellaneous_info.has_own_family_home' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
                 'nullable',
-                'int'
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
-            'number_of_siblings' => [
+            'miscellaneous_info.has_own_family_land' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
                 'nullable',
-                'int'
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
-            'recommended_by_any_organization' => [
+            'miscellaneous_info.number_of_siblings' => [
                 'nullable',
-                'int'
+                'int',
+            ],
+            'miscellaneous_info.recommended_by_any_organization' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
             'education_info' => [
                 'nullable',
                 'array',
             ],
         ];
-        if (isset($request['education_info']) && is_array($request['education_info'])) {
-            foreach ($request['education_info'] as $eduLabelId => $fields) {
+        if (!empty($data['education_info'])) {
+            foreach ($data['education_info'] as $eduLabelId => $fields) {
                 $validationField = 'education_info.' . $eduLabelId . '.';
                 $rules[$validationField . 'exam_degree_id'] = [
                     'required',
                     'int'
                 ];
                 $rules[$validationField . 'exam_degree_name'] = [
-                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::EXAM_DEGREE_NAME, $eduLabelId);
                     }),
+                    'nullable',
                     "string"
                 ];
                 $rules[$validationField . 'exam_degree_name_en'] = [
@@ -367,9 +541,10 @@ class CourseEnrollmentService
                     "string"
                 ];
                 $rules[$validationField . 'major_or_concentration'] = [
-                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::MAJOR, $eduLabelId);
                     }),
+                    'nullable',
                     "string"
                 ];
                 $rules[$validationField . 'major_or_concentration_en'] = [
@@ -377,16 +552,18 @@ class CourseEnrollmentService
                     "string"
                 ];
                 $rules[$validationField . 'edu_group_id'] = [
-                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::EDU_GROUP, $eduLabelId);
                     }),
+                    'nullable',
                     'exists:edu_groups,id,deleted_at,NULL',
                     "integer"
                 ];
                 $rules[$validationField . 'edu_board_id'] = [
-                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::BOARD, $eduLabelId);
                     }),
+                    'nullable',
                     'exists:edu_boards,id,deleted_at,NULL',
                     "integer"
                 ];
@@ -406,9 +583,10 @@ class CourseEnrollmentService
                     Rule::in([BaseModel::TRUE, BaseModel::FALSE])
                 ];
                 $rules[$validationField . 'foreign_institute_country_id'] = [
-                    Rule::requiredIf(function () use ($fields, $request) {
-                        return BaseModel::TRUE == isset($fields['is_foreign_institute']) ? $fields['is_foreign_institute'] : BaseModel::FALSE;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        return BaseModel::TRUE == !empty($fields['is_foreign_institute']) ? $fields['is_foreign_institute'] : BaseModel::FALSE;
                     }),
+                    'nullable',
                     "integer"
                 ];
                 $rules[$validationField . 'result'] = [
@@ -417,39 +595,44 @@ class CourseEnrollmentService
                     Rule::in(array_keys(config("nise3.exam_degree_results")))
                 ];
                 $rules[$validationField . 'marks_in_percentage'] = [
-                    Rule::requiredIf(function () use ($fields, $request) {
-                        $resultId = isset($fields['result']) ? $fields['result'] : null;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId) : false;
                     }),
+                    'nullable',
                     "numeric"
                 ];
                 $rules[$validationField . 'cgpa_scale'] = [
-                    Rule::requiredIf(function () use ($fields,$request) {
-                        $resultId = isset($fields['result']) ? $fields['result'] : null;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId) : false;
                     }),
+                    'nullable',
                     Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
                     "integer"
                 ];
                 $rules[$validationField . 'cgpa'] = [
-                    Rule::requiredIf(function () use ($fields,$request) {
-                        $resultId = isset($fields['result']) ? $fields['result'] : null;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId) : false;
                     }),
+                    'nullable',
                     'numeric'
                 ];
                 $rules[$validationField . 'year_of_passing'] = [
-                    Rule::requiredIf(function () use ($fields,$request) {
-                        $resultId = isset($fields['result']) ? $fields['result'] : null;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId) : false;
                     }),
+                    'nullable',
                     'string'
                 ];
                 $rules[$validationField . 'expected_year_of_passing'] = [
-                    Rule::requiredIf(function () use ($fields,$request) {
-                        $resultId = isset($fields['result']) ? $fields['result'] : null;
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $resultId) : false;
                     }),
+                    'nullable',
                     'string'
                 ];
                 $rules[$validationField . 'duration'] = [
@@ -467,27 +650,28 @@ class CourseEnrollmentService
             }
         }
 
+        if (isset($request['physical_disability_status']) && $request['physical_disability_status'] == BaseModel::TRUE) {
+            $rules['physical_disabilities'] = [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['physical_disability_status'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                "array",
+                "min:1"
+            ];
+            $rules['physical_disabilities.*'] = [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['physical_disability_status'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                "int",
+                "distinct",
+                "min:1",
+                "exists:physical_disabilities,id,deleted_at,NULL",
+            ];
+        }
 
-//        if($request['physical_disability_status'] == BaseModel::TRUE){
-//            $rules['physical_disabilities'] = [
-//                Rule::requiredIf(function () use ($id, $request) {
-//                    return $request['physical_disability_status'] == BaseModel::TRUE;
-//                }),
-//                "array",
-//                "min:1"
-//            ];
-//            $rules['physical_disabilities.*'] = [
-//                Rule::requiredIf(function () use ($id, $request) {
-//                    return $request['physical_disability_status'] == BaseModel::TRUE;
-//                }),
-//                "exists:physical_disabilities,id,deleted_at,NULL",
-//                "int",
-//                "distinct",
-//                "min:1"
-//            ];
-//        }
-
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
     /**

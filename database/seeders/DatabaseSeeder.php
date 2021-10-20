@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             EduGroupSeeder::class,
             EduBoardSeeder::class,
             ExamDegreeSeeder::class,
-            EducationLevelSeeder::class
+            EducationLevelSeeder::class,
+            PhysicalDisabilitySeeder::class
         ]);
     }
 }
