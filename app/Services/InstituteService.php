@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -215,10 +216,10 @@ class InstituteService
         }
 
         /** @var Institute $institute */
-        $institute = $instituteBuilder->first();
+        $institute = $instituteBuilder->firstOrFail();
 
         return [
-            "data" => $institute ?: [],
+            "data" => $institute,
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -296,11 +297,10 @@ class InstituteService
             'mobile' => $data['contact_person_mobile'],
         ];
 
-        return Http::retry(3)
-            ->withOptions([
-                'verify' => false,
-                'debug' => false,
-            ])
+        return Http::withOptions([
+            'verify' => false,
+            'timeout' => 60
+        ])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) use ($url) {
                 Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array)$response);
@@ -327,8 +327,7 @@ class InstituteService
             'password' => $data['password']
         ];
 
-        return Http::retry(3)
-            ->withOptions(['verify' => false])
+        return Http::withOptions(['verify' => false, 'timeout' => 60])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;
@@ -417,44 +416,31 @@ class InstituteService
         $data = $request->all();
 
         if (!empty($data['phone_numbers'])) {
-            $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+            $data["phone_numbers"] = isset($data['phone_numbers']) && is_array($data['phone_numbers']) ? $data['phone_numbers'] : explode(',', $data['phone_numbers']);
         }
         if (!empty($data['mobile_numbers'])) {
-            $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+            $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
         }
 
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ],
-            "password.regex" => [
-                "code" => "",
-                "message" => [
-                    "Have At least one Uppercase letter",
-                    "At least one Lower case letter",
-                    "Also,At least one numeric value",
-                    "And, At least one special character",
-                    "Must be more than 8 characters long"
-                ]
-            ]
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         $rules = [
             'permission_sub_group_id' => [
                 'required_if:' . $id . ',==,null',
+                'nullable',
                 'int'
             ],
             "institute_type_id" => [
                 "required",
                 "int"
             ],
-
             'code' => [
-                'unique:institutes,code,' . $id,
                 'required',
                 'string',
                 'max:150',
+                'unique:institutes,code,' . $id,
             ],
 
             'title' => [
@@ -468,10 +454,9 @@ class InstituteService
                 'max:500',
                 'min:2'
             ],
-
             'domain' => [
-                'unique:institutes,domain,' . $id,
                 'nullable',
+                'unique:institutes,domain,' . $id,
                 'string',
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191'
@@ -518,7 +503,7 @@ class InstituteService
                 'nullable',
                 'string',
                 'max:20',
-                'regex:/^[0-9]*$/'
+                'regex:/^[0-9]+$/'
             ],
             'phone_numbers' => [
                 'nullable',
@@ -527,7 +512,7 @@ class InstituteService
             'phone_numbers.*' => [
                 'nullable',
                 'string',
-                'regex:/^[0-9]*$/'
+                'regex:/^[0-9]+$/'
             ],
             'primary_mobile' => [
                 'required',
@@ -581,9 +566,8 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
-                'unique:institutes,contact_person_mobile',
                 BaseModel::MOBILE_REGEX,
-
+                'unique:institutes,contact_person_mobile',
             ],
             'contact_person_email' => [
                 'required',
@@ -605,6 +589,7 @@ class InstituteService
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'int'],
@@ -651,8 +636,8 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
+                BaseModel::MOBILE_REGEX,
                 'unique:institutes,contact_person_mobile',
-                BaseModel::MOBILE_REGEX
             ],
             'contact_person_name' => [
                 'required',
@@ -666,8 +651,8 @@ class InstituteService
             ],
             'contact_person_email' => [
                 'required',
+                'email',
                 'unique:institutes,contact_person_email',
-                'email'
             ],
             'address' => [
                 'required',
@@ -675,9 +660,12 @@ class InstituteService
                 'min:2'
             ],
             "password" => [
-                'string',
-                'min:6',
-                'confirmed'
+                "required",
+                "confirmed",
+                Password::min(BaseModel::PASSWORD_MIN_LENGTH)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
             ],
             "password_confirmation" => 'required_with:password',
         ];

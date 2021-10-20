@@ -265,15 +265,12 @@ class TrainingCenterService
     public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         $rules = [
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|required|int',
-            'branch_id' => 'exists:branches,id,deleted_at,NULL|nullable|int',
+            'institute_id' => 'required|exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'center_location_type' => 'nullable|int',
             'title' => 'required|string|max: 1000',
             'title_en' => 'nullable|string|max: 500',
@@ -287,6 +284,7 @@ class TrainingCenterService
             'address_en' => ['nullable', 'string'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer'],
@@ -297,7 +295,7 @@ class TrainingCenterService
 
     /**
      * @param string|null $googleMapSrc
-     * @return string
+     * @return string|null
      */
     public function parseGoogleMapSrc(?string $googleMapSrc): ?string
     {
