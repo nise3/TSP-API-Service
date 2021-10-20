@@ -3061,7 +3061,6 @@
              {
                 "name": "skill_ids",
                 "in": "query",
-                "required": true,
                 "schema": {
                     "type": "array",
                     "minimum": 1,
