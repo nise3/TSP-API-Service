@@ -844,7 +844,7 @@ class CourseService
         if ($type == Course::COURSE_FILTER_TYPE_NEARBY) {
             $rules['loc_district_id'] = [
                 Rule::requiredIf(function () use ($requestData) {
-                    return $requestData['loc_upazila_id'] == null;
+                    return (!isset($requestData['loc_upazila_id']));
                 }),
                 'nullable',
                 'integer'
