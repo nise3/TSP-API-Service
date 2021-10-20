@@ -29,7 +29,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
         /** Course Filter */
-        $router->get('courses[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
+        $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
 
         /** Course details  */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
