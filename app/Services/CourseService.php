@@ -772,7 +772,7 @@ class CourseService
      * @param $type
      * @return Validator
      */
-    public function filterValidator(Request $request, $type): Validator
+    public function filterValidator(Request $request, $type = null): Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
@@ -841,7 +841,7 @@ class CourseService
             ];
         }
 
-        if ($type == Course::COURSE_FILTER_TYPE_NEARBY) {
+        if ($type && $type == Course::COURSE_FILTER_TYPE_NEARBY) {
             $rules['loc_district_id'] = [
                 Rule::requiredIf(function () use ($requestData) {
                     return (!isset($requestData['loc_upazila_id']));
@@ -855,7 +855,7 @@ class CourseService
             ];
         }
 
-        if ($type == Course::COURSE_FILTER_TYPE_SKILL_MATCHING) {
+        if ($type && $type == Course::COURSE_FILTER_TYPE_SKILL_MATCHING) {
             $rules['skill_ids'] = [
                 'required',
                 'array',

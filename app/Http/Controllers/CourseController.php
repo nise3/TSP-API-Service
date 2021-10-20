@@ -47,12 +47,7 @@ class CourseController extends Controller
     public function getList(Request $request): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request)->validate();
-
-        try {
-            $response = $this->courseService->getCourseList($filter, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->courseService->getCourseList($filter, $this->startTime);
         return Response::json($response);
     }
 
