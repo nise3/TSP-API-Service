@@ -222,7 +222,7 @@ class CourseController extends Controller
 
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
-        $filter = $this->courseService->filterValidator($request)->validate();
+        $filter = $this->courseService->filterValidator($request, $type)->validate();
 
         try {
             $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
