@@ -68,14 +68,14 @@ class TrainingCenterService
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_integer($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_integer($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -96,14 +96,13 @@ class TrainingCenterService
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if (is_int($instituteId)) {
+        if (is_integer($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        if (is_int($branchId)) {
+        if (is_integer($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
-
-        if (is_int($rowStatus)) {
+        if (is_integer($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
@@ -116,7 +115,7 @@ class TrainingCenterService
 
 
         /** @var Collection $trainingCentersBuilder */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_integer($paginate) || is_integer($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -146,7 +145,7 @@ class TrainingCenterService
      */
     public function getOneTrainingCenter(int $id, Carbon $startTime): array
     {
-        /** @var TrainingCenter|Builder $trainingCenterBuilder */
+        /** @var Builder $trainingCenterBuilder */
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
@@ -205,8 +204,8 @@ class TrainingCenterService
         });
 
         $trainingCenterBuilder->where('training_centers.id', '=', $id);
-        /** @var TrainingCenter $trainingCenterBuilder */
-        $trainingCenter = $trainingCenterBuilder->first();
+        /** @var TrainingCenter $trainingCenter */
+        $trainingCenter = $trainingCenterBuilder->firstOrFail();
 
         return [
             "data" => $trainingCenter ?: [],
@@ -391,8 +390,8 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
-            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
+            'institute_id' => 'nullable|exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
