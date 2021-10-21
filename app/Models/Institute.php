@@ -22,12 +22,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Institute extends BaseModel
 {
+    const STATUS_PENDING = 1;
+    const STATUS_APPROVED = 2;
+    const STATUS_REJECTED = 3;
+
+    const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_APPROVED,
+        self::STATUS_REJECTED
+    ];
+
     use ScopeRowStatusTrait, SoftDeletes;
 
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     /**
      *

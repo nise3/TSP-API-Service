@@ -51,7 +51,8 @@ class CreateInstitutesTable extends Migration
             $table->string('contact_person_designation_en', 300)->nullable();
             $table->text('config')->nullable();
 
-            $table->unsignedTinyInteger('row_status')->default(1);
+            $table->unsignedTinyInteger('row_status')->default(1)
+                ->comment('1=>Pending,2=>Approved,3=>Rejected');
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
