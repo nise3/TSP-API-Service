@@ -80,7 +80,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
 
-        $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
             if (is_numeric($rowStatus)) {
@@ -225,7 +225,6 @@ class CourseEnrollmentService
         $courseEnrollment = $courseEnrollmentBuilder->first();
 
 
-
         return [
             "data" => $courseEnrollment ?: [],
             "_response_status" => [
@@ -240,6 +239,8 @@ class CourseEnrollmentService
     {
         $courseEnrollment = app(CourseEnrollment::class);
         $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+        $course = Course::find($data['course_id']);
+        $data['institute_id'] = $course->institute_id;
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
 
@@ -369,7 +370,7 @@ class CourseEnrollmentService
 
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
-            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
         ];
 
         $requestData = $request->all();
@@ -391,7 +392,7 @@ class CourseEnrollmentService
             'row_status' => [
                 'nullable',
                 "int",
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                Rule::in(BaseModel::ROW_STATUSES),
             ]
         ];
 
