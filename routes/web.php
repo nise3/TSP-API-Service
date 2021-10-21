@@ -26,6 +26,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('courses', 'CourseController')->render();
     $customRouter()->resourceRoute('branches', 'BranchController')->render();
     $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
+    $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
 
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
         /** Course Filter */
