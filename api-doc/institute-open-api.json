@@ -88,7 +88,7 @@
                         "$ref": "#/components/parameters/title_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/row_status_optional"
+                        "$ref": "#/components/parameters/institute_row_status"
                     }
                 ],
                 "responses": {
@@ -4504,6 +4504,22 @@
                         1
                     ],
                     "example": 1
+                }
+            },
+            "institute_row_status": {
+                "name": "row_status",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3
+                    ],
+                    "default": 2,
+                    "description": "0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected"
                 }
             },
             "row_status_optional": {

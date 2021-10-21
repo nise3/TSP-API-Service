@@ -106,7 +106,7 @@ class InstituteService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $instituteBuilder->where('institutes.row_status', $rowStatus);
         }
 
@@ -118,7 +118,7 @@ class InstituteService
         }
 
         /** @var Collection $institutes */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $institutes = $instituteBuilder->paginate($pageSize);
             $paginateData = (object)$institutes->toArray();
@@ -530,7 +530,7 @@ class InstituteService
 
             'email' => [
                 'required',
-                'string',
+                'email',
                 'max:254'
             ],
 
@@ -589,7 +589,7 @@ class InstituteService
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                Rule::in(Institute::ROW_STATUSES),
             ],
             'created_by' => ['nullable', 'int'],
             'updated_by' => ['nullable', 'int'],
@@ -598,7 +598,7 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
-    public function registerInstituteValidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
         $rules = [
             'title' => [
@@ -667,6 +667,10 @@ class InstituteService
                     ->numbers()
             ],
             "password_confirmation" => 'required_with:password',
+            'row_status' => [
+                'nullable',
+                Rule::in([BaseModel::ROW_STATUS_PENDING])
+            ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
@@ -700,8 +704,9 @@ class InstituteService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                "nullable",
                 "int",
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                Rule::in(Institute::ROW_STATUSES),
             ],
         ], $customMessage);
     }

@@ -20,9 +20,9 @@ abstract class BaseModel extends Model
 
     public const ROW_STATUS_ACTIVE = 1;
     public const ROW_STATUS_INACTIVE = 0;
-    public const ROW_STATUS_PENDING = 2;
-    public const ROW_STATUS_REJECT = 3;
 
+    public const ROW_STATUS_PENDING = 2;
+    public const ROW_STATUS_REJECTED = 3;
 
     public const ROW_ORDER_ASC = 'ASC';
     public const ROW_ORDER_DESC = 'DESC';
@@ -130,4 +130,7 @@ abstract class BaseModel extends Model
 
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
+
+    public const PASSWORD_MIN_LENGTH = 8;
+    public const PASSWORD_MAX_LENGTH = 50;
 }
