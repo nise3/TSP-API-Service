@@ -3036,13 +3036,14 @@
                     {
                         "name": "level",
                         "in": "query",
+                        "description": "1=>Beginner,2=>Intermediate,3=>Expert",
                         "required": false,
-                        "description": "1=>paid,2=>free",
                         "schema": {
                             "type": "integer",
                             "enum": [
                                 1,
-                                2
+                                2,
+                                3
                             ]
                         }
                     },
@@ -3294,13 +3295,14 @@
                     {
                         "name": "level",
                         "in": "query",
-                        "description": "1=>paid,2=>free",
+                        "description": "1=>Beginner,2=>Intermediate,3=>Expert",
                         "required": false,
                         "schema": {
                             "type": "integer",
                             "enum": [
                                 1,
-                                2
+                                2,
+                                3
                             ]
                         }
                     }
@@ -3387,6 +3389,258 @@
                 "tags": [
                     "Courses List with filters"
                 ]
+            }
+        },
+        "/course-enrollments/": {
+            "get": {
+                "summary": "Get all course enrollments",
+                "description": "API endpoint to get All course enrollments.A successful request response will show 200 HTTP status code\",",
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maximum": 500,
+                            "minimum": 2
+                        }
+                    },
+                    {
+                        "name": "first_name_en",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maximum": 250,
+                            "minimum": 2
+                        }
+                    },
+                    {
+                        "name": "program_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "institute_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "training_center_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ASC",
+                                "DESC"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "row_status",
+                        "in": "query",
+                        "description": "0=>Inactive 1=>Active 2=>Pending 3=>Rejected",
+                        "schema": {
+                            "type": "inetger",
+                            "enum": [
+                                1,0,2,3
+
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "DESC",
+                                    "data": [
+
+                                        {
+                                            "id": 101,
+                                            "youth_id": 1,
+                                            "institute_id": 6,
+                                            "program_id": null,
+                                            "program_title": "Jody Beahan",
+                                            "program_title_en": "Schuyler Hickle",
+                                            "course_id": 6,
+                                            "course_title": "Noble Haag",
+                                            "course_title_en": "Alanis Hansen",
+                                            "training_center_id": null,
+                                            "training_center_title": null,
+                                            "training_center_title_en": null,
+                                            "batch_id": null,
+                                            "payment_status": 0,
+                                            "first_name": "",
+                                            "first_name_en": null,
+                                            "last_name": "",
+                                            "last_name_en": null,
+                                            "gender": 0,
+                                            "date_of_birth": "0000-00-00",
+                                            "email": null,
+                                            "mobile": null,
+                                            "identity_number_type": null,
+                                            "identity_number": null,
+                                            "religion": 0,
+                                            "marital_status": 0,
+                                            "nationality": 1,
+                                            "physical_disability_status": 0,
+                                            "freedom_fighter_status": 0,
+                                            "row_status": 0,
+                                            "created_at": "2021-10-21T09:47:29.000000Z",
+                                            "updated_at": "2021-10-21T09:47:29.000000Z"
+                                        },
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "institute_id": 6,
+                                            "program_id": null,
+                                            "program_title": "Johnpaul Windler",
+                                            "program_title_en": "Marlene Steuber",
+                                            "course_id": 1,
+                                            "course_title": "Fabiola Hyatt",
+                                            "course_title_en": "Ike Leannon",
+                                            "training_center_id": null,
+                                            "training_center_title": null,
+                                            "training_center_title_en": null,
+                                            "batch_id": null,
+                                            "payment_status": 0,
+                                            "first_name": "",
+                                            "first_name_en": null,
+                                            "last_name": "",
+                                            "last_name_en": null,
+                                            "gender": 0,
+                                            "date_of_birth": "0000-00-00",
+                                            "email": null,
+                                            "mobile": null,
+                                            "identity_number_type": null,
+                                            "identity_number": null,
+                                            "religion": 0,
+                                            "marital_status": 0,
+                                            "nationality": 1,
+                                            "physical_disability_status": 0,
+                                            "freedom_fighter_status": 0,
+                                            "row_status": 0,
+                                            "created_at": "2021-10-21T09:47:28.000000Z",
+                                            "updated_at": "2021-10-21T09:47:28.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Course Enrollments"]
+            }
+        },
+        "/course-enrollments/{id}": {
+            "get": {
+                "summary": "get course-enrollment by Id",
+                "description": "API endpoint to get a course enrollments.A successful request response will show 200 HTTP status code\",",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type" : "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data":
+                                        {
+                                            "id": 101,
+                                            "youth_id": 1,
+                                            "institute_id": 6,
+                                            "program_id": null,
+                                            "program_title": "Jody Beahan",
+                                            "program_title_en": "Schuyler Hickle",
+                                            "course_id": 6,
+                                            "course_title": "Noble Haag",
+                                            "course_title_en": "Alanis Hansen",
+                                            "training_center_id": null,
+                                            "training_center_title": null,
+                                            "training_center_title_en": null,
+                                            "batch_id": null,
+                                            "payment_status": 0,
+                                            "first_name": "",
+                                            "first_name_en": null,
+                                            "last_name": "",
+                                            "last_name_en": null,
+                                            "gender": 0,
+                                            "date_of_birth": "0000-00-00",
+                                            "email": null,
+                                            "mobile": null,
+                                            "identity_number_type": null,
+                                            "identity_number": null,
+                                            "religion": 0,
+                                            "marital_status": 0,
+                                            "nationality": 1,
+                                            "physical_disability_status": 0,
+                                            "freedom_fighter_status": 0,
+                                            "row_status": 0,
+                                            "created_at": "2021-10-21T09:47:29.000000Z",
+                                            "updated_at": "2021-10-21T09:47:29.000000Z"
+                                        },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Course Enrollments"]
             }
         }
     },
