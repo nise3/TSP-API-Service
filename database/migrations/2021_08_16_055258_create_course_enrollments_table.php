@@ -67,13 +67,6 @@ class CreateCourseEnrollmentsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('institute_id', 'c_enroll_fk_institute_id')
-                ->references('id')
-                ->on('institutes')
-                ->onUpdate('CASCADE')
-                ->onDelete('CASCADE');
-
         });
     }
 

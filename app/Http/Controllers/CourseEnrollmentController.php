@@ -57,6 +57,22 @@ class CourseEnrollmentController extends Controller
         return Response::json($response);
     }
 
+    /**
+     * Display the specified resource
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function read(int $id): JsonResponse
+    {
+        try {
+            $response = $this->courseEnrollService->getOneCourseEnrollment($id, $this->startTime);
+        } catch (Throwable $e) {
+            throw $e;
+        }
+        return Response::json($response);
+    }
+
 
     /**
      * @param Request $request
