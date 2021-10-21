@@ -20,12 +20,20 @@ abstract class BaseModel extends Model
 
     public const ROW_STATUS_ACTIVE = 1;
     public const ROW_STATUS_INACTIVE = 0;
+
+    public const ROW_STATUS_PENDING = 2;
+    public const ROW_STATUS_REJECTED = 3;
+
     public const ROW_ORDER_ASC = 'ASC';
     public const ROW_ORDER_DESC = 'DESC';
 
     public const INSTITUTE_TYPE_GOVT = 1;
     public const INSTITUTE_TYPE_NON_GOVT = 2;
     public const INSTITUTE_TYPE_OTHERS_ = 3;
+
+
+    public const TRUE = 1;
+    public const FALSE = 0;
 
     /** Religions Mapping  */
     public const RELIGION_ISLAM = 1;
@@ -76,7 +84,9 @@ abstract class BaseModel extends Model
     public const ORGANIZATION_CLIENT_URL_TYPE = "ORGANIZATION";
     public const INSTITUTE_URL_CLIENT_TYPE = "INSTITUTE";
     public const CORE_CLIENT_URL_TYPE = "CORE";
+    public const YOUTH_CLIENT_URL_TYPE = "YOUTH";
     public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
+    public const CMS_CLIENT_URL_TYPE = "CMS";
 
     public const DYNAMIC_FORM_FIELD_INFO = [
         self::ETHNIC_GROUP_INFO => [
