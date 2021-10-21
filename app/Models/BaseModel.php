@@ -25,8 +25,8 @@ abstract class BaseModel extends Model
     public const ROW_STATUS_REJECTED = 3;
 
     public const ROW_STATUSES = [
-        self::ROW_STATUS_ACTIVE,
         self::ROW_STATUS_INACTIVE,
+        self::ROW_STATUS_ACTIVE, /** Approved Status */
         self::ROW_STATUS_PENDING,
         self::ROW_STATUS_REJECTED
     ];
