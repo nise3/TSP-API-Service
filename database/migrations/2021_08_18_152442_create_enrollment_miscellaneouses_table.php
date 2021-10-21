@@ -16,9 +16,9 @@ class CreateEnrollmentMiscellaneousesTable extends Migration
         Schema::create('enrollment_miscellaneouses', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('course_enrollment_id');
-            $table->unsignedTinyInteger('has_own_family_home');
-            $table->unsignedTinyInteger('has_own_family_land');
-            $table->unsignedTinyInteger('number_of_siblings');
+            $table->unsignedTinyInteger('has_own_family_home')->default(0);
+            $table->unsignedTinyInteger('has_own_family_land')->default(0);
+            $table->unsignedTinyInteger('number_of_siblings')->default(0);
             $table->unsignedTinyInteger('recommended_by_any_organization')->default(0);
             $table->timestamps();
             $table->softDeletes();
