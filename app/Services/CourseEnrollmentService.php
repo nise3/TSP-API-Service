@@ -36,7 +36,7 @@ class CourseEnrollmentService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var Course|Builder $coursesEnrollmentBuilder */
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
         $coursesEnrollmentBuilder = CourseEnrollment::select(
             [
                 'course_enrollments.id',
@@ -75,7 +75,7 @@ class CourseEnrollmentService
         );
 
         if(is_numeric($instituteId)){
-            $coursesEnrollmentBuilder->where('institute_id',$instituteId);
+            $coursesEnrollmentBuilder->where('course_enrollments.institute_id',$instituteId);
         }
 
         $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -86,8 +86,8 @@ class CourseEnrollmentService
             }
         });
 
-        $coursesEnrollmentBuilder->join("training_centers", function ($join) use ($rowStatus) {
-            $join->on('training_centers.training_center_id', '=', 'training_centers.id')
+        $coursesEnrollmentBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
+            $join->on('course_enrollments.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
             if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
