@@ -531,6 +531,7 @@ class InstituteService
             'email' => [
                 'required',
                 'string',
+                'email',
                 'max:254'
             ],
 
@@ -700,6 +701,7 @@ class InstituteService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                "nullable",
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
