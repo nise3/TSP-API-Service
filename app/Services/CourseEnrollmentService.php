@@ -13,12 +13,14 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
+use App\Models\Trainer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
 
 class CourseEnrollmentService
 {
@@ -74,8 +76,8 @@ class CourseEnrollmentService
             ]
         );
 
-        if(is_numeric($instituteId)){
-            $coursesEnrollmentBuilder->where('course_enrollments.institute_id',$instituteId);
+        if (is_numeric($instituteId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
 
         $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -148,6 +150,90 @@ class CourseEnrollmentService
         ];
 
         return $response;
+    }
+
+    /**
+     * @param int $id
+     * @param Carbon $startTime
+     * @param bool $withTrainers
+     * @return array
+     */
+    public function getOneCourseEnrollment(int $id, Carbon $startTime, bool $withTrainers = false): array
+    {
+        /** @var CourseEnrollment|Builder $courseEnrollmentBuilder */
+        $courseEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'course_enrollments.institute_id',
+                'course_enrollments.program_id',
+                'programs.title as program_title',
+                'programs.title_en as program_title_en',
+                'course_enrollments.course_id',
+                'courses.title as course_title',
+                'courses.title_en as course_title_en',
+                'course_enrollments.training_center_id',
+                'training_centers.title as training_center_title',
+                'training_centers.title_en as training_center_title_en',
+                'course_enrollments.batch_id',
+                'course_enrollments.payment_status',
+                'course_enrollments.first_name',
+                'course_enrollments.first_name_en',
+                'course_enrollments.last_name',
+                'course_enrollments.last_name_en',
+                'course_enrollments.gender',
+                'course_enrollments.date_of_birth',
+                'course_enrollments.email',
+                'course_enrollments.mobile',
+                'course_enrollments.identity_number_type',
+                'course_enrollments.identity_number',
+                'course_enrollments.religion',
+                'course_enrollments.marital_status',
+                'course_enrollments.nationality',
+                'course_enrollments.physical_disability_status',
+                'course_enrollments.freedom_fighter_status',
+                'course_enrollments.row_status',
+                'course_enrollments.created_at',
+                'course_enrollments.updated_at'
+            ]
+        );
+
+        $courseEnrollmentBuilder->where('course_enrollments.id', '=', $id);
+
+        $courseEnrollmentBuilder->join("courses", function ($join) {
+            $join->on('course_enrollments.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at')
+                ->where('courses.row_status', BaseModel::ROW_STATUS_ACTIVE);
+        });
+
+        $courseEnrollmentBuilder->leftJoin("training_centers", function ($join) {
+            $join->on('course_enrollments.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at')->where('training_centers.row_status', BaseModel::ROW_STATUS_ACTIVE);
+        });
+
+        $courseEnrollmentBuilder->leftJoin("programs", function ($join) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at')->where('programs.row_status', BaseModel::ROW_STATUS_ACTIVE);
+        });
+
+        $courseEnrollmentBuilder->with('educations');
+        $courseEnrollmentBuilder->with('addresses');
+        $courseEnrollmentBuilder->with('guardian');
+        $courseEnrollmentBuilder->with('miscellaneous');
+        $courseEnrollmentBuilder->with('physicalDisabilities');
+
+        $courseEnrollment = $courseEnrollmentBuilder->first();
+
+
+
+        return [
+            "data" => $courseEnrollment ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => Response::HTTP_OK,
+                "query_time" => $startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
     }
 
     public function enrollCourse(array $data): CourseEnrollment
@@ -442,7 +528,7 @@ class CourseEnrollmentService
             "physical_disability_status" => [
                 "required",
                 "int",
-                Rule::in([BaseModel::TRUE,BaseModel::FALSE])
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
             'address_info' => [
                 'nullable',
