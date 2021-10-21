@@ -3474,7 +3474,7 @@
                     {
                         "name": "row_status",
                         "in": "query",
-                        "description": "0=>Inactive 1=>Active 2=>Pending 3=>Rejected",
+                        "description": "0=>Inactive, 1=>Approved, 2=>Pending 3=>Rejected",
                         "schema": {
                             "type": "integer",
                             "enum": [
@@ -4540,7 +4540,7 @@
                             1
                         ],
                         "description": "0=>No, 1=>Yes",
-                        "default": 1
+                        "example": 1
                     }
                 },
                 "required": [
@@ -4617,7 +4617,13 @@
                         "type": "string"
                     },
                     "row_status": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            0,
+                            1
+                        ],
+                        "description": "0=>No, 1=>Yes",
+                        "example": 1
                     },
                     "batches": {
                         "type": "array",
