@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -88,5 +90,37 @@ class CourseEnrollment extends BaseModel
     public function physicalDisabilities(): BelongsToMany
     {
         return $this->belongsToMany(PhysicalDisability::class, 'enrollment_physical_disabilities');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function educations(): HasMany
+    {
+        return $this->hasMany(EnrollmentEducation::class, 'course_enrollment_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(EnrollmentAddress::class, 'course_enrollment_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function guardian(): HasOne
+    {
+        return $this->hasOne(EnrollmentGuardian::class, 'course_enrollment_id');
+    }
+
+    /**
+     * @return HasOne
+     */
+    public function miscellaneous(): HasOne
+    {
+        return $this->hasOne(EnrollmentMiscellaneous::class, 'course_enrollment_id');
     }
 }

@@ -67,7 +67,6 @@ class CreateCourseEnrollmentsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
