@@ -3401,9 +3401,7 @@
                         "in": "query",
                         "required": false,
                         "schema": {
-                            "type": "string",
-                            "maximum": 500,
-                            "minimum": 2
+                            "type": "string"
                         }
                     },
                     {
@@ -3411,9 +3409,7 @@
                         "in": "query",
                         "required": false,
                         "schema": {
-                            "type": "string",
-                            "maximum": 250,
-                            "minimum": 2
+                            "type": "string"
                         }
                     },
                     {
@@ -3435,6 +3431,7 @@
                     {
                         "name": "course_id",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -3442,6 +3439,7 @@
                     {
                         "name": "training_center_id",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -3449,6 +3447,7 @@
                     {
                         "name": "page_size",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -3456,6 +3455,7 @@
                     {
                         "name": "page",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
@@ -3463,6 +3463,7 @@
                     {
                         "name": "order",
                         "in": "query",
+                        "required": false,
                         "schema": {
                             "type": "string",
                             "enum": [
