@@ -17,7 +17,12 @@ class DatabaseSeeder extends Seeder
             GeoLocationDatabaseSeeder::class,
             InstituteSeeder::class,
             CourseBatchCompositeSeeder::class,
-            CourseEnrollmentSeeder::class
+            CourseEnrollmentSeeder::class,
+            EduGroupSeeder::class,
+            EduBoardSeeder::class,
+            ExamDegreeSeeder::class,
+            EducationLevelSeeder::class,
+            PhysicalDisabilitySeeder::class
         ]);
     }
 }

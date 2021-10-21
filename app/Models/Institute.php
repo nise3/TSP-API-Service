@@ -22,14 +22,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Institute extends BaseModel
 {
-    const STATUS_PENDING = 1;
-    const STATUS_APPROVED = 2;
-    const STATUS_REJECTED = 3;
 
-    const STATUSES = [
-        self::STATUS_PENDING,
-        self::STATUS_APPROVED,
-        self::STATUS_REJECTED
+    public const ROW_STATUSES = [
+        self::ROW_STATUS_INACTIVE,
+        self::ROW_STATUS_ACTIVE, /** Approved Status */
+        self::ROW_STATUS_PENDING,
+        self::ROW_STATUS_REJECTED
     ];
 
     use ScopeRowStatusTrait, SoftDeletes;
