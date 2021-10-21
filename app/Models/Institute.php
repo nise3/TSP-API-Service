@@ -25,9 +25,9 @@ class Institute extends BaseModel
 
     public const ROW_STATUSES = [
         self::ROW_STATUS_INACTIVE,
-        self::ROW_STATUS_ACTIVE,
+        self::ROW_STATUS_ACTIVE, /** Approved Status */
         self::ROW_STATUS_PENDING,
-        self::ROW_STATUS_REJECT
+        self::ROW_STATUS_REJECTED
     ];
 
     use ScopeRowStatusTrait, SoftDeletes;
