@@ -58,6 +58,21 @@ class CourseEnrollmentController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function getYouthEnrollCourses(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->youthEnrollCoursesFilterValidator($request)->validate();
+        $response = $this->courseEnrollService->getYouthEnrollCourses($validated, $this->startTime);
+        return Response::json($response);
+    }
+
+
+    /**
      * Display the specified resource
      * @param int $id
      * @return JsonResponse
