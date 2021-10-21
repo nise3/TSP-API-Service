@@ -29,6 +29,15 @@ class CourseEnrollment extends BaseModel
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
+
+    public const ROW_STATUSES = [
+        self::ROW_STATUS_INACTIVE,
+        self::ROW_STATUS_ACTIVE, /** Approved Status */
+        self::ROW_STATUS_PENDING,
+        self::ROW_STATUS_REJECTED
+    ];
+
+
     /** Marital Statuses */
     public const MARITAL_STATUS_SINGLE = 1;
     public const MARITAL_STATUS_MARRIED = 2;

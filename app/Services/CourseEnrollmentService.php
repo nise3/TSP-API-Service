@@ -392,7 +392,7 @@ class CourseEnrollmentService
             'row_status' => [
                 'nullable',
                 "int",
-                Rule::in(BaseModel::ROW_STATUSES),
+                Rule::in(CourseEnrollment::ROW_STATUSES),
             ]
         ];
 
