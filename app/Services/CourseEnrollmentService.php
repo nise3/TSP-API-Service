@@ -359,7 +359,6 @@ class CourseEnrollmentService
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
-     * @param $type
      * @return Validator
      */
     public function filterValidator(Request $request): Validator
@@ -1003,5 +1002,127 @@ class CourseEnrollmentService
             $code = config("nise3.exam_degree_results." . $id . ".code");
         }
         return $code ?? "";
+    }
+
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getYouthEnrollCourses(array $request, Carbon $startTime): array
+    {
+        $youthId = $request['youth_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $courseId = $request['course_id'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
+        $coursesEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'courses.code as course_code',
+                'courses.level as course_level',
+                'courses.language_medium as course_language_medium',
+                'courses.title as course_title',
+                'courses.title_en as course_title_en',
+                'courses.course_fee as course_fee',
+                'courses.duration as course_duration',
+                'course_enrollments.row_status',
+                'course_enrollments.created_at',
+                'course_enrollments.updated_at'
+            ]
+        );
+
+        if (is_numeric($youthId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
+        }
+
+        $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
+            $join->on('course_enrollments.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at');
+            if (is_numeric($rowStatus)) {
+                $join->where('courses.row_status', $rowStatus);
+            }
+        });
+
+        $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
+
+        if (is_numeric($rowStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        if (!empty($firstName)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.first_name', 'like', '%' . $firstName . '%');
+        }
+        if (!empty($firstNameEn)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.first_name_en', 'like', '%' . $firstNameEn . '%');
+        }
+
+        if (is_numeric($courseId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.course_id', '=', $courseId);
+        }
+
+        /** @var Collection $courseEnrollments */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courseEnrollments = $coursesEnrollmentBuilder->paginate($pageSize);
+            $paginateData = (object)$courseEnrollments->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courseEnrollments = $coursesEnrollmentBuilder->get();
+        }
+        $response['order'] = $order;
+        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return Validator
+     */
+    public function youthEnrollCoursesFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
+        ];
+
+        $requestData = $request->all();
+
+        $rules = [
+            'youth_id' => 'required|min:1',
+            'course_id' => 'nullable|int|gt:0',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'nullable',
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in(CourseEnrollment::ROW_STATUSES),
+            ]
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 }
