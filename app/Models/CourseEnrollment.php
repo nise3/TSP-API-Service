@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int id
  * @property int course_id
  * @property int youth_id
+ * @property int institute_id
  * @property int program_id
  * @property int|null training_center_id
  * @property int|null batch_id

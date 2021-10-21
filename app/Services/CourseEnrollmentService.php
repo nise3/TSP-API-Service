@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Models\EducationLevel;
@@ -23,6 +22,7 @@ class CourseEnrollmentService
     public function enrollCourse(array $data): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
+        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
 
@@ -111,9 +111,7 @@ class CourseEnrollmentService
 
     public function storeEnrollmentPhysicalDisabilities(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
-        if ($data['physical_disability_status'] == BaseModel::FALSE) {
-            $this->detachPhysicalDisabilities($courseEnrollment);
-        } else if ($data['physical_disability_status'] == BaseModel::TRUE) {
+        if ($data['physical_disability_status'] == BaseModel::TRUE) {
             $this->assignPhysicalDisabilities($courseEnrollment, $data['physical_disabilities']);
         }
         return $courseEnrollment;
@@ -616,7 +614,8 @@ class CourseEnrollmentService
                         return $resultId ? $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId) : false;
                     }),
                     'nullable',
-                    'numeric'
+                    'numeric',
+                    "max:5"
                 ];
                 $rules[$validationField . 'year_of_passing'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
