@@ -3476,11 +3476,11 @@
                         "in": "query",
                         "description": "0=>Inactive 1=>Active 2=>Pending 3=>Rejected",
                         "schema": {
-                            "type": "inetger",
+                            "type": "integer",
                             "enum": [
-                                1,0,2,3
-
-                            ]
+                                0,1,2,3
+                            ],
+                            "example": 2
                         }
                     }
                 ],
