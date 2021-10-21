@@ -136,10 +136,10 @@ class ProgramService
         $programmeBuilder->where('programs.id', '=', $id);
 
         /** @var Program $programme */
-        $programme = $programmeBuilder->first();
+        $programme = $programmeBuilder->firstOrFail();
 
         return [
-            "data" => $programme ?: [],
+            "data" => $programme,
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,

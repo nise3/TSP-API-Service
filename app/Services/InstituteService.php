@@ -341,7 +341,7 @@ class InstituteService
         $titleBn = $request->query('title');
         $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::onlyTrashed()->select([
@@ -442,7 +442,6 @@ class InstituteService
                 'max:150',
                 'unique:institutes,code,' . $id,
             ],
-
             'title' => [
                 'required',
                 'string',

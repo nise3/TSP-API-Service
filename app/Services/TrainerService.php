@@ -320,9 +320,9 @@ class TrainerService
         $trainerBuilder->where('trainers.id', $id);
 
         /** @var Trainer $trainer */
-        $trainer = $trainerBuilder->first();
+        $trainer = $trainerBuilder->firstOrFail();
         return [
-            "data" => $trainer ?: [],
+            "data" => $trainer,
             "_response_status" => [
                 "success" => true,
                 "code" => Response::HTTP_OK,
@@ -337,7 +337,7 @@ class TrainerService
      */
     public function store(array $data): Trainer
     {
-        $trainer = new Trainer();
+        $trainer = app(Trainer::class);
         $trainer->fill($data);
         $trainer->Save();
         return $trainer;
@@ -370,7 +370,7 @@ class TrainerService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title');
         $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::onlyTrashed()->select([
@@ -570,9 +570,9 @@ class TrainerService
             ],
             'mobile' => [
                 'required',
-                'unique:trainers,mobile,' . $id,
                 BaseModel::MOBILE_REGEX,
                 'max:15',
+                'unique:trainers,mobile,' . $id,
             ],
             'date_of_birth' => [
                 'required',
@@ -631,19 +631,18 @@ class TrainerService
             ],
             'present_address_division_id' => [
                 'nullable',
-                'exists:loc_divisions,id,deleted_at,NULL',
                 'integer',
+                'exists:loc_divisions,id,deleted_at,NULL',
             ],
             'present_address_district_id' => [
                 'nullable',
-                'exists:loc_districts,id,deleted_at,NULL',
                 'integer',
-
+                'exists:loc_districts,id,deleted_at,NULL',
             ],
             'present_address_upazila_id' => [
                 'nullable',
-                'exists:loc_upazilas,id,deleted_at,NULL',
                 'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL',
             ],
             'present_house_address' => [
                 'nullable',
@@ -717,8 +716,8 @@ class TrainerService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
-            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
-            'training_center_id' => 'exists:training_centers,id,deleted_at,NULL|int',
+            'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
+            'training_center_id' => 'nullable|exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

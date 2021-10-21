@@ -188,7 +188,7 @@ class BranchService
         $branchBuilder->where('branches.id', $id);
 
         /** @var Branch $branch */
-        $branch = $branchBuilder->first();
+        $branch = $branchBuilder->firstOrFail();
 
         return [
             "data" => $branch ?: [],
@@ -256,7 +256,8 @@ class BranchService
         $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $limit = $request->query('limit', 10);
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Branch|Builder $branchBuilder */
         $branchBuilder = Branch::onlyTrashed()->select([
@@ -277,7 +278,6 @@ class BranchService
         $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
         $branchBuilder->orderBy('branches.id', $order);
 
-
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
@@ -296,9 +296,9 @@ class BranchService
         } else {
             $branches = $branchBuilder->get();
         }
+
         $response['order'] = $order;
         $response['data'] = $branches->toArray()['data'] ?? $branches->toArray();
-
 
         $response['_response_status'] = [
             "success" => true,
@@ -326,10 +326,7 @@ class BranchService
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
         $rules = [
             'title_en' => [
@@ -345,8 +342,8 @@ class BranchService
                 'min:2'
             ],
             'institute_id' => [
-                'exists:institutes,id,deleted_at,NULL',
                 'required',
+                'exists:institutes,id,deleted_at,NULL',
                 'int'
             ],
             'address' => [
@@ -366,6 +363,7 @@ class BranchService
             'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer'],
@@ -391,12 +389,13 @@ class BranchService
             'title' => 'nullable|max:600|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                "nullable",
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],

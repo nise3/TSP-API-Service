@@ -70,6 +70,36 @@ class Course extends BaseModel
         self::COURSE_LANGUAGE_MEDIUM_ENGLISH,
     ];
 
+    /** Course filter parameters */
+    const COURSE_FILTER_TYPE_RECENT = 'recent';
+    const COURSE_FILTER_TYPE_POPULAR = 'popular';
+    const COURSE_FILTER_TYPE_NEARBY = 'nearby';
+    const COURSE_FILTER_TYPE_SKILL_MATCHING = 'skill-matching';
+    const COURSE_FILTER_TYPE_TRENDING = 'trending';
+    const COURSE_FILTER_TYPES = [
+        self::COURSE_FILTER_TYPE_RECENT,
+        self::COURSE_FILTER_TYPE_POPULAR,
+        self::COURSE_FILTER_TYPE_NEARBY,
+        self::COURSE_FILTER_TYPE_SKILL_MATCHING,
+        self::COURSE_FILTER_TYPE_TRENDING
+    ];
+
+    const COURSE_FILTER_AVAILABILITY_RUNNING = 1;
+    const COURSE_FILTER_AVAILABILITY_UPCOMING = 2;
+    const COURSE_FILTER_AVAILABILITY_COMPLETED = 3;
+    const COURSE_FILTER_AVAILABILITIES = [
+        self::COURSE_FILTER_AVAILABILITY_RUNNING,
+        self::COURSE_FILTER_AVAILABILITY_UPCOMING,
+        self::COURSE_FILTER_AVAILABILITY_COMPLETED,
+    ];
+
+    const COURSE_FILTER_COURSE_TYPE_PAID = 1;
+    const COURSE_FILTER_COURSE_TYPE_FREE = 2;
+    const COURSE_FILTER_COURSE_TYPES = [
+        self::COURSE_FILTER_COURSE_TYPE_PAID,
+        self::COURSE_FILTER_COURSE_TYPE_FREE
+    ];
+
 
     /**
      * @return BelongsTo

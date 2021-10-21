@@ -480,18 +480,20 @@ class BatchService
             'order.in' => 'Order must be within ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
+
         return Validator::make($request->all(), [
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
-            'branch_id' => 'exists:branches,id,deleted_at,NULL|int',
-            'course_id' => 'exists:courses,id,deleted_at,NULL|int',
-            'training_center_id' => 'exists:training_centers,id,deleted_at,NULL|int',
+            'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
+            'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
+            'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
+            'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
@@ -505,29 +507,34 @@ class BatchService
      */
     public function trainerValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        $data["trainerIds"] = is_array($request['trainerIds']) ? $request['trainerIds'] : explode(',', $request['trainerIds']);
+        $requestData = $request->get('trainerIds');
+        $data = [];
+        $data["trainerIds"] = isset($requestData['trainerIds']) && is_array($requestData['trainerIds']) ? $requestData['trainerIds'] : explode(',', $requestData['trainerIds']);
 
         $rules = [
             'trainerIds' => 'required|array|min:1',
             'trainerIds.*' => 'required|integer|distinct|min:1'
         ];
+
         return Validator::make($data, $rules);
     }
 
 
     /**
-     * @param $request
+     * @param Request $request
      * @param $id
      * @param $currentTime
      * @return array
      */
-    public function batchesWithTrainingCenters($request, $id, $currentTime): array
+    public function batchesWithTrainingCenters(Request $request, $id, $currentTime): array
     {
-        $active = $request['active'] == "true";
-        $upcoming = $request['upcoming'] == "true";
+        $active = $request->get('active') === "true";
+        $upcoming =  $request->get('upcoming') === "true";
 
-        $course = Course::find($id);
-        $instituteId = $course['institute_id'];
+        /** @var Course $course */
+        $course = Course::findOrFail($id);
+
+        $instituteId = $course->institute_id;
 
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = TrainingCenter::select([
@@ -564,8 +571,9 @@ class BatchService
             DB::raw('GROUP_CONCAT(batches.batch_end_date) as batch_end_dates'),
             DB::raw('GROUP_CONCAT(batches.available_seats) as available_seats'),
             DB::raw('GROUP_CONCAT(batches.row_status) as batch_row_statuses')
-        ])
-            ->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
+        ]);
+
+        $courseBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
                 $join->on('batches.training_center_id', '=', 'training_centers.id');
                 if ($active && !$upcoming) {
                     $join->whereDate('batches.registration_start_date', '<=', $currentTime);
@@ -636,6 +644,7 @@ class BatchService
             }
         }
 
+        $response = [];
         $response['data'] = $trainingCenterWiseBatches;
 
         $response['_response_status'] = [
