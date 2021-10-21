@@ -101,21 +101,21 @@ class TrainerService
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
             }
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -143,7 +143,7 @@ class TrainerService
         $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
                 ->whereNull('loc_districts_permanent.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('loc_districts_permanent.row_status', $rowStatus);
             }
         });
@@ -151,14 +151,14 @@ class TrainerService
         $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
                 ->whereNull('loc_upazilas_permanent.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('loc_upazilas_permanent.row_status', $rowStatus);
             }
         });
 
         $trainerBuilder->orderBy('trainers.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $trainerBuilder->where('trainers.row_status', $rowStatus);
         }
 
@@ -169,20 +169,20 @@ class TrainerService
             $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $name . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (!empty($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
-        if (is_int($branchId)) {
+        if (!empty($branchId)) {
             $trainerBuilder->where('trainers.branch_id', '=', $branchId);
         }
 
-        if (is_int($trainingCenterId)) {
+        if (!empty($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
         /** @var Collection $trainers */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $trainerBuilder->paginate($pageSize);
             $paginateData = (object)$trainers->toArray();

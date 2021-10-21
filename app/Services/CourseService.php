@@ -98,7 +98,7 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_integer($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -106,7 +106,7 @@ class CourseService
         $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_integer($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -114,14 +114,14 @@ class CourseService
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_integer($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
 
-        if (is_integer($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
@@ -132,12 +132,12 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_integer($instituteId)) {
+        if (!empty($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $courses */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -553,7 +553,7 @@ class CourseService
 
 
         /** @var Collection $courses */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();

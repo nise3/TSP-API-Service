@@ -65,7 +65,7 @@ class BranchService
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -91,7 +91,7 @@ class BranchService
 
         $branchBuilder->orderBy('branches.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $branchBuilder->where('branches.row_status', $rowStatus);
         }
 
@@ -102,12 +102,12 @@ class BranchService
             $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (!empty($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $branches */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
             $paginateData = (object)$branches->toArray();

@@ -106,7 +106,7 @@ class InstituteService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $instituteBuilder->where('institutes.row_status', $rowStatus);
         }
 
@@ -118,7 +118,7 @@ class InstituteService
         }
 
         /** @var Collection $institutes */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $institutes = $instituteBuilder->paginate($pageSize);
             $paginateData = (object)$institutes->toArray();
@@ -374,7 +374,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (is_int($paginate) || is_int($limit)) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();

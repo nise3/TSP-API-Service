@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -80,14 +81,14 @@ class BatchService
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('courses.row_status', $rowStatus);
             }
         });
         $batchBuilder->leftjoin("institutes", function ($join) use ($rowStatus) {
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
@@ -95,7 +96,7 @@ class BatchService
         $batchBuilder->leftjoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
             }
         });
@@ -103,7 +104,7 @@ class BatchService
         $batchBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
             $join->on('batches.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -111,40 +112,40 @@ class BatchService
         $batchBuilder->join("training_centers", function ($join) use ($rowStatus) {
             $join->on('batches.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
             }
         });
 
         $batchBuilder->orderBy('batches.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $batchBuilder->where('batches.row_status', $rowStatus);
         }
 
-        if (is_int($instituteId)) {
+        if (!empty($instituteId)) {
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
 
-        if (is_int($branchId)) {
+        if (!empty($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
-        if (is_int($programId)) {
+        if (!empty($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
         }
 
-        if (is_int($courseId)) {
+        if (!empty($courseId)) {
             $batchBuilder->where('batches.course_id', $courseId);
         }
 
-        if (is_int($trainingCenterId)) {
+        if (!empty($trainingCenterId)) {
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
         /** @var Collection $batches */
-        if (is_int($paginate) || is_int($pageSize)) {
-            $pageSize = $pageSize ?: 10;
+        if (!empty($paginate) || !empty($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $batches = $batchBuilder->paginate($pageSize);
             $paginateData = (object)$batches->toArray();
             $response['current_page'] = $paginateData->current_page;
@@ -390,10 +391,7 @@ class BatchService
     {
 
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
         $rules = [
             'institute_id' => [
