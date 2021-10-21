@@ -3065,13 +3065,16 @@
                     {
                         "name": "skill_ids",
                         "in": "query",
-                        "schema": {
-                            "type": "array",
-                            "minimum": 1,
-                            "maximum": 10,
-                            "items": {
-                                "type": "integer",
-                                "minimum": 1
+                        "required": false,
+                        "content": {
+                            "multipart/form-data": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "integer",
+                                        "uniqueItems": true
+                                    }
+                                }
                             }
                         }
                     }
@@ -3080,7 +3083,76 @@
                     "200": {
                         "description": "success",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "example": {
+                                    "data": [ {
+                                        "id": 4,
+                                        "code": "odio-et-dolores-non-necessitatibus-voluptas-placeat-et-veniam-corrupti-saepe-enim-id-exercitationem-animi-expedita-atque-quis-facilis-libero-aliquid-m",
+                                        "title_en": "Monserrat Herzog",
+                                        "title": "Neil Armstrong",
+                                        "institute_id": 2,
+                                        "institute_title": "Laura Upton",
+                                        "institute_title_en": "Mr. Randy Effertz MD",
+                                        "program_id": 6,
+                                        "program_title": "Braulio Kuhic Sr.",
+                                        "program_title_en": "Patrick Rowe",
+                                        "course_fee": 9583,
+                                        "duration": 71,
+                                        "overview": "Sunt alias sapiente facere quia omnis officia. Quis veritatis sed molestias nobis. Placeat dolore culpa numquam saepe incidunt aut veniam.",
+                                        "overview_en": "Illum maxime sequi necessitatibus sint alias qui voluptatem. Occaecati voluptates eos sint quidem. Rerum sunt autem ex maxime illum.",
+                                        "target_group": "aut enim qui",
+                                        "target_group_en": "porro quo dolores",
+                                        "prerequisite": "Eligendi maiores natus non.",
+                                        "prerequisite_en": "Ad est mollitia sit repellat aliquid ducimus blanditiis.",
+                                        "eligibility": "Blanditiis totam repellat porro et ipsa.",
+                                        "eligibility_en": "Omnis molestiae labore quam.",
+                                        "cover_image": "softbd.jpg",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-21T04:29:12.000000Z",
+                                        "updated_at": "2021-10-21T04:29:13.000000Z",
+                                        "deleted_at": null,
+                                        "total_enroll": 20
+                                    },
+                                        {
+                                        "id": 7,
+                                        "code": "assumenda-minima-ullam-voluptatem-magnam-porro-at-ea-totam-vel-voluptatum-at-fugit-magnam-iure-a-sunt-veniam-laborum-nisi-et-aliquam-illo-expedita-seq",
+                                        "title_en": "Howell Von",
+                                        "title": "Dr. Wava Jacobs III",
+                                        "institute_id": 3,
+                                        "institute_title": "Henry Mosciski DVM",
+                                        "institute_title_en": "Cicero Armstrong",
+                                        "program_id": 7,
+                                        "program_title": "Prof. Sonya Zboncak Jr.",
+                                        "program_title_en": "Darwin Lynch Jr.",
+                                        "course_fee": 4102,
+                                        "duration": 57,
+                                        "overview": "Libero eos velit illo. Voluptatem ratione vel sint. Vel sunt ut distinctio sed eveniet occaecati.",
+                                        "overview_en": "Veritatis et reprehenderit porro qui quo. Veritatis et qui eum non sed quis. Delectus et architecto asperiores velit enim. Error soluta quae architecto sunt cum et.",
+                                        "target_group": "harum harum non",
+                                        "target_group_en": "ea ipsa provident",
+                                        "prerequisite": "Unde similique optio numquam ratione ipsa.",
+                                        "prerequisite_en": "Voluptatem molestiae magni dolore ad.",
+                                        "eligibility": "Sed quisquam et quisquam nulla ea tempora.",
+                                        "eligibility_en": "Quo consequatur provident totam sunt et facilis eius.",
+                                        "cover_image": "softbd.jpg",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-21T04:29:12.000000Z",
+                                        "updated_at": "2021-10-21T04:29:13.000000Z",
+                                        "deleted_at": null,
+                                        "total_enroll": 20
+                                    }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
                         }
                     }
                 },
@@ -3237,7 +3309,78 @@
                     "200": {
                         "description": "success",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "code": "quo-voluptas-eum-saepe-enim-repellendus-corporis-magnam-debitis-accusamus-minima-commodi-possimus-ipsa-magni-quos-aut-in-minima-ipsam-accusantium-aute",
+                                            "title_en": "Miss Jakayla Luettgen",
+                                            "title": "Santa Sauer",
+                                            "institute_id": 1,
+                                            "institute_title": "Mr. Francisco Lowe Jr.",
+                                            "institute_title_en": "Assunta Ferry",
+                                            "program_id": 3,
+                                            "program_title": "Dr. Jaylan Moen III",
+                                            "program_title_en": "Ms. Maria Franecki Sr.",
+                                            "course_fee": 17373,
+                                            "duration": 25,
+                                            "overview": "Odit in reiciendis qui quis maxime. Sit occaecati quaerat sit in. Dicta eligendi esse et velit ratione impedit et voluptatem.",
+                                            "overview_en": "Non perspiciatis consequatur deserunt omnis dolorem expedita neque. Voluptatem autem nihil omnis. Aperiam alias consequatur qui. Eligendi odio sint ut soluta occaecati.",
+                                            "target_group": "temporibus accusamus quas",
+                                            "target_group_en": "aut unde et",
+                                            "prerequisite": "Assumenda cupiditate et omnis.",
+                                            "prerequisite_en": "Molestias et dignissimos molestias nobis consequatur voluptatibus.",
+                                            "eligibility": "Error vel pariatur sit.",
+                                            "eligibility_en": "Quas autem molestias veniam aspernatur.",
+                                            "cover_image": "softbd.jpg",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-21T04:29:12.000000Z",
+                                            "updated_at": "2021-10-21T04:29:13.000000Z",
+                                            "deleted_at": null,
+                                            "total_enroll": 20
+                                        },
+
+                                        {
+                                            "id": 30,
+                                            "code": "vel-sed-id-a-dignissimos-possimus-tenetur-rerum-ut-saepe-a-eum-veritatis-magnam-totam-est-non-sint-adipisci-quae-quas-et-incidunt-ea-ullam-quo-consequ",
+                                            "title_en": "Magdalena Harber Jr.",
+                                            "title": "Mr. Darien Lowe PhD",
+                                            "institute_id": 10,
+                                            "institute_title": "Prof. Lance McClure",
+                                            "institute_title_en": "Angie Haley",
+                                            "program_id": 30,
+                                            "program_title": "Julio Wilkinson",
+                                            "program_title_en": "Zoila Kihn MD",
+                                            "course_fee": 17561,
+                                            "duration": 42,
+                                            "overview": "Tempore aut unde nemo illum quisquam. Quaerat ex voluptatem et delectus quasi tempore. Quam ipsum doloremque iste amet velit voluptatibus.",
+                                            "overview_en": "Soluta accusamus nihil quia ea ea. Inventore quisquam enim qui et consequuntur. Eius officia quisquam est exercitationem eos ad aut ea.",
+                                            "target_group": "voluptate quaerat quidem",
+                                            "target_group_en": "dolores qui et",
+                                            "prerequisite": "Rem architecto officiis consectetur nemo quia autem.",
+                                            "prerequisite_en": "Sunt ducimus aut laborum dolores libero enim rerum.",
+                                            "eligibility": "Tenetur odit fuga similique provident vero rerum.",
+                                            "eligibility_en": "Odio odio iure quo ipsum eaque omnis ea.",
+                                            "cover_image": "softbd.jpg",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-21T04:29:13.000000Z",
+                                            "updated_at": "2021-10-21T04:29:13.000000Z",
+                                            "deleted_at": null,
+                                            "total_enroll": 20
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
                         }
                     }
                 },
