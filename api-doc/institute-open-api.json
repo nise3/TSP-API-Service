@@ -3982,6 +3982,7 @@
                     "title",
                     "primary_mobile",
                     "email",
+                    "name_of_the_office_head",
                     "name_of_the_office_head_designation",
                     "contact_person_name",
                     "contact_person_mobile",
@@ -4921,9 +4922,9 @@
                         2,
                         3
                     ],
-                    "default": 2,
-                    "description": "0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected"
-                }
+                    "default": 2
+                },
+                "description": "0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected"
             },
             "row_status_optional": {
                 "name": "row_status",

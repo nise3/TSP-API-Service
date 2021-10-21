@@ -143,17 +143,11 @@ class TrainerService
         $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
                 ->whereNull('loc_districts_permanent.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_districts_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
                 ->whereNull('loc_upazilas_permanent.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('loc_upazilas_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->orderBy('trainers.id', $order);
@@ -486,7 +480,7 @@ class TrainerService
         }
 
         /** @var Collection $trainerBuilder */
-        if ($paginate || $limit) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $trainers = $trainerBuilder->paginate($limit);
             $paginateData = (object)$trainers->toArray();
@@ -723,6 +717,7 @@ class TrainerService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
