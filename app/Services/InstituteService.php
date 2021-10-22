@@ -283,7 +283,7 @@ class InstituteService
      * @return PromiseInterface|\Illuminate\Http\Client\Response
      * @throws RequestException
      */
-    public function createUser(array $data)
+    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
         $userPostField = [
@@ -327,7 +327,10 @@ class InstituteService
             'password' => $data['password']
         ];
 
-        return Http::withOptions(['verify' => false, 'timeout' => 60])
+        return Http::withOptions([
+            'verify' => false,
+            'timeout' => 60
+        ])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) {
                 return $e;

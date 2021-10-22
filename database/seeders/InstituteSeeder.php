@@ -10,7 +10,9 @@ use App\Models\Program;
 use App\Models\Skill;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Services\InstituteService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class InstituteSeeder extends Seeder
@@ -23,6 +25,8 @@ class InstituteSeeder extends Seeder
      */
     public function run()
     {
+        $instituteService = app(InstituteService::class);
+
         Schema::disableForeignKeyConstraints();
 
         $skillIdCollection = Skill::all()->pluck('id');
@@ -42,6 +46,15 @@ class InstituteSeeder extends Seeder
         foreach ($institutes as $institute) {
 
             /** @var Institute $institute */
+            try {
+                $instituteData = $institute->toArray();
+                $instituteData['permission_sub_group_id'] = 5;
+                $instituteService->createUser($instituteData);
+            } catch (\Exception $e) {
+                Log::debug('User Creation Failed for Institute id: ', $institute->id);
+                Log::debug($e->getCode() . ' - ' . $e->getMessage());
+            }
+
             Branch::factory()->state([
                 'institute_id' => $institute->id,
             ])->count(3)->create();
