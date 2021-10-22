@@ -36,7 +36,6 @@ class CourseFactory extends Factory
             'eligibility' => $this->faker->sentence,
             'eligibility_en' => $this->faker->sentence,
             'cover_image' => "softbd.jpg"
-
         ];
     }
 

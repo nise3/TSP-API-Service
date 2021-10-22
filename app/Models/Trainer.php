@@ -12,6 +12,8 @@ use Illuminate\Support\Carbon;
  * @property string trainer_name
  * @property string trainer_name_en
  * @property int institute_id
+ * @property int|null branch_id
+ * @property int|null training_center_id
  * @property string trainer_registration_number
  * @property string code
  * @property string email

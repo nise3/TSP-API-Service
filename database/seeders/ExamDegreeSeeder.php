@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\ExamDegree;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class ExamDegreeSeeder extends Seeder
 {
@@ -14,6 +15,9 @@ class ExamDegreeSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+
+        ExamDegree::query()->truncate();
         $examDegrees = [
             [
                 "education_level_id" => 1,
@@ -137,5 +141,6 @@ class ExamDegreeSeeder extends Seeder
             ]
         ];
         ExamDegree::insert($examDegrees);
+        Schema::enableForeignKeyConstraints();
     }
 }

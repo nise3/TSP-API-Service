@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\File;
  * @property string|null title_en
  * @property string|null title
  * @property string code
+ * @property int id
  * @property int institute_id
  * @property int program_id
  * @property double course_fee

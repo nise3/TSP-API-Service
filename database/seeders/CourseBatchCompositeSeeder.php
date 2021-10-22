@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Program;
+use App\Models\Skill;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Seeder;
@@ -30,8 +31,9 @@ class CourseBatchCompositeSeeder extends Seeder
             DB::beginTransaction();
 
 
+            $skills = Skill::all()->pluck('id')->toArray();
             $branches = Branch::select(['institute_id', 'id'])->get()->groupBy('institute_id');
-            //       Log::debug($branches->all());
+
             $trainingCenters = TrainingCenter::select(['institute_id', 'id', 'branch_id'])->get();
 
             foreach ($trainingCenters as $trainingCenter) {
@@ -51,6 +53,7 @@ class CourseBatchCompositeSeeder extends Seeder
             $courses = Course::select(['institute_id', 'program_id', 'id'])->get();
 
             foreach ($courses as $course) {
+                /** @var Course $course */
                 if (!$course->program_id && $programmes->has($course->institute_id)) {
                     $innerProgrammes = $programmes->get($course->institute_id);
                     //                  Log::debug($innerProgrammes->toArray());
@@ -60,6 +63,7 @@ class CourseBatchCompositeSeeder extends Seeder
                     //                   Log::debug($programmeId);
                     $course->program_id = $programmeId;
                     $course->save();
+                    $course->skills()->sync([$skills[$index]]);
                 }
             }
 
