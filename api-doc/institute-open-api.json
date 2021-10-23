@@ -3781,6 +3781,49 @@
                     "batches"
                 ]
             }
+        },
+        "/reject-course-enrollment": {
+            "post": {"summary": "A new rejected course enrollment created",
+                "description": "An http request to create a new rejected course enrollment. A successfull request response will show 200 HTTP status  code\"",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "enrollment_id"
+                                ],
+                                "properties": {
+                                    "enrollment_id": {
+                                        "type": "integer",
+                                        "description": "rejected enrollment id"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course Enrollment Rejected Successfully",
+                                        "query_time": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Enroll Rejected Course"
+                ]
+            }
         }
     },
     "components": {
@@ -3792,6 +3835,7 @@
             }
         },
         "schemas": {
+
             "programs": {
                 "type": "object",
                 "description": "Programmes management Service",
