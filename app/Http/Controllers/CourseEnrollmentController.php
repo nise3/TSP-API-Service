@@ -3,13 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
-use App\Models\Course;
-use App\Models\CourseEnrollment;
 use App\Services\CourseEnrollmentService;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -92,7 +88,7 @@ class CourseEnrollmentController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException|RequestException
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
