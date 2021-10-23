@@ -117,6 +117,11 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function assignBatch(Request $request): JsonResponse
     {
         $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
@@ -134,6 +139,11 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function rejectCourseEnrollment(Request $request): JsonResponse
     {
         $validated = $this->courseEnrollService->rejectCourseEnrollmentValidator($request)->validate();

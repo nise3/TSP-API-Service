@@ -26,6 +26,11 @@ use Symfony\Component\HttpFoundation\Response;
 class CourseEnrollmentService
 {
 
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
     public function getCourseEnrollmentList(array $request, Carbon $startTime): array
     {
         $instituteId = $request['institute_id'] ?? "";
@@ -236,6 +241,10 @@ class CourseEnrollmentService
         ];
     }
 
+    /**
+     * @param array $data
+     * @return CourseEnrollment
+     */
     public function enrollCourse(array $data): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
@@ -248,6 +257,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentAddresses(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if (!empty($data['address_info']['present_address'])) {
@@ -276,6 +290,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentEducations(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if (!empty($data['education_info'])) {
@@ -292,6 +311,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentProfessionalInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if (!empty($data['professional_info'])) {
@@ -304,6 +328,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentGuardianInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if (!empty($data['guardian_info'])) {
@@ -316,6 +345,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentMiscellaneousInfo(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if (!empty($data['miscellaneous_info'])) {
@@ -328,6 +362,11 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @param CourseEnrollment $courseEnrollment
+     * @return CourseEnrollment
+     */
     public function storeEnrollmentPhysicalDisabilities(array $data, CourseEnrollment $courseEnrollment): CourseEnrollment
     {
         if ($data['physical_disability_status'] == BaseModel::TRUE) {
@@ -1172,6 +1211,10 @@ class CourseEnrollmentService
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules);
     }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function assignBatch(array $data){
         $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->batch_id = $data['batch_id'];
@@ -1182,6 +1225,10 @@ class CourseEnrollmentService
         return $courseEnrollment;
     }
 
+    /**
+     * @param array $data
+     * @return mixed
+     */
     public function rejectCourseEnrollmentApplication(array $data){
         $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->row_status = BaseModel::ROW_STATUS_REJECTED;
