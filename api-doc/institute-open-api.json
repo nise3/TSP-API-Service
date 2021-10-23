@@ -3935,6 +3935,8 @@
                     "permission_sub_group_id",
                     "institute_type_id",
                     "code",
+                    "loc_division_id",
+                    "loc_district_id",
                     "title",
                     "primary_mobile",
                     "email",
@@ -4083,6 +4085,8 @@
                 "required": [
                     "institute_type_id",
                     "code",
+                    "loc_division_id",
+                    "loc_district_id",
                     "title",
                     "primary_mobile",
                     "email",
@@ -4127,6 +4131,18 @@
                     "email": {
                         "type": "string",
                         "maxLength": 150
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
                     },
                     "primary_mobile": {
                         "type": "string",
@@ -4175,6 +4191,8 @@
                     "institute_type_id",
                     "name_of_the_office_head",
                     "email",
+                    "loc_division_id",
+                    "loc_district_id",
                     "primary_mobile",
                     "contact_person_mobile",
                     "contact_person_name",
