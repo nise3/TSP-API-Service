@@ -62,7 +62,7 @@ class CreateCourseEnrollmentsTable extends Migration
             $table->string('passport_photo_path', 600)->nullable();
             $table->string('signature_image_path', 600)->nullable();
 
-            $table->unsignedTinyInteger("row_status")->default(0)
+            $table->unsignedTinyInteger("row_status")->default(2)
                 ->comment('0=>inactive, 1=>active, 2=>pending, 3=>rejected');
 
             $table->timestamps();
