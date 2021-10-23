@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Schema;
 
 class InstituteSeeder extends Seeder
 {
-    const createInstitute = false;
-
+    const createInstitute = true;
+    const createIdpUser = false;
     /**
      * Run the database seeds.
      *
@@ -27,6 +27,7 @@ class InstituteSeeder extends Seeder
      */
     public function run()
     {
+        /** @var InstituteService $instituteService */
         $instituteService = app(InstituteService::class);
 
         Schema::disableForeignKeyConstraints();
@@ -52,10 +53,13 @@ class InstituteSeeder extends Seeder
         foreach ($institutes as $institute) {
 
             /** @var Institute $institute */
-            if (self::createInstitute) {
+            if (self::createIdpUser) {
                 try {
                     $instituteData = $institute->toArray();
                     $instituteData['permission_sub_group_id'] = 5;
+                    $instituteData['institute_id'] = $institute->id;
+                    $instituteData['password'] = '12345678';
+
                     $instituteService->createUser($instituteData);
                 } catch (\Exception $e) {
                     Log::debug('User Creation Failed for Institute id: ', $institute->id);
