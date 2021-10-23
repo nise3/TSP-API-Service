@@ -19,6 +19,7 @@ class InstituteSeeder extends Seeder
 {
     const createInstitute = true;
     const createIdpUser = false;
+
     /**
      * Run the database seeds.
      *
@@ -56,9 +57,9 @@ class InstituteSeeder extends Seeder
             if (self::createIdpUser) {
                 try {
                     $instituteData = $institute->toArray();
+                    unset($instituteData['id']);
                     $instituteData['permission_sub_group_id'] = 5;
                     $instituteData['institute_id'] = $institute->id;
-                    $instituteData['password'] = '12345678';
 
                     $instituteService->createUser($instituteData);
                 } catch (\Exception $e) {
@@ -67,23 +68,35 @@ class InstituteSeeder extends Seeder
                 }
             }
 
-            Branch::factory()->state([
-                'institute_id' => $institute->id,
-            ])->count(3)->create();
+            Branch::factory()
+                ->state([
+                    'institute_id' => $institute->id,
+                ])
+                ->count(3)
+                ->create();
 
-            $trainingCenters = TrainingCenter::factory()->state([
-                'institute_id' => $institute->id,
-            ])->count(6)->create();
+            $trainingCenters = TrainingCenter::factory()
+                ->state([
+                    'institute_id' => $institute->id,
+                ])
+                ->count(6)
+                ->create();
 
-            $programs = Program::factory()->state([
-                'institute_id' => $institute->id,
-            ])->count(2)->create();
+            $programs = Program::factory()
+                ->state([
+                    'institute_id' => $institute->id,
+                ])
+                ->count(2)
+                ->create();
 
             foreach ($programs as $program) {
-                $courses = Course::factory()->state([
-                    'institute_id' => $institute->id,
-                    'program_id' => $program->id
-                ])->count(2)->create();
+                $courses = Course::factory()
+                    ->state([
+                        'institute_id' => $institute->id,
+                        'program_id' => $program->id
+                    ])
+                    ->count(2)
+                    ->create();
 
                 foreach ($courses as $course) {
                     /** @var Course $course */
