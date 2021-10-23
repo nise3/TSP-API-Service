@@ -1181,6 +1181,7 @@ class CourseEnrollmentService
                 'required',
                 'int',
                 'min:1',
+                'exists:batches,id,deleted_at,NULL',
                 function ($attr,$value,$failed){
                     $selectedBatch = Batch::find($value);
                     $numberOfSeats = $selectedBatch->number_of_seats;
