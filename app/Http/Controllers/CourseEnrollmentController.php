@@ -117,6 +117,40 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
+    public function assignBatch(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
+        $this->courseEnrollService->assignBatch($validated);
+
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Batch assign successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    public function rejectCourseEnrollment(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->rejectCourseEnrollmentValidator($request)->validate();
+        $this->courseEnrollService->rejectCourseEnrollmentApplication($validated);
+
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Course Enrollment Rejected Successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
     /**
      * @param array $data
      * @return PromiseInterface|\Illuminate\Http\Client\Response
