@@ -3067,17 +3067,11 @@
                         "name": "skill_ids",
                         "in": "query",
                         "required": false,
-                        "content": {
-                            "multipart/form-data": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "integer",
-                                        "uniqueItems": true
-                                    }
-                                }
-                            }
-                        }
+                        "schema": {
+                            "type": "string",
+                            "example": "1,2,3"
+                        },
+                        "description": "Send Skill IDs as comma seperated String"
                     }
                 ],
                 "responses": {
@@ -3423,7 +3417,7 @@
                     {
                         "name": "institute_id",
                         "in": "query",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "integer"
                         }
