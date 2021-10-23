@@ -3746,6 +3746,41 @@
                     "youth enroll courses"
                 ]
             }
+        },
+        "/batch-assign": {
+            "post": {
+                "summary": "Assign batch to Course Enrollment",
+                "description": "API endpoint to assign a batch to a Course Enrollment. A successful request response will show 200 HTTP status code\",",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchAssign"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Batch assign successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "batches"
+                ]
+            }
         }
     },
     "components": {
@@ -3934,7 +3969,6 @@
                 "required": [
                     "permission_sub_group_id",
                     "institute_type_id",
-                    "code",
                     "title",
                     "primary_mobile",
                     "email",
@@ -4763,6 +4797,22 @@
                         }
                     }
                 }
+            },
+            "batchAssign": {
+                "type": "object",
+                "description": "Assign batch to Course Enrollment",
+                "properties": {
+                    "enrollment_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "enrollment_id",
+                    "batch_id"
+                ]
             }
         },
         "parameters": {
