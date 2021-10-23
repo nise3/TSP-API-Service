@@ -48,89 +48,99 @@ class InstituteController extends Controller
     {
         $filter = $this->instituteService->filterValidator($request)->validate();
 
-        try {
-            $response = $this->instituteService->getInstituteList($filter, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->instituteService->getInstituteList($filter, $this->startTime);
         return Response::json($response);
     }
 
     /**
      * * Display the specified resource
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function read(int $id): JsonResponse
     {
-        try {
-            $response = $this->instituteService->getOneInstitute($id, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->instituteService->getOneInstitute($id, $this->startTime);
         return Response::json($response);
     }
 
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function store(Request $request)
     {
+        /** @var Institute $institute */
+        $institute = app(Institute::class);
+        $validatedData = $this->instituteService->validator($request)->validate();
 
         DB::beginTransaction();
-        $institute = new Institute();
-        $validatedData = $this->instituteService->validator($request)->validate();
+
         try {
+
             $institute = $this->instituteService->store($institute, $validatedData);
-            if ($institute) {
-                $validatedData['institute_id'] = $institute->id;
-                $createUser = $this->instituteService->createUser($validatedData);
-                Log::channel('idp_user')->info('idp_user_info:' . json_encode($createUser));
-                if ($createUser && $createUser['_response_status']['success']) {
+
+            if (!$institute) {
+                DB::rollBack();
+                throw new RuntimeException('Saving Institute to DB failed!', 500);
+            }
+
+            $validatedData['institute_id'] = $institute->id;
+            $createdUser = $this->instituteService->createUser($validatedData);
+            Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
+
+            if (!$createdUser) {
+                DB::rollBack();
+                throw new RuntimeException('Creating User during Institute Creation has been failed!', 500);
+            }
+
+            // TODO: Check the variable type of $createdUser (Is it a Object or Array ? ) and Properly check Subsequent Codes
+
+            if ($createdUser['_response_status']['success']) {
+                $response = [
+                    'data' => $institute,
+                    '_response_status' => [
+                        "success" => true,
+                        "code" => ResponseAlias::HTTP_CREATED,
+                        "message" => "Institute added successfully",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                    ]
+                ];
+                DB::commit();
+                return Response::json($response, ResponseAlias::HTTP_CREATED);
+            } else {
+                DB::rollBack();
+                if ($createdUser['_response_status']['code'] == 400) {
                     $response = [
-                        'data' => $institute ?: [],
+                        'errors' => $createdUser['errors'] ?? [],
                         '_response_status' => [
-                            "success" => true,
-                            "code" => ResponseAlias::HTTP_CREATED,
-                            "message" => "Institute added successfully",
+                            "success" => false,
+                            "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                            "message" => "Bad Request. Please Contact.",
                             "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                         ]
                     ];
-                    DB::commit();
-                } else {
-                    if ($createUser && $createUser['_response_status']['code'] == 400) {
-                        $response = [
-                            'errors' => $createUser['errors'] ?? [],
-                            '_response_status' => [
-                                "success" => false,
-                                "code" => ResponseAlias::HTTP_BAD_REQUEST,
-                                "message" => "Validation Error",
-                                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                            ]
-                        ];
-                    } else {
-                        $response = [
-                            '_response_status' => [
-                                "success" => false,
-                                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                                "message" => "Unprocessable Request,Please contact",
-                                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                            ]
-                        ];
-                    }
 
-                    DB::rollBack();
+                } else {
+                    $response = [
+                        '_response_status' => [
+                            "success" => false,
+                            "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                            "message" => "Unprocessable Entity, Please Contact.",
+                            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                        ]
+                    ];
+
                 }
+                return Response::json($response, $response['_response_status']['code']);
             }
 
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -143,16 +153,25 @@ class InstituteController extends Controller
 
         $institute = app(Institute::class);
         $validated = $this->instituteService->registerInstituteValidator($request)->validate();
+
         DB::beginTransaction();
         try {
             $institute = $this->instituteService->store($institute, $validated);
 
-            throw_if(!$institute, new RuntimeException('Saving Institute to DB failed!', 500));
+            if (!$institute) {
+                DB::rollBack();
+                throw new RuntimeException('Saving Institute to DB failed!', 500);
+            }
 
             $validated['institute_id'] = $institute->id;
-            $createRegisterUser = $this->instituteService->createRegisterUser($validated);
+            $createdRegisterUser = $this->instituteService->createRegisterUser($validated);
 
-            throw_if(!$createRegisterUser, new RuntimeException('Saving User to Core and IDP failed!', 500));
+            // TODO: Check the variable type of $createdRegisterUser (Is it a Object or Array ? ) and Properly check Subsequent Codes
+
+            if (!$createdRegisterUser) {
+                DB::rollBack();
+                throw new RuntimeException('Creating User during Institute Registration has been failed!', 500);
+            }
 
             $response = [
                 '_response_status' => [
@@ -163,7 +182,7 @@ class InstituteController extends Controller
                 ]
             ];
 
-            if ($createRegisterUser['_response_status']['success']) {
+            if ($createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
                 DB::commit();
                 return Response::json($response, $response['_response_status']['code']);
@@ -174,17 +193,17 @@ class InstituteController extends Controller
             $response['_response_status'] = [
                 "success" => false,
                 "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Validation Error",
+                "message" => "Bad Request. Please Contact.",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ];
 
-            if (!empty($createRegisterUser['errors'])) {
-                $response['errors'] = $createRegisterUser['errors'];
+            if (!empty($createdRegisterUser['errors'])) {
+                $response['errors'] = $createdRegisterUser['errors'];
             }
 
-            if ($createRegisterUser['_response_status']['code'] != ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
+            if ($createdRegisterUser['_response_status']['code'] != ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
                 $response['_response_status']['code'] = ResponseAlias::HTTP_BAD_REQUEST;
-                $response['_response_status']['message'] = "Bad Request, Please contact";
+                $response['_response_status']['message'] = "Unprocessable Entity, Please Contact";
             }
 
             return Response::json($response, $response['_response_status']['code']);
@@ -200,99 +219,84 @@ class InstituteController extends Controller
      * * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
         $validated = $this->instituteService->validator($request, $id)->validate();
-        try {
-            $data = $this->instituteService->update($institute, $validated);
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Institute updated successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $data = $this->instituteService->update($institute, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
      *  * Remove the specified resource from storage.
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function destroy(int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
-        try {
-            $this->instituteService->destroy($institute);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Institute deleted successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->instituteService->destroy($institute);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute deleted successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     public function getTrashedData(Request $request)
     {
-        try {
-            $response = $this->instituteService->getInstituteTrashList($request, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->instituteService->getInstituteTrashList($request, $this->startTime);
         return Response::json($response);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function restore(int $id)
     {
         $institute = Institute::onlyTrashed()->findOrFail($id);
-        try {
-            $this->instituteService->restore($institute);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Institute restored successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->instituteService->restore($institute);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute restored successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     public function forceDelete(int $id)
     {
         $institute = Institute::onlyTrashed()->findOrFail($id);
-        try {
-            $this->instituteService->forceDelete($institute);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Institute permanently deleted successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->instituteService->forceDelete($institute);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute permanently deleted successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

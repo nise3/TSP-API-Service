@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\EduGroup;
 use App\Models\PhysicalDisability;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class PhysicalDisabilitySeeder extends Seeder
 {
@@ -14,6 +16,10 @@ class PhysicalDisabilitySeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+
+        PhysicalDisability::query()->truncate();
+
         PhysicalDisability::insert([
             [
                 "title" => "Visual Disabilities",
@@ -36,5 +42,7 @@ class PhysicalDisabilitySeeder extends Seeder
                 "title_en" => "Social Disabilities",
             ]
         ]);
+
+        Schema::enableForeignKeyConstraints();
     }
 }

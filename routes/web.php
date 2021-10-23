@@ -28,6 +28,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
     $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
 
+    $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
+
+
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
         /** Course Filter */
         $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);

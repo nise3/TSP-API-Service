@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string title
  * @property int institute_id
  * @property int branch_id
+ * @property int id
  * @property  int row_status
  * @property string|null address
  * @property string|null google_map_src

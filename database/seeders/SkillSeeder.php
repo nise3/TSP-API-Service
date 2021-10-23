@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Skill;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class SkillSeeder extends Seeder
@@ -17,7 +16,7 @@ class SkillSeeder extends Seeder
     public function run()
     {
         Schema::disableForeignKeyConstraints();
-        DB::table('skills')->truncate();
+        Skill::query()->truncate();
         $skills = [
             [
                 'id' => '1',
