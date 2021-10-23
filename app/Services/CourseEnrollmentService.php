@@ -1176,7 +1176,7 @@ class CourseEnrollmentService
         $requestData = $request->all();
 
         $rules = [
-            'enrollment_id' => 'required|min:1|exists:course_enrollments,id,deleted_at,NULL',
+            'enrollment_id' => ['required','int','min:1','exists:course_enrollments,id,deleted_at,NULL'],
             'batch_id' => [
                 'required',
                 'int',
