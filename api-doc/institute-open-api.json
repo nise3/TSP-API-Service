@@ -3477,6 +3477,17 @@
                             ],
                             "example": 2
                         }
+                    } , {
+                        "name": "payment_status",
+                        "in": "query",
+                        "description": "0=>False, 1=>True",
+                        "schema": {
+                            "type": "integer",
+                            "enum": [
+                                0,1
+                            ],
+                            "example": 2
+                        }
                     }
                 ],
                 "responses": {
@@ -3502,6 +3513,7 @@
                                             "training_center_title": null,
                                             "training_center_title_en": null,
                                             "batch_id": null,
+                                            "payment_status": 0,
                                             "payment_status": 0,
                                             "first_name": "",
                                             "first_name_en": null,
@@ -3532,6 +3544,7 @@
                                             "course_id": 1,
                                             "course_title": "Fabiola Hyatt",
                                             "course_title_en": "Ike Leannon",
+                                            "payment_status": 0,
                                             "training_center_id": null,
                                             "training_center_title": null,
                                             "training_center_title_en": null,
@@ -3606,6 +3619,7 @@
                                             "training_center_title_en": null,
                                             "batch_id": null,
                                             "payment_status": 0,
+                                            "payment_status": 0,
                                             "first_name": "",
                                             "first_name_en": null,
                                             "last_name": "",
@@ -3637,116 +3651,8 @@
                 },
                 "tags": ["Course Enrollments"]
             }
-        },
-        "/youth-enroll-courses": {
-            "get": {
-                "summary": "Get all course enrollments",
-                "description": "API endpoint to get All youth-enrolled courses. A successful request response will show 200 HTTP status code\",",
-                "parameters": [
-                    {
-                        "name": "youth_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "course_id",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "page_size",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "order",
-                        "in": "query",
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                 "ASC",
-                                 "DESC"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "row_status",
-                        "in": "query",
-                        "description": "0=>Inactive 1=>Active 2=>Pending 3=>Rejected",
-                        "schema": {
-                            "type": "integer",
-                            "enum": [
-                                0,1,2,3
-                            ]
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "order": "ASC",
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "youth_id": 1,
-                                            "course_code": "et-minimacorporis-sed-",
-                                            "course_level": 3,
-                                            "course_language_medium": 2,
-                                            "course_title": "Rickie Weissnat",
-                                            "course_title_en": "Dolores Jast",
-                                            "course_fee": 19877,
-                                            "course_duration": 70,
-                                            "row_status": 0,
-                                            "created_at": "2021-10-21T13:14:08.000000Z",
-                                            "updated_at": "2021-10-21T13:14:08.000000Z"
-                                        },
-                                        {
-                                            "id": 401,
-                                            "youth_id": 1,
-                                            "course_code": "et-beatae-rem-assumenda-voluptate-ill",
-                                            "course_level": 3,
-                                            "course_language_medium": 1,
-                                            "course_title": "Gavin Daniel",
-                                            "course_title_en": "Kassandra Ward",
-                                            "course_fee": 8578,
-                                            "course_duration": 69,
-                                            "row_status": 0,
-                                            "created_at": "2021-10-21T13:14:10.000000Z",
-                                            "updated_at": "2021-10-21T13:14:10.000000Z"
-                                        }
-                                    ],
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "youth enroll courses"
-                ]
-            }
         }
+
     },
     "components": {
         "securitySchemes": {
