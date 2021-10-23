@@ -464,16 +464,19 @@ class InstituteService
                 'max:191'
             ],
             'loc_division_id' => [
-                'nullable',
-                'int'
+                'required',
+                'integer',
+                'exists:loc_division,id,deleted_at,NULL'
             ],
             'loc_district_id' => [
-                'nullable',
-                'int'
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
             ],
             'loc_upazila_id' => [
                 'nullable',
-                'int'
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
             ],
             'location_latitude' => [
                 'nullable',
@@ -659,6 +662,21 @@ class InstituteService
                 'required',
                 'email',
                 'unique:institutes,contact_person_email',
+            ],
+            'loc_division_id' => [
+                'required',
+                'integer',
+                'exists:loc_division,id,deleted_at,NULL'
+            ],
+            'loc_district_id' => [
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
             ],
             'address' => [
                 'required',

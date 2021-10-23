@@ -82,8 +82,7 @@ class InstituteController extends Controller
 
             $institute = $this->instituteService->store($institute, $validatedData);
 
-            if (!$institute) {
-                DB::rollBack();
+            if (!($institute && $institute->id)) {
                 throw new RuntimeException('Saving Institute to DB failed!', 500);
             }
 
@@ -91,51 +90,43 @@ class InstituteController extends Controller
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
 
-            if (!$createdUser) {
-                DB::rollBack();
+            if (!($createdUser && isset($createdUser['_response_status']))) {
                 throw new RuntimeException('Creating User during Institute Creation has been failed!', 500);
             }
 
-            // TODO: Check the variable type of $createdUser (Is it a Object or Array ? ) and Properly check Subsequent Codes
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Institute Successfully Created",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
 
-            if ($createdUser['_response_status']['success']) {
-                $response = [
-                    'data' => $institute,
-                    '_response_status' => [
-                        "success" => true,
-                        "code" => ResponseAlias::HTTP_CREATED,
-                        "message" => "Institute added successfully",
-                        "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                    ]
-                ];
+            if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
                 DB::commit();
+                $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
-            } else {
-                DB::rollBack();
-                if ($createdUser['_response_status']['code'] == 400) {
-                    $response = [
-                        'errors' => $createdUser['errors'] ?? [],
-                        '_response_status' => [
-                            "success" => false,
-                            "code" => ResponseAlias::HTTP_BAD_REQUEST,
-                            "message" => "Bad Request. Please Contact.",
-                            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                        ]
-                    ];
-
-                } else {
-                    $response = [
-                        '_response_status' => [
-                            "success" => false,
-                            "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                            "message" => "Unprocessable Entity, Please Contact.",
-                            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                        ]
-                    ];
-
-                }
-                return Response::json($response, $response['_response_status']['code']);
             }
+
+            DB::rollBack();
+
+            $httpStatusCode = ResponseAlias::HTTP_BAD_REQUEST;
+            if (!empty($createdUser['_response_status']['code'])) {
+                $httpStatusCode = $createdUser['_response_status']['code'];
+            }
+            $response['_response_status'] = [
+                "success" => false,
+                "code" => $httpStatusCode,
+                "message" => "Error Occurred. Please Contact.",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ];
+
+            if (!empty($createdUser['errors'])) {
+                $response['errors'] = $createdUser['errors'];
+            }
+
+            return Response::json($response, $httpStatusCode);
 
         } catch (Throwable $e) {
             DB::rollBack();
@@ -158,8 +149,7 @@ class InstituteController extends Controller
         try {
             $institute = $this->instituteService->store($institute, $validated);
 
-            if (!$institute) {
-                DB::rollBack();
+            if (!($institute && $institute->id)) {
                 throw new RuntimeException('Saving Institute to DB failed!', 500);
             }
 
@@ -167,9 +157,7 @@ class InstituteController extends Controller
             $createdRegisterUser = $this->instituteService->createRegisterUser($validated);
 
             // TODO: Check the variable type of $createdRegisterUser (Is it a Object or Array ? ) and Properly check Subsequent Codes
-
-            if (!$createdRegisterUser) {
-                DB::rollBack();
+            if (!($createdRegisterUser && isset($createdRegisterUser['_response_status']))) {
                 throw new RuntimeException('Creating User during Institute Registration has been failed!', 500);
             }
 
@@ -182,18 +170,23 @@ class InstituteController extends Controller
                 ]
             ];
 
-            if ($createdRegisterUser['_response_status']['success']) {
-                $response['data'] = $institute;
+            if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 DB::commit();
-                return Response::json($response, $response['_response_status']['code']);
+                $response['data'] = $institute;
+                return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
 
             DB::rollBack();
 
+            $httpStatusCode = ResponseAlias::HTTP_BAD_REQUEST;
+            if (!empty($createdRegisterUser['_response_status']['code'])) {
+                $httpStatusCode = $createdRegisterUser['_response_status']['code'];
+            }
+
             $response['_response_status'] = [
                 "success" => false,
-                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Bad Request. Please Contact.",
+                "code" => $httpStatusCode,
+                "message" => "Error Occurred. Please Contact.",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ];
 
@@ -201,12 +194,7 @@ class InstituteController extends Controller
                 $response['errors'] = $createdRegisterUser['errors'];
             }
 
-            if ($createdRegisterUser['_response_status']['code'] != ResponseAlias::HTTP_UNPROCESSABLE_ENTITY) {
-                $response['_response_status']['code'] = ResponseAlias::HTTP_BAD_REQUEST;
-                $response['_response_status']['message'] = "Unprocessable Entity, Please Contact";
-            }
-
-            return Response::json($response, $response['_response_status']['code']);
+            return Response::json($response, $httpStatusCode);
 
         } catch (Throwable $e) {
             DB::rollBack();
