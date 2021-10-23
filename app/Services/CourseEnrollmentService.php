@@ -40,6 +40,7 @@ class CourseEnrollmentService
         $paginate = $request['page'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
+        $paymentStatus = $request['payment_status'] ?? "";
         $programId = $request['program_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
@@ -114,6 +115,10 @@ class CourseEnrollmentService
 
         if (is_numeric($rowStatus)) {
             $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        if (is_numeric($paymentStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.payment_status', $paymentStatus);
         }
 
         if (!empty($firstName)) {
@@ -418,6 +423,11 @@ class CourseEnrollmentService
             'first_name' => 'nullable|max:500|min:2',
             'first_name_en' => 'nullable|max:250|min:2',
             'program_id' => 'nullable|int|gt:0',
+            'payment_status' => [
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
             'institute_id' => 'nullable|int|gt:0',
             'course_id' => 'nullable|int|gt:0',
             'training_center_id' => 'nullable|int|gt:0',
