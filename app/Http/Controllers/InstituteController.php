@@ -90,7 +90,7 @@ class InstituteController extends Controller
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
 
-            if (!($createdUser && isset($createdUser['_response_status']))) {
+            if (!($createdUser && !empty($createdUser['_response_status']))) {
                 throw new RuntimeException('Creating User during Institute Creation has been failed!', 500);
             }
 
@@ -115,6 +115,7 @@ class InstituteController extends Controller
             if (!empty($createdUser['_response_status']['code'])) {
                 $httpStatusCode = $createdUser['_response_status']['code'];
             }
+
             $response['_response_status'] = [
                 "success" => false,
                 "code" => $httpStatusCode,
@@ -156,8 +157,7 @@ class InstituteController extends Controller
             $validated['institute_id'] = $institute->id;
             $createdRegisterUser = $this->instituteService->createRegisterUser($validated);
 
-            // TODO: Check the variable type of $createdRegisterUser (Is it a Object or Array ? ) and Properly check Subsequent Codes
-            if (!($createdRegisterUser && isset($createdRegisterUser['_response_status']))) {
+            if (!($createdRegisterUser && !empty($createdRegisterUser['_response_status']))) {
                 throw new RuntimeException('Creating User during Institute Registration has been failed!', 500);
             }
 
