@@ -76,11 +76,7 @@ class CourseEnrollmentController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        try {
-            $response = $this->courseEnrollService->getOneCourseEnrollment($id, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->courseEnrollService->getOneCourseEnrollment($id, $this->startTime);
         return Response::json($response);
     }
 
@@ -92,8 +88,9 @@ class CourseEnrollmentController extends Controller
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
-        DB::beginTransaction();
+
         $validated = $this->courseEnrollService->courseEnrollmentValidator($request)->validate();
+        DB::beginTransaction();
         try {
             $courseEnroll = $this->courseEnrollService->enrollCourse($validated);
             $this->courseEnrollService->storeEnrollmentAddresses($validated, $courseEnroll);
@@ -125,7 +122,7 @@ class CourseEnrollmentController extends Controller
      * @return PromiseInterface|\Illuminate\Http\Client\Response
      * @throws RequestException
      */
-    public function updateYouthProfileAfterEnrollment(array $data)
+    public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response
     {
         $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'youth-update-after-course-enrollment';
 
