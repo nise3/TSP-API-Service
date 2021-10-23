@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Schema;
 
 class InstituteSeeder extends Seeder
 {
+    const createInstitute = false;
+
     /**
      * Run the database seeds.
      *
@@ -41,18 +43,24 @@ class InstituteSeeder extends Seeder
         Branch::query()->truncate();
         Institute::query()->truncate();
 
-        $institutes = Institute::factory()->count(3)->create();
+        if (self::createInstitute) {
+            $institutes = Institute::factory()->count(3)->create();
+        } else {
+            $institutes = Institute::all();
+        }
 
         foreach ($institutes as $institute) {
 
             /** @var Institute $institute */
-            try {
-                $instituteData = $institute->toArray();
-                $instituteData['permission_sub_group_id'] = 5;
-                $instituteService->createUser($instituteData);
-            } catch (\Exception $e) {
-                Log::debug('User Creation Failed for Institute id: ', $institute->id);
-                Log::debug($e->getCode() . ' - ' . $e->getMessage());
+            if (self::createInstitute) {
+                try {
+                    $instituteData = $institute->toArray();
+                    $instituteData['permission_sub_group_id'] = 5;
+                    $instituteService->createUser($instituteData);
+                } catch (\Exception $e) {
+                    Log::debug('User Creation Failed for Institute id: ', $institute->id);
+                    Log::debug($e->getCode() . ' - ' . $e->getMessage());
+                }
             }
 
             Branch::factory()->state([
