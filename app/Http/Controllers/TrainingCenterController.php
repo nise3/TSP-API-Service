@@ -69,9 +69,8 @@ class TrainingCenterController extends Controller
     /**
      *  * Store a newly created resource in storage.
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
      * @throws ValidationException
-     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
@@ -93,7 +92,8 @@ class TrainingCenterController extends Controller
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
@@ -141,7 +141,7 @@ class TrainingCenterController extends Controller
     /**
      * @throws Throwable
      */
-    public function getTrashedData(Request $request)
+    public function getTrashedData(Request $request): JsonResponse
     {
         $response = $this->trainingCenterService->getTrainingCenterTrashList($request, $this->startTime);
         return Response::json($response);
