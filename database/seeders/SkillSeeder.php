@@ -147,6 +147,16 @@ class SkillSeeder extends Seeder
                 'id' => '26',
                 "title" => "মাছ চাষ",
                 "title_en" => "Fish Farming"
+            ],
+            [
+                'id' => '27',
+                "title" => "মেশিন লার্নিং",
+                "title_en" => "Machine Learning"
+            ],
+            [
+                'id' => '28',
+                "title" => "কম্পিউটার প্রশিক্ষণ",
+                "title_en" => "Computer Training"
             ]
         ];
 

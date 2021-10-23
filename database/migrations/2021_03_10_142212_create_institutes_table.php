@@ -24,6 +24,7 @@ class CreateInstitutesTable extends Migration
             $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_ins_loc_division_id_inx');
             $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_ins_loc_district_id_inx');
             $table->unsignedMediumInteger('loc_upazila_id')->nullable()->index('tsp_ins_loc_upazila_id_inx');
+
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
             $table->text('google_map_src')->nullable();
