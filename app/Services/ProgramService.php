@@ -55,14 +55,14 @@ class ProgramService
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
 
         $programmesBuilder->orderBy('programs.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $programmesBuilder->where('programs.row_status', $rowStatus);
         }
 
@@ -74,13 +74,13 @@ class ProgramService
             $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (!empty($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
         /** @var Collection $programmes */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $programmes = $programmesBuilder->paginate($pageSize);
             $paginateData = (object)$programmes->toArray();
@@ -327,6 +327,7 @@ class ProgramService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],

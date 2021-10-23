@@ -24,7 +24,7 @@ class LocDivision extends BaseModel
     use SoftDeletes;
 
     protected $table = 'loc_divisions';
-    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
 
     public $timestamps = false;
 

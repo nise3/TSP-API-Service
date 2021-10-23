@@ -68,14 +68,14 @@ class TrainingCenterService
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_integer($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
             }
         });
         $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_integer($rowStatus)) {
+            if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
             }
         });
@@ -96,13 +96,13 @@ class TrainingCenterService
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if (is_integer($instituteId)) {
+        if (!empty($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        if (is_integer($branchId)) {
+        if (!empty($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
-        if (is_integer($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
         }
 
@@ -115,7 +115,7 @@ class TrainingCenterService
 
 
         /** @var Collection $trainingCentersBuilder */
-        if (is_integer($paginate) || is_integer($pageSize)) {
+        if (!empty($paginate) || !empty($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -342,7 +342,7 @@ class TrainingCenterService
         }
 
         /** @var Collection $trainingCentersBuilder */
-        if ($paginate || $limit) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($limit);
             $paginateData = (object)$trainingCenters->toArray();
@@ -397,6 +397,7 @@ class TrainingCenterService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],

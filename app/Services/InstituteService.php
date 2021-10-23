@@ -377,7 +377,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (is_int($paginate) || is_int($limit)) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
@@ -569,7 +569,11 @@ class InstituteService
             'contact_person_mobile' => [
                 'required',
                 BaseModel::MOBILE_REGEX,
-                'unique:institutes,contact_person_mobile',
+                Rule::unique('institutes','contact_person_mobile')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) {
+                        return $query->whereNull('deleted_at');
+                    })
             ],
             'contact_person_email' => [
                 'required',
