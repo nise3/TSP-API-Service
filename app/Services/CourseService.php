@@ -785,7 +785,7 @@ class CourseService
 
         $requestData = $request->all();
 
-        if (isset($requestData['skill_ids'])) {
+        if (!empty($requestData['skill_ids'])) {
             $requestData['skill_ids'] = is_array($requestData['skill_ids']) ? $requestData['skill_ids'] : explode(',', $requestData['skill_ids']);
         }
 
