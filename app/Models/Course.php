@@ -45,7 +45,7 @@ class Course extends BaseModel
     use ScopeRowStatusTrait, SoftDeletes;
 
     protected $table = 'courses';
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
 

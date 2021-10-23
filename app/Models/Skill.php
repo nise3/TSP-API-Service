@@ -20,7 +20,7 @@ class Skill extends BaseModel
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
     /**
      * @var string[]
      */
