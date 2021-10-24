@@ -3,8 +3,11 @@
 use App\Models\EducationLevel;
 
 return [
-    "is_dev_mode" => env("IS_DEVELOPMENT_MOOD", false),
+    "is_dev_mode" => env("IS_DEVELOPMENT_MODE", false),
+    'http_debug' => env("HTTP_DEBUG_MODE", true),
     "should_ssl_verify" => env("IS_SSL_VERIFY", false),
+    "http_timeout" => env("HTTP_TIMEOUT", 60),
+
     'nationalities' => [
         '1' => ['en' => 'Bangladeshi', 'bn' => 'Bangladeshi'],
         '2' => ['en' => 'Indian', 'bn' => 'Indian'],

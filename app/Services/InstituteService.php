@@ -298,12 +298,13 @@ class InstituteService
         ];
 
         return Http::withOptions([
-            'verify' => false,
-            'timeout' => 60
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
         ])
             ->post($url, $userPostField)
             ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array)$response);
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
                 return $e;
             })
             ->json();
@@ -328,11 +329,13 @@ class InstituteService
         ];
 
         return Http::withOptions([
-            'verify' => false,
-            'timeout' => 60
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
         ])
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) {
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
                 return $e;
             })
             ->json();
@@ -572,7 +575,7 @@ class InstituteService
             'contact_person_mobile' => [
                 'required',
                 BaseModel::MOBILE_REGEX,
-                Rule::unique('institutes','contact_person_mobile')
+                Rule::unique('institutes', 'contact_person_mobile')
                     ->ignore($id)
                     ->where(function (\Illuminate\Database\Query\Builder $query) {
                         return $query->whereNull('deleted_at');
