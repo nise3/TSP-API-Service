@@ -3080,66 +3080,67 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data": [ {
-                                        "id": 4,
-                                        "code": "odio-et-dolores-non-necessitatibus-voluptas-placeat-et-veniam-corrupti-saepe-enim-id-exercitationem-animi-expedita-atque-quis-facilis-libero-aliquid-m",
-                                        "title_en": "Monserrat Herzog",
-                                        "title": "Neil Armstrong",
-                                        "institute_id": 2,
-                                        "institute_title": "Laura Upton",
-                                        "institute_title_en": "Mr. Randy Effertz MD",
-                                        "program_id": 6,
-                                        "program_title": "Braulio Kuhic Sr.",
-                                        "program_title_en": "Patrick Rowe",
-                                        "course_fee": 9583,
-                                        "duration": 71,
-                                        "overview": "Sunt alias sapiente facere quia omnis officia. Quis veritatis sed molestias nobis. Placeat dolore culpa numquam saepe incidunt aut veniam.",
-                                        "overview_en": "Illum maxime sequi necessitatibus sint alias qui voluptatem. Occaecati voluptates eos sint quidem. Rerum sunt autem ex maxime illum.",
-                                        "target_group": "aut enim qui",
-                                        "target_group_en": "porro quo dolores",
-                                        "prerequisite": "Eligendi maiores natus non.",
-                                        "prerequisite_en": "Ad est mollitia sit repellat aliquid ducimus blanditiis.",
-                                        "eligibility": "Blanditiis totam repellat porro et ipsa.",
-                                        "eligibility_en": "Omnis molestiae labore quam.",
-                                        "cover_image": "softbd.jpg",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-21T04:29:12.000000Z",
-                                        "updated_at": "2021-10-21T04:29:13.000000Z",
-                                        "deleted_at": null,
-                                        "total_enroll": 20
-                                    },
+                                    "data": [
                                         {
-                                        "id": 7,
-                                        "code": "assumenda-minima-ullam-voluptatem-magnam-porro-at-ea-totam-vel-voluptatum-at-fugit-magnam-iure-a-sunt-veniam-laborum-nisi-et-aliquam-illo-expedita-seq",
-                                        "title_en": "Howell Von",
-                                        "title": "Dr. Wava Jacobs III",
-                                        "institute_id": 3,
-                                        "institute_title": "Henry Mosciski DVM",
-                                        "institute_title_en": "Cicero Armstrong",
-                                        "program_id": 7,
-                                        "program_title": "Prof. Sonya Zboncak Jr.",
-                                        "program_title_en": "Darwin Lynch Jr.",
-                                        "course_fee": 4102,
-                                        "duration": 57,
-                                        "overview": "Libero eos velit illo. Voluptatem ratione vel sint. Vel sunt ut distinctio sed eveniet occaecati.",
-                                        "overview_en": "Veritatis et reprehenderit porro qui quo. Veritatis et qui eum non sed quis. Delectus et architecto asperiores velit enim. Error soluta quae architecto sunt cum et.",
-                                        "target_group": "harum harum non",
-                                        "target_group_en": "ea ipsa provident",
-                                        "prerequisite": "Unde similique optio numquam ratione ipsa.",
-                                        "prerequisite_en": "Voluptatem molestiae magni dolore ad.",
-                                        "eligibility": "Sed quisquam et quisquam nulla ea tempora.",
-                                        "eligibility_en": "Quo consequatur provident totam sunt et facilis eius.",
-                                        "cover_image": "softbd.jpg",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-21T04:29:12.000000Z",
-                                        "updated_at": "2021-10-21T04:29:13.000000Z",
-                                        "deleted_at": null,
-                                        "total_enroll": 20
-                                    }
+                                            "id": 4,
+                                            "code": "odio-et-dolores-non-necessitatibus-voluptas-placeat-et-veniam-corrupti-saepe-enim-id-exercitationem-animi-expedita-atque-quis-facilis-libero-aliquid-m",
+                                            "title_en": "Monserrat Herzog",
+                                            "title": "Neil Armstrong",
+                                            "institute_id": 2,
+                                            "institute_title": "Laura Upton",
+                                            "institute_title_en": "Mr. Randy Effertz MD",
+                                            "program_id": 6,
+                                            "program_title": "Braulio Kuhic Sr.",
+                                            "program_title_en": "Patrick Rowe",
+                                            "course_fee": 9583,
+                                            "duration": 71,
+                                            "overview": "Sunt alias sapiente facere quia omnis officia. Quis veritatis sed molestias nobis. Placeat dolore culpa numquam saepe incidunt aut veniam.",
+                                            "overview_en": "Illum maxime sequi necessitatibus sint alias qui voluptatem. Occaecati voluptates eos sint quidem. Rerum sunt autem ex maxime illum.",
+                                            "target_group": "aut enim qui",
+                                            "target_group_en": "porro quo dolores",
+                                            "prerequisite": "Eligendi maiores natus non.",
+                                            "prerequisite_en": "Ad est mollitia sit repellat aliquid ducimus blanditiis.",
+                                            "eligibility": "Blanditiis totam repellat porro et ipsa.",
+                                            "eligibility_en": "Omnis molestiae labore quam.",
+                                            "cover_image": "softbd.jpg",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-21T04:29:12.000000Z",
+                                            "updated_at": "2021-10-21T04:29:13.000000Z",
+                                            "deleted_at": null,
+                                            "total_enroll": 20
+                                        },
+                                        {
+                                            "id": 7,
+                                            "code": "assumenda-minima-ullam-voluptatem-magnam-porro-at-ea-totam-vel-voluptatum-at-fugit-magnam-iure-a-sunt-veniam-laborum-nisi-et-aliquam-illo-expedita-seq",
+                                            "title_en": "Howell Von",
+                                            "title": "Dr. Wava Jacobs III",
+                                            "institute_id": 3,
+                                            "institute_title": "Henry Mosciski DVM",
+                                            "institute_title_en": "Cicero Armstrong",
+                                            "program_id": 7,
+                                            "program_title": "Prof. Sonya Zboncak Jr.",
+                                            "program_title_en": "Darwin Lynch Jr.",
+                                            "course_fee": 4102,
+                                            "duration": 57,
+                                            "overview": "Libero eos velit illo. Voluptatem ratione vel sint. Vel sunt ut distinctio sed eveniet occaecati.",
+                                            "overview_en": "Veritatis et reprehenderit porro qui quo. Veritatis et qui eum non sed quis. Delectus et architecto asperiores velit enim. Error soluta quae architecto sunt cum et.",
+                                            "target_group": "harum harum non",
+                                            "target_group_en": "ea ipsa provident",
+                                            "prerequisite": "Unde similique optio numquam ratione ipsa.",
+                                            "prerequisite_en": "Voluptatem molestiae magni dolore ad.",
+                                            "eligibility": "Sed quisquam et quisquam nulla ea tempora.",
+                                            "eligibility_en": "Quo consequatur provident totam sunt et facilis eius.",
+                                            "cover_image": "softbd.jpg",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-21T04:29:12.000000Z",
+                                            "updated_at": "2021-10-21T04:29:13.000000Z",
+                                            "deleted_at": null,
+                                            "total_enroll": 20
+                                        }
                                     ],
                                     "_response_status": {
                                         "success": true,
@@ -3338,7 +3339,6 @@
                                             "deleted_at": null,
                                             "total_enroll": 20
                                         },
-
                                         {
                                             "id": 30,
                                             "code": "vel-sed-id-a-dignissimos-possimus-tenetur-rerum-ut-saepe-a-eum-veritatis-magnam-totam-est-non-sint-adipisci-quae-quas-et-incidunt-ea-ullam-quo-consequ",
@@ -3473,18 +3473,23 @@
                         "schema": {
                             "type": "integer",
                             "enum": [
-                                0,1,2,3
+                                0,
+                                1,
+                                2,
+                                3
                             ],
                             "example": 2
                         }
-                    } , {
+                    },
+                    {
                         "name": "payment_status",
                         "in": "query",
                         "description": "0=>False, 1=>True",
                         "schema": {
                             "type": "integer",
                             "enum": [
-                                0,1
+                                0,
+                                1
                             ],
                             "example": 2
                         }
@@ -3498,7 +3503,6 @@
                                 "example": {
                                     "order": "DESC",
                                     "data": [
-
                                         {
                                             "id": 101,
                                             "youth_id": 1,
@@ -3578,7 +3582,9 @@
                         }
                     }
                 },
-                "tags": ["Course Enrollments"]
+                "tags": [
+                    "Course Enrollments"
+                ]
             }
         },
         "/course-enrollments/{id}": {
@@ -3591,7 +3597,7 @@
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type" : "integer"
+                            "type": "integer"
                         }
                     }
                 ],
@@ -3601,41 +3607,40 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data":
-                                        {
-                                            "id": 101,
-                                            "youth_id": 1,
-                                            "institute_id": 6,
-                                            "program_id": null,
-                                            "program_title": "Jody Beahan",
-                                            "program_title_en": "Schuyler Hickle",
-                                            "course_id": 6,
-                                            "course_title": "Noble Haag",
-                                            "course_title_en": "Alanis Hansen",
-                                            "training_center_id": null,
-                                            "training_center_title": null,
-                                            "training_center_title_en": null,
-                                            "batch_id": null,
-                                            "payment_status": 0,
-                                            "first_name": "",
-                                            "first_name_en": null,
-                                            "last_name": "",
-                                            "last_name_en": null,
-                                            "gender": 0,
-                                            "date_of_birth": "0000-00-00",
-                                            "email": null,
-                                            "mobile": null,
-                                            "identity_number_type": null,
-                                            "identity_number": null,
-                                            "religion": 0,
-                                            "marital_status": 0,
-                                            "nationality": 1,
-                                            "physical_disability_status": 0,
-                                            "freedom_fighter_status": 0,
-                                            "row_status": 0,
-                                            "created_at": "2021-10-21T09:47:29.000000Z",
-                                            "updated_at": "2021-10-21T09:47:29.000000Z"
-                                        },
+                                    "data": {
+                                        "id": 101,
+                                        "youth_id": 1,
+                                        "institute_id": 6,
+                                        "program_id": null,
+                                        "program_title": "Jody Beahan",
+                                        "program_title_en": "Schuyler Hickle",
+                                        "course_id": 6,
+                                        "course_title": "Noble Haag",
+                                        "course_title_en": "Alanis Hansen",
+                                        "training_center_id": null,
+                                        "training_center_title": null,
+                                        "training_center_title_en": null,
+                                        "batch_id": null,
+                                        "payment_status": 0,
+                                        "first_name": "",
+                                        "first_name_en": null,
+                                        "last_name": "",
+                                        "last_name_en": null,
+                                        "gender": 0,
+                                        "date_of_birth": "0000-00-00",
+                                        "email": null,
+                                        "mobile": null,
+                                        "identity_number_type": null,
+                                        "identity_number": null,
+                                        "religion": 0,
+                                        "marital_status": 0,
+                                        "nationality": 1,
+                                        "physical_disability_status": 0,
+                                        "freedom_fighter_status": 0,
+                                        "row_status": 0,
+                                        "created_at": "2021-10-21T09:47:29.000000Z",
+                                        "updated_at": "2021-10-21T09:47:29.000000Z"
+                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -3646,10 +3651,90 @@
                         }
                     }
                 },
-                "tags": ["Course Enrollments"]
+                "tags": [
+                    "Course Enrollments"
+                ]
+            }
+        },
+        "/reject-course-enrollment": {
+            "post": {
+                "summary": "A new rejected course enrollment created",
+                "description": "An http request to create a new rejected course enrollment. A successfull request response will show 200 HTTP status  code\"",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "enrollment_id"
+                                ],
+                                "properties": {
+                                    "enrollment_id": {
+                                        "type": "integer",
+                                        "description": "rejected enrollment id"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course Enrollment Rejected Successfully",
+                                        "query_time": 1
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Course Enrollments"
+                ]
+            }
+        },
+        "/batch-assign": {
+            "post": {
+                "summary": "Assign batch to Course Enrollment",
+                "description": "API endpoint to assign a batch to a Course Enrollment. A successful request response will show 200 HTTP status code\",",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchAssign"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Batch assign successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Course Enrollments"
+                ]
             }
         }
-
     },
     "components": {
         "securitySchemes": {
@@ -3660,6 +3745,22 @@
             }
         },
         "schemas": {
+            "batchAssign": {
+                "type": "object",
+                "description": "Assign batch to Course Enrollment",
+                "properties": {
+                    "enrollment_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "enrollment_id",
+                    "batch_id"
+                ]
+            },
             "programs": {
                 "type": "object",
                 "description": "Programmes management Service",
