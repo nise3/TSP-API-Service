@@ -3845,6 +3845,44 @@
                     "Course Enrollments"
                 ]
             }
+        },
+        "/course-enroll": {
+            "post": {
+                "summary": "Course enroll",
+                "description": "API endpoint to enroll in a course A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CourseEnroll"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programs"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course Enrolled successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Course Enrollments"
+                ]
+            }
         }
     },
     "components": {
@@ -4896,6 +4934,212 @@
                                 "batch_row_status": {
                                     "type": "integer"
                                 }
+                            }
+                        }
+                    }
+                }
+            },
+            "CourseEnroll": {
+                "type": "object",
+                "description": "Course enroll",
+                "properties": {
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "first_name_en": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    },
+                    "last_name_en": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
+                    "course_id": {
+                        "type": "integer",
+                        "description": "Unique with youth_id"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "gender": {
+                        "type": "integer",
+                        "description": "1=>male,2=>female,3=>other",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "marital_status": {
+                        "type": "integer",
+                        "description": "1 => single, 2 => married, 3 => widowed, 4 => divorced",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "religion": {
+                        "type": "integer",
+                        "description": "'1 => Islam, 2 => Hinduism, 3 => Christianity, 4 => Buddhism, 5 => Judaism, 6 => Sikhism, 7 => Ethnic, 8 => Agnostic/Atheist",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                        ]
+                    },
+                    "nationality": {
+                        "type": "integer",
+                        "default": 1
+                    },
+                    "does_belong_to_ethnic_group": {
+                        "type": "integer",
+                        "description": "0=>No, 1=>Yes",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "identity_number_type": {
+                        "type": "integer",
+                        "default": "Nid => 1, Birth Certificate => 2, Passport => 3",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "identity_number": {
+                        "type": "string"
+                    },
+                    "freedom_fighter_status": {
+                        "type": "integer",
+                        "description": "1 => No, 2 => Yes, 3=> child of a freedom fighter, 4 => grand child of a freedom fighter",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "passport_photo_path": {
+                        "type": "string"
+                    },
+                    "signature_image_path": {
+                        "type": "string"
+                    },
+                    "physical_disability_status": {
+                        "type": "integer",
+                        "description": "0=>No, 1=>Yes",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "address_info": {
+                        "type": "object",
+                        "example": " [\n    'present_address' =>[\n      'loc_division_id' => '1',\n      'loc_district_id' => '1',\n      'village_or_area' => 'present address Village',\n      'village_or_area_en' => 'present address Village',\n       'house_n_road'=> 'new eskaton road',\n       'house_n_road_en'=> 'new eskaton road',\n       'zip_or_postal_code => '9400'\n    ]\n      'is_permanent_address'=> '1',\n      'permanent_address' = 'Dhaka-1201',\n\n            \n      'permanent_address' =>[\n      'loc_division_id' => '1'\n      'loc_district_id' => '1'\n      'village_or_area' => 'Permanent CTG VILLAGE',\n      'village_or_area_en' => 'present address Village',\n       'house_n_road'=> 'new eskaton road',\n       'house_n_road_en'=> 'new eskaton road',\n       'zip_or_postal_code => '9400'\n    ]\n  ]",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "professional_info": {
+                        "type": "object",
+                        "example": "[\n   'father_name'' => 'MAAA',\n   'father_name_en' => 'MAAA'\n   'father_mobile' => '01711223344'\n    'father_nid'=> '1122334455667'\n    'father_date_of_birth'=> '1970-01-03'\n    'mother_name' => 'KRIII',\n    'mother_name_en' => 'KRIII',\n   'mother_nid' => '1122334455668',\n    'mother_mobile'=> '01711223345',\n    'mother_date_of_birth'=> '1980-02-03'\n ]",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "guardian_info": {
+                        "type": "object",
+                        "example": "[\n   'father_name'\"' => 'MAAA'\n    'mother_name'' => 'KRIII'\n ]"
+                    },
+                    "miscellaneous_info": {
+                        "type": "object",
+                        "example": "[\n    'has_own_family_home' => '1'\n    'has_own_family_land' => '0'\n    'number_of_siblings' => '0'\n    'recommended_by_any_organization' => '0'\n  ]"
+                    },
+                    "education_info": {
+                        "type": "object",
+                        "example": "   [\n     [\n      'exam_degree_id' => '4',\n      'exam_degree_name' => \"BSC,\n      'exam_degree_name_en' => \"BSC,\n      'major_or_concentration' => 'Computer Science',\n      'edu_group_id'=> '1',\n      'edu_board_id'=> '2',\n      'institute_name' => 'BGC TRUST',\n      'institute_name_en' => 'BGC TRUST',\n      'is_foreign_institute'= >'0',\n      'foreign_institute_country_id' => null,\n      'result' => '4\n      'marks_in_percentage' => null\n      'cgpa_scale' => '4'\n      'cgpa' => '3.5'\n      'year_of_passing' => '2017',\n      'expected_year_of_passing'=>null\n      'duration' => '4',\n      'achievements' = >null,\n      'achievements_en => null\n    ]\n  ]"
+
+                    },
+                    "physical_disabilities": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "uniqueItems": true
+                        }
+                    }
+                },
+                "required": [
+                    "youth_id",
+                    "first_name",
+                    "last_name",
+                    "training_center_id",
+                    "course_id",
+                    "gender",
+                    "date_of_birth",
+                    "marital_status",
+                    "religion",
+                    "nationality",
+                    "freedom_fighter_status",
+                    "physical_disability_status"
+                ]
+            },
+            "address_info": {
+                "type": "object",
+                "properties": {
+                    "present_address": {
+                        "type": "object",
+                        "properties": {
+                            "loc_division_id": {
+                                "type": "integer"
+                            },
+                            "loc_district_id": {
+                                "type": "integer"
+                            },
+                            "loc_upazila_id": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "is_permanent_address": {
+                        "type": "string"
+                    },
+                    "permanent_address": {
+                        "type": "object",
+                        "properties": {
+                            "loc_division_id": {
+                                "type": "integer"
+                            },
+                            "loc_district_id": {
+                                "type": "integer"
+                            },
+                            "loc_upazila_id": {
+                                "type": "integer"
                             }
                         }
                     }
