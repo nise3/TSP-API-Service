@@ -550,8 +550,9 @@ class CourseEnrollmentService
                 'required'
             ],
             'does_belong_to_ethnic_group' => [
+                'required',
                 'int',
-                'required'
+                Rule::in([BaseModel::TRUE,BaseModel::FALSE])
             ],
             'identity_number_type' => [
                 'int',
@@ -1002,7 +1003,7 @@ class CourseEnrollmentService
             }
             case EnrollmentEducation::MAJOR:
             {
-                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_DIPLOMA, EducationLevel::EDUCATION_LEVEL_BACHELOR, EducationLevel::EDUCATION_LEVEL_MASTERS]);
+                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_DIPLOMA, EducationLevel::EDUCATION_LEVEL_BACHELOR, EducationLevel::EDUCATION_LEVEL_MASTERS, EducationLevel::EDUCATION_LEVEL_PHD]);
             }
             case EnrollmentEducation::EXAM_DEGREE_NAME:
             {

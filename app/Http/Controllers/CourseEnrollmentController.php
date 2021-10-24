@@ -166,7 +166,7 @@ class CourseEnrollmentController extends Controller
      * @return PromiseInterface|\Illuminate\Http\Client\Response
      * @throws RequestException
      */
-    public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response
+    public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
         $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'youth-update-after-course-enrollment';
 
