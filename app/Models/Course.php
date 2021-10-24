@@ -49,9 +49,9 @@ class Course extends BaseModel
 
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
 
-//    protected $casts = [
-//        'application_form_settings' => 'array'
-//    ];
+    protected $casts = [
+        'application_form_settings' => 'array'
+    ];
 
     const COURSE_LEVEL_BEGINNER = 1;
     const COURSE_LEVEL_INTERMEDIATE = 2;

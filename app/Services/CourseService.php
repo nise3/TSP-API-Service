@@ -608,9 +608,6 @@ class CourseService
         if (!empty($requestData["skills"])) {
             $requestData["skills"] = is_array($requestData['skills']) ? $requestData['skills'] : explode(',', $requestData['skills']);
         }
-        if ($requestData['application_form_settings']) {
-            $requestData["application_form_settings"] = is_array($requestData['application_form_settings']) ? $requestData['application_form_settings'] : explode(',', $requestData['application_form_settings']);
-        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
@@ -743,11 +740,7 @@ class CourseService
             ],
             'application_form_settings' => [
                 'nullable',
-                'array',
-            ],
-            'application_form_settings.*' => [
-                'nullable',
-                'string'
+                'string',
             ],
             "skills" => [
                 "required",
