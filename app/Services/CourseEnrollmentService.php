@@ -550,8 +550,9 @@ class CourseEnrollmentService
                 'required'
             ],
             'does_belong_to_ethnic_group' => [
+                'required',
                 'int',
-                'required'
+                Rule::in([BaseModel::TRUE,BaseModel::FALSE])
             ],
             'identity_number_type' => [
                 'int',
