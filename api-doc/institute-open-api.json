@@ -3020,26 +3020,6 @@
                         "description": "Available Type names: recent,popular,nearby, skill-matching,trending"
                     },
                     {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "maximum": 500,
-                            "minimum": 200
-                        }
-                    },
-                    {
-                        "name": "title",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "maximum": 1000,
-                            "minimum": 2
-                        }
-                    },
-                    {
                         "name": "page_size",
                         "in": "query",
                         "required": false,
@@ -3273,26 +3253,6 @@
                 "summary": "Course List without type",
                 "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",
                 "parameters": [
-                    {
-                        "name": "title_en",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "maximum": 500,
-                            "minimum": 200
-                        }
-                    },
-                    {
-                        "name": "title",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "maximum": 1000,
-                            "minimum": 2
-                        }
-                    },
                     {
                         "name": "page_size",
                         "in": "query",

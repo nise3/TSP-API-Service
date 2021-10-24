@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -442,36 +443,36 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus, $instituteId) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if ($rowStatus) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus, $programId) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if ($rowStatus) {
+            /*if ($rowStatus) {
                 $join->where('programs.row_status', $rowStatus);
-            }
+            }*/
         });
 
-        if ($rowStatus) {
+        if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
-        if ($instituteId) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        if ($programId) {
+        if (is_numeric($programId)) {
             $coursesBuilder->where('courses.program_id', '=', $programId);
         }
 
-        if ($language) {
+        if (is_numeric($language)) {
             $coursesBuilder->where('courses.language_medium', '=', $language);
         }
 
-        if ($courseType) {
+        if (is_numeric($courseType)) {
             if ($courseType == self::COURSE_FILTER_COURSE_TYPE_PAID) {
                 $coursesBuilder->where('courses.course_fee', '!=', 0);
                 $coursesBuilder->Where('courses.course_fee', '!=', null);
@@ -481,12 +482,12 @@ class CourseService
             }
         }
 
-        if ($courseName) {
+        if (!empty($courseName)) {
             $coursesBuilder->where('courses.title', 'like', '%' . $courseName . '%');
             $coursesBuilder->orWhere('courses.title_en', 'like', '%' . $courseName . '%');
         }
 
-        if ($courseLevel) {
+        if (is_numeric($courseLevel)) {
             $coursesBuilder->where('courses.level', '=', $courseLevel);
         }
 
@@ -494,7 +495,7 @@ class CourseService
 
         $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
 
-        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || $availability) {
+        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
             if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
                 $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
                 $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
@@ -789,8 +790,6 @@ class CourseService
         }
 
         $rules = [
-            'title_en' => 'nullable|max:500|min:2',
-            'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [
