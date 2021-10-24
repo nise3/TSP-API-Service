@@ -35,6 +35,10 @@ class TrainingCenterService
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
+        $skillIds = $request['skill_ids'] ?? [];
+        $locDistrictId = $request['loc_district_id'] ?? "";
+        $locUpzilaId = $request['loc_upazila_id'] ?? "";
+
 
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
@@ -114,6 +118,19 @@ class TrainingCenterService
         if (!empty($title)) {
             $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
         }
+
+        if(!empty($skillIds)){
+            $trainingCentersBuilder->join('training_center_skill','training_center_skill.training_center_id','=','training_centers.id');
+            $trainingCentersBuilder->whereIn('training_center_skill.skill_id',$skillIds);
+        }
+
+        if(!empty($locUpzilaId)){
+            $trainingCentersBuilder->where('training_centers.loc_upazila_id','=',$locUpzilaId);
+        } else if(!empty($locDistrictId)){
+            $trainingCentersBuilder->where('training_centers.loc_district_id','=',$locDistrictId);
+        }
+
+        $trainingCentersBuilder->groupBy('training_centers.id');
 
 
         /** @var Collection $trainingCentersBuilder */
@@ -407,15 +424,21 @@ class TrainingCenterService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+        if($request->filled('skill_ids')){
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+            $request->offsetSet('skill_ids', $skill_ids);
+        }
+
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
-        return Validator::make($request->all(), [
+        $rules = [
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
@@ -431,6 +454,28 @@ class TrainingCenterService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+            'skill_ids' => [
+                'nullable',
+                'array',
+                'min:1',
+                'max:10'
+            ],
+            'skill_ids.*' => [
+                'nullable',
+                'integer',
+                'distinct',
+                'min:1'
+            ],
+            'loc_district_id' => [
+                'nullable',
+                'integer'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer'
+            ]
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
     }
 }

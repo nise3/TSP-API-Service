@@ -180,4 +180,15 @@ class TrainingCenterController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function getTrainingCentersWithFilters(Request $request): JsonResponse
+    {
+        $filter = $this->trainingCenterService->filterValidator($request)->validate();
+
+        $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
+        return Response::json($response);
+    }
+
 }
