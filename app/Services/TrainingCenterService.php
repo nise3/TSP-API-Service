@@ -102,10 +102,10 @@ class TrainingCenterService
         });
         $trainingCentersBuilder->orderBy('training_centers.id', $order);
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
         }
-        if (!empty($branchId)) {
+        if (is_numeric($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
         if (is_numeric($rowStatus)) {
@@ -124,9 +124,9 @@ class TrainingCenterService
             $trainingCentersBuilder->whereIn('training_center_skill.skill_id',$skillIds);
         }
 
-        if(!empty($locUpzilaId)){
+        if(is_numeric($locUpzilaId)){
             $trainingCentersBuilder->where('training_centers.loc_upazila_id','=',$locUpzilaId);
-        } else if(!empty($locDistrictId)){
+        } else if(is_numeric($locDistrictId)){
             $trainingCentersBuilder->where('training_centers.loc_district_id','=',$locDistrictId);
         }
 
@@ -134,7 +134,7 @@ class TrainingCenterService
 
 
         /** @var Collection $trainingCentersBuilder */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
             $paginateData = (object)$trainingCenters->toArray();
@@ -389,7 +389,7 @@ class TrainingCenterService
         }
 
         /** @var Collection $trainingCentersBuilder */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $trainingCenters = $trainingCentersBuilder->paginate($limit);
             $paginateData = (object)$trainingCenters->toArray();

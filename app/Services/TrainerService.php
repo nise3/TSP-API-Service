@@ -163,20 +163,20 @@ class TrainerService
             $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $name . '%');
         }
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
-        if (!empty($branchId)) {
+        if (is_numeric($branchId)) {
             $trainerBuilder->where('trainers.branch_id', '=', $branchId);
         }
 
-        if (!empty($trainingCenterId)) {
+        if (is_numeric($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
         /** @var Collection $trainers */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $trainerBuilder->paginate($pageSize);
             $paginateData = (object)$trainers->toArray();
@@ -480,7 +480,7 @@ class TrainerService
         }
 
         /** @var Collection $trainerBuilder */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $trainers = $trainerBuilder->paginate($limit);
             $paginateData = (object)$trainers->toArray();

@@ -102,12 +102,12 @@ class BranchService
             $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $branches */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
             $paginateData = (object)$branches->toArray();
@@ -284,7 +284,7 @@ class BranchService
         }
 
         /** @var Collection $branchBuilder */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();

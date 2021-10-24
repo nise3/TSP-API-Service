@@ -211,7 +211,7 @@ class InstituteService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (!empty($id)) {
+        if (is_numeric($id)) {
             $instituteBuilder->where('institutes.id', $id);
         }
 
@@ -380,7 +380,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();

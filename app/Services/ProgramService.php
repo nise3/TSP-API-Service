@@ -74,13 +74,13 @@ class ProgramService
             $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $programmesBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
         /** @var Collection $programmes */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $programmes = $programmesBuilder->paginate($pageSize);
             $paginateData = (object)$programmes->toArray();

@@ -123,28 +123,28 @@ class BatchService
             $batchBuilder->where('batches.row_status', $rowStatus);
         }
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
 
-        if (!empty($branchId)) {
+        if (is_numeric($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
-        if (!empty($programId)) {
+        if (is_numeric($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
         }
 
-        if (!empty($courseId)) {
+        if (is_numeric($courseId)) {
             $batchBuilder->where('batches.course_id', $courseId);
         }
 
-        if (!empty($trainingCenterId)) {
+        if (is_numeric($trainingCenterId)) {
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
 
         /** @var Collection $batches */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $batches = $batchBuilder->paginate($pageSize);
             $paginateData = (object)$batches->toArray();
@@ -336,7 +336,7 @@ class BatchService
         }
 
         /** @var Collection $batches */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $batches = $batchBuilder->paginate($limit);
             $paginateData = (object)$batches->toArray();

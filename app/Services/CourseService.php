@@ -132,12 +132,12 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (!empty($instituteId)) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $courses */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -353,7 +353,7 @@ class CourseService
         }
 
         /** @var Collection $courses */
-        if (!empty($paginate) || !empty($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();
@@ -559,7 +559,7 @@ class CourseService
 
 
         /** @var Collection $courses */
-        if (!empty($paginate) || !empty($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
