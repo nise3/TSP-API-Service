@@ -163,7 +163,7 @@ class CourseEnrollmentController extends Controller
 
     /**
      * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response
+     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
      * @throws RequestException
      */
     public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array

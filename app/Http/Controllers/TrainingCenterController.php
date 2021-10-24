@@ -100,20 +100,16 @@ class TrainingCenterController extends Controller
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
-        try {
-            $data = $this->trainingCenterService->update($trainingCenter, $validated);
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Training center updated successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $data = $this->trainingCenterService->update($trainingCenter, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Training center updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
@@ -150,7 +146,7 @@ class TrainingCenterController extends Controller
     /**
      * @throws Throwable
      */
-    public function restore(int $id)
+    public function restore(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
         $this->trainingCenterService->restore($trainingCenter);
@@ -165,7 +161,7 @@ class TrainingCenterController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function forceDelete(int $id)
+    public function forceDelete(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
         $this->trainingCenterService->forceDelete($trainingCenter);

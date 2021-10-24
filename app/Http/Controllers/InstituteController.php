@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Institute;
 use Exception;
+use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -68,9 +69,11 @@ class InstituteController extends Controller
      * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
+     * @throws RequestException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         /** @var Institute $institute */
         $institute = app(Institute::class);
@@ -138,6 +141,8 @@ class InstituteController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws RequestException
+     * @throws Throwable
      * @throws ValidationException
      */
     public function instituteRegistration(Request $request): JsonResponse
@@ -249,7 +254,7 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getTrashedData(Request $request)
+    public function getTrashedData(Request $request): JsonResponse
     {
         $response = $this->instituteService->getInstituteTrashList($request, $this->startTime);
         return Response::json($response);
@@ -258,7 +263,7 @@ class InstituteController extends Controller
     /**
      * @throws Throwable
      */
-    public function restore(int $id)
+    public function restore(int $id): JsonResponse
     {
         $institute = Institute::onlyTrashed()->findOrFail($id);
         $this->instituteService->restore($institute);
@@ -273,7 +278,7 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function forceDelete(int $id)
+    public function forceDelete(int $id): JsonResponse
     {
         $institute = Institute::onlyTrashed()->findOrFail($id);
         $this->instituteService->forceDelete($institute);

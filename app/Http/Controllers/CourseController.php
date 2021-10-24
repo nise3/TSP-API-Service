@@ -149,7 +149,7 @@ class CourseController extends Controller
     /**
      * @throws Throwable
      */
-    public function getTrashedData(Request $request)
+    public function getTrashedData(Request $request): JsonResponse
     {
         $response = $this->courseService->getCourseTrashList($request, $this->startTime);
         return Response::json($response);
@@ -158,7 +158,7 @@ class CourseController extends Controller
     /**
      * @throws Throwable
      */
-    public function restore(int $id)
+    public function restore(int $id): JsonResponse
     {
         $course = Course::onlyTrashed()->findOrFail($id);
         $this->courseService->restore($course);
@@ -173,7 +173,7 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function forceDelete(int $id)
+    public function forceDelete(int $id): JsonResponse
     {
         $course = Course::onlyTrashed()->findOrFail($id);
         $this->courseService->forceDelete($course);
