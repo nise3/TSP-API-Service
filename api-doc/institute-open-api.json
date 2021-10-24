@@ -4306,6 +4306,13 @@
                             0
                         ],
                         "example": 1
+                    },
+                    "skill_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "uniqueItems": true
+                        }
                     }
                 },
                 "required": [

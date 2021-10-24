@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\Skill;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -229,7 +231,15 @@ class TrainingCenterService
         $trainingCenter = new TrainingCenter();
         $trainingCenter->fill($data);
         $trainingCenter->Save();
+        if(!empty($data['skill_ids'])){
+            $this->assignSkills($trainingCenter, $data['skill_ids']);
+        }
         return $trainingCenter;
+    }
+
+    public function assignSkills($trainingCenter, $skills){
+        $skills = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
+        $trainingCenter->skills()->sync($skills);
     }
 
     /**
@@ -244,6 +254,9 @@ class TrainingCenterService
         }
         $trainingCenter->fill($data);
         $trainingCenter->Save();
+        if(!empty($data['skill_ids'])){
+            $this->assignSkills($trainingCenter, $data['skill_ids']);
+        }
         return $trainingCenter;
     }
 
@@ -263,6 +276,11 @@ class TrainingCenterService
      */
     public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
+        if($request->filled('skill_ids')){
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+            $request->offsetSet('skill_ids', $skill_ids);
+        }
+
         $customMessage = [
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
@@ -288,6 +306,18 @@ class TrainingCenterService
             ],
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
+            'skill_ids' => [
+                'nullable',
+                'array',
+                'min:1',
+                'max:10'
+            ],
+            'skill_ids.*' => [
+                'nullable',
+                'integer',
+                'distinct',
+                'min:1'
+            ]
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
