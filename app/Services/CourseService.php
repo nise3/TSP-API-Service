@@ -231,6 +231,8 @@ class CourseService
 
         $courseBuilder->where('courses.id', '=', $id);
 
+        $courseBuilder->with('skills');
+
         /** @var Course $course */
         $course = $courseBuilder->firstOrFail();
 
@@ -625,7 +627,7 @@ class CourseService
             'branch_id' => [
                 'nullable',
                 'int',
-                'exists:programs,id,deleted_at,NULL',
+                'exists:branches,id,deleted_at,NULL',
             ],
             'program_id' => [
                 'nullable',
