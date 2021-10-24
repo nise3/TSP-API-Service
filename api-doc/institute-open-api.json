@@ -3734,6 +3734,44 @@
                     "Course Enrollments"
                 ]
             }
+        },
+        "/course-enroll": {
+            "post": {
+                "summary": "Course enroll",
+                "description": "API endpoint to enroll in a course A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainingCenters"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/programs"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Course Enrolled successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Course Enrollments"
+                ]
+            }
         }
     },
     "components": {
@@ -4785,6 +4823,88 @@
                         }
                     }
                 }
+            },
+            "CourseEnroll": {
+                "type": "object",
+                "description": "Course enroll",
+                "properties": {
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "first_name": {
+                        "type": "string"
+                    },
+                    "first_name_en": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    },
+                    "last_name_en": {
+                        "type": "string"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
+                    "course_id": {
+                        "type": "integer",
+                        "description": "Unique with youth_id"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "gender": {
+                        "type": "integer",
+                        "description": "1=>male,2=>female,3=>other",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "marital_status": {
+                        "type": "integer",
+                        "description": "1 => single, 2 => married, 3 => widowed, 4 => divorced",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "religion": {
+                        "type": "integer",
+                        "description": "'1 => Islam, 2 => Hinduism, 3 => Christianity, 4 => Buddhism, 5 => Judaism, 6 => Sikhism, 7 => Ethnic, 8 => Agnostic/Atheist",
+                        "enum": [1,2,3,4,5,6,7,8]
+                    },
+                    "nationality": {
+                        "type": "integer",
+                        "default": 1
+                    },
+                    "does_belong_to_ethnic_group": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "youth_id",
+                    "first_name",
+                    "last_name",
+                    "training_center_id",
+                    "course_id",
+                    "gender",
+                    "date_of_birth",
+                    "marital_status",
+                    "religion",
+                    "nationality"
+
+                ]
             }
         },
         "parameters": {
