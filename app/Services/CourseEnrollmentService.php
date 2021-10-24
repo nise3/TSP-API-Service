@@ -90,25 +90,25 @@ class CourseEnrollmentService
         $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('courses.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesEnrollmentBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesEnrollmentBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
@@ -905,7 +905,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'marks_in_percentage'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
                         $resultId = !empty($fields['result']) ? $fields['result'] : null;
-                        return $resultId ? $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId) : false;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId);
                     }),
                     'nullable',
                     "numeric"
@@ -913,7 +913,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'cgpa_scale'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
                         $resultId = !empty($fields['result']) ? $fields['result'] : null;
-                        return $resultId ? $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId) : false;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId);
                     }),
                     'nullable',
                     Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
@@ -922,7 +922,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'cgpa'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
                         $resultId = !empty($fields['result']) ? $fields['result'] : null;
-                        return $resultId ? $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId) : false;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId);
                     }),
                     'nullable',
                     'numeric',
@@ -931,7 +931,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'year_of_passing'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
                         $resultId = !empty($fields['result']) ? $fields['result'] : null;
-                        return $resultId ? $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId) : false;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId);
                     }),
                     'nullable',
                     'string'
@@ -939,7 +939,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'expected_year_of_passing'] = [
                     Rule::requiredIf(function () use ($fields, $data) {
                         $resultId = !empty($fields['result']) ? $fields['result'] : null;
-                        return $resultId ? $this->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $resultId) : false;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $resultId);
                     }),
                     'nullable',
                     'string'
@@ -985,7 +985,7 @@ class CourseEnrollmentService
 
     /**
      * @param string $key
-     * @param int $id
+     * @param int $eduLabelId
      * @return bool
      */
     private function getRequiredStatus(string $key, int $eduLabelId): bool
@@ -1227,7 +1227,8 @@ class CourseEnrollmentService
      * @param array $data
      * @return mixed
      */
-    public function assignBatch(array $data){
+    public function assignBatch(array $data): mixed
+    {
         $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->batch_id = $data['batch_id'];
         $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
@@ -1241,7 +1242,8 @@ class CourseEnrollmentService
      * @param array $data
      * @return mixed
      */
-    public function rejectCourseEnrollmentApplication(array $data){
+    public function rejectCourseEnrollmentApplication(array $data): mixed
+    {
         $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->row_status = BaseModel::ROW_STATUS_REJECTED;
 

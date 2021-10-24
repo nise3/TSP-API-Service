@@ -55,9 +55,9 @@ class ProgramService
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $programmesBuilder->orderBy('programs.id', $order);

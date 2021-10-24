@@ -65,9 +65,9 @@ class BranchService
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $branchBuilder->leftJoin('loc_divisions', function ($join) {
@@ -266,7 +266,6 @@ class BranchService
             'branches.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
-            'branches.row_status',
             'branches.address',
             'branches.address_en',
             'branches.google_map_src',
@@ -285,7 +284,7 @@ class BranchService
         }
 
         /** @var Collection $branchBuilder */
-        if ($paginate || $limit) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();

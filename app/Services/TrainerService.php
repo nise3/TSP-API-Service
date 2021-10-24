@@ -101,23 +101,23 @@ class TrainerService
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
-            }
+            }*/
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {

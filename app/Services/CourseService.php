@@ -98,25 +98,25 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
@@ -353,7 +353,7 @@ class CourseService
         }
 
         /** @var Collection $courses */
-        if ($paginate || $limit) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();

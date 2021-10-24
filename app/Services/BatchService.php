@@ -81,40 +81,40 @@ class BatchService
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('courses.row_status', $rowStatus);
-            }
+            }*/
         });
         $batchBuilder->leftjoin("institutes", function ($join) use ($rowStatus) {
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $batchBuilder->leftjoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $batchBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
             $join->on('batches.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $batchBuilder->join("training_centers", function ($join) use ($rowStatus) {
             $join->on('batches.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $batchBuilder->orderBy('batches.id', $order);
@@ -336,7 +336,7 @@ class BatchService
         }
 
         /** @var Collection $batches */
-        if ($paginate || $limit) {
+        if (!empty($paginate) || !empty($limit)) {
             $limit = $limit ?: 10;
             $batches = $batchBuilder->paginate($limit);
             $paginateData = (object)$batches->toArray();
