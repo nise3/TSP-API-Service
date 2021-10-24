@@ -506,6 +506,7 @@ class BatchService
     public function trainerValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $requestData = $request->all();
+
         $data = [];
         if(!empty($requestData['trainerIds'])){
             $data["trainerIds"] =  is_array($requestData['trainerIds']) ? $requestData['trainerIds'] : explode(',', $requestData['trainerIds']);
@@ -513,9 +514,7 @@ class BatchService
 
         $rules = [
             'trainerIds' => 'required|array',
-            'trainerIds.*' => 'nullable|integer|distinct|min:1'
         ];
-
         return Validator::make($data, $rules);
     }
 

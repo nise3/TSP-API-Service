@@ -146,6 +146,7 @@ class BatchController extends Controller
     {
         $validated = $this->batchService->trainerValidator($request)->validated();
         $batch = Batch::findOrFail($id);
+        $validated['trainerIds'] = !empty($validated['trainerIds'])? $validated['trainerIds'] : [];
         $batch = $this->batchService->assignTrainer($batch, $validated['trainerIds']);
         $response = [
             'data' => $batch->trainers()->get(),
