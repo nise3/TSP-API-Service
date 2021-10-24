@@ -171,12 +171,13 @@ class CourseEnrollmentController extends Controller
         $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'youth-update-after-course-enrollment';
 
         return Http::withOptions([
-            'verify' => false,
-            'timeout' => 60
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
         ])
             ->post($url, $data)
             ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ', (array)$response);
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
                 return $e;
             })
             ->json();
