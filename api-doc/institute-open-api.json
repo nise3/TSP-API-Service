@@ -3743,7 +3743,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/trainingCenters"
+                                "$ref": "#/components/schemas/CourseEnroll"
                             }
                         }
                     }
@@ -4889,14 +4889,71 @@
                     "religion": {
                         "type": "integer",
                         "description": "'1 => Islam, 2 => Hinduism, 3 => Christianity, 4 => Buddhism, 5 => Judaism, 6 => Sikhism, 7 => Ethnic, 8 => Agnostic/Atheist",
-                        "enum": [1,2,3,4,5,6,7,8]
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                        ]
                     },
                     "nationality": {
                         "type": "integer",
                         "default": 1
                     },
                     "does_belong_to_ethnic_group": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "0=>No, 1=>Yes",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "identity_number_type": {
+                        "type": "integer",
+                        "default": "Nid => 1, Birth Certificate => 2, Passport => 3",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "identity_number": {
+                        "type": "string"
+                    },
+                    "freedom_fighter_status": {
+                        "type": "integer",
+                        "description": "1 => No, 2 => Yes, 3=> child of a freedom fighter, 4 => grand child of a freedom fighter",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4
+                        ]
+                    },
+                    "passport_photo_path": {
+                        "type": "string"
+                    },
+                    "signature_image_path": {
+                        "type": "string"
+                    },
+                    "physical_disability_status": {
+                        "type": "integer",
+                        "description": "0=>No, 1=>Yes",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "address_info": {
+                        "type": "object",
+                        "additionalProperties": {
+
+                            "$ref": "#/components/schemas/address_info"
+                        }
                     }
                 },
                 "required": [
@@ -4909,9 +4966,46 @@
                     "date_of_birth",
                     "marital_status",
                     "religion",
-                    "nationality"
-
+                    "nationality",
+                    "freedom_fighter_status",
+                    "physical_disability_status"
                 ]
+            },
+            "address_info": {
+                "type": "object",
+                "properties": {
+                    "present_address": {
+                        "type": "object",
+                        "properties": {
+                            "loc_division_id": {
+                                "type": "integer"
+                            },
+                            "loc_district_id": {
+                                "type": "integer"
+                            },
+                            "loc_upazila_id": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "is_permanent_address": {
+                        "type": "string"
+                    },
+                    "permanent_address": {
+                        "type": "object",
+                        "properties": {
+                            "loc_division_id": {
+                                "type": "integer"
+                            },
+                            "loc_district_id": {
+                                "type": "integer"
+                            },
+                            "loc_upazila_id": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                }
             }
         },
         "parameters": {
