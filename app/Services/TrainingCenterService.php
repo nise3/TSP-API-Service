@@ -74,16 +74,16 @@ class TrainingCenterService
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
         $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('training_centers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_numeric($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) {
@@ -109,7 +109,7 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
         }
         if (is_numeric($rowStatus)) {
-            $trainingCentersBuilder->where('training_centers.row_status', $rowStatus);
+            $trainingCentersBuilder->where('training_centers.row_status', '=', $rowStatus);
         }
 
         if (!empty($titleEn)) {

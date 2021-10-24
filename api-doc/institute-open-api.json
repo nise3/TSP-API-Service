@@ -853,6 +853,117 @@
                 }
             }
         },
+        "/public/training-centers": {
+            "get": {
+                "tags": [
+                    "training-centers"
+                ],
+                "summary": "Get training centers list with filter",
+                "description": "Public API endpoint to get list of training centers with filter.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/branch_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "skill_ids",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "1,2,3",
+                        "description": "Send skill ids as comma seperated string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 3,
+                                            "center_location_type": 3,
+                                            "title_en": "Dr. Jayce McKenzie",
+                                            "title": "Miss Mossie Kris",
+                                            "loc_division_id": 2,
+                                            "division_title": "চট্টগ্রাম",
+                                            "division_title_en": "Chittagong",
+                                            "loc_district_id": 10,
+                                            "district_title": "চট্টগ্রাম",
+                                            "district_title_en": "CHITTAGONG",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "institute_id": 1,
+                                            "institute_title_en": "Damon Schimmel",
+                                            "institutetitle": "Tess Blanda DVM",
+                                            "branch_id": 2,
+                                            "branch_title_en": "Rubie Bechtelar",
+                                            "branch_title": "Ally Nienow",
+                                            "address": "6551 Brekke Mill\nMariettaside, SD 47032-5423",
+                                            "google_map_src": "64082 Rempel Forest\nMullermouth, MI 68804-8218",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-21T12:58:29.000000Z",
+                                            "updated_at": "2021-10-21T12:58:31.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            }
+        },
         "/branches": {
             "get": {
                 "tags": [
