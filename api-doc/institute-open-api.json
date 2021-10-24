@@ -4947,9 +4947,39 @@
                     },
                     "address_info": {
                         "type": "object",
-                        "additionalProperties": {
+                        "example": " [\n    'present_address' =>[\n      'loc_division_id' => '1',\n      'loc_district_id' => '1',\n      'village_or_area' => 'present address Village',\n      'village_or_area_en' => 'present address Village',\n       'house_n_road'=> 'new eskaton road',\n       'house_n_road_en'=> 'new eskaton road',\n       'zip_or_postal_code => '9400'\n    ]\n      'is_permanent_address'=> '1',\n      'permanent_address' = 'Dhaka-1201',\n\n            \n      'permanent_address' =>[\n      'loc_division_id' => '1'\n      'loc_district_id' => '1'\n      'village_or_area' => 'Permanent CTG VILLAGE',\n      'village_or_area_en' => 'present address Village',\n       'house_n_road'=> 'new eskaton road',\n       'house_n_road_en'=> 'new eskaton road',\n       'zip_or_postal_code => '9400'\n    ]\n  ]",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    "professional_info": {
+                        "type": "object",
+                        "example": "[\n   'father_name'' => 'MAAA',\n   'father_name_en' => 'MAAA'\n   'father_mobile' => '01711223344'\n    'father_nid'=> '1122334455667'\n    'father_date_of_birth'=> '1970-01-03'\n    'mother_name' => 'KRIII',\n    'mother_name_en' => 'KRIII',\n   'mother_nid' => '1122334455668',\n    'mother_mobile'=> '01711223345',\n    'mother_date_of_birth'=> '1980-02-03'\n ]",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "guardian_info": {
+                        "type": "object",
+                        "example": "[\n   'father_name'\"' => 'MAAA'\n    'mother_name'' => 'KRIII'\n ]"
+                    },
+                    "miscellaneous_info": {
+                        "type": "object",
+                        "example": "[\n    'has_own_family_home' => '1'\n    'has_own_family_land' => '0'\n    'number_of_siblings' => '0'\n    'recommended_by_any_organization' => '0'\n  ]"
+                    },
+                    "education_info": {
+                        "type": "object",
+                        "example": "   [\n     [\n      'exam_degree_id' => '4',\n      'exam_degree_name' => \"BSC,\n      'exam_degree_name_en' => \"BSC,\n      'major_or_concentration' => 'Computer Science',\n      'edu_group_id'=> '1',\n      'edu_board_id'=> '2',\n      'institute_name' => 'BGC TRUST',\n      'institute_name_en' => 'BGC TRUST',\n      'is_foreign_institute'= >'0',\n      'foreign_institute_country_id' => null,\n      'result' => '4\n      'marks_in_percentage' => null\n      'cgpa_scale' => '4'\n      'cgpa' => '3.5'\n      'year_of_passing' => '2017',\n      'expected_year_of_passing'=>null\n      'duration' => '4',\n      'achievements' = >null,\n      'achievements_en => null\n    ]\n  ]"
 
-                            "$ref": "#/components/schemas/address_info"
+                    },
+                    "physical_disabilities": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "uniqueItems": true
                         }
                     }
                 },
