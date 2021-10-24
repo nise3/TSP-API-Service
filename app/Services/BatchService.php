@@ -507,12 +507,13 @@ class BatchService
     {
         $requestData = $request->all();
         $data = [];
-        $reqTrainerIds = $requestData['trainerIds'];
-        $data["trainerIds"] = !empty($reqTrainerIds) && is_array($reqTrainerIds) ? $reqTrainerIds : explode(',', $reqTrainerIds);
+        if(!empty($requestData['trainerIds'])){
+            $data["trainerIds"] =  is_array($requestData['trainerIds']) ? $requestData['trainerIds'] : explode(',', $requestData['trainerIds']);
+        }
 
         $rules = [
-            'trainerIds' => 'required|array|min:1',
-            'trainerIds.*' => 'required|integer|distinct|min:1'
+            'trainerIds' => 'required|array',
+            'trainerIds.*' => 'nullable|integer|distinct|min:1'
         ];
 
         return Validator::make($data, $rules);

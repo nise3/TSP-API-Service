@@ -144,8 +144,8 @@ class BatchController extends Controller
      */
     public function assignTrainerToBatch(Request $request, int $id): JsonResponse
     {
-        $batch = Batch::findOrFail($id);
         $validated = $this->batchService->trainerValidator($request)->validated();
+        $batch = Batch::findOrFail($id);
         $batch = $this->batchService->assignTrainer($batch, $validated['trainerIds']);
         $response = [
             'data' => $batch->trainers()->get(),
