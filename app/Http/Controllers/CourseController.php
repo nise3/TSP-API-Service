@@ -86,7 +86,6 @@ class CourseController extends Controller
     function store(Request $request): JsonResponse
     {
         $validated = $this->courseService->validator($request)->validate();
-        Log::info(json_encode($validated));
         $data = $this->courseService->store($validated);
 
         $response = [

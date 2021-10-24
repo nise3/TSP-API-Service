@@ -231,6 +231,8 @@ class CourseService
 
         $courseBuilder->where('courses.id', '=', $id);
 
+        $courseBuilder->with('skills');
+
         /** @var Course $course */
         $course = $courseBuilder->firstOrFail();
 
@@ -274,7 +276,11 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
-        $this->assignSkills($course, $data["skills"]);
+
+        if(!empty($data["skills"])){
+            $this->assignSkills($course, $data["skills"]);
+        }
+
         return $course;
     }
 
@@ -602,9 +608,6 @@ class CourseService
         if (!empty($requestData["skills"])) {
             $requestData["skills"] = is_array($requestData['skills']) ? $requestData['skills'] : explode(',', $requestData['skills']);
         }
-        if ($requestData['application_form_settings']) {
-            $requestData["application_form_settings"] = is_array($requestData['application_form_settings']) ? $requestData['application_form_settings'] : explode(',', $requestData['application_form_settings']);
-        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
@@ -625,7 +628,7 @@ class CourseService
             'branch_id' => [
                 'nullable',
                 'int',
-                'exists:programs,id,deleted_at,NULL',
+                'exists:branches,id,deleted_at,NULL',
             ],
             'program_id' => [
                 'nullable',
@@ -737,11 +740,7 @@ class CourseService
             ],
             'application_form_settings' => [
                 'nullable',
-                'array',
-            ],
-            'application_form_settings.*' => [
-                'nullable',
-                'string'
+                'string',
             ],
             "skills" => [
                 "required",
