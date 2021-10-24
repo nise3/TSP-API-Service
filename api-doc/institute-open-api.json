@@ -4442,11 +4442,8 @@
                         "type": "string"
                     },
                     "application_form_settings": {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            "example": "usidvyfu sdifu"
-                        }
+                        "type": "string",
+                        "example": "{\"ethnic_group_info\":[true,true],\"freedom_fighter_info\":[true,false],\"disability_info\":[true,true],\"ssc_passing_info\":[true,false],\"hsc_passing_status\":[true,true],\"honors_passing_info\":[false,false],\"masters_passing_info\":[false,false],\"occupation_info\":[false,false],\"guardian_info\":[false,false]}"
                     },
                     "row_status": {
                         "type": "integer",
