@@ -276,7 +276,11 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
-        $this->assignSkills($course, $data["skills"]);
+
+        if(!empty($data["skills"])){
+            $this->assignSkills($course, $data["skills"]);
+        }
+
         return $course;
     }
 
