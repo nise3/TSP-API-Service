@@ -4747,6 +4747,12 @@
                 "type": "object",
                 "description": "Batch management Service",
                 "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -4792,6 +4798,7 @@
                     }
                 },
                 "required": [
+                    "title",
                     "institute_id",
                     "training_center_id",
                     "course_id",

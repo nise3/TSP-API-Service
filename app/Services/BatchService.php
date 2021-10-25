@@ -398,6 +398,16 @@ class BatchService
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
         $rules = [
+            'title' => [
+                'required',
+                'string',
+                'max:500'
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
             'institute_id' => [
                 'exists:institutes,id,deleted_at,NULL',
                 'required',
