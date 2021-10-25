@@ -48,6 +48,8 @@ class BatchService
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::select([
             'batches.id',
+            'batches.title',
+            'batches.title_en',
             'batches.course_id',
             'courses.title_en as course_title_en',
             'courses.title as course_title',
@@ -178,6 +180,8 @@ class BatchService
 
         $batchBuilder = Batch::select([
             'batches.id',
+            'batches.title',
+            'batches.title_en',
             'batches.course_id',
             'courses.title_en as course_title_en',
             'courses.title as course_title',
@@ -563,6 +567,8 @@ class BatchService
             'training_centers.row_status',
 
             DB::raw('GROUP_CONCAT(batches.id) as batch_ids'),
+            DB::raw('GROUP_CONCAT(batches.title) as batch_titles'),
+            DB::raw('GROUP_CONCAT(batches.title_en) as batch_titles_en'),
             DB::raw('GROUP_CONCAT(batches.number_of_seats) as number_of_seats'),
             DB::raw('GROUP_CONCAT(batches.registration_start_date) as registration_start_dates'),
             DB::raw('GROUP_CONCAT(batches.registration_end_date) as registration_end_dates'),
@@ -605,6 +611,8 @@ class BatchService
             for ($index = 0; $index < $length; ++$index) {
 
                 $batchIds = explode(',', $trainingCenterWiseBatches[$index]['batch_ids']);
+                $batchTitles = explode(',', $trainingCenterWiseBatches[$index]['batch_titles']);
+                $batchTitlesEn = explode(',', $trainingCenterWiseBatches[$index]['batch_titles_en']);
                 $numberOfSeats = explode(',', $trainingCenterWiseBatches[$index]['number_of_seats']);
                 $registrationStartDates = explode(',', $trainingCenterWiseBatches[$index]['registration_start_dates']);
                 $registrationEndDate = explode(',', $trainingCenterWiseBatches[$index]['registration_end_dates']);
@@ -620,6 +628,8 @@ class BatchService
                 for ($i = 0; $i < $batchCount; ++$i) {
                     $batchInfo = [
                         "id" => $batchIds[$i],
+                        "title" => $batchTitles[$i],
+                        "title_en" => $batchTitlesEn[$i],
                         "number_of_seat" => $numberOfSeats[$i],
                         "registration_start_date" => $registrationStartDates[$i],
                         "registration_end_date" => $registrationEndDate[$i],
