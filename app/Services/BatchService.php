@@ -512,12 +512,13 @@ class BatchService
         $requestData = $request->all();
 
         $data = [];
-        if(!empty($requestData['trainerIds'])){
-            $data["trainerIds"] =  is_array($requestData['trainerIds']) ? $requestData['trainerIds'] : explode(',', $requestData['trainerIds']);
+        if (!empty($requestData['trainerIds'])) {
+            $data["trainerIds"] = is_array($requestData['trainerIds']) ? $requestData['trainerIds'] : explode(',', $requestData['trainerIds']);
         }
 
         $rules = [
             'trainerIds' => 'required|array',
+            'trainerIds.*' => 'nullable|integer|distinct|exists:trainers,id,deleted_at,NULL'
         ];
         return Validator::make($data, $rules);
     }
@@ -532,7 +533,7 @@ class BatchService
     public function batchesWithTrainingCenters(Request $request, $id, $currentTime): array
     {
         $active = $request->get('active') === "true";
-        $upcoming =  $request->get('upcoming') === "true";
+        $upcoming = $request->get('upcoming') === "true";
 
         /** @var Course $course */
         $course = Course::findOrFail($id);
@@ -579,16 +580,16 @@ class BatchService
         ]);
 
         $courseBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
-                $join->on('batches.training_center_id', '=', 'training_centers.id');
-                if ($active && !$upcoming) {
-                    $join->whereDate('batches.registration_start_date', '<=', $currentTime);
-                    $join->whereDate('batches.registration_end_date', '>=', $currentTime);
-                } else if (!$active && $upcoming) {
-                    $join->whereDate('batches.registration_start_date', '>', $currentTime);
-                } else {
-                    $join->whereDate('batches.registration_end_date', '>=', $currentTime);
-                }
-            })
+            $join->on('batches.training_center_id', '=', 'training_centers.id');
+            if ($active && !$upcoming) {
+                $join->whereDate('batches.registration_start_date', '<=', $currentTime);
+                $join->whereDate('batches.registration_end_date', '>=', $currentTime);
+            } else if (!$active && $upcoming) {
+                $join->whereDate('batches.registration_start_date', '>', $currentTime);
+            } else {
+                $join->whereDate('batches.registration_end_date', '>=', $currentTime);
+            }
+        })
             ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'training_centers.loc_division_id')
             ->leftJoin('loc_districts', 'loc_districts.id', '=', 'training_centers.loc_district_id')
             ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
