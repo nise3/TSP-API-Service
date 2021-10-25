@@ -4296,14 +4296,14 @@
                         "type": "string",
                         "format": "password",
                         "minLength": 6,
-                        "description": "Minimum length 6 ",
+                        "description": "Must contain upper case and lower case letter and number.Minimum length 8",
                         "example": "Aa!1sS3#"
                     },
                     "password_confirmation": {
                         "type": "string",
                         "format": "password",
                         "minLength": 6,
-                        "description": "Minimum length 6 ",
+                        "description": "Must contain upper case and lower case letter and number.Minimum length 8",
                         "example": "Aa!1sS3#"
                     }
                 },
