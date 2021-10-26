@@ -76,7 +76,15 @@ class CourseEnrollmentController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $response = $this->courseEnrollService->getOneCourseEnrollment($id, $this->startTime);
+        $data = $this->courseEnrollService->getOneCourseEnrollment($id);
+        $response = [
+            "data" => $data ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response);
     }
 

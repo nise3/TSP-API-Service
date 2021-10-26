@@ -61,7 +61,17 @@ class BatchController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $response = $this->batchService->getBatch($id, $this->startTime);
+        $data = $this->batchService->getBatch($id);
+
+        $response =  [
+            "data" =>  $data ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+
         return Response::json($response);
 
     }

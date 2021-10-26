@@ -61,7 +61,16 @@ class InstituteController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $response = $this->instituteService->getOneInstitute($id, $this->startTime);
+        $data = $this->instituteService->getOneInstitute($id);
+
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response);
     }
 

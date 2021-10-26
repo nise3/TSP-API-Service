@@ -133,9 +133,9 @@ class BranchService
     /**
      * @param int $id
      * @param Carbon $startTime
-     * @return array
+     * @return Branch
      */
-    public function getOneBranch(int $id, Carbon $startTime): array
+    public function getOneBranch(int $id, Carbon $startTime): Branch
     {
         /** @var Branch|Builder $branchBuilder */
         $branchBuilder = Branch::select([
@@ -188,16 +188,7 @@ class BranchService
         $branchBuilder->where('branches.id', $id);
 
         /** @var Branch $branch */
-        $branch = $branchBuilder->firstOrFail();
-
-        return [
-            "data" => $branch ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $branchBuilder->firstOrFail();
 
     }
 

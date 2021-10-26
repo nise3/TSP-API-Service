@@ -57,7 +57,16 @@ class CourseController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $response = $this->courseService->getOneCourse($id, $this->startTime);
+        $data = $this->courseService->getOneCourse($id);
+
+        $response = [
+            "data" => $data ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response);
     }
 

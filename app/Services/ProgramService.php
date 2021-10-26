@@ -105,10 +105,9 @@ class ProgramService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Program
      */
-    public function getOneProgramme(int $id, Carbon $startTime): array
+    public function getOneProgramme(int $id): Program
     {
         /** @var Program|Builder $programmeBuilder */
         $programmeBuilder = Program::select([
@@ -136,16 +135,7 @@ class ProgramService
         $programmeBuilder->where('programs.id', '=', $id);
 
         /** @var Program $programme */
-        $programme = $programmeBuilder->firstOrFail();
-
-        return [
-            "data" => $programme,
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $programmeBuilder->firstOrFail();
     }
 
     /**

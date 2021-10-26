@@ -162,11 +162,10 @@ class CourseService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
      * @param bool $withTrainers
-     * @return array
+     * @return Course
      */
-    public function getOneCourse(int $id, Carbon $startTime, bool $withTrainers = false): array
+    public function getOneCourse(int $id, bool $withTrainers = false): Course
     {
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
@@ -255,17 +254,8 @@ class CourseService
             $trainers = $trainerBuilder->get();
 
             $course["trainers"] = $trainers->toArray();
-
         }
-
-        return [
-            "data" => $course ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $course;
     }
 
     /**

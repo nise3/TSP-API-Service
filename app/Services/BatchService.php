@@ -171,10 +171,9 @@ class BatchService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Batch
      */
-    public function getBatch(int $id, Carbon $startTime): array
+    public function getBatch(int $id): Batch
     {
         /** @var Batch|Builder $batchBuilder */
 
@@ -239,17 +238,7 @@ class BatchService
         $batchBuilder->with('trainers');
 
         /** @var Batch $batch */
-        $batch = $batchBuilder->first();
-
-        return [
-            "data" => $batch ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-
+        return $batchBuilder->firstOrFail();
     }
 
 

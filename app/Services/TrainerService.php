@@ -201,10 +201,9 @@ class TrainerService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Trainer
      */
-    public function getOneTrainer(int $id, Carbon $startTime): array
+    public function getOneTrainer(int $id): Trainer
     {
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
@@ -314,15 +313,7 @@ class TrainerService
         $trainerBuilder->where('trainers.id', $id);
 
         /** @var Trainer $trainer */
-        $trainer = $trainerBuilder->firstOrFail();
-        return [
-            "data" => $trainer,
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $trainerBuilder->firstOrFail();
     }
 
     /**

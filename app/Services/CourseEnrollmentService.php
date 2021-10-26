@@ -165,11 +165,9 @@ class CourseEnrollmentService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @param bool $withTrainers
-     * @return array
+     * @return CourseEnrollment
      */
-    public function getOneCourseEnrollment(int $id, Carbon $startTime, bool $withTrainers = false): array
+    public function getOneCourseEnrollment(int $id): CourseEnrollment
     {
         /** @var CourseEnrollment|Builder $courseEnrollmentBuilder */
         $courseEnrollmentBuilder = CourseEnrollment::select(
@@ -233,17 +231,7 @@ class CourseEnrollmentService
         $courseEnrollmentBuilder->with('miscellaneous');
         $courseEnrollmentBuilder->with('physicalDisabilities');
 
-        $courseEnrollment = $courseEnrollmentBuilder->first();
-
-
-        return [
-            "data" => $courseEnrollment ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $courseEnrollmentBuilder->firstOrFail();
     }
 
     /**

@@ -159,12 +159,11 @@ class TrainingCenterService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return TrainingCenter
      */
-    public function getOneTrainingCenter(int $id, Carbon $startTime): array
+    public function getOneTrainingCenter(int $id): TrainingCenter
     {
-        /** @var Builder $trainingCenterBuilder */
+        /** @var TrainingCenter|Builder $trainingCenterBuilder */
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
@@ -224,16 +223,7 @@ class TrainingCenterService
 
         $trainingCenterBuilder->where('training_centers.id', '=', $id);
         /** @var TrainingCenter $trainingCenter */
-        $trainingCenter = $trainingCenterBuilder->firstOrFail();
-
-        return [
-            "data" => $trainingCenter ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $trainingCenterBuilder->firstOrFail();
     }
 
     /**

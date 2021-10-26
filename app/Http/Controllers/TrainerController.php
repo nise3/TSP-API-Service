@@ -60,7 +60,15 @@ class TrainerController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $response = $this->trainerService->getOneTrainer($id, $this->startTime);
+        $data = $this->trainerService->getOneTrainer($id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ]
+        ];
         return Response::json($response);
     }
 

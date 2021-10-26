@@ -60,7 +60,17 @@ class BranchController extends Controller
      */
     public function read($id): JsonResponse
     {
-        $response = $this->branchService->getOneBranch($id, $this->startTime);
+        $data = $this->branchService->getOneBranch($id, $this->startTime);
+
+        $response = [
+            "data" => $data ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
         return Response::json($response);
 
     }

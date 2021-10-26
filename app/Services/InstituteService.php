@@ -142,10 +142,9 @@ class InstituteService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Institute
      */
-    public function getOneInstitute(int $id, Carbon $startTime): array
+    public function getOneInstitute(int $id): Institute
     {
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
@@ -216,16 +215,7 @@ class InstituteService
         }
 
         /** @var Institute $institute */
-        $institute = $instituteBuilder->firstOrFail();
-
-        return [
-            "data" => $institute,
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $instituteBuilder->firstOrFail();
     }
 
 
