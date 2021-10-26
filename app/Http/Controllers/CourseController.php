@@ -46,7 +46,7 @@ class CourseController extends Controller
     {
         $filter = $this->courseService->filterValidator($request)->validate();
         $response = $this->courseService->getCourseList($filter, $this->startTime);
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -63,11 +63,11 @@ class CourseController extends Controller
             "data" => $data ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "code" => ResponseAlias::HTTP_OK,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**

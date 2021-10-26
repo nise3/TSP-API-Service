@@ -50,7 +50,7 @@ class BatchController extends Controller
     {
         $filter = $this->batchService->filterValidator($request)->validate();
         $response = $this->batchService->getBatchList($filter, $this->startTime);
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -67,12 +67,12 @@ class BatchController extends Controller
             "data" =>  $data ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "code" => ResponseAlias::HTTP_OK,
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
             ]
         ];
 
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
 
     }
 

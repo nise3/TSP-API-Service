@@ -51,7 +51,7 @@ class TrainingCenterController extends Controller
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -67,12 +67,12 @@ class TrainingCenterController extends Controller
             "data" => $data ?: [],
             "_response_status" => [
                 "success" => true,
-                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "code" => ResponseAlias::HTTP_OK,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**

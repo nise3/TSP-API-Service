@@ -51,7 +51,7 @@ class ProgramController extends Controller
         $filter = $this->programmeService->filterValidator($request)->validate();
 
         $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -68,11 +68,11 @@ class ProgramController extends Controller
             "data" => $data,
             "_response_status" => [
                 "success" => true,
-                "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+                "code" => ResponseAlias::HTTP_OK,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response);
+        return Response::json($response,ResponseAlias::HTTP_OK);
     }
 
     /**
