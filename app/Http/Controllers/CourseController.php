@@ -46,7 +46,7 @@ class CourseController extends Controller
     {
         $filter = $this->courseService->filterValidator($request)->validate();
         $response = $this->courseService->getCourseList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -67,7 +67,7 @@ class CourseController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -78,9 +78,16 @@ class CourseController extends Controller
      */
     public function courseDetails(int $id): JsonResponse
     {
-        $withTrainers = true;
-        $response = $this->courseService->getOneCourse($id, $this->startTime, $withTrainers);
-        return Response::json($response);
+        $course = $this->courseService->getOneCourse($id, true);
+        $response = [
+            "data" => $course ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
