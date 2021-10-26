@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Facade;
  * @package App\Facade
  * @method static array|mixed getAuthUserWithRolePermission(string $idpUserId)
  *
- *
  * @see \App\Helpers\Classes\ServiceToServiceCallHandler
  */
 class ServiceToServiceCall extends Facade
