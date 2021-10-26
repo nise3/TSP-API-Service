@@ -469,7 +469,7 @@ class InstituteService
             'loc_division_id' => [
                 'required',
                 'integer',
-                'exists:loc_division,id,deleted_at,NULL'
+                'exists:loc_divisions,id,deleted_at,NULL'
             ],
             'loc_district_id' => [
                 'required',
@@ -669,7 +669,7 @@ class InstituteService
             'loc_division_id' => [
                 'required',
                 'integer',
-                'exists:loc_division,id,deleted_at,NULL'
+                'exists:loc_divisions,id,deleted_at,NULL'
             ],
             'loc_district_id' => [
                 'required',

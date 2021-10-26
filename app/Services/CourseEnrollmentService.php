@@ -835,7 +835,8 @@ class CourseEnrollmentService
                 $validationField = 'education_info.' . $eduLabelId . '.';
                 $rules[$validationField . 'exam_degree_id'] = [
                     'required',
-                    'int'
+                    'int',
+                    'exists:exam_degrees,id,deleted_at,NULL,education_level_id,'.$eduLabelId
                 ];
                 $rules[$validationField . 'exam_degree_name'] = [
                     Rule::requiredIf(function () use ($eduLabelId, $data) {
@@ -1025,7 +1026,7 @@ class CourseEnrollmentService
             }
             case EnrollmentEducation::YEAR_OF_PASS:
             {
-                return in_array($this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId), [EducationLevel::RESULT_GRADE, EducationLevel::RESULT_ENROLLED, EducationLevel::RESULT_AWARDED, EducationLevel::RESULT_PASS]);
+                return  $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) !== EducationLevel::RESULT_APPEARED;
             }
             case EnrollmentEducation::EXPECTED_YEAR_OF_PASS:
             {

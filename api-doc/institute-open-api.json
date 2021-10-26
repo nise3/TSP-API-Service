@@ -1588,6 +1588,8 @@
                                     "data": [
                                         {
                                             "id": 2,
+                                            "title": "Prof. Gonzalo Cole",
+                                            "title_en": "Deion Medhurst MD",
                                             "course_id": 1,
                                             "course_title_en": "Mrs. Lindsay Bernhard I",
                                             "course_title": "Tyreek Koelpin",
@@ -1724,6 +1726,8 @@
                                 "example": {
                                     "data": {
                                         "id": 40,
+                                        "title": "Prof. Gonzalo Cole",
+                                        "title_en": "Deion Medhurst MD",
                                         "course_id": 14,
                                         "course_title_en": "Miss Geraldine Vandervort",
                                         "course_title": "Jazlyn Dooley",
@@ -2966,6 +2970,8 @@
                                         "batches": [
                                             {
                                                 "id": "1",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
                                                 "number_of_seat": "43",
                                                 "registration_start_date": "2021-10-27",
                                                 "registration_end_date": "2021-10-27",
@@ -2976,6 +2982,8 @@
                                             },
                                             {
                                                 "id": "6",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
                                                 "number_of_seat": "57",
                                                 "registration_start_date": "2021-11-16",
                                                 "registration_end_date": "2021-11-16",
@@ -4288,14 +4296,14 @@
                         "type": "string",
                         "format": "password",
                         "minLength": 6,
-                        "description": "Minimum length 6 ",
+                        "description": "Must contain upper case and lower case letter and number.Minimum length 8",
                         "example": "Aa!1sS3#"
                     },
                     "password_confirmation": {
                         "type": "string",
                         "format": "password",
                         "minLength": 6,
-                        "description": "Minimum length 6 ",
+                        "description": "Must contain upper case and lower case letter and number.Minimum length 8",
                         "example": "Aa!1sS3#"
                     }
                 },
@@ -4739,6 +4747,12 @@
                 "type": "object",
                 "description": "Batch management Service",
                 "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -4784,6 +4798,7 @@
                     }
                 },
                 "required": [
+                    "title",
                     "institute_id",
                     "training_center_id",
                     "course_id",
@@ -4872,6 +4887,12 @@
                             "properties": {
                                 "id": {
                                     "type": "integer"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "title_en": {
+                                    "type": "string"
                                 },
                                 "number_of_seat": {
                                     "type": "integer"
