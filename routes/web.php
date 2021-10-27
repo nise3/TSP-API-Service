@@ -40,6 +40,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Course details  */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
+
+        /** Program details  */
+        $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
     });
 
 
