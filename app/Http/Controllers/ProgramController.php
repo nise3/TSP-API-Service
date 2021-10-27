@@ -187,7 +187,7 @@ class ProgramController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getProgramList(Request $request): JsonResponse
+    public function getPublicProgramList(Request $request): JsonResponse
     {
         $filter = $this->programmeService->filterValidator($request)->validate();
 
