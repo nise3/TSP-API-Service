@@ -295,7 +295,7 @@ class TrainingCenterService
         $rules = [
             'institute_id' => 'required|exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
-            'center_location_type' => 'nullable|int',
+            'center_location_type' => 'sometimes|required|int',
             'title' => 'required|string|max: 1000',
             'title_en' => 'nullable|string|max: 500',
             'loc_division_id' => ['nullable', 'integer'],
