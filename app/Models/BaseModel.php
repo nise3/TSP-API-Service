@@ -78,7 +78,7 @@ abstract class BaseModel extends Model
     public const GUARDIAN_INFO = 'guardian_info';
 
     /** Institute User Type*/
-    public const INSTITUTE_USER = 3;
+    public const INSTITUTE_USER_TYPE = 3;
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
