@@ -96,7 +96,6 @@ class CourseEnrollmentController extends Controller
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
-
         $validated = $this->courseEnrollService->courseEnrollmentValidator($request)->validate();
         DB::beginTransaction();
         try {
@@ -107,6 +106,9 @@ class CourseEnrollmentController extends Controller
             $this->courseEnrollService->storeEnrollmentGuardianInfo($validated, $courseEnroll);
             $this->courseEnrollService->storeEnrollmentMiscellaneousInfo($validated, $courseEnroll);
             $this->courseEnrollService->storeEnrollmentPhysicalDisabilities($validated, $courseEnroll);
+
+            unset($validated['email']); // youth can't update email. So remove this from array
+            unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
             $this->updateYouthProfileAfterEnrollment($validated);
             $response = [

@@ -241,9 +241,11 @@ class CourseEnrollmentService
     public function enrollCourse(array $data): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
-        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+
         $course = Course::find($data['course_id']);
         $data['institute_id'] = $course->institute_id;
+        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
 
@@ -514,15 +516,15 @@ class CourseEnrollmentService
                 'required',
                 'date',
             ],
-//            'email' => [
-//                'required',
-//                'email',
-//            ],
-//            "mobile" => [
-//                "required",
-//                "max:11",
-//                BaseModel::MOBILE_REGEX
-//            ],
+            'email' => [
+                'nullable',
+                'email',
+            ],
+            "mobile" => [
+                "nullable",
+                "max:11",
+                BaseModel::MOBILE_REGEX
+            ],
             'marital_status' => [
                 'required',
                 'int',
