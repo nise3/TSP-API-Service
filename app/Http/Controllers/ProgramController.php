@@ -183,4 +183,15 @@ class ProgramController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    /**
+     * @throws ValidationException
+     */
+    public function getProgramList(Request $request): JsonResponse
+    {
+        $filter = $this->programmeService->filterValidator($request)->validate();
+
+        $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
+        return Response::json($response,ResponseAlias::HTTP_OK);
+    }
 }
