@@ -78,7 +78,7 @@ class BatchService
             'batches.created_at',
             'batches.updated_at',
             'batches.deleted_at',
-        ]);
+        ])->byInstitute('batches');
 
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')

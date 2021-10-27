@@ -69,7 +69,7 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at',
             'training_centers.deleted_at',
-        ]);
+        ])->byInstitute('training_centers');
 
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
@@ -119,15 +119,15 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
         }
 
-        if(!empty($skillIds)){
-            $trainingCentersBuilder->join('training_center_skill','training_center_skill.training_center_id','=','training_centers.id');
-            $trainingCentersBuilder->whereIn('training_center_skill.skill_id',$skillIds);
+        if (!empty($skillIds)) {
+            $trainingCentersBuilder->join('training_center_skill', 'training_center_skill.training_center_id', '=', 'training_centers.id');
+            $trainingCentersBuilder->whereIn('training_center_skill.skill_id', $skillIds);
         }
 
-        if(is_numeric($locUpzilaId)){
-            $trainingCentersBuilder->where('training_centers.loc_upazila_id','=',$locUpzilaId);
-        } else if(is_numeric($locDistrictId)){
-            $trainingCentersBuilder->where('training_centers.loc_district_id','=',$locDistrictId);
+        if (is_numeric($locUpzilaId)) {
+            $trainingCentersBuilder->where('training_centers.loc_upazila_id', '=', $locUpzilaId);
+        } else if (is_numeric($locDistrictId)) {
+            $trainingCentersBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
         }
 
         $trainingCentersBuilder->groupBy('training_centers.id');
@@ -238,13 +238,14 @@ class TrainingCenterService
         $trainingCenter = new TrainingCenter();
         $trainingCenter->fill($data);
         $trainingCenter->Save();
-        if(!empty($data['skill_ids'])){
+        if (!empty($data['skill_ids'])) {
             $this->assignSkills($trainingCenter, $data['skill_ids']);
         }
         return $trainingCenter;
     }
 
-    public function assignSkills($trainingCenter, $skills){
+    public function assignSkills($trainingCenter, $skills)
+    {
         $skills = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
         $trainingCenter->skills()->sync($skills);
     }
@@ -261,7 +262,7 @@ class TrainingCenterService
         }
         $trainingCenter->fill($data);
         $trainingCenter->Save();
-        if(!empty($data['skill_ids'])){
+        if (!empty($data['skill_ids'])) {
             $this->assignSkills($trainingCenter, $data['skill_ids']);
         }
         return $trainingCenter;
@@ -283,8 +284,8 @@ class TrainingCenterService
      */
     public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
-        if($request->filled('skill_ids')){
-            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+        if ($request->filled('skill_ids')) {
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
 
@@ -414,8 +415,8 @@ class TrainingCenterService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        if($request->filled('skill_ids')){
-            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+        if ($request->filled('skill_ids')) {
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeFilterByInstitute;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrainingCenter extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes;
+    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes, ScopeFilterByInstitute;
 
     /**
      * @var string[]

@@ -5378,8 +5378,7 @@
                         1,
                         2,
                         3
-                    ],
-                    "default": 2
+                    ]
                 },
                 "description": "0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected"
             },
@@ -5392,8 +5391,7 @@
                     "enum": [
                         0,
                         1
-                    ],
-                    "default": 1
+                    ]
                 }
             },
             "location_latitude": {

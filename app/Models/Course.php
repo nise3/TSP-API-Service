@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeFilterByInstitute;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -42,7 +43,7 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeFilterByInstitute;
 
     protected $table = 'courses';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;

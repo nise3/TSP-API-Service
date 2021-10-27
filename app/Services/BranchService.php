@@ -60,7 +60,7 @@ class BranchService
             'branches.created_at',
             'branches.updated_at',
             'branches.deleted_at',
-        ]);
+        ])->byInstitute('branches');
 
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')

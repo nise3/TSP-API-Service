@@ -278,7 +278,7 @@ class InstituteService
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
-            'user_type' => BaseModel::INSTITUTE_USER,
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'institute_id' => $data['institute_id'],
             'username' => $data['contact_person_mobile'],
             'name_en' => $data['contact_person_name'],
@@ -308,7 +308,7 @@ class InstituteService
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-open-registration';
 
         $userPostField = [
-            'user_type' => BaseModel::INSTITUTE_USER,
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'username' => $data['contact_person_mobile'],
             'institute_id' => $data['institute_id'],
             'name_en' => $data['contact_person_name'],
