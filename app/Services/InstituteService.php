@@ -270,10 +270,10 @@ class InstituteService
 
     /**
      * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response
+     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
      * @throws RequestException
      */
-    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response
+    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
         $userPostField = [
