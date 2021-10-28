@@ -3582,6 +3582,14 @@
                         }
                     },
                     {
+                        "name": "program_title",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "institute_id",
                         "in": "query",
                         "required": false,
@@ -3595,6 +3603,14 @@
                         "required": false,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "course_title",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {

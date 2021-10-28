@@ -19,6 +19,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 
 class CourseEnrollmentService
@@ -37,9 +38,11 @@ class CourseEnrollmentService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $courseId = $request['course_id'] ?? "";
+        $courseTitle = $request['course_title'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
         $paymentStatus = $request['payment_status'] ?? "";
         $programId = $request['program_id'] ?? "";
+        $programTitle = $request['program_title'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -128,8 +131,18 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.course_id', '=', $courseId);
         }
 
+        if (!empty($courseTitle)) {
+            $coursesEnrollmentBuilder->where('courses.title', 'like', '%' . $courseTitle . '%');
+            $coursesEnrollmentBuilder->orWhere('courses.title_en', 'like', '%' . $courseTitle . '%');
+        }
+
         if (is_numeric($programId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.program_id', '=', $programId);
+        }
+
+        if (!empty($programTitle)) {
+            $coursesEnrollmentBuilder->where('programs.title', 'like', '%' . $programTitle . '%');
+            $coursesEnrollmentBuilder->orWhere('programs.title_en', 'like', '%' . $programTitle . '%');
         }
 
         if (is_numeric($trainingCenterId)) {
@@ -416,6 +429,7 @@ class CourseEnrollmentService
             'first_name' => 'nullable|max:500|min:2',
             'first_name_en' => 'nullable|max:250|min:2',
             'program_id' => 'nullable|int|gt:0',
+            'program_title' => 'nullable|string|min:2',
             'payment_status' => [
                 'nullable',
                 'int',
@@ -423,6 +437,7 @@ class CourseEnrollmentService
             ],
             'institute_id' => 'nullable|int|gt:0',
             'course_id' => 'nullable|int|gt:0',
+            'course_title' => 'nullable|string|min:2',
             'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
