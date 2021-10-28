@@ -243,6 +243,14 @@ class CourseEnrollmentService
 
         $courseEnrollmentBuilder->with('educations');
         $courseEnrollmentBuilder->with('addresses');
+//        $courseEnrollmentBuilder->with([
+//            'addresses' => function($query) {
+//                $query->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'enrollment_addresses.loc_division_id')
+//                ->leftJoin('loc_districts', 'loc_districts.id', '=', 'enrollment_addresses.loc_district_id')
+//                ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'enrollment_addresses.loc_upazila_id');
+//
+//            }
+//        ]);
         $courseEnrollmentBuilder->with('guardian');
         $courseEnrollmentBuilder->with('miscellaneous');
         $courseEnrollmentBuilder->with('physicalDisabilities');

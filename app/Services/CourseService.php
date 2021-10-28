@@ -643,7 +643,8 @@ class CourseService
                 'min:2'
             ],
             'course_fee' => [
-                'nullable',
+                'sometimes',
+                'required',
                 'numeric',
             ],
             'duration' => [
