@@ -94,17 +94,17 @@ class CourseEnrollmentService
                 ->whereNull('courses.deleted_at');
         });
 
-        $coursesEnrollmentBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("training_centers", function ($join) {
             $join->on('course_enrollments.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
         });
 
-        $coursesEnrollmentBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("programs", function ($join) {
             $join->on('course_enrollments.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
         });
 
-        $coursesEnrollmentBuilder->leftJoin("batches", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("batches", function ($join) {
             $join->on('course_enrollments.batch_id', '=', 'batches.id')
                 ->whereNull('batches.deleted_at');
         });
@@ -183,6 +183,8 @@ class CourseEnrollmentService
                 'training_centers.title as training_center_title',
                 'training_centers.title_en as training_center_title_en',
                 'course_enrollments.batch_id',
+                'batches.title as batch_title',
+                'batches.title_en as batch_title_en',
                 'course_enrollments.payment_status',
                 'course_enrollments.first_name',
                 'course_enrollments.first_name_en',
@@ -221,6 +223,11 @@ class CourseEnrollmentService
         $courseEnrollmentBuilder->leftJoin("programs", function ($join) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at')->where('programs.row_status', BaseModel::ROW_STATUS_ACTIVE);
+        });
+
+        $courseEnrollmentBuilder->leftJoin("batches", function ($join) {
+            $join->on('course_enrollments.batch_id', '=', 'batches.id')
+                ->whereNull('batches.deleted_at');
         });
 
         $courseEnrollmentBuilder->with('educations');
@@ -540,7 +547,7 @@ class CourseEnrollmentService
             'does_belong_to_ethnic_group' => [
                 'required',
                 'int',
-                Rule::in([BaseModel::TRUE,BaseModel::FALSE])
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
             'identity_number_type' => [
                 'int',
@@ -824,7 +831,7 @@ class CourseEnrollmentService
                 $rules[$validationField . 'exam_degree_id'] = [
                     'required',
                     'int',
-                    'exists:exam_degrees,id,deleted_at,NULL,education_level_id,'.$eduLabelId
+                    'exists:exam_degrees,id,deleted_at,NULL,education_level_id,' . $eduLabelId
                 ];
                 $rules[$validationField . 'exam_degree_name'] = [
                     Rule::requiredIf(function () use ($eduLabelId, $data) {
@@ -1014,7 +1021,7 @@ class CourseEnrollmentService
             }
             case EnrollmentEducation::YEAR_OF_PASS:
             {
-                return  $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) !== EducationLevel::RESULT_APPEARED;
+                return $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) !== EducationLevel::RESULT_APPEARED;
             }
             case EnrollmentEducation::EXPECTED_YEAR_OF_PASS:
             {
@@ -1176,17 +1183,17 @@ class CourseEnrollmentService
         $requestData = $request->all();
 
         $rules = [
-            'enrollment_id' => ['required','int','min:1','exists:course_enrollments,id,deleted_at,NULL'],
+            'enrollment_id' => ['required', 'int', 'min:1', 'exists:course_enrollments,id,deleted_at,NULL'],
             'batch_id' => [
                 'required',
                 'int',
                 'min:1',
                 'exists:batches,id,deleted_at,NULL',
-                function ($attr,$value,$failed){
+                function ($attr, $value, $failed) {
                     $selectedBatch = Batch::findOrFail($value);
                     $numberOfSeats = $selectedBatch->number_of_seats;
-                    $numberOfEnrollmentsInBatch = CourseEnrollment::where('batch_id',$value)->count();
-                    if($numberOfEnrollmentsInBatch >= $numberOfSeats){
+                    $numberOfEnrollmentsInBatch = CourseEnrollment::where('batch_id', $value)->count();
+                    if ($numberOfEnrollmentsInBatch >= $numberOfSeats) {
                         $failed("Batch maximum seats exceed");
                     }
                 }
