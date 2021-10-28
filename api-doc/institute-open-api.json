@@ -4430,7 +4430,7 @@
                             2,
                             3
                         ],
-                        "example": 1
+                        "example": 3
                     },
                     "title": {
                         "type": "string",
@@ -4484,7 +4484,8 @@
                 },
                 "required": [
                     "institute_id",
-                    "title"
+                    "title",
+                    "center_location_type"
                 ]
             },
             "branches": {

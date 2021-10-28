@@ -28,6 +28,15 @@ class TrainingCenter extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes, SoftDeletes, ScopeFilterByInstitute;
 
+    public const CENTER_LOCATION_TYPE_INSTITUTE_PREMISES = 1;
+    public const CENTER_LOCATION_TYPE_BRANCH_PREMISES = 2;
+    public const CENTER_LOCATION_TYPE_TRAINING_CENTER_PREMISES = 3;
+    public const CENTER_LOCATION_TYPES = [
+        self::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES,
+        self::CENTER_LOCATION_TYPE_BRANCH_PREMISES,
+        self::CENTER_LOCATION_TYPE_TRAINING_CENTER_PREMISES,
+    ];
+
     /**
      * @var string[]
      */
