@@ -61,6 +61,8 @@ class CourseEnrollmentService
                 'training_centers.title as training_center_title',
                 'training_centers.title_en as training_center_title_en',
                 'course_enrollments.batch_id',
+                'batches.title as batch_title',
+                'batches.title_en as batch_title_en',
                 'course_enrollments.payment_status',
                 'course_enrollments.first_name',
                 'course_enrollments.first_name_en',
@@ -90,25 +92,21 @@ class CourseEnrollmentService
         $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('courses.row_status', $rowStatus);
-            }*/
         });
 
         $coursesEnrollmentBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('training_centers.row_status', $rowStatus);
-            }*/
         });
 
         $coursesEnrollmentBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
-            $join->on('courses.program_id', '=', 'programs.id')
+            $join->on('course_enrollments.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('programs.row_status', $rowStatus);
-            }*/
+        });
+
+        $coursesEnrollmentBuilder->leftJoin("batches", function ($join) use ($rowStatus) {
+            $join->on('course_enrollments.batch_id', '=', 'batches.id')
+                ->whereNull('batches.deleted_at');
         });
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
@@ -1185,7 +1183,7 @@ class CourseEnrollmentService
                 'min:1',
                 'exists:batches,id,deleted_at,NULL',
                 function ($attr,$value,$failed){
-                    $selectedBatch = Batch::find($value);
+                    $selectedBatch = Batch::findOrFail($value);
                     $numberOfSeats = $selectedBatch->number_of_seats;
                     $numberOfEnrollmentsInBatch = CourseEnrollment::where('batch_id',$value)->count();
                     if($numberOfEnrollmentsInBatch >= $numberOfSeats){
@@ -1220,7 +1218,7 @@ class CourseEnrollmentService
      */
     public function assignBatch(array $data): mixed
     {
-        $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+        $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
         $courseEnrollment->batch_id = $data['batch_id'];
         $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
 
@@ -1235,7 +1233,8 @@ class CourseEnrollmentService
      */
     public function rejectCourseEnrollmentApplication(array $data): mixed
     {
-        $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+        $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
+        $courseEnrollment->batch_id = null;
         $courseEnrollment->row_status = BaseModel::ROW_STATUS_REJECTED;
 
         $courseEnrollment->save();
