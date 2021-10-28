@@ -242,9 +242,6 @@ class CourseEnrollmentService
         $courseEnrollmentBuilder->with('miscellaneous');
         $courseEnrollmentBuilder->with('physicalDisabilities');
 
-       // dd($courseEnrollmentBuilder->toSql());
-        //dd($courseEnrollmentBuilder->get());
-
         return $courseEnrollmentBuilder->firstOrFail();
     }
 
