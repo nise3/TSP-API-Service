@@ -128,6 +128,12 @@ class ExamDegreeSeeder extends Seeder
                 "title_en" => "Others"
             ],
             [
+                "education_level_id" => 5,
+                "code" => "DIPLOMA_IT",
+                "title" => "ডিপ্লোমা ইন আইটি",
+                "title_en" => "Diploma in IT"
+            ],
+            [
                 "education_level_id" => 6,
                 "code" => "BSC",
                 "title" => "ব্যাচেলর অফ সায়েন্স",
@@ -138,6 +144,12 @@ class ExamDegreeSeeder extends Seeder
                 "code" => "BA",
                 "title" => "ব্যাচেলর অফ আর্টস",
                 "title_en" => "Bachelor of Arts"
+            ],
+            [
+                "education_level_id" => 7,
+                "code" => "MSC",
+                "title" => "মাস্টার্স অফ সায়েন্স",
+                "title_en" => "Master of Science"
             ]
         ];
         ExamDegree::insert($examDegrees);
