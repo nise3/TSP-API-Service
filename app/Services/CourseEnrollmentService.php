@@ -14,14 +14,12 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
-use App\Models\Trainer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Symfony\Component\HttpFoundation\Response;
 
 class CourseEnrollmentService
 {
@@ -83,7 +81,7 @@ class CourseEnrollmentService
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
             ]
-        );
+        )->byInstitute('course_enrollments');
 
         if (is_numeric($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);

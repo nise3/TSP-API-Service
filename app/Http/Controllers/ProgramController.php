@@ -51,7 +51,7 @@ class ProgramController extends Controller
         $filter = $this->programmeService->filterValidator($request)->validate();
 
         $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -72,7 +72,7 @@ class ProgramController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -191,7 +191,7 @@ class ProgramController extends Controller
     {
         $filter = $this->programmeService->filterValidator($request)->validate();
 
-        $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        $response = $this->programmeService->getPublicProgramList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

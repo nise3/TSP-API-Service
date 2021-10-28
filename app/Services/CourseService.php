@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -94,7 +93,7 @@ class CourseService
                 'courses.updated_at',
                 'courses.deleted_at',
             ]
-        );
+        )->byInstitute('courses');
 
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')

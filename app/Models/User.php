@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Faker\Provider\Base;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -37,6 +38,7 @@ class User extends BaseModel implements
 {
     use Authenticatable, Authorizable;
 
+    protected $guarded = [];
     protected Collection $permissions;
     protected Role $role;
 

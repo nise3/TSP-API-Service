@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -26,6 +25,143 @@ class TrainingCenterService
      * @return array
      */
     public function getTrainingCenterList(array $request, Carbon $startTime): array
+    {
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $instituteId = $request['institute_id'] ?? "";
+        $branchId = $request['branch_id'] ?? "";
+        $skillIds = $request['skill_ids'] ?? [];
+        $locDistrictId = $request['loc_district_id'] ?? "";
+        $locUpzilaId = $request['loc_upazila_id'] ?? "";
+
+
+        /** @var TrainingCenter|Builder $trainingCentersBuilder */
+        $trainingCentersBuilder = TrainingCenter::select([
+            'training_centers.id',
+            'training_centers.center_location_type',
+            'training_centers.title_en',
+            'training_centers.title',
+            'training_centers.loc_division_id',
+            'loc_divisions.title as division_title',
+            'loc_divisions.title_en as division_title_en',
+            'training_centers.loc_district_id',
+            'loc_districts.title as district_title',
+            'loc_districts.title_en as district_title_en',
+            'training_centers.loc_upazila_id',
+            'loc_upazilas.title as upazila_title',
+            'loc_upazilas.title_en as upazila_title_en',
+            'training_centers.institute_id',
+            'institutes.title_en as institute_title_en',
+            'institutes.title as institutetitle',
+            'training_centers.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title as branch_title',
+            'training_centers.address',
+            'training_centers.google_map_src',
+            'training_centers.row_status',
+            'training_centers.created_by',
+            'training_centers.updated_by',
+            'training_centers.created_at',
+            'training_centers.updated_at',
+            'training_centers.deleted_at',
+        ])->byInstitute('training_centers');
+
+        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
+            $join->on('training_centers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+            /*if (is_numeric($rowStatus)) {
+                $join->where('institutes.row_status', $rowStatus);
+            }*/
+        });
+        $trainingCentersBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
+            $join->on('training_centers.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+            /*if (is_numeric($rowStatus)) {
+                $join->where('branches.row_status', $rowStatus);
+            }*/
+        });
+
+        $trainingCentersBuilder->leftJoin('loc_divisions', function ($join) {
+            $join->on('loc_divisions.id', '=', 'training_centers.loc_division_id')
+                ->whereNull('loc_divisions.deleted_at');
+        });
+
+        $trainingCentersBuilder->leftJoin('loc_districts', function ($join) {
+            $join->on('loc_districts.id', '=', 'training_centers.loc_district_id')
+                ->whereNull('loc_districts.deleted_at');
+        });
+
+        $trainingCentersBuilder->leftJoin('loc_upazilas', function ($join) {
+            $join->on('loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
+                ->whereNull('loc_upazilas.deleted_at');
+        });
+        $trainingCentersBuilder->orderBy('training_centers.id', $order);
+
+        if (is_numeric($instituteId)) {
+            $trainingCentersBuilder->where('training_centers.institute_id', '=', $instituteId);
+        }
+        if (is_numeric($branchId)) {
+            $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
+        }
+        if (is_numeric($rowStatus)) {
+            $trainingCentersBuilder->where('training_centers.row_status', '=', $rowStatus);
+        }
+
+        if (!empty($titleEn)) {
+            $trainingCentersBuilder->where('training_centers.title_en', 'like', '%' . $titleEn . '%');
+        }
+        if (!empty($title)) {
+            $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($skillIds)) {
+            $trainingCentersBuilder->join('training_center_skill', 'training_center_skill.training_center_id', '=', 'training_centers.id');
+            $trainingCentersBuilder->whereIn('training_center_skill.skill_id', $skillIds);
+        }
+
+        if (is_numeric($locUpzilaId)) {
+            $trainingCentersBuilder->where('training_centers.loc_upazila_id', '=', $locUpzilaId);
+        } else if (is_numeric($locDistrictId)) {
+            $trainingCentersBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
+        }
+
+        $trainingCentersBuilder->groupBy('training_centers.id');
+
+
+        /** @var Collection $trainingCentersBuilder */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $trainingCenters = $trainingCentersBuilder->paginate($pageSize);
+            $paginateData = (object)$trainingCenters->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $trainingCenters = $trainingCentersBuilder->get();
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $trainingCenters->toArray()['data'] ?? $trainingCenters->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getPublicTrainingCenterList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -119,15 +255,15 @@ class TrainingCenterService
             $trainingCentersBuilder->where('training_centers.title', 'like', '%' . $title . '%');
         }
 
-        if(!empty($skillIds)){
-            $trainingCentersBuilder->join('training_center_skill','training_center_skill.training_center_id','=','training_centers.id');
-            $trainingCentersBuilder->whereIn('training_center_skill.skill_id',$skillIds);
+        if (!empty($skillIds)) {
+            $trainingCentersBuilder->join('training_center_skill', 'training_center_skill.training_center_id', '=', 'training_centers.id');
+            $trainingCentersBuilder->whereIn('training_center_skill.skill_id', $skillIds);
         }
 
-        if(is_numeric($locUpzilaId)){
-            $trainingCentersBuilder->where('training_centers.loc_upazila_id','=',$locUpzilaId);
-        } else if(is_numeric($locDistrictId)){
-            $trainingCentersBuilder->where('training_centers.loc_district_id','=',$locDistrictId);
+        if (is_numeric($locUpzilaId)) {
+            $trainingCentersBuilder->where('training_centers.loc_upazila_id', '=', $locUpzilaId);
+        } else if (is_numeric($locDistrictId)) {
+            $trainingCentersBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
         }
 
         $trainingCentersBuilder->groupBy('training_centers.id');
@@ -238,13 +374,14 @@ class TrainingCenterService
         $trainingCenter = new TrainingCenter();
         $trainingCenter->fill($data);
         $trainingCenter->Save();
-        if(!empty($data['skill_ids'])){
+        if (!empty($data['skill_ids'])) {
             $this->assignSkills($trainingCenter, $data['skill_ids']);
         }
         return $trainingCenter;
     }
 
-    public function assignSkills($trainingCenter, $skills){
+    public function assignSkills($trainingCenter, $skills)
+    {
         $skills = Skill::whereIn("id", $skills)->orderBy('id', 'ASC')->pluck('id')->toArray();
         $trainingCenter->skills()->sync($skills);
     }
@@ -261,7 +398,7 @@ class TrainingCenterService
         }
         $trainingCenter->fill($data);
         $trainingCenter->Save();
-        if(!empty($data['skill_ids'])){
+        if (!empty($data['skill_ids'])) {
             $this->assignSkills($trainingCenter, $data['skill_ids']);
         }
         return $trainingCenter;
@@ -283,8 +420,8 @@ class TrainingCenterService
      */
     public function validator(Request $request, $id = null): \Illuminate\Contracts\Validation\Validator
     {
-        if($request->filled('skill_ids')){
-            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+        if ($request->filled('skill_ids')) {
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
 
@@ -419,8 +556,8 @@ class TrainingCenterService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        if($request->filled('skill_ids')){
-            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',',$request->get('skill_ids'));
+        if ($request->filled('skill_ids')) {
+            $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
 

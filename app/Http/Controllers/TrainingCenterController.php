@@ -51,7 +51,7 @@ class TrainingCenterController extends Controller
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -72,7 +72,7 @@ class TrainingCenterController extends Controller
             ]
         ];
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -192,7 +192,7 @@ class TrainingCenterController extends Controller
     {
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
-        $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
+        $response = $this->trainingCenterService->getPublicTrainingCenterList($filter, $this->startTime);
         return Response::json($response);
     }
 

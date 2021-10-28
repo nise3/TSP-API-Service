@@ -89,46 +89,6 @@ abstract class BaseModel extends Model
     public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
     public const CMS_CLIENT_URL_TYPE = "CMS";
 
-    public const DYNAMIC_FORM_FIELD_INFO = [
-        self::ETHNIC_GROUP_INFO => [
-            true,
-            false
-        ],
-        self::FREEDOM_FIGHTER_INFO => [
-            true,
-            false
-        ],
-        self::DISABILITY_INFO => [
-            true,
-            false
-        ],
-        self::SSC_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::HSC_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::HONOURS_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::MASTERS_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::OCCUPATION_INFO => [
-            true,
-            false
-        ],
-        self::GUARDIAN_INFO => [
-            true,
-            false
-        ]
-
-    ];
-
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
 

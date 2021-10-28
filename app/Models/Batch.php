@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Traits\Scopes\ScopeFilterByInstitute;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * Class Batche
+ * Class Batch
  * @package App\Models
  * @property int institute_id
  * @property int branch_id
@@ -31,7 +32,8 @@ use Illuminate\Support\Carbon;
 class Batch extends BaseModel
 {
 
-    use ScopeRowStatusTrait,SoftDeletes;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeFilterByInstitute;
+
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     /**
