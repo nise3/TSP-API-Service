@@ -71,7 +71,7 @@ class ExamDegreeSeeder extends Seeder
                 "education_level_id" => 3,
                 "code" => "SSC",
                 "title" => "এসএসসি",
-                "title_en" => "JSC"
+                "title_en" => "SSC"
             ],
             [
                 "education_level_id" => 3,

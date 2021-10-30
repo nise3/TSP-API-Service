@@ -107,7 +107,17 @@ class CourseEnrollment extends BaseModel
      */
     public function educations(): HasMany
     {
-        return $this->hasMany(EnrollmentEducation::class, 'course_enrollment_id');
+        return $this->hasMany(EnrollmentEducation::class, 'course_enrollment_id')
+            ->leftJoin('exam_degrees', 'exam_degrees.id', '=', 'enrollment_educations.exam_degree_id')
+            ->leftJoin('edu_groups', 'edu_groups.id', '=', 'enrollment_educations.edu_group_id')
+            ->leftJoin('edu_boards', 'edu_boards.id', '=', 'enrollment_educations.edu_board_id')
+            ->select(['enrollment_educations.*',
+                'exam_degrees.title as exam_degree_title',
+                'exam_degrees.title_en as exam_degree_title_en',
+                'edu_groups.title as edu_group_title',
+                'edu_groups.title_en as edu_group_title_en',
+                'edu_boards.title as edu_board_title',
+                'edu_boards.title_en as edu_board_tile_en']);
     }
 
     /**
@@ -115,7 +125,17 @@ class CourseEnrollment extends BaseModel
      */
     public function addresses(): HasMany
     {
-        return $this->hasMany(EnrollmentAddress::class, 'course_enrollment_id');
+        return $this->hasMany(EnrollmentAddress::class, 'course_enrollment_id')
+            ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'enrollment_addresses.loc_division_id')
+            ->leftJoin('loc_districts', 'loc_districts.id', '=', 'enrollment_addresses.loc_district_id')
+            ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'enrollment_addresses.loc_upazila_id')
+            ->select(['enrollment_addresses.*',
+                'loc_divisions.title as loc_division_title',
+                'loc_divisions.title_en as loc_division_title_en',
+                'loc_districts.title as loc_district_title',
+                'loc_districts.title_en as loc_district_title_en',
+                'loc_upazilas.title as loc_upazila_title',
+                'loc_upazilas.title_en as loc_upazila_tile_en']);
     }
 
     /**

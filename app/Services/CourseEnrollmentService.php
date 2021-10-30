@@ -14,6 +14,7 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
+use App\Models\YouthEducation;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -243,14 +244,6 @@ class CourseEnrollmentService
 
         $courseEnrollmentBuilder->with('educations');
         $courseEnrollmentBuilder->with('addresses');
-//        $courseEnrollmentBuilder->with([
-//            'addresses' => function($query) {
-//                $query->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'enrollment_addresses.loc_division_id')
-//                ->leftJoin('loc_districts', 'loc_districts.id', '=', 'enrollment_addresses.loc_district_id')
-//                ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'enrollment_addresses.loc_upazila_id');
-//
-//            }
-//        ]);
         $courseEnrollmentBuilder->with('guardian');
         $courseEnrollmentBuilder->with('miscellaneous');
         $courseEnrollmentBuilder->with('physicalDisabilities');
@@ -850,7 +843,10 @@ class CourseEnrollmentService
             foreach ($data['education_info'] as $eduLabelId => $fields) {
                 $validationField = 'education_info.' . $eduLabelId . '.';
                 $rules[$validationField . 'exam_degree_id'] = [
-                    'required',
+                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                        return $this->getRequiredStatus(EnrollmentEducation::DEGREE, $eduLabelId);
+                    }),
+                    'nullable',
                     'int',
                     'exists:exam_degrees,id,deleted_at,NULL,education_level_id,' . $eduLabelId
                 ];
