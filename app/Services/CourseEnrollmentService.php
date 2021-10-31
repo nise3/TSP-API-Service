@@ -1087,13 +1087,19 @@ class CourseEnrollmentService
             [
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
+                'courses.id as course_id',
+                'courses.cover_image',
                 'courses.code as course_code',
                 'courses.level as course_level',
                 'courses.language_medium as course_language_medium',
                 'courses.title as course_title',
                 'courses.title_en as course_title_en',
                 'courses.course_fee as course_fee',
-                'courses.duration as course_duration',
+                'courses.duration as duration',
+                'courses.created_at as course_created_at',
+                'institutes.id as institute_id',
+                'institutes.title as institute_title',
+                'institutes.title_en as institute_title_en',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -1104,12 +1110,13 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            if (is_numeric($rowStatus)) {
-                $join->where('courses.row_status', $rowStatus);
-            }
+        });
+        $coursesEnrollmentBuilder->join("institutes", function ($join) {
+            $join->on('course_enrollments.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
         });
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
