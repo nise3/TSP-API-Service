@@ -66,7 +66,7 @@ class AuthServiceProvider extends ServiceProvider
                 if ($userWithRolePermission) {
                     $role = app(Role::class);
                     if (isset($userWithRolePermission['role'])) {
-                        $role = app(Role::class, $userWithRolePermission['role']);
+                        $role = new Role($userWithRolePermission['role']);
                     }
 
                     $authUser = new User($userWithRolePermission);
