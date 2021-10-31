@@ -62,4 +62,9 @@ class EnrollmentEducation extends BaseModel
     /** Trigger Flag For Education Form Validation */
     public const EDUCATION_LEVEL_TRIGGER = "EDUCATION_LEVEL";
     public const RESULT_TRIGGER = "RESULT";
+
+    public function getResultAttribute($value)
+    {
+        return config("nise3.exam_degree_results." . $value);
+    }
 }

@@ -111,13 +111,17 @@ class CourseEnrollment extends BaseModel
             ->leftJoin('exam_degrees', 'exam_degrees.id', '=', 'enrollment_educations.exam_degree_id')
             ->leftJoin('edu_groups', 'edu_groups.id', '=', 'enrollment_educations.edu_group_id')
             ->leftJoin('edu_boards', 'edu_boards.id', '=', 'enrollment_educations.edu_board_id')
+            ->leftJoin('education_levels', 'education_levels.id', '=', 'enrollment_educations.education_level_id')
             ->select(['enrollment_educations.*',
                 'exam_degrees.title as exam_degree_title',
                 'exam_degrees.title_en as exam_degree_title_en',
                 'edu_groups.title as edu_group_title',
                 'edu_groups.title_en as edu_group_title_en',
                 'edu_boards.title as edu_board_title',
-                'edu_boards.title_en as edu_board_tile_en']);
+                'edu_boards.title_en as edu_board_title_en',
+                'education_levels.title as education_level_title',
+                'education_levels.title_en as education_level_title_en',
+            ]);
     }
 
     /**
