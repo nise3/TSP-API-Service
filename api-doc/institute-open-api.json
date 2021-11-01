@@ -3606,6 +3606,14 @@
                         }
                     },
                     {
+                        "name": "batch_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
                         "name": "course_title",
                         "in": "query",
                         "required": false,

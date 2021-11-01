@@ -44,6 +44,7 @@ class CourseEnrollmentService
         $paymentStatus = $request['payment_status'] ?? "";
         $programId = $request['program_id'] ?? "";
         $programTitle = $request['program_title'] ?? "";
+        $batchId = $request['batch_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -144,6 +145,10 @@ class CourseEnrollmentService
         if (!empty($programTitle)) {
             $coursesEnrollmentBuilder->where('programs.title', 'like', '%' . $programTitle . '%');
             $coursesEnrollmentBuilder->orWhere('programs.title_en', 'like', '%' . $programTitle . '%');
+        }
+
+        if(is_numeric($batchId)){
+            $coursesEnrollmentBuilder->where('course_enrollments.batch_id', $batchId);
         }
 
         if (is_numeric($trainingCenterId)) {
@@ -438,6 +443,7 @@ class CourseEnrollmentService
             ],
             'institute_id' => 'nullable|int|gt:0',
             'course_id' => 'nullable|int|gt:0',
+            'batch_id' => 'nullable|int|gt:0',
             'course_title' => 'nullable|string|min:2',
             'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
