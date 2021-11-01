@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Services\CourseEnrollmentService;
 use App\Services\CourseService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,10 @@ class CourseController extends Controller
      */
     public CourseService $courseService;
     /**
+     * @var CourseEnrollmentService
+     */
+    public CourseEnrollmentService $courseEnrollmentServiceService;
+    /**
      * @var Carbon
      */
 
@@ -27,11 +32,13 @@ class CourseController extends Controller
     /**
      * CourseController constructor.
      * @param CourseService $courseService
+     * @param CourseEnrollmentService $courseEnrollmentService
      */
-    public function __construct(CourseService $courseService)
+    public function __construct(CourseService $courseService, CourseEnrollmentService $courseEnrollmentService)
     {
 
         $this->courseService = $courseService;
+        $this->courseEnrollmentServiceService = $courseEnrollmentService;
         $this->startTime = Carbon::now();
     }
 
@@ -213,4 +220,26 @@ class CourseController extends Controller
         $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
         return Response::json($response);
     }
+
+    /**
+     * @param Request $request
+     * @param int $youthId
+     * @return array
+     */
+    public function youthFeedStatistics(Request $request, int $youthId): array
+    {
+        $requestData = $request->all();
+        if (!empty($requestData["skill_ids"])) {
+            $requestData["skill_ids"] = is_array($requestData['skill_ids']) ? $requestData['skill_ids'] : explode(',', $requestData['skill_ids']);
+        }
+        $totalCourseCount = $this->courseService->getCourseCount();
+        $enrolledCourseCount = $this->courseEnrollmentServiceService->getEnrolledCourseCount($youthId);
+        $skillMatchingCourseCount = $this->courseService->getSkillMatchingCourseCount($requestData["skill_ids"]);
+        return [
+            'total_courses' => $totalCourseCount,
+            'enrolled_courses' => $enrolledCourseCount,
+            'skill_matching_courses' => $skillMatchingCourseCount
+        ];
+    }
+
 }

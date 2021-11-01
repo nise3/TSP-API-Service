@@ -267,7 +267,7 @@ class CourseService
         $course->fill($data);
         $course->save();
 
-        if(!empty($data["skills"])){
+        if (!empty($data["skills"])) {
             $this->assignSkills($course, $data["skills"]);
         }
 
@@ -583,6 +583,16 @@ class CourseService
             ->toArray();
         $course->skills()->sync($skillIds);
 
+    }
+
+    public function getCourseCount(): int
+    {
+        return DB::table('courses')->count('id');
+    }
+
+    public function getSkillMatchingCourseCount(array $skillIds): int
+    {
+        return DB::table('course_skill')->whereIn('skill_id', $skillIds)->count('course_id');
     }
 
     /**
