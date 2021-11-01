@@ -14,15 +14,17 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
-use App\Models\YouthEducation;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
+/**
+ *
+ */
 class CourseEnrollmentService
 {
 
@@ -1278,4 +1280,14 @@ class CourseEnrollmentService
 
         return $courseEnrollment;
     }
+
+    /**
+     * @param int $youthId
+     * @return int
+     */
+    public function getEnrolledCourseCount(int $youthId): int
+    {
+        return DB::table('course_enrollments')->where('youth_id', $youthId)->count('id');
+    }
+
 }
