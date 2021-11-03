@@ -384,6 +384,7 @@ class CourseService
         $curDate = Carbon::now();
 
         /** Filters variables */
+        $searchText = $request['search_text'] ?? "";
         $locDistrictId = $request['loc_district_id'] ?? "";
         $locUpazilaId = $request['loc_upazila_id'] ?? "";
         $skillIds = $request['skill_ids'] ?? [];
@@ -432,18 +433,55 @@ class CourseService
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus, $instituteId) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus, $programId) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            /*if ($rowStatus) {
-                $join->where('programs.row_status', $rowStatus);
-            }*/
         });
+
+        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+        $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
+
+        if (!empty($searchText) || ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)){
+            $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
+            $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
+
+            /** Search courses by search_text */
+            if(!empty($searchText)){
+                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id','training_centers.loc_division_id');
+                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id','training_centers.loc_district_id');
+                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id','training_centers.loc_upazila_id');
+                $coursesBuilder->leftJoin('skills', 'skills.id','course_skill.skill_id');
+
+                $coursesBuilder->where(function ($builder) use ($searchText){
+                    $builder->orWhere('courses.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('courses.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_divisions.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_divisions.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_districts.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_districts.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_upazilas.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_upazilas.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('skills.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('skills.title_en', 'like', '%' . $searchText . '%');
+                });
+            }
+
+            if ($type == self::COURSE_FILTER_NEARBY) {
+                if ($locUpazilaId) {
+                    $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
+                } else if ($locDistrictId) {
+                    $coursesBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
+                }
+            }
+
+            if ($type == self::COURSE_FILTER_SKILL_MATCHING) {
+                if (is_array($skillIds) && count($skillIds) > 0) {
+                    $coursesBuilder->whereIn('course_skill.skill_id', $skillIds);
+                }
+            }
+        }
 
         if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
@@ -480,10 +518,6 @@ class CourseService
             $coursesBuilder->where('courses.level', '=', $courseLevel);
         }
 
-        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
-
-        $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
-
         if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
             if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
                 $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
@@ -494,40 +528,6 @@ class CourseService
             }
             if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
                 $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
-            }
-        }
-
-        if ($type == self::COURSE_FILTER_NEARBY) {
-            $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
-            if ($locUpazilaId) {
-                $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
-            } else if ($locDistrictId) {
-                $coursesBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
-            } else {
-                $response['data'] = [];
-                $response['_response_status'] = [
-                    "success" => true,
-                    "code" => Response::HTTP_OK,
-                    "query_time" => $startTime->diffInSeconds(Carbon::now()),
-                ];
-
-                return $response;
-            }
-        }
-
-        if ($type == self::COURSE_FILTER_SKILL_MATCHING) {
-            if (is_array($skillIds) && count($skillIds) > 0) {
-                $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
-                $coursesBuilder->whereIn('course_skill.skill_id', $skillIds);
-            } else {
-                $response['data'] = [];
-                $response['_response_status'] = [
-                    "success" => true,
-                    "code" => Response::HTTP_OK,
-                    "query_time" => $startTime->diffInSeconds(Carbon::now()),
-                ];
-
-                return $response;
             }
         }
 
@@ -804,7 +804,8 @@ class CourseService
             ],
             'institute_id' => 'nullable|int|gt:0',
             'program_id' => 'nullable|int|gt:0',
-            'course_name' => 'nullable|string'
+            'course_name' => 'nullable|string',
+            'search_text' => 'nullable|string|min:2'
         ];
 
         if (isset($requestData['availability'])) {
