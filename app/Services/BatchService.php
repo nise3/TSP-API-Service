@@ -33,6 +33,7 @@ class BatchService
      */
     public function getBatchList(array $request, Carbon $startTime): array
     {
+//         var_dump($request);
 
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
@@ -486,8 +487,9 @@ class BatchService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
-            'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
+            'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
+            'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
             'order' => [
                 'string',
