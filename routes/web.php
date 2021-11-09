@@ -81,4 +81,13 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->patch('trainers-restore-data/{id}', ['as' => 'branches.restore-data', 'uses' => 'TrainerController@restore']);
     $router->delete('trainers-force-delete/{id}', ['as' => 'branches.restore-data', 'uses' => 'TrainerController@forceDelete']);
 
+
+    /** Organization Title by Ids for Internal Api */
+    $router->post("get-institute-title-by-ids",
+        [
+            "as" => "institutes.get-institute-title-by-ids",
+            "uses" => "InstituteController@getInstituteTitleByIds"
+        ]
+    );
+
 });

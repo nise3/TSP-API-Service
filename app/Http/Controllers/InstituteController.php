@@ -246,6 +246,29 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+
+    /**
+     * @throws Throwable
+     */
+    public function getInstituteTitleByIds(Request $request): JsonResponse
+    {
+        throw_if(!is_array($request->get('organization_ids')), ValidationException::withMessages([
+            "The Organization ids must be array.[8000]"
+        ]));
+
+        $organizationTitle = $this->instituteService->getInstituteTitle($request);
+        $response = [
+            "data" => $organizationTitle,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Organization Title List.",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
     public function getTrashedData(Request $request)
     {
         try {
