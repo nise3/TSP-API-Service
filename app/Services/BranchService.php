@@ -60,44 +60,38 @@ class BranchService
             'branches.created_at',
             'branches.updated_at',
             'branches.deleted_at',
-        ]);
+        ])->byInstitute('branches');
 
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
-        $branchBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'branches.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_districts', function ($join) {
             $join->on('loc_districts.id', '=', 'branches.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
+
         });
 
-        $branchBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
+        $branchBuilder->leftJoin('loc_upazilas', function ($join) {
             $join->on('loc_upazilas.id', '=', 'branches.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
+
         });
 
 
         $branchBuilder->orderBy('branches.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $branchBuilder->where('branches.row_status', $rowStatus);
         }
 
@@ -108,12 +102,12 @@ class BranchService
             $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (is_numeric($instituteId)) {
             $branchBuilder->where('branches.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $branches */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $branches = $branchBuilder->paginate($pageSize);
             $paginateData = (object)$branches->toArray();
@@ -139,9 +133,9 @@ class BranchService
     /**
      * @param int $id
      * @param Carbon $startTime
-     * @return array
+     * @return Branch
      */
-    public function getOneBranch(int $id, Carbon $startTime): array
+    public function getOneBranch(int $id, Carbon $startTime): Branch
     {
         /** @var Branch|Builder $branchBuilder */
         $branchBuilder = Branch::select([
@@ -194,16 +188,7 @@ class BranchService
         $branchBuilder->where('branches.id', $id);
 
         /** @var Branch $branch */
-        $branch = $branchBuilder->first();
-
-        return [
-            "data" => $branch ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $branchBuilder->firstOrFail();
 
     }
 
@@ -262,7 +247,8 @@ class BranchService
         $titleBn = $request->query('title');
         $paginate = $request->query('page');
         $limit = $request->query('limit', 10);
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Branch|Builder $branchBuilder */
         $branchBuilder = Branch::onlyTrashed()->select([
@@ -271,7 +257,6 @@ class BranchService
             'branches.title',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
-            'branches.row_status',
             'branches.address',
             'branches.address_en',
             'branches.google_map_src',
@@ -283,7 +268,6 @@ class BranchService
         $branchBuilder->join('institutes', 'branches.institute_id', '=', 'institutes.id');
         $branchBuilder->orderBy('branches.id', $order);
 
-
         if (!empty($titleEn)) {
             $branchBuilder->where('branches.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
@@ -291,7 +275,7 @@ class BranchService
         }
 
         /** @var Collection $branchBuilder */
-        if ($paginate || $limit) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $branches = $branchBuilder->paginate($limit);
             $paginateData = (object)$branches->toArray();
@@ -302,9 +286,9 @@ class BranchService
         } else {
             $branches = $branchBuilder->get();
         }
+
         $response['order'] = $order;
         $response['data'] = $branches->toArray()['data'] ?? $branches->toArray();
-
 
         $response['_response_status'] = [
             "success" => true,
@@ -332,10 +316,7 @@ class BranchService
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
         $rules = [
             'title_en' => [
@@ -352,8 +333,8 @@ class BranchService
             ],
             'institute_id' => [
                 'required',
-                'int',
-                'exists:institutes,id',
+                'exists:institutes,id,deleted_at,NULL',
+                'int'
             ],
             'address' => [
                 'nullable',
@@ -372,6 +353,7 @@ class BranchService
             'loc_upazila_id' => ['nullable', 'integer'],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer'],
@@ -383,18 +365,13 @@ class BranchService
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be within ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         return Validator::make($request->all(), [
@@ -402,12 +379,13 @@ class BranchService
             'title' => 'nullable|max:600|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
+            'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                "nullable",
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],

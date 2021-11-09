@@ -42,59 +42,58 @@ class TrainingCenterController extends Controller
     /**
      * * Display a listing of the resource.
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
-        try {
-            $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
-        return Response::json($response);
+        $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
      *  * Display the specified resource
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function read(int $id): JsonResponse
     {
-        try {
-            $response = $this->trainingCenterService->getOneTrainingCenter($id, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
-        return Response::json($response);
+        $data = $this->trainingCenterService->getOneTrainingCenter($id);
+        $response = [
+            "data" => $data ?: [],
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
      *  * Store a newly created resource in storage.
      * @param Request $request
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->trainingCenterService->validator($request)->validate();
-        try {
-            $data = $this->trainingCenterService->store($validatedData);
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Training center added successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $data = $this->trainingCenterService->store($validatedData);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Training center added successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
@@ -102,100 +101,99 @@ class TrainingCenterController extends Controller
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
-        try {
-            $data = $this->trainingCenterService->update($trainingCenter, $validated);
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Training center updated successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $data = $this->trainingCenterService->update($trainingCenter, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Training center updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
      *  *  remove the specified resource from storage
      * @param int $id
-     * @return Exception|JsonResponse|Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
     public function destroy(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
-        try {
-            $this->trainingCenterService->destroy($trainingCenter);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Training center deleted successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->trainingCenterService->destroy($trainingCenter);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Training center deleted successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getTrashedData(Request $request)
+    /**
+     * @throws Throwable
+     */
+    public function getTrashedData(Request $request): JsonResponse
     {
-        try {
-            $response = $this->trainingCenterService->getTrainingCenterTrashList($request, $this->startTime);
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $response = $this->trainingCenterService->getTrainingCenterTrashList($request, $this->startTime);
         return Response::json($response);
     }
 
-    public function restore(int $id)
+    /**
+     * @throws Throwable
+     */
+    public function restore(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
-        try {
-            $this->trainingCenterService->restore($trainingCenter);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Training Center restored successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->trainingCenterService->restore($trainingCenter);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Training Center restored successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function forceDelete(int $id)
+    public function forceDelete(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::onlyTrashed()->findOrFail($id);
-        try {
-            $this->trainingCenterService->forceDelete($trainingCenter);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Training Center permanently deleted successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                ]
-            ];
-        } catch (Throwable $e) {
-            throw $e;
-        }
+        $this->trainingCenterService->forceDelete($trainingCenter);
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Training Center permanently deleted successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function getTrainingCentersWithFilters(Request $request): JsonResponse
+    {
+        $filter = $this->trainingCenterService->filterValidator($request)->validate();
+
+        $response = $this->trainingCenterService->getPublicTrainingCenterList($filter, $this->startTime);
+        return Response::json($response);
     }
 
 }

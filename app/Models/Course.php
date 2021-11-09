@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeFilterByInstitute;
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\File;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\File;
  * @property string|null title_en
  * @property string|null title
  * @property string code
+ * @property int id
  * @property int institute_id
  * @property int program_id
  * @property double course_fee
@@ -41,16 +43,65 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeFilterByInstitute;
 
     protected $table = 'courses';
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
 
     protected $casts = [
         'application_form_settings' => 'array'
     ];
+
+    const COURSE_LEVEL_BEGINNER = 1;
+    const COURSE_LEVEL_INTERMEDIATE = 2;
+    const COURSE_LEVEL_EXPERT = 3;
+
+    const COURSE_LEVELS = [
+        self::COURSE_LEVEL_BEGINNER,
+        self::COURSE_LEVEL_INTERMEDIATE,
+        self::COURSE_LEVEL_EXPERT
+    ];
+
+    const COURSE_LANGUAGE_MEDIUM_BENGALI = 1;
+    const COURSE_LANGUAGE_MEDIUM_ENGLISH = 2;
+
+    const COURSE_LANGUAGE_MEDIUMS = [
+        self::COURSE_LANGUAGE_MEDIUM_BENGALI,
+        self::COURSE_LANGUAGE_MEDIUM_ENGLISH,
+    ];
+
+    /** Course filter parameters */
+    const COURSE_FILTER_TYPE_RECENT = 'recent';
+    const COURSE_FILTER_TYPE_POPULAR = 'popular';
+    const COURSE_FILTER_TYPE_NEARBY = 'nearby';
+    const COURSE_FILTER_TYPE_SKILL_MATCHING = 'skill-matching';
+    const COURSE_FILTER_TYPE_TRENDING = 'trending';
+    const COURSE_FILTER_TYPES = [
+        self::COURSE_FILTER_TYPE_RECENT,
+        self::COURSE_FILTER_TYPE_POPULAR,
+        self::COURSE_FILTER_TYPE_NEARBY,
+        self::COURSE_FILTER_TYPE_SKILL_MATCHING,
+        self::COURSE_FILTER_TYPE_TRENDING
+    ];
+
+    const COURSE_FILTER_AVAILABILITY_RUNNING = 1;
+    const COURSE_FILTER_AVAILABILITY_UPCOMING = 2;
+    const COURSE_FILTER_AVAILABILITY_COMPLETED = 3;
+    const COURSE_FILTER_AVAILABILITIES = [
+        self::COURSE_FILTER_AVAILABILITY_RUNNING,
+        self::COURSE_FILTER_AVAILABILITY_UPCOMING,
+        self::COURSE_FILTER_AVAILABILITY_COMPLETED,
+    ];
+
+    const COURSE_FILTER_COURSE_TYPE_PAID = 1;
+    const COURSE_FILTER_COURSE_TYPE_FREE = 2;
+    const COURSE_FILTER_COURSE_TYPES = [
+        self::COURSE_FILTER_COURSE_TYPE_PAID,
+        self::COURSE_FILTER_COURSE_TYPE_FREE
+    ];
+
 
     /**
      * @return BelongsTo
@@ -74,5 +125,13 @@ class Course extends BaseModel
     public function program(): BelongsTo
     {
         return $this->belongsTo(Program::class, 'course_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'course_skill');
     }
 }

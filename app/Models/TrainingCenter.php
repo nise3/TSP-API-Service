@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use App\Traits\scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Scopes\ScopeFilterByInstitute;
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string title
  * @property int institute_id
  * @property int branch_id
+ * @property int id
  * @property  int row_status
  * @property string|null address
  * @property string|null google_map_src
@@ -24,11 +26,21 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrainingCenter extends BaseModel
 {
-    use ScopeRowStatusTrait;
+    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes, ScopeFilterByInstitute;
+
+    public const CENTER_LOCATION_TYPE_INSTITUTE_PREMISES = 1;
+    public const CENTER_LOCATION_TYPE_BRANCH_PREMISES = 2;
+    public const CENTER_LOCATION_TYPE_TRAINING_CENTER_PREMISES = 3;
+    public const CENTER_LOCATION_TYPES = [
+        self::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES,
+        self::CENTER_LOCATION_TYPE_BRANCH_PREMISES,
+        self::CENTER_LOCATION_TYPE_TRAINING_CENTER_PREMISES,
+    ];
+
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     /**
      * @return BelongsTo
@@ -52,5 +64,13 @@ class TrainingCenter extends BaseModel
     public function batch(): HasMany
     {
         return $this->hasMany(Batch::class, 'training_center_id', 'id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'training_center_skill');
     }
 }

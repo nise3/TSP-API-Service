@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Response;
+use App\Models\BaseModel;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -8,34 +8,39 @@ if (!function_exists("clientUrl")) {
     function clientUrl($type)
     {
         if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
-            if ($type == "CORE") {
+            if ($type == BaseModel::CORE_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.core.dev") : config("httpclientendpoint.core.prod");
-            } elseif ($type == "ORGANIZATION") {
+            } elseif ($type == BaseModel::ORGANIZATION_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.organization.dev") : config("httpclientendpoint.organization.prod");
-            } elseif ($type == "INSTITUTE") {
+            } elseif ($type == BaseModel::INSTITUTE_URL_CLIENT_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.institute.dev") : config("httpclientendpoint.institute.prod");
-
-            } elseif ($type == "IDP_SERVER") {
+            } elseif ($type == BaseModel::CMS_CLIENT_URL_TYPE) {
+                return config("nise3.is_dev_mode") ? config("httpclientendpoint.cms.dev") : config("httpclientendpoint.cms.prod");
+            } elseif ($type == BaseModel::YOUTH_CLIENT_URL_TYPE) {
+                return config("nise3.is_dev_mode") ? config("httpclientendpoint.youth.dev") : config("httpclientendpoint.youth.prod");
+            } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-
             }
+
         } else {
-            if ($type == "CORE") {
+            if ($type == BaseModel::CORE_CLIENT_URL_TYPE) {
                 return config("httpclientendpoint.core.local");
-            } elseif ($type == "ORGANIZATION") {
+            } elseif ($type == BaseModel::ORGANIZATION_CLIENT_URL_TYPE) {
                 return config("httpclientendpoint.organization.local");
-
-            } elseif ($type == "INSTITUTE") {
+            } elseif ($type == BaseModel::INSTITUTE_URL_CLIENT_TYPE) {
                 return config("httpclientendpoint.institute.local");
-
-            } elseif ($type == "IDP_SERVER") {
+            } elseif ($type == BaseModel::YOUTH_CLIENT_URL_TYPE) {
+                return config("httpclientendpoint.youth.local");
+            } elseif ($type == BaseModel::CMS_CLIENT_URL_TYPE) {
+                return config("httpclientendpoint.cms.local");
+            } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-
             }
         }
         return "";
     }
 }
+
 if (!function_exists('formatApiResponse')) {
     /**
      * @param $data
@@ -60,6 +65,7 @@ if (!function_exists("idpUserErrorMessage")) {
 
     /**
      * @param $exception
+     * @return array
      */
     function idUserErrorMessage($exception): array
     {
@@ -67,8 +73,8 @@ if (!function_exists("idpUserErrorMessage")) {
         $errors = [
             '_response_status' => [
                 'success' => false,
-                'code' => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
-                "message" => "Idp User unknown error",
+                'code' => $statusCode,
+                "message" => $exception->getMessage(),
                 "query_time" => 0
             ]
         ];

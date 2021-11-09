@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -91,31 +92,22 @@ class InstituteService
 
         $instituteBuilder->orderBy('institutes.id', $order);
 
-        $instituteBuilder->leftJoin('loc_divisions', function ($join) use ($rowStatus) {
+        $instituteBuilder->leftJoin('loc_divisions', function ($join) {
             $join->on('loc_divisions.id', '=', 'institutes.loc_division_id')
                 ->whereNull('loc_divisions.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions.row_status', $rowStatus);
-            }
         });
 
         $instituteBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
             $join->on('loc_districts.id', '=', 'institutes.loc_district_id')
                 ->whereNull('loc_districts.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts.row_status', $rowStatus);
-            }
         });
 
         $instituteBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas.id', '=', 'institutes.loc_upazila_id')
                 ->whereNull('loc_upazilas.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas.row_status', $rowStatus);
-            }
         });
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $instituteBuilder->where('institutes.row_status', $rowStatus);
         }
 
@@ -127,7 +119,7 @@ class InstituteService
         }
 
         /** @var Collection $institutes */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $institutes = $instituteBuilder->paginate($pageSize);
             $paginateData = (object)$institutes->toArray();
@@ -151,10 +143,9 @@ class InstituteService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Institute
      */
-    public function getOneInstitute(int $id, Carbon $startTime): array
+    public function getOneInstitute(int $id): Institute
     {
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::select([
@@ -220,21 +211,12 @@ class InstituteService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (!empty($id)) {
+        if (is_numeric($id)) {
             $instituteBuilder->where('institutes.id', $id);
         }
 
         /** @var Institute $institute */
-        $institute = $instituteBuilder->first();
-
-        return [
-            "data" => $institute ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $instituteBuilder->firstOrFail();
     }
 
 
@@ -304,27 +286,31 @@ class InstituteService
 
     /**
      * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response
+     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
      * @throws RequestException
      */
-    public function createUser(array $data)
+    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
-            'user_type' => BaseModel::INSTITUTE_USER,
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'institute_id' => $data['institute_id'],
             'username' => $data['contact_person_mobile'],
             'name_en' => $data['contact_person_name'],
-            'name_bn' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
             'email' => $data['contact_person_email'],
             'mobile' => $data['contact_person_mobile'],
         ];
 
-        return Http::retry(3)
-            ->withOptions(['verify' => false])
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) {
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
                 return $e;
             })
             ->json();
@@ -338,20 +324,24 @@ class InstituteService
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-open-registration';
 
         $userPostField = [
-            'user_type' => BaseModel::INSTITUTE_USER,
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'username' => $data['contact_person_mobile'],
             'institute_id' => $data['institute_id'],
             'name_en' => $data['contact_person_name'],
-            'name_bn' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
             'email' => $data['contact_person_email'],
             'mobile' => $data['contact_person_mobile'],
             'password' => $data['password']
         ];
 
-        return Http::retry(3)
-            ->withOptions(['verify' => false])
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) {
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
                 return $e;
             })
             ->json();
@@ -363,7 +353,7 @@ class InstituteService
         $titleBn = $request->query('title');
         $limit = $request->query('limit', 10);
         $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Institute|Builder $instituteBuilder */
         $instituteBuilder = Institute::onlyTrashed()->select([
@@ -396,7 +386,7 @@ class InstituteService
         }
 
         /** @var Collection $instituteBuilder */
-        if (is_int($paginate) || is_int($limit)) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $institutes = $instituteBuilder->paginate($limit);
             $paginateData = (object)$institutes->toArray();
@@ -438,46 +428,32 @@ class InstituteService
         $data = $request->all();
 
         if (!empty($data['phone_numbers'])) {
-            $data["phone_numbers"] = is_array($request['phone_numbers']) ? $request['phone_numbers'] : explode(',', $request['phone_numbers']);
+            $data["phone_numbers"] = isset($data['phone_numbers']) && is_array($data['phone_numbers']) ? $data['phone_numbers'] : explode(',', $data['phone_numbers']);
         }
         if (!empty($data['mobile_numbers'])) {
-            $data["mobile_numbers"] = is_array($request['mobile_numbers']) ? $request['mobile_numbers'] : explode(',', $request['mobile_numbers']);
+            $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
         }
 
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ],
-            "password.regex" => [
-                "code" => "",
-                "message" => [
-                    "Have At least one Uppercase letter",
-                    "At least one Lower case letter",
-                    "Also,At least one numeric value",
-                    "And, At least one special character",
-                    "Must be more than 8 characters long"
-                ]
-            ]
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         $rules = [
             'permission_sub_group_id' => [
                 'required_if:' . $id . ',==,null',
+                'nullable',
                 'int'
             ],
             "institute_type_id" => [
                 "required",
                 "int"
             ],
-
             'code' => [
                 'required',
                 'string',
                 'max:150',
-                'unique:institutes,code,' . $id
+                'unique:institutes,code,' . $id,
             ],
-
             'title' => [
                 'required',
                 'string',
@@ -489,25 +465,27 @@ class InstituteService
                 'max:500',
                 'min:2'
             ],
-
             'domain' => [
                 'nullable',
-                'string',
                 'unique:institutes,domain,' . $id,
+                'string',
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191'
             ],
             'loc_division_id' => [
-                'nullable',
-                'int'
+                'required',
+                'integer',
+                'exists:loc_divisions,id,deleted_at,NULL'
             ],
             'loc_district_id' => [
-                'nullable',
-                'int'
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
             ],
             'loc_upazila_id' => [
                 'nullable',
-                'int'
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
             ],
             'location_latitude' => [
                 'nullable',
@@ -539,7 +517,7 @@ class InstituteService
                 'nullable',
                 'string',
                 'max:20',
-                'regex:/^[0-9]*$/'
+                'regex:/^[0-9]+$/'
             ],
             'phone_numbers' => [
                 'nullable',
@@ -548,7 +526,7 @@ class InstituteService
             'phone_numbers.*' => [
                 'nullable',
                 'string',
-                'regex:/^[0-9]*$/'
+                'regex:/^[0-9]+$/'
             ],
             'primary_mobile' => [
                 'required',
@@ -556,6 +534,7 @@ class InstituteService
                 BaseModel::MOBILE_REGEX
             ],
             'mobile_numbers' => [
+                'nullable',
                 'array'
             ],
             'mobile_numbers.*' => [
@@ -566,12 +545,12 @@ class InstituteService
 
             'email' => [
                 'required',
-                'string',
-                'max:19'
+                'email',
+                'max:254'
             ],
 
             'name_of_the_office_head' => [
-                'nullable',
+                'required',
                 'string',
                 'max:500'
             ],
@@ -601,7 +580,12 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
-                BaseModel::MOBILE_REGEX
+                BaseModel::MOBILE_REGEX,
+                Rule::unique('institutes', 'contact_person_mobile')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) {
+                        return $query->whereNull('deleted_at');
+                    })
             ],
             'contact_person_email' => [
                 'required',
@@ -621,10 +605,10 @@ class InstituteService
                 'nullable',
                 'string'
             ],
-
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                'nullable',
+                Rule::in(Institute::ROW_STATUSES),
             ],
             'created_by' => ['nullable', 'int'],
             'updated_by' => ['nullable', 'int'],
@@ -633,7 +617,7 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
-    public function registerInstituteValidator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
         $rules = [
             'title' => [
@@ -670,7 +654,8 @@ class InstituteService
             ],
             'contact_person_mobile' => [
                 'required',
-                BaseModel::MOBILE_REGEX
+                BaseModel::MOBILE_REGEX,
+                'unique:institutes,contact_person_mobile',
             ],
             'contact_person_name' => [
                 'required',
@@ -684,7 +669,23 @@ class InstituteService
             ],
             'contact_person_email' => [
                 'required',
-                'email'
+                'email',
+                'unique:institutes,contact_person_email',
+            ],
+            'loc_division_id' => [
+                'required',
+                'integer',
+                'exists:loc_divisions,id,deleted_at,NULL'
+            ],
+            'loc_district_id' => [
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
             ],
             'address' => [
                 'required',
@@ -692,11 +693,18 @@ class InstituteService
                 'min:2'
             ],
             "password" => [
-                'required_with:password_confirmation',
-                'string',
-                'confirmed'
+                "required",
+                "confirmed",
+                Password::min(BaseModel::PASSWORD_MIN_LENGTH)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
             ],
             "password_confirmation" => 'required_with:password',
+            'row_status' => [
+                'nullable',
+                Rule::in([BaseModel::ROW_STATUS_PENDING])
+            ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
@@ -708,18 +716,12 @@ class InstituteService
      */
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be either ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be either 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -736,8 +738,9 @@ class InstituteService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                "nullable",
                 "int",
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+                Rule::in(Institute::ROW_STATUSES),
             ],
         ], $customMessage);
     }

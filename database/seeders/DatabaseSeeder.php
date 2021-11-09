@@ -15,9 +15,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             GeoLocationDatabaseSeeder::class,
+            SkillSeeder::class,
+            PhysicalDisabilitySeeder::class,
+            EducationLevelSeeder::class,
+            EduGroupSeeder::class,
+            EduBoardSeeder::class,
+            ExamDegreeSeeder::class,
             InstituteSeeder::class,
-            CourseBatchCompositeSeeder::class,
-            CourseEnrollmentSeeder::class
+            CourseEnrollmentSeeder::class,
         ]);
     }
 }

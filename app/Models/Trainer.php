@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeFilterByInstitute;
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -14,6 +13,8 @@ use Illuminate\Support\Carbon;
  * @property string trainer_name
  * @property string trainer_name_en
  * @property int institute_id
+ * @property int|null branch_id
+ * @property int|null training_center_id
  * @property string trainer_registration_number
  * @property string code
  * @property string email
@@ -36,8 +37,8 @@ use Illuminate\Support\Carbon;
  */
 class Trainer extends BaseModel
 {
-    use ScopeRowStatusTrait;
-    protected $guarded = ['id'];
+    use ScopeRowStatusTrait,SoftDeletes,ScopeFilterByInstitute;
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     protected $casts = [
         'skills' => 'array',

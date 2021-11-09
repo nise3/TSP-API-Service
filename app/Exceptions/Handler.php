@@ -2,12 +2,12 @@
 
 namespace App\Exceptions;
 
-//use ErrorException;
 use BadMethodCallException;
 use ErrorException;
 use Exception;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Client\RequestException as IlluminateRequestException;
@@ -19,7 +19,6 @@ use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 use ParseError;
 use PDOException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -32,12 +31,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
-        ModelNotFoundException::class,
-        ValidationException::class,
-    ];
+    protected $dontReport = [];
 
     /**
      * Report or log an exception.
@@ -63,22 +57,13 @@ class Handler extends ExceptionHandler
      *
      * @throws Throwable
      */
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param Request $request
-     * @param Throwable $e
-     * @return JsonResponse
-     *
-     * @throws Throwable
-     */
     public function render($request, Throwable $e): JsonResponse
     {
         $errors = [
             '_response_status' => [
                 'success' => false,
                 'code' => ResponseAlias::HTTP_INTERNAL_SERVER_ERROR,
-                "message" => "Unknown Error",
+                "message" => "Internal Server Error!",
                 "query_time" => 0
             ]
         ];
@@ -86,6 +71,9 @@ class Handler extends ExceptionHandler
         if ($e instanceof HttpResponseException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
             $errors['_response_status']['message'] = "Invalid Request Format";
+        } elseif ($e instanceof AuthenticationException) {
+            $errors['_response_status']['code'] = ResponseAlias::HTTP_UNAUTHORIZED;
+            $errors['_response_status']['message'] = $e->getMessage();
         } elseif ($e instanceof AuthorizationException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_FORBIDDEN;
             $errors['_response_status']['message'] = "Unable to Access";
@@ -100,13 +88,13 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = "Binding Resolution Error";
         } else if ($e instanceof IlluminateRequestException || $e instanceof RequestException) {
-            $errors=idUserErrorMessage($e);
+            $errors = idUserErrorMessage($e);
         } elseif ($e instanceof ModelNotFoundException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
             $errors['_response_status']['message'] = 'Entry or Row for ' . str_replace('App\\', '', $e->getModel()) . ' was not Found'; //$e->getMessage();
         } elseif ($e instanceof NotFoundHttpException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
-            $errors['_response_status']['message'] = "dkdkkd";
+            $errors['_response_status']['message'] = "Not Found";
         } elseif ($e instanceof BadMethodCallException) {
             $errors['_response_status']['message'] = "Bad Method has been Called";
         } elseif ($e instanceof ErrorException) {
@@ -120,9 +108,12 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof PDOException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = "PDO Error";
+        } elseif ($e instanceof \RuntimeException) {
+            $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
+            $errors['_response_status']['message'] = $e->getMessage();
         } elseif ($e instanceof Exception) {
             $errors['_response_status']['code'] = $e->getCode() ?? ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
-            $errors['_response_status']['message'] = "dhdhhdhdhdhhd";
+            $errors['_response_status']['message'] = $e->getMessage();
         }
         return response()->json($errors, $errors['_response_status']['code']);
 

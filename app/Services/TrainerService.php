@@ -96,81 +96,63 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
             'trainers.deleted_at',
-        ]);
+        ])->byInstitute('trainers');
 
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('training_centers.row_status', $rowStatus);
-            }
+            }*/
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
             $join->on('loc_divisions_present.id', '=', 'trainers.present_address_division_id')
                 ->whereNull('loc_divisions_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_districts as loc_districts_present', function ($join) {
             $join->on('loc_districts_present.id', '=', 'trainers.present_address_district_id')
                 ->whereNull('loc_districts_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_present', function ($join) {
             $join->on('loc_upazilas_present.id', '=', 'trainers.present_address_upazila_id')
                 ->whereNull('loc_upazilas_present.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas_present.row_status', $rowStatus);
-            }
         });
 
-        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin('loc_divisions as loc_divisions_permanent', function ($join) {
             $join->on('loc_divisions_permanent.id', '=', 'trainers.permanent_address_division_id')
                 ->whereNull('loc_divisions_permanent.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_divisions_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->leftJoin('loc_districts as loc_districts_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_districts_permanent.id', '=', 'trainers.permanent_address_district_id')
                 ->whereNull('loc_districts_permanent.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_districts_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->leftJoin('loc_upazilas as loc_upazilas_permanent', function ($join) use ($rowStatus) {
             $join->on('loc_upazilas_permanent.id', '=', 'trainers.permanent_address_upazila_id')
                 ->whereNull('loc_upazilas_permanent.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('loc_upazilas_permanent.row_status', $rowStatus);
-            }
         });
 
         $trainerBuilder->orderBy('trainers.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $trainerBuilder->where('trainers.row_status', $rowStatus);
         }
 
@@ -181,20 +163,20 @@ class TrainerService
             $trainerBuilder->where('trainers.trainer_name', 'like', '%' . $name . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (is_numeric($instituteId)) {
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
-        if (is_int($branchId)) {
+        if (is_numeric($branchId)) {
             $trainerBuilder->where('trainers.branch_id', '=', $branchId);
         }
 
-        if (is_int($trainingCenterId)) {
+        if (is_numeric($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
 
         /** @var Collection $trainers */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $trainerBuilder->paginate($pageSize);
             $paginateData = (object)$trainers->toArray();
@@ -219,10 +201,9 @@ class TrainerService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @return Trainer
      */
-    public function getOneTrainer(int $id, Carbon $startTime): array
+    public function getOneTrainer(int $id): Trainer
     {
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
@@ -332,15 +313,7 @@ class TrainerService
         $trainerBuilder->where('trainers.id', $id);
 
         /** @var Trainer $trainer */
-        $trainer = $trainerBuilder->first();
-        return [
-            "data" => $trainer ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        return $trainerBuilder->firstOrFail();
     }
 
     /**
@@ -349,7 +322,7 @@ class TrainerService
      */
     public function store(array $data): Trainer
     {
-        $trainer = new Trainer();
+        $trainer = app(Trainer::class);
         $trainer->fill($data);
         $trainer->Save();
         return $trainer;
@@ -382,7 +355,7 @@ class TrainerService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title');
         $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::onlyTrashed()->select([
@@ -498,7 +471,7 @@ class TrainerService
         }
 
         /** @var Collection $trainerBuilder */
-        if ($paginate || $limit) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $trainers = $trainerBuilder->paginate($limit);
             $paginateData = (object)$trainers->toArray();
@@ -540,27 +513,24 @@ class TrainerService
     public function validator(Request $request, int $id = null): Validator
     {
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
         $rules = [
             'institute_id' => [
                 'required',
+                'exists:institutes,id,deleted_at,NULL',
                 'int',
-                'exists:institutes,id'
             ],
             'branch_id' => [
                 'nullable',
+                'exists:branches,id,deleted_at,NULL',
                 'int',
-                'exists:branches,id'
             ],
             'training_center_id' => [
                 'nullable',
+                'exists:training_centers,id,deleted_at,NULL',
                 'int',
-                'exists:training_centers,id'
             ],
             'trainer_name' => [
                 'required',
@@ -574,20 +544,20 @@ class TrainerService
             ],
             'trainer_registration_number' => [
                 'required',
+                'unique:trainers,trainer_registration_number,' . $id,
                 'string',
-                'unique:trainers,trainer_registration_number,' . $id
             ],
             'email' => [
                 'required',
+                'unique:trainers,email,' . $id,
                 'email',
                 'max:150',
-                'unique:trainers,email,' . $id
             ],
             'mobile' => [
                 'required',
                 BaseModel::MOBILE_REGEX,
                 'max:15',
-                'unique:trainers,mobile,' . $id
+                'unique:trainers,mobile,' . $id,
             ],
             'date_of_birth' => [
                 'required',
@@ -598,22 +568,6 @@ class TrainerService
                 'string'
             ],
             'about_me_en' => [
-                'nullable',
-                'string'
-            ],
-            'educational_qualification' => [
-                'nullable',
-                'string'
-            ],
-            'educational_qualification_en' => [
-                'nullable',
-                'string'
-            ],
-            'skills' => [
-                'nullable',
-                'string'
-            ],
-            'skills_en' => [
                 'nullable',
                 'string'
             ],
@@ -644,20 +598,36 @@ class TrainerService
                 'string',
                 'max:50'
             ],
+            'educational_qualification' => [
+                'nullable',
+                'string'
+            ],
+            'educational_qualification_en' => [
+                'nullable',
+                'string'
+            ],
+            'skills' => [
+                'nullable',
+                'string'
+            ],
+            'skills_en' => [
+                'nullable',
+                'string'
+            ],
             'present_address_division_id' => [
                 'nullable',
                 'integer',
-                'exists:loc_divisions,id'
+                'exists:loc_divisions,id,deleted_at,NULL',
             ],
             'present_address_district_id' => [
                 'nullable',
                 'integer',
-                'exists:loc_districts,id'
+                'exists:loc_districts,id,deleted_at,NULL',
             ],
             'present_address_upazila_id' => [
                 'nullable',
                 'integer',
-                'exists:loc_upazilas,id'
+                'exists:loc_upazilas,id,deleted_at,NULL',
             ],
             'present_house_address' => [
                 'nullable',
@@ -669,18 +639,18 @@ class TrainerService
             ],
             'permanent_address_division_id' => [
                 'nullable',
+                'exists:loc_divisions,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_divisions,id'
             ],
             'permanent_address_district_id' => [
                 'nullable',
+                'exists:loc_districts,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_districts,id'
             ],
             'permanent_address_upazila_id' => [
                 'nullable',
+                'exists:loc_upazilas,id,deleted_at,NULL',
                 'integer',
-                'exists:loc_upazilas,id'
             ],
             'permanent_house_address' => [
                 'nullable',
@@ -700,6 +670,7 @@ class TrainerService
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => [
@@ -716,18 +687,12 @@ class TrainerService
 
     public function filterValidator(Request $request): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -735,14 +700,15 @@ class TrainerService
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|exists:institutes,id',
-            'branch_id' => 'int|exists:branches,id',
-            'training_center_id' => 'int|exists:training_centers,id',
+            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
+            'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
+            'training_center_id' => 'nullable|exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],

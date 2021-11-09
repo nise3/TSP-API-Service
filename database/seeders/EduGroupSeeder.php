@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\EduGroup;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class EduGroupSeeder extends Seeder
 {
@@ -14,6 +15,9 @@ class EduGroupSeeder extends Seeder
      */
     public function run()
     {
+        Schema::disableForeignKeyConstraints();
+
+        EduGroup::query()->truncate();
         $groups = [
             [
                 "title_en" => "Science",
@@ -35,5 +39,7 @@ class EduGroupSeeder extends Seeder
         ];
 
         EduGroup::insert($groups);
+
+        Schema::enableForeignKeyConstraints();
     }
 }

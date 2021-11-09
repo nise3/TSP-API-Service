@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class BaseModel
@@ -12,15 +11,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 abstract class BaseModel extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
+    public const COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE = ['id', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_SIMPLE = ['id', 'created_at', 'updated_at'];
     public const COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE = ['id', 'created_at', 'updated_at', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_NON_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
-    public const ROW_STATUS_ACTIVE = 1;
     public const ROW_STATUS_INACTIVE = 0;
+    public const ROW_STATUS_ACTIVE = 1;
+    public const ROW_STATUS_PENDING = 2;
+    public const ROW_STATUS_REJECTED = 3;
+
+
     public const ROW_ORDER_ASC = 'ASC';
     public const ROW_ORDER_DESC = 'DESC';
 
@@ -28,14 +32,18 @@ abstract class BaseModel extends Model
     public const INSTITUTE_TYPE_NON_GOVT = 2;
     public const INSTITUTE_TYPE_OTHERS_ = 3;
 
+
+    public const TRUE = 1;
+    public const FALSE = 0;
+
     /** Religions Mapping  */
     public const RELIGION_ISLAM = 1;
     public const RELIGION_HINDUISM = 2;
     public const RELIGION_CHRISTIANITY = 3;
     public const RELIGION_BUDDHISM = 4;
-    public const RELIGION_JUDAISM  = 5;
-    public const RELIGION_SIKHISM  = 6;
-    public const RELIGION_ETHNIC  = 7;
+    public const RELIGION_JUDAISM = 5;
+    public const RELIGION_SIKHISM = 6;
+    public const RELIGION_ETHNIC = 7;
     public const RELIGION_AGNOSTIC_ATHEIST = 8;
 
     /** Youth Identity Type */
@@ -70,56 +78,20 @@ abstract class BaseModel extends Model
     public const GUARDIAN_INFO = 'guardian_info';
 
     /** Institute User Type*/
-    public const INSTITUTE_USER = 3;
+    public const INSTITUTE_USER_TYPE = 3;
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
     public const ORGANIZATION_CLIENT_URL_TYPE = "ORGANIZATION";
     public const INSTITUTE_URL_CLIENT_TYPE = "INSTITUTE";
     public const CORE_CLIENT_URL_TYPE = "CORE";
+    public const YOUTH_CLIENT_URL_TYPE = "YOUTH";
     public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
-
-    public const DYNAMIC_FORM_FIELD_INFO = [
-        self::ETHNIC_GROUP_INFO => [
-            true,
-            false
-        ],
-        self::FREEDOM_FIGHTER_INFO => [
-            true,
-            false
-        ],
-        self::DISABILITY_INFO => [
-            true,
-            false
-        ],
-        self::SSC_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::HSC_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::HONOURS_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::MASTERS_PASSING_INFO => [
-            true,
-            false
-        ],
-        self::OCCUPATION_INFO => [
-            true,
-            false
-        ],
-        self::GUARDIAN_INFO => [
-            true,
-            false
-        ]
-
-    ];
+    public const CMS_CLIENT_URL_TYPE = "CMS";
 
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
 
+    public const PASSWORD_MIN_LENGTH = 8;
+    public const PASSWORD_MAX_LENGTH = 50;
 }

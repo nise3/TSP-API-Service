@@ -30,7 +30,8 @@ class ApiInfoController extends Controller
                 'Institute',
                 'Program',
                 'TrainingCenter',
-                'Trainer'
+                'Trainer',
+                'CourseEnrollment'
             ],
             'description' => [
                 'It is a institute management api service that manages services related to a institute'

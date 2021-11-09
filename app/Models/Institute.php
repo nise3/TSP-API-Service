@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 /**
@@ -20,10 +22,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Institute extends BaseModel
 {
+
+    public const ROW_STATUSES = [
+        self::ROW_STATUS_INACTIVE,
+        self::ROW_STATUS_ACTIVE, /** Approved Status */
+        self::ROW_STATUS_PENDING,
+        self::ROW_STATUS_REJECTED
+    ];
+
+    use ScopeRowStatusTrait, SoftDeletes;
+
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     /**
      *

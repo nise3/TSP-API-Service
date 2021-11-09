@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Course;
+use App\Models\Skill;
+use App\Models\Trainer;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
@@ -25,9 +27,16 @@ class CourseService
      * @param Carbon $startTime
      * @return array
      */
-
     public const COURSE_FILTER_POPULAR = "popular";
     public const COURSE_FILTER_RECENT = "recent";
+    public const COURSE_FILTER_NEARBY = "nearby";
+    public const COURSE_FILTER_SKILL_MATCHING = "skill-matching";
+    public const COURSE_FILTER_TRENDING = "trending";
+    public const COURSE_FILTER_AVAILABILITY_RUNNING = 1;
+    public const COURSE_FILTER_AVAILABILITY_UPCOMING = 2;
+    public const COURSE_FILTER_AVAILABILITY_COMPLETED = 3;
+    public const COURSE_FILTER_COURSE_TYPE_PAID = 1;
+    public const COURSE_FILTER_COURSE_TYPE_FREE = 2;
 
     public function getCourseList(array $request, Carbon $startTime): array
     {
@@ -44,6 +53,8 @@ class CourseService
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -57,14 +68,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -82,35 +93,35 @@ class CourseService
                 'courses.updated_at',
                 'courses.deleted_at',
             ]
-        );
+        )->byInstitute('courses');
 
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('institutes.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('branches.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_int($rowStatus)) {
+            /*if (is_numeric($rowStatus)) {
                 $join->where('programs.row_status', $rowStatus);
-            }
+            }*/
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
 
-        if (is_int($rowStatus)) {
+        if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
@@ -121,12 +132,12 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
         }
 
-        if (is_int($instituteId)) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
         /** @var Collection $courses */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -150,16 +161,18 @@ class CourseService
 
     /**
      * @param int $id
-     * @param Carbon $startTime
-     * @return array
+     * @param bool $withTrainers
+     * @return Course
      */
-    public function getOneCourse(int $id, Carbon $startTime): array
+    public function getOneCourse(int $id, bool $withTrainers = false): Course
     {
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
             [
                 'courses.id',
                 'courses.code',
+                'courses.level',
+                'courses.language_medium',
                 'courses.institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -173,14 +186,14 @@ class CourseService
                 'courses.title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.objectives',
                 'courses.objectives_en',
-                'courses.contents',
-                'courses.contents_en',
+                'courses.lessons',
+                'courses.lessons_en',
                 'courses.training_methodology',
                 'courses.training_methodology_en',
                 'courses.evaluation_system',
@@ -205,29 +218,43 @@ class CourseService
                 ->whereNull('institutes.deleted_at');
         });
 
-        $courseBuilder->join("branches", function ($join) {
+        $courseBuilder->leftJoin("branches", function ($join) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
         });
 
-        $courseBuilder->join("programs", function ($join) {
+        $courseBuilder->leftJoin("programs", function ($join) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
         });
 
         $courseBuilder->where('courses.id', '=', $id);
 
-        /** @var Course $course */
-        $course = $courseBuilder->first();
+        $courseBuilder->with('skills');
 
-        return [
-            "data" => $course ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => Response::HTTP_OK,
-                "query_time" => $startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        /** @var Course $course */
+        $course = $courseBuilder->firstOrFail();
+
+        if ($withTrainers == true) {
+            /** @var Builder $trainerBuilder */
+            $trainerBuilder = Trainer::select([
+                'trainers.trainer_name',
+                'trainers.trainer_name_en',
+                'trainers.email',
+                'trainers.mobile',
+            ]);
+            $trainerBuilder->join('trainer_batch', 'trainer_batch.trainer_id', '=', 'trainers.id');
+            $trainerBuilder->join('batches', 'trainer_batch.batch_id', '=', 'batches.id');
+            $trainerBuilder->where('batches.course_id', $id);
+            $trainerBuilder->orderBy('trainers.id', 'ASC');
+            $trainerBuilder->groupBy('trainers.id');
+
+            /** @var Collection $trainers */
+            $trainers = $trainerBuilder->get();
+
+            $course["trainers"] = $trainers->toArray();
+        }
+        return $course;
     }
 
     /**
@@ -239,6 +266,11 @@ class CourseService
         $course = new Course();
         $course->fill($data);
         $course->save();
+
+        if (!empty($data["skills"])) {
+            $this->assignSkills($course, $data["skills"]);
+        }
+
         return $course;
     }
 
@@ -251,6 +283,7 @@ class CourseService
     {
         $course->fill($data);
         $course->save();
+        $this->assignSkills($course, $data["skills"]);
         return $course;
     }
 
@@ -270,7 +303,7 @@ class CourseService
         $titleEn = $request->query('title_en');
         $titleBn = $request->query('title');
         $paginate = $request->query('page');
-        $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
+        $order = $request->filled('order') ? $request->query('order') : 'ASC';
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::onlyTrashed()->select(
@@ -284,10 +317,10 @@ class CourseService
                 'courses.title',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
+                'courses.overview',
                 'courses.target_group',
                 'courses.objectives',
-                'courses.contents',
+                'courses.lessons',
                 'courses.training_methodology',
                 'courses.evaluation_system',
                 'courses.prerequisite',
@@ -310,7 +343,7 @@ class CourseService
         }
 
         /** @var Collection $courses */
-        if ($paginate || $limit) {
+        if (is_numeric($paginate) || is_numeric($limit)) {
             $limit = $limit ?: 10;
             $courses = $coursesBuilder->paginate($limit);
             $paginateData = (object)$courses->toArray();
@@ -342,18 +375,26 @@ class CourseService
         return $courses->forceDelete();
     }
 
-
-    /**Filter courses by popular, recent, nearby, skill matching*/
+    /** Filter courses by popular, recent, nearby, skill matching */
     public function getFilterCourses(array $request, Carbon $startTime, string $type = null): array
     {
-        $title = $request['title'] ?? "";
-        $titleEn = $request['title_en'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
-        $instituteId = $request['institute_id'] ?? "";
-        $programId = $request['program_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $curDate = Carbon::now();
+
+        /** Filters variables */
+        $searchText = $request['search_text'] ?? "";
+        $locDistrictId = $request['loc_district_id'] ?? "";
+        $locUpazilaId = $request['loc_upazila_id'] ?? "";
+        $skillIds = $request['skill_ids'] ?? [];
+        $instituteId = $request['institute_id'] ?? "";
+        $programId = $request['program_id'] ?? "";
+        $availability = $request['availability'] ?? "";
+        $language = $request['language_medium'] ?? "";
+        $courseType = $request['course_type'] ?? "";
+        $courseName = $request['course_name'] ?? "";
+        $courseLevel = $request['level'] ?? "";
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
@@ -370,8 +411,8 @@ class CourseService
                 'programs.title_en as program_title_en',
                 'courses.course_fee',
                 'courses.duration',
-                'courses.description',
-                'courses.description_en',
+                'courses.overview',
+                'courses.overview_en',
                 'courses.target_group',
                 'courses.target_group_en',
                 'courses.prerequisite',
@@ -389,50 +430,118 @@ class CourseService
             ]
         );
 
-        $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $coursesBuilder->join("institutes", function ($join) use ($rowStatus, $instituteId) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }
         });
 
-        $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
+        $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus, $programId) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            if (is_int($rowStatus)) {
-                $join->where('programs.row_status', $rowStatus);
-            }
         });
 
-        if (is_int($rowStatus)) {
+        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+        $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
+
+        if (!empty($searchText) || ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)){
+            $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
+            $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
+
+            /** Search courses by search_text */
+            if(!empty($searchText)){
+                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id','training_centers.loc_division_id');
+                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id','training_centers.loc_district_id');
+                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id','training_centers.loc_upazila_id');
+                $coursesBuilder->leftJoin('skills', 'skills.id','course_skill.skill_id');
+
+                $coursesBuilder->where(function ($builder) use ($searchText){
+                    $builder->orWhere('courses.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('courses.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_divisions.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_divisions.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_districts.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_districts.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_upazilas.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('loc_upazilas.title_en', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('skills.title', 'like', '%' . $searchText . '%');
+                    $builder->orWhere('skills.title_en', 'like', '%' . $searchText . '%');
+                });
+            }
+
+            if ($type == self::COURSE_FILTER_NEARBY) {
+                if ($locUpazilaId) {
+                    $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
+                } else if ($locDistrictId) {
+                    $coursesBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
+                }
+            }
+
+            if ($type == self::COURSE_FILTER_SKILL_MATCHING) {
+                if (is_array($skillIds) && count($skillIds) > 0) {
+                    $coursesBuilder->whereIn('course_skill.skill_id', $skillIds);
+                }
+            }
+        }
+
+        if (is_numeric($rowStatus)) {
             $coursesBuilder->where('courses.row_status', $rowStatus);
         }
 
-        if (!empty($title)) {
-            $coursesBuilder->where('courses.title', 'like', '%' . $title . '%');
-        }
-        if (!empty($titleEn)) {
-            $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
-        }
-
-        if (is_int($instituteId)) {
+        if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        if (is_int($programId)) {
+        if (is_numeric($programId)) {
             $coursesBuilder->where('courses.program_id', '=', $programId);
         }
 
-        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+        if (is_numeric($language)) {
+            $coursesBuilder->where('courses.language_medium', '=', $language);
+        }
 
-        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
-            $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
-            $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
-            $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
-            if ($type == "recent") {
-                $coursesBuilder->orWhereDate('batches.registration_start_date', '>', $curDate);
+        if (is_numeric($courseType)) {
+            if ($courseType == self::COURSE_FILTER_COURSE_TYPE_PAID) {
+                $coursesBuilder->where('courses.course_fee', '!=', 0);
+                $coursesBuilder->Where('courses.course_fee', '!=', null);
+            } else if ($courseType == self::COURSE_FILTER_COURSE_TYPE_FREE) {
+                $coursesBuilder->where('courses.course_fee', '=', 0);
+                $coursesBuilder->orWhere('courses.course_fee', '=', null);
             }
+        }
+
+        if (!empty($courseName)) {
+            $coursesBuilder->where('courses.title', 'like', '%' . $courseName . '%');
+            $coursesBuilder->orWhere('courses.title_en', 'like', '%' . $courseName . '%');
+        }
+
+        if (is_numeric($courseLevel)) {
+            $coursesBuilder->where('courses.level', '=', $courseLevel);
+        }
+
+        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
+            if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
+                $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
+                $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
+            }
+            if ($type != self::COURSE_FILTER_POPULAR && ($type == self::COURSE_FILTER_RECENT || $availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING)) {
+                $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
+            }
+            if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
+                $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
+            }
+        }
+
+        if ($type == self::COURSE_FILTER_TRENDING) {
+            $randomIds = [];
+            for ($i = 0; $i < 10; $i++) {
+                $id = rand(1, 20);
+                if (in_array($id, $randomIds)) {
+                    $i--;
+                    continue;
+                }
+                array_push($randomIds, $id);
+            }
+            $coursesBuilder->whereIn('courses.id', $randomIds);
         }
 
         $coursesBuilder->groupBy("courses.id");
@@ -440,7 +549,7 @@ class CourseService
 
 
         /** @var Collection $courses */
-        if (is_int($paginate) || is_int($pageSize)) {
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $courses = $coursesBuilder->paginate($pageSize);
             $paginateData = (object)$courses->toArray();
@@ -465,6 +574,27 @@ class CourseService
         return $response;
     }
 
+    private function assignSkills(Course $course, array $skills)
+    {
+        /** Assign skills to COURSE */
+        $skillIds = Skill::whereIn("id", $skills)
+            ->orderBy('id', 'ASC')
+            ->pluck('id')
+            ->toArray();
+        $course->skills()->sync($skillIds);
+
+    }
+
+    public function getCourseCount(): int
+    {
+        return DB::table('courses')->count('id');
+    }
+
+    public function getSkillMatchingCourseCount(array $skillIds): int
+    {
+        return DB::table('course_skill')->whereIn('skill_id', $skillIds)->count('course_id');
+    }
+
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
@@ -473,24 +603,37 @@ class CourseService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $requestData = $request->all();
 
-        if($request['application_form_settings']){
-            $request["application_form_settings"] = is_array($request['application_form_settings']) ? $request['application_form_settings'] : explode(',', $request['application_form_settings']);
+        if (!empty($requestData["skills"])) {
+            $requestData["skills"] = is_array($requestData['skills']) ? $requestData['skills'] : explode(',', $requestData['skills']);
         }
 
         $customMessage = [
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be either 1 or 0'
-            ]
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         $rules = [
-            'title_en' => [
-                'nullable',
+            'code' => [
+                'required',
                 'string',
-                'max:255',
-                'min:2'
+                'max:150',
+                'unique:courses,code,' . $id,
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL',
+            ],
+            'branch_id' => [
+                'nullable',
+                'int',
+                'exists:branches,id,deleted_at,NULL',
+            ],
+            'program_id' => [
+                'nullable',
+                'int',
+                'exists:programs,id,deleted_at,NULL',
             ],
             'title' => [
                 'required',
@@ -498,89 +641,83 @@ class CourseService
                 'max:1000',
                 'min:2'
             ],
-            'code' => [
-                'required',
-                'string',
-                'max:150',
-                'unique:courses,code,' . $id
-            ],
-            'institute_id' => [
+            "level" => [
                 'required',
                 'int',
-                'exists:institutes,id'
+                Rule::in(Course::COURSE_LEVELS)
             ],
-            'program_id' => [
+            'title_en' => [
                 'nullable',
-                'int',
-                'exists:programs,id'
+                'string',
+                'max:255',
+                'min:2'
             ],
             'course_fee' => [
+                'sometimes',
                 'required',
                 'numeric',
-                'min:0'
             ],
             'duration' => [
                 'nullable',
                 'numeric',
-                'max: 14',
             ],
-            'description' => [
+            'overview' => [
                 'nullable',
                 'string'
             ],
-            'description_en' => [
+            'overview_en' => [
                 'nullable',
                 'string'
-            ],
-            'target_group_en' => [
-                'nullable',
-                'string',
-                'max: 500',
             ],
             'target_group' => [
                 'nullable',
                 'string',
                 'max: 1000',
             ],
+            'target_group_en' => [
+                'nullable',
+                'string',
+                'max: 500',
+            ],
             'objectives' => [
                 'nullable',
-                'string'
-            ],
-
-            'application_form_settings.*' => [
                 'string'
             ],
             'objectives_en' => [
                 'nullable',
                 'string'
             ],
-            'contents' => [
+            'lessons' => [
                 'nullable',
                 'string'
             ],
-            'contents_en' => [
+            'lessons_en' => [
                 'nullable',
                 'string'
+            ],
+            "language_medium" => [
+                "required",
+                Rule::in(Course::COURSE_LANGUAGE_MEDIUMS)
             ],
             'training_methodology' => [
                 'nullable',
                 'string',
-                'max: 1000',
+                'max:1000',
             ],
             'training_methodology_en' => [
                 'nullable',
                 'string',
-                'max: 600',
+                'max:600',
             ],
             'evaluation_system' => [
                 'nullable',
                 'string',
-                'max: 1000',
+                'max:1000',
             ],
             'evaluation_system_en' => [
                 'nullable',
                 'string',
-                'max: 500',
+                'max:500',
             ],
             'prerequisite' => [
                 'nullable',
@@ -600,55 +737,138 @@ class CourseService
             ],
             'cover_image' => [
                 'nullable',
+                'string'
+            ],
+            'application_form_settings' => [
+                'nullable',
                 'string',
-                'max:191',
+            ],
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
+                'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
+     * @param $type
      * @return Validator
      */
-    public function filterValidator(Request $request): Validator
+    public function filterValidator(Request $request, $type = null): Validator
     {
-        if (!empty($request['order'])) {
-            $request['order'] = strtoupper($request['order']);
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
         $customMessage = [
-            'order.in' => [
-                'code' => 30000,
-                "message" => 'Order must be within ASC or DESC',
-            ],
-            'row_status.in' => [
-                'code' => 30000,
-                'message' => 'Row status must be within 1 or 0'
-            ]
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|max:500|min:2',
-            'title' => 'nullable|max:1000|min:2',
+        $requestData = $request->all();
+
+        if (!empty($requestData['skill_ids'])) {
+            $requestData['skill_ids'] = is_array($requestData['skill_ids']) ? $requestData['skill_ids'] : explode(',', $requestData['skill_ids']);
+        }
+
+        $rules = [
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'int|gt:0',
-            'program_id' => 'nullable|int|gt:0',
             'order' => [
+                'nullable',
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
             'row_status' => [
+                'nullable',
                 "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+            'institute_id' => 'nullable|int|gt:0',
+            'program_id' => 'nullable|int|gt:0',
+            'course_name' => 'nullable|string',
+            'search_text' => 'nullable|string|min:2'
+        ];
+
+        if (isset($requestData['availability'])) {
+            $rules['availability'] = [
+                'nullable',
+                'integer',
+                Rule::in(Course::COURSE_FILTER_AVAILABILITIES)
+            ];
+        }
+
+        if (isset($requestData['language_medium'])) {
+            $rules['language_medium'] = [
+                'nullable',
+                'integer',
+                Rule::in(Course::COURSE_LANGUAGE_MEDIUMS)
+            ];
+        }
+
+        if (isset($requestData['course_type'])) {
+            $rules['course_type'] = [
+                'nullable',
+                'integer',
+                Rule::in(Course::COURSE_FILTER_COURSE_TYPES)
+            ];
+        }
+
+        if (isset($requestData['level'])) {
+            $rules['level'] = [
+                'nullable',
+                'integer',
+                Rule::in(Course::COURSE_LEVELS)
+            ];
+        }
+
+        if ($type && $type == Course::COURSE_FILTER_TYPE_NEARBY) {
+            $rules['loc_district_id'] = [
+                Rule::requiredIf(function () use ($requestData) {
+                    return (!isset($requestData['loc_upazila_id']));
+                }),
+                'nullable',
+                'integer'
+            ];
+            $rules['loc_upazila_id'] = [
+                'nullable',
+                'integer'
+            ];
+        }
+
+        if ($type && $type == Course::COURSE_FILTER_TYPE_SKILL_MATCHING) {
+            $rules['skill_ids'] = [
+                'required',
+                'array',
+                'min:1',
+                'max:10'
+            ];
+            $rules['skill_ids.*'] = [
+                'required',
+                'integer',
+                'distinct',
+                'min:1'
+            ];
+        }
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 }

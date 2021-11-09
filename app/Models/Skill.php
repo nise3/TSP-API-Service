@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Skill
@@ -12,16 +13,29 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class Skill extends BaseModel
 {
-    use HasFactory;
+
+    use SoftDeletes;
 
     public $timestamps = false;
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
     /**
      * @var string[]
      */
     protected $hidden = ["pivot"];
 
+    /**
+     * @return BelongsToMany
+     */
+    public function trainingCenters(): BelongsToMany
+    {
+        return $this->belongsToMany(TrainingCenter::class, 'training_center_skill');
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_skill');
+    }
 }

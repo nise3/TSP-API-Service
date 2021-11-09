@@ -15,7 +15,7 @@ class CreateInstitutesTable extends Migration
     {
         Schema::create('institutes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('institute_type_id')->default(0);
+            $table->unsignedInteger('institute_type_id')->default(2)->comment('1=> Govt, 2=> Non govt , 3=> Others');
             $table->string('code', 150);
             $table->string('title', 1000);
             $table->string('title_en', 500)->nullable();
@@ -24,6 +24,7 @@ class CreateInstitutesTable extends Migration
             $table->unsignedMediumInteger('loc_division_id')->nullable()->index('tsp_ins_loc_division_id_inx');
             $table->unsignedMediumInteger('loc_district_id')->nullable()->index('tsp_ins_loc_district_id_inx');
             $table->unsignedMediumInteger('loc_upazila_id')->nullable()->index('tsp_ins_loc_upazila_id_inx');
+
             $table->string('location_latitude', 50)->nullable();
             $table->string('location_longitude', 50)->nullable();
             $table->text('google_map_src')->nullable();
@@ -38,20 +39,23 @@ class CreateInstitutesTable extends Migration
             $table->string('phone_numbers', 400)->nullable();
             $table->string('primary_mobile', 15);
             $table->string('mobile_numbers', 400)->nullable();
-            $table->string('email', 150);
+            $table->string('email', 254);
             $table->string("name_of_the_office_head", 500)->nullable();
             $table->string("name_of_the_office_head_en")->nullable();
             $table->string("name_of_the_office_head_designation", 500)->nullable();
             $table->string("name_of_the_office_head_designation_en")->nullable();
             $table->string('contact_person_name', 500);
-            $table->string('contact_person_name_en', 250);
+            $table->string('contact_person_name_en', 250)->nullable();
             $table->string('contact_person_mobile', 15);
-            $table->string('contact_person_email', 191);
+            $table->string('contact_person_email', 254);
             $table->string('contact_person_designation', 500);
-            $table->string('contact_person_designation_en', 300);
+            $table->string('contact_person_designation_en', 300)->nullable();
             $table->text('config')->nullable();
 
-            $table->unsignedTinyInteger('row_status')->default(1);
+            $table->unsignedTinyInteger('row_status')
+                ->default(2)
+                ->comment('0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected');
+
             $table->unsignedInteger('created_by')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
