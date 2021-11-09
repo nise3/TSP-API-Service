@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Models\Organization;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -216,6 +217,21 @@ class InstituteService
 
         /** @var Institute $institute */
         return $instituteBuilder->firstOrFail();
+    }
+
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getInstituteTitle(Request $request): array
+    {
+        return Institute::select([
+            "id",
+            "title",
+            "title_en"
+        ])->whereIn("id", $request->get('institute_ids'))
+            ->get()->keyBy("id")->toArray();
     }
 
 

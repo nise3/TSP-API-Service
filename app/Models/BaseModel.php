@@ -94,4 +94,6 @@ abstract class BaseModel extends Model
 
     public const PASSWORD_MIN_LENGTH = 8;
     public const PASSWORD_MAX_LENGTH = 50;
+
+
 }
