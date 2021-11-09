@@ -26,6 +26,9 @@
             "url": "http://localhost:8000/api/v1"
         },
         {
+            "url": "http://localhost:8002/api/v1"
+        },
+        {
             "url": "http://institute.local:8009/api/v1"
         }
     ],
@@ -3466,6 +3469,22 @@
                                 2,
                                 3
                             ]
+                        }
+                    },
+                    {
+                        "name": "loc_district_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "loc_upazila_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
                         }
                     }
                 ],

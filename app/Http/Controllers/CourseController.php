@@ -191,6 +191,9 @@ class CourseController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function forceDelete(int $id): JsonResponse
     {
         $course = Course::onlyTrashed()->findOrFail($id);
@@ -218,6 +221,9 @@ class CourseController extends Controller
         return Response::json($response);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function youthFeedStatistics(Request $request, int $youthId): array
     {
         $requestData = $request->all();

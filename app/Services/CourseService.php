@@ -443,18 +443,19 @@ class CourseService
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
         $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
 
-        if (!empty($searchText) || ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)){
+        if (!empty($searchText) || !empty($locUpazilaId) || !empty($locDistrictId) ||
+            ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)) {
             $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
             $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
 
             /** Search courses by search_text */
-            if(!empty($searchText)){
-                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id','training_centers.loc_division_id');
-                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id','training_centers.loc_district_id');
-                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id','training_centers.loc_upazila_id');
-                $coursesBuilder->leftJoin('skills', 'skills.id','course_skill.skill_id');
+            if (!empty($searchText)) {
+                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id', 'training_centers.loc_division_id');
+                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id', 'training_centers.loc_district_id');
+                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id', 'training_centers.loc_upazila_id');
+                $coursesBuilder->leftJoin('skills', 'skills.id', 'course_skill.skill_id');
 
-                $coursesBuilder->where(function ($builder) use ($searchText){
+                $coursesBuilder->where(function ($builder) use ($searchText) {
                     $builder->orWhere('courses.title', 'like', '%' . $searchText . '%');
                     $builder->orWhere('courses.title_en', 'like', '%' . $searchText . '%');
                     $builder->orWhere('loc_divisions.title', 'like', '%' . $searchText . '%');
@@ -468,7 +469,7 @@ class CourseService
                 });
             }
 
-            if ($type == self::COURSE_FILTER_NEARBY) {
+            if ($type == self::COURSE_FILTER_NEARBY || !empty($locUpazilaId) || !empty($locDistrictId)) {
                 if ($locUpazilaId) {
                     $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
                 } else if ($locDistrictId) {
@@ -805,7 +806,9 @@ class CourseService
             'institute_id' => 'nullable|int|gt:0',
             'program_id' => 'nullable|int|gt:0',
             'course_name' => 'nullable|string',
-            'search_text' => 'nullable|string|min:2'
+            'search_text' => 'nullable|string|min:2',
+            'loc_district_id' => 'nullable|int|gt:0',
+            'loc_upazila_id' => 'nullable|int|gt:0'
         ];
 
         if (isset($requestData['availability'])) {
@@ -845,10 +848,6 @@ class CourseService
                 Rule::requiredIf(function () use ($requestData) {
                     return (!isset($requestData['loc_upazila_id']));
                 }),
-                'nullable',
-                'integer'
-            ];
-            $rules['loc_upazila_id'] = [
                 'nullable',
                 'integer'
             ];
