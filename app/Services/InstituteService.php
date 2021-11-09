@@ -228,8 +228,8 @@ class InstituteService
     {
         return Institute::select([
             "id",
-            "title_en",
-            "title_bn"
+            "title",
+            "title_en"
         ])->whereIn("id", $request->get('institute_ids'))
             ->get()->keyBy("id")->toArray();
     }

@@ -50,7 +50,7 @@ class InstituteController extends Controller
         $filter = $this->instituteService->filterValidator($request)->validate();
 
         $response = $this->instituteService->getInstituteList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -71,7 +71,7 @@ class InstituteController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -258,6 +258,28 @@ class InstituteController extends Controller
                 "code" => ResponseAlias::HTTP_OK,
                 "message" => "Institute deleted successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function getInstituteTitleByIds(Request $request): JsonResponse
+    {
+        throw_if(!is_array($request->get('institute_ids')), ValidationException::withMessages([
+            "The Organization ids must be array.[8000]"
+        ]));
+
+        $organizationTitle = $this->instituteService->getInstituteTitle($request);
+        $response = [
+            "data" => $organizationTitle,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute Title List.",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
