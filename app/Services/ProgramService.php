@@ -52,7 +52,7 @@ class ProgramService
             'programs.created_at',
             'programs.updated_at',
             'programs.deleted_at',
-        ])->byInstitute('programs');
+        ])->byInstitute();
 
         $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
