@@ -418,4 +418,23 @@ class ProgramService
         ], $customMessage);
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getProgramTitle(Request $request): array
+    {
+        /** @var Program|Builder $programBuilder */
+        $programBuilder = Program::select([
+            'id',
+            'title'
+        ]);
+
+        if($request->filled('program_ids') && is_array($request->input('program_ids'))){
+            $programBuilder->whereIn("id", $request->input('program_ids'));
+        }
+
+        return $programBuilder->get()->keyBy("id")->toArray();
+    }
+
 }

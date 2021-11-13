@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Institute;
+use App\Services\BatchService;
+use App\Services\ProgramService;
 use Exception;
 use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
@@ -23,6 +25,8 @@ class InstituteController extends Controller
      * @var InstituteService
      */
     public InstituteService $instituteService;
+    public BatchService $batchService;
+    public ProgramService $programService;
     /**
      * @var Carbon
      */
@@ -32,9 +36,11 @@ class InstituteController extends Controller
      * InstituteController constructor.
      * @param InstituteService $instituteService
      */
-    public function __construct(InstituteService $instituteService)
+    public function __construct(InstituteService $instituteService, BatchService $batchService, ProgramService $programService)
     {
         $this->instituteService = $instituteService;
+        $this->batchService = $batchService;
+        $this->programService = $programService;
         $this->startTime = Carbon::now();
     }
 
@@ -279,6 +285,35 @@ class InstituteController extends Controller
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
                 "message" => "Institute Title List.",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function getBatchAndProgramTitleByIds(Request $request): JsonResponse {
+        throw_if(!empty($request->input('batch_ids')) && !is_array($request->input('batch_ids')),  ValidationException::withMessages([
+            "The Batch ids must be an array.[8000]"
+        ]));
+        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')),  ValidationException::withMessages([
+            "The Program ids must be an array.[8000]"
+        ]));
+
+        $batchTitle = $this->batchService->getBatchTitle($request);
+        $programTitle = $this->programService->getProgramTitle($request);
+
+        $response = [
+            "data" => [
+                'batch_title' => $batchTitle,
+                'program_title' => $programTitle
+            ],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "batch and Program Title List.",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
             ]
         ];
