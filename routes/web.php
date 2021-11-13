@@ -67,11 +67,19 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
 
 
-    /** Organization Title by Ids for Internal Api */
+    /** Institute Title by Ids for Internal Api */
     $router->post("get-institute-title-by-ids",
         [
             "as" => "institutes.get-institute-title-by-ids",
             "uses" => "InstituteController@getInstituteTitleByIds"
+        ]
+    );
+
+    /** Batch and Program Title by Ids for Internal Api */
+    $router->post("get-batch-program-title-by-ids",
+        [
+            "as" => "institutes.get-batch-program-title-by-ids",
+            "uses" => "InstituteController@getBatchAndProgramTitleByIds"
         ]
     );
 
