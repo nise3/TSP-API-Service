@@ -870,4 +870,24 @@ class CourseService
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getCourseTitle(Request $request): array
+    {
+        /** @var Course|Builder $batchBuilder */
+        $courseBuilder = Course::select([
+            'id',
+            'title',
+            'title_en'
+        ]);
+
+        if($request->filled('course_ids') && is_array($request->input('course_ids'))){
+            $courseBuilder->whereIn("id", $request->input('course_ids'));
+        }
+
+        return $courseBuilder->get()->keyBy("id")->toArray();
+    }
 }

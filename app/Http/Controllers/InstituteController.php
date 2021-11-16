@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Institute;
-use App\Services\BatchService;
+use App\Services\CourseService;
 use App\Services\ProgramService;
-use Exception;
 use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +24,7 @@ class InstituteController extends Controller
      * @var InstituteService
      */
     public InstituteService $instituteService;
-    public BatchService $batchService;
+    public CourseService $courseService;
     public ProgramService $programService;
     /**
      * @var Carbon
@@ -35,11 +34,13 @@ class InstituteController extends Controller
     /**
      * InstituteController constructor.
      * @param InstituteService $instituteService
+     * @param CourseService $courseService
+     * @param ProgramService $programService
      */
-    public function __construct(InstituteService $instituteService, BatchService $batchService, ProgramService $programService)
+    public function __construct(InstituteService $instituteService, CourseService $courseService, ProgramService $programService)
     {
         $this->instituteService = $instituteService;
-        $this->batchService = $batchService;
+        $this->courseService = $courseService;
         $this->programService = $programService;
         $this->startTime = Carbon::now();
     }
@@ -294,20 +295,20 @@ class InstituteController extends Controller
     /**
      * @throws Throwable
      */
-    public function getBatchAndProgramTitleByIds(Request $request): JsonResponse {
-        throw_if(!empty($request->input('batch_ids')) && !is_array($request->input('batch_ids')),  ValidationException::withMessages([
-            "The Batch ids must be an array.[8000]"
+    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse {
+        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')),  ValidationException::withMessages([
+            "The Course ids must be an array.[8000]"
         ]));
         throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')),  ValidationException::withMessages([
             "The Program ids must be an array.[8000]"
         ]));
 
-        $batchTitle = $this->batchService->getBatchTitle($request);
+        $courseTitle = $this->courseService->getCourseTitle($request);
         $programTitle = $this->programService->getProgramTitle($request);
 
         $response = [
             "data" => [
-                'batch_title' => $batchTitle,
+                'course_title' => $courseTitle,
                 'program_title' => $programTitle
             ],
             '_response_status' => [

@@ -76,10 +76,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     );
 
     /** Batch and Program Title by Ids for Internal Api */
-    $router->post("get-batch-program-title-by-ids",
+    $router->post("get-course-program-title-by-ids",
         [
-            "as" => "institutes.get-batch-program-title-by-ids",
-            "uses" => "InstituteController@getBatchAndProgramTitleByIds"
+            "as" => "institutes.get-course-program-title-by-ids",
+            "uses" => "InstituteController@getCourseAndProgramTitleByIds"
         ]
     );
 
