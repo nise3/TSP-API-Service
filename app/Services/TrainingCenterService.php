@@ -68,7 +68,7 @@ class TrainingCenterService
             'training_centers.created_at',
             'training_centers.updated_at',
             'training_centers.deleted_at',
-        ])->byInstitute('training_centers');
+        ])->byInstitute();
 
         $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')

@@ -96,7 +96,7 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
             'trainers.deleted_at',
-        ])->byInstitute('trainers');
+        ])->byInstitute();
 
         $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')

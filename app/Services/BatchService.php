@@ -33,8 +33,6 @@ class BatchService
      */
     public function getBatchList(array $request, Carbon $startTime): array
     {
-//         var_dump($request);
-
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -79,7 +77,7 @@ class BatchService
             'batches.created_at',
             'batches.updated_at',
             'batches.deleted_at',
-        ])->byInstitute('batches');
+        ])->byInstitute();
 
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')

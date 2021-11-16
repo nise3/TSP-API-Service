@@ -7,12 +7,16 @@ use Illuminate\Support\Facades\Auth;
 
 trait ScopeFilterByInstitute
 {
-    public function scopeByInstitute($query, $table)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeByInstitute($query): mixed
     {
         $authUser = Auth::user();
-
+        $tableName = $this->getTable();
         if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {  //Institute User
-            return $query->where($table . '.institute_id', $authUser->institute_id);
+            return $query->where($tableName . '.institute_id', $authUser->institute_id);
         }
         return $query;
     }
