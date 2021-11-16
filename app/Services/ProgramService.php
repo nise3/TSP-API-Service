@@ -427,7 +427,8 @@ class ProgramService
         /** @var Program|Builder $programBuilder */
         $programBuilder = Program::select([
             'id',
-            'title'
+            'title',
+            'title_en'
         ]);
 
         if($request->filled('program_ids') && is_array($request->input('program_ids'))){

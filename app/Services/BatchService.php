@@ -10,7 +10,6 @@ use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -665,26 +664,6 @@ class BatchService
         ];
 
         return $response;
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function getBatchTitle(Request $request): array
-    {
-
-        /** @var Batch|Builder $batchBuilder */
-        $batchBuilder = Batch::select([
-            'id',
-            'title'
-        ]);
-
-        if($request->filled('batch_ids') && is_array($request->input('batch_ids'))){
-            $batchBuilder->whereIn("id", $request->input('batch_ids'));
-        }
-
-        return $batchBuilder->get()->keyBy("id")->toArray();
     }
 }
 
