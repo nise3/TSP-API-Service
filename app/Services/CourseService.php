@@ -237,9 +237,7 @@ class CourseService
         $course = $courseBuilder->firstOrFail();
 
         /** @var CourseEnrollment|Builder $courseEnrolled */
-        $courseEnrolled = CourseEnrollment::where('course_id',$course->id)->get();
-
-        $course["enroll_count"] = $courseEnrolled->count();
+        $course["enroll_count"] = CourseEnrollment::where('course_id',$course->id)->count();
 
         if ($withTrainers == true) {
             /** @var Builder $trainerBuilder */
