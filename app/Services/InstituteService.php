@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Models\Organization;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
