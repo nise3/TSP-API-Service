@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Course;
+use App\Models\CourseEnrollment;
 use App\Models\Skill;
 use App\Models\Trainer;
 use Carbon\Carbon;
@@ -209,8 +210,7 @@ class CourseService
                 'courses.updated_by',
                 'courses.created_at',
                 'courses.updated_at',
-                'courses.deleted_at',
-                DB::raw('COUNT(course_enrollments.id) as enroll_count')
+                'courses.deleted_at'
             ]
         );
 
@@ -229,17 +229,17 @@ class CourseService
                 ->whereNull('programs.deleted_at');
         });
 
-        $courseBuilder->leftJoin("course_enrollments", function ($join) {
-            $join->on('courses.id', '=', 'course_enrollments.course_id')
-                ->whereNull('course_enrollments.deleted_at');
-        });
-
         $courseBuilder->where('courses.id', '=', $id);
 
         $courseBuilder->with('skills');
 
         /** @var Course $course */
         $course = $courseBuilder->firstOrFail();
+
+        /** @var CourseEnrollment|Builder $courseEnrolled */
+        $courseEnrolled = CourseEnrollment::where('course_id',$course->id)->get();
+
+        $course["enroll_count"] = $courseEnrolled->count();
 
         if ($withTrainers == true) {
             /** @var Builder $trainerBuilder */
