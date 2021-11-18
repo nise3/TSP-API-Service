@@ -618,6 +618,9 @@ class InstituteService
 
     public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
+        $customMessage = [
+            'password.regex' => BaseModel::PASSWORD_VALIDATION_MESSAGE
+        ];
         $rules = [
             'title' => [
                 'required',
@@ -691,13 +694,20 @@ class InstituteService
                 'max: 1000',
                 'min:2'
             ],
-            "password" => [
-                "required",
-                "confirmed",
-                Password::min(BaseModel::PASSWORD_MIN_LENGTH)
-                    ->letters()
-                    ->mixedCase()
-                    ->numbers()
+
+            /**Commented it for custom validation message*/
+//            "password" => [
+//                "required",
+//                "confirmed",
+//                Password::min(BaseModel::PASSWORD_MIN_LENGTH)
+//                    ->letters()
+//                    ->mixedCase()
+//                    ->numbers()
+//            ],
+            'password' => [
+                'required',
+                'min:' . BaseModel::PASSWORD_MIN_LENGTH,
+                BaseModel::PASSWORD_REGEX
             ],
             "password_confirmation" => 'required_with:password',
             'row_status' => [
@@ -706,7 +716,7 @@ class InstituteService
             ]
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
     /**

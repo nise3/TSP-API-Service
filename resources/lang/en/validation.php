@@ -124,6 +124,7 @@ return [
     'uploaded' => 'The :attribute failed to upload.[63000]',
     'url' => 'The :attribute must be a valid URL.[64000]',
     'uuid' => 'The :attribute must be a valid UUID.[65000]',
+    'password_regex' => 'The :attribute must contain at least one uppercase, lowercase letter and at least one number.[66000]',
 
     /*
     |--------------------------------------------------------------------------
@@ -139,7 +140,7 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
-        ],
+        ]
     ],
 
     /*
