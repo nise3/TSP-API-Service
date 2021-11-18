@@ -10,6 +10,8 @@ use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -662,6 +664,22 @@ class BatchService
         ];
 
         return $response;
+    }
+
+    public function createCalenderEventForBatch(array $batch){
+        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'calender-update-after-batch-create';
+
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])
+            ->post($url, $batch)
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+                return $e;
+            })
+            ->json();
     }
 }
 
