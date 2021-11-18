@@ -9,6 +9,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -666,7 +667,13 @@ class BatchService
         return $response;
     }
 
-    public function createCalenderEventForBatch(array $batch){
+    /**
+     * @param array $batch
+     * @return array
+     * @throws RequestException
+     */
+    public function createCalenderEventForBatch(array $batch): array
+    {
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'calendar-update-after-batch-create';
 
         return Http::withOptions([
