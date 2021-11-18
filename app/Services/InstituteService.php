@@ -698,6 +698,7 @@ class InstituteService
                     ->letters()
                     ->mixedCase()
                     ->numbers()
+
             ],
             "password_confirmation" => 'required_with:password',
             'row_status' => [
