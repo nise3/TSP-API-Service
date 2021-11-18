@@ -667,7 +667,7 @@ class BatchService
     }
 
     public function createCalenderEventForBatch(array $batch){
-        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'calender-update-after-batch-create';
+        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'calendar-update-after-batch-create';
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
