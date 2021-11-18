@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
+use App\Models\Batch;
+use App\Models\CourseEnrollment;
 use App\Services\CourseEnrollmentService;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -64,7 +66,7 @@ class CourseEnrollmentController extends Controller
     {
         $validated = $this->courseEnrollService->youthEnrollCoursesFilterValidator($request)->validate();
         $response = $this->courseEnrollService->getYouthEnrollCourses($validated, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 
@@ -85,7 +87,7 @@ class CourseEnrollmentController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 
@@ -135,7 +137,8 @@ class CourseEnrollmentController extends Controller
     public function assignBatch(Request $request): JsonResponse
     {
         $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-        $this->courseEnrollService->assignBatch($validated);
+        $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
+        $this->createCalenderEventsForBatchAssign($courseEnrollment);
 
         $response = [
             '_response_status' => [
@@ -147,6 +150,26 @@ class CourseEnrollmentController extends Controller
         ];
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment){
+        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
+        $data = [
+            "batch" => Batch::find($courseEnrollment->batch_id),
+            "youth_id" => $courseEnrollment->youth_id
+        ];
+
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])
+            ->post($url, $data)
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+                return $e;
+            })
+            ->json();
     }
 
     /**

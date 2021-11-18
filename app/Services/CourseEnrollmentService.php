@@ -1255,7 +1255,7 @@ class CourseEnrollmentService
      * @param array $data
      * @return mixed
      */
-    public function assignBatch(array $data): mixed
+    public function assignBatch(array $data): CourseEnrollment
     {
         $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
         $courseEnrollment->batch_id = $data['batch_id'];
