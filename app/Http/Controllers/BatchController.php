@@ -8,7 +8,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -84,21 +84,29 @@ class BatchController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      * @throws RequestException
+     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->batchService->validator($request)->validate();
-        $data = $this->batchService->store($validatedData);
-        $this->batchService->createCalenderEventForBatch($data->toArray());
-        $response = [
-            'data' => $data ?: [],
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Batch added successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try {
+            $data = $this->batchService->store($validatedData);
+            $this->batchService->createCalenderEventForBatch($data->toArray());
+            $response = [
+                'data' => $data ?: [],
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Batch added successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
