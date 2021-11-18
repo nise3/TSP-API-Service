@@ -51,7 +51,7 @@ class BatchController extends Controller
     {
         $filter = $this->batchService->filterValidator($request)->validate();
         $response = $this->batchService->getBatchList($filter, $this->startTime);
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -64,8 +64,8 @@ class BatchController extends Controller
     {
         $data = $this->batchService->getBatch($id);
 
-        $response =  [
-            "data" =>  $data ?: [],
+        $response = [
+            "data" => $data ?: [],
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -73,7 +73,7 @@ class BatchController extends Controller
             ]
         ];
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
 
@@ -108,12 +108,14 @@ class BatchController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws RequestException
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
         $validated = $this->batchService->validator($request)->validate();
         $data = $this->batchService->update($batch, $validated);
+        $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
         $response = [
             'data' => $data ?: [],
             '_response_status' => [
@@ -159,7 +161,7 @@ class BatchController extends Controller
     {
         $validated = $this->batchService->trainerValidator($request)->validated();
         $batch = Batch::findOrFail($id);
-        $validated['trainerIds'] = !empty($validated['trainerIds'])? $validated['trainerIds'] : [];
+        $validated['trainerIds'] = !empty($validated['trainerIds']) ? $validated['trainerIds'] : [];
         $batch = $this->batchService->assignTrainer($batch, $validated['trainerIds']);
         $response = [
             'data' => $batch->trainers()->get(),
