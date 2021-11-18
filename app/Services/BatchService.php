@@ -277,6 +277,27 @@ class BatchService
         return $batch->delete();
     }
 
+    /**
+     * @param int $batchId
+     * @return mixed
+     * @throws RequestException
+     */
+    public function destroyCalenderEventByBatchId(int $batchId): mixed
+    {
+        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'delete-calender-event-by-batch-id/' . $batchId;
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])
+            ->delete($url)
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+                return $e;
+            })
+            ->json();
+    }
+
 
     public function getBatchTrashList(Request $request, Carbon $startTime): array
     {
