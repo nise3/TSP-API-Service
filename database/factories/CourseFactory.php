@@ -14,7 +14,7 @@ class CourseFactory extends Factory
         return [
             'title_en' => $this->faker->name,
             'title' => $this->faker->name,
-            'code' => $this->faker->slug(30, false),
+            'code' => $this->faker->word(),
             'course_fee' => $this->faker->numberBetween(2000, 20000),
             'duration' => $this->faker->numberBetween(8, 72),
             'overview' => $this->faker->paragraph,

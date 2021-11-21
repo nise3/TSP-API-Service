@@ -41,7 +41,7 @@ class InstituteFactory extends Factory
             'loc_upazila_id' => $location['loc_upazila_id'],
             'location_latitude' => $location['location_longitude'],
             'location_longitude' => $location['location_longitude'],
-            'code' => $this->faker->slug(20, false),
+            'code' => $this->faker->word(),
             'domain' => 'https://' . $this->faker->domainName,
             'address' => $address,
             'address_en' => $address,
