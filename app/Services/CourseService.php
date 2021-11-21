@@ -768,14 +768,17 @@ class CourseService
         if ($id == null) {
             /** @var Institute $institute */
             $institute = Institute::where('id', $requestData['institute_id'])->first();
-            if($institute){
+            if ($institute) {
                 /** Concat course code with institute code as prefix */
-                $requestData['code'] = $institute['code'] ."-". $requestData['code'];
+                $requestData['code'] = $institute['code'] . "-" . $requestData['code'];
                 $rules['code'] = [
                     'required',
                     'string',
                     'max:150',
-                    'unique:courses,code'
+                    Rule::unique('courses', 'code')
+                        ->where(function (\Illuminate\Database\Query\Builder $query) {
+                            return $query->whereNull('deleted_at');
+                        })
                 ];
             }
 
