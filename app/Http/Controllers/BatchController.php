@@ -118,22 +118,30 @@ class BatchController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      * @throws RequestException
+     * @throws Throwable
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
         $validated = $this->batchService->validator($request)->validate();
-        $data = $this->batchService->update($batch, $validated);
-        $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
-        $response = [
-            'data' => $data ?: [],
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Batch update successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try{
+            $data = $this->batchService->update($batch, $validated);
+            $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
+            $response = [
+                'data' => $data ?: [],
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Batch update successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
