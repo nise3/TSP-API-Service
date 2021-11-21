@@ -770,7 +770,7 @@ class CourseService
             $institute = Institute::where('id', $requestData['institute_id'])->first();
             if($institute){
                 /** Concat course code with institute code as prefix */
-                $requestData['code'] = $institute['code'] . $requestData['code'];
+                $requestData['code'] = $institute['code'] ."-". $requestData['code'];
                 $rules['code'] = [
                     'required',
                     'string',
