@@ -468,7 +468,6 @@ class CourseEnrollmentService
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
-     * @param int|null $id
      * @return Validator
      */
     public function courseEnrollmentValidator(Request $request): Validator
