@@ -468,10 +468,9 @@ class CourseEnrollmentService
     /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
-     * @param int|null $id
      * @return Validator
      */
-    public function courseEnrollmentValidator(Request $request, int $id = null): Validator
+    public function courseEnrollmentValidator(Request $request): Validator
     {
         $request->offsetSet('deleted_at', null);
         $data = $request->all();

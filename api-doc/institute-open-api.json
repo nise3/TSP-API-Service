@@ -2362,7 +2362,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/courses"
+                                "$ref": "#/components/schemas/coursesUpdate"
                             }
                         }
                     }
@@ -4706,6 +4706,135 @@
                 },
                 "required": [
                     "code",
+                    "institute_id",
+                    "skills",
+                    "title",
+                    "level",
+                    "language_medium"
+                ]
+            },
+            "coursesUpdate":  {
+                "type": "object",
+                "description": "Course",
+                "properties": {
+
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "branch_id": {
+                        "type": "integer"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 1000,
+                        "minLength": 2
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 2
+                    },
+                    "course_fee": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "level": {
+                        "type": "integer",
+                        "description": "1=>beginner,2=>intermediate,3=>expert",
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ]
+                    },
+                    "language_medium": {
+                        "type": "integer",
+                        "description": "1=Bengali,2=>English",
+                        "enum": [
+                            1,
+                            2
+                        ]
+                    },
+                    "duration": {
+                        "type": "number"
+                    },
+                    "overview": {
+                        "type": "string"
+                    },
+                    "overview_en": {
+                        "type": "string"
+                    },
+                    "target_group": {
+                        "type": "string"
+                    },
+                    "target_group_en": {
+                        "type": "string"
+                    },
+                    "objectives": {
+                        "type": "string"
+                    },
+                    "objectives_en": {
+                        "type": "string"
+                    },
+                    "lessons": {
+                        "type": "string"
+                    },
+                    "lessons_en": {
+                        "type": "string"
+                    },
+                    "training_methodology": {
+                        "type": "string"
+                    },
+                    "training_methodology_en": {
+                        "type": "string"
+                    },
+                    "evaluation_system": {
+                        "type": "string"
+                    },
+                    "evaluation_system_en": {
+                        "type": "string"
+                    },
+                    "prerequisite": {
+                        "type": "string"
+                    },
+                    "prerequisite_en": {
+                        "type": "string"
+                    },
+                    "skills": {
+                        "type": "array",
+                        "minItems": 1,
+                        "maxItems": 10,
+                        "items": {
+                            "type": "integer",
+                            "uniqueItems": true
+                        }
+                    },
+                    "eligibility": {
+                        "type": "string"
+                    },
+                    "eligibility_en": {
+                        "type": "string"
+                    },
+                    "cover_image": {
+                        "type": "string"
+                    },
+                    "application_form_settings": {
+                        "type": "string",
+                        "example": "{\"ethnic_group_info\":[true,true],\"freedom_fighter_info\":[true,false],\"disability_info\":[true,true],\"ssc_passing_info\":[true,false],\"hsc_passing_status\":[true,true],\"honors_passing_info\":[false,false],\"masters_passing_info\":[false,false],\"occupation_info\":[false,false],\"guardian_info\":[false,false]}"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
+                    }
+                },
+                "required": [
                     "institute_id",
                     "skills",
                     "title",

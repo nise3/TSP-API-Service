@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\Institute;
 use App\Models\Skill;
 use App\Models\Trainer;
 use Carbon\Carbon;
@@ -237,7 +238,7 @@ class CourseService
         $course = $courseBuilder->firstOrFail();
 
         /** @var CourseEnrollment|Builder $courseEnrolled */
-        $course["enroll_count"] = CourseEnrollment::where('course_id',$course->id)->count();
+        $course["enroll_count"] = CourseEnrollment::where('course_id', $course->id)->count();
 
         if ($withTrainers == true) {
             /** @var Builder $trainerBuilder */
@@ -267,6 +268,8 @@ class CourseService
      */
     public function store(array $data): Course
     {
+
+
         $course = new Course();
         $course->fill($data);
         $course->save();
@@ -619,12 +622,6 @@ class CourseService
         ];
 
         $rules = [
-            'code' => [
-                'required',
-                'string',
-                'max:150',
-                'unique:courses,code,' . $id,
-            ],
             'institute_id' => [
                 'required',
                 'int',
@@ -768,6 +765,24 @@ class CourseService
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
         ];
+        if ($id == null) {
+            /** @var Institute $institute */
+            $institute = Institute::where('id', $requestData['institute_id'])->first();
+            if ($institute) {
+                /** Concat course code with institute code as prefix */
+                $requestData['code'] = $institute['code'] . "-" . $requestData['code'];
+                $rules['code'] = [
+                    'required',
+                    'string',
+                    'max:150',
+                    Rule::unique('courses', 'code')
+                        ->where(function (\Illuminate\Database\Query\Builder $query) {
+                            return $query->whereNull('deleted_at');
+                        })
+                ];
+            }
+
+        }
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 
@@ -888,7 +903,7 @@ class CourseService
             'title_en'
         ]);
 
-        if($request->filled('course_ids') && is_array($request->input('course_ids'))){
+        if ($request->filled('course_ids') && is_array($request->input('course_ids'))) {
             $courseBuilder->whereIn("id", $request->input('course_ids'));
         }
 

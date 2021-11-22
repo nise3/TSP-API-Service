@@ -139,23 +139,32 @@ class CourseEnrollmentController extends Controller
      */
     public function assignBatch(Request $request): JsonResponse
     {
-        $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-        $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-        $this->createCalenderEventsForBatchAssign($courseEnrollment);
+        DB::beginTransaction();
+        try {
+            $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
+            $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
+            $this->createCalenderEventsForBatchAssign($courseEnrollment);
 
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Batch assign successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Batch assign successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
+
     }
 
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment){
+    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment)
+    {
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
         $data = [
             "batch" => Batch::find($courseEnrollment->batch_id),
