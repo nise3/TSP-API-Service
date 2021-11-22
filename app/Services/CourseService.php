@@ -527,11 +527,13 @@ class CourseService
         }
 
         if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
-            if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
-                $coursesBuilder->whereDate('batches.registration_start_date', '<=', $curDate);
-                $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
+            if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING || $type == self::COURSE_FILTER_RECENT) {
+                $coursesBuilder->where(function($builder) use($curDate){
+                    $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+                    $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+                });
             }
-            if ($type != self::COURSE_FILTER_POPULAR && ($type == self::COURSE_FILTER_RECENT || $availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING)) {
+            if ($type != self::COURSE_FILTER_POPULAR && $availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING) {
                 $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
             }
             if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
