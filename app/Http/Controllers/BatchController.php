@@ -93,7 +93,10 @@ class BatchController extends Controller
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
-            $this->batchService->createCalenderEventForBatch($data->toArray());
+            Log::info("Before calling event");
+            event(new \App\Events\BatchCreated($data));
+            Log::info("This is after the event trigger call");
+//            $this->batchService->createCalenderEventForBatch($data->toArray());
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [

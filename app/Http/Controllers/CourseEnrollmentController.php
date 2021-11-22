@@ -112,7 +112,10 @@ class CourseEnrollmentController extends Controller
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
-            $this->updateYouthProfileAfterEnrollment($validated);
+//            $this->updateYouthProfileAfterEnrollment($validated);
+            $hello = event(new \App\Events\CourseEnrollmentEvent($validated));
+            Log::info("ppppppppppppppppppppppppppZZZZZZZZZZZZZZZZZZZZZZZz");
+            Log::info(json_encode($hello));
             $response = [
                 '_response_status' => [
                     "success" => true,
