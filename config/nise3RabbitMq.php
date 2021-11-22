@@ -10,13 +10,16 @@ return [
         'headers' => 'headers'
     ],
     'exchanges' => [
-        'courseEnrollmentExchange' => [
-            'name' => 'course.enrollment.exchange',
+        'nise3Exchange' => [
+            'name' => 'nise3.exchange',
             'type' => 'fanout',
-            'routingKey' => 'course.enrollment.routing.key.1',
+            'routingKey' => 'nise3.routing.key',
             'queues' => [
-                'courseEnrollmentQueue1' => [
-                    'name' => 'course.enrollment.queue.1'
+                'nise3Queue' => [
+                    'name' => 'nise3.queue'
+                ],
+                'courseEnrollment' => [
+                    'name' => 'course.enrollment.queue'
                 ]
             ]
         ]

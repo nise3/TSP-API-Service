@@ -32,30 +32,30 @@ return [
 
         'rabbitmq' => [
             'driver' => 'rabbitmq',
-            'queue' => env('RABBITMQ_QUEUE', 'default.queue'),
+            'queue' => env('RABBITMQ_QUEUE','nise3.queue'),
             'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
             'hosts' => [
                 [
-                    'host' => env('RABBITMQ_HOST', '127.0.0.1'),
+                    'host' => env('RABBITMQ_HOST','localhost'),
                     'port' => env('RABBITMQ_PORT', 15672),
-                    'user' => env('RABBITMQ_USER', 'guest'),
-                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
+                    'user' => env('RABBITMQ_USER','guest'),
+                    'password' => env('RABBITMQ_PASSWORD','guest'),
                     'vhost' => env('RABBITMQ_VHOST', '/'),
                 ],
             ],
             'options' => [
                 'queue' => [
-                    'exchange' => 'default.exchange',
-                    'exchange_type' => 'fanout',
-                    'exchange_routing_key' => "default.routing.key",
+                    'exchange' => env('RABBITMQ_EXCHANGE_NAME','nise3.exchange'),
+                    'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE','fanout'),
+                    'exchange_routing_key' => env('EXCHANGE_ROUTING_KEY','nise3.routing.key'),
                     'prioritize_delayed_messages' =>  false,
                     'queue_max_priority' => 10,
                 ],
                 'exchange' => [
-                    'name' => env('RABBITMQ_EXCHANGE_NAME', 'default.exchange'),
+                    'name' => env('RABBITMQ_EXCHANGE_NAME','nise3.exchange'),
                     'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
 
-                    'type' => 'fanout',
+                    'type' => env('RABBITMQ_EXCHANGE_TYPE','fanout'),
                     'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
                     'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
                     'auto_delete' => env('RABBITMQ_EXCHANGE_AUTODELETE', false),

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
+use App\Events\CourseEnrollmentEvent;
 
 class CourseEnrollmentController extends Controller
 {
@@ -112,10 +113,9 @@ class CourseEnrollmentController extends Controller
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
-//            $this->updateYouthProfileAfterEnrollment($validated);
-            $hello = event(new \App\Events\CourseEnrollmentEvent($validated));
-            Log::info("ppppppppppppppppppppppppppZZZZZZZZZZZZZZZZZZZZZZZz");
-            Log::info(json_encode($hello));
+            /** Trigger EVENT to Youth Service via RabbitMQ  */
+            event(new CourseEnrollmentEvent($validated));
+
             $response = [
                 '_response_status' => [
                     "success" => true,

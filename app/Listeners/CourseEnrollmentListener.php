@@ -12,20 +12,21 @@ class CourseEnrollmentListener implements ShouldQueue
     public function __construct()
     {
         config([
-            'queue.connections.rabbitmq.options.queue.exchange' => config('nise3RabbitMq.exchanges.courseEnrollmentExchange.name'),
-            'queue.connections.rabbitmq.options.exchange.name' => config('nise3RabbitMq.exchanges.courseEnrollmentExchange.name'),
+            'queue.connections.rabbitmq.options.queue.exchange' => config('nise3RabbitMq.exchanges.nise3Exchange.name'),
+            'queue.connections.rabbitmq.options.exchange.name' => config('nise3RabbitMq.exchanges.nise3Exchange.name'),
 
-            'queue.connections.rabbitmq.queue' => config('nise3RabbitMq.exchanges.courseEnrollmentExchange.queues.courseEnrollmentQueue1.name'),
+            'queue.connections.rabbitmq.queue' => config('nise3RabbitMq.exchanges.nise3Exchange.queues.courseEnrollment.name'),
 
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => config('nise3RabbitMq.exchanges.courseEnrollmentExchange.routingKey'),
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => config('nise3RabbitMq.exchanges.nise3Exchange.routingKey'),
 
-            'queue.connections.rabbitmq.options.queue.exchange_type' => config('nise3RabbitMq.exchanges.courseEnrollmentExchange.type'),
+            'queue.connections.rabbitmq.options.queue.exchange_type' => config('nise3RabbitMq.exchanges.nise3Exchange.type'),
         ]);
 /*        dd(config('queue.connections.rabbitmq.options.queue.exchange'),
             config('queue.connections.rabbitmq.options.exchange.name'),
             config('queue.connections.rabbitmq.queue'),
             config('queue.connections.rabbitmq.options.queue.exchange_routing_key'),
             config('queue.connections.rabbitmq.options.queue.exchange_type'));*/
+//        dd(config('nise3.is_dev_mode') ? config('nise3RabbitMq.host.local') : config('nise3RabbitMq.host.live'));
     }
 
     public function handle($event)
