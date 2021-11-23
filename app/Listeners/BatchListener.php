@@ -5,7 +5,7 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class CourseEnrollmentListener implements ShouldQueue
+class BatchListener  implements ShouldQueue
 {
     public string $connection = 'rabbitmq';
 
@@ -15,9 +15,9 @@ class CourseEnrollmentListener implements ShouldQueue
             'queue.connections.rabbitmq.options.queue.exchange' => 'nise3.topic',
             'queue.connections.rabbitmq.options.exchange.name' => 'nise3.topic',
 
-            'queue.connections.rabbitmq.queue' => '1.topic',
+            'queue.connections.rabbitmq.queue' => '5.topic',
 
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => 'topic.one',
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => 'user.first.rk',
 
             'queue.connections.rabbitmq.options.queue.exchange_type' => 'topic',
         ]);
@@ -31,6 +31,6 @@ class CourseEnrollmentListener implements ShouldQueue
 
     public function handle($event)
     {
-
+        Log::info("jjjjjjj");
     }
 }

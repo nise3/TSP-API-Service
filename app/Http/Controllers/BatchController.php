@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -93,9 +92,6 @@ class BatchController extends Controller
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
-            Log::info("Before calling event");
-            event(new \App\Events\BatchCreated($data));
-            Log::info("This is after the event trigger call");
 //            $this->batchService->createCalenderEventForBatch($data->toArray());
             $response = [
                 'data' => $data ?: [],
@@ -106,6 +102,13 @@ class BatchController extends Controller
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
+
+            /* Trigger EVENT to Youth Service via RabbitMQ  */
+            /*event(new BatchEvent([
+                "type" => "batch",
+                "id" => $data->id
+            ]));*/
+
             DB::commit();
         } catch (Throwable $e){
             DB::rollBack();
