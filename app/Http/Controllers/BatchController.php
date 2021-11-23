@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BatchEvent;
 use App\Models\Batch;
 use App\Services\BatchService;
 use Illuminate\Http\Client\RequestException;
@@ -104,10 +105,10 @@ class BatchController extends Controller
             ];
 
             /* Trigger EVENT to Youth Service via RabbitMQ  */
-            /*event(new BatchEvent([
+            event(new BatchEvent([
                 "type" => "batch",
                 "id" => $data->id
-            ]));*/
+            ]));
 
             DB::commit();
         } catch (Throwable $e){
