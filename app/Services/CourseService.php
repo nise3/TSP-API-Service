@@ -168,6 +168,8 @@ class CourseService
      */
     public function getOneCourse(int $id, bool $withTrainers = false): Course
     {
+        $youthId = request('youth_id') ?: "";
+
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
             [
@@ -258,6 +260,11 @@ class CourseService
             $trainers = $trainerBuilder->get();
 
             $course["trainers"] = $trainers->toArray();
+        }
+
+        if(is_numeric($youthId)){
+            $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
+            $course["enrolled"] = (bool)$courseEnrollment;
         }
         return $course;
     }
@@ -402,6 +409,7 @@ class CourseService
         $courseType = $request['course_type'] ?? "";
         $courseName = $request['course_name'] ?? "";
         $courseLevel = $request['level'] ?? "";
+        $youthId = $request['youth_id'] ?? "";
 
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
@@ -572,6 +580,21 @@ class CourseService
             $courses = $coursesBuilder->get()->take(20);
         } else {
             $courses = $coursesBuilder->get();
+        }
+
+        /** Set course already enrolled OR not for youth */
+        if(is_numeric($youthId)){
+            $courseIds = $courses->pluck('id')->toArray();
+            if(count($courseIds) > 0){
+                $youthEnrolledCourseIds = CourseEnrollment::whereIn('course_id', $courseIds)
+                    ->where('youth_id', $youthId)
+                    ->pluck('course_id')
+                    ->toArray();
+
+                foreach ($courses as $course){
+                    $course['enrolled'] = (bool) in_array($course->id, $youthEnrolledCourseIds);
+                }
+            }
         }
 
         $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
@@ -829,7 +852,8 @@ class CourseService
             'course_name' => 'nullable|string',
             'search_text' => 'nullable|string|min:2',
             'loc_district_id' => 'nullable|int|gt:0',
-            'loc_upazila_id' => 'nullable|int|gt:0'
+            'loc_upazila_id' => 'nullable|int|gt:0',
+            'youth_id' => 'nullable|int|gt:0'
         ];
 
         if (isset($requestData['availability'])) {
