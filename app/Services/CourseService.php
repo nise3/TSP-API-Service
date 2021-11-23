@@ -249,6 +249,7 @@ class CourseService
                 'trainers.trainer_name_en',
                 'trainers.email',
                 'trainers.mobile',
+                'trainers.photo',
             ]);
             $trainerBuilder->join('trainer_batch', 'trainer_batch.trainer_id', '=', 'trainers.id');
             $trainerBuilder->join('batches', 'trainer_batch.batch_id', '=', 'batches.id');
