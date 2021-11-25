@@ -551,16 +551,7 @@ class CourseService
         }
 
         if ($type == self::COURSE_FILTER_TRENDING) {
-            $randomIds = [];
-            for ($i = 0; $i < 10; $i++) {
-                $id = rand(1, 20);
-                if (in_array($id, $randomIds)) {
-                    $i--;
-                    continue;
-                }
-                array_push($randomIds, $id);
-            }
-            $coursesBuilder->whereIn('courses.id', $randomIds);
+            $coursesBuilder->inRandomOrder()->limit(10);
         }
 
         $coursesBuilder->groupBy("courses.id");
