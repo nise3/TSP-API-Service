@@ -59,6 +59,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e): JsonResponse
     {
+
         $errors = [
             '_response_status' => [
                 'success' => false,
@@ -112,7 +113,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = $e->getMessage();
         } elseif ($e instanceof Exception) {
-            $errors['_response_status']['code'] = $e->getCode() ?? ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
+            $errors['_response_status']['code'] = ($e->getCode() || $e->getCode() == 0) ?? ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = $e->getMessage();
         }
         return response()->json($errors, $errors['_response_status']['code']);
