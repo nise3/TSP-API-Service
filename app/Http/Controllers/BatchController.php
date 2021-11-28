@@ -93,7 +93,7 @@ class BatchController extends Controller
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
-//            $this->batchService->createCalenderEventForBatch($data->toArray());
+            $this->batchService->createCalenderEventForBatch($data->toArray());
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [
@@ -103,12 +103,6 @@ class BatchController extends Controller
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
-
-            /* Trigger EVENT to Youth Service via RabbitMQ  */
-            event(new BatchEvent([
-                "type" => "batch",
-                "id" => $data->id
-            ]));
 
             DB::commit();
         } catch (Throwable $e){
