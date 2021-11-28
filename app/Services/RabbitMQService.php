@@ -82,11 +82,11 @@ class RabbitMQService
      */
     public function createQueueAndBindWithoutRetry(RabbitMQQueue $queue, array $payload){
         /** Exchange Queue related variables */
-        $exchange = $payload['$exchange'];
-        $queueName = $payload['$queueName'];
-        $binding = $payload['$binding'];
-        $durable = $payload['$durable'];
-        $autoDelete = $payload['$autoDelete'];
+        $exchange = $payload['exchange'];
+        $queueName = $payload['queueName'];
+        $binding = $payload['binding'];
+        $durable = $payload['durable'];
+        $autoDelete = $payload['autoDelete'];
 
         /** Create Queue */
         if(!$queue->isQueueExists($queueName)){
