@@ -55,11 +55,6 @@ class CourseEnrollmentListener implements ShouldQueue
         config([
             'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding
         ]);
-
-        /*dd(config('queue.connections.rabbitmq.options.queue.exchange'),
-            config('queue.connections.rabbitmq.options.exchange.name'),
-            config('queue.connections.rabbitmq.options.queue.exchange_routing_key'),
-            config('queue.connections.rabbitmq.options.queue.exchange_type'));*/
     }
 
     public function handle($event)

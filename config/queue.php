@@ -74,7 +74,7 @@ return [
                     'name' => env('RABBITMQ_RETRY_DLX', 'institute.dlx'),
                     'type' => env('RABBITMQ_RETRY_DLX_TYPE', 'fanout'),
                     'dlq' => env('RABBITMQ_RETRY_DLQ', 'institute.dlq'),
-                    'x_message_ttl' => env('RABBITMQ_RETRY_MESSAGE_TTL', '120000')
+                    'x_message_ttl' => env('RABBITMQ_RETRY_MESSAGE_TTL', 120000)
                 ],
                 'ssl_options' => [
                     'cafile' => env('RABBITMQ_SSL_CAFILE', null),

@@ -109,11 +109,11 @@ class RabbitMQService
      */
     public function createQueueAndBindWithRetry(RabbitMQQueue $queue, array $payload){
         /** Exchange Queue related variables */
-        $exchange = $payload['$exchange'];
-        $queueName = $payload['$queueName'];
-        $binding = $payload['$binding'];
-        $durable = $payload['$durable'];
-        $autoDelete = $payload['$autoDelete'];
+        $exchange = $payload['exchange'];
+        $queueName = $payload['queueName'];
+        $binding = $payload['binding'];
+        $durable = $payload['durable'];
+        $autoDelete = $payload['autoDelete'];
 
         $dlx = config('queue.connections.rabbitmq.options.dlx.name');
         $dlxType = config('queue.connections.rabbitmq.options.dlx.type');
@@ -122,7 +122,7 @@ class RabbitMQService
 
         $dlqArguments = [
             'x-dead-letter-exchange' => $exchange,
-            'x-message-ttl' => $dlqMessageTtl
+            'x-message-ttl' => (int) $dlqMessageTtl
         ];
         $queueArguments = [
             'x-dead-letter-exchange' => $dlx
