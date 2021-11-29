@@ -85,8 +85,8 @@ class RabbitMQService
         $exchange = $payload['exchange'];
         $queueName = $payload['queueName'];
         $binding = $payload['binding'];
-        $durable = $payload['durable'];
-        $autoDelete = $payload['autoDelete'];
+        $durable = $payload['durable'] ?? true;
+        $autoDelete = $payload['autoDelete'] ?? false;
 
         /** Create Queue */
         if(!$queue->isQueueExists($queueName)){
@@ -112,8 +112,8 @@ class RabbitMQService
         $exchange = $payload['exchange'];
         $queueName = $payload['queueName'];
         $binding = $payload['binding'];
-        $durable = $payload['durable'];
-        $autoDelete = $payload['autoDelete'];
+        $durable = $payload['durable'] ?? true;
+        $autoDelete = $payload['autoDelete'] ?? false;
 
         $dlx = config('queue.connections.rabbitmq.options.dlx.name');
         $dlxType = config('queue.connections.rabbitmq.options.dlx.type');
@@ -155,5 +155,40 @@ class RabbitMQService
         $queue->bindQueue(
             $queueName, $exchange, $binding
         );
+    }
+
+    /**
+     * @param RabbitMQQueue $queue
+     * @param array $payload
+     * @return void
+     * @throws AMQPProtocolChannelException
+     */
+    public function createExchangeQueueBind(RabbitMQQueue $queue, array $payload){
+        $exchange = $payload['exchange'];
+        $exchangeType = $payload['type'] ?? 'fanout';
+        $queueName = $payload['queueName'];
+        $binding = $payload['binding'] ?? "";
+        $durable = $payload['durable'] ?? true;
+        $autoDelete = $payload['autoDelete'] ?? false;
+        $exchangeArguments = $payload['exchangeArguments'] ?? [];
+        $queueArguments = $payload['queueArguments'] ?? [];
+
+        /** Create Exchange */
+        if (!$queue->isExchangeExists($exchange)) {
+            $queue->declareExchange(
+                $exchange, $exchangeType, true, false, $exchangeArguments
+            );
+        }
+        /** Create Queue */
+        if(!$queue->isQueueExists($queueName)){
+            $queue->declareQueue(
+                $queueName, $durable, $autoDelete, $queueArguments
+            );
+        }
+        /** Bind Error Queue with Error Exchange. */
+        $queue->bindQueue(
+            $queueName, $exchange, $binding
+        );
+
     }
 }
