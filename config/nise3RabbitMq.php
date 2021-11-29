@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\EducationLevel;
-
 return [
     'exchangeType' => [
         'direct' => 'direct',

@@ -185,10 +185,9 @@ class RabbitMQService
                 $queueName, $durable, $autoDelete, $queueArguments
             );
         }
-        /** Bind Error Queue with Error Exchange. */
+        /** Bind Queue with Exchange. */
         $queue->bindQueue(
             $queueName, $exchange, $binding
         );
-
     }
 }
