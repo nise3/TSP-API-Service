@@ -88,6 +88,7 @@ abstract class BaseModel extends Model
     public const YOUTH_CLIENT_URL_TYPE = "YOUTH";
     public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
     public const CMS_CLIENT_URL_TYPE = "CMS";
+    public const MAIL_SMS_SEND = "MAIL_SMS_SEND";
 
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
@@ -98,6 +99,7 @@ abstract class BaseModel extends Model
     public const PASSWORD_REGEX = 'regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
     public const PASSWORD_VALIDATION_MESSAGE = 'The password must contain at least one uppercase, lowercase letter and at least one number.[66000]';
 
+    public const NISE3_FROM_EMAIL = "info@nise3.com";
     public const SELF_EXCHANGE = 'institute';
 
 }

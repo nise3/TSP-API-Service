@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Services\CommonServices\MailService;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use Illuminate\Http\Client\RequestException;
@@ -192,8 +194,26 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
-                DB::commit();
                 $response['data'] = $institute;
+                $mailService = new MailService();
+                $mailService->setTo([
+                    $validated['contact_person_email']
+                ]);
+
+                $mailService->setForm(BaseModel::NISE3_FROM_EMAIL);
+                $mailService->setSubject("Institute Registration");
+                $mailService->setMessageBody([
+                    "user_name" => $validated['contact_person_mobile'],
+                    "password" => $validated['password']
+                ]);
+                $instituteRegistrationTemplate = 'mail.institute-create-default-template';
+                $mailService->setTemplate($instituteRegistrationTemplate);
+                $mailSendStatus=$mailService->sendMail();
+                Log::error("Institute User Create Notification : ".json_encode($mailSendStatus));
+                if(!$mailSendStatus['_response']['success']){
+                    DB::rollBack();
+                }
+                DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
 
@@ -295,11 +315,12 @@ class InstituteController extends Controller
     /**
      * @throws Throwable
      */
-    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse {
-        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')),  ValidationException::withMessages([
+    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse
+    {
+        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')), ValidationException::withMessages([
             "The Course ids must be an array.[8000]"
         ]));
-        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')),  ValidationException::withMessages([
+        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')), ValidationException::withMessages([
             "The Program ids must be an array.[8000]"
         ]));
 

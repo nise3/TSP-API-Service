@@ -290,7 +290,7 @@ class InstituteService
      */
     public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
