@@ -18,8 +18,11 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\CourseEnrollmentEvent::class => [
             \App\Listeners\CourseEnrollmentListener::class,
         ],
-        \App\Events\BatchEvent::class => [
-            \App\Listeners\BatchListener::class,
+        \App\Events\MailSendEvent::class => [
+            \App\Listeners\MailSendListener::class,
+        ],
+        \App\Events\SmsSendEvent::class => [
+            \App\Listeners\SmsSendListener::class,
         ],
     ];
 }
