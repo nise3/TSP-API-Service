@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
 
@@ -12,18 +13,18 @@ class RabbitMQService
      * @return void
      * @throws AMQPProtocolChannelException
      */
-    public function createRabbitMQCommonEntities(RabbitMQQueue $queue): void {
-
+    public function createRabbitMQCommonEntities(RabbitMQQueue $queue): void
+    {
         /** Exchange Queue related variables */
-        $exchange = config('queue.connections.rabbitmq.options.exchange.name');
-        $exchangeType = config('queue.connections.rabbitmq.options.exchange.type');
+        $exchange = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.name');
+        $exchangeType = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.type');
+        $durable = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.durable');
+        $autoDelete = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.autoDelete');
 
-        $alternateExchange = config('queue.connections.rabbitmq.options.alternate_exchange.name');
-        $alternateExchangeType = config('queue.connections.rabbitmq.options.alternate_exchange.type');
-        $alternateQueue = config('queue.connections.rabbitmq.options.alternate_exchange.queue');
+        $alternateExchange = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.alternateExchange.name');
+        $alternateExchangeType = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.alternateExchange.type');
+        $alternateQueue = config('nise3RabbitMq.exchanges.' . BaseModel::SELF_EXCHANGE . '.alternateExchange.queue');
 
-        $durable = config('queue.connections.rabbitmq.options.exchange.durable');
-        $autoDelete = config('queue.connections.rabbitmq.options.exchange.auto_delete');
         $exchangeArguments = [
             'alternate-exchange' => $alternateExchange
         ];
@@ -39,7 +40,7 @@ class RabbitMQService
             );
         }
         /** Create Alternate Queue */
-        if(!$queue->isQueueExists($alternateQueue)){
+        if (!$queue->isQueueExists($alternateQueue)) {
             $queue->declareQueue(
                 $alternateQueue, $durable, $autoDelete
             );
@@ -63,7 +64,7 @@ class RabbitMQService
             );
         }
         /** Create Error Queue */
-        if(!$queue->isQueueExists($errorQueue)){
+        if (!$queue->isQueueExists($errorQueue)) {
             $queue->declareQueue(
                 $errorQueue, true, false
             );
@@ -80,16 +81,17 @@ class RabbitMQService
      * @return void
      * @throws AMQPProtocolChannelException
      */
-    public function createQueueAndBindWithoutRetry(RabbitMQQueue $queue, array $payload){
+    public function createQueueAndBindWithoutRetry(RabbitMQQueue $queue, array $payload)
+    {
         /** Exchange Queue related variables */
         $exchange = $payload['exchange'];
-        $queueName = $payload['queueName'];
-        $binding = $payload['binding'];
         $durable = $payload['durable'] ?? true;
         $autoDelete = $payload['autoDelete'] ?? false;
+        $queueName = $payload['queueName'];
+        $binding = $payload['binding'] ?? "";
 
         /** Create Queue */
-        if(!$queue->isQueueExists($queueName)){
+        if (!$queue->isQueueExists($queueName)) {
             $queue->declareQueue(
                 $queueName, $durable, $autoDelete
             );
@@ -107,22 +109,24 @@ class RabbitMQService
      * @return void
      * @throws AMQPProtocolChannelException
      */
-    public function createQueueAndBindWithRetry(RabbitMQQueue $queue, array $payload){
+    public function createQueueAndBindWithRetry(RabbitMQQueue $queue, array $payload)
+    {
         /** Exchange Queue related variables */
         $exchange = $payload['exchange'];
-        $queueName = $payload['queueName'];
-        $binding = $payload['binding'];
         $durable = $payload['durable'] ?? true;
         $autoDelete = $payload['autoDelete'] ?? false;
+        $queueName = $payload['queueName'];
+        $binding = $payload['binding'] ?? "";
 
-        $dlx = config('queue.connections.rabbitmq.options.dlx.name');
-        $dlxType = config('queue.connections.rabbitmq.options.dlx.type');
-        $dlq = config('queue.connections.rabbitmq.options.dlx.dlq');
-        $dlqMessageTtl = config('queue.connections.rabbitmq.options.dlx.x_message_ttl');
+        /** DLX-DLQ related variables */
+        $dlx = $payload['dlx'];
+        $dlxType = $payload['dlxType'];
+        $dlq = $payload['dlq'];
+        $dlqMessageTtl = $payload['messageTtl'];
 
         $dlqArguments = [
             'x-dead-letter-exchange' => $exchange,
-            'x-message-ttl' => (int) $dlqMessageTtl
+            'x-message-ttl' => (int)$dlqMessageTtl
         ];
         $queueArguments = [
             'x-dead-letter-exchange' => $dlx
@@ -135,7 +139,7 @@ class RabbitMQService
             );
         }
         /** Create DLQ */
-        if(!$queue->isQueueExists($dlq)){
+        if (!$queue->isQueueExists($dlq)) {
             $queue->declareQueue(
                 $dlq, true, false, $dlqArguments
             );
@@ -146,7 +150,7 @@ class RabbitMQService
         );
 
         /** Create Queue */
-        if(!$queue->isQueueExists($queueName)){
+        if (!$queue->isQueueExists($queueName)) {
             $queue->declareQueue(
                 $queueName, $durable, $autoDelete, $queueArguments
             );
@@ -160,34 +164,29 @@ class RabbitMQService
     /**
      * @param RabbitMQQueue $queue
      * @param array $payload
+     * @param bool $retry
      * @return void
      * @throws AMQPProtocolChannelException
      */
-    public function createExchangeQueueBind(RabbitMQQueue $queue, array $payload){
+    public function createExchangeQueueAndBind(RabbitMQQueue $queue, array $payload, bool $retry = false)
+    {
         $exchange = $payload['exchange'];
-        $exchangeType = $payload['type'] ?? 'fanout';
-        $queueName = $payload['queueName'];
-        $binding = $payload['binding'] ?? "";
+        $exchangeType = $payload['type'];
         $durable = $payload['durable'] ?? true;
         $autoDelete = $payload['autoDelete'] ?? false;
         $exchangeArguments = $payload['exchangeArguments'] ?? [];
-        $queueArguments = $payload['queueArguments'] ?? [];
 
         /** Create Exchange */
         if (!$queue->isExchangeExists($exchange)) {
             $queue->declareExchange(
-                $exchange, $exchangeType, true, false, $exchangeArguments
+                $exchange, $exchangeType, $durable, $autoDelete, $exchangeArguments
             );
         }
-        /** Create Queue */
-        if(!$queue->isQueueExists($queueName)){
-            $queue->declareQueue(
-                $queueName, $durable, $autoDelete, $queueArguments
-            );
+
+        if ($retry) {
+            $this->createQueueAndBindWithRetry($queue, $payload);
+        } else {
+            $this->createQueueAndBindWithoutRetry($queue, $payload);
         }
-        /** Bind Queue with Exchange. */
-        $queue->bindQueue(
-            $queueName, $exchange, $binding
-        );
     }
 }

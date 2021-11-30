@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\BaseModel;
 use App\Services\RabbitMQService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -32,11 +33,12 @@ class CourseEnrollmentListener implements ShouldQueue
         $queue = $this->connector->connect($config);
 
         /** Exchange Queue related variables */
-        $exchange = config('queue.connections.rabbitmq.options.exchange.name');
-        $queueName = config('nise3RabbitMq.queue.courseEnrollment.name');
-        $binding = config('nise3RabbitMq.queue.courseEnrollment.binding');
-        $durable = config('queue.connections.rabbitmq.options.exchange.durable');
-        $autoDelete = config('queue.connections.rabbitmq.options.exchange.auto_delete');
+        $exchange = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.name');
+        $type = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.type');
+        $durable = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.durable');
+        $autoDelete = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.autoDelete');
+        $queueName = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.queue.courseEnrollment.name');
+        $binding = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.queue.courseEnrollment.binding');
 
         /** Create all common entities in RabbitMQ server If they don't exist */
         $this->rabbitmqService->createRabbitMQCommonEntities($queue);
@@ -47,14 +49,25 @@ class CourseEnrollmentListener implements ShouldQueue
             'queueName' => $queueName,
             'binding' => $binding,
             'durable' => $durable,
-            'autoDelete' => $autoDelete,
+            'autoDelete' => $autoDelete
         ];
         $this->rabbitmqService->createQueueAndBindWithoutRetry($queue, $payload);
 
         /** Set Config to publish the event message */
         config([
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding
+            'queue.connections.rabbitmq.options.exchange.name' => $exchange,
+            'queue.connections.rabbitmq.options.queue.exchange' => $exchange,
+            'queue.connections.rabbitmq.options.exchange.type' => $type,
+            'queue.connections.rabbitmq.options.queue.exchange_type' => $type,
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding,
         ]);
+
+        /*dd(config('queue.connections.rabbitmq.options.exchange.name'),
+            config('queue.connections.rabbitmq.options.queue.exchange'),
+            config('queue.connections.rabbitmq.options.exchange.type'),
+            config('queue.connections.rabbitmq.options.queue.exchange_type'),
+            config('queue.connections.rabbitmq.options.queue.exchange_routing_key')
+        );*/
     }
 
     public function handle($event)

@@ -65,6 +65,9 @@ class CreateCourseEnrollmentsTable extends Migration
             $table->unsignedTinyInteger("row_status")->default(2)
                 ->comment('0=>inactive, 1=>active, 2=>pending, 3=>rejected');
 
+            $table->unsignedTinyInteger("saga_status")->default(1)
+                ->comment('1=>pending, 2=>commit, 3=>rollback');
+
             $table->timestamps();
             $table->softDeletes();
         });

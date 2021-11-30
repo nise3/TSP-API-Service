@@ -98,5 +98,9 @@ abstract class BaseModel extends Model
     public const PASSWORD_REGEX = 'regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
     public const PASSWORD_VALIDATION_MESSAGE = 'The password must contain at least one uppercase, lowercase letter and at least one number.[66000]';
 
+    public const SELF_EXCHANGE = 'institute';
 
+    public const SAGA_STATUS_PENDING = 1;
+    public const SAGA_STATUS_COMMIT = 2;
+    public const SAGA_STATUS_ROLLBACK = 3;
 }

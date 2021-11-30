@@ -95,7 +95,7 @@ class CourseEnrollmentController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|RequestException
+     * @throws ValidationException
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
@@ -114,6 +114,7 @@ class CourseEnrollmentController extends Controller
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
             /** Trigger EVENT to Youth Service via RabbitMQ  */
+            $validated['id'] = $courseEnroll->id;
             event(new CourseEnrollmentEvent($validated));
 
             $response = [
@@ -135,7 +136,7 @@ class CourseEnrollmentController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|Throwable
      */
     public function assignBatch(Request $request): JsonResponse
     {
@@ -163,7 +164,7 @@ class CourseEnrollmentController extends Controller
 
     }
 
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment)
+    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment): void
     {
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
         $data = [
@@ -171,7 +172,7 @@ class CourseEnrollmentController extends Controller
             "youth_id" => $courseEnrollment->youth_id
         ];
 
-        return Http::withOptions([
+        Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug'),
             'timeout' => config("nise3.http_timeout")
