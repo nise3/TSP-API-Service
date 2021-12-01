@@ -139,19 +139,6 @@ class MailService
 
     }
 
-    public function getAttachments(array $attachments): array
-    {
-        $attachmentFile = [];
-        foreach ($attachments as $attachment) {
-            $ext = pathinfo($attachment, PATHINFO_EXTENSION);
-            if ($ext && in_array($ext, self::FILE_EXTENSION_ALLOWABLE)) {
-                $attachmentFile[] = $attachment;
-            }
-        }
-
-        return $attachmentFile;
-
-    }
 
     public function sendMail()
     {

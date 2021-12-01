@@ -4,7 +4,7 @@ namespace App\Events;
 
 class MailSendEvent
 {
-    private array $mailPayload;
+    public array $mailPayload;
     /**
      * Create a new Email event instance.
      *

@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Services\RabbitMQService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
 
@@ -48,7 +49,7 @@ class MailSendListener implements ShouldQueue
     private const DLX = "mail.sms.dlx";
     private const DLX_TYPE = "fanout";
     private const DLX_DL_QUEUE = "mail.sms.dlq";
-    private const DLX_X_MESSAGE_TTL = 120000;
+    private const DLX_X_MESSAGE_TTL = 12000;
 
 
     /**
@@ -59,6 +60,15 @@ class MailSendListener implements ShouldQueue
      */
     private function publishEvent(): void
     {
+        /** Set Config to publish the event message */
+        config([
+            'queue.connections.rabbitmq.options.exchange.name' => self::EXCHANGE,
+            'queue.connections.rabbitmq.options.queue.exchange' => self::EXCHANGE,
+            'queue.connections.rabbitmq.options.exchange.type' => self::EXCHANGE_TYPE,
+            'queue.connections.rabbitmq.options.queue.exchange_type' => self::EXCHANGE_TYPE,
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => self::EXCHANGE_BINDING_KEY,
+        ]);
+
         $config = config('queue.connections.rabbitmq');
         $queue = $this->connector->connect($config);
 
@@ -93,14 +103,13 @@ class MailSendListener implements ShouldQueue
         ];
         $this->rabbitmqService->createExchangeQueueAndBind($queue, $payload, true);
 
-        /** Set Config to publish the event message */
-        config([
-            'queue.connections.rabbitmq.options.exchange.name' => self::EXCHANGE,
-            'queue.connections.rabbitmq.options.queue.exchange' => self::EXCHANGE,
-            'queue.connections.rabbitmq.options.exchange.type' => self::EXCHANGE_TYPE,
-            'queue.connections.rabbitmq.options.queue.exchange_type' => self::EXCHANGE_TYPE,
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => self::EXCHANGE_BINDING_KEY,
-        ]);
+
+
+        Log::info(config('queue.connections.rabbitmq.options.exchange.name'));
+        Log::info(config('queue.connections.rabbitmq.options.queue.exchange'));
+        Log::info(config('queue.connections.rabbitmq.options.exchange.type'));
+        Log::info(config('queue.connections.rabbitmq.options.queue.exchange_type'));
+        Log::info(config('queue.connections.rabbitmq.options.queue.exchange_routing_key'));
     }
 
     public function handle($event)

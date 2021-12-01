@@ -32,7 +32,7 @@ return [
 
         'rabbitmq' => [
             'driver' => 'rabbitmq',
-            'queue' => env('RABBITMQ_QUEUE','youth.q'),
+            'queue' => env('RABBITMQ_QUEUE','institute.q'),
             'connection' => PhpAmqpLib\Connection\AMQPLazyConnection::class,
             'hosts' => [
                 [
@@ -45,9 +45,9 @@ return [
             ],
             'options' => [
                 'queue' => [
-                    'exchange' => env('RABBITMQ_EXCHANGE_NAME','youth.x'),
+                    'exchange' => env('RABBITMQ_EXCHANGE_NAME','institute.x'),
                     'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE','fanout'),
-                    'exchange_routing_key' => env('EXCHANGE_ROUTING_KEY','youth.routing.key'),
+                    'exchange_routing_key' => env('EXCHANGE_ROUTING_KEY','institute.routing.key'),
                     'prioritize_delayed_messages' =>  false,
                     'queue_max_priority' => 10,
 
@@ -57,7 +57,7 @@ return [
                     'error_queue_name' => env('RABBITMQ_ERROR_QUEUE_NAME', 'error.q')
                 ],
                 'exchange' => [
-                    'name' => env('RABBITMQ_EXCHANGE_NAME','youth.x'),
+                    'name' => env('RABBITMQ_EXCHANGE_NAME','institute.x'),
                     'type' => env('RABBITMQ_EXCHANGE_TYPE','topic'),
                     'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
                     'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
@@ -66,14 +66,14 @@ return [
                     'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
                 ],
                 'alternate_exchange' => [
-                    'name' => env('RABBITMQ_ALTERNATE_EXCHANGE', 'youth.alternate.x'),
+                    'name' => env('RABBITMQ_ALTERNATE_EXCHANGE', 'institute.alternate.x'),
                     'type' => env('RABBITMQ_ALTERNATE_EXCHANGE_TYPE','fanout'),
-                    'queue' => env('RABBITMQ_ALTERNATE_QUEUE','youth.alternate.q')
+                    'queue' => env('RABBITMQ_ALTERNATE_QUEUE','institute.alternate.q')
                 ],
                 'dlx' => [
-                    'name' => env('RABBITMQ_RETRY_DLX', 'youth.dlx'),
+                    'name' => env('RABBITMQ_RETRY_DLX', 'institute.dlx'),
                     'type' => env('RABBITMQ_RETRY_DLX_TYPE', 'fanout'),
-                    'dlq' => env('RABBITMQ_RETRY_DLQ', 'youth.dlq'),
+                    'dlq' => env('RABBITMQ_RETRY_DLQ', 'institute.dlq'),
                     'x_message_ttl' => env('RABBITMQ_RETRY_MESSAGE_TTL', 120000)
                 ],
                 'ssl_options' => [

@@ -108,6 +108,9 @@ class InstituteController extends Controller
             }
 
             $validatedData['institute_id'] = $institute->id;
+
+            $validatedData['password']=BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
 
@@ -125,6 +128,9 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
+
+                $this->instituteService->userInfoSendByMail($validatedData);
+
                 DB::commit();
                 $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -195,20 +201,9 @@ class InstituteController extends Controller
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
-                $mailService = new MailService();
-                $mailService->setTo([
-                    $validated['contact_person_email']
-                ]);
 
-                $mailService->setForm(BaseModel::NISE3_FROM_EMAIL);
-                $mailService->setSubject("Institute Registration");
-                $mailService->setMessageBody([
-                    "user_name" => $validated['contact_person_mobile'],
-                    "password" => $validated['password']
-                ]);
-                $instituteRegistrationTemplate = 'mail.institute-create-default-template';
-                $mailService->setTemplate($instituteRegistrationTemplate);
-                $mailService->sendMail();
+
+                $this->instituteService->userInfoSendByMail($validated);
 
                 DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -377,4 +372,6 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+
 }
