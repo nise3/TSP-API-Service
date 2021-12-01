@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
-use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
+
 
 class MailSendListener implements ShouldQueue
 {
@@ -28,6 +28,8 @@ class MailSendListener implements ShouldQueue
      * @return void
      * @throws Exception
      */
+
+    /** Exchange related variables */
     private const EXCHANGE = "mail.sms.x";
     private const EXCHANGE_TYPE = "topic";
     private const EXCHANGE_QUEUE = "mail.q";
@@ -36,10 +38,14 @@ class MailSendListener implements ShouldQueue
     private const EXCHANGE_DURABLE = true;
     private const EXCHANGE_AUTO_DELETE = false;
 
+    /** Alternate Exchange related variables */
     private const ALTER_EXCHANGE = "mail.sms.alternate.x";
     private const ALTER_EXCHANGE_TYPE = "fanout";
     private const ALTER_EXCHANGE_QUEUE = "mail.sms.alternate.q";
+    private const ALTER_EXCHANGE_DURABLE = true;
+    private const ALTER_EXCHANGE_AUTO_DELETE = false;
 
+    /** DlX-DLQ related variables */
     private const DLX = "mail.sms.dlx";
     private const DLX_TYPE = "fanout";
     private const DLX_DL_QUEUE = "mail.sms.dlq";
@@ -55,64 +61,44 @@ class MailSendListener implements ShouldQueue
         $config = config('queue.connections.rabbitmq');
         $queue = $this->connector->connect($config);
 
-        /** Exchange Queue related variables */
-        $exchange = self::EXCHANGE;
-        $type = self::EXCHANGE_TYPE;
-        $durable = self::EXCHANGE_DURABLE;
-        $autoDelete = self::EXCHANGE_AUTO_DELETE;
-        $queueName = self::EXCHANGE_QUEUE;
-        $binding = self::EXCHANGE_BINDING_KEY;
-
-        /** Alternate Exchange related variables */
-        $alternateExchange = self::ALTER_EXCHANGE;
-        $alternateExchangeType = self::ALTER_EXCHANGE_TYPE;
-        $alternateQueue = self::ALTER_EXCHANGE_QUEUE;
-
         $exchangeArguments = [
-            'alternate-exchange' => $alternateExchange
+            'alternate-exchange' => self::ALTER_EXCHANGE
         ];
-
-        /** DlX-DLQ related variables */
-        $dlx = self::DLX;
-        $dlxType = self::DLX_TYPE;
-        $dlq = self::DLX_DL_QUEUE;
-        $messageTtl = self::DLX_X_MESSAGE_TTL;
 
         /** Create Alternate Exchange, Queue and Bind Queue for Mail-SMS Exchange */
         $payload = [
-            'exchange' => $alternateExchange,
-            'type' => $alternateExchangeType,
-            'durable' => true,
-            'autoDelete' => false,
-            'queueName' => $alternateQueue,
+            'exchange' => self::ALTER_EXCHANGE,
+            'type' => self::ALTER_EXCHANGE_TYPE,
+            'durable' => self::ALTER_EXCHANGE_DURABLE,  /** DATA STORE IN CASE OF CONNECTION FAILURE */
+            'autoDelete' => self::ALTER_EXCHANGE_AUTO_DELETE,  /** IF TRUE= THE EXCHANGE IS DELETED IN CASE OF THERE IS NO BOUND QUEUE AND IF=FALSE THE EXCHANGE IS NOT DELETED  */
+            'queueName' => self::ALTER_EXCHANGE_QUEUE,
             'binding' => ""
         ];
         $this->rabbitmqService->createExchangeQueueAndBind($queue, $payload, false);
 
         /** Create Exchange, Queue and Bind Queue with Retry by using DLX-DLQ for RETRY mechanism */
         $payload = [
-            'exchange' => $exchange,
-            'type' => $type,
-            'durable' => $durable,
-            'autoDelete' => $autoDelete,
+            'exchange' => self::EXCHANGE,
+            'type' => self::EXCHANGE_TYPE,
+            'durable' => self::EXCHANGE_DURABLE,  /** DATA STORE IN CASE OF CONNECTION FAILURE */
+            'autoDelete' => self::EXCHANGE_AUTO_DELETE, /** IF TRUE= THE EXCHANGE IS DELETED IN CASE OF THERE IS NO BOUND QUEUE AND IF=FALSE THE EXCHANGE IS NOT DELETED  */
             'exchangeArguments' => $exchangeArguments,
-            'queueName' => $queueName,
-            'binding' => $binding,
-            'dlx' => $dlx,
-            'dlxType' => $dlxType,
-            'dlq' => $dlq,
-            'messageTtl' => $messageTtl
+            'queueName' => self::EXCHANGE_QUEUE,
+            'binding' => self::EXCHANGE_BINDING_KEY,
+            'dlx' => self::DLX,
+            'dlxType' => self::DLX_TYPE,
+            'dlq' => self::DLX_DL_QUEUE,
+            'messageTtl' => self::DLX_X_MESSAGE_TTL
         ];
         $this->rabbitmqService->createExchangeQueueAndBind($queue, $payload, true);
 
-
         /** Set Config to publish the event message */
         config([
-            'queue.connections.rabbitmq.options.exchange.name' => $exchange,
-            'queue.connections.rabbitmq.options.queue.exchange' => $exchange,
-            'queue.connections.rabbitmq.options.exchange.type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding,
+            'queue.connections.rabbitmq.options.exchange.name' => self::EXCHANGE,
+            'queue.connections.rabbitmq.options.queue.exchange' => self::EXCHANGE,
+            'queue.connections.rabbitmq.options.exchange.type' => self::EXCHANGE_TYPE,
+            'queue.connections.rabbitmq.options.queue.exchange_type' => self::EXCHANGE_TYPE,
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => self::EXCHANGE_BINDING_KEY,
         ]);
     }
 
