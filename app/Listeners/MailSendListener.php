@@ -52,10 +52,10 @@ class MailSendListener implements ShouldQueue
 
 
     /**
-     * @throws AMQPProtocolChannelException
-     * @throws Exception
-     * @throws Exception
      * @return void
+     * @throws Exception
+     * @throws Exception
+     * @throws AMQPProtocolChannelException
      */
     private function publishEvent(): void
     {
@@ -70,38 +70,9 @@ class MailSendListener implements ShouldQueue
         $payload = [
             'exchange' => self::ALTER_EXCHANGE,
             'type' => self::ALTER_EXCHANGE_TYPE,
-            'durable' => self::ALTER_EXCHANGE_DURABLE,  /** DATA STORE IN CASE OF CONNECTION FAILURE */
-            'autoDelete' => self::ALTER_EXCHANGE_AUTO_DELETE,  /** IF TRUE= THE EXCHANGE IS DELETED IN CASE OF THERE IS NO BOUND QUEUE AND IF=FALSE THE EXCHANGE IS NOT DELETED  */
+            'durable' => self::ALTER_EXCHANGE_DURABLE, /** DATA STORE IN CASE OF CONNECTION FAILURE */
+            'autoDelete' => self::ALTER_EXCHANGE_AUTO_DELETE, /** IF TRUE= THE EXCHANGE IS DELETED IN CASE OF THERE IS NO BOUND QUEUE AND IF=FALSE THE EXCHANGE IS NOT DELETED  */
             'queueName' => self::ALTER_EXCHANGE_QUEUE,
-        /** Alternate Exchange related variables */
-        $alternateExchange = config('nise3RabbitMq.exchanges.mailSmsExchange.alternateExchange.name');
-        $alternateExchangeType = config('nise3RabbitMq.exchanges.mailSmsExchange.alternateExchange.type');
-        $alternateQueue = config('nise3RabbitMq.exchanges.mailSmsExchange.alternateExchange.queue');
-
-        /** Exchange Queue related variables */
-        $exchange = config('nise3RabbitMq.exchanges.mailSmsExchange.name');
-        $type = config('nise3RabbitMq.exchanges.mailSmsExchange.type');
-        $durable = config('nise3RabbitMq.exchanges.mailSmsExchange.durable');
-        $autoDelete = config('nise3RabbitMq.exchanges.mailSmsExchange.autoDelete');
-        $exchangeArguments = [
-            'alternate-exchange' => $alternateExchange
-        ];
-        $queueName = config('nise3RabbitMq.exchanges.mailSmsExchange.queue.mail.name');
-        $binding = config('nise3RabbitMq.exchanges.mailSmsExchange.queue.mail.binding');
-
-        /** DlX-DLQ related variables */
-        $dlx = config('nise3RabbitMq.exchanges.mailSmsExchange.dlx.name');
-        $dlxType = config('nise3RabbitMq.exchanges.mailSmsExchange.dlx.type');
-        $dlq = config('nise3RabbitMq.exchanges.mailSmsExchange.dlx.dlq');
-        $messageTtl = config('nise3RabbitMq.exchanges.mailSmsExchange.dlx.x_message_ttl');
-
-        /** Create Alternate Exchange, Queue and Bind Queue for Mail-SMS Exchange */
-        $payload = [
-            'exchange' => $alternateExchange,
-            'type' => $alternateExchangeType,
-            'durable' => true,
-            'autoDelete' => false,
-            'queueName' => $alternateQueue,
             'binding' => ""
         ];
         $this->rabbitmqService->createExchangeQueueAndBind($queue, $payload, false);
@@ -110,7 +81,7 @@ class MailSendListener implements ShouldQueue
         $payload = [
             'exchange' => self::EXCHANGE,
             'type' => self::EXCHANGE_TYPE,
-            'durable' => self::EXCHANGE_DURABLE,  /** DATA STORE IN CASE OF CONNECTION FAILURE */
+            'durable' => self::EXCHANGE_DURABLE, /** DATA STORE IN CASE OF CONNECTION FAILURE */
             'autoDelete' => self::EXCHANGE_AUTO_DELETE, /** IF TRUE= THE EXCHANGE IS DELETED IN CASE OF THERE IS NO BOUND QUEUE AND IF=FALSE THE EXCHANGE IS NOT DELETED  */
             'exchangeArguments' => $exchangeArguments,
             'queueName' => self::EXCHANGE_QUEUE,
@@ -129,11 +100,6 @@ class MailSendListener implements ShouldQueue
             'queue.connections.rabbitmq.options.exchange.type' => self::EXCHANGE_TYPE,
             'queue.connections.rabbitmq.options.queue.exchange_type' => self::EXCHANGE_TYPE,
             'queue.connections.rabbitmq.options.queue.exchange_routing_key' => self::EXCHANGE_BINDING_KEY,
-            'queue.connections.rabbitmq.options.exchange.name' => $exchange,
-            'queue.connections.rabbitmq.options.queue.exchange' => $exchange,
-            'queue.connections.rabbitmq.options.exchange.type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding,
         ]);
     }
 
