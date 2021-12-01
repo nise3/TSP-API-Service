@@ -2,25 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
-use App\Models\Institute;
 use App\Models\Trainer;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
-use Symfony\Component\HttpFoundation\Response;
 
 class InstituteStatisticsService
 {
