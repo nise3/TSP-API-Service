@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Services\CommonServices\MailService;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use Illuminate\Http\Client\RequestException;
@@ -107,6 +108,9 @@ class InstituteController extends Controller
             }
 
             $validatedData['institute_id'] = $institute->id;
+
+            $validatedData['password']=BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
 
@@ -124,6 +128,9 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
+
+                $this->instituteService->userInfoSendByMail($validatedData);
+
                 DB::commit();
                 $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -193,8 +200,12 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
-                DB::commit();
                 $response['data'] = $institute;
+
+
+                $this->instituteService->userInfoSendByMail($validated);
+
+                DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
 
@@ -296,11 +307,12 @@ class InstituteController extends Controller
     /**
      * @throws Throwable
      */
-    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse {
-        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')),  ValidationException::withMessages([
+    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse
+    {
+        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')), ValidationException::withMessages([
             "The Course ids must be an array.[8000]"
         ]));
-        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')),  ValidationException::withMessages([
+        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')), ValidationException::withMessages([
             "The Program ids must be an array.[8000]"
         ]));
 
@@ -448,4 +460,6 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
+
+
 }

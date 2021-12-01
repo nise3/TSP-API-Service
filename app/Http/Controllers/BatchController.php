@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BatchEvent;
 use App\Models\Batch;
 use App\Services\BatchService;
 use Illuminate\Http\Client\RequestException;
@@ -9,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -103,6 +103,7 @@ class BatchController extends Controller
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
+
             DB::commit();
         } catch (Throwable $e){
             DB::rollBack();

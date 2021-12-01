@@ -30,5 +30,10 @@ return [
         "local" => "",
         "dev" => "https://identity.bus-staging.softbdltd.com/scim2/Users",
         "prod" => "https://identity.bus-staging.softbdltd.com/scim2/Users"
+    ],
+    'mail_sms_send'=>[
+        "local" => "http://localhost:8015/api/v1/",
+        "dev" => "http://organization.local:8015/api/v1/",
+        "prod" => ""
     ]
 ];
