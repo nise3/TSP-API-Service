@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\MailSendEvent;
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -22,13 +23,16 @@ class CourseEnrollmentSuccessToInstituteListener implements ShouldQueue
         $data = json_decode(json_encode($event), true);
 
         Log::info("ttttttttttttttttttttttttttttttttt");
-        Log::info(json_encode($data));
-        Log::info($data['id']);
+        /*Log::info(json_encode($data));
+        Log::info($data['id']);*/
 
         /** @var CourseEnrollment $courseEnrollment */
-        $courseEnrollment = CourseEnrollment::find($data['id']);
+        /*$courseEnrollment = CourseEnrollment::find($data['id']);
         $courseEnrollment['saga_status'] = BaseModel::SAGA_STATUS_COMMIT;
         $courseEnrollment->fill($data);
-        $courseEnrollment->save();
+        $courseEnrollment->save();*/
+
+        event(MailSendEvent::class);
+
     }
 }
