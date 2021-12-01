@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeFilterByInstitute;
+use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -37,7 +37,8 @@ use Illuminate\Support\Carbon;
  */
 class Trainer extends BaseModel
 {
-    use ScopeRowStatusTrait,SoftDeletes,ScopeFilterByInstitute;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
     protected $casts = [

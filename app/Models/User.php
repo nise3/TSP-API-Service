@@ -8,6 +8,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use \Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Auth\Authorizable;
 
 /**
@@ -26,6 +27,8 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property int loc_division_id
  * @property int loc_district_id
  * @property int loc_upazila_id
+ * @property int branch_id
+ * @property int training_center_id
  * @property int $row_status
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -66,5 +69,25 @@ class User extends BaseModel implements
 
         return $this->permissions->contains($key);
     }
+
+    public static function isInstituteUser(): bool
+    {
+        $authUser = Auth::user();
+        return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+    }
+
+    public static function isTrainingCenterUser(): bool
+    {
+        $authUser = Auth::user();
+        return $authUser && $authUser->training_center_id;
+    }
+
+    public static function isBranchUser(): bool
+    {
+        $authUser = Auth::user();
+        return $authUser && $authUser->branch_id && $authUser->training_center_id == null;
+    }
+
+
 
 }

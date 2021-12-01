@@ -60,14 +60,11 @@ class BranchService
             'branches.created_at',
             'branches.updated_at',
             'branches.deleted_at',
-        ])->byInstitute();
+        ])->acl();
 
         $branchBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('branches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
         $branchBuilder->leftJoin('loc_divisions', function ($join) {
