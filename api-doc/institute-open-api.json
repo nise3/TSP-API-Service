@@ -1747,35 +1747,19 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 2,
-                                        "course_id": 1,
-                                        "course_title_en": "Mrs. Lindsay Bernhard I",
-                                        "course_title": "Tyreek Koelpin",
-                                        "institute_id": 1,
-                                        "institute_title_en": "Prof. Shyann Armstrong",
-                                        "institute_title": "Dr. Cristopher Schiller V",
-                                        "branch_id": null,
-                                        "branch_title_en": null,
-                                        "branch_title": null,
-                                        "program_id": 2,
-                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
-                                        "program_title": "Trey Nader I",
-                                        "number_of_seats": 100,
-                                        "registration_start_date": "2021-11-15",
-                                        "registration_end_date": "2021-11-15",
-                                        "batch_start_date": "2021-11-15",
-                                        "batch_end_date": "2021-11-15",
-                                        "available_seats": 0,
-                                        "training_center_id": 2,
-                                        "training_center_title_en": "Mr. Javonte Conn IV",
-                                        "training_center_title": "Whitney Leuschke",
-                                        "application_form_settings": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-13T08:48:09.000000Z",
-                                        "updated_at": "2021-10-13T08:48:10.000000Z",
-                                        "deleted_at": null
+                                        "title": "AAAAA",
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "course_id": "1",
+                                        "number_of_seats": "200",
+                                        "registration_start_date": "2021-09-07",
+                                        "registration_end_date": "2021-09-09",
+                                        "batch_start_date": "2021-09-09",
+                                        "batch_end_date": "2021-12-09",
+                                        "available_seats": "200",
+                                        "updated_at": "2021-12-01T12:06:59.000000Z",
+                                        "created_at": "2021-12-01T12:06:59.000000Z",
+                                        "id": 169
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -5251,9 +5235,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "available_seats": {
-                        "type": "integer"
-                    },
                     "row_status": {
                         "type": "integer",
                         "enum": [
@@ -5273,8 +5254,7 @@
                     "registration_start_date",
                     "registration_end_date",
                     "batch_start_date",
-                    "batch_end_date",
-                    "available_seats"
+                    "batch_end_date"
                 ]
             },
             "trainingCentersWithBatches": {
