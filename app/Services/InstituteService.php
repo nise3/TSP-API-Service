@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -280,6 +281,81 @@ class InstituteService
     public function destroy(Institute $institute): bool
     {
         return $institute->delete();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterApproval(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_ACTIVE;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterRejection(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_REJECTED;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function instituteUserApproval(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->put($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+
+    public function instituteUserRejection(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-rejection';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->put($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Services\CourseService;
 use App\Services\ProgramService;
@@ -358,5 +359,93 @@ class InstituteController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Institute Open Registration Approval
+     * @param int $instituteId
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function instituteRegistrationApproval(int $instituteId): JsonResponse
+    {
+        $institute = Institute::findOrFail($instituteId);
+
+        DB::beginTransaction();
+        try {
+            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
+                $this->instituteService->InstituteStatusChangeAfterApproval($institute);
+                $this->instituteService->InstituteUserApproval($institute);
+                DB::commit();
+                $response = [
+                    '_response_status' => [
+                        "success" => true,
+                        "code" => ResponseAlias::HTTP_OK,
+                        "message" => "Institute Registration  approved successfully",
+                        "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+                    ]
+                ];
+            } else {
+                $response = [
+                    '_response_status' => [
+                        "success" => false,
+                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                        "message" => "No pending status found for this Institute",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            }
+
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
+    }
+
+    /**
+     * Institute Open Registration Rejection
+     * @param int $instituteId
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function InstituteRegistrationRejection(int $instituteId): JsonResponse
+    {
+        $institute = Institute::findOrFail($instituteId);
+
+        DB::beginTransaction();
+        try {
+            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
+                $this->instituteService->InstituteStatusChangeAfterRejection($institute);
+                $this->instituteService->InstituteUserRejection($institute);
+                DB::commit();
+                $response = [
+                    '_response_status' => [
+                        "success" => true,
+                        "code" => ResponseAlias::HTTP_OK,
+                        "message" => "Institute Registration  rejected successfully",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            } else {
+                $response = [
+                    '_response_status' => [
+                        "success" => false,
+                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                        "message" => "No pending status found for this Institute",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            }
+
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
     }
 }
