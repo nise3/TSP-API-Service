@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Services\RabbitMQService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
 
 class CourseEnrollmentListener implements ShouldQueue
@@ -72,6 +73,6 @@ class CourseEnrollmentListener implements ShouldQueue
 
     public function handle($event)
     {
-
+       Log::info("listen".json_encode($event));
     }
 }

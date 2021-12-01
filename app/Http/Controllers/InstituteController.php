@@ -208,11 +208,7 @@ class InstituteController extends Controller
                 ]);
                 $instituteRegistrationTemplate = 'mail.institute-create-default-template';
                 $mailService->setTemplate($instituteRegistrationTemplate);
-                $mailSendStatus=$mailService->sendMail();
-                Log::error("Institute User Create Notification : ".json_encode($mailSendStatus));
-                if(!$mailSendStatus['_response']['success']){
-                    DB::rollBack();
-                }
+                $mailService->sendMail();
                 DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }

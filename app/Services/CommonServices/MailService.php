@@ -2,6 +2,7 @@
 
 namespace App\Services\CommonServices;
 
+use App\Events\MailSendEvent;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use Illuminate\Support\Facades\Http;
@@ -173,26 +174,15 @@ class MailService
         if (!empty($this->bcc)) {
             $sendMailPayload['bcc'] = $this->bcc;
         }
-        if (!empty($mailData['attachment'])) {
-            $sendMailPayload['attachment'] = $this->getAttachments($this->attachments);
+        if (!empty($this->attachments)) {
+            $sendMailPayload['attachment'] = $this->attachments;
         }
-        $url = clientUrl(BaseModel::MAIL_SMS_SEND) . 'send-mail';
-        return Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $sendMailPayload)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
 
+        event(new MailSendEvent($sendMailPayload));
     }
 
-    private function templateView($data)
+    private function templateView($data): string
     {
-       return '<p>UserName: '.$data["user_name"].'.</p><br/><p>Password: '.$data["password"].'.</p>';
+        return '<p>UserName: ' . $data["user_name"] . '.</p><br/><p>Password: ' . $data["password"] . '.</p>';
     }
 }
