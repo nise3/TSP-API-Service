@@ -209,6 +209,7 @@ class InstituteController extends Controller
                 $instituteRegistrationTemplate = 'mail.institute-create-default-template';
                 $mailService->setTemplate($instituteRegistrationTemplate);
                 $mailService->sendMail();
+
                 DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
