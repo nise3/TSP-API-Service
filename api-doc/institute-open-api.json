@@ -4116,6 +4116,44 @@
                     "Course Enrollments"
                 ]
             }
+        },
+        "/institute-dashboard-statistics/{instituteId}": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to aGet institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "total_Enroll": 80,
+                                    "total_Course": 4,
+                                    "total_Batch": 25,
+                                    "total_running_students": 90,
+                                    "total_trainers": 18,
+                                    "total_Demand_From_Industry": 0,
+                                    "total_Certificate_Issue": 0,
+                                    "Total_Trending_Course": 0,
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Dashboard Statistics"
+                ]
+            }
         }
     },
     "components": {
@@ -5649,6 +5687,15 @@
                 "in": "query",
                 "required": true,
                 "name": "institute_id",
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "institute_id_path": {
+                "in": "path",
+                "required": true,
+                "name": "instituteId",
                 "schema": {
                     "type": "integer",
                     "example": "1"
