@@ -95,7 +95,7 @@ class CourseService
                 'courses.updated_at',
                 'courses.deleted_at',
             ]
-        )->byInstitute();
+        )->acl();
 
         $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')

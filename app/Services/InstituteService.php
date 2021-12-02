@@ -685,7 +685,12 @@ class InstituteService
             ],
             'contact_person_email' => [
                 'required',
-                'email'
+                'email',
+                Rule::unique('institutes', 'contact_person_email')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) {
+                        return $query->whereNull('deleted_at');
+                    })
             ],
             'contact_person_designation' => [
                 'required',
@@ -754,7 +759,11 @@ class InstituteService
             'contact_person_mobile' => [
                 'required',
                 BaseModel::MOBILE_REGEX,
-                'unique:institutes,contact_person_mobile',
+                Rule::unique('institutes', 'contact_person_mobile')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) {
+                        return $query->whereNull('deleted_at');
+                    })
             ],
             'contact_person_name' => [
                 'required',
@@ -769,7 +778,11 @@ class InstituteService
             'contact_person_email' => [
                 'required',
                 'email',
-                'unique:institutes,contact_person_email',
+                Rule::unique('institutes', 'contact_person_email')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) {
+                        return $query->whereNull('deleted_at');
+                    })
             ],
             'loc_division_id' => [
                 'required',

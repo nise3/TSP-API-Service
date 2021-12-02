@@ -88,7 +88,7 @@ class CourseEnrollmentService
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
             ]
-        )->byInstitute();
+        )->acl();
 
         if (is_numeric($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
