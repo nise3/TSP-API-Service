@@ -4188,6 +4188,74 @@
                 ]
 
             }
+        },
+        "/demanded-courses/{instituteId}": {
+            "get": {
+                "summary": "Get demanded courses",
+                "description": "API endpoint to get demanded courses. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": [
+                                        {
+                                            "Value": 20,
+                                            "Name": "Moshe Cremin III"
+                                        },
+                                        {
+                                            "Value": 20,
+                                            "Name": "Marie Lehner"
+                                        },
+                                        {
+                                            "Value": 20,
+                                            "Name": "Dr. Jon Reilly"
+                                        },
+                                        {
+                                            "Value": 19,
+                                            "Name": "Mrs. Mara Haag IV"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Demanded Courses"
+                ]
+            }
+        },
+        "/demanded-courses": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to get institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "Successfull",
+                        "content": {
+                            "application/json": {
+                                "example":{}
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Dashboard Statistics"
+                ]
+
+            }
         }
     },
     "components": {
