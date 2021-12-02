@@ -284,6 +284,33 @@ class InstituteService
         return $institute->delete();
     }
 
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function userDestroy(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->delete($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
     /**
      * @param Institute $institute
      * @return Institute

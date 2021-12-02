@@ -109,7 +109,7 @@ class InstituteController extends Controller
 
             $validatedData['institute_id'] = $institute->id;
 
-            $validatedData['password']=BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $validatedData['password'] = BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
 
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
@@ -262,7 +262,7 @@ class InstituteController extends Controller
     }
 
     /**
-     *  * Remove the specified resource from storage.
+     *Remove the specified resource from storage.
      * @param int $id
      * @return JsonResponse
      * @throws Throwable
@@ -270,15 +270,24 @@ class InstituteController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
-        $this->instituteService->destroy($institute);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Institute deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try {
+            $this->instituteService->destroy($institute);
+            $this->instituteService->userDestroy($institute);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
