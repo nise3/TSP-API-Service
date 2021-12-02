@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e): JsonResponse
     {
-       // dd($e);
+
 
         $errors = [
             '_response_status' => [
