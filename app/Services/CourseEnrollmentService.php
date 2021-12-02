@@ -21,6 +21,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 /**
  *
@@ -1256,11 +1258,22 @@ class CourseEnrollmentService
      */
     public function assignBatch(array $data): CourseEnrollment
     {
-        $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
-        $courseEnrollment->batch_id = $data['batch_id'];
-        $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+        DB::beginTransaction();
+        try {
+            $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
+            $courseEnrollment->batch_id = $data['batch_id'];
 
-        $courseEnrollment->save();
+            $batch =  Batch::find($data['batch_id']);
+            $batch['available_seats']= $batch['available_seats'] - 1;
+            $batch->save();
+
+            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+            $courseEnrollment->save();
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollBack();
+            throw $e;
+        }
 
         return $courseEnrollment;
     }
