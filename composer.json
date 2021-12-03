@@ -21,7 +21,7 @@
         "laravel/lumen-framework": "^8.0",
         "laravel/tinker": "^2.6",
         "phabloraylan/lumen-middleware-trim-or-convert-strings": "^1.0",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "dev-feat/limit-retry-mechanism-added"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "dev-feat/get-exchange_info-from-queue-config"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

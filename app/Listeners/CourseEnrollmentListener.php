@@ -29,9 +29,6 @@ class CourseEnrollmentListener implements ShouldQueue
      */
     private function publishEvent(): void
     {
-        $config = config('queue.connections.rabbitmq');
-        $queue = $this->connector->connect($config);
-
         /** Exchange Queue related variables */
         $exchange = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.name');
         $type = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.type');
@@ -39,6 +36,18 @@ class CourseEnrollmentListener implements ShouldQueue
         $autoDelete = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.autoDelete');
         $queueName = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.queue.courseEnrollment.name');
         $binding = config('nise3RabbitMq.exchanges.'.BaseModel::SELF_EXCHANGE.'.queue.courseEnrollment.binding');
+
+        /** Set Config to publish the event message */
+        config([
+            'queue.connections.rabbitmq.options.exchange.name' => $exchange,
+            'queue.connections.rabbitmq.options.queue.exchange' => $exchange,
+            'queue.connections.rabbitmq.options.exchange.type' => $type,
+            'queue.connections.rabbitmq.options.queue.exchange_type' => $type,
+            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding,
+        ]);
+
+        $config = config('queue.connections.rabbitmq');
+        $queue = $this->connector->connect($config);
 
         /** Create all common entities in RabbitMQ server If they don't exist */
         $this->rabbitmqService->createRabbitMQCommonEntities($queue);
@@ -52,15 +61,6 @@ class CourseEnrollmentListener implements ShouldQueue
             'autoDelete' => $autoDelete
         ];
         $this->rabbitmqService->createQueueAndBindWithoutRetry($queue, $payload);
-
-        /** Set Config to publish the event message */
-        config([
-            'queue.connections.rabbitmq.options.exchange.name' => $exchange,
-            'queue.connections.rabbitmq.options.queue.exchange' => $exchange,
-            'queue.connections.rabbitmq.options.exchange.type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_type' => $type,
-            'queue.connections.rabbitmq.options.queue.exchange_routing_key' => $binding,
-        ]);
 
         /*dd(config('queue.connections.rabbitmq.options.exchange.name'),
             config('queue.connections.rabbitmq.options.queue.exchange'),

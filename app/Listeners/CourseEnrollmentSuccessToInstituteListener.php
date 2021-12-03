@@ -32,7 +32,6 @@ class CourseEnrollmentSuccessToInstituteListener implements ShouldQueue
         $courseEnrollment->fill($data);
         $courseEnrollment->save();*/
 
-        event(MailSendEvent::class);
 
     }
 }
