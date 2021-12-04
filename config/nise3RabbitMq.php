@@ -1,23 +1,40 @@
 <?php
 
-use \App\Models\BaseModel;
-
 return [
     'exchanges' => [
-        BaseModel::SELF_EXCHANGE => [
-            'name' => BaseModel::SELF_EXCHANGE.'.x',
+        'institute' => [
+            'name' => 'institute.x',
             'type' => 'topic',
             'durable' => true,
             'autoDelete' => false,
             'alternateExchange' => [
-                'name' => BaseModel::SELF_EXCHANGE.'.alternate.x',
+                'name' => 'institute.alternate.x',
                 'type' => 'fanout',
-                'queue' => BaseModel::SELF_EXCHANGE.'.alternate.q'
+                'queue' => 'institute.alternate.q'
             ],
             'queue' => [
                 'courseEnrollment' => [
-                    'name' => BaseModel::SELF_EXCHANGE.'.course.enrollment.q',
-                    'binding' => BaseModel::SELF_EXCHANGE.'.course.enrollment',
+                    'name' => 'institute.course.enrollment.q',
+                    'binding' => 'institute.course.enrollment',
+                    'durable' => true,
+                    'autoDelete' => false
+                ]
+            ],
+        ],
+        'youth' => [
+            'name' => 'youth.x',
+            'type' => 'topic',
+            'durable' => true,
+            'autoDelete' => false,
+            'alternateExchange' => [
+                'name' => 'youth.alternate.x',
+                'type' => 'fanout',
+                'queue' => 'youth.alternate.q'
+            ],
+            'queue' => [
+                'courseEnrollment' => [
+                    'name' => 'youth.course.enrollment.q',
+                    'binding' => 'youth.course.enrollment',
                     'durable' => true,
                     'autoDelete' => false
                 ]
@@ -53,26 +70,7 @@ return [
                     'autoDelete' => false,
                 ]
             ]
-        ],
-        'youth' => [
-            'name' => 'youth.x',
-            'type' => 'topic',
-            'durable' => true,
-            'autoDelete' => false,
-            'alternateExchange' => [
-                'name' => 'youth.alternate.x',
-                'type' => 'fanout',
-                'queue' => 'youth.alternate.q'
-            ],
-            'queue' => [
-                'courseEnrollment' => [
-                    'name' => 'youth.course.enrollment.q',
-                    'binding' => 'youth.course.enrollment',
-                    'durable' => true,
-                    'autoDelete' => false
-                ]
-            ],
-        ],
+        ]
     ],
-    'consume' => 'youth.course.enrollment.q'
+    'consume' => 'institute.course.enrollment.q'
 ];
