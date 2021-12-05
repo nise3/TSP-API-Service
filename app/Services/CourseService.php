@@ -390,7 +390,12 @@ class CourseService
         return $courses->forceDelete();
     }
 
-    /** Filter courses by popular, recent, nearby, skill matching */
+    /** Filter courses by popular, recent, nearby, skill matching
+     * @param array $request
+     * @param Carbon $startTime
+     * @param string|null $type
+     * @return array
+     */
     public function getFilterCourses(array $request, Carbon $startTime, string $type = null): array
     {
         $pageSize = $request['page_size'] ?? "";
