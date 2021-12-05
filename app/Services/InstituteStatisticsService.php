@@ -9,8 +9,10 @@ use App\Models\Trainer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class InstituteStatisticsService
 {
@@ -20,6 +22,18 @@ class InstituteStatisticsService
      * @param Carbon $startTime
      * @return array
      */
+
+    public function instituteIdValidator(array $request) : \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+           'institute_id'=>[
+               "required",
+               "integer"
+           ]
+        ];
+        return Validator::make($request,$rules);
+
+    }
 
     public function getTotalCourseEnrollments(int $id): int
     {
@@ -95,7 +109,7 @@ class InstituteStatisticsService
     }
 
 
-    public function finalStatisticalData(int $instituteId):array
+    public function getDashboardStatisticalData(int $instituteId):array
     {
         $dashboardStatData ['total_Enroll']  = $this->getTotalCourseEnrollments($instituteId);
         $dashboardStatData ['total_Course']  = $this->getTotalCourses($instituteId);

@@ -33,13 +33,20 @@ class InstituteStatisticsController extends Controller
         $this->startTime = Carbon::now();
     }
 
-    public function dashboardStatistics(int $instituteId=null): JsonResponse
-    {;
-        $authUser = Auth::user();
-        if ($authUser  && $authUser->institute_id) {  //Institute User
-            $instituteId = $authUser->institute_id;
+    public function dashboardStatistics(int $instituteId = null): JsonResponse
+    {
+        if (!$instituteId) {
+            $authUser = Auth::user();
+            if ($authUser && $authUser->institute_id) {
+                $instituteId = $authUser->institute_id;
+            }
         }
-        $response['data'] = $this->instituteStatisticsService->finalStatisticalData($instituteId);
+        $request = [
+            'institute_id' => $instituteId
+        ];
+        $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
+
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($validated['institute_id']);
         $response['_response_status'] = [
             "success" => true,
             "code" => ResponseAlias::HTTP_OK,
@@ -49,14 +56,14 @@ class InstituteStatisticsController extends Controller
 
     }
 
-    public function DemandingCourses(int $instituteId=null): JsonResponse
+    public function DemandingCourses(int $instituteId = null): JsonResponse
     {
         $authUser = Auth::user();
-        if ($authUser  && $authUser->institute_id) {  //Institute User
+        if ($authUser && $authUser->institute_id) {  //Institute User
             $instituteId = $authUser->institute_id;
         }
         $demandingCourses = $this->instituteStatisticsService->DemandingCourses($instituteId);
-        $response['data']=$demandingCourses->toArray();
+        $response['data'] = $demandingCourses->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => ResponseAlias::HTTP_OK,
