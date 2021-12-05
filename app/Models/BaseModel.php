@@ -19,6 +19,8 @@ abstract class BaseModel extends Model
     public const COMMON_GUARDED_FIELDS_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_NON_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
 
+    public const ADMIN_CREATED_USER_DEFAULT_PASSWORD = "ABcd1234";
+
     public const ROW_STATUS_INACTIVE = 0;
     public const ROW_STATUS_ACTIVE = 1;
     public const ROW_STATUS_PENDING = 2;
@@ -77,8 +79,14 @@ abstract class BaseModel extends Model
     public const OCCUPATION_INFO = 'occupation_info';
     public const GUARDIAN_INFO = 'guardian_info';
 
-    /** Institute User Type*/
+    /** User Type*/
+    public const SYSTEM_USER_TYPE = 1;
+    public const ORGANIZATION_USER_TYPE = 2;
     public const INSTITUTE_USER_TYPE = 3;
+    public const YOUTH_USER_TYPE = 4;
+    public const INDUSTRY_ASSOCIATION_USER_TYPE = 5;
+
+
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
@@ -98,7 +106,9 @@ abstract class BaseModel extends Model
     public const PASSWORD_REGEX = 'regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
     public const PASSWORD_VALIDATION_MESSAGE = 'The password must contain at least one uppercase, lowercase letter and at least one number.[66000]';
 
+    public const NISE3_FROM_EMAIL = "info@nise3.com";
     public const SELF_EXCHANGE = 'institute';
+
 
     public const SAGA_STATUS_PENDING = 1;
     public const SAGA_STATUS_COMMIT = 2;

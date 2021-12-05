@@ -94,6 +94,7 @@ class BatchController extends Controller
         try {
             $data = $this->batchService->store($validatedData);
             $this->batchService->createCalenderEventForBatch($data->toArray());
+
             $response = [
                 'data' => $data ?: [],
                 '_response_status' => [

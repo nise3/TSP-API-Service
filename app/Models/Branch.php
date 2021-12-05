@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeFilterByInstitute;
+use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Branch
  * @package App\Models
+ * @property int id
  * @property string title_en
  * @property string title
  * @property int institute_id
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes,ScopeFilterByInstitute;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 

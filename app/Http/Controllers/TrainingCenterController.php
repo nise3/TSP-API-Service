@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -131,15 +132,25 @@ class TrainingCenterController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
-        $this->trainingCenterService->destroy($trainingCenter);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Training center deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+
+        DB::beginTransaction();
+        try {
+            $this->trainingCenterService->destroy($trainingCenter);
+            $this->trainingCenterService->trainingCenterUserDestroy($trainingCenter);
+
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Training center deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(\Illuminate\Support\Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

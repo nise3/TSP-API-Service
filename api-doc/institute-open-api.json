@@ -473,59 +473,31 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "institute_type_id": 0,
-                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
-                                        "title": "Dr. Cristopher Schiller V",
-                                        "title_en": "Prof. Shyann Armstrong",
-                                        "domain": "https://cummings.info",
-                                        "loc_division_id": 3,
-                                        "division_title": "ঢাকা",
-                                        "division_title_en": "Dhaka",
-                                        "loc_district_id": 18,
-                                        "district_title": "ঢাকা ",
-                                        "district_title_en": "DHAKA",
-                                        "loc_upazila_id": null,
-                                        "upazila_title": null,
-                                        "upazila_title_en": null,
-                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
-                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
-                                        "location_latitude": "90.399452",
-                                        "location_longitude": "90.399452",
-                                        "google_map_src": "Sed saepe aut aut enim eum.",
-                                        "logo": "softbd.jpg",
-                                        "country": "BD",
-                                        "phone_code": "880",
-                                        "primary_phone": "1-843-507-1994",
-                                        "phone_numbers": null,
-                                        "primary_mobile": "01715665360",
-                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
-                                        "email": "xbergstrom@corwin.biz",
-                                        "name_of_the_office_head": null,
-                                        "name_of_the_office_head_en": null,
-                                        "name_of_the_office_head_designation": null,
-                                        "name_of_the_office_head_designation_en": null,
-                                        "contact_person_name": "",
-                                        "contact_person_name_en": null,
-                                        "contact_person_mobile": "",
-                                        "contact_person_email": "",
-                                        "contact_person_designation": "",
-                                        "contact_person_designation_en": null,
-                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-13T08:48:09.000000Z",
-                                        "updated_at": "2021-10-13T08:48:09.000000Z",
-                                        "deleted_at": null
-                                    },
+                                "example":{
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Institute added successfully",
-                                        "query_time": 0
+                                        "message": "Institute Successfully Created",
+                                        "query_time": 1
+                                    },
+                                    "data": {
+                                        "title": "বিতাক",
+                                        "title_en": "BITAC",
+                                        "institute_type_id": "1",
+                                        "name_of_the_office_head": "asdfsadfsf",
+                                        "name_of_the_office_head_designation": "aaaaa",
+                                        "email": "abc@gmail.com",
+                                        "primary_mobile": "01558292976",
+                                        "contact_person_mobile": "01858682610",
+                                        "contact_person_name": "asjhsklakllskla",
+                                        "contact_person_designation": "asddddddd",
+                                        "contact_person_email": "abac46164@gmail.com",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "address": "sadfasdfdasf",
+                                        "updated_at": "2021-12-02T09:09:22.000000Z",
+                                        "created_at": "2021-12-02T09:09:22.000000Z",
+                                        "id": 33
                                     }
                                 }
                             }
@@ -1747,35 +1719,19 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 2,
-                                        "course_id": 1,
-                                        "course_title_en": "Mrs. Lindsay Bernhard I",
-                                        "course_title": "Tyreek Koelpin",
-                                        "institute_id": 1,
-                                        "institute_title_en": "Prof. Shyann Armstrong",
-                                        "institute_title": "Dr. Cristopher Schiller V",
-                                        "branch_id": null,
-                                        "branch_title_en": null,
-                                        "branch_title": null,
-                                        "program_id": 2,
-                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
-                                        "program_title": "Trey Nader I",
-                                        "number_of_seats": 100,
-                                        "registration_start_date": "2021-11-15",
-                                        "registration_end_date": "2021-11-15",
-                                        "batch_start_date": "2021-11-15",
-                                        "batch_end_date": "2021-11-15",
-                                        "available_seats": 0,
-                                        "training_center_id": 2,
-                                        "training_center_title_en": "Mr. Javonte Conn IV",
-                                        "training_center_title": "Whitney Leuschke",
-                                        "application_form_settings": null,
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-13T08:48:09.000000Z",
-                                        "updated_at": "2021-10-13T08:48:10.000000Z",
-                                        "deleted_at": null
+                                        "title": "AAAAA",
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "course_id": "1",
+                                        "number_of_seats": "200",
+                                        "registration_start_date": "2021-09-07",
+                                        "registration_end_date": "2021-09-09",
+                                        "batch_start_date": "2021-09-09",
+                                        "batch_end_date": "2021-12-09",
+                                        "available_seats": "200",
+                                        "updated_at": "2021-12-01T12:06:59.000000Z",
+                                        "created_at": "2021-12-01T12:06:59.000000Z",
+                                        "id": 169
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -4116,6 +4072,146 @@
                     "Course Enrollments"
                 ]
             }
+        },
+        "/institute-dashboard-statistics/{instituteId}": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to aGet institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "total_Enroll": 80,
+                                    "total_Course": 4,
+                                    "total_Batch": 25,
+                                    "total_running_students": 90,
+                                    "total_trainers": 18,
+                                    "total_Demand_From_Industry": 0,
+                                    "total_Certificate_Issue": 0,
+                                    "Total_Trending_Course": 0,
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Dashboard Statistics"
+                ]
+            }
+        },
+        "/institute-dashboard-statistics": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to get institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "Successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "total_Enroll": 80,
+                                    "total_Course": 4,
+                                    "total_Batch": 72,
+                                    "total_running_students": 182,
+                                    "total_trainers": 18,
+                                    "total_Demand_From_Industry": 0,
+                                    "total_Certificate_Issue": 0,
+                                    "Total_Trending_Course": 0,
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Dashboard Statistics"
+                ]
+
+            }
+        },
+        "/demanded-courses/{instituteId}": {
+            "get": {
+                "summary": "Get demanded courses",
+                "description": "API endpoint to get demanded courses. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": [
+                                        {
+                                            "Value": 20,
+                                            "Name": "Moshe Cremin III"
+                                        },
+                                        {
+                                            "Value": 20,
+                                            "Name": "Marie Lehner"
+                                        },
+                                        {
+                                            "Value": 20,
+                                            "Name": "Dr. Jon Reilly"
+                                        },
+                                        {
+                                            "Value": 19,
+                                            "Name": "Mrs. Mara Haag IV"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Demanded Courses"
+                ]
+            }
+        },
+        "/demanded-courses": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to get institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "Successfull",
+                        "content": {
+                            "application/json": {
+                                "example":{}
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Demanded Courses"
+                ]
+
+            }
         }
     },
     "components": {
@@ -5179,9 +5275,6 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "available_seats": {
-                        "type": "integer"
-                    },
                     "row_status": {
                         "type": "integer",
                         "enum": [
@@ -5201,8 +5294,7 @@
                     "registration_start_date",
                     "registration_end_date",
                     "batch_start_date",
-                    "batch_end_date",
-                    "available_seats"
+                    "batch_end_date"
                 ]
             },
             "trainingCentersWithBatches": {
@@ -5649,6 +5741,15 @@
                 "in": "query",
                 "required": true,
                 "name": "institute_id",
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "institute_id_path": {
+                "in": "path",
+                "required": true,
+                "name": "instituteId",
                 "schema": {
                     "type": "integer",
                     "example": "1"

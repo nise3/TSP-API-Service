@@ -30,6 +30,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
 
+    $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@DemandingCourses"]);
+
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
 
@@ -53,6 +56,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
+
+    /** Institute Registration Approval */
+    $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
+
+    /** Institute Registration Rejection */
+    $router->put("institute-registration-rejection/{instituteId}", ["as" => "Institute.institutes-registration-rejection", "uses" => "InstituteController@instituteRegistrationRejection"]);
+
+
 
     /* Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);

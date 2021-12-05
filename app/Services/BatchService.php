@@ -79,7 +79,7 @@ class BatchService
             'batches.created_at',
             'batches.updated_at',
             'batches.deleted_at',
-        ])->byInstitute();
+        ])->acl();
 
         $batchBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')
@@ -251,6 +251,7 @@ class BatchService
     {
         $courseConfig = new Batch();
         $courseConfig->fill($data);
+        $courseConfig['available_seats'] = $data['number_of_seats'];
         $courseConfig->save();
         return $courseConfig;
     }
@@ -466,10 +467,6 @@ class BatchService
                 'date',
                 'date_format:Y-m-d',
                 'after:batch_start_date'
-            ],
-            'available_seats' => [
-                'int',
-                'required'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

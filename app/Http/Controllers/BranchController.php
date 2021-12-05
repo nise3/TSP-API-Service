@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Services\BranchService;
+use Dotenv\Validator;
 use Exception;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -49,7 +52,7 @@ class BranchController extends Controller
 
         $response = $this->branchService->getBranchList($filter, $this->startTime);
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -70,7 +73,7 @@ class BranchController extends Controller
             ]
         ];
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
 
@@ -129,23 +132,34 @@ class BranchController extends Controller
 
 
     /**
-     *  *  remove the specified resource from storage
+     * Remove the specified resource from storage
      * @param int $id
      * @return JsonResponse
+     * @throws RequestException|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
 
-        $this->branchService->destroy($branch);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Branch deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try {
+            $this->branchService->destroy($branch);
+            $this->branchService->branchUserDestroy($branch);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Branch deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
 
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
