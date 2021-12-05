@@ -20,21 +20,21 @@ class InstituteStatisticsService
      * @return array
      */
 
-    public function getTotalCourseEnrollments(int $id, Carbon $startTime): int
+    public function getTotalCourseEnrollments(int $id): int
     {
         $Enrollments = CourseEnrollment::where('institute_id', '=', $id)->get();
         $totalCount = $Enrollments->count('id');
         return $totalCount;
     }
 
-    public function getTotalCourses(int $id, Carbon $startTime): int
+    public function getTotalCourses(int $id): int
     {
         $Courses = Course::where('institute_id', '=', $id)->get();
         $totalCount = $Courses->count('id');
         return $totalCount;
     }
 
-    public function DemandingCourses(int $id, Carbon $startTime): array
+    public function DemandingCourses(int $id): array
     {
         return CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as Value , courses.title as Name '))
             ->join('courses', function ($join) {
@@ -49,7 +49,7 @@ class InstituteStatisticsService
 
     }
 
-    public function getTotalBatches(int $id, Carbon $startTime): int
+    public function getTotalBatches(int $id): int
     {
         return Batch::where('institute_id', $id)->count('id');
     }
@@ -72,7 +72,7 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(int $id, Carbon $startTime): int
+    public function getTotalTrainers(int $id): int
     {
         $Trainers = Trainer::where('institute_id', '=', $id)->get();
         $totalCount = $Trainers->count('id');
