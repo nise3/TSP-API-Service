@@ -56,5 +56,22 @@ class InstituteStatisticsController extends Controller
 
     }
 
+    public function DemandingCourses(int $instituteId=null): JsonResponse
+    {
+        $authUser = Auth::user();
+        if ($authUser  && $authUser->institute_id) {  //Institute User
+            $instituteId = $authUser->institute_id;
+        }
+        $demandingCourses = $this->instituteStatisticsService->DemandingCourses($instituteId, $this->startTime);
+        $response['data']=$demandingCourses;
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
+    }
+
 
 }

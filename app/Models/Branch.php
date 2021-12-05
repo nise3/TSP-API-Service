@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Branch
  * @package App\Models
+ * @property int id
  * @property string title_en
  * @property string title
  * @property int institute_id
