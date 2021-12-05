@@ -39,14 +39,7 @@ class InstituteStatisticsController extends Controller
         if ($authUser  && $authUser->institute_id) {  //Institute User
             $instituteId = $authUser->institute_id;
         }
-        $response ['data']['total_Enroll']  = $this->instituteStatisticsService->getTotalCourseEnrollments($instituteId);
-        $response ['data']['total_Course']  = $this->instituteStatisticsService->getTotalCourses($instituteId);
-        $response ['data']['total_Batch']  = $this->instituteStatisticsService->getTotalBatches($instituteId);
-        $response ['data']['total_running_students']  = $this->instituteStatisticsService->getTotalRunningStudents($instituteId);
-        $response ['data']['total_trainers']  = $this->instituteStatisticsService->getTotalTrainers($instituteId);
-        $response ['data']['total_Demand_From_Industry']  = $this->instituteStatisticsService->getTotalDemandFromIndustry($instituteId);
-        $response ['data']['total_Certificate_Issue']  = $this->instituteStatisticsService->getTotalCertificateIssue($instituteId);
-        $response ['data']['Total_Trending_Course']  = $this->instituteStatisticsService->getTotalTrendingCourse($instituteId);
+        $response['data'] = $this->instituteStatisticsService->finalStatisticalData($instituteId);
         $response['_response_status'] = [
             "success" => true,
             "code" => ResponseAlias::HTTP_OK,
@@ -63,7 +56,7 @@ class InstituteStatisticsController extends Controller
             $instituteId = $authUser->institute_id;
         }
         $demandingCourses = $this->instituteStatisticsService->DemandingCourses($instituteId);
-        $response['data']=$demandingCourses;
+        $response['data']=$demandingCourses->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => ResponseAlias::HTTP_OK,

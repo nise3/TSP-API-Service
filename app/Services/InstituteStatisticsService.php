@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -34,7 +35,7 @@ class InstituteStatisticsService
         return $totalCount;
     }
 
-    public function DemandingCourses(int $id): array
+    public function DemandingCourses(int $id): Collection
     {
         return CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as Value , courses.title as Name '))
             ->join('courses', function ($join) {
@@ -44,8 +45,7 @@ class InstituteStatisticsService
             ->groupby('course_enrollments.course_id')
             ->orderby('Value', 'DESC')
             ->limit(6)
-            ->get()
-            ->toArray();
+            ->get();
 
     }
 
@@ -92,6 +92,21 @@ class InstituteStatisticsService
     public function getTotalTrendingCourse(int $id)
     {
         return 0;
+    }
+
+
+    public function finalStatisticalData(int $instituteId):array
+    {
+        $dashboardStatData ['total_Enroll']  = $this->getTotalCourseEnrollments($instituteId);
+        $dashboardStatData ['total_Course']  = $this->getTotalCourses($instituteId);
+        $dashboardStatData ['total_Batch']  = $this->getTotalBatches($instituteId);
+        $dashboardStatData ['total_running_students']  = $this->getTotalRunningStudents($instituteId);
+        $dashboardStatData ['total_trainers']  = $this->getTotalTrainers($instituteId);
+        $dashboardStatData ['total_Demand_From_Industry']  = $this->getTotalDemandFromIndustry($instituteId);
+        $dashboardStatData ['total_Certificate_Issue']  = $this->getTotalCertificateIssue($instituteId);
+        $dashboardStatData ['Total_Trending_Course']  = $this->getTotalTrendingCourse($instituteId);
+        return $dashboardStatData;
+
     }
 
 
