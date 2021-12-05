@@ -56,7 +56,7 @@ class InstituteStatisticsController extends Controller
 
     }
 
-    public function DemandingCourses(int $instituteId = null): JsonResponse
+    public function demandingCourses(int $instituteId = null): JsonResponse
     {
         if (!$instituteId) {
             $authUser = Auth::user();
