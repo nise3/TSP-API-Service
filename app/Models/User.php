@@ -70,22 +70,29 @@ class User extends BaseModel implements
         return $this->permissions->contains($key);
     }
 
-    public static function isInstituteUser(): bool
+    public function isSystemUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+        return $this->user_type == BaseModel::SYSTEM_USER_TYPE;
     }
 
-    public static function isTrainingCenterUser(): bool
+    public function isOrganizationUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->training_center_id;
+        return $this->user_type == BaseModel::ORGANIZATION_USER_TYPE && $this->organization_id;
     }
 
-    public static function isBranchUser(): bool
+    public function isInstituteUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->branch_id && $authUser->training_center_id == null;
+        return $this->user_type == BaseModel::INSTITUTE_USER_TYPE && $this->institute_id;
+    }
+
+    public function isTrainingCenterUser(): bool
+    {
+        return $this->isInstituteUser() && $this->training_center_id;
+    }
+
+    public function isBranchUser(): bool
+    {
+        return $this->isInstituteUser() && $this->branch_id && $this->training_center_id == null;
     }
 
 

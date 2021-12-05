@@ -79,8 +79,14 @@ abstract class BaseModel extends Model
     public const OCCUPATION_INFO = 'occupation_info';
     public const GUARDIAN_INFO = 'guardian_info';
 
-    /** Institute User Type*/
+    /** User Type*/
+    public const SYSTEM_USER_TYPE = 1;
+    public const ORGANIZATION_USER_TYPE = 2;
     public const INSTITUTE_USER_TYPE = 3;
+    public const YOUTH_USER_TYPE = 4;
+    public const INDUSTRY_ASSOCIATION_USER_TYPE = 5;
+
+
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
