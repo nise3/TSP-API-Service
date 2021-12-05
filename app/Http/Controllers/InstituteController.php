@@ -127,6 +127,8 @@ class InstituteController extends Controller
                 ]
             ];
 
+
+
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
 
                 $this->instituteService->userInfoSendByMail($validatedData);
@@ -192,19 +194,17 @@ class InstituteController extends Controller
 
             $response = [
                 '_response_status' => [
-                    "success" => true,
+                    "success" => false,
                     "code" => ResponseAlias::HTTP_CREATED,
                     "message" => "Institute Successfully Created",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
 
+
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
-
-
                 $this->instituteService->userInfoSendByMail($validated);
-
                 DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
