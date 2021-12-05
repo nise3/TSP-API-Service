@@ -2,21 +2,17 @@
 
 namespace App\Events;
 
-use App\Models\Batch;
-use App\Models\CourseEnrollment;
-use Illuminate\Support\Facades\Log;
-
 class CourseEnrollmentEvent
 {
-    public array $courseEnrollment;
+    public array $data;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(array $courseEnrollment)
+    public function __construct(array $data)
     {
-        $this->courseEnrollment = $courseEnrollment;
+        $this->data = $data;
     }
 }

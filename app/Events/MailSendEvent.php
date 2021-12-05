@@ -4,14 +4,14 @@ namespace App\Events;
 
 class MailSendEvent
 {
-    public array $mailPayload;
+    public array $data;
     /**
      * Create a new Email event instance.
      *
      * @return void
      */
-    public function __construct(array $mailPayload)
+    public function __construct(array $data)
     {
-        $this->mailPayload = $mailPayload;
+        $this->data = $data;
     }
 }
