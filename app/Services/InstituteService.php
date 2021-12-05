@@ -290,7 +290,7 @@ class InstituteService
      * @return mixed
      * @throws RequestException
      */
-    public function userDestroy(Institute $institute): mixed
+    public function instituteUserDestroy(Institute $institute): mixed
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
         $userPostField = [

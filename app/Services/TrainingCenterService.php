@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\Institute;
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -405,6 +408,34 @@ class TrainingCenterService
     public function destroy(TrainingCenter $trainingCenter): bool
     {
         return $trainingCenter->delete();
+    }
+
+
+    /**
+     * @param TrainingCenter $trainingCenter
+     * @return mixed
+     * @throws RequestException
+     */
+    public function trainingCenterUserDestroy(TrainingCenter $trainingCenter): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'training_center_id' => $trainingCenter->id,
+            'institute_id' => $trainingCenter->institute_id
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->delete($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
     }
 
     /**

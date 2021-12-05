@@ -270,10 +270,11 @@ class InstituteController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $institute = Institute::findOrFail($id);
+
         DB::beginTransaction();
         try {
             $this->instituteService->destroy($institute);
-            $this->instituteService->userDestroy($institute);
+            $this->instituteService->instituteUserDestroy($institute);
             DB::commit();
             $response = [
                 '_response_status' => [
