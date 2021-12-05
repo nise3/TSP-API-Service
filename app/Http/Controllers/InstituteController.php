@@ -109,7 +109,7 @@ class InstituteController extends Controller
 
             $validatedData['institute_id'] = $institute->id;
 
-            $validatedData['password']=BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $validatedData['password'] = BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
 
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
@@ -128,10 +128,15 @@ class InstituteController extends Controller
             ];
 
 
-
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
 
+                /** Mail & SMS send after user registration */
                 $this->instituteService->userInfoSendByMail($validatedData);
+
+                $recipient = $validatedData['contact_person_mobile'];
+                $message = "Dear, " . $validatedData['contact_person_name'] . " your username: " . $validatedData['contact_person_mobile'] . " & password: " . $validatedData['password'];
+
+                $this->instituteService->userInfoSendBySMS($recipient, $message);
 
                 DB::commit();
                 $response['data'] = $institute;
@@ -381,6 +386,7 @@ class InstituteController extends Controller
      */
     public function instituteRegistrationApproval(int $instituteId): JsonResponse
     {
+        /** @var Institute $institute */
         $institute = Institute::findOrFail($instituteId);
 
         DB::beginTransaction();
@@ -388,6 +394,12 @@ class InstituteController extends Controller
             if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
                 $this->instituteService->InstituteStatusChangeAfterApproval($institute);
                 $this->instituteService->InstituteUserApproval($institute);
+
+                /** Sms send after institute approval */
+                $recipient = $institute->contact_person_mobile;
+                $message = "Congratulation, " . $institute->contact_person_name . " You are approved as institute user";
+                $this->instituteService->userInfoSendBySMS($recipient, $message);
+
                 DB::commit();
                 $response = [
                     '_response_status' => [

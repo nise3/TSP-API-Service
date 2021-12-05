@@ -2,7 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Services\RabbitMQService;
+
+use App\Services\CommonServices\RabbitMQService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
