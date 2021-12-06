@@ -17,45 +17,27 @@ class InstituteStatisticsService
 {
 
 
-    public function getTotalCourseEnrollments(int $id = null): int
+    public function getTotalCourseEnrollments(): int
     {
-
-        $enrollmentBuilder = CourseEnrollment::query();
-        /*if (is_numeric($id)) {
-            $enrollmentBuilder->where('institute_id', '=', $id);
-        }*/
-        $enrollmentBuilder->acl();
-
-        return $enrollmentBuilder->count('id');
+        return CourseEnrollment::acl()->count('id');
     }
 
-    public function getTotalCourses(int $id = null): int
+    public function getTotalCourses(): int
     {
-        $courseBuilder = Course::query();
-//        if (is_numeric($id)) {
-//            $courseBuilder->where('institute_id', '=', $id);
-//        }
-        return $courseBuilder->count('id');
+        return Course::acl()->count('id');
     }
-
 
 
     /**
-     * @param int|null $id
      * @return Collection|array
      */
-    public function getDemandedCourses(int $id = null): Collection|array
+    public function getDemandedCourses(): Collection|array
     {
         /** @var CourseEnrollment $courseEnrollmentBuilder */
         $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
             });
-
-        /*if (is_numeric($id)) {
-            $courseEnrollmentBuilder->where('course_enrollments.institute_id', $id);
-        }*/
-
         $courseEnrollmentBuilder->acl();
 
         return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
@@ -64,33 +46,19 @@ class InstituteStatisticsService
             ->get();
     }
 
-    public function getTotalBatches(int $id = null): int
+    public function getTotalBatches(): int
     {
-        $batchBuilder = Batch::query();
+        return Batch::acl()->count('id');
 
-        $batchBuilder->acl();
-
-//        if (is_numeric($id)) {
-//            $batchBuilder->where('institute_id', $id);
-//        }
-        return $batchBuilder->count('id');
     }
 
-    public function getTotalRunningStudents(int $id = null): int
+    public function getTotalRunningStudents(): int
     {
         $currentDate = Carbon::now();
-
-        $batchBuilder = Batch::query();
-
-        $batchBuilder->acl();
-
-        if (is_numeric($id)) {
-            $batchBuilder->whereDate('batch_start_date', '<=', $currentDate)
-                ->whereDate('batch_end_date', '>=', $currentDate)->get();
-        }
-
-        /** @var Collection $batches */
-        $batches = $batchBuilder->get();
+        $batches = Batch::whereDate('batch_start_date', '<=', $currentDate)
+            ->whereDate('batch_end_date', '>=', $currentDate)
+            ->acl()
+            ->get();
 
         $totalRunningStudent = 0;
         foreach ($batches as $batch) {
@@ -99,60 +67,47 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(int $id = null): int
+    public function getTotalTrainers(): int
     {
-        $trainerBuilder = Trainer::query();
-        /*if (is_numeric($id)) {
-            $trainerBuilder->where('institute_id', '=', $id);
-        }*/
-        $trainerBuilder->acl();
-        return $trainerBuilder->count('id');
+        return Trainer::acl()->count('id');
     }
 
-    public function getTotalTrainingCenters(int $id = null): int
+    public function getTotalTrainingCenters(): int
     {
         $trainingCenterBuilder = TrainingCenter::query();
-//        if (is_numeric($id)) {
-//            $trainingCenterBuilder->where('institute_id', $id);
-//        }
         $trainingCenterBuilder->acl();
         return $trainingCenterBuilder->count('id');
 
     }
 
 
-    public function getTotalDemandFromIndustry(int $id = null): int
+    public function getTotalDemandFromIndustry(): int
     {
         return 0;
     }
 
-    public function getTotalCertificateIssue(int $id = null): int
+    public function getTotalCertificateIssue(): int
     {
         return 0;
     }
 
-    public function getTotalTrendingCourse(int $id = null): int
+    public function getTotalTrendingCourse(): int
     {
-        $courseBuilder = Course::query();
-//        if (is_numeric($id)) {
-//            $courseBuilder->where('institute_id', '=', $id);
-//        }
-        $courseBuilder->acl();
-        return $courseBuilder->count('id');
+        return Course::acl()->count('id');
     }
 
 
-    public function getDashboardStatisticalData(int $instituteId = null): array
+    public function getDashboardStatisticalData(): array
     {
-        $dashboardStatData ['total_Enroll'] = $this->getTotalCourseEnrollments($instituteId);
-        $dashboardStatData ['total_Course'] = $this->getTotalCourses($instituteId);
-        $dashboardStatData ['total_Batch'] = $this->getTotalBatches($instituteId);
-        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents($instituteId);
-        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers($instituteId);
-        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters($instituteId);
-        $dashboardStatData ['total_Demand_From_Industry'] = $this->getTotalDemandFromIndustry($instituteId);
-        $dashboardStatData ['total_Certificate_Issue'] = $this->getTotalCertificateIssue($instituteId);
-        $dashboardStatData ['Total_Trending_Course'] = $this->getTotalTrendingCourse($instituteId);
+        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments();
+        $dashboardStatData ['total_course'] = $this->getTotalCourses();
+        $dashboardStatData ['total_batch'] = $this->getTotalBatches();
+        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents();
+        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers();
+        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters();
+        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
+        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
+        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse();
         return $dashboardStatData;
 
     }
