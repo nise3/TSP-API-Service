@@ -89,6 +89,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 });
 
 $router->get("/idp-test",function (){
-   Log('Idp-Log');
-   return "idp-User";
-});
+        Illuminate\Support\Facades\Log::info('Idp-Log');
+        return "idp-User";
+    });
