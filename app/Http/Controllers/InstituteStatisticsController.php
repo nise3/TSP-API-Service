@@ -41,12 +41,8 @@ class InstituteStatisticsController extends Controller
                 $instituteId = $authUser->institute_id;
             }
         }
-        $request = [
-            'institute_id' => $instituteId
-        ];
-        $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
 
-        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($validated['institute_id']);
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($instituteId);
         $response['_response_status'] = [
             "success" => true,
             "code" => ResponseAlias::HTTP_OK,

@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
@@ -18,26 +20,13 @@ use Illuminate\Support\Facades\Validator;
 class InstituteStatisticsService
 {
 
-    /**
-     * @param array $request
-     * @param Carbon $startTime
-     * @return array
-     */
 
-    public function instituteIdValidator(array $request): \Illuminate\Contracts\Validation\Validator
+    public function getTotalCourseEnrollments(int $id = null): int
     {
-        $rules = [
-            'institute_id' => [
-                "required",
-                "integer"
-            ]
-        ];
-        return Validator::make($request, $rules);
-
-    }
-
-    public function getTotalCourseEnrollments(int $id): int
-    {
+        if ($id == null) {
+            $user = Auth::user();
+        }
+        if($user&&$user->user_type = BaseModel::)
         return CourseEnrollment::where('institute_id', '=', $id)->count('id');
     }
 
@@ -112,7 +101,7 @@ class InstituteStatisticsService
     }
 
 
-    public function getDashboardStatisticalData(int $instituteId): array
+    public function getDashboardStatisticalData(int $instituteId = null): array
     {
         $dashboardStatData ['total_Enroll'] = $this->getTotalCourseEnrollments($instituteId);
         $dashboardStatData ['total_Course'] = $this->getTotalCourses($instituteId);
