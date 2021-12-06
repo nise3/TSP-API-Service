@@ -21,9 +21,10 @@ class InstituteStatisticsService
     {
 
         $enrollmentBuilder = CourseEnrollment::query();
-        if (is_numeric($id)) {
+        /*if (is_numeric($id)) {
             $enrollmentBuilder->where('institute_id', '=', $id);
-        }
+        }*/
+        $enrollmentBuilder->acl();
 
         return $enrollmentBuilder->count('id');
     }
@@ -31,11 +32,12 @@ class InstituteStatisticsService
     public function getTotalCourses(int $id = null): int
     {
         $courseBuilder = Course::query();
-        if (is_numeric($id)) {
-            $courseBuilder->where('institute_id', '=', $id);
-        }
+//        if (is_numeric($id)) {
+//            $courseBuilder->where('institute_id', '=', $id);
+//        }
         return $courseBuilder->count('id');
     }
+
 
 
     /**
@@ -44,15 +46,17 @@ class InstituteStatisticsService
      */
     public function getDemandedCourses(int $id = null): Collection|array
     {
-        /** @var Builder $courseEnrollmentBuilder */
+        /** @var CourseEnrollment $courseEnrollmentBuilder */
         $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
             });
 
-        if (is_numeric($id)) {
+        /*if (is_numeric($id)) {
             $courseEnrollmentBuilder->where('course_enrollments.institute_id', $id);
-        }
+        }*/
+
+        $courseEnrollmentBuilder->acl();
 
         return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
             ->orderby('value', 'DESC')
@@ -63,9 +67,12 @@ class InstituteStatisticsService
     public function getTotalBatches(int $id = null): int
     {
         $batchBuilder = Batch::query();
-        if (is_numeric($id)) {
-            $batchBuilder->where('institute_id', $id);
-        }
+
+        $batchBuilder->acl();
+
+//        if (is_numeric($id)) {
+//            $batchBuilder->where('institute_id', $id);
+//        }
         return $batchBuilder->count('id');
     }
 
@@ -74,8 +81,11 @@ class InstituteStatisticsService
         $currentDate = Carbon::now();
 
         $batchBuilder = Batch::query();
+
+        $batchBuilder->acl();
+
         if (is_numeric($id)) {
-            $batchBuilder->where('institute_id', $id)->whereDate('batch_start_date', '<=', $currentDate)
+            $batchBuilder->whereDate('batch_start_date', '<=', $currentDate)
                 ->whereDate('batch_end_date', '>=', $currentDate)->get();
         }
 
@@ -92,18 +102,20 @@ class InstituteStatisticsService
     public function getTotalTrainers(int $id = null): int
     {
         $trainerBuilder = Trainer::query();
-        if (is_numeric($id)) {
+        /*if (is_numeric($id)) {
             $trainerBuilder->where('institute_id', '=', $id);
-        }
+        }*/
+        $trainerBuilder->acl();
         return $trainerBuilder->count('id');
     }
 
     public function getTotalTrainingCenters(int $id = null): int
     {
         $trainingCenterBuilder = TrainingCenter::query();
-        if (is_numeric($id)) {
-            $trainingCenterBuilder->where('institute_id', $id);
-        }
+//        if (is_numeric($id)) {
+//            $trainingCenterBuilder->where('institute_id', $id);
+//        }
+        $trainingCenterBuilder->acl();
         return $trainingCenterBuilder->count('id');
 
     }
@@ -122,9 +134,10 @@ class InstituteStatisticsService
     public function getTotalTrendingCourse(int $id = null): int
     {
         $courseBuilder = Course::query();
-        if (is_numeric($id)) {
-            $courseBuilder->where('institute_id', '=', $id);
-        }
+//        if (is_numeric($id)) {
+//            $courseBuilder->where('institute_id', '=', $id);
+//        }
+        $courseBuilder->acl();
         return $courseBuilder->count('id');
     }
 
@@ -143,6 +156,5 @@ class InstituteStatisticsService
         return $dashboardStatData;
 
     }
-
 
 }
