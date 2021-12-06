@@ -25,9 +25,12 @@ class InstituteStatisticsService
     {
         if ($id == null) {
             $user = Auth::user();
-        }
-        if($user&&$user->user_type = BaseModel::)
-        return CourseEnrollment::where('institute_id', '=', $id)->count('id');
+            if ($user && $user->user_type == BaseModel::SYSTEM_USER) {
+                return CourseEnrollment::count('id');
+            } else
+                return 0;
+        } else
+            return CourseEnrollment::where('institute_id', '=', $id)->count('id');
     }
 
     public function getTotalCourses(int $id): int
