@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Institute;
@@ -169,6 +170,7 @@ class CourseService
     public function getOneCourse(int $id, bool $withTrainers = false): Course
     {
         $youthId = request('youth_id') ?: "";
+        $curDate = Carbon::now();
 
         /** @var Course|Builder $courseBuilder */
         $courseBuilder = Course::select(
@@ -267,6 +269,17 @@ class CourseService
             $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
             $course["enrolled"] = (bool)$courseEnrollment;
         }
+
+        /** Set enrollable field to determine weather Youth Can Enroll into this course */
+        /** @var Batch | Builder $batch */
+        $batch = Batch::where('course_id', $course->id);
+        $batch->where(function($builder) use($curDate){
+            $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+        });
+        $batchCount = $batch->count();
+        $course["enrollable"] = $batchCount > 0;
+
         return $course;
     }
 
