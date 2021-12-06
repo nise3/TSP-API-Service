@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseEnrollment;
+use App\Models\User;
 use App\Services\CourseEnrollmentService;
 use App\Services\InstituteService;
 use App\Services\InstituteStatisticsService;
@@ -33,23 +34,11 @@ class InstituteStatisticsController extends Controller
         $this->startTime = Carbon::now();
     }
 
-    public function dashboardStatistics($instituteId = null): JsonResponse
+    public function dashboardStatistics(int $instituteId = null): JsonResponse
     {
-        if (!$instituteId) {
-            $authUser = Auth::user();
-            if ($authUser && $authUser->institute_id) {
-                $instituteId = $authUser->institute_id;
-            }
-        }
-        $request = [
-            'institute_id' => $instituteId
-        ];
-        $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
-
-        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($validated['institute_id']);
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData();
         $response['_response_status'] = [
-            "success" => true,
-            "code" => ResponseAlias::HTTP_OK,
+            "success" => true, "code" => ResponseAlias::HTTP_OK,
             "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -59,16 +48,21 @@ class InstituteStatisticsController extends Controller
     public function demandingCourses(int $instituteId = null): JsonResponse
     {
         if (!$instituteId) {
+            /** @var User $authUser */
             $authUser = Auth::user();
             if ($authUser && $authUser->institute_id) {
                 $instituteId = $authUser->institute_id;
             }
         }
-        $request = [
-            'institute_id' => $instituteId
-        ];
-        $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
-        $demandingCourses = $this->instituteStatisticsService->demandingCourses($validated['institute_id']);
+
+        /**
+         * $request = [
+         * 'institute_id' => $instituteId
+         * ];
+         * $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
+         */
+
+        $demandingCourses = $this->instituteStatisticsService->getDemandedCourses($instituteId);
         $response['data'] = $demandingCourses->toArray();
         $response['_response_status'] = [
             "success" => true,

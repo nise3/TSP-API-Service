@@ -7,75 +7,57 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Validator;
+
 
 class InstituteStatisticsService
 {
 
+
+    public function getTotalCourseEnrollments(): int
+    {
+        return CourseEnrollment::acl()->count('id');
+    }
+
+    public function getTotalCourses(): int
+    {
+        return Course::acl()->count('id');
+    }
+
     /**
-     * @param array $request
-     * @param Carbon $startTime
-     * @return array
+     * @return Collection|array
      */
-
-    public function instituteIdValidator(array $request): \Illuminate\Contracts\Validation\Validator
+    public function getDemandedCourses(): Collection|array
     {
-        $rules = [
-            'institute_id' => [
-                "required",
-                "integer"
-            ]
-        ];
-        return Validator::make($request, $rules);
-
-    }
-
-    public function getTotalCourseEnrollments(int $id): int
-    {
-        return CourseEnrollment::where('institute_id', '=', $id)->count('id');
-    }
-
-    public function getTotalCourses(int $id): int
-    {
-        return Course::where('institute_id', '=', $id)->count('id');
-    }
-
-    public function demandingCourses(int $id): Collection
-    {
-        return CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as Value , courses.title as Name '))
+        /** @var CourseEnrollment $courseEnrollmentBuilder */
+        $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
-            })
-            ->where('course_enrollments.institute_id', $id)
-            ->groupby('course_enrollments.course_id')
-            ->orderby('Value', 'DESC')
+            });
+        $courseEnrollmentBuilder->acl();
+
+        return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
+            ->orderby('value', 'DESC')
             ->limit(6)
             ->get();
-
     }
 
-    public function getTotalBatches(int $id): int
+    public function getTotalBatches(): int
     {
-        return Batch::where('institute_id', $id)->count('id');
+        return Batch::acl()->count('id');
+
     }
 
-    public function getTotalRunningStudents(int $id): int
+    public function getTotalRunningStudents(): int
     {
         $currentDate = Carbon::now();
-//        $authUser = Auth::user();
-//        if ($authUser  && $authUser->institute_id) {  //Institute User
-//            $id = $authUser->institute_id;
-//        }
-        /** @var Batch|Builder $batches */
+        $batches = Batch::whereDate('batch_start_date', '<=', $currentDate)
+            ->whereDate('batch_end_date', '>=', $currentDate)
+            ->acl()
+            ->get();
 
-        $batches = Batch::where('institute_id', $id)->whereDate('batch_start_date', '<=', $currentDate)
-            ->whereDate('batch_end_date', '>=', $currentDate)->get();
         $totalRunningStudent = 0;
         foreach ($batches as $batch) {
             $totalRunningStudent += ($batch->number_of_seats - $batch->available_seats);
@@ -83,49 +65,49 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(int $id): int
+    public function getTotalTrainers(): int
     {
-        $Trainers = Trainer::where('institute_id', '=', $id)->get();
-        $totalCount = $Trainers->count('id');
-        return $totalCount;
+        return Trainer::acl()->count('id');
     }
 
-    public function getTotalTrainingCenters(int $id): int
+    public function getTotalTrainingCenters(): int
     {
-        return TrainingCenter::where('institute_id', $id)->count('id');
+        $trainingCenterBuilder = TrainingCenter::query();
+        $trainingCenterBuilder->acl();
+        return $trainingCenterBuilder->count('id');
+
     }
 
 
-    public function getTotalDemandFromIndustry(int $id)
+    public function getTotalDemandFromIndustry(): int
     {
         return 0;
     }
 
-    public function getTotalCertificateIssue(int $id)
+    public function getTotalCertificateIssue(): int
     {
         return 0;
     }
 
-    public function getTotalTrendingCourse(int $id)
+    public function getTotalTrendingCourse(): int
     {
-        return 0;
+        return Course::acl()->count('id');
     }
 
 
-    public function getDashboardStatisticalData(int $instituteId): array
+    public function getDashboardStatisticalData(): array
     {
-        $dashboardStatData ['total_Enroll'] = $this->getTotalCourseEnrollments($instituteId);
-        $dashboardStatData ['total_Course'] = $this->getTotalCourses($instituteId);
-        $dashboardStatData ['total_Batch'] = $this->getTotalBatches($instituteId);
-        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents($instituteId);
-        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers($instituteId);
-        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters($instituteId);
-        $dashboardStatData ['total_Demand_From_Industry'] = $this->getTotalDemandFromIndustry($instituteId);
-        $dashboardStatData ['total_Certificate_Issue'] = $this->getTotalCertificateIssue($instituteId);
-        $dashboardStatData ['Total_Trending_Course'] = $this->getTotalTrendingCourse($instituteId);
+        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments();
+        $dashboardStatData ['total_course'] = $this->getTotalCourses();
+        $dashboardStatData ['total_batch'] = $this->getTotalBatches();
+        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents();
+        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers();
+        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters();
+        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
+        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
+        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse();
         return $dashboardStatData;
 
     }
-
 
 }

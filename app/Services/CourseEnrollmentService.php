@@ -96,7 +96,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
