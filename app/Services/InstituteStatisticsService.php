@@ -12,7 +12,7 @@ use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
+//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -33,8 +33,17 @@ class InstituteStatisticsService
             return CourseEnrollment::where('institute_id', '=', $id)->count('id');
     }
 
-    public function getTotalCourses(int $id): int
+    public function getTotalCourses(int $id=null): int
     {
+        if($id ==null){
+            $user = Auth::user();
+        }
+        if($user && $user->user_type = BaseModel::SYSTEM_USER)
+        {
+            return Course::count('id');
+        }else{
+            return 0;
+        }
         return Course::where('institute_id', '=', $id)->count('id');
     }
 
