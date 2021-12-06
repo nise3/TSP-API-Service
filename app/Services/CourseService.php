@@ -404,17 +404,17 @@ class CourseService
         $curDate = Carbon::now();
 
         /** Filters variables */
-        $searchText = $request['search_text'] ?? "";
-        $locDistrictId = $request['loc_district_id'] ?? "";
-        $locUpazilaId = $request['loc_upazila_id'] ?? "";
-        $skillIds = $request['skill_ids'] ?? [];
+//        $searchText = $request['search_text'] ?? "";
+//        $locDistrictId = $request['loc_district_id'] ?? "";
+//        $locUpazilaId = $request['loc_upazila_id'] ?? "";
+//        $skillIds = $request['skill_ids'] ?? [];
         $instituteId = $request['institute_id'] ?? "";
         $programId = $request['program_id'] ?? "";
-        $availability = $request['availability'] ?? "";
-        $language = $request['language_medium'] ?? "";
-        $courseType = $request['course_type'] ?? "";
-        $courseName = $request['course_name'] ?? "";
-        $courseLevel = $request['level'] ?? "";
+//        $availability = $request['availability'] ?? "";
+//        $language = $request['language_medium'] ?? "";
+//        $courseType = $request['course_type'] ?? "";
+//        $courseName = $request['course_name'] ?? "";
+//        $courseLevel = $request['level'] ?? "";
         $youthId = $request['youth_id'] ?? "";
 
         /** @var Course|Builder $coursesBuilder */
@@ -464,100 +464,100 @@ class CourseService
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
         $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
 
-        if (!empty($searchText) || !empty($locUpazilaId) || !empty($locDistrictId) ||
-            ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)) {
-            $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
-            $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
+//        if (!empty($searchText) || !empty($locUpazilaId) || !empty($locDistrictId) ||
+//            ($type == self::COURSE_FILTER_NEARBY) || ($type == self::COURSE_FILTER_SKILL_MATCHING)) {
+//            $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
+//            $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
+//
+//            /** Search courses by search_text */
+//            if (!empty($searchText)) {
+//                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id', 'training_centers.loc_division_id');
+//                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id', 'training_centers.loc_district_id');
+//                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id', 'training_centers.loc_upazila_id');
+//                $coursesBuilder->leftJoin('skills', 'skills.id', 'course_skill.skill_id');
+//
+//                $coursesBuilder->where(function ($builder) use ($searchText) {
+//                    $builder->orWhere('courses.title', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('courses.title_en', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_divisions.title', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_divisions.title_en', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_districts.title', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_districts.title_en', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_upazilas.title', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('loc_upazilas.title_en', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('skills.title', 'like', '%' . $searchText . '%');
+//                    $builder->orWhere('skills.title_en', 'like', '%' . $searchText . '%');
+//                });
+//            }
+//
+//            if ($type == self::COURSE_FILTER_NEARBY || !empty($locUpazilaId) || !empty($locDistrictId)) {
+//                if ($locUpazilaId) {
+//                    $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
+//                } else if ($locDistrictId) {
+//                    $coursesBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
+//                }
+//            }
+//
+//            if ($type == self::COURSE_FILTER_SKILL_MATCHING) {
+//                if (is_array($skillIds) && count($skillIds) > 0) {
+//                    $coursesBuilder->whereIn('course_skill.skill_id', $skillIds);
+//                }
+//            }
+//        }
 
-            /** Search courses by search_text */
-            if (!empty($searchText)) {
-                $coursesBuilder->leftJoin('loc_divisions', 'loc_divisions.id', 'training_centers.loc_division_id');
-                $coursesBuilder->leftJoin('loc_districts', 'loc_districts.id', 'training_centers.loc_district_id');
-                $coursesBuilder->leftJoin('loc_upazilas', 'loc_upazilas.id', 'training_centers.loc_upazila_id');
-                $coursesBuilder->leftJoin('skills', 'skills.id', 'course_skill.skill_id');
-
-                $coursesBuilder->where(function ($builder) use ($searchText) {
-                    $builder->orWhere('courses.title', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('courses.title_en', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_divisions.title', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_divisions.title_en', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_districts.title', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_districts.title_en', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_upazilas.title', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('loc_upazilas.title_en', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('skills.title', 'like', '%' . $searchText . '%');
-                    $builder->orWhere('skills.title_en', 'like', '%' . $searchText . '%');
-                });
-            }
-
-            if ($type == self::COURSE_FILTER_NEARBY || !empty($locUpazilaId) || !empty($locDistrictId)) {
-                if ($locUpazilaId) {
-                    $coursesBuilder->where('training_centers.loc_upazila_id', '=', $locUpazilaId);
-                } else if ($locDistrictId) {
-                    $coursesBuilder->where('training_centers.loc_district_id', '=', $locDistrictId);
-                }
-            }
-
-            if ($type == self::COURSE_FILTER_SKILL_MATCHING) {
-                if (is_array($skillIds) && count($skillIds) > 0) {
-                    $coursesBuilder->whereIn('course_skill.skill_id', $skillIds);
-                }
-            }
-        }
-
-        if (is_numeric($rowStatus)) {
-            $coursesBuilder->where('courses.row_status', $rowStatus);
-        }
+//        if (is_numeric($rowStatus)) {
+//            $coursesBuilder->where('courses.row_status', $rowStatus);
+//        }
 
         if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
-        if (is_numeric($programId)) {
-            $coursesBuilder->where('courses.program_id', '=', $programId);
-        }
+//        if (is_numeric($programId)) {
+//            $coursesBuilder->where('courses.program_id', '=', $programId);
+//        }
 
-        if (is_numeric($language)) {
-            $coursesBuilder->where('courses.language_medium', '=', $language);
-        }
+//        if (is_numeric($language)) {
+//            $coursesBuilder->where('courses.language_medium', '=', $language);
+//        }
 
-        if (is_numeric($courseType)) {
-            if ($courseType == self::COURSE_FILTER_COURSE_TYPE_PAID) {
-                $coursesBuilder->where('courses.course_fee', '!=', 0);
-                $coursesBuilder->Where('courses.course_fee', '!=', null);
-            } else if ($courseType == self::COURSE_FILTER_COURSE_TYPE_FREE) {
-                $coursesBuilder->where('courses.course_fee', '=', 0);
-                $coursesBuilder->orWhere('courses.course_fee', '=', null);
-            }
-        }
+//        if (is_numeric($courseType)) {
+//            if ($courseType == self::COURSE_FILTER_COURSE_TYPE_PAID) {
+//                $coursesBuilder->where('courses.course_fee', '!=', 0);
+//                $coursesBuilder->Where('courses.course_fee', '!=', null);
+//            } else if ($courseType == self::COURSE_FILTER_COURSE_TYPE_FREE) {
+//                $coursesBuilder->where('courses.course_fee', '=', 0);
+//                $coursesBuilder->orWhere('courses.course_fee', '=', null);
+//            }
+//        }
 
-        if (!empty($courseName)) {
-            $coursesBuilder->where('courses.title', 'like', '%' . $courseName . '%');
-            $coursesBuilder->orWhere('courses.title_en', 'like', '%' . $courseName . '%');
-        }
+//        if (!empty($courseName)) {
+//            $coursesBuilder->where('courses.title', 'like', '%' . $courseName . '%');
+//            $coursesBuilder->orWhere('courses.title_en', 'like', '%' . $courseName . '%');
+//        }
 
-        if (is_numeric($courseLevel)) {
-            $coursesBuilder->where('courses.level', '=', $courseLevel);
-        }
+//        if (is_numeric($courseLevel)) {
+//            $coursesBuilder->where('courses.level', '=', $courseLevel);
+//        }
 
-        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
-            if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING || $type == self::COURSE_FILTER_RECENT) {
-                $coursesBuilder->where(function($builder) use($curDate){
-                    $builder->whereDate('batches.registration_start_date', '<=', $curDate);
-                    $builder->whereDate('batches.registration_end_date', '>=', $curDate);
-                });
-            }
-            if ($type != self::COURSE_FILTER_POPULAR && $availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING) {
-                $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
-            }
-            if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
-                $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
-            }
-        }
+//        if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
+//            if ($type == self::COURSE_FILTER_POPULAR || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING || $type == self::COURSE_FILTER_RECENT) {
+//                $coursesBuilder->where(function($builder) use($curDate){
+//                    $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+//                    $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+//                });
+//            }
+//            if ($type != self::COURSE_FILTER_POPULAR && $availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING) {
+//                $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
+//            }
+//            if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
+//                $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
+//            }
+//        }
 
-        if ($type == self::COURSE_FILTER_TRENDING) {
-            $coursesBuilder->inRandomOrder()->limit(10);
-        }
+//        if ($type == self::COURSE_FILTER_TRENDING) {
+//            $coursesBuilder->inRandomOrder()->limit(10);
+//        }
 
         $coursesBuilder->groupBy("courses.id");
         $coursesBuilder->orderByDesc('total_enroll');
@@ -573,9 +573,11 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
 
-        } else if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
-            $courses = $coursesBuilder->get()->take(20);
-        } else {
+        }
+//        else if ($type == self::COURSE_FILTER_POPULAR || $type == self::COURSE_FILTER_RECENT) {
+//            $courses = $coursesBuilder->get()->take(20);
+//        }
+        else {
             $courses = $coursesBuilder->get();
         }
 
