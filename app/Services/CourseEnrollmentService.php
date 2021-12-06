@@ -1299,7 +1299,10 @@ class CourseEnrollmentService
      */
     public function getEnrolledCourseCount(int $youthId): int
     {
-        return DB::table('course_enrollments')->where('youth_id', $youthId)->count('id');
+        return CourseEnrollment::join('courses', function ($join) {
+            $join->on('courses.id', 'course_enrollments.course_id')
+                ->whereNull('courses.deleted_at');
+        })->where('course_enrollments.youth_id', $youthId)->count('course_enrollments.id');
     }
 
 }
