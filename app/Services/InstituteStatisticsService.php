@@ -2,20 +2,15 @@
 
 namespace App\Services;
 
-use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
-use Faker\Provider\Base;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-//use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Validator;
+
 
 class InstituteStatisticsService
 {
@@ -23,28 +18,22 @@ class InstituteStatisticsService
 
     public function getTotalCourseEnrollments(int $id = null): int
     {
-        if ($id == null) {
-            $user = Auth::user();
-            if ($user && $user->user_type == BaseModel::SYSTEM_USER) {
-                return CourseEnrollment::count('id');
-            } else
-                return 0;
-        } else
-            return CourseEnrollment::where('institute_id', '=', $id)->count('id');
+
+        $enrollmentBuilder = CourseEnrollment::query();
+        if (is_numeric($id)) {
+            $enrollmentBuilder->where('institute_id', '=', $id);
+        }
+
+        return $enrollmentBuilder->count('id');
     }
 
-    public function getTotalCourses(int $id=null): int
+    public function getTotalCourses(int $id = null): int
     {
-        if($id ==null){
-            $user = Auth::user();
+        $courseBuilder = Course::query();
+        if (is_numeric($id)) {
+            $courseBuilder->where('institute_id', '=', $id);
         }
-        if($user && $user->user_type = BaseModel::SYSTEM_USER)
-        {
-            return Course::count('id');
-        }else{
-            return 0;
-        }
-        return Course::where('institute_id', '=', $id)->count('id');
+        return $courseBuilder->count('id');
     }
 
     public function demandingCourses(int $id): Collection
@@ -61,22 +50,28 @@ class InstituteStatisticsService
 
     }
 
-    public function getTotalBatches(int $id): int
+    public function getTotalBatches(int $id = null): int
     {
-        return Batch::where('institute_id', $id)->count('id');
+        $batchBuilder = Batch::query();
+        if (is_numeric($id)) {
+            $batchBuilder->where('institute_id', $id);
+        }
+        return $batchBuilder->count('id');
     }
 
-    public function getTotalRunningStudents(int $id): int
+    public function getTotalRunningStudents(int $id = null): int
     {
         $currentDate = Carbon::now();
-//        $authUser = Auth::user();
-//        if ($authUser  && $authUser->institute_id) {  //Institute User
-//            $id = $authUser->institute_id;
-//        }
-        /** @var Batch|Builder $batches */
 
-        $batches = Batch::where('institute_id', $id)->whereDate('batch_start_date', '<=', $currentDate)
-            ->whereDate('batch_end_date', '>=', $currentDate)->get();
+        $batchBuilder = Batch::query();
+        if (is_numeric($id)) {
+            $batchBuilder->where('institute_id', $id)->whereDate('batch_start_date', '<=', $currentDate)
+                ->whereDate('batch_end_date', '>=', $currentDate)->get();
+        }
+
+        /** @var Collection $batches */
+        $batches = $batchBuilder->get();
+
         $totalRunningStudent = 0;
         foreach ($batches as $batch) {
             $totalRunningStudent += ($batch->number_of_seats - $batch->available_seats);
@@ -84,30 +79,37 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(int $id): int
+    public function getTotalTrainers(int $id = null): int
     {
-        $Trainers = Trainer::where('institute_id', '=', $id)->get();
-        $totalCount = $Trainers->count('id');
-        return $totalCount;
+        $trainerBuilder = Trainer::query();
+        if (is_numeric($id)) {
+            $trainerBuilder->where('institute_id', '=', $id);
+        }
+        return $trainerBuilder->count('id');
     }
 
-    public function getTotalTrainingCenters(int $id): int
+    public function getTotalTrainingCenters(int $id = null): int
     {
-        return TrainingCenter::where('institute_id', $id)->count('id');
+        $trainingCenterBuilder = TrainingCenter::query();
+        if (is_numeric($id)) {
+            $trainingCenterBuilder->where('institute_id', $id);
+        }
+        return $trainingCenterBuilder->count('id');
+
     }
 
 
-    public function getTotalDemandFromIndustry(int $id)
+    public function getTotalDemandFromIndustry(int $id=null): int
     {
         return 0;
     }
 
-    public function getTotalCertificateIssue(int $id)
+    public function getTotalCertificateIssue(int $id=null): int
     {
         return 0;
     }
 
-    public function getTotalTrendingCourse(int $id)
+    public function getTotalTrendingCourse(int $id=null): int
     {
         return 0;
     }
