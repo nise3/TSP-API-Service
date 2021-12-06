@@ -7,11 +7,9 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-
-//use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -111,19 +109,23 @@ class InstituteStatisticsService
     }
 
 
-    public function getTotalDemandFromIndustry(int $id=null): int
+    public function getTotalDemandFromIndustry(int $id = null): int
     {
         return 0;
     }
 
-    public function getTotalCertificateIssue(int $id=null): int
+    public function getTotalCertificateIssue(int $id = null): int
     {
         return 0;
     }
 
-    public function getTotalTrendingCourse(int $id=null): int
+    public function getTotalTrendingCourse(int $id = null): int
     {
-        return 0;
+        $courseBuilder = Course::query();
+        if (is_numeric($id)) {
+            $courseBuilder->where('institute_id', '=', $id);
+        }
+        return $courseBuilder->count('id');
     }
 
 
