@@ -799,6 +799,18 @@ class CourseService
             }
         }
 
+        /** Set enrollable field in course */
+        /** @var $batchBuilder $batchBuilder */
+        $onGoingRegCourseIds = Batch::where(function($builder) use($curDate){
+                $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+                $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+            })->pluck('course_id')->toArray();
+
+        foreach ($courses as $course){
+            $course['enrollable'] = (bool) in_array($course->id, $onGoingRegCourseIds);
+        }
+
+
         $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
         $response['_response_status'] = [
             "success" => true,
