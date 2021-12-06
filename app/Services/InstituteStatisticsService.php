@@ -18,7 +18,10 @@ class InstituteStatisticsService
 
     public function getTotalCourseEnrollments(): int
     {
-        return CourseEnrollment::acl()->count('id');
+       return CourseEnrollment::join("courses", function ($join) {
+            $join->on('courses.id', '=', 'course_enrollments.course_id')
+                ->whereNull('courses.deleted_at');
+        })->acl()->count('id');
     }
 
     public function getTotalCourses(): int
@@ -34,7 +37,8 @@ class InstituteStatisticsService
         /** @var CourseEnrollment $courseEnrollmentBuilder */
         $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
-                $join->on('courses.id', '=', 'course_enrollments.course_id');
+                $join->on('courses.id', '=', 'course_enrollments.course_id')
+                ->whereNull('courses.deleted_at');
             });
         $courseEnrollmentBuilder->acl();
 
@@ -46,14 +50,21 @@ class InstituteStatisticsService
 
     public function getTotalBatches(): int
     {
-        return Batch::acl()->count('id');
+        return Batch::join('courses', function ($join) {
+            $join->on('courses.id', '=', 'batches.course_id')
+                ->whereNull('courses.deleted_at');
+        })->acl()->count('id');
 
     }
 
     public function getTotalRunningStudents(): int
     {
         $currentDate = Carbon::now();
-        $batches = Batch::whereDate('batch_start_date', '<=', $currentDate)
+        $batches = Batch::join('courses', function ($join) {
+            $join->on('courses.id', '=', 'batches.course_id')
+                ->whereNull('courses.deleted_at');
+            })
+            ->whereDate('batch_start_date', '<=', $currentDate)
             ->whereDate('batch_end_date', '>=', $currentDate)
             ->acl()
             ->get();
