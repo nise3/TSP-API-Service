@@ -7,7 +7,6 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,14 +18,13 @@ class InstituteStatisticsService
 
     public function getTotalCourseEnrollments(): int
     {
-        return CourseEnrollment::acl()->count('id');
+        return CourseEnrollment::publicInstitute()->count('id');
     }
 
     public function getTotalCourses(): int
     {
-        return Course::acl()->count('id');
+        return Course::publicInstitute()->count('id');
     }
-
 
     /**
      * @return Collection|array
@@ -38,7 +36,7 @@ class InstituteStatisticsService
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
             });
-        $courseEnrollmentBuilder->acl();
+        $courseEnrollmentBuilder->publicInstitute();
 
         return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
             ->orderby('value', 'DESC')
@@ -48,7 +46,7 @@ class InstituteStatisticsService
 
     public function getTotalBatches(): int
     {
-        return Batch::acl()->count('id');
+        return Batch::publicInstitute()->count('id');
 
     }
 
@@ -57,7 +55,7 @@ class InstituteStatisticsService
         $currentDate = Carbon::now();
         $batches = Batch::whereDate('batch_start_date', '<=', $currentDate)
             ->whereDate('batch_end_date', '>=', $currentDate)
-            ->acl()
+            ->publicInstitute()
             ->get();
 
         $totalRunningStudent = 0;
@@ -69,13 +67,13 @@ class InstituteStatisticsService
 
     public function getTotalTrainers(): int
     {
-        return Trainer::acl()->count('id');
+        return Trainer::publicInstitute()->count('id');
     }
 
     public function getTotalTrainingCenters(): int
     {
         $trainingCenterBuilder = TrainingCenter::query();
-        $trainingCenterBuilder->acl();
+        $trainingCenterBuilder->publicInstitute();
         return $trainingCenterBuilder->count('id');
 
     }
@@ -93,7 +91,7 @@ class InstituteStatisticsService
 
     public function getTotalTrendingCourse(): int
     {
-        return Course::acl()->count('id');
+        return Course::publicInstitute()->count('id');
     }
 
 
