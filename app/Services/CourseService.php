@@ -674,7 +674,7 @@ class CourseService
         });
 
         $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
-        $coursesBuilder->join("batches", "courses.id", "=", "batches.course_id");
+        $coursesBuilder->leftJoin("batches", "courses.id", "=", "batches.course_id");
 
         if (!empty($searchText) || !empty($locUpazilaId) || !empty($locDistrictId)) {
             $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
