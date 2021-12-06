@@ -88,6 +88,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 });
 
-$router->get("/idp",function (){
+$router->get("/idp-test",function (){
    Log('Idp-Log'.json_encode(request()));
 });
