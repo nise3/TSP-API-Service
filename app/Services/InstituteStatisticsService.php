@@ -12,7 +12,9 @@ use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+
 //use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -33,32 +35,40 @@ class InstituteStatisticsService
             return CourseEnrollment::where('institute_id', '=', $id)->count('id');
     }
 
-    public function getTotalCourses(int $id=null): int
+    public function getTotalCourses(int $id = null): int
     {
-        if($id ==null){
+        if ($id == null) {
             $user = Auth::user();
         }
-        if($user && $user->user_type = BaseModel::SYSTEM_USER)
-        {
+        if ($user && $user->user_type = BaseModel::SYSTEM_USER) {
             return Course::count('id');
-        }else{
+        } else {
             return 0;
         }
         return Course::where('institute_id', '=', $id)->count('id');
     }
 
-    public function demandingCourses(int $id): Collection
+
+    /**
+     * @param int|null $id
+     * @return Collection|array
+     */
+    public function getDemandedCourses(int $id = null): Collection|array
     {
-        return CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as Value , courses.title as Name '))
+        /** @var Builder $courseEnrollmentBuilder */
+        $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
-            })
-            ->where('course_enrollments.institute_id', $id)
-            ->groupby('course_enrollments.course_id')
-            ->orderby('Value', 'DESC')
+            });
+
+        if (is_numeric($id)) {
+            $courseEnrollmentBuilder->where('course_enrollments.institute_id', $id);
+        }
+
+        return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
+            ->orderby('value', 'DESC')
             ->limit(6)
             ->get();
-
     }
 
     public function getTotalBatches(int $id): int

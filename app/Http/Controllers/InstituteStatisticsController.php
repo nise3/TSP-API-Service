@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseEnrollment;
+use App\Models\User;
 use App\Services\CourseEnrollmentService;
 use App\Services\InstituteService;
 use App\Services\InstituteStatisticsService;
@@ -55,16 +56,21 @@ class InstituteStatisticsController extends Controller
     public function demandingCourses(int $instituteId = null): JsonResponse
     {
         if (!$instituteId) {
+            /** @var User $authUser */
             $authUser = Auth::user();
             if ($authUser && $authUser->institute_id) {
                 $instituteId = $authUser->institute_id;
             }
         }
+
+        /**
         $request = [
             'institute_id' => $instituteId
         ];
         $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
-        $demandingCourses = $this->instituteStatisticsService->demandingCourses($validated['institute_id']);
+         */
+
+        $demandingCourses = $this->instituteStatisticsService->getDemandedCourses($instituteId);
         $response['data'] = $demandingCourses->toArray();
         $response['_response_status'] = [
             "success" => true,
