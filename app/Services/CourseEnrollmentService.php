@@ -583,7 +583,7 @@ class CourseEnrollmentService
             ],
             'freedom_fighter_status' => [
                 'int',
-                'required',
+                'nullable',
                 Rule::in(CourseEnrollment::FREEDOM_FIGHTER_STATUSES)
             ],
             'passport_photo_path' => [
