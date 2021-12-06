@@ -21,7 +21,7 @@ class InstituteStatisticsService
        return CourseEnrollment::join("courses", function ($join) {
             $join->on('courses.id', '=', 'course_enrollments.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('id');
+        })->acl()->count('course_enrollments.id');
     }
 
     public function getTotalCourses(): int
@@ -53,7 +53,7 @@ class InstituteStatisticsService
         return Batch::join('courses', function ($join) {
             $join->on('courses.id', '=', 'batches.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('id');
+        })->acl()->count('batches.id');
 
     }
 
