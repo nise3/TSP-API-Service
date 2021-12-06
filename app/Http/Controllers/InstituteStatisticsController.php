@@ -34,7 +34,7 @@ class InstituteStatisticsController extends Controller
         $this->startTime = Carbon::now();
     }
 
-    public function dashboardStatistics(): JsonResponse
+    public function dashboardStatistics(int $instituteId = null): JsonResponse
     {
         $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData();
         $response['_response_status'] = [
