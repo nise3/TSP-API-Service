@@ -737,21 +737,6 @@ class CourseService
             $coursesBuilder->where('courses.level', '=', $courseLevel);
         }
 
-        if (is_numeric($availability)) {
-            if ($availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
-                $coursesBuilder->where(function($builder) use($curDate){
-                    $builder->whereDate('batches.registration_start_date', '<=', $curDate);
-                    $builder->whereDate('batches.registration_end_date', '>=', $curDate);
-                });
-            }
-            if ($availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING) {
-                $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
-            }
-            if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
-                $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
-            }
-        }
-
         $coursesBuilder->groupBy("courses.id");
         $coursesBuilder->orderByDesc('total_enroll');
 
