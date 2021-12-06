@@ -34,17 +34,9 @@ class InstituteStatisticsController extends Controller
         $this->startTime = Carbon::now();
     }
 
-    public function dashboardStatistics($instituteId = null): JsonResponse
+    public function dashboardStatistics(int $instituteId = null): JsonResponse
     {
-        if (!$instituteId) {
-            $authUser = Auth::user();
-            if ($authUser && $authUser->institute_id) {
-                $instituteId = $authUser->institute_id;
-            }
-        }
-
-
-        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($instituteId);
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData();
         $response['_response_status'] = [
             "success" => true, "code" => ResponseAlias::HTTP_OK,
             "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
@@ -64,10 +56,10 @@ class InstituteStatisticsController extends Controller
         }
 
         /**
-        $request = [
-            'institute_id' => $instituteId
-        ];
-        $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
+         * $request = [
+         * 'institute_id' => $instituteId
+         * ];
+         * $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
          */
 
         $demandingCourses = $this->instituteStatisticsService->getDemandedCourses($instituteId);
