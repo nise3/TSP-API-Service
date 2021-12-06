@@ -822,12 +822,18 @@ class CourseService
 
     public function getCourseCount(): int
     {
-        return DB::table('courses')->count('id');
+        return Course::count('id');
     }
 
     public function getSkillMatchingCourseCount(array $skillIds): int
     {
-        return DB::table('course_skill')->whereIn('skill_id', $skillIds)->count('course_id');
+        return DB::table('course_skill')
+            ->join('courses', function ($join) {
+                $join->on('courses.id', 'course_skill.course_id')
+                    ->whereNull('courses.deleted_at');
+            })
+            ->whereIn('skill_id', $skillIds)
+            ->count('course_skill.course_id');
     }
 
     /**

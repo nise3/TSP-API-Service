@@ -222,7 +222,9 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param int $youthId
+     * @return array
      */
     public function youthFeedStatistics(Request $request, int $youthId): array
     {
