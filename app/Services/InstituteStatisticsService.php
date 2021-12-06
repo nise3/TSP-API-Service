@@ -18,12 +18,12 @@ class InstituteStatisticsService
 
     public function getTotalCourseEnrollments(): int
     {
-        return CourseEnrollment::publicInstitute()->count('id');
+        return CourseEnrollment::acl()->count('id');
     }
 
     public function getTotalCourses(): int
     {
-        return Course::publicInstitute()->count('id');
+        return Course::acl()->count('id');
     }
 
     /**
@@ -36,7 +36,7 @@ class InstituteStatisticsService
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id');
             });
-        $courseEnrollmentBuilder->publicInstitute();
+        $courseEnrollmentBuilder->acl();
 
         return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
             ->orderby('value', 'DESC')
@@ -46,7 +46,7 @@ class InstituteStatisticsService
 
     public function getTotalBatches(): int
     {
-        return Batch::publicInstitute()->count('id');
+        return Batch::acl()->count('id');
 
     }
 
@@ -55,7 +55,7 @@ class InstituteStatisticsService
         $currentDate = Carbon::now();
         $batches = Batch::whereDate('batch_start_date', '<=', $currentDate)
             ->whereDate('batch_end_date', '>=', $currentDate)
-            ->publicInstitute()
+            ->acl()
             ->get();
 
         $totalRunningStudent = 0;
@@ -67,13 +67,13 @@ class InstituteStatisticsService
 
     public function getTotalTrainers(): int
     {
-        return Trainer::publicInstitute()->count('id');
+        return Trainer::acl()->count('id');
     }
 
     public function getTotalTrainingCenters(): int
     {
         $trainingCenterBuilder = TrainingCenter::query();
-        $trainingCenterBuilder->publicInstitute();
+        $trainingCenterBuilder->acl();
         return $trainingCenterBuilder->count('id');
 
     }
@@ -91,7 +91,7 @@ class InstituteStatisticsService
 
     public function getTotalTrendingCourse(): int
     {
-        return Course::publicInstitute()->count('id');
+        return Course::acl()->count('id');
     }
 
 
