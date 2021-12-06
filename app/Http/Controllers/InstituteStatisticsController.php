@@ -43,6 +43,7 @@ class InstituteStatisticsController extends Controller
             }
         }
 
+
         $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($instituteId);
         $response['_response_status'] = [
             "success" => true,
