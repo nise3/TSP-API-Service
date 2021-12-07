@@ -20,8 +20,6 @@ if (!function_exists("clientUrl")) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.youth.dev") : config("httpclientendpoint.youth.prod");
             } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-            } elseif ($type == BaseModel::MAIL_SMS_SEND) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.mail_sms_send.dev") : config("httpclientendpoint.mail_sms_send.prod");
             }
 
         } else {
@@ -37,8 +35,6 @@ if (!function_exists("clientUrl")) {
                 return config("httpclientendpoint.cms.local");
             } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
                 return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-            } elseif ($type == BaseModel::MAIL_SMS_SEND) {
-                return config("httpclientendpoint.mail_sms_send.local");
             }
         }
         return "";

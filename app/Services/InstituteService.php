@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -470,6 +471,12 @@ class InstituteService
         $mailService->sendMail();
     }
 
+    public function userInfoSendBySMS(string $recipient, string $message)
+    {
+        $sms = new SmsService($recipient, $message);
+        $sms->sendSms();
+    }
+
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
     {
         $titleEn = $request->query('title_en');
@@ -890,4 +897,5 @@ class InstituteService
             ],
         ], $customMessage);
     }
+
 }
