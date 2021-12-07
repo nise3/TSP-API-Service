@@ -568,7 +568,7 @@ class CourseEnrollmentService
                 'required'
             ],
             'does_belong_to_ethnic_group' => [
-                'required',
+                'nullable',
                 'int',
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
@@ -595,7 +595,7 @@ class CourseEnrollmentService
                 'nullable',
             ],
             "physical_disability_status" => [
-                "required",
+                "nullable",
                 "int",
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
@@ -1119,7 +1119,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) {
+        $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
