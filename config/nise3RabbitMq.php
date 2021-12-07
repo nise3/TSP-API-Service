@@ -2,6 +2,25 @@
 
 return [
     'exchanges' => [
+        'core' => [
+            'name' => 'core.x',
+            'type' => 'topic',
+            'durable' => true,
+            'autoDelete' => false,
+            'alternateExchange' => [
+                'name' => 'core.alternate.x',
+                'type' => 'fanout',
+                'queue' => 'core.alternate.q'
+            ],
+            'queue' => [
+                'demo' => [
+                    'name' => 'core.demo.q',
+                    'binding' => 'core.demo',
+                    'durable' => true,
+                    'autoDelete' => false
+                ]
+            ],
+        ],
         'institute' => [
             'name' => 'institute.x',
             'type' => 'topic',
@@ -21,6 +40,25 @@ return [
                 ]
             ],
         ],
+        'organization' => [
+            'name' => 'organization.x',
+            'type' => 'topic',
+            'durable' => true,
+            'autoDelete' => false,
+            'alternateExchange' => [
+                'name' => 'organization.alternate.x',
+                'type' => 'fanout',
+                'queue' => 'organization.alternate.q'
+            ],
+            'queue' => [
+                'demo' => [
+                    'name' => 'organization.demo.q',
+                    'binding' => 'organization.demo',
+                    'durable' => true,
+                    'autoDelete' => false
+                ]
+            ],
+        ],
         'youth' => [
             'name' => 'youth.x',
             'type' => 'topic',
@@ -35,6 +73,25 @@ return [
                 'courseEnrollment' => [
                     'name' => 'youth.course.enrollment.q',
                     'binding' => 'youth.course.enrollment',
+                    'durable' => true,
+                    'autoDelete' => false
+                ]
+            ],
+        ],
+        'cms' => [
+            'name' => 'cms.x',
+            'type' => 'topic',
+            'durable' => true,
+            'autoDelete' => false,
+            'alternateExchange' => [
+                'name' => 'cms.alternate.x',
+                'type' => 'fanout',
+                'queue' => 'cms.alternate.q'
+            ],
+            'queue' => [
+                'demo' => [
+                    'name' => 'cms.demo.q',
+                    'binding' => 'cms.demo',
                     'durable' => true,
                     'autoDelete' => false
                 ]
