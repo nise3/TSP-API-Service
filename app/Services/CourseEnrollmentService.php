@@ -1119,7 +1119,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) {
+        $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
