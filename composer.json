@@ -8,12 +8,13 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
-        "laravel/lumen-framework": "^8.0",
-        "laravel/tinker": "^2.6",
-        "guzzlehttp/guzzle": "^7.3",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.1",
         "felixkiss/uniquewith-validator": "^3.4",
         "flipbox/lumen-generator": "^8.2",
+        "guzzlehttp/guzzle": "^7.3",
         "irazasyed/larasupport": "^1.7",
+        "laravel/lumen-framework": "^8.0",
+        "laravel/tinker": "^2.6",
         "phabloraylan/lumen-middleware-trim-or-convert-strings": "^1.0"
     },
     "require-dev": {
