@@ -755,13 +755,16 @@ class CourseService
                 $coursesBuilder->where(function($builder) use($curDate){
                     $builder->whereDate('batches.registration_start_date', '<=', $curDate);
                     $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+                    $builder->whereNull('batches.deleted_at');
                 });
             }
             if ($availability == self::COURSE_FILTER_AVAILABILITY_UPCOMING) {
                 $coursesBuilder->WhereDate('batches.registration_start_date', '>', $curDate);
+                $coursesBuilder->whereNull('batches.deleted_at');
             }
             if ($availability == self::COURSE_FILTER_AVAILABILITY_COMPLETED) {
                 $coursesBuilder->whereDate('batches.batch_end_date', '<', $curDate);
+                $coursesBuilder->whereNull('batches.deleted_at');
             }
         }
 
