@@ -10,6 +10,8 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -86,7 +88,10 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId($request));
+
         $validatedData = $this->branchService->validator($request)->validate();
+
         $data = $this->branchService->store($validatedData);
         $response = [
             'data' => $data ?: [],
