@@ -112,10 +112,9 @@ if (!function_exists("idpUserErrorMessage")) {
     }
 
     if (!function_exists("getInstituteId")) {
-        function instituteId(): int|null
+        function getInstituteId(): int|null
         {
             $authUser = \Illuminate\Support\Facades\Auth::user();
-
             return $authUser && $authUser->institute_id ? $authUser->institute_id : request()->get('institute_id');
         }
     }

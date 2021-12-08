@@ -113,4 +113,9 @@ abstract class BaseModel extends Model
     public const SAGA_STATUS_PENDING = 1;
     public const SAGA_STATUS_COMMIT = 2;
     public const SAGA_STATUS_ROLLBACK = 3;
+
+    /** Service to service internal calling header type */
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_KEY = 'service-to-service';
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_TRUE = true;
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE = false;
 }

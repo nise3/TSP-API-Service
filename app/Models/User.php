@@ -61,13 +61,13 @@ class User extends BaseModel implements
         return $this;
     }
 
-    public function hasPermission($key): bool
+    public function hasPermission($ability): bool
     {
         if (!(!empty($this->permissions) && $this->permissions instanceof Collection)) {
             return false;
         }
 
-        return $this->permissions->contains($key);
+        return $this->permissions->contains($ability);
     }
 
     public function isSystemUser(): bool
