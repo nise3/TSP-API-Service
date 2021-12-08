@@ -15,7 +15,7 @@ class RabbitMQ
      */
     public static function publishEvent(
         RabbitMQConnector $connector, RabbitMQService $rabbitMqService, string $configExchangeName, string $configQueueName, bool $retry = false
-    ){
+    ): void {
         /** Alternate Exchange related variables */
         $alternateExchange = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.alternateExchange.name');
         $alternateExchangeType = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.alternateExchange.type');

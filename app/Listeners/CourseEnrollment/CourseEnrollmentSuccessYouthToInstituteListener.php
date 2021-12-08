@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\CourseEnrollment;
 
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
