@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class EnrollmentProfessionalInfo extends BaseModel
 {
     use SoftDeletes;
+
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
     protected $table = 'enrollment_professional_infos'; //dont remove this

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use Carbon\Carbon;
@@ -48,6 +47,8 @@ class ProgramController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Program::class);
+
         $filter = $this->programmeService->filterValidator($request)->validate();
 
         $response = $this->programmeService->getProgrammeList($filter, $this->startTime);
@@ -62,16 +63,18 @@ class ProgramController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $data = $this->programmeService->getOneProgramme($id);
+        $program = $this->programmeService->getOneProgramme($id);
+
+        $this->authorize('view', $program);
 
         $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        "data" => $program,
+        "_response_status" => [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ]
+    ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -84,6 +87,8 @@ class ProgramController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Program::class);
+
         $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->programmeService->validator($request)->validate();
         $data = $this->programmeService->store($validatedData);
@@ -109,10 +114,13 @@ class ProgramController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $program = Program::findOrFail($id);
+
+        $this->authorize('update', $program);
+
         $request->offsetSet('institute_id', getInstituteId());
-        $programme = Program::findOrFail($id);
         $validated = $this->programmeService->validator($request, $id)->validate();
-        $data = $this->programmeService->update($programme, $validated);
+        $data = $this->programmeService->update($program, $validated);
         $response = [
             'data' => $data ?: null,
             '_response_status' => [
@@ -133,8 +141,11 @@ class ProgramController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $programme = Program::findOrFail($id);
-        $this->programmeService->destroy($programme);
+        $program = Program::findOrFail($id);
+
+        $this->authorize('delete', $program);
+
+        $this->programmeService->destroy($program);
         $response = [
             '_response_status' => [
                 "success" => true,

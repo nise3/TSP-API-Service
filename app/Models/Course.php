@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,7 +43,7 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl, CascadeSoftDeletes;
+    use ScopeRowStatusTrait, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'courses';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
