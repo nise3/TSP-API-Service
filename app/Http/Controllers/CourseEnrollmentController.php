@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
-use App\Events\CourseEnrollmentEvent;
+use App\Events\CourseEnrollment\CourseEnrollmentEvent;
 
 class CourseEnrollmentController extends Controller
 {
