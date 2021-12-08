@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -43,10 +44,16 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl, CascadeSoftDeletes;
 
     protected $table = 'courses';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
+
+    protected $cascadeDeletes = [
+        'batches',
+        'courseEnrollments',
+        'skills'
+    ];
 
     const DEFAULT_COVER_IMAGE = 'course/course.jpeg';
 
@@ -134,4 +141,10 @@ class Course extends BaseModel
     {
         return $this->belongsToMany(Skill::class, 'course_skill');
     }
+
+    public function courseEnrollments(): HasMany
+    {
+        return $this->hasMany(CourseEnrollment::class, 'course_id');
+    }
+
 }

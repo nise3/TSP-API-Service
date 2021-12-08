@@ -31,7 +31,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
 
     $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@DemandingCourses"]);
+    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
 
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
@@ -95,3 +95,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     );
 
 });
+
+$router->get("/idp-test",function (){
+        Illuminate\Support\Facades\Log::info('Idp-Log');
+        return "idp-User";
+    });

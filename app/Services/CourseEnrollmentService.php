@@ -96,7 +96,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
@@ -568,7 +568,7 @@ class CourseEnrollmentService
                 'required'
             ],
             'does_belong_to_ethnic_group' => [
-                'required',
+                'nullable',
                 'int',
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
@@ -583,7 +583,7 @@ class CourseEnrollmentService
             ],
             'freedom_fighter_status' => [
                 'int',
-                'required',
+                'nullable',
                 Rule::in(CourseEnrollment::FREEDOM_FIGHTER_STATUSES)
             ],
             'passport_photo_path' => [
@@ -595,7 +595,7 @@ class CourseEnrollmentService
                 'nullable',
             ],
             "physical_disability_status" => [
-                "required",
+                "nullable",
                 "int",
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
@@ -1119,7 +1119,7 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
 
-        $coursesEnrollmentBuilder->leftJoin("courses", function ($join) {
+        $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
@@ -1299,7 +1299,10 @@ class CourseEnrollmentService
      */
     public function getEnrolledCourseCount(int $youthId): int
     {
-        return DB::table('course_enrollments')->where('youth_id', $youthId)->count('id');
+        return CourseEnrollment::join('courses', function ($join) {
+            $join->on('courses.id', 'course_enrollments.course_id')
+                ->whereNull('courses.deleted_at');
+        })->where('course_enrollments.youth_id', $youthId)->count('course_enrollments.id');
     }
 
 }
