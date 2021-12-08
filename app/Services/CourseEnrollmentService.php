@@ -296,7 +296,7 @@ class CourseEnrollmentService
             $presentAddress->fill($addressValues);
             $presentAddress->save();
         }
-        if ($data['address_info']['is_permanent_address'] == BaseModel::TRUE) {
+        if (!empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE) {
             $permanentAddress = app(EnrollmentAddress::class);
 
             $addressValues = $data['address_info']['permanent_address'];
