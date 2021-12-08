@@ -46,7 +46,7 @@ return [
             'options' => [
                 'queue' => [
                     'exchange' => env('RABBITMQ_EXCHANGE_NAME','institute.x'),
-                    'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE','fanout'),
+                    'exchange_type' => env('RABBITMQ_EXCHANGE_TYPE','topic'),
                     'exchange_routing_key' => env('EXCHANGE_ROUTING_KEY','institute.routing.key'),
                     'prioritize_delayed_messages' =>  false,
                     'queue_max_priority' => 10,

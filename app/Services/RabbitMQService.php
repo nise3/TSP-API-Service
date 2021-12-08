@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
-use App\Models\SagaEvent;
+use App\Models\SagaSuccessEvent;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Helpers\RabbitMQ;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
@@ -207,8 +207,8 @@ class RabbitMQService
     public function checkWeatherEventAlreadyConsumed(): bool {
         $uuid = $this->getRabbitMqMessageUuid();
 
-        /** @var SagaEvent $sagaEvent */
-        $sagaEvent = SagaEvent::where('uuid', $uuid)->first();
+        /** @var SagaSuccessEvent $sagaEvent */
+        $sagaEvent = SagaSuccessEvent::where('uuid', $uuid)->first();
         return (bool) $sagaEvent;
     }
 
