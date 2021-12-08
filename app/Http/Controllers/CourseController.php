@@ -116,10 +116,11 @@ class CourseController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId());
         $course = Course::findOrFail($id);
 
         $this->authorize('update', $course);
+
+        $request->offsetSet('institute_id', getInstituteId());
 
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);
