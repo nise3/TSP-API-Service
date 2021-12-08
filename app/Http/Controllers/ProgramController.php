@@ -84,6 +84,7 @@ class ProgramController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->programmeService->validator($request)->validate();
         $data = $this->programmeService->store($validatedData);
         $response = [
@@ -108,6 +109,7 @@ class ProgramController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $programme = Program::findOrFail($id);
         $validated = $this->programmeService->validator($request, $id)->validate();
         $data = $this->programmeService->update($programme, $validated);
@@ -146,7 +148,8 @@ class ProgramController extends Controller
 
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -185,6 +188,8 @@ class ProgramController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function getPublicProgramList(Request $request): JsonResponse

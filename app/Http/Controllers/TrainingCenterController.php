@@ -84,6 +84,7 @@ class TrainingCenterController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->trainingCenterService->validator($request)->validate();
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
@@ -108,6 +109,7 @@ class TrainingCenterController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $trainingCenter = TrainingCenter::findOrFail($id);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
         $data = $this->trainingCenterService->update($trainingCenter, $validated);

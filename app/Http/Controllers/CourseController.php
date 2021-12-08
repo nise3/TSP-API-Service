@@ -103,6 +103,7 @@ class CourseController extends Controller
      */
     function store(Request $request): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $validated = $this->courseService->validator($request)->validate();
         $data = $this->courseService->store($validated);
 
@@ -128,6 +129,7 @@ class CourseController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
         $course = Course::findOrFail($id);
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);
@@ -165,7 +167,8 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -174,7 +177,8 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
@@ -192,7 +196,8 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {
@@ -210,7 +215,9 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param string|null $type
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse

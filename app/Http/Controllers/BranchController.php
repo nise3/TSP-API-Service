@@ -88,10 +88,8 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->offsetSet('institute_id', instituteId());
-
+        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->branchService->validator($request)->validate();
-
         $data = $this->branchService->store($validatedData);
         $response = [
             'data' => $data ?: [],
@@ -118,6 +116,8 @@ class BranchController extends Controller
     {
         $branch = Branch::findOrFail($id);
 
+        $request->offsetSet('institute_id', getInstituteId());
+
         $validated = $this->branchService->validator($request)->validate();
 
         $data = $this->branchService->update($branch, $validated);
@@ -127,7 +127,7 @@ class BranchController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Brnach Update successfully.",
+                "message" => "Branch Update successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
