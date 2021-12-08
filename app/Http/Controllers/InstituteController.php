@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Services\CommonServices\MailService;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use Illuminate\Http\Client\RequestException;
@@ -56,6 +55,7 @@ class InstituteController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Institute::class);
         $filter = $this->instituteService->filterValidator($request)->validate();
 
         $response = $this->instituteService->getInstituteList($filter, $this->startTime);
@@ -64,16 +64,24 @@ class InstituteController extends Controller
 
     /**
      * * Display the specified resource
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws Throwable
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function read(int $id): JsonResponse
+    public function read(Request $request,int $id): JsonResponse
     {
-        $data = $this->instituteService->getOneInstitute($id);
+        $institute = $this->instituteService->getOneInstitute($id);
+
+        $requestHeaders = $request->header();
+        /** Policy not checking when service to service call true*/
+        if (empty($requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0]) ||
+            $requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0] === BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE) {
+            $this->authorize('view', $institute);
+        }
 
         $response = [
-            "data" => $data,
+            "data" => $institute,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -95,6 +103,9 @@ class InstituteController extends Controller
     {
         /** @var Institute $institute */
         $institute = app(Institute::class);
+
+        $this->authorize('create', $institute);
+
         $validatedData = $this->instituteService->validator($request)->validate();
 
         DB::beginTransaction();
@@ -163,6 +174,68 @@ class InstituteController extends Controller
     }
 
     /**
+     * * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $institute = Institute::findOrFail($id);
+
+        $this->authorize('update', $institute);
+
+        $validated = $this->instituteService->validator($request, $id)->validate();
+        $data = $this->instituteService->update($institute, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     *Remove the specified resource from storage.
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $institute = Institute::findOrFail($id);
+
+        $this->authorize('delete', $institute);
+
+        DB::beginTransaction();
+        try {
+            $this->instituteService->destroy($institute);
+            $this->instituteService->instituteUserDestroy($institute);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Institute Open Registration
      * @param Request $request
      * @return JsonResponse
      * @throws RequestException
@@ -234,62 +307,6 @@ class InstituteController extends Controller
             throw $e;
         }
 
-    }
-
-    /**
-     * * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     * @throws ValidationException
-     */
-    public function update(Request $request, int $id): JsonResponse
-    {
-        $institute = Institute::findOrFail($id);
-        $validated = $this->instituteService->validator($request, $id)->validate();
-        $data = $this->instituteService->update($institute, $validated);
-        $response = [
-            'data' => $data ?: [],
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Institute updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-    /**
-     *Remove the specified resource from storage.
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $institute = Institute::findOrFail($id);
-
-        DB::beginTransaction();
-        try {
-            $this->instituteService->destroy($institute);
-            $this->instituteService->instituteUserDestroy($institute);
-            DB::commit();
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Institute deleted successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
