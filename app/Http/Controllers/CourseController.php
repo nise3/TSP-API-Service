@@ -79,26 +79,6 @@ class CourseController extends Controller
     }
 
     /**
-     * Display the specified resource
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function courseDetails(int $id): JsonResponse
-    {
-        $course = $this->courseService->getOneCourse($id, true);
-        $response = [
-            "data" => $course ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
-
-    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
@@ -107,9 +87,9 @@ class CourseController extends Controller
      */
     function store(Request $request): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId());
-
         $this->authorize('create', Course::class);
+
+        $request->offsetSet('institute_id', getInstituteId());
 
         $validated = $this->courseService->validator($request)->validate();
         $course = $this->courseService->store($validated);
@@ -144,7 +124,7 @@ class CourseController extends Controller
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -174,6 +154,26 @@ class CourseController extends Controller
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
                 "message" => "Course deleted successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Display the specified resource
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function publicCourseDetails(int $id): JsonResponse
+    {
+        $course = $this->courseService->getOneCourse($id, true);
+        $response = [
+            "data" => $course ?: null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];

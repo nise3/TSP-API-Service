@@ -37,7 +37,7 @@ use Illuminate\Support\Carbon;
  */
 class Trainer extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
