@@ -88,7 +88,7 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId($request));
+        $request->offsetSet('institute_id', instituteId());
 
         $validatedData = $this->branchService->validator($request)->validate();
 
