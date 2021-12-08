@@ -107,7 +107,7 @@ $app->register(Felixkiss\UniqueWithValidator\ServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 
 $app->register(App\Providers\EventServiceProvider::class);
-$app->register(App\Providers\RabbitMQProvider::class);
+$app->register(App\Providers\RabbitMQServiceProvider::class);
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 
 /*

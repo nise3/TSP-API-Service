@@ -13,7 +13,7 @@ class RabbitMQ
      * @throws AMQPProtocolChannelException
      * @throws Exception
      */
-    public static function publishEvent(
+    public function publishEvent(
         RabbitMQConnector $connector, RabbitMQService $rabbitMqService, string $configExchangeName, string $configQueueName, bool $retry = false
     ): void {
         /** Alternate Exchange related variables */
