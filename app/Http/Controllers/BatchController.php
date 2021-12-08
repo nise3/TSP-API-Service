@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\BatchEvent;
 use App\Models\Batch;
 use App\Services\BatchService;
 use Illuminate\Http\Client\RequestException;
@@ -89,6 +88,8 @@ class BatchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $request->offsetSet('institute_id', getInstituteId());
+
         $validatedData = $this->batchService->validator($request)->validate();
         DB::beginTransaction();
         try {
@@ -125,6 +126,9 @@ class BatchController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
+
+        $request->offsetSet('institute_id', getInstituteId());
+
         $validated = $this->batchService->validator($request)->validate();
         DB::beginTransaction();
         try{

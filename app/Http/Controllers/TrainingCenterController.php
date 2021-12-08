@@ -65,7 +65,7 @@ class TrainingCenterController extends Controller
     {
         $data = $this->trainingCenterService->getOneTrainingCenter($id);
         $response = [
-            "data" => $data ?: [],
+            "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -88,7 +88,7 @@ class TrainingCenterController extends Controller
         $validatedData = $this->trainingCenterService->validator($request)->validate();
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -114,7 +114,7 @@ class TrainingCenterController extends Controller
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
         $data = $this->trainingCenterService->update($trainingCenter, $validated);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
