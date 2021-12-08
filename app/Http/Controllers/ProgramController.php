@@ -146,6 +146,7 @@ class ProgramController extends Controller
         $this->authorize('delete', $program);
 
         $this->programmeService->destroy($program);
+
         $response = [
             '_response_status' => [
                 "success" => true,
