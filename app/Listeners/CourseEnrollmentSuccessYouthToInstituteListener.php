@@ -21,7 +21,7 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
         $data = $eventData['data'];
 
         /** @var CourseEnrollment $courseEnrollment */
-        $courseEnrollment = CourseEnrollment::find($data['id']);
+        $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
         $courseEnrollment->save();
     }

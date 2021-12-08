@@ -23,7 +23,7 @@ class CourseEnrollmentRollbackToInstituteListener
         $data = $eventData['data'];
 
         /** @var CourseEnrollment $courseEnrollment */
-        $courseEnrollment = CourseEnrollment::find($data['id']);
+        $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
         $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
         $courseEnrollment->deleted_at = $this->currentTime;
         $courseEnrollment->save();

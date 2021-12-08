@@ -114,7 +114,7 @@ class CourseEnrollmentController extends Controller
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
             /** Trigger EVENT to Youth Service via RabbitMQ  */
-            $validated['id'] = $courseEnroll->id;
+            $validated['enrollment_id'] = $courseEnroll->id;
             event(new CourseEnrollmentEvent($validated));
 
             $response = [
