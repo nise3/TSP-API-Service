@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
- * Class BatcheController
+ * Class BatchController
  * @package App\Http\Controllers
  */
 class BatchController extends Controller

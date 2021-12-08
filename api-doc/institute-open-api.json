@@ -506,6 +506,68 @@
                 }
             }
         },
+        "/institute-registration-approval/{instituteId}": {
+            "put": {
+                "summary": "Approve institute registration req",
+                "description": "API endpoint to Approve institute registration req.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute Registration  approved successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Institute Registration Approval"
+                ]
+            }
+        },
+        "/institute-registration-rejection/{instituteId}": {
+            "put": {
+                "summary": "Reject institute registration req",
+                "description": "API endpoint to Reject institute registration req.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute Registration  rejected successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Institute Registration Approval"
+                ]
+            }
+        },
         "/training-centers": {
             "get": {
                 "tags": [

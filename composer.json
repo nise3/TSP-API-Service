@@ -14,15 +14,16 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-pdo": "*",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.1",
         "felixkiss/uniquewith-validator": "^3.4",
         "flipbox/lumen-generator": "^8.2",
         "guzzlehttp/guzzle": "^7.3",
         "illuminate/redis": "^8.73",
         "irazasyed/larasupport": "^1.7",
         "laravel/lumen-framework": "^8.0",
+        "laravel/tinker": "^2.6",
         "phabloraylan/lumen-middleware-trim-or-convert-strings": "^1.0",
         "predis/predis": "~1.0",
-        "laravel/tinker": "^2.6",
         "vladimir-yuldashev/laravel-queue-rabbitmq": "dev-feat/give-accessibility-to-access-rabbitmqjob-instance"
     },
     "require-dev": {
