@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Helpers\Classes\RabbitMQ;
+use App\Facade\RabbitMQFacade;
 use App\Services\RabbitMQService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,7 +25,7 @@ class MailSendListener implements ShouldQueue
     {
         $this->connector = $connector;
         $this->rabbitmqService = $rabbitmqService;
-        RabbitMQ::publishEvent(
+        RabbitMQFacade::publishEvent(
             $this->connector,
             $this->rabbitmqService,
             self::EXCHANGE_CONFIG_NAME,
