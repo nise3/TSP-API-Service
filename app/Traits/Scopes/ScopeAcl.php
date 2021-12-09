@@ -13,7 +13,7 @@ trait ScopeAcl
      * @param $query
      * @return mixed
      */
-    public function ScopeAcl($query): mixed
+    public function scopeAcl($query): mixed
     {
         /** @var User $authUser */
         $authUser = Auth::user();
