@@ -89,8 +89,6 @@ class CourseController extends Controller
     {
         $this->authorize('create', Course::class);
 
-        $request->offsetSet('institute_id', getInstituteId());
-
         $validated = $this->courseService->validator($request)->validate();
         $course = $this->courseService->store($validated);
 
@@ -119,8 +117,6 @@ class CourseController extends Controller
         $course = Course::findOrFail($id);
 
         $this->authorize('update', $course);
-
-        $request->offsetSet('institute_id', getInstituteId());
 
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);

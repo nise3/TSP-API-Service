@@ -21,7 +21,7 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property string mobile
  * @property string profile_pic
  * @property int $role_id
- * @property int $user_type
+ * @property int user_type
  * @property int organization_id
  * @property int institute_id
  * @property int loc_division_id
