@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
+use App\Services\CommonServices\MailService;
 use App\Services\CourseEnrollmentService;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -144,7 +145,8 @@ class CourseEnrollmentController extends Controller
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
             $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+//            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
 
             $response = [
                 '_response_status' => [
@@ -184,6 +186,7 @@ class CourseEnrollmentController extends Controller
             })
             ->json();
     }
+
 
     /**
      * @param Request $request

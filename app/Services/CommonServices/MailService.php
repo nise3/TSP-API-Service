@@ -168,8 +168,8 @@ class MailService
         event(new MailSendEvent($sendMailPayload));
     }
 
-    private function templateView($data): string
+    private function templateView($data)
     {
-        return '<p>UserName: ' . $data["user_name"] . '.</p><br/><p>Password: ' . $data["password"] . '.</p>';
+        return $data;
     }
 }
