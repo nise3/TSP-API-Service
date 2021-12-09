@@ -15,7 +15,6 @@ trait ScopeAcl
      */
     public function ScopeAcl($query): mixed
     {
-
         $authUser = Auth::user();
         $tableName = $this->getTable();
 
@@ -33,12 +32,8 @@ trait ScopeAcl
             }
 
             return $query->where($tableName . '.institute_id', $authUser->institute_id);
-        }else{ //for public call with param id. Need to optimize
-            $instituteId = last(request()->segments());
-            if(is_numeric($instituteId)){
-                return $query->where($tableName . '.institute_id', $instituteId);
-            }
         }
+
         return $query;
     }
 }
