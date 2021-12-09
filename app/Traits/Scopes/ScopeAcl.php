@@ -15,17 +15,18 @@ trait ScopeAcl
      */
     public function ScopeAcl($query): mixed
     {
+        /** @var User $authUser */
         $authUser = Auth::user();
         $tableName = $this->getTable();
 
         if ($authUser && $authUser->isInstituteUser()) {  //Institute User
 
-            if ($authUser && $authUser->isTrainingCenterUser()) { //Training Center user
+            if ($authUser->isTrainingCenterUser()) { //Training Center user
                 if (Schema::hasColumn($tableName, 'training_center_id')) {
                     $query = $query->where($tableName . '.training_center_id', $authUser->training_center_id);
                 }
 
-            } else if ($authUser && $authUser->isBranchUser()) { // Branch user
+            } else if ($authUser->isBranchUser()) { // Branch user
                 if (Schema::hasColumn($tableName, 'branch_id')) {
                     $query = $query->where($tableName . '.branch_id', $authUser->branch_id);
                 }
