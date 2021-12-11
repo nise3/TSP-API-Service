@@ -33,15 +33,15 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
             $courseEnrollment->save();
 
             $this->rabbitMQService->sagaSuccessEvent(
-                BaseModel::YOUTH_SERVICE,
-                BaseModel::INSTITUTE_SERVICE,
+                BaseModel::SAGA_YOUTH_SERVICE,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
                 get_class($this),
                 json_encode($data)
             );
         } catch (Exception $e){
             $this->rabbitMQService->sagaErrorEvent(
-                BaseModel::YOUTH_SERVICE,
-                BaseModel::INSTITUTE_SERVICE,
+                BaseModel::SAGA_YOUTH_SERVICE,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
                 get_class($this),
                 json_encode($data),
                 $e,

@@ -38,14 +38,14 @@ class CourseEnrollmentRollbackToInstituteListener
 
             $this->rabbitMQService->sagaSuccessEvent(
                 $publisher,
-                BaseModel::INSTITUTE_SERVICE,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
                 get_class($this),
                 json_encode($data)
             );
         } catch (Exception $e){
             $this->rabbitMQService->sagaErrorEvent(
                 $publisher,
-                BaseModel::INSTITUTE_SERVICE,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
                 get_class($this),
                 json_encode($data),
                 $e,
