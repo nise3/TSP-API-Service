@@ -89,7 +89,6 @@ class ProgramController extends Controller
     {
         $this->authorize('create', Program::class);
 
-        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->programmeService->validator($request)->validate();
         $data = $this->programmeService->store($validatedData);
         $response = [
@@ -118,7 +117,6 @@ class ProgramController extends Controller
 
         $this->authorize('update', $program);
 
-        $request->offsetSet('institute_id', getInstituteId());
         $validated = $this->programmeService->validator($request, $id)->validate();
         $data = $this->programmeService->update($program, $validated);
         $response = [

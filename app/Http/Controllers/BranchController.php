@@ -8,6 +8,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -84,7 +85,6 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->branchService->validator($request)->validate();
         $data = $this->branchService->store($validatedData);
         $response = [
@@ -111,8 +111,6 @@ class BranchController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
-
-        $request->offsetSet('institute_id', getInstituteId());
 
         $validated = $this->branchService->validator($request)->validate();
 
@@ -187,7 +185,8 @@ class BranchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {

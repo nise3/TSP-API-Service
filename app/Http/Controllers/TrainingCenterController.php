@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
@@ -84,7 +83,6 @@ class TrainingCenterController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId());
         $validatedData = $this->trainingCenterService->validator($request)->validate();
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
@@ -109,7 +107,6 @@ class TrainingCenterController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $request->offsetSet('institute_id', getInstituteId());
         $trainingCenter = TrainingCenter::findOrFail($id);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
         $data = $this->trainingCenterService->update($trainingCenter, $validated);
@@ -157,7 +154,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -166,7 +164,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
