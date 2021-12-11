@@ -2,9 +2,13 @@
 
 namespace App\Services;
 
+use Exception;
 use App\Models\BaseModel;
+use App\Models\SagaErrorEvent;
 use App\Models\SagaSuccessEvent;
+use Illuminate\Support\Facades\Log;
 use PhpAmqpLib\Exception\AMQPProtocolChannelException;
+use PhpParser\Builder;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Helpers\RabbitMQ;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\RabbitMQQueue;
 
@@ -237,5 +241,82 @@ class RabbitMQService
         $message = $this->getRabbitMqMessage();
         $messageDeliveryInfo = $message['delivery_info'] ?? "";
         return $messageDeliveryInfo['routing_key'] ?? "";
+    }
+
+    /**
+     * @param String $publisher
+     * @param String $consumer
+     * @param String $listener
+     * @param String $eventData
+     * @param Exception|null $error
+     * @return array
+     */
+    public function createSagaPayload(String $publisher, String $consumer, String $listener, String $eventData, Exception $error = null): array {
+        $uuid = $this->getRabbitMqMessageUuid();
+        $exchange = $this->getRabbitMqMessageExchange();
+        $routingKey = $this->getRabbitMqMessageRoutingKey();
+        $sagaPayload = [
+            'uuid' => $uuid,
+            'connection' => 'rabbitmq',
+            'publisher' => $publisher,
+            'listener' => $listener,
+            'exchange' => $exchange,
+            'routing_key' => $routingKey,
+            'consumer' => $consumer,
+            'event_data' => $eventData
+        ];
+        if($error){
+            $sagaPayload['error_message'] = $error->getMessage();
+        }
+        return $sagaPayload;
+    }
+
+    /**
+     * @param String $publisher
+     * @param String $consumer
+     * @param String $listener
+     * @param String $eventData
+     * @return void
+     */
+    public function sagaSuccessEvent(String $publisher, String $consumer, String $listener, String $eventData): void {
+        $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData);
+
+        /** Remove the event from Error table if exist */
+        $errorEvent = SagaErrorEvent::where('uuid', $sagaPayload['uuid'])->first();
+        $errorEvent?->delete();
+
+        /** Store the event as a Success event into Database */
+        $sagaSuccessEvent = app(SagaSuccessEvent::class);
+        $sagaSuccessEvent->fill($sagaPayload);
+        $sagaSuccessEvent->save();
+    }
+
+    /**
+     * @param String $publisher
+     * @param String $consumer
+     * @param String $listener
+     * @param String $eventData
+     * @param Exception $error
+     * @return void
+     */
+    public function sagaErrorEvent(String $publisher, String $consumer, String $listener, String $eventData, Exception $error){
+        $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData, $error);
+
+        /** Check weather the event already stored in Error Table or Not. If not then Store. */
+        $errorEvent = SagaErrorEvent::where('uuid', $sagaPayload['uuid'])->first();
+        if(!$errorEvent){
+            /** @var SagaErrorEvent|Builder $errorEvent */
+            $errorEvent = app(SagaErrorEvent::class);
+            $errorEvent->fill($sagaPayload);
+            $errorEvent->save();
+        }
+
+        /** Log in saga_error.log */
+        Log::channel('saga_error')->info('########################################### ERROR Start ###########################################');
+        Log::channel('saga_error')->info('Database Index ###### ' . $errorEvent['id']);
+        Log::channel('saga_error')->info('Error Message ####### '. $error->getMessage());
+        Log::channel('saga_error')->info('Event Data ########## ', json_decode($eventData, true));
+        Log::channel('saga_error')->info('Error Trac Trace #### ' . $error->getTraceAsString());
+        Log::channel('saga_error')->info('############################################ ERROR End ############################################');
     }
 }

@@ -22,7 +22,8 @@ class CreateSagaErrorEvents extends Migration
             $table->string('exchange');
             $table->string('routing_key');
             $table->string('consumer');
-            $table->longText('payload');
+            $table->longText('event_data');
+            $table->longText('error_message');
             $table->timestamps();
         });
     }

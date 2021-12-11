@@ -22,7 +22,7 @@ class CreateSagaSuccessEvents extends Migration
             $table->string('exchange');
             $table->string('routing_key');
             $table->string('consumer');
-            $table->longText('payload');
+            $table->longText('event_data');
             $table->timestamps();
         });
     }

@@ -4,12 +4,19 @@ namespace App\Listeners\CourseEnrollment;
 
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
+use Exception;
+use App\Services\RabbitMQService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
 {
-    public function __construct(){
+    private RabbitMQService $rabbitMQService;
 
+    /**
+     * @param RabbitMQService $rabbitMQService
+     */
+    public function __construct(RabbitMQService $rabbitMQService){
+        $this->rabbitMQService = $rabbitMQService;
     }
 
     /**
@@ -18,11 +25,27 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
      */
     public function handle($event){
         $eventData = json_decode(json_encode($event), true);
-        $data = $eventData['data'];
+        $data = $eventData['data'] ?? [];
+        try {
+            /** @var CourseEnrollment $courseEnrollment */
+            $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+            $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
+            $courseEnrollment->save();
 
-        /** @var CourseEnrollment $courseEnrollment */
-        $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
-        $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
-        $courseEnrollment->save();
+            $this->rabbitMQService->sagaSuccessEvent(
+                BaseModel::YOUTH_SERVICE,
+                BaseModel::INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data)
+            );
+        } catch (Exception $e){
+            $this->rabbitMQService->sagaErrorEvent(
+                BaseModel::YOUTH_SERVICE,
+                BaseModel::INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data),
+                $e,
+            );
+        }
     }
 }
