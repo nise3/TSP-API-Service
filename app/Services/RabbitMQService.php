@@ -208,7 +208,7 @@ class RabbitMQService
     /**
      * @return bool
      */
-    public function checkWeatherEventAlreadyConsumed(): bool {
+    public function checkEventAlreadyConsumed(): bool {
         $uuid = $this->getRabbitMqMessageUuid();
 
         /** @var SagaSuccessEvent $sagaEvent */
