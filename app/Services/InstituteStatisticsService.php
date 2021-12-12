@@ -16,58 +16,89 @@ class InstituteStatisticsService
 {
 
 
-    public function getTotalCourseEnrollments(): int
+    public function getTotalCourseEnrollments(int $instituteId): int
     {
-       return CourseEnrollment::join("courses", function ($join) {
+        $builder = CourseEnrollment::join("courses", function ($join) {
             $join->on('courses.id', '=', 'course_enrollments.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('course_enrollments.id');
+        });
+
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+        return $builder->count('course_enrollments.id');
     }
 
-    public function getTotalCourses(): int
+    public function getTotalCourses(int $instituteId): int
     {
-        return Course::acl()->count('id');
+        $builder = Course::query();
+
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+        return $builder->count('id');
     }
 
     /**
+     * @param int $instituteId
      * @return Collection|array
      */
-    public function getDemandedCourses(): Collection|array
+    public function getDemandedCourses(int $instituteId): Collection|array
     {
-        /** @var CourseEnrollment $courseEnrollmentBuilder */
-        $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
+        $builder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id')
-                ->whereNull('courses.deleted_at');
+                    ->whereNull('courses.deleted_at');
             });
-        $courseEnrollmentBuilder->acl();
 
-        return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+
+        return $builder->groupby('course_enrollments.course_id')
             ->orderby('value', 'DESC')
             ->limit(6)
             ->get();
     }
 
-    public function getTotalBatches(): int
+    public function getTotalBatches(int $instituteId): int
     {
-        return Batch::join('courses', function ($join) {
+        $builder = Batch::join('courses', function ($join) {
             $join->on('courses.id', '=', 'batches.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('batches.id');
+        });
 
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+        return $builder->count('batches.id');
     }
 
-    public function getTotalRunningStudents(): int
+    public function getTotalRunningStudents(int $instituteId): int
     {
         $currentDate = Carbon::now();
-        $batches = Batch::join('courses', function ($join) {
+        $builder = Batch::join('courses', function ($join) {
             $join->on('courses.id', '=', 'batches.course_id')
                 ->whereNull('courses.deleted_at');
-            })
+        })
             ->whereDate('batch_start_date', '<=', $currentDate)
-            ->whereDate('batch_end_date', '>=', $currentDate)
-            ->acl()
-            ->get();
+            ->whereDate('batch_end_date', '>=', $currentDate);
+
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+
+        $batches = $builder->get();
 
         $totalRunningStudent = 0;
         foreach ($batches as $batch) {
@@ -106,9 +137,9 @@ class InstituteStatisticsService
     }
 
 
-    public function getDashboardStatisticalData(): array
+    public function getDashboardStatisticalData(int $instituteId): array
     {
-        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments();
+        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
         $dashboardStatData ['total_course'] = $this->getTotalCourses();
         $dashboardStatData ['total_batch'] = $this->getTotalBatches();
         $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents();

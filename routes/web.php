@@ -63,9 +63,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
-    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
-
-
     /** Public APIs */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
         /** Course Filter */
@@ -81,8 +78,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
 
 
-        $router->get('institute-dashboard-statistics/{instituteId}', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-        $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+        $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('demanded-courses[/{instituteId}]', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
     /* Course Enrollment */
