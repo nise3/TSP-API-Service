@@ -68,7 +68,7 @@ class CourseController extends Controller
         $this->authorize('view', $course);
 
         $response = [
-            "data" => $course ?: null,
+            "data" => $course,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -93,7 +93,7 @@ class CourseController extends Controller
         $course = $this->courseService->store($validated);
 
         $response = [
-            'data' => $course ?: null,
+            'data' => $course,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -121,7 +121,7 @@ class CourseController extends Controller
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);
         $response = [
-            'data' => $data ?: null,
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
