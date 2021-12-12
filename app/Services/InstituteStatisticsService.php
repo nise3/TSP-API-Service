@@ -165,8 +165,8 @@ class InstituteStatisticsService
         $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents($instituteId);
         $dashboardStatData ['total_trainers'] = $this->getTotalTrainers($instituteId);
         $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters($instituteId);
-        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry($instituteId);
-        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue($instituteId);
+        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
+        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
         $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse($instituteId);
         return $dashboardStatData;
 
