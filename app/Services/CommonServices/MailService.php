@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class MailService
 {
@@ -168,8 +169,12 @@ class MailService
         event(new MailSendEvent($sendMailPayload));
     }
 
+    /**
+     * @throws Throwable
+     */
     private function templateView($data): string
     {
-        return '<p>UserName: ' . $data["user_name"] . '.</p><br/><p>Password: ' . $data["password"] . '.</p>';
+        $data = $this->messageBody;
+        return view($this->template, compact('data'))->render();
     }
 }
