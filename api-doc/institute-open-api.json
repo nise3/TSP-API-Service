@@ -4135,7 +4135,7 @@
                 ]
             }
         },
-        "/institute-dashboard-statistics/{instituteId}": {
+        "/public/institute-dashboard-statistics/{instituteId}": {
             "get": {
                 "summary": "Get institute dashboard statistics",
                 "description": "API endpoint to aGet institute dashboard statistics. A successful request response will show 200 HTTP status code",
@@ -4207,7 +4207,7 @@
 
             }
         },
-        "/demanded-courses/{instituteId}": {
+        "/public/demanded-courses/{instituteId}": {
             "get": {
                 "summary": "Get demanded courses",
                 "description": "API endpoint to get demanded courses. A successful request response will show 200 HTTP status code",
