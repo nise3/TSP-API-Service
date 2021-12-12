@@ -107,16 +107,29 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(): int
+    public function getTotalTrainers(int $instituteId): int
     {
-        return Trainer::acl()->count('id');
+        $builder = Trainer::query();
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+
+        return $builder->count('id');
     }
 
-    public function getTotalTrainingCenters(): int
+    public function getTotalTrainingCenters(int $instituteId): int
     {
-        $trainingCenterBuilder = TrainingCenter::query();
-        $trainingCenterBuilder->acl();
-        return $trainingCenterBuilder->count('id');
+        $builder = TrainingCenter::query();
+
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+
+        return $builder->count('id');
 
     }
 
@@ -131,23 +144,30 @@ class InstituteStatisticsService
         return 0;
     }
 
-    public function getTotalTrendingCourse(): int
+    public function getTotalTrendingCourse(int $instituteId): int
     {
-        return Course::acl()->count('id');
+        $builder = Course::query();
+
+        if ($instituteId) { // from path param in public api
+            $builder->where('institute_id', $instituteId);
+        } else { // for private auth api
+            $builder->acl();
+        }
+        return $builder->count('id');
     }
 
 
     public function getDashboardStatisticalData(int $instituteId): array
     {
         $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
-        $dashboardStatData ['total_course'] = $this->getTotalCourses();
-        $dashboardStatData ['total_batch'] = $this->getTotalBatches();
-        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents();
-        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers();
-        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters();
-        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
-        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
-        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse();
+        $dashboardStatData ['total_course'] = $this->getTotalCourses($instituteId);
+        $dashboardStatData ['total_batch'] = $this->getTotalBatches($instituteId);
+        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents($instituteId);
+        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers($instituteId);
+        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters($instituteId);
+        $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry($instituteId);
+        $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue($instituteId);
+        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse($instituteId);
         return $dashboardStatData;
 
     }
