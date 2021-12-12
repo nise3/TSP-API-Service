@@ -145,7 +145,7 @@ class CourseEnrollmentController extends Controller
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
             $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-//            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+            $this->createCalenderEventsForBatchAssign($courseEnrollment);
             $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
 
             $response = [
