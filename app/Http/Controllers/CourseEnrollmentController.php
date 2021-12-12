@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
@@ -144,9 +145,12 @@ class CourseEnrollmentController extends Controller
         DB::beginTransaction();
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-            $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+            $this->courseEnrollService->assignBatch($validated);
             $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
+
+
+            /** Trigger Event to Cms Service via RabbitMQ  */
+            event(new BatchCalenderYouthBatchAssignEvent($validated));
 
             $response = [
                 '_response_status' => [
@@ -164,27 +168,6 @@ class CourseEnrollmentController extends Controller
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
 
-    }
-
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment): void
-    {
-        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
-        $data = [
-            "batch" => Batch::find($courseEnrollment->batch_id),
-            "youth_id" => $courseEnrollment->youth_id
-        ];
-
-        Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $data)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
     }
 
 

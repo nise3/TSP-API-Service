@@ -21,5 +21,8 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\SmsSendEvent::class => [
             \App\Listeners\SmsSendListener::class
         ],
+        \App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent::class => [
+            \App\Listeners\BatchCalender\BatchCalenderYouthBatchAssignInstituteToCmsListener::class
+        ],
     ];
 }

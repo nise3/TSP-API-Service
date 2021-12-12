@@ -89,12 +89,12 @@ return [
                 'queue' => 'cms.alternate.q'
             ],
             'queue' => [
-                'demo' => [
-                    'name' => 'cms.demo.q',
-                    'binding' => 'cms.demo',
+                'batchCalender' => [
+                    'name' => 'cms.batch.calender.q',
+                    'binding' => 'cms.batch.calender',
                     'durable' => true,
                     'autoDelete' => false
-                ]
+                ],
             ],
         ],
         'mailSms' => [
