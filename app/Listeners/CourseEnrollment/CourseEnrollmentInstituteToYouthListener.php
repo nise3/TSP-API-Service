@@ -33,4 +33,8 @@ class CourseEnrollmentInstituteToYouthListener implements ShouldQueue
             self::RETRY_MECHANISM
         );
     }
+
+    public function handle(){
+
+    }
 }
