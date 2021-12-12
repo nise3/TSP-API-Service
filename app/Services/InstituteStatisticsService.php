@@ -168,8 +168,8 @@ class InstituteStatisticsService
         $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
         $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
         $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse($instituteId);
-        return $dashboardStatData;
 
+        return $dashboardStatData;
     }
 
 }
