@@ -289,6 +289,13 @@ class RabbitMQService
         $sagaSuccessEvent = app(SagaSuccessEvent::class);
         $sagaSuccessEvent->fill($sagaPayload);
         $sagaSuccessEvent->save();
+
+        /** Log in saga_error.log */
+        Log::channel('saga')->info('########################################### SUCCESS to Event Consumed START ###########################################');
+        Log::channel('saga')->info('Database Index ###### ' . $sagaSuccessEvent['id']);
+        Log::channel('saga')->info('Saga Payload ######## ', $sagaSuccessEvent->toArray());
+        Log::channel('saga')->info('Event Data ########## ', json_decode($eventData, true));
+        Log::channel('saga')->info('############################################ SUCCESS to Event Consumed End ############################################');
     }
 
     /**
@@ -312,11 +319,12 @@ class RabbitMQService
         }
 
         /** Log in saga_error.log */
-        Log::channel('saga_error')->info('########################################### ERROR Start ###########################################');
-        Log::channel('saga_error')->info('Database Index ###### ' . $errorEvent['id']);
-        Log::channel('saga_error')->info('Error Message ####### '. $error->getMessage());
-        Log::channel('saga_error')->info('Event Data ########## ', json_decode($eventData, true));
-        Log::channel('saga_error')->info('Error Trac Trace #### ' . $error->getTraceAsString());
-        Log::channel('saga_error')->info('############################################ ERROR End ############################################');
+        Log::channel('saga')->info('########################################### ERROR in Event Consumed Start ###########################################');
+        Log::channel('saga')->info('Database Index ###### ' . $errorEvent['id']);
+        Log::channel('saga')->info('Error Message ####### '. $error->getMessage());
+        Log::channel('saga')->info('Saga Payload ######## ', $errorEvent->toArray());
+        Log::channel('saga')->info('Event Data ########## ', json_decode($eventData, true));
+        Log::channel('saga')->info('Error Trac Trace #### ' . $error->getTraceAsString());
+        Log::channel('saga')->info('############################################ ERROR in Event Consumed End ############################################');
     }
 }
