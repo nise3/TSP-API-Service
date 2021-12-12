@@ -35,6 +35,12 @@ return [
     */
 
     'channels' => [
+        'idp_user' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/idp-user-logs/' . date('Y/F/') . 'idp-user.log'),
+            'level' => 'info'
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
@@ -42,21 +48,17 @@ return [
 
         'single' => [
             'driver' => 'single',
-            'path' => storage_path('logs/lumen.log'),
+            'path' => storage_path('logs/' . date('Y/F/') . 'lumen.log'),
             'level' => 'debug',
         ],
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/lumen.log'),
+            'path' => storage_path('logs/' . date('Y/F/') . 'lumen.log'),
             'level' => 'debug',
             'days' => 14,
         ],
-        'idp_user' => [
-            'driver' => 'single',
-            'path' => storage_path('logs/idp_user.log'),
-            'level' => 'info'
-        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
