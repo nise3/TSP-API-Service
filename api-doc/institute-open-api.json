@@ -4852,7 +4852,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title",
                     "center_location_type"
                 ]
