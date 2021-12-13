@@ -148,9 +148,21 @@ class CourseEnrollmentController extends Controller
             $this->courseEnrollService->assignBatch($validated);
             $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
 
+            $batch = Batch::findOrFail($validated['batch_id']);
+            $courseEnrollment = CourseEnrollment::findOrFail($validated['batch_id']);
+
+            $calenderEventPayload = [
+                'batch_title' => $batch->title,
+                'batch_title_en' => $batch->title_en,
+                'youth_id' => $courseEnrollment->youth_id,
+                'enrollment_id' => $courseEnrollment->id,
+                'batch_id' => $batch->id,
+                'batch_start_date' => $batch->batch_start_date,
+                'batch_end_date' => $batch->batch_end_date
+            ];
 
             /** Trigger Event to Cms Service via RabbitMQ  */
-            event(new BatchCalenderYouthBatchAssignEvent($validated));
+            event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
 
             $response = [
                 '_response_status' => [
