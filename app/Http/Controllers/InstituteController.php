@@ -10,6 +10,7 @@ use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -61,6 +62,7 @@ class InstituteController extends Controller
         $response = $this->instituteService->getInstituteList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
 
     /**
      * * Display the specified resource
@@ -487,6 +489,33 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
+
+
+    public function updateInstituteAdminProfile(Request $request): JsonResponse
+    {
+        $authUser = Auth::user();
+        $instituteId = null;
+        if ($authUser && $authUser->institute_id) {
+            $instituteId = $authUser->institute_id;
+        }
+        $institute = Institute::findOrFail($instituteId);
+
+        $this->authorize('update', $institute);
+
+        $validated = $this->instituteService->instituteAdminProfileValidator($request, $instituteId)->validate();
+        $data = $this->instituteService->update($institute, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
 
 
 }

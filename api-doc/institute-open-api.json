@@ -452,6 +452,84 @@
                 }
             }
         },
+        "/institute-admin-profile-update": {
+            "put": {
+                "tags": ["Institute Admin Profile "],
+                "summary": "Update institute admin profile",
+                "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/institutesAdminUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 4,
+                                        "institute_type_id": 1,
+                                        "code": "555",
+                                        "title": "QQQTTTT",
+                                        "title_en": null,
+                                        "domain": null,
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": null,
+                                        "address_en": null,
+                                        "address": null,
+                                        "logo": null,
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": null,
+                                        "phone_numbers": [
+                                            "01376728953"
+                                        ],
+                                        "primary_mobile": "01300099090",
+                                        "mobile_numbers": [
+                                            "01300099090"
+                                        ],
+                                        "email": "aa@gmail.com",
+                                        "name_of_the_office_head": "qqwqwqwqw",
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": "dddddddddddd",
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "ddddddddddddddddd",
+                                        "contact_person_name_en": null,
+                                        "contact_person_mobile": "01300097090",
+                                        "contact_person_email": "hh@gmail.com",
+                                        "contact_person_designation": "dddfdf",
+                                        "contact_person_designation_en": null,
+                                        "config": null,
+                                        "row_status": "1",
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-12-14T06:55:05.000000Z",
+                                        "updated_at": "2021-12-14T11:02:55.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute-open-registration": {
             "post": {
                 "tags": [
@@ -4374,7 +4452,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title"
                 ]
             },
@@ -4676,6 +4753,98 @@
                     "contact_person_designation"
                 ]
             },
+            "institutesAdminUpdate": {
+                "type": "object",
+                "description": "Institutes management Service",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 1000,
+                        "minLength": 2
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 2
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "location_latitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "location_longitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_designation_en": {
+                        "type": "string"
+                    },
+                    "contact_person_name": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_name_en": {
+                        "type": "string",
+                        "maxLength": 250
+                    },
+                    "contact_person_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_designation_en": {
+                        "type": "string",
+                        "maxLength": 300
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
+                    }
+                },
+                "required": [
+                    "loc_division_id",
+                    "loc_district_id",
+                    "title",
+                    "name_of_the_office_head",
+                    "name_of_the_office_head_designation",
+                    "contact_person_name",
+                    "contact_person_designation"
+                ]
+            },
             "instituteOpenRegistration": {
                 "type": "object",
                 "properties": {
@@ -4901,7 +5070,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title"
                 ]
             },
@@ -5030,7 +5198,6 @@
                 },
                 "required": [
                     "code",
-                    "institute_id",
                     "skills",
                     "title",
                     "level",
@@ -5159,7 +5326,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "skills",
                     "title",
                     "level",
@@ -5303,7 +5469,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "trainer_name",
                     "trainer_registration_number",
                     "email",

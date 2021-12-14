@@ -40,6 +40,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
 
+        /** Institute Admin Profile Update */
+        $router->put("institute-admin-profile-update", ["as" => "Institute.admin-profile-update", "uses" => "InstituteController@updateInstituteAdminProfile"]);
+
         /** Institute Registration Rejection */
         $router->put("institute-registration-rejection/{instituteId}", ["as" => "Institute.institutes-registration-rejection", "uses" => "InstituteController@instituteRegistrationRejection"]);
 
