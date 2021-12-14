@@ -40,6 +40,11 @@ return [
             'path' => storage_path('logs/idp-user-logs/' . date('Y/F/') . 'idp-user.log'),
             'level' => 'info'
         ],
+        'ek_pay' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/ek-pay-logs/' . date('Y/F/') . 'ek-pay.log'),
+            'level' => 'info'
+        ],
 
         'stack' => [
             'driver' => 'stack',

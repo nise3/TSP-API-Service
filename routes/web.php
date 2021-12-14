@@ -3,6 +3,7 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
+use Illuminate\Http\Request;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -57,13 +58,19 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
 
-    /* Course Enrollment */
+    /** Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
 
-    /* Batch Assign*/
+    /** Course Enrollment Verification Code send */
+    $router->post("course-enroll/{id}/send-verification-code", ["as" => "course.send-verification-code", "uses" => "CourseEnrollmentController@sendVerificationCode"]);
+
+    /** Course Enrollment Verification Code resend */
+    $router->post("course-enroll/{id}/resend-verification-code", ["as" => "course.resend-verification-code", "uses" => "CourseEnrollmentController@reSendVerificationCode"]);
+
+    /** Batch Assign*/
     $router->post("batch-assign", ["as" => "course-enroll.batch-assign", "uses" => "CourseEnrollmentController@assignBatch"]);
 
-    /* Reject course enrollment application*/
+    /** Reject course enrollment application */
     $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
 
     /** Course All batches / Active batches / Up-coming batches */
@@ -86,9 +93,15 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         ]
     );
 
+    $router->post('payment/pay-now', ["as" => "payment.pay-now", "uses" => "PaymentController@payNow"]);
+    $router->get('payment/success', ["as" => "payment.success", "uses" => "PaymentController@success"]);
+    $router->get('payment/fail', ["as" => "payment.fail", "uses" => "PaymentController@fail"]);
+    $router->get('payment/cancel', ["as" => "payment.cancel", "uses" => "PaymentController@cancel"]);
+    $router->post('payment/ipn-handler', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
+
 });
 
-$router->get("/idp-test",function (){
-        Illuminate\Support\Facades\Log::info('Idp-Log');
-        return "idp-User";
-    });
+$router->get("/idp-test", function () {
+    Illuminate\Support\Facades\Log::info('Idp-Log');
+    return "idp-User";
+});

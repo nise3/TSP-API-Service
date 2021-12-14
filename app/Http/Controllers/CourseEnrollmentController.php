@@ -6,7 +6,9 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\CourseEnrollmentService;
+use App\Services\EkPay\PaymentService;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
@@ -26,6 +28,7 @@ class CourseEnrollmentController extends Controller
      * @var CourseEnrollmentService
      */
     public CourseEnrollmentService $courseEnrollService;
+    public PaymentService $paymentService;
     /**
      * @var Carbon
      */
@@ -35,9 +38,10 @@ class CourseEnrollmentController extends Controller
      * CourseEnrollmentController constructor.
      * @param CourseEnrollmentService $courseEnrollService
      */
-    public function __construct(CourseEnrollmentService $courseEnrollService)
+    public function __construct(CourseEnrollmentService $courseEnrollService, PaymentService $paymentService)
     {
         $this->courseEnrollService = $courseEnrollService;
+        $this->paymentService = $paymentService;
         $this->startTime = Carbon::now();
     }
 
@@ -101,6 +105,8 @@ class CourseEnrollmentController extends Controller
         $validated = $this->courseEnrollService->courseEnrollmentValidator($request)->validate();
         DB::beginTransaction();
         try {
+            $validated["verification_code"] = generateOtp(4);
+            $validated['verification_code_sent_at'] = Carbon::now();
             $courseEnroll = $this->courseEnrollService->enrollCourse($validated);
             $this->courseEnrollService->storeEnrollmentAddresses($validated, $courseEnroll);
             $this->courseEnrollService->storeEnrollmentEducations($validated, $courseEnroll);
@@ -109,11 +115,13 @@ class CourseEnrollmentController extends Controller
             $this->courseEnrollService->storeEnrollmentMiscellaneousInfo($validated, $courseEnroll);
             $this->courseEnrollService->storeEnrollmentPhysicalDisabilities($validated, $courseEnroll);
 
+
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
             $this->updateYouthProfileAfterEnrollment($validated);
             $response = [
+                "data" => $courseEnroll,
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_CREATED,
@@ -122,7 +130,7 @@ class CourseEnrollmentController extends Controller
                 ]
             ];
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
@@ -130,9 +138,49 @@ class CourseEnrollmentController extends Controller
     }
 
     /**
+     * @throws Exception
+     */
+    public function sendVerificationCode(Request $request, int $id): JsonResponse
+    {
+        $courseEnrollment = CourseEnrollment::findOrFail($id);
+        $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
+        $sendSmsStatus = $this->courseEnrollService->sendSmsVerificationCode($courseEnrollment, $validated['verification_code']);
+
+        $response = [
+            '_response_status' => [
+                "success" => $sendSmsStatus,
+                "code" => $sendSmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "message" => $sendSmsStatus ? "Sms Code Successfully Send." : "Unprocessable Request",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function reSendVerificationCode(int $id): JsonResponse
+    {
+        $courseEnrollment = CourseEnrollment::findOrFail($id);
+        $sendSmsStatus = $this->courseEnrollService->resendCode($courseEnrollment);
+        $response = [
+            '_response_status' => [
+                "success" => $sendSmsStatus,
+                "code" => $sendSmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "message" => $sendSmsStatus ? "Sms Code Successfully ReSend." : "Unprocessable Request",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|Throwable
      */
     public function assignBatch(Request $request): JsonResponse
     {

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,10 +24,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null first_name_en
  * @property string last_name
  * @property string|null last_name_en
+ * @property string email
+ * @property string mobile
+ * @property string | null verification_code
+ * @property Carbon | null verification_code_sent_at
+ * @property HasOne course
  */
 class CourseEnrollment extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+
+    public const PAYMENT_STATUS_PAID = 1;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
@@ -156,5 +164,10 @@ class CourseEnrollment extends BaseModel
     public function miscellaneous(): HasOne
     {
         return $this->hasOne(EnrollmentMiscellaneous::class, 'course_enrollment_id');
+    }
+
+    public function course(): HasOne
+    {
+        return $this->hasOne(Course::class, 'id');
     }
 }
