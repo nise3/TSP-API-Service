@@ -6,7 +6,6 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\CourseEnrollmentService;
-use App\Services\EkPay\PaymentService;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -28,7 +27,6 @@ class CourseEnrollmentController extends Controller
      * @var CourseEnrollmentService
      */
     public CourseEnrollmentService $courseEnrollService;
-    public PaymentService $paymentService;
     /**
      * @var Carbon
      */
@@ -38,10 +36,9 @@ class CourseEnrollmentController extends Controller
      * CourseEnrollmentController constructor.
      * @param CourseEnrollmentService $courseEnrollService
      */
-    public function __construct(CourseEnrollmentService $courseEnrollService, PaymentService $paymentService)
+    public function __construct(CourseEnrollmentService $courseEnrollService)
     {
         $this->courseEnrollService = $courseEnrollService;
-        $this->paymentService = $paymentService;
         $this->startTime = Carbon::now();
     }
 

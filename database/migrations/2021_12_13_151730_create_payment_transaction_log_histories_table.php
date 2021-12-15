@@ -25,7 +25,8 @@ class CreatePaymentTransactionLogHistoriesTable extends Migration
             $table->string('name');
             $table->string('mobile');
             $table->string('email');
-            $table->unsignedDouble('amount')->nullable();
+            $table->unsignedDouble('amount');
+            $table->unsignedDouble('paid_amount')->nullable();
             $table->string('trnx_currency')->comment('BDT');
             $table->string('order_detail')->nullable();
             $table->json('request_payload');

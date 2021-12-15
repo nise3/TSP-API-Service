@@ -5,7 +5,6 @@ namespace App\Services\Payment;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionLogHistory;
-use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -21,7 +20,6 @@ class PaymentService
     {
         $paymentGatewayType = $paymentRequestPayload['payment_gateway_type'];
         $courseEnrollmentId = $paymentRequestPayload['course_enrollment_id'];
-
         $courseEnrollment = CourseEnrollment::find($courseEnrollmentId);
 
         $response = null;
@@ -37,6 +35,7 @@ class PaymentService
                 $data['mobile'] = $payload['customer']['mobile'];
                 $data['email'] = $payload['customer']['email'];
                 $data['trnx_currency'] = $payload['payment']['trnx_currency'];
+                $data['amount'] = $payload['payment']['trnx_amt'];
                 $data['request_payload'] = $payload;
                 $this->storeDataInPaymentHistory($data);
             }

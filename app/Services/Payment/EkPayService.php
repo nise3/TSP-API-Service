@@ -2,6 +2,7 @@
 
 namespace App\Services\Payment;
 
+use App\Models\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
@@ -39,15 +40,20 @@ class EkPayService
 
         $customerCleanName = preg_replace('/[^A-Za-z0-9 \-\.]/', '', $customerInfo['name']);
 
+        $baseUrl = BaseModel::INSTITUTE_REMOTE_BASE_URL;
+        if (request()->getHost() == 'localhost' || request()->getHost() == '127.0. 0.1') {
+            $baseUrl = BaseModel::INSTITUTE_LOCAL_BASE_URL;
+        }
+
         $ekPayPayload = [
             'mer_info' => [
                 'mer_reg_id' => config('ekpay.ek_pay_base_config.mer_info.mer_reg_id'),
                 'mer_pas_key' => config('ekpay.ek_pay_base_config.mer_info.mer_pas_key'),
             ],
             'feed_uri' => [
-                's_uri' => config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
-                'f_uri' => config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
-                'c_uri' => config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
+                's_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
+                'f_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
+                'c_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
             ],
             'req_timestamp' => $time . ' GMT+6',
             'cust_info' => [
@@ -67,14 +73,14 @@ class EkPayService
             'ipn_info' => [
                 'ipn_channel' => config('ekpay.ek_pay_base_config.ipn_info.ipn_channel'),
                 'ipn_email' => config('ekpay.ek_pay_base_config.ipn_info.ipn_email'),
-                'ipn_uri' => config('ekpay.ek_pay_base_config.ipn_info.ipn_uri'),
+                'ipn_uri' => $baseUrl . config('ekpay.ek_pay_base_config.ipn_info.ipn_uri'),
             ],
             'mac_addr' => config('ekpay.mac_addr'),
         ];
 
         if (config('ekpay.debug')) {
-            Log::channel('ek_pay')->debug("Youth Name: " . $customerInfo['name'] . ' , Youth Enroll ID: ' . $paymentInfo['ord_id']);
-            Log::channel('ek_pay')->debug(json_encode($ekPayPayload));
+            Log::channel('ek_pay')->info("Youth Name: " . $customerInfo['name'] . ' , Youth Enroll ID: ' . $paymentInfo['ord_id']);
+            Log::channel('ek_pay')->info("Ekpay Request PayLoad: " . json_encode($ekPayPayload));
         }
 
         $url = config('ekpay.ekpay_base_uri') . "/merchant-api";

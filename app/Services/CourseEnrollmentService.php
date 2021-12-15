@@ -483,10 +483,7 @@ class CourseEnrollmentService
         $courseEnrollment->verification_code = $code;
         $courseEnrollment->verification_code_sent_at = Carbon::now();
         $courseEnrollment->save();
-
-        $payLoad["verification_code"] = $code;
-
-        return $this->sendSmsVerificationCode($payLoad, $code);
+        return $this->sendSmsVerificationCode($courseEnrollment, $code);
     }
 
     /**
