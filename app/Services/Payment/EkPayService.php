@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\BaseModel;
 use Carbon\Carbon;
+use http\Url;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -85,6 +86,8 @@ class EkPayService
 
         $url = config('ekpay.ekpay_base_uri') . "/merchant-api";
 
+        Log::info("ekpay-url:" . $url);
+
         $res = Http::withoutVerifying()
             ->withHeaders([
                 "Content-Type" => 'application/json'
@@ -92,7 +95,7 @@ class EkPayService
             ->post($url, $ekPayPayload)
             ->throw()
             ->json('secure_token');
-        Log::info("Http-log: ".json_encode($res));
+        Log::info("Http-log: " . json_encode($res));
         return $res;
 
     }
