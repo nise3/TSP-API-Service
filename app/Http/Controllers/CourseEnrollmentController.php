@@ -112,6 +112,7 @@ class CourseEnrollmentController extends Controller
             $this->courseEnrollService->storeEnrollmentMiscellaneousInfo($validated, $courseEnroll);
             $this->courseEnrollService->storeEnrollmentPhysicalDisabilities($validated, $courseEnroll);
 
+            $this->courseEnrollService->sendSmsVerificationCode($courseEnroll, $validated["verification_code"]);
 
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
@@ -137,22 +138,22 @@ class CourseEnrollmentController extends Controller
     /**
      * @throws Exception
      */
-    public function sendVerificationCode(Request $request, int $id): JsonResponse
+    public function verifyCode(Request $request, int $id): JsonResponse
     {
-        $courseEnrollment = CourseEnrollment::findOrFail($id);
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
-        $sendSmsStatus = $this->courseEnrollService->sendSmsVerificationCode($courseEnrollment, $validated['verification_code']);
+        $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
+        $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
 
         $response = [
             '_response_status' => [
-                "success" => $sendSmsStatus,
-                "code" => $sendSmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => $sendSmsStatus ? "Sms Code Successfully Send." : "Unprocessable Request",
+                "success" => $verifySmsStatus,
+                "code" => $statusCode,
+                "message" => $verifySmsStatus ? "Sms Verification is done" : "Unprocessable Request",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, $statusCode);
     }
 
     /**
@@ -162,16 +163,17 @@ class CourseEnrollmentController extends Controller
     {
         $courseEnrollment = CourseEnrollment::findOrFail($id);
         $sendSmsStatus = $this->courseEnrollService->resendCode($courseEnrollment);
+        $statusCode = $sendSmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
         $response = [
             '_response_status' => [
                 "success" => $sendSmsStatus,
-                "code" => $sendSmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "code" => $statusCode,
                 "message" => $sendSmsStatus ? "Sms Code Successfully ReSend." : "Unprocessable Request",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
 
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, $statusCode);
     }
 
     /**

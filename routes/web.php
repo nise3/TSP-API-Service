@@ -62,7 +62,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
 
     /** Course Enrollment Verification Code send */
-    $router->post("course-enroll/{id}/send-verification-code", ["as" => "course.send-verification-code", "uses" => "CourseEnrollmentController@sendVerificationCode"]);
+    $router->post("course-enroll/{id}/verify-sms-code", ["as" => "course.verify-sms-code", "uses" => "CourseEnrollmentController@verifyCode"]);
 
     /** Course Enrollment Verification Code resend */
     $router->post("course-enroll/{id}/resend-verification-code", ["as" => "course.resend-verification-code", "uses" => "CourseEnrollmentController@reSendVerificationCode"]);

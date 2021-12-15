@@ -34,16 +34,18 @@ class PaymentController
     {
         $paymentValidationData = $this->paymentService->paymentValidator($request)->validate();
         $response = $this->paymentService->paymentProcessing($paymentValidationData);
+        $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
+
         $response = [
             "redirect_url" => !empty($response) ? $response : null,
             "_response_status" => [
                 "status" => !empty($response),
-                "code" => !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "code" => $statusCode,
                 "message" => !empty($response) ? "Success" : "Unprocessable Payment Request"
             ]
         ];
 
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, $statusCode);
     }
 
     public function success(Request $request): JsonResponse
@@ -95,7 +97,7 @@ class PaymentController
         $data['status'] = $paymentStatus;
         $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
-        if ($payment){
+        if ($payment) {
             $payment->fill($data);
             $payment->save();
             $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);

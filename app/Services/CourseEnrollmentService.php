@@ -434,13 +434,12 @@ class CourseEnrollmentService
     }
 
     /**
-     * @param array $data
+     * @param int $id
+     * @param string $code
      * @return bool
      */
-    public function verifySMSCode(array $data): bool
+    public function verifySMSCode(int $id, string $code): bool
     {
-        $id = $data['id'];
-        $code = $data['verification_code'];
         $courseEnrollment = CourseEnrollment::where("id", $id)
             ->where("verification_code", $code)
             ->where("row_status", BaseModel::ROW_STATUS_PENDING)
