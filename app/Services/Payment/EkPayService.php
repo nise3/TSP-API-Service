@@ -52,9 +52,9 @@ class EkPayService
                 'mer_pas_key' => config('ekpay.ek_pay_base_config.mer_info.mer_pas_key'),
             ],
             'feed_uri' => [
-                's_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
-                'f_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
-                'c_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
+                's_uri' => config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
+                'f_uri' => config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
+                'c_uri' => config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
             ],
             'req_timestamp' => $time . ' GMT+6',
             'cust_info' => [
