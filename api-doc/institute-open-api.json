@@ -4046,6 +4046,132 @@
                 ]
             }
         },
+        "/course-enroll/{id}/send-verification-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Send verfication code for a course enrollment",
+                "description": "An Api to send verification code for course enrollment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerficationCode"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Sms Code Successfully Send.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/course-enroll/{id}/resend-verification-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Resend verification code a specific course enrollment",
+                "description": "An API endpoint to resend verfication code for course enrollment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerficationCode"
+                            }
+                        }
+                    }
+                },
+
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Sms Code Successfully ReSend.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/payment/pay-now": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Payment for course enrollment",
+                "description": "An API endpoint to pay for a course enrollment",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PayNow"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "redirect_url": "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaXNlX3Rlc3QiLCJhdXRoIjoiUk9MRV9NRVJDSEFOVCIsImV4cCI6MTYzOTU4Njc2Mn0._MV4HYI5iwvrV_EAX_JmcAm4R_1c86cb5TEVrPhkehtPt0MmYrSK7X-XfC-v2t6myaNdgTy1KSfEJb7qq4B9Ug&trnsID=53c10403-87fb-435ed07",
+                                    "_response_status": {
+                                        "status": true,
+                                        "code": 200,
+                                        "message": "Success"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/reject-course-enrollment": {
             "post": {
                 "summary": "A new rejected course enrollment created",
@@ -5657,6 +5783,29 @@
                     "freedom_fighter_status",
                     "physical_disability_status"
                 ]
+            },
+            "VerficationCode": {
+                "type": "object",
+                "properties": {
+                    "verification_code": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PayNow": {
+                "type": "object",
+                "properties": {
+                    "payment_gateway_type": {
+                        "type": "integer",
+                        "enum": [1,2,3,4,5],
+                        "description": "1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet",
+                        "required": true
+                    },
+                    "course_enrollment_id": {
+                        "type": "integer",
+                        "required": true
+                    }
+                }
             },
             "address_info": {
                 "type": "object",
