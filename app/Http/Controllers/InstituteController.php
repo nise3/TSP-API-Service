@@ -489,8 +489,25 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
-
-
+    public function getInstituteAdminProfile()
+    {
+        $authUser = Auth::user();
+        $instituteId = null;
+        if ($authUser && $authUser->institute_id) {
+            $instituteId = $authUser->institute_id;
+        }
+        $institute = $this->instituteService->getOneInstitute($instituteId);
+//        $institute = Institute::findOrFail($instituteId);
+        $response = [
+            "data" => $institute,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
     public function updateInstituteAdminProfile(Request $request): JsonResponse
     {
         $authUser = Auth::user();
