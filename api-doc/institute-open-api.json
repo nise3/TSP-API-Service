@@ -5798,7 +5798,7 @@
                     "payment_gateway_type": {
                         "type": "integer",
                         "enum": [1,2,3,4,5],
-                        "description": "1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet"
+                        "description": "1=Ek-Pay"
                     },
                     "course_enrollment_id": {
                         "type": "integer"
