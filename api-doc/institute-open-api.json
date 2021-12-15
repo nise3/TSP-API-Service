@@ -4046,12 +4046,12 @@
                 ]
             }
         },
-        "/course-enroll/{id}/send-verification-code": {
+        "/course-enroll/{id}/verify-sms-code": {
             "post": {
                 "tags": [
                     "Course Enrollments"
                 ],
-                "summary": "Send verfication code for a course enrollment",
+                "summary": "Verify sms code for a course enrollment",
                 "description": "An Api to send verification code for course enrollment",
                 "parameters": [
                     {
