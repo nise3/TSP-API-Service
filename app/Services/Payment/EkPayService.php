@@ -85,7 +85,7 @@ class EkPayService
 
         $url = config('ekpay.ekpay_base_uri') . "/merchant-api";
 
-        return Http::withoutVerifying()
+        $res = Http::withoutVerifying()
             ->retry(3, 100, function ($exception) {
                 return $exception instanceof ConnectionException;
             })
@@ -95,6 +95,8 @@ class EkPayService
             ->post($url, $ekPayPayload)
             ->throw()
             ->json('secure_token');
+        Log::info(json_encode($res));
+        return $res;
 
     }
 }
