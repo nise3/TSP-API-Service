@@ -16,7 +16,7 @@ class EkPayService
      * @return string
      * @throws RequestException
      */
-    public function paymentByEkPay(array $payLoad): string
+    public function paymentByEkPay(array $payLoad): mixed
     {
         $customerInfo = $payLoad['customer'];
         $paymentInfo = $payLoad['payment'];
