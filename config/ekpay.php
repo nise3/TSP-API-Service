@@ -1,7 +1,7 @@
 <?php
 return [
     "ekpay_base_uri" => env('EK_PAY_BASE_URI', 'https://sandbox.ekpay.gov.bd/ekpaypg/v1'),
-    "debug" => env('EK_PAY_DEBUG', false),
+    "debug" => env('EK_PAY_DEBUG', true),
     "trnx_currency" => env('TRNX_CURRENCY', 'BDT'),
     'mac_addr' => env('EKPAY_MAC_ADDRESS', '1.1.1.1'),
     "ek_pay_base_config" => [
