@@ -4052,7 +4052,7 @@
                     "Course Enrollments"
                 ],
                 "summary": "Verify sms code for a course enrollment",
-                "description": "An Api to send verification code for course enrollment",
+                "description": "Verify sms code for a course enrollment",
                 "parameters": [
                     {
                         "name": "id",
