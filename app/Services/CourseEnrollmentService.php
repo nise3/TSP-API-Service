@@ -614,11 +614,11 @@ class CourseEnrollmentService
                 'date',
             ],
             'email' => [
-                'nullable',
+                'required',
                 'email',
             ],
             "mobile" => [
-                "nullable",
+                "required",
                 "max:11",
                 BaseModel::MOBILE_REGEX
             ],
