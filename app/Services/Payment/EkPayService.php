@@ -86,9 +86,6 @@ class EkPayService
         $url = config('ekpay.ekpay_base_uri') . "/merchant-api";
 
         $res = Http::withoutVerifying()
-            ->retry(3, 100, function ($exception) {
-                return $exception instanceof ConnectionException;
-            })
             ->withHeaders([
                 "Content-Type" => 'application/json'
             ])
