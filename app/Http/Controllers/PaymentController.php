@@ -36,14 +36,29 @@ class PaymentController
         $response = $this->paymentService->paymentProcessing($paymentValidationData);
         $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
 
-        $response = [
-            "redirect_url" => !empty($response) ? $response : null,
-            "_response_status" => [
-                "status" => !empty($response),
-                "code" => $statusCode,
-                "message" => !empty($response) ? "Success" : "Unprocessable Payment Request"
-            ]
-        ];
+        if ($this->paymentService->isNotSMSVerified($paymentValidationData)) {
+            $statusCode = ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
+            $response = [
+                "errors" => [
+                    "sms_verification" => "Sms Verification is not yet done, Please verify it",
+                ],
+                "_response_status" => [
+                    "status" => false,
+                    "code" => $statusCode,
+                    "message" => "Validation Error"
+                ]
+            ];
+
+        } else {
+            $response = [
+                "redirect_url" => !empty($response) ? $response : null,
+                "_response_status" => [
+                    "status" => !empty($response),
+                    "code" => $statusCode,
+                    "message" => !empty($response) ? "Success" : "Unprocessable Payment Request"
+                ]
+            ];
+        }
 
         return Response::json($response, $statusCode);
     }
