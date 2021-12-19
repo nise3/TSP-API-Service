@@ -15,7 +15,7 @@ return [
             'cancel_uri' => env('EKPAY_CANCEL_FEED_URI', 'http://localhost:8001/api/v1/payment/cancel'),
         ],
         'ipn_info' => [
-            'ipn_channel' => env('EKPAY_IPN_CHANNEL', '0'),
+            'ipn_channel' => env('EKPAY_IPN_CHANNEL', '1'),
             'ipn_email' => env('EKPAY_IPN_EMAIL', 'tasmidur.softbdltd@gmail.com'),
             'ipn_uri' => env('EKPAY_IPN_URI', 'api/v1/payment/ipn-handler'),
         ]
