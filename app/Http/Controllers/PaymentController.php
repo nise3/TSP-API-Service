@@ -112,6 +112,8 @@ class PaymentController
         $data['status'] = $paymentStatus;
         $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
+        Log::channel("ek_pay")->info("Payment Info in ipnHandler for mer_trnx_id=" . $request->trnx_info['mer_trnx_id'] . json_encode($payment));
+
         if ($payment) {
             $payment->fill($data);
             $payment->save();
