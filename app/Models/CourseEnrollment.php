@@ -166,8 +166,4 @@ class CourseEnrollment extends BaseModel
         return $this->hasOne(EnrollmentMiscellaneous::class, 'course_enrollment_id');
     }
 
-    public function course(): HasOne
-    {
-        return $this->hasOne(Course::class, 'id');
-    }
 }
