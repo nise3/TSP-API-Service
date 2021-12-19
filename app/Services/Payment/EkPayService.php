@@ -21,8 +21,9 @@ class EkPayService
     {
         $customerInfo = $payLoad['customer'];
         $paymentInfo = $payLoad['payment'];
+        $feedUri = $payLoad['feed_uri'];
 
-        $token = $this->ekPayInit($customerInfo, $paymentInfo);
+        $token = $this->ekPayInit($customerInfo, $paymentInfo, $feedUri);
         if (!empty($token)) {
             $token = config('ekpay.ekpay_base_uri') . '?sToken=' . $token . '&trnsID=' . $paymentInfo['trnx_id'];
         }
@@ -35,7 +36,7 @@ class EkPayService
      * @return mixed
      * @throws RequestException
      */
-    private function ekPayInit(array $customerInfo, array $paymentInfo): mixed
+    private function ekPayInit(array $customerInfo, array $paymentInfo, array $feedUri): mixed
     {
         $time = Carbon::now()->format('Y-m-d H:i:s');
 
@@ -52,9 +53,9 @@ class EkPayService
                 'mer_pas_key' => config('ekpay.ek_pay_base_config.mer_info.mer_pas_key'),
             ],
             'feed_uri' => [
-                's_uri' => config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
-                'f_uri' => config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
-                'c_uri' => config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
+                's_uri' => $feedUri['success'] ?? config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
+                'f_uri' => $feedUri['failed'] ?? config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
+                'c_uri' => $feedUri['cancel'] ?? config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
             ],
             'req_timestamp' => $time . ' GMT+6',
             'cust_info' => [

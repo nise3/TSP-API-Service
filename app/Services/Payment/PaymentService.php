@@ -20,11 +20,12 @@ class PaymentService
     {
         $paymentGatewayType = $paymentRequestPayload['payment_gateway_type'];
         $courseEnrollmentId = $paymentRequestPayload['course_enrollment_id'];
+        $feedUri = $paymentRequestPayload['feed_uri'];
         $courseEnrollment = CourseEnrollment::find($courseEnrollmentId);
 
         $response = null;
         if ($paymentGatewayType == PaymentTransactionLogHistory::PAYMENT_GATEWAY_EK_PAY) {
-            $payload = $this->buildPayload($paymentGatewayType, $courseEnrollment);
+            $payload = $this->buildPayload($paymentGatewayType, $courseEnrollment,$feedUri);
             $response = app(EkPayService::class)->paymentByEkPay($payload);
             if (!empty($response)) {
                 $data['order_id'] = $payload['payment']['ord_id'];
@@ -44,7 +45,7 @@ class PaymentService
         return $response;
     }
 
-    private function buildPayload(int $paymentGatewayType, CourseEnrollment $courseEnrollment): array
+    private function buildPayload(int $paymentGatewayType, CourseEnrollment $courseEnrollment,array $feedUri): array
     {
         /** @var Course $courseInfo */
         $courseInfo = Course::findOrFail($courseEnrollment->course_id);
@@ -64,7 +65,8 @@ class PaymentService
                     'trnx_currency' => config('ekpay.trnx_currency'),
                     'ord_id' => $courseEnrollment->id,
                     'ord_det' => 'Course Enrollment Fee',
-                ]
+                ],
+                "feed_uri"=>$feedUri
             ];
         }
         return $paymentGatewayPayLoad;
@@ -87,6 +89,18 @@ class PaymentService
                 "required",
                 "int",
                 'exists:course_enrollments,id,deleted_at,NULL'
+            ],
+            "feed_uri.success" => [
+                "required",
+                "url"
+            ],
+            "feed_uri.failed" => [
+                "required",
+                "url"
+            ],
+            "feed_uri.cancel" => [
+                "required",
+                "url"
             ]
         ];
         return Validator::make($request->all(), $rules);
