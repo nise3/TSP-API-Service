@@ -121,4 +121,23 @@ class PaymentService
         $paymentHistory->fill($paymentData);
         $paymentHistory->save();
     }
+
+
+    /**
+     * @param string $msgCode
+     * @return int
+     */
+    public function getPaymentStatus(string $msgCode): int
+    {
+        if ($msgCode == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_SUCCESSFULLY) {
+            return PaymentTransactionLogHistory::PAYMENT_SUCCESS;
+        } elseif ($msgCode == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_FAIL) {
+            return PaymentTransactionLogHistory::PAYMENT_FAIL;
+        } elseif ($msgCode == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_CANCEL) {
+            return PaymentTransactionLogHistory::PAYMENT_CANCEL;
+        } else {
+            return PaymentTransactionLogHistory::PAYMENT_PENDING;
+        }
+
+    }
 }
