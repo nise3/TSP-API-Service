@@ -10,9 +10,9 @@ return [
             'mer_pas_key' => env('EKPAY_MERCHANT_PASS_KEY', 'NiSe@TsT11')
         ],
         'feed_uri' => [
-            'success_uri' => env('EKPAY_SUCCESS_FEED_URI', 'api/v1/payment/success'),
-            'fail_uri' => env('EKPAY_FAIL_FEED_URI', 'api/v1/payment/fail'),
-            'cancel_uri' => env('EKPAY_CANCEL_FEED_URI', 'api/v1/payment/cancel'),
+            'success_uri' => env('EKPAY_SUCCESS_FEED_URI', 'http://localhost:8001/api/v1/payment/success'),
+            'fail_uri' => env('EKPAY_FAIL_FEED_URI', 'http://localhost:8001/api/v1/payment/failed'),
+            'cancel_uri' => env('EKPAY_CANCEL_FEED_URI', 'http://localhost:8001/api/v1/payment/cancel'),
         ],
         'ipn_info' => [
             'ipn_channel' => env('EKPAY_IPN_CHANNEL', '0'),
