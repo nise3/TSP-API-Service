@@ -6,6 +6,7 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionLogHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Ramsey\Uuid\Rfc4122\UuidV4;
@@ -25,7 +26,7 @@ class PaymentService
 
         $response = null;
         if ($paymentGatewayType == PaymentTransactionLogHistory::PAYMENT_GATEWAY_EK_PAY) {
-            $payload = $this->buildPayload($paymentGatewayType, $courseEnrollment,$feedUri);
+            $payload = $this->buildPayload($paymentGatewayType, $courseEnrollment, $feedUri);
             $response = app(EkPayService::class)->paymentByEkPay($payload);
             if (!empty($response)) {
                 $data['order_id'] = $payload['payment']['ord_id'];
@@ -45,10 +46,13 @@ class PaymentService
         return $response;
     }
 
-    private function buildPayload(int $paymentGatewayType, CourseEnrollment $courseEnrollment,array $feedUri): array
+    private function buildPayload(int $paymentGatewayType, CourseEnrollment $courseEnrollment, array $feedUri): array
     {
+        Log::channel('ek_pay')->info("Course enrollment Info for id-" . $courseEnrollment->id . json_encode($courseEnrollment));
         /** @var Course $courseInfo */
         $courseInfo = Course::findOrFail($courseEnrollment->course_id);
+
+        Log::channel('ek_pay')->info("Course Info for course_id-" . $courseEnrollment->course_id . json_encode($courseInfo));
 
         $paymentGatewayPayLoad = [];
         if ($paymentGatewayType == PaymentTransactionLogHistory::PAYMENT_GATEWAY_EK_PAY) {
@@ -66,7 +70,7 @@ class PaymentService
                     'ord_id' => $courseEnrollment->id,
                     'ord_det' => 'Course Enrollment Fee',
                 ],
-                "feed_uri"=>$feedUri
+                "feed_uri" => $feedUri
             ];
         }
         return $paymentGatewayPayLoad;
