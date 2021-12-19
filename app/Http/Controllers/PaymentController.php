@@ -103,22 +103,22 @@ class PaymentController
     {
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
 
-        /** $paymentStatus = $request->msg_code == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_SUCCESSFULLY ? PaymentTransactionLogHistory::PAYMENT_SUCCESS : PaymentTransactionLogHistory::PAYMENT_PENDING;
-         * $data['trnx_id'] = $request->trnx_info['trnx_id'];
-         * $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
-         * $data['payment_instrument_name'] = $request->pi_det_info['pi_name'];
-         * $data['paid_amount'] = $request->trnx_info['trnx_amt'];
-         * $data['response_message'] = $request->all();
-         * $data['status'] = $paymentStatus;
-         * $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
-         *
-         * if ($payment) {
-         * $payment->fill($data);
-         * $payment->save();
-         * $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
-         * $courseEnroll->payment_status = $paymentStatus;
-         * $courseEnroll->save();
-         * }*/
+        $paymentStatus = $request->msg_code == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_SUCCESSFULLY ? PaymentTransactionLogHistory::PAYMENT_SUCCESS : PaymentTransactionLogHistory::PAYMENT_PENDING;
+        $data['trnx_id'] = $request->trnx_info['trnx_id'];
+        $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
+        $data['payment_instrument_name'] = $request->pi_det_info['pi_name'];
+        $data['paid_amount'] = $request->trnx_info['trnx_amt'];
+        $data['response_message'] = $request->all();
+        $data['status'] = $paymentStatus;
+        $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
+
+        if ($payment) {
+            $payment->fill($data);
+            $payment->save();
+            $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
+            $courseEnroll->payment_status = $paymentStatus;
+            $courseEnroll->save();
+        }
     }
 
 
