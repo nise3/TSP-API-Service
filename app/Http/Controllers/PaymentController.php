@@ -8,6 +8,7 @@ use App\Services\Payment\PaymentService;
 use http\Exception\RuntimeException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -102,7 +103,7 @@ class PaymentController
     public function ipnHandler(Request $request)
     {
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
-
+        DB::beginTransaction();
         $paymentStatus = $request->msg_code == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_SUCCESSFULLY ? PaymentTransactionLogHistory::PAYMENT_SUCCESS : PaymentTransactionLogHistory::PAYMENT_PENDING;
         $data['trnx_id'] = $request->trnx_info['trnx_id'];
         $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
@@ -113,14 +114,20 @@ class PaymentController
         $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
         Log::channel("ek_pay")->info("Payment Info in ipnHandler for mer_trnx_id=" . $request->trnx_info['mer_trnx_id'] . json_encode($payment));
-
-        if ($payment) {
-            $payment->fill($data);
-            $payment->save();
-            $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
-            $courseEnroll->payment_status = $paymentStatus;
-            $courseEnroll->save();
+        try {
+            if ($payment) {
+                $payment->fill($data);
+                $payment->save();
+                $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
+                $courseEnroll->payment_status = $paymentStatus;
+                $courseEnroll->save();
+                DB::commit();
+            }
+        } catch (Throwable $exception) {
+            DB::rollBack();
+            throw $exception;
         }
+
     }
 
 
