@@ -22,8 +22,9 @@ class EkPayService
         $customerInfo = $payLoad['customer'];
         $paymentInfo = $payLoad['payment'];
         $feedUri = $payLoad['feed_uri'];
+        $ipnInfo = $payLoad['ipn_info'];
 
-        $token = $this->ekPayInit($customerInfo, $paymentInfo, $feedUri);
+        $token = $this->ekPayInit($customerInfo, $paymentInfo, $ipnInfo, $feedUri);
         if (!empty($token)) {
             $token = config('ekpay.ekpay_base_uri') . '?sToken=' . $token . '&trnsID=' . $paymentInfo['trnx_id'];
         }
@@ -36,16 +37,11 @@ class EkPayService
      * @return mixed
      * @throws RequestException
      */
-    private function ekPayInit(array $customerInfo, array $paymentInfo, array $feedUri): mixed
+    private function ekPayInit(array $customerInfo, array $paymentInfo, array $ipnInfo, array $feedUri): mixed
     {
         $time = Carbon::now()->format('Y-m-d H:i:s');
 
         $customerCleanName = preg_replace('/[^A-Za-z0-9 \-\.]/', '', $customerInfo['name']);
-
-        $baseUrl = BaseModel::INSTITUTE_REMOTE_BASE_URL;
-        if (request()->getHost() == 'localhost' || request()->getHost() == '127.0. 0.1') {
-            $baseUrl = BaseModel::INSTITUTE_LOCAL_BASE_URL;
-        }
 
         $ekPayPayload = [
             'mer_info' => [
@@ -73,9 +69,9 @@ class EkPayService
                 'ord_det' => $paymentInfo['ord_det'] ?? 'Course Enrollment Fee',
             ],
             'ipn_info' => [
-                'ipn_channel' => config('ekpay.ek_pay_base_config.ipn_info.ipn_channel'),
-                'ipn_email' => config('ekpay.ek_pay_base_config.ipn_info.ipn_email'),
-                'ipn_uri' => $baseUrl . config('ekpay.ek_pay_base_config.ipn_info.ipn_uri'),
+                'ipn_channel' => $ipnInfo['ipn_channel'] ?? config('ekpay.ek_pay_base_config.ipn_info.ipn_channel'),
+                'ipn_email' => $ipnInfo['ipn_email'] ?? config('ekpay.ek_pay_base_config.ipn_info.ipn_email'),
+                'ipn_uri' => $ipnInfo['ipn_uri'] ?? config('ekpay.ek_pay_base_config.ipn_info.ipn_uri'),
             ],
             'mac_addr' => config('ekpay.mac_addr'),
         ];

@@ -32,6 +32,7 @@ class CreatePaymentTransactionLogHistoriesTable extends Migration
             $table->json('request_payload')->nullable();
             $table->json('response_message')->nullable();
             $table->string('status')->default(2)->comment("1=>Success, 2=>Pending, 3=>Fail, 5=>Cancel");
+            $table->string('ipn_uri_secret_token')->nullable();
             $table->timestamps();
         });
     }

@@ -97,7 +97,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('payment/success', ["as" => "payment.success", "uses" => "PaymentController@success"]);
     $router->get('payment/failed', ["as" => "payment.fail", "uses" => "PaymentController@fail"]);
     $router->get('payment/cancel', ["as" => "payment.cancel", "uses" => "PaymentController@cancel"]);
-    $router->post('payment/ipn-handler', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
+    $router->post('payment/ipn-handler/{secret_token}', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
 
 });
 

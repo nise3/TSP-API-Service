@@ -2,9 +2,11 @@
 
 namespace App\Services\Payment;
 
+use App\Models\BaseModel;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionLogHistory;
+use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +29,10 @@ class PaymentService
         $response = null;
         if ($paymentGatewayType == PaymentTransactionLogHistory::PAYMENT_GATEWAY_EK_PAY) {
             $payload = $this->buildPayload($paymentGatewayType, $courseEnrollment, $feedUri);
+
+            $parts = explode('/', $payload['ipn_info']['ipn_uri']);
+            $ipnUriSecretToken = end($parts);
+
             $response = app(EkPayService::class)->paymentByEkPay($payload);
             if (!empty($response)) {
                 $data['order_id'] = $payload['payment']['ord_id'];
@@ -38,6 +44,7 @@ class PaymentService
                 $data['email'] = $payload['customer']['email'];
                 $data['trnx_currency'] = $payload['payment']['trnx_currency'];
                 $data['amount'] = $payload['payment']['trnx_amt'];
+                $data['ipn_uri_secret_token'] = $ipnUriSecretToken;
                 $data['request_payload'] = $payload;
                 $this->storeDataInPaymentHistory($data);
             }
@@ -49,10 +56,18 @@ class PaymentService
     private function buildPayload(int $paymentGatewayType, CourseEnrollment $courseEnrollment, array $feedUri): array
     {
         Log::channel('ek_pay')->info("Course enrollment Info for id-" . $courseEnrollment->id . json_encode($courseEnrollment));
+
         /** @var Course $courseInfo */
         $courseInfo = Course::findOrFail($courseEnrollment->course_id);
 
         Log::channel('ek_pay')->info("Course Info for course_id-" . $courseEnrollment->course_id . json_encode($courseInfo));
+
+        $baseUrl = BaseModel::INSTITUTE_REMOTE_BASE_URL;
+        if (request()->getHost() == 'localhost' || request()->getHost() == '127.0. 0.1') {
+            $baseUrl = BaseModel::INSTITUTE_LOCAL_BASE_URL;
+        }
+
+        $ipnUri = $baseUrl . "api/v1/payment/ipn-handler/" . Uuid::uuid();
 
         $paymentGatewayPayLoad = [];
         if ($paymentGatewayType == PaymentTransactionLogHistory::PAYMENT_GATEWAY_EK_PAY) {
@@ -70,7 +85,10 @@ class PaymentService
                     'ord_id' => $courseEnrollment->id,
                     'ord_det' => 'Course Enrollment Fee',
                 ],
-                "feed_uri" => $feedUri
+                "feed_uri" => $feedUri,
+                "ipn_info" => [
+                    "ipn_uri" => $ipnUri
+                ]
             ];
         }
         return $paymentGatewayPayLoad;
@@ -80,34 +98,6 @@ class PaymentService
     {
         return UuidV4::uuid4();
 
-    }
-
-    public function paymentValidator(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            "payment_gateway_type" => [
-                "required",
-                Rule::in(array_values(PaymentTransactionLogHistory::PAYMENT_GATEWAYS))
-            ],
-            "course_enrollment_id" => [
-                "required",
-                "int",
-                'exists:course_enrollments,id,deleted_at,NULL'
-            ],
-            "feed_uri.success" => [
-                "required",
-                "url"
-            ],
-            "feed_uri.failed" => [
-                "required",
-                "url"
-            ],
-            "feed_uri.cancel" => [
-                "required",
-                "url"
-            ]
-        ];
-        return Validator::make($request->all(), $rules);
     }
 
     public function isNotSMSVerified(array $data): bool
@@ -139,5 +129,38 @@ class PaymentService
             return PaymentTransactionLogHistory::PAYMENT_PENDING;
         }
 
+    }
+
+    public function checkSecretToken(string $secretToken): bool
+    {
+        return (bool)PaymentTransactionLogHistory::where('ipn_uri_secret_token', $secretToken)->count('ipn_uri_secret_token');
+    }
+
+    public function paymentValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            "payment_gateway_type" => [
+                "required",
+                Rule::in(array_values(PaymentTransactionLogHistory::PAYMENT_GATEWAYS))
+            ],
+            "course_enrollment_id" => [
+                "required",
+                "int",
+                'exists:course_enrollments,id,deleted_at,NULL'
+            ],
+            "feed_uri.success" => [
+                "required",
+                "url"
+            ],
+            "feed_uri.failed" => [
+                "required",
+                "url"
+            ],
+            "feed_uri.cancel" => [
+                "required",
+                "url"
+            ]
+        ];
+        return Validator::make($request->all(), $rules);
     }
 }
