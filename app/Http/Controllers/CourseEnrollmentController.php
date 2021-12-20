@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
+use App\Events\CourseEnrollmentEvent;
 
 class CourseEnrollmentController extends Controller
 {
@@ -95,7 +96,7 @@ class CourseEnrollmentController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|RequestException
+     * @throws ValidationException
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
@@ -117,7 +118,10 @@ class CourseEnrollmentController extends Controller
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
-            $this->updateYouthProfileAfterEnrollment($validated);
+            /** Trigger EVENT to Youth Service via RabbitMQ  */
+            $validated['id'] = $courseEnroll->id;
+            event(new CourseEnrollmentEvent($validated));
+
             $response = [
                 "data" => $courseEnroll,
                 '_response_status' => [
@@ -207,7 +211,7 @@ class CourseEnrollmentController extends Controller
 
     }
 
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment)
+    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment): void
     {
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
         $data = [
@@ -215,7 +219,7 @@ class CourseEnrollmentController extends Controller
             "youth_id" => $courseEnrollment->youth_id
         ];
 
-        return Http::withOptions([
+        Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug'),
             'timeout' => config("nise3.http_timeout")

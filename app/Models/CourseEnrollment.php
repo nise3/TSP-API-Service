@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,7 +31,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class CourseEnrollment extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     public const PAYMENT_STATUS_PAID = 1;
 

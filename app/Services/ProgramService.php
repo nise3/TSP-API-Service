@@ -34,8 +34,8 @@ class ProgramService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var Program|Builder $programmesBuilder */
-        $programmesBuilder = Program::select([
+        /** @var Program|Builder $programsBuilder */
+        $programsBuilder = Program::select([
             'programs.id',
             'programs.title_en',
             'programs.title',
@@ -54,45 +54,45 @@ class ProgramService
             'programs.deleted_at',
         ])->acl();
 
-        $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $programsBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
 
-        $programmesBuilder->orderBy('programs.id', $order);
+        $programsBuilder->orderBy('programs.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $programmesBuilder->where('programs.row_status', $rowStatus);
+            $programsBuilder->where('programs.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
-            $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
+            $programsBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
 
         if (!empty($title)) {
-            $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
+            $programsBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
 
         if (is_numeric($instituteId)) {
-            $programmesBuilder->where('programs.institute_id', '=', $instituteId);
+            $programsBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
-        /** @var Collection $programmes */
+        /** @var Collection $programs */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $programmes = $programmesBuilder->paginate($pageSize);
-            $paginateData = (object)$programmes->toArray();
+            $programs = $programsBuilder->paginate($pageSize);
+            $paginateData = (object)$programs->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $programmes = $programmesBuilder->get();
+            $programs = $programsBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['data'] = $programs->toArray()['data'] ?? $programs->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -118,8 +118,8 @@ class ProgramService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var Program|Builder $programmesBuilder */
-        $programmesBuilder = Program::select([
+        /** @var Program|Builder $programsBuilder */
+        $programsBuilder = Program::select([
             'programs.id',
             'programs.title_en',
             'programs.title',
@@ -138,48 +138,45 @@ class ProgramService
             'programs.deleted_at',
         ]);
 
-        $programmesBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $programsBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
-        $programmesBuilder->orderBy('programs.id', $order);
+        $programsBuilder->orderBy('programs.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $programmesBuilder->where('programs.row_status', $rowStatus);
+            $programsBuilder->where('programs.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
-            $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
+            $programsBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         }
 
         if (!empty($title)) {
-            $programmesBuilder->where('programs.title', 'like', '%' . $title . '%');
+            $programsBuilder->where('programs.title', 'like', '%' . $title . '%');
         }
 
         if (is_numeric($instituteId)) {
-            $programmesBuilder->where('programs.institute_id', '=', $instituteId);
+            $programsBuilder->where('programs.institute_id', '=', $instituteId);
         }
 
 
-        /** @var Collection $programmes */
+        /** @var Collection $programs */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $programmes = $programmesBuilder->paginate($pageSize);
-            $paginateData = (object)$programmes->toArray();
+            $programs = $programsBuilder->paginate($pageSize);
+            $paginateData = (object)$programs->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $programmes = $programmesBuilder->get();
+            $programs = $programsBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['data'] = $programs->toArray()['data'] ?? $programs->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -325,8 +322,8 @@ class ProgramService
         $paginate = $request->query('page');
         $order = !empty($request->query('order')) ? $request->query('order') : 'ASC';
 
-        /** @var Program|Builder $programmesBuilder */
-        $programmesBuilder = Program::onlyTrashed()->select([
+        /** @var Program|Builder $programsBuilder */
+        $programsBuilder = Program::onlyTrashed()->select([
             'programs.id as id',
             'programs.title_en',
             'programs.title',
@@ -339,30 +336,30 @@ class ProgramService
             'programs.created_at',
             'programs.updated_at',
         ]);
-        $programmesBuilder->join('institutes', 'programs.institute_id', '=', 'institutes.id');
-        $programmesBuilder->orderBy('programs.id', $order);
+        $programsBuilder->join('institutes', 'programs.institute_id', '=', 'institutes.id');
+        $programsBuilder->orderBy('programs.id', $order);
 
         if (!empty($titleEn)) {
-            $programmesBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
+            $programsBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
         } elseif (!empty($titleBn)) {
-            $programmesBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
+            $programsBuilder->where('programs.title', 'like', '%' . $titleBn . '%');
         }
 
-        /** @var Collection $programmesBuilder */
+        /** @var Collection $programsBuilder */
         if ($paginate || $limit) {
             $limit = $limit ?: 10;
-            $programmes = $programmesBuilder->paginate($limit);
-            $paginateData = (object)$programmes->toArray();
+            $programs = $programsBuilder->paginate($limit);
+            $paginateData = (object)$programs->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $programmes = $programmesBuilder->get();
+            $programs = $programsBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $programmes->toArray()['data'] ?? $programmes->toArray();
+        $response['data'] = $programs->toArray()['data'] ?? $programs->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -373,14 +370,14 @@ class ProgramService
     }
 
 
-    public function restore(Program $programmes): bool
+    public function restore(Program $programs): bool
     {
-        return $programmes->restore();
+        return $programs->restore();
     }
 
-    public function forceDelete(Program $programmes): bool
+    public function forceDelete(Program $programs): bool
     {
-        return $programmes->forceDelete();
+        return $programs->forceDelete();
     }
 
     /**

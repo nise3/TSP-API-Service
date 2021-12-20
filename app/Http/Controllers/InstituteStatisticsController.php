@@ -36,7 +36,7 @@ class InstituteStatisticsController extends Controller
 
     public function dashboardStatistics(int $instituteId = null): JsonResponse
     {
-        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData();
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($instituteId);
         $response['_response_status'] = [
             "success" => true, "code" => ResponseAlias::HTTP_OK,
             "query_time" => $this->startTime->diffInSeconds(Carbon::now()),

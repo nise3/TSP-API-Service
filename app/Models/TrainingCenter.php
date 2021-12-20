@@ -26,7 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrainingCenter extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes;
 
     public const CENTER_LOCATION_TYPE_INSTITUTE_PREMISES = 1;
     public const CENTER_LOCATION_TYPE_BRANCH_PREMISES = 2;

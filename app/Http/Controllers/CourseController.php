@@ -48,6 +48,8 @@ class CourseController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Course::class);
+
         $filter = $this->courseService->filterValidator($request)->validate();
         $response = $this->courseService->getCourseList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -61,30 +63,12 @@ class CourseController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $data = $this->courseService->getOneCourse($id);
+        $course = $this->courseService->getOneCourse($id);
+
+        $this->authorize('view', $course);
 
         $response = [
-            "data" => $data ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
-
-    /**
-     * Display the specified resource
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function courseDetails(int $id): JsonResponse
-    {
-        $course = $this->courseService->getOneCourse($id, true);
-        $response = [
-            "data" => $course ?: [],
+            "data" => $course,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -103,11 +87,13 @@ class CourseController extends Controller
      */
     function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Course::class);
+
         $validated = $this->courseService->validator($request)->validate();
-        $data = $this->courseService->store($validated);
+        $course = $this->courseService->store($validated);
 
         $response = [
-            'data' => $data ?: [],
+            'data' => $course,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -129,10 +115,13 @@ class CourseController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $course = Course::findOrFail($id);
+
+        $this->authorize('update', $course);
+
         $validated = $this->courseService->validator($request, $id)->validate();
         $data = $this->courseService->update($course, $validated);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -152,7 +141,11 @@ class CourseController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $course = Course::findOrFail($id);
+
+        $this->authorize('delete', $course);
+
         $this->courseService->destroy($course);
+
         $response = [
             '_response_status' => [
                 "success" => true,
@@ -165,7 +158,28 @@ class CourseController extends Controller
     }
 
     /**
+     * Display the specified resource
+     * @param int $id
+     * @return JsonResponse
      * @throws Throwable
+     */
+    public function publicCourseDetails(int $id): JsonResponse
+    {
+        $course = $this->courseService->getOneCourse($id, true);
+        $response = [
+            "data" => $course ?: null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -174,7 +188,8 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
@@ -192,7 +207,8 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {
@@ -210,7 +226,9 @@ class CourseController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param string|null $type
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse

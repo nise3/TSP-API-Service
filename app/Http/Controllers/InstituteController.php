@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Services\CourseService;
 use App\Services\ProgramService;
@@ -9,6 +10,7 @@ use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -54,24 +56,34 @@ class InstituteController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Institute::class);
         $filter = $this->instituteService->filterValidator($request)->validate();
 
         $response = $this->instituteService->getInstituteList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+
     /**
      * * Display the specified resource
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws Throwable
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function read(int $id): JsonResponse
+    public function read(Request $request,int $id): JsonResponse
     {
-        $data = $this->instituteService->getOneInstitute($id);
+        $institute = $this->instituteService->getOneInstitute($id);
+
+        $requestHeaders = $request->header();
+        /** Policy not checking when service to service call true*/
+        if (empty($requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0]) ||
+            $requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0] === BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE) {
+            $this->authorize('view', $institute);
+        }
 
         $response = [
-            "data" => $data,
+            "data" => $institute,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -93,6 +105,9 @@ class InstituteController extends Controller
     {
         /** @var Institute $institute */
         $institute = app(Institute::class);
+
+        $this->authorize('create', $institute);
+
         $validatedData = $this->instituteService->validator($request)->validate();
 
         DB::beginTransaction();
@@ -106,6 +121,9 @@ class InstituteController extends Controller
             }
 
             $validatedData['institute_id'] = $institute->id;
+
+            $validatedData['password'] = BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+
             $createdUser = $this->instituteService->createUser($validatedData);
             Log::channel('idp_user')->info('idp_user_info:' . json_encode($createdUser));
 
@@ -123,6 +141,9 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
+
+                $this->instituteService->userInfoSendByMail($validatedData);
+
                 DB::commit();
                 $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -155,6 +176,68 @@ class InstituteController extends Controller
     }
 
     /**
+     * * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function update(Request $request, int $id): JsonResponse
+    {
+        $institute = Institute::findOrFail($id);
+
+        $this->authorize('update', $institute);
+
+        $validated = $this->instituteService->validator($request, $id)->validate();
+        $data = $this->instituteService->update($institute, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     *Remove the specified resource from storage.
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $institute = Institute::findOrFail($id);
+
+        $this->authorize('delete', $institute);
+
+        DB::beginTransaction();
+        try {
+            $this->instituteService->destroy($institute);
+            $this->instituteService->instituteUserDestroy($institute);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Institute Open Registration
      * @param Request $request
      * @return JsonResponse
      * @throws RequestException
@@ -192,8 +275,12 @@ class InstituteController extends Controller
             ];
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
-                DB::commit();
                 $response['data'] = $institute;
+
+
+                $this->instituteService->userInfoSendByMail($validated);
+
+                DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
 
@@ -225,52 +312,6 @@ class InstituteController extends Controller
     }
 
     /**
-     * * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     * @throws ValidationException
-     */
-    public function update(Request $request, int $id): JsonResponse
-    {
-        $institute = Institute::findOrFail($id);
-        $validated = $this->instituteService->validator($request, $id)->validate();
-        $data = $this->instituteService->update($institute, $validated);
-        $response = [
-            'data' => $data ?: [],
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Institute updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-    /**
-     *  * Remove the specified resource from storage.
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $institute = Institute::findOrFail($id);
-        $this->instituteService->destroy($institute);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Institute deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
-
-    /**
      * @throws Throwable
      */
     public function getInstituteTitleByIds(Request $request): JsonResponse
@@ -295,11 +336,12 @@ class InstituteController extends Controller
     /**
      * @throws Throwable
      */
-    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse {
-        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')),  ValidationException::withMessages([
+    public function getCourseAndProgramTitleByIds(Request $request): JsonResponse
+    {
+        throw_if(!empty($request->input('course_ids')) && !is_array($request->input('course_ids')), ValidationException::withMessages([
             "The Course ids must be an array.[8000]"
         ]));
-        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')),  ValidationException::withMessages([
+        throw_if(!empty($request->input('program_ids')) && !is_array($request->input('program_ids')), ValidationException::withMessages([
             "The Program ids must be an array.[8000]"
         ]));
 
@@ -359,4 +401,138 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    /**
+     * Institute Open Registration Approval
+     * @param int $instituteId
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function instituteRegistrationApproval(int $instituteId): JsonResponse
+    {
+        $institute = Institute::findOrFail($instituteId);
+
+        DB::beginTransaction();
+        try {
+            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
+                $this->instituteService->InstituteStatusChangeAfterApproval($institute);
+                $this->instituteService->InstituteUserApproval($institute);
+                DB::commit();
+                $response = [
+                    '_response_status' => [
+                        "success" => true,
+                        "code" => ResponseAlias::HTTP_OK,
+                        "message" => "Institute Registration  approved successfully",
+                        "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+                    ]
+                ];
+            } else {
+                $response = [
+                    '_response_status' => [
+                        "success" => false,
+                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                        "message" => "No pending status found for this Institute",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            }
+
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
+    }
+
+    /**
+     * Institute Open Registration Rejection
+     * @param int $instituteId
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function InstituteRegistrationRejection(int $instituteId): JsonResponse
+    {
+        $institute = Institute::findOrFail($instituteId);
+
+        DB::beginTransaction();
+        try {
+            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
+                $this->instituteService->InstituteStatusChangeAfterRejection($institute);
+                $this->instituteService->InstituteUserRejection($institute);
+                DB::commit();
+                $response = [
+                    '_response_status' => [
+                        "success" => true,
+                        "code" => ResponseAlias::HTTP_OK,
+                        "message" => "Institute Registration  rejected successfully",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            } else {
+                $response = [
+                    '_response_status' => [
+                        "success" => false,
+                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
+                        "message" => "No pending status found for this Institute",
+                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                    ]
+                ];
+            }
+
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
+    }
+    public function getInstituteAdminProfile()
+    {
+        $authUser = Auth::user();
+        $instituteId = null;
+        if ($authUser && $authUser->institute_id) {
+            $instituteId = $authUser->institute_id;
+        }
+        $institute = $this->instituteService->getOneInstitute($instituteId);
+//        $institute = Institute::findOrFail($instituteId);
+        $response = [
+            "data" => $institute,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+    public function updateInstituteAdminProfile(Request $request): JsonResponse
+    {
+        $authUser = Auth::user();
+        $instituteId = null;
+        if ($authUser && $authUser->institute_id) {
+            $instituteId = $authUser->institute_id;
+        }
+        $institute = Institute::findOrFail($instituteId);
+
+        $this->authorize('update', $institute);
+
+        $validated = $this->instituteService->instituteAdminProfileValidator($request, $instituteId)->validate();
+        $data = $this->instituteService->update($institute, $validated);
+        $response = [
+            'data' => $data ?: [],
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Institute updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+
+
 }

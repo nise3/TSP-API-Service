@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -48,6 +48,7 @@ class TrainingCenterController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', TrainingCenter::class);
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
@@ -63,8 +64,9 @@ class TrainingCenterController extends Controller
     public function read(int $id): JsonResponse
     {
         $data = $this->trainingCenterService->getOneTrainingCenter($id);
+        $this->authorize('view', $data);
         $response = [
-            "data" => $data ?: [],
+            "data" => $data ?: null,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -83,10 +85,11 @@ class TrainingCenterController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', TrainingCenter::class);
         $validatedData = $this->trainingCenterService->validator($request)->validate();
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -108,10 +111,11 @@ class TrainingCenterController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
+        $this->authorize('update', $trainingCenter);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
         $data = $this->trainingCenterService->update($trainingCenter, $validated);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -131,20 +135,32 @@ class TrainingCenterController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
-        $this->trainingCenterService->destroy($trainingCenter);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Training center deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $this->authorize('delete', $trainingCenter);
+
+        DB::beginTransaction();
+        try {
+            $this->trainingCenterService->destroy($trainingCenter);
+            $this->trainingCenterService->trainingCenterUserDestroy($trainingCenter);
+
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Training center deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(\Illuminate\Support\Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -153,7 +169,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
