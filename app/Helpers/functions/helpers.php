@@ -120,3 +120,14 @@ if (!function_exists("idpUserErrorMessage")) {
 //    }
 
 }
+
+if (!function_exists('generateOtp')) {
+    /**
+     * @param int $digits
+     * @return int
+     */
+    function generateOtp(int $digits): int
+    {
+        return rand(pow(10, $digits - 1), pow(10, $digits) - 1);
+    }
+}

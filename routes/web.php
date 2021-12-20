@@ -3,6 +3,7 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
+use Illuminate\Http\Request;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -36,6 +37,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
 
+        /** Institute Admin Profile Update */
+        $router->put("institute-admin-profile-update", ["as" => "Institute.admin-profile-update", "uses" => "InstituteController@updateInstituteAdminProfile"]);        /** Institute Admin Profile Update */
+
+        /** Get Institute Admin Profile */
+        $router->get("institute-admin-profile", ["as" => "Institute.admin-profile", "uses" => "InstituteController@getInstituteAdminProfile"]);
+
         /** Institute Registration Rejection */
         $router->put("institute-registration-rejection/{instituteId}", ["as" => "Institute.institutes-registration-rejection", "uses" => "InstituteController@instituteRegistrationRejection"]);
 
@@ -47,6 +54,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Course All batches / Active batches / Up-coming batches */
         $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
+
+        $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
     /** institute registration */
@@ -55,10 +65,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** API call from Youth */
     $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
-
-    $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
-
 
     /** Public APIs */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
@@ -73,10 +79,29 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Program lists  */
         $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
+
+
+        $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('demanded-courses[/{instituteId}]', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
-    /* Course Enrollment */
+    /** Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
+
+    /** Course Enrollment Verification Code send */
+    $router->post("course-enroll/{id}/send-verification-code", ["as" => "course.send-verification-code", "uses" => "CourseEnrollmentController@sendVerificationCode"]);
+
+    /** Course Enrollment Verification Code resend */
+    $router->post("course-enroll/{id}/resend-verification-code", ["as" => "course.resend-verification-code", "uses" => "CourseEnrollmentController@reSendVerificationCode"]);
+
+    /** Batch Assign*/
+    $router->post("batch-assign", ["as" => "course-enroll.batch-assign", "uses" => "CourseEnrollmentController@assignBatch"]);
+
+    /** Reject course enrollment application */
+    $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
+
+    /** Course All batches / Active batches / Up-coming batches */
+    $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
 
 
     /** Institute Title by Ids for Internal Api */
@@ -84,6 +109,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     /** Batch and Program Title by Ids for Internal Api */
     $router->post("get-course-program-title-by-ids", ["as" => "institutes.get-course-program-title-by-ids", "uses" => "InstituteController@getCourseAndProgramTitleByIds"]);
+
+    $router->post('payment/pay-now', ["as" => "payment.pay-now", "uses" => "PaymentController@payNow"]);
+    $router->get('payment/success', ["as" => "payment.success", "uses" => "PaymentController@success"]);
+    $router->get('payment/fail', ["as" => "payment.fail", "uses" => "PaymentController@fail"]);
+    $router->get('payment/cancel', ["as" => "payment.cancel", "uses" => "PaymentController@cancel"]);
+    $router->post('payment/ipn-handler', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
 
 });
 

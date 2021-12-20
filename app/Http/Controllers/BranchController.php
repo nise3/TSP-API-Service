@@ -8,7 +8,6 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -47,6 +46,8 @@ class BranchController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Branch::class);
+
         $filter = $this->branchService->filterValidator($request)->validate();
 
         $response = $this->branchService->getBranchList($filter, $this->startTime);
@@ -61,10 +62,12 @@ class BranchController extends Controller
      */
     public function read($id): JsonResponse
     {
-        $data = $this->branchService->getOneBranch($id, $this->startTime);
+        $branch = $this->branchService->getOneBranch($id, $this->startTime);
+
+        $this->authorize('view', $branch);
 
         $response = [
-            "data" => $data ?: [],
+            "data" => $branch,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -85,10 +88,11 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Branch::class);
         $validatedData = $this->branchService->validator($request)->validate();
         $data = $this->branchService->store($validatedData);
         $response = [
-            'data' => $data ?: [],
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -112,12 +116,14 @@ class BranchController extends Controller
     {
         $branch = Branch::findOrFail($id);
 
+        $this->authorize('update', $branch);
+
         $validated = $this->branchService->validator($request)->validate();
 
         $data = $this->branchService->update($branch, $validated);
 
         $response = [
-            'data' => $data ?: [],
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -139,6 +145,8 @@ class BranchController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
+
+        $this->authorize('delete', $branch);
 
         DB::beginTransaction();
         try {

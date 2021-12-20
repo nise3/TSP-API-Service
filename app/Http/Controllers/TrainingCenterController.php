@@ -48,6 +48,7 @@ class TrainingCenterController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', TrainingCenter::class);
         $filter = $this->trainingCenterService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
@@ -63,6 +64,7 @@ class TrainingCenterController extends Controller
     public function read(int $id): JsonResponse
     {
         $data = $this->trainingCenterService->getOneTrainingCenter($id);
+        $this->authorize('view', $data);
         $response = [
             "data" => $data ?: null,
             "_response_status" => [
@@ -83,6 +85,7 @@ class TrainingCenterController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', TrainingCenter::class);
         $validatedData = $this->trainingCenterService->validator($request)->validate();
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
@@ -108,6 +111,7 @@ class TrainingCenterController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
+        $this->authorize('update', $trainingCenter);
         $validated = $this->trainingCenterService->validator($request, $id)->validate();
         $data = $this->trainingCenterService->update($trainingCenter, $validated);
         $response = [
@@ -131,6 +135,7 @@ class TrainingCenterController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $trainingCenter = TrainingCenter::findOrFail($id);
+        $this->authorize('delete', $trainingCenter);
 
         DB::beginTransaction();
         try {

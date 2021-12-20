@@ -752,6 +752,114 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
+
+    public function instituteAdminProfileValidator(Request $request, int $id = null): Validator
+    {
+        $data = $request->all();
+
+        $customMessage = [
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
+        ];
+
+        $rules = [
+            'title' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'loc_division_id' => [
+                'required',
+                'integer',
+                'exists:loc_divisions,id,deleted_at,NULL'
+            ],
+            'loc_district_id' => [
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
+            ],
+            'location_latitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'location_longitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
+            'address' => [
+                'nullable',
+                'string'
+            ],
+            'address_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head' => [
+                'required',
+                'string',
+                'max:500'
+            ],
+            'name_of_the_office_head_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head_designation' => [
+                "required",
+                "string",
+                "max:500"
+            ],
+            'name_of_the_office_head_designation_en' => [
+                "nullable",
+                "string",
+                "max:500"
+            ],
+            'contact_person_name' => [
+                'required',
+                'max: 500',
+                'min:2'
+            ],
+            'contact_person_name_en' => [
+                'nullable',
+                'max: 250',
+                'min:2'
+            ],
+            'contact_person_designation' => [
+                'required',
+                'max: 500',
+                "min:2"
+            ],
+            'contact_person_designation_en' => [
+                'nullable',
+                'max: 300',
+                "min:2"
+            ],
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
+                'nullable',
+                Rule::in(Institute::ROW_STATUSES),
+            ],
+            'created_by' => ['nullable', 'int'],
+            'updated_by' => ['nullable', 'int'],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
     public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
         $customMessage = [

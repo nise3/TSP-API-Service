@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\PaymentTransactionLogHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
 use App\Models\EnrollmentEducation;
@@ -14,8 +15,11 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
+use App\Models\Youth;
+use App\Services\CommonServices\SmsService;
 use App\Services\CommonServices\MailService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -409,6 +413,18 @@ class CourseEnrollmentService
 
     }
 
+    public function smsCodeValidation(Request $request): Validator
+    {
+        $rules = [
+            "verification_code" => [
+                "required",
+                "digits:4"
+            ]
+        ];
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+    }
+
+
     /**
      * @param CourseEnrollment $courseEnrollment
      */
@@ -416,6 +432,59 @@ class CourseEnrollmentService
     {
         $courseEnrollment->physicalDisabilities()->sync([]);
 
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function verifySMSCode(array $data): bool
+    {
+        $id = $data['id'];
+        $code = $data['verification_code'];
+        $courseEnrollment = CourseEnrollment::where("id", $id)
+            ->where("verification_code", $code)
+            ->where("row_status", BaseModel::ROW_STATUS_PENDING)
+            ->first();
+
+        if ($courseEnrollment) {
+            $courseEnrollment->verification_code_verified_at = Carbon::now();
+            $courseEnrollment->save();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param CourseEnrollment $courseEnrollment
+     * @param string $code
+     * @return bool
+     * @throws Exception
+     */
+    public function sendSmsVerificationCode(CourseEnrollment $courseEnrollment, string $code): bool
+    {
+        $mobile_number = $courseEnrollment->mobile;
+        $message = "Welcome to NISE-3. Your Verification code : " . $code;
+        if ($mobile_number) {
+            if (sms()->send($mobile_number, $message)->is_successful()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param CourseEnrollment $courseEnrollment
+     * @return bool
+     * @throws Exception
+     */
+    public function resendCode(CourseEnrollment $courseEnrollment): bool
+    {
+        $code = generateOtp(4);
+        $courseEnrollment->verification_code = $code;
+        $courseEnrollment->verification_code_sent_at = Carbon::now();
+        $courseEnrollment->save();
+        return $this->sendSmsVerificationCode($courseEnrollment, $code);
     }
 
     /**
@@ -1003,6 +1072,12 @@ class CourseEnrollmentService
             ];
         }
 
+        if (!empty($request['payment_info'])) {
+            $rules['payment_gateway_type'] = [
+                'required',
+                Rule::in(array_values(PaymentTransactionLogHistory::PAYMENT_GATEWAYS))
+            ];
+        }
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 

@@ -46,6 +46,8 @@ class TrainerController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Trainer::class);
+
         $filter = $this->trainerService->filterValidator($request)->validate();
 
         $response = $this->trainerService->getTrainerList($filter, $this->startTime);
@@ -60,9 +62,12 @@ class TrainerController extends Controller
      */
     public function read(int $id): JsonResponse
     {
-        $data = $this->trainerService->getOneTrainer($id);
+        $trainer = $this->trainerService->getOneTrainer($id);
+
+        $this->authorize('view', $trainer);
+
         $response = [
-            "data" => $data,
+            "data" => $trainer,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -81,6 +86,8 @@ class TrainerController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Trainer::class);
+
         $validatedData = $this->trainerService->validator($request)->validate();
         $data = $this->trainerService->store($validatedData);
         $response = [
@@ -106,11 +113,15 @@ class TrainerController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $trainer = Trainer::findOrFail($id);
+
+        $this->authorize('update', $trainer);
+
         $validated = $this->trainerService->validator($request, $id)->validate();
 
         $data = $this->trainerService->update($trainer, $validated);
+
         $response = [
-            'data' => $data ?: [],
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -129,6 +140,9 @@ class TrainerController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $trainer = Trainer::findOrFail($id);
+
+        $this->authorize('delete', $trainer);
+
         $this->trainerService->destroy($trainer);
         $response = [
             '_response_status' => [
@@ -143,7 +157,8 @@ class TrainerController extends Controller
 
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -152,7 +167,8 @@ class TrainerController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
