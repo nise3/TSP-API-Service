@@ -48,7 +48,7 @@ return [
 
         'saga' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/saga/' . date('Y/F/') . 'saga.log'),
+            'path' => storage_path('logs/saga-logs/' . date('Y/F/') . 'saga.log'),
             'level' => 'info'
         ],
 
