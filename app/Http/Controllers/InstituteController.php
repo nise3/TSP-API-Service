@@ -489,7 +489,7 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
-    public function getInstituteAdminProfile()
+    public function getInstituteProfile()
     {
         $authUser = Auth::user();
         $instituteId = null;
@@ -508,7 +508,7 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
-    public function updateInstituteAdminProfile(Request $request): JsonResponse
+    public function updateInstituteProfile(Request $request): JsonResponse
     {
         $authUser = Auth::user();
         $instituteId = null;

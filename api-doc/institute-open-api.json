@@ -526,9 +526,9 @@
                 }
             }
         },
-        "/institute-admin-profile-update": {
+        "/institute-profile-update": {
             "put": {
-                "tags": ["Institute Admin Profile "],
+                "tags": ["Institute Admin Profile"],
                 "summary": "Update institute admin profile",
                 "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
                 "requestBody": {
@@ -5014,6 +5014,9 @@
                         "type": "string",
                         "maxLength": 500
                     },
+                    "logo": {
+                        "type": "string"
+                    },
                     "contact_person_name_en": {
                         "type": "string",
                         "maxLength": 250
@@ -5025,15 +5028,8 @@
                     "contact_person_designation_en": {
                         "type": "string",
                         "maxLength": 300
-                    },
-                    "row_status": {
-                        "type": "integer",
-                        "enum": [
-                            1,
-                            0
-                        ],
-                        "example": 1
                     }
+
                 },
                 "required": [
                     "loc_division_id",
