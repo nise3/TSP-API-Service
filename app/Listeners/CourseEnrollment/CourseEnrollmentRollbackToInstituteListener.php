@@ -31,6 +31,12 @@ class CourseEnrollmentRollbackToInstituteListener
         $eventData = json_decode(json_encode($event), true);
         $data = $eventData['data'] ?? [];
         $publisher = $data ? $data['publisher_service'] ?? "" : "";
+        $this->rabbitMQService->receiveEventSuccessfully(
+            $publisher,
+            BaseModel::SAGA_INSTITUTE_SERVICE,
+            get_class($this),
+            json_encode($event)
+        );
         try {
             /** @var CourseEnrollment $courseEnrollment */
             $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);

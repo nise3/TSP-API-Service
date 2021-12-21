@@ -17,7 +17,7 @@ class AddSagaStatusToBatchesTable extends Migration
             $table->unsignedTinyInteger("saga_status")
                 ->after('row_status')
                 ->default(1)
-                ->comment('1=>pending, 2=>commit, 3=>rollback');
+                ->comment('1=>create_pending, 2=>update_pending, 3=>destroy_pending, 4=>commit, 5=>rollback');
         });
     }
 

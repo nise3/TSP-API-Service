@@ -69,12 +69,20 @@ return [
                 'type' => 'fanout',
                 'queue' => 'youth.alternate.q'
             ],
+            'dlx' => [
+                'name' => 'youth.dlx',
+                'type' => 'topic',
+                'x_message_ttl' => 120000
+            ],
             'queue' => [
                 'courseEnrollment' => [
                     'name' => 'youth.course.enrollment.q',
                     'binding' => 'youth.course.enrollment',
                     'durable' => true,
-                    'autoDelete' => false
+                    'autoDelete' => false,
+                    'dlq' => [
+                        'name' => 'youth.course.enrollment.dlq'
+                    ],
                 ]
             ],
         ],
