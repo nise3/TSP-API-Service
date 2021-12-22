@@ -71,8 +71,7 @@ return [
             ],
             'dlx' => [
                 'name' => 'youth.dlx',
-                'type' => 'topic',
-                'x_message_ttl' => 120000
+                'type' => 'topic'
             ],
             'queue' => [
                 'courseEnrollment' => [
@@ -81,7 +80,8 @@ return [
                     'durable' => true,
                     'autoDelete' => false,
                     'dlq' => [
-                        'name' => 'youth.course.enrollment.dlq'
+                        'name' => 'youth.course.enrollment.dlq',
+                        'x_message_ttl' => 120000
                     ],
                 ]
             ],
@@ -117,9 +117,7 @@ return [
             ],
             'dlx' => [
                 'name' => 'mail.sms.dlx',
-                'type' => 'fanout',
-                'dlq' => 'mail.sms.dlq',
-                'x_message_ttl' => 120000
+                'type' => 'fanout'
             ],
             'queue' => [
                 'mail' => [
@@ -127,12 +125,20 @@ return [
                     'binding' => 'mail',
                     'durable' => true,
                     'autoDelete' => false,
+                    'dlq' => [
+                        'name' => 'mail.sms.dlq',
+                        'x_message_ttl' => 120000
+                    ],
                 ],
                 'sms' => [
                     'name' => 'sms.q',
                     'binding' => 'sms',
                     'durable' => true,
                     'autoDelete' => false,
+                    'dlq' => [
+                        'name' => 'mail.sms.dlq',
+                        'x_message_ttl' => 120000
+                    ],
                 ]
             ]
         ]

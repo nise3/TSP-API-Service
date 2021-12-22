@@ -15,7 +15,8 @@ class RabbitMQ
      */
     public function publishEvent(
         RabbitMQConnector $connector, RabbitMQService $rabbitMqService, string $configExchangeName, string $configQueueName, bool $retry = false
-    ): void {
+    ): void
+    {
         /** Alternate Exchange related variables */
         $alternateExchange = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.alternateExchange.name');
         $alternateExchangeType = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.alternateExchange.type');
@@ -70,8 +71,8 @@ class RabbitMQ
             /** DlX-DLQ related variables */
             $dlx = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.dlx.name');
             $dlxType = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.dlx.type');
-            $dlq = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.dlx.dlq');
-            $messageTtl = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.dlx.x_message_ttl');
+            $dlq = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.queue.' . $configQueueName . '.dlq.name');
+            $messageTtl = config('nise3RabbitMq.exchanges.' . $configExchangeName . '.queue.' . $configQueueName . '.dlq.x_message_ttl');
 
             $exchangePayload['dlx'] = $dlx;
             $exchangePayload['dlxType'] = $dlxType;

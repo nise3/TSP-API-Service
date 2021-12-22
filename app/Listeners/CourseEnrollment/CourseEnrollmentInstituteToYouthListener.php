@@ -16,7 +16,7 @@ class CourseEnrollmentInstituteToYouthListener implements ShouldQueue
     /** Set rabbitmq config where this event is going to publish */
     private const EXCHANGE_CONFIG_NAME = 'youth';
     private const QUEUE_CONFIG_NAME = 'courseEnrollment';
-    private const RETRY_MECHANISM = false;
+    private const RETRY_MECHANISM = true;
 
     /**
      * @throws Exception
