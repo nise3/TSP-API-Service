@@ -519,7 +519,7 @@ class InstituteController extends Controller
 
         $this->authorize('update', $institute);
 
-        $validated = $this->instituteService->instituteAdminProfileValidator($request, $instituteId)->validate();
+        $validated = $this->instituteService->instituteProfileValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
         $response = [
             'data' => $data ?: [],

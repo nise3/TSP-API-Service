@@ -452,9 +452,9 @@
                 }
             }
         },
-        "/institute-admin-profile": {
+        "/institute-profile": {
             "get": {
-                "tags": ["Institute Admin Profile "],
+                "tags": ["Institute  Profile "],
                 "summary": "Get an institute admin profile",
                 "description": "An API endpoint to get an institute admin profile. A successfull request will give response with 200 status code",
                 "responses": {
@@ -510,8 +510,8 @@
                                         "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-12-14T06:55:05.000000Z",
-                                        "updated_at": "2021-12-14T11:02:55.000000Z",
+                                        "created_at": "2021-12-14T00:55:05.000000Z",
+                                        "updated_at": "2021-12-14T05:02:55.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -528,7 +528,7 @@
         },
         "/institute-profile-update": {
             "put": {
-                "tags": ["Institute Admin Profile"],
+                "tags": ["Institute  Profile "],
                 "summary": "Update institute admin profile",
                 "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
                 "requestBody": {
@@ -550,7 +550,7 @@
                                         "id": 4,
                                         "institute_type_id": 1,
                                         "code": "555",
-                                        "title": "QQQTTTT",
+                                        "title": "CocoJumbo",
                                         "title_en": null,
                                         "domain": null,
                                         "loc_division_id": "1",
@@ -561,7 +561,7 @@
                                         "google_map_src": null,
                                         "address_en": null,
                                         "address": null,
-                                        "logo": null,
+                                        "logo": "ThisIsMyLogo",
                                         "country": "BD",
                                         "phone_code": "880",
                                         "primary_phone": null,
@@ -573,22 +573,22 @@
                                             "01300099090"
                                         ],
                                         "email": "aa@gmail.com",
-                                        "name_of_the_office_head": "qqwqwqwqw",
+                                        "name_of_the_office_head": "Helsinki",
                                         "name_of_the_office_head_en": null,
-                                        "name_of_the_office_head_designation": "dddddddddddd",
+                                        "name_of_the_office_head_designation": "Chairperson",
                                         "name_of_the_office_head_designation_en": null,
-                                        "contact_person_name": "ddddddddddddddddd",
+                                        "contact_person_name": "NoTommoroow",
                                         "contact_person_name_en": null,
                                         "contact_person_mobile": "01300097090",
                                         "contact_person_email": "hh@gmail.com",
-                                        "contact_person_designation": "dddfdf",
-                                        "contact_person_designation_en": null,
+                                        "contact_person_designation": "HellYeahh",
+                                        "contact_person_designation_en": "ffff",
                                         "config": null,
-                                        "row_status": "1",
+                                        "row_status": 1,
                                         "created_by": null,
                                         "updated_by": null,
-                                        "created_at": "2021-12-14T06:55:05.000000Z",
-                                        "updated_at": "2021-12-14T11:02:55.000000Z",
+                                        "created_at": "2021-12-14T00:55:05.000000Z",
+                                        "updated_at": "2021-12-21T09:29:47.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {

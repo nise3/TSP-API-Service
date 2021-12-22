@@ -746,7 +746,7 @@ class InstituteService
     }
 
 
-    public function instituteAdminProfileValidator(Request $request, int $id = null): Validator
+    public function instituteProfileValidator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
 
