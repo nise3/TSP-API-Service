@@ -1,10 +1,11 @@
 FROM composer:2.0.7 as build
+FROM oberd/php-8.1-apache
 
 WORKDIR /app
 COPY . /app
 RUN composer install
 
-FROM oberd/php-8.1-apache
+
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
