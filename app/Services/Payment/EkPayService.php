@@ -91,10 +91,10 @@ class EkPayService
             ])
             ->post($url, $ekPayPayload)
             ->throw()
-            ->json('secure_token');
+            ->json(); //secure_token
 
         Log::info("Http-log: " . json_encode($res));
-        return $res;
+        return $res['secure_token'] ?? null;
 
     }
 }
