@@ -37,6 +37,7 @@ class PaymentController
         $response = $this->paymentService->paymentProcessing($paymentValidationData);
         $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
 
+
         if ($this->paymentService->isNotSMSVerified($paymentValidationData)) {
             $statusCode = ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
             $response = [
@@ -103,7 +104,7 @@ class PaymentController
     public function ipnHandler(Request $request, string $secretToken)
     {
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
-        if($this->paymentService->checkSecretToken($secretToken)){
+        if ($this->paymentService->checkSecretToken($secretToken)) {
             DB::beginTransaction();
             $paymentStatus = $this->paymentService->getPaymentStatus($request->msg_code);
             $data['trnx_id'] = $request->trnx_info['trnx_id'];
