@@ -3,7 +3,6 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
-use Illuminate\Http\Request;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -94,16 +93,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Course Enrollment Verification Code resend */
     $router->post("course-enroll/{id}/resend-verification-code", ["as" => "course.resend-verification-code", "uses" => "CourseEnrollmentController@reSendVerificationCode"]);
 
-    /** Batch Assign*/
-    $router->post("batch-assign", ["as" => "course-enroll.batch-assign", "uses" => "CourseEnrollmentController@assignBatch"]);
-
-    /** Reject course enrollment application */
-    $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
-
-    /** Course All batches / Active batches / Up-coming batches */
-    $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
-
-
     /** Institute Title by Ids for Internal Api */
     $router->post("get-institute-title-by-ids", ["as" => "institutes.get-institute-title-by-ids", "uses" => "InstituteController@getInstituteTitleByIds"]);
 
@@ -116,9 +105,4 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('payment/cancel', ["as" => "payment.cancel", "uses" => "PaymentController@cancel"]);
     $router->post('payment/ipn-handler', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
 
-});
-
-$router->get("/idp-test", function () {
-    Illuminate\Support\Facades\Log::info('Idp-Log');
-    return "idp-User";
 });
