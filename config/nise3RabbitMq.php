@@ -10,14 +10,33 @@ return [
             'alternateExchange' => [
                 'name' => 'core.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'core.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'core.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
+            ],
+            'dlx' => [
+                'name' => 'core.dlx',
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'demo' => [
                     'name' => 'core.demo.q',
                     'binding' => 'core.demo',
                     'durable' => true,
-                    'autoDelete' => false
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'core.demo.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
                 ]
             ],
         ],
@@ -81,14 +100,33 @@ return [
             'alternateExchange' => [
                 'name' => 'organization.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'organization.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'organization.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
+            ],
+            'dlx' => [
+                'name' => 'organization.dlx',
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'demo' => [
                     'name' => 'organization.demo.q',
                     'binding' => 'organization.demo',
                     'durable' => true,
-                    'autoDelete' => false
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'organization.demo.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
                 ]
             ],
         ],
@@ -176,11 +214,18 @@ return [
             'alternateExchange' => [
                 'name' => 'mail.sms.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'mail.sms.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'mail.sms.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
             ],
             'dlx' => [
                 'name' => 'mail.sms.dlx',
-                'type' => 'fanout'
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'mail' => [
@@ -188,9 +233,13 @@ return [
                     'binding' => 'mail',
                     'durable' => true,
                     'autoDelete' => false,
+                    'queueMode' => 'lazy',
                     'dlq' => [
-                        'name' => 'mail.sms.dlq',
-                        'x_message_ttl' => 50000
+                        'name' => 'mail.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
                     ],
                 ],
                 'sms' => [
@@ -198,13 +247,17 @@ return [
                     'binding' => 'sms',
                     'durable' => true,
                     'autoDelete' => false,
+                    'queueMode' => 'lazy',
                     'dlq' => [
-                        'name' => 'mail.sms.dlq',
-                        'x_message_ttl' => 50000
+                        'name' => 'sms.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
                     ],
                 ]
-            ]
-        ]
+            ],
+        ],
     ],
-    'consume' => 'institute.course.enrollment.q, institute.batch.calender.q'
+    'consume' => ''
 ];
