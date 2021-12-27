@@ -91,15 +91,21 @@ class RabbitMQService
     {
         /** Exchange Queue related variables */
         $exchange = $payload['exchange'];
-        $durable = $payload['durable'] ?? true;
-        $autoDelete = $payload['autoDelete'] ?? false;
         $queueName = $payload['queueName'];
         $binding = $payload['binding'] ?? "";
+        $queueDurable = $payload['queueDurable'] ?? true;
+        $queueAutoDelete = $payload['queueAutoDelete'] ?? false;
+        $queueMode = $payload['queueMode'] ?? 'lazy';
+
+        /** Create Queue Arguments */
+        $queueArguments = [
+            'x-queue-mode' => $queueMode
+        ];
 
         /** Create Queue */
         if (!$queue->isQueueExists($queueName)) {
             $queue->declareQueue(
-                $queueName, $durable, $autoDelete
+                $queueName, $queueDurable, $queueAutoDelete, $queueArguments
             );
         }
 
@@ -119,46 +125,57 @@ class RabbitMQService
     {
         /** Exchange Queue related variables */
         $exchange = $payload['exchange'];
-        $durable = $payload['durable'] ?? true;
-        $autoDelete = $payload['autoDelete'] ?? false;
         $queueName = $payload['queueName'];
         $binding = $payload['binding'] ?? "";
+        $queueDurable = $payload['queueDurable'] ?? true;
+        $queueAutoDelete = $payload['queueAutoDelete'] ?? false;
+        $queueMode = $payload['queueMode'] ?? 'lazy';
 
         /** DLX-DLQ related variables */
         $dlx = $payload['dlx'];
         $dlxType = $payload['dlxType'];
+        $dlxDurable = $payload['dlxDurable'] ?? true;
+        $dlxAutoDelete = $payload['dlxAutoDelete'] ?? false;
         $dlq = $payload['dlq'];
         $dlqMessageTtl = $payload['messageTtl'];
+        $dlqDurable = $payload['dlqDurable'] ?? true;
+        $dlqAutoDelete = $payload['dlqAutoDelete'] ?? false;
+        $dlqQueueMode = $payload['dlqQueueMode'] ?? 'lazy';
 
+        /** Create DLQ Arguments */
         $dlqArguments = [
             'x-dead-letter-exchange' => $exchange,
-            'x-message-ttl' => (int)$dlqMessageTtl
+            'x-message-ttl' => (int)$dlqMessageTtl,
+            'x-queue-mode' => $dlqQueueMode
         ];
+
+        /** Create Queue Arguments */
         $queueArguments = [
-            'x-dead-letter-exchange' => $dlx
+            'x-dead-letter-exchange' => $dlx,
+            'x-queue-mode' => $queueMode
         ];
 
         /** Create DLX */
         if (!$queue->isExchangeExists($dlx)) {
             $queue->declareExchange(
-                $dlx, $dlxType, true, false
+                $dlx, $dlxType, $dlxDurable, $dlxAutoDelete
             );
         }
         /** Create DLQ */
         if (!$queue->isQueueExists($dlq)) {
             $queue->declareQueue(
-                $dlq, true, false, $dlqArguments
+                $dlq, $dlqDurable, $dlqAutoDelete, $dlqArguments
             );
         }
         /** Bind DLQ with DLX */
         $queue->bindQueue(
-            $dlq, $dlx
+            $dlq, $dlx, $binding
         );
 
         /** Create Queue */
         if (!$queue->isQueueExists($queueName)) {
             $queue->declareQueue(
-                $queueName, $durable, $autoDelete, $queueArguments
+                $queueName, $queueDurable, $queueAutoDelete, $queueArguments
             );
         }
         /** Bind Queue with Exchange. */

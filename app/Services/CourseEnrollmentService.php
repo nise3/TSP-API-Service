@@ -1364,6 +1364,7 @@ class CourseEnrollmentService
     /**
      * @param array $data
      * @return mixed
+     * @throws Throwable
      */
     public function assignBatch(array $data): CourseEnrollment
     {
@@ -1371,13 +1372,14 @@ class CourseEnrollmentService
         try {
             $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
             $courseEnrollment->batch_id = $data['batch_id'];
+            $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_UPDATE_PENDING;
+            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+            $courseEnrollment->save();
 
             $batch = Batch::find($data['batch_id']);
             $batch['available_seats'] = $batch['available_seats'] - 1;
             $batch->save();
 
-            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
-            $courseEnrollment->save();
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();

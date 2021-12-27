@@ -2,8 +2,6 @@
 
 namespace App\Events\BatchCalender;
 
-use Illuminate\Support\Facades\Log;
-
 class BatchCalenderYouthBatchAssignEvent
 {
 
@@ -16,7 +14,6 @@ class BatchCalenderYouthBatchAssignEvent
      */
     public function __construct(array $data)
     {
-        Log::info(json_encode($data));
         $this->data = $data;
     }
 }

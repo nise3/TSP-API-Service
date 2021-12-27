@@ -2,20 +2,19 @@
 
 namespace App\Listeners\BatchCalender;
 
-use App\Facade\RabbitMQFacade;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\RabbitMQService;
-use Carbon\Carbon;
-use Exception;
+use Illuminate\Support\Facades\DB;
+use PDOException;
+use Throwable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
+use Illuminate\Database\QueryException;
 
 class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQueue
 {
-    private Carbon $currentTime;
     private RabbitMQService $rabbitMQService;
 
     /**
@@ -23,43 +22,62 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
      */
     public function __construct(RabbitMQService $rabbitMQService)
     {
-        $this->currentTime = Carbon::now();
         $this->rabbitMQService = $rabbitMQService;
     }
 
     public function handle($event)
     {
-
         $eventData = json_decode(json_encode($event), true);
         $data = $eventData['data'] ?? [];
         $publisher = $data ? $data['publisher_service'] ?? "" : "";
         try {
-            /** @var CourseEnrollment $courseEnrollment */
-            $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
-            $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
-            $courseEnrollment->batch_id = null;
-            $courseEnrollment->deleted_at = $this->currentTime;
-            $courseEnrollment->save();
-
-
-            $batch = Batch::find($data['batch_id']);
-            $batch->avilable_seats += 1;
-
-            $this->rabbitMQService->sagaSuccessEvent(
+            $this->rabbitMQService->receiveEventSuccessfully(
                 $publisher,
                 BaseModel::SAGA_INSTITUTE_SERVICE,
                 get_class($this),
-                json_encode($data)
+                json_encode($event)
             );
-        } catch (Exception $e) {
-            $this->rabbitMQService->sagaErrorEvent(
-                $publisher,
-                BaseModel::SAGA_INSTITUTE_SERVICE,
-                get_class($this),
-                json_encode($data),
-                $e,
-            );
+
+            $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
+            if (!$alreadyConsumed) {
+                DB::beginTransaction();
+
+                /** @var CourseEnrollment $courseEnrollment */
+                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                $courseEnrollment->batch_id = $data['saga_previous_data']['batch_id'];
+                $courseEnrollment->saga_status = $data['saga_previous_data']['saga_status'];
+                $courseEnrollment->row_status = $data['saga_previous_data']['row_status'];
+                $courseEnrollment->save();
+
+                /** Return the previously booked seat */
+                $batch = Batch::find($data['batch_id']);
+                $batch->avilable_seats += 1;
+
+                /** Store the event as a Success event into Database */
+                $this->rabbitMQService->sagaSuccessEvent(
+                    $publisher,
+                    BaseModel::SAGA_INSTITUTE_SERVICE,
+                    get_class($this),
+                    json_encode($data)
+                );
+                DB::commit();
+            }
+        } catch (Throwable $e) {
+            DB::rollBack();
+            if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {
+                /** Technical Recoverable Error Occurred. RETRY mechanism with DLX-DLQ apply now by sending a rejection */
+                throw new PDOException("Database Connectivity Error");
+            } else {
+                /** Technical Non-recoverable Error "OR" Business Rule violation Error Occurred */
+                /** Store the event as an Error event into Database */
+                $this->rabbitMQService->sagaErrorEvent(
+                    $publisher,
+                    BaseModel::SAGA_INSTITUTE_SERVICE,
+                    get_class($this),
+                    json_encode($data),
+                    $e,
+                );
+            }
         }
-
     }
 }

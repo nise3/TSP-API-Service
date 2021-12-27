@@ -190,24 +190,28 @@ class CourseEnrollmentController extends Controller
         DB::beginTransaction();
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-            $this->courseEnrollService->assignBatch($validated);
-            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
+            $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
+            $this->courseEnrollService->assignBatch($validated);
             $batch = Batch::findOrFail($validated['batch_id']);
-            $courseEnrollment = CourseEnrollment::findOrFail($validated['batch_id']);
+            $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [
                 'batch_title' => $batch->title,
                 'batch_title_en' => $batch->title_en,
-                'youth_id' => $courseEnrollment->youth_id,
-                'enrollment_id' => $courseEnrollment->id,
+                'youth_id' => $courseEnrollmentDataAfterUpdate->youth_id,
+                'enrollment_id' => $courseEnrollmentDataAfterUpdate->id,
                 'batch_id' => $batch->id,
                 'batch_start_date' => $batch->batch_start_date,
-                'batch_end_date' => $batch->batch_end_date
+                'batch_end_date' => $batch->batch_end_date,
+                'saga_previous_data' => $courseEnrollmentDataBeforeUpdate->toArray()
             ];
 
             /** Trigger Event to Cms Service via RabbitMQ  */
             event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
+
+            /** Send Mail Event */
+            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
 
             $response = [
                 '_response_status' => [

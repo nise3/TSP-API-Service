@@ -29,14 +29,47 @@ return [
             'alternateExchange' => [
                 'name' => 'institute.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'institute.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'institute.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
+            ],
+            'dlx' => [
+                'name' => 'institute.dlx',
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'courseEnrollment' => [
                     'name' => 'institute.course.enrollment.q',
                     'binding' => 'institute.course.enrollment',
                     'durable' => true,
-                    'autoDelete' => false
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'institute.course.enrollment.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
+                ],
+                'batchCalender' => [
+                    'name' => 'institute.batch.calender.q',
+                    'binding' => 'institute.batch.calender',
+                    'durable' => true,
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'institute.batch.calender.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
                 ]
             ],
         ],
@@ -67,11 +100,18 @@ return [
             'alternateExchange' => [
                 'name' => 'youth.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'youth.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'youth.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
             ],
             'dlx' => [
                 'name' => 'youth.dlx',
-                'type' => 'topic'
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'courseEnrollment' => [
@@ -79,9 +119,13 @@ return [
                     'binding' => 'youth.course.enrollment',
                     'durable' => true,
                     'autoDelete' => false,
+                    'queueMode' => 'lazy',
                     'dlq' => [
                         'name' => 'youth.course.enrollment.dlq',
-                        'x_message_ttl' => 120000
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
                     ],
                 ]
             ],
@@ -94,15 +138,34 @@ return [
             'alternateExchange' => [
                 'name' => 'cms.alternate.x',
                 'type' => 'fanout',
-                'queue' => 'cms.alternate.q'
+                'durable' => true,
+                'autoDelete' => false,
+                'queue' => 'cms.alternate.q',
+                'queueDurable' => true,
+                'queueAutoDelete' => false,
+                'queueMode' => 'lazy',
+            ],
+            'dlx' => [
+                'name' => 'cms.dlx',
+                'type' => 'topic',
+                'durable' => true,
+                'autoDelete' => false
             ],
             'queue' => [
                 'batchCalender' => [
                     'name' => 'cms.batch.calender.q',
                     'binding' => 'cms.batch.calender',
                     'durable' => true,
-                    'autoDelete' => false
-                ],
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'cms.batch.calender.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
+                ]
             ],
         ],
         'mailSms' => [
@@ -127,7 +190,7 @@ return [
                     'autoDelete' => false,
                     'dlq' => [
                         'name' => 'mail.sms.dlq',
-                        'x_message_ttl' => 120000
+                        'x_message_ttl' => 50000
                     ],
                 ],
                 'sms' => [
@@ -137,11 +200,11 @@ return [
                     'autoDelete' => false,
                     'dlq' => [
                         'name' => 'mail.sms.dlq',
-                        'x_message_ttl' => 120000
+                        'x_message_ttl' => 50000
                     ],
                 ]
             ]
         ]
     ],
-    'consume' => 'institute.course.enrollment.q'
+    'consume' => 'institute.course.enrollment.q, institute.batch.calender.q'
 ];
