@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\BatchCalender;
 
 use App\Facade\RabbitMQFacade;
 use App\Services\RabbitMQService;
@@ -8,14 +8,15 @@ use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use VladimirYuldashev\LaravelQueueRabbitMQ\Queue\Connectors\RabbitMQConnector;
 
-class MailSendListener implements ShouldQueue
+class BatchCalenderYouthBatchAssignInstituteToCmsListener implements ShouldQueue
 {
+
     private RabbitMQConnector $connector;
     private RabbitMQService $rabbitmqService;
 
     /** Set rabbitmq config where this event is going to publish */
-    private const EXCHANGE_CONFIG_NAME = 'mailSms';
-    private const QUEUE_CONFIG_NAME = 'mail';
+    private const EXCHANGE_CONFIG_NAME = 'cms';
+    private const QUEUE_CONFIG_NAME = 'batchCalender';
     private const RETRY_MECHANISM = true;
 
     /**
@@ -34,8 +35,8 @@ class MailSendListener implements ShouldQueue
         );
     }
 
-    public function handle()
-    {
+    public function handle(){
 
     }
+
 }

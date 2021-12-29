@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -100,6 +101,15 @@ class CourseEnrollment extends BaseModel
         self::CHILD_OF_FREEDOM_FIGHTER,
         self::GRAND_CHILD_OF_FREEDOM_FIGHTER
     ];
+
+    /**
+     * Add @method SagaStatusGlobalScope() as a Global Scope to fetch only saga_status committed data
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new SagaStatusGlobalScope);
+    }
 
     /**
      * @return BelongsToMany

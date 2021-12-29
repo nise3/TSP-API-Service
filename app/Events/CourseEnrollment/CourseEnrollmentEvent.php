@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\CourseEnrollment;
 
-class SmsSendEvent
+class CourseEnrollmentEvent
 {
     public array $data;
+
     /**
-     * Create a new SMS event instance.
+     * Create a new event instance.
      *
      * @return void
      */

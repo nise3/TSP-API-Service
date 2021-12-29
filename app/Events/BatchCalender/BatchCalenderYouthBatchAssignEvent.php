@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\BatchCalender;
 
-class SmsSendEvent
+class BatchCalenderYouthBatchAssignEvent
 {
+
     public array $data;
+
     /**
-     * Create a new SMS event instance.
+     * Create a new event instance.
      *
      * @return void
      */

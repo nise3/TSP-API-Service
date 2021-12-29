@@ -12,17 +12,17 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        \App\Events\ExampleEvent::class => [
-            \App\Listeners\ExampleListener::class,
+        \App\Events\CourseEnrollment\CourseEnrollmentEvent::class => [
+            \App\Listeners\CourseEnrollment\CourseEnrollmentInstituteToYouthListener::class,
         ],
-        \App\Events\CourseEnrollmentEvent::class => [
-            \App\Listeners\CourseEnrollmentListener::class,
+        \App\Events\MailSendEvent::class => [
+            \App\Listeners\MailSendListener::class
         ],
         \App\Events\SmsSendEvent::class => [
             \App\Listeners\SmsSendListener::class
         ],
-        \App\Events\MailSendEvent::class => [
-            \App\Listeners\MailSendListener::class
-        ]
+        \App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent::class => [
+            \App\Listeners\BatchCalender\BatchCalenderYouthBatchAssignInstituteToCmsListener::class
+        ],
     ];
 }

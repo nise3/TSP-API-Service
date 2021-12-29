@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
+use App\Services\CommonServices\MailService;
 use App\Services\CourseEnrollmentService;
 use Carbon\Carbon;
 use Exception;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
-use App\Events\CourseEnrollmentEvent;
+use App\Events\CourseEnrollment\CourseEnrollmentEvent;
 
 class CourseEnrollmentController extends Controller
 {
@@ -118,7 +120,7 @@ class CourseEnrollmentController extends Controller
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
             /** Trigger EVENT to Youth Service via RabbitMQ  */
-            $validated['id'] = $courseEnroll->id;
+            $validated['enrollment_id'] = $courseEnroll->id;
             event(new CourseEnrollmentEvent($validated));
 
             $response = [
@@ -188,8 +190,28 @@ class CourseEnrollmentController extends Controller
         DB::beginTransaction();
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-            $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+            $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
+
+            $this->courseEnrollService->assignBatch($validated);
+            $batch = Batch::findOrFail($validated['batch_id']);
+            $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
+
+            $calenderEventPayload = [
+                'batch_title' => $batch->title,
+                'batch_title_en' => $batch->title_en,
+                'youth_id' => $courseEnrollmentDataAfterUpdate->youth_id,
+                'enrollment_id' => $courseEnrollmentDataAfterUpdate->id,
+                'batch_id' => $batch->id,
+                'batch_start_date' => $batch->batch_start_date,
+                'batch_end_date' => $batch->batch_end_date,
+                'saga_previous_data' => $courseEnrollmentDataBeforeUpdate->toArray()
+            ];
+
+            /** Trigger Event to Cms Service via RabbitMQ  */
+            event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
+
+            /** Send Mail Event */
+            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
 
             $response = [
                 '_response_status' => [
@@ -209,26 +231,6 @@ class CourseEnrollmentController extends Controller
 
     }
 
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment): void
-    {
-        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
-        $data = [
-            "batch" => Batch::find($courseEnrollment->batch_id),
-            "youth_id" => $courseEnrollment->youth_id
-        ];
-
-        Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $data)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
-    }
 
     /**
      * @param Request $request
@@ -250,27 +252,5 @@ class CourseEnrollmentController extends Controller
         ];
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-    /**
-     * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
-     * @throws RequestException
-     */
-    public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
-    {
-        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'youth-update-after-course-enrollment';
-
-        return Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $data)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
     }
 }

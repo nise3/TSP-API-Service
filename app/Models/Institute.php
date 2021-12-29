@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null google_map_src
  * @property string logo
  * @property string|null config
+ * @property string contact_person_name
+ * @property string contact_person_mobile
  */
 class Institute extends BaseModel
 {
@@ -49,6 +51,7 @@ class Institute extends BaseModel
         'phone_numbers' => 'array',
         'mobile_numbers' => 'array',
     ];
+    private mixed $contact_person_name;
 
     /**
      * @return string|null

@@ -4,9 +4,7 @@ namespace App\Providers;
 
 use App\Helpers\Classes\AuthTokenUtilityHandler;
 use App\Helpers\Classes\ServiceToServiceCallHandler;
-use App\Helpers\CustomPassword;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
