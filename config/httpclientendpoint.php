@@ -28,7 +28,7 @@ return [
     ],
     "idp_server" => [
         "local" => "",
-        "dev" => "https://192.168.13.206:9443/carbon/scim2/Users",
+        "dev" => "https://192.168.13.206:9448/scim2/Users",
         "prod" => "https://identity.bus-staging.softbdltd.com/scim2/Users"
     ],
     'mail_sms_send'=>[
