@@ -25,7 +25,7 @@ variables:
   serviceTargetPort: 80
 
   #app buil image
-  imageRepository: kalyan31.jfrog.io/nise3-institute-docker/nise3-institute-docker
+  imageRepository: registry.bus-staging.softbdltd.com/nise3-institute-management-api-service
 
 
   #auto scaling config

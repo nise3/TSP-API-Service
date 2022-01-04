@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
@@ -435,13 +436,12 @@ class CourseEnrollmentService
     }
 
     /**
-     * @param array $data
+     * @param int $id
+     * @param string $code
      * @return bool
      */
-    public function verifySMSCode(array $data): bool
+    public function verifySMSCode(int $id, string $code): bool
     {
-        $id = $data['id'];
-        $code = $data['verification_code'];
         $courseEnrollment = CourseEnrollment::where("id", $id)
             ->where("verification_code", $code)
             ->where("row_status", BaseModel::ROW_STATUS_PENDING)
@@ -464,9 +464,10 @@ class CourseEnrollmentService
     public function sendSmsVerificationCode(CourseEnrollment $courseEnrollment, string $code): bool
     {
         $mobile_number = $courseEnrollment->mobile;
-        $message = "Welcome to NISE-3. Your Verification code : " . $code;
+        $message = "Your Course Enrollment Verification code : " . $code;
         if ($mobile_number) {
             if (sms()->send($mobile_number, $message)->is_successful()) {
+                Log::info('Sms send after enrollment to number--->'.$mobile_number);
                 return true;
             }
         }
@@ -615,11 +616,11 @@ class CourseEnrollmentService
                 'date',
             ],
             'email' => [
-                'nullable',
+                'required',
                 'email',
             ],
             "mobile" => [
-                "nullable",
+                "required",
                 "max:11",
                 BaseModel::MOBILE_REGEX
             ],

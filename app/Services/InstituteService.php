@@ -4,12 +4,14 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Models\TrainingCenter;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -450,6 +452,8 @@ class InstituteService
             })
             ->json();
     }
+
+
 
     public function userInfoSendByMail(array $mailPayload)
     {
@@ -1005,5 +1009,6 @@ class InstituteService
             ],
         ], $customMessage);
     }
+
 
 }
