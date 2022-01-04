@@ -49,6 +49,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Program lists  */
         $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
+
+        /** Single Institute Fetch  */
+        $router->get("institutes/{id}", ["as" => "public.institute", "uses" => "InstituteController@instituteDetails"]);
     });
 
 
