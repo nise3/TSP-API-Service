@@ -3,7 +3,7 @@
     "info": {
         "version": "1.0.0",
         "title": "TSP Api Service",
-        "description": "It is a institute management api service that manages services related to institute",
+        "description": "It is a TSP api service that manages services related to institute",
         "termsOfService": "",
         "contact": {},
         "license": {
