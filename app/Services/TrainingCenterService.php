@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
@@ -436,6 +437,34 @@ class TrainingCenterService
                 return $e;
             })
             ->json();
+    }
+
+    public function createDefaultTrainingCenter(BaseModel $model)
+    {
+        $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES;
+        $instituteId = $model->id;
+        $branchId = null;
+        if (isset($model->institute_id)) {
+            $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_BRANCH_PREMISES;
+            $instituteId = $model->institute_id;
+            $branchId = $model->id;
+        }
+        $trainingCenterPayload = [
+            'institute_id' => $instituteId,
+            'branch_id' => $branchId,
+            'center_location_type' => $centerLocationType,
+            'title' => $model->title,
+            'title_en' => $model->title_en,
+            'loc_division_id' => $model->loc_division_id,
+            'loc_district_id' => $model->loc_district_id,
+            'loc_upazila_id' => $model->loc_upazila_id,
+            'location_latitude' => $model->location_latitude,
+            'location_longitude' => $model->location_latitude,
+            'google_map_src' => $model->google_map_src,
+            'address' => $model->google_map_src,
+            'address_en' => $model->address_en,
+        ];
+        app(TrainingCenterService::class)->store($trainingCenterPayload);
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Services\CourseService;
 use App\Services\ProgramService;
+use App\Services\TrainingCenterService;
 use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -71,7 +72,7 @@ class InstituteController extends Controller
      * @return JsonResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function read(Request $request,int $id): JsonResponse
+    public function read(Request $request, int $id): JsonResponse
     {
         $institute = $this->instituteService->getOneInstitute($id);
 
@@ -172,6 +173,8 @@ class InstituteController extends Controller
 
                 $this->instituteService->userInfoSendBySMS($recipient, $message);
 
+                /** Create a default training center in time of Institute Create */
+                app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
                 DB::commit();
                 $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
@@ -306,6 +309,9 @@ class InstituteController extends Controller
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
                 $this->instituteService->userInfoSendByMail($validated);
+
+                /** Create a default training center in time of Institute Create */
+                app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
                 DB::commit();
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
             }
@@ -522,6 +528,7 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
+
     public function getInstituteAdminProfile()
     {
         $authUser = Auth::user();
@@ -541,6 +548,7 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
     public function updateInstituteAdminProfile(Request $request): JsonResponse
     {
         $authUser = Auth::user();
@@ -565,7 +573,6 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
-
 
 
 }
