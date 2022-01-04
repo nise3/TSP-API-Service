@@ -35,6 +35,8 @@ class PaymentTransactionLogHistory extends BaseModel
 
     public const PAYMENT_TYPE_COURSE_ENROLLMENT = 1;
     public const TRANSACTION_COMPLETED_SUCCESSFULLY=1020;
+    public const TRANSACTION_COMPLETED_FAIL=1021;
+    public const TRANSACTION_COMPLETED_CANCEL=1022;
 
     protected $casts=[
         "request_payload"=>'array',

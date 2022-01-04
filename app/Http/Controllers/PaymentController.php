@@ -8,6 +8,7 @@ use App\Services\Payment\PaymentService;
 use http\Exception\RuntimeException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -34,16 +35,34 @@ class PaymentController
     {
         $paymentValidationData = $this->paymentService->paymentValidator($request)->validate();
         $response = $this->paymentService->paymentProcessing($paymentValidationData);
-        $response = [
-            "redirect_url" => !empty($response) ? $response : null,
-            "_response_status" => [
-                "status" => !empty($response),
-                "code" => !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => !empty($response) ? "Success" : "Unprocessable Payment Request"
-            ]
-        ];
+        $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
 
-        return Response::json($response, ResponseAlias::HTTP_OK);
+
+        if ($this->paymentService->isNotSMSVerified($paymentValidationData)) {
+            $statusCode = ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
+            $response = [
+                "errors" => [
+                    "sms_verification" => "Sms Verification is not yet done, Please verify it",
+                ],
+                "_response_status" => [
+                    "status" => false,
+                    "code" => $statusCode,
+                    "message" => "Validation Error"
+                ]
+            ];
+
+        } else {
+            $response = [
+                "redirect_url" => !empty($response) ? $response : null,
+                "_response_status" => [
+                    "status" => !empty($response),
+                    "code" => $statusCode,
+                    "message" => !empty($response) ? "Success" : "Unprocessable Payment Request"
+                ]
+            ];
+        }
+
+        return Response::json($response, $statusCode);
     }
 
     public function success(Request $request): JsonResponse
@@ -64,7 +83,7 @@ class PaymentController
             "_response_status" => [
                 "status" => false,
                 "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Unprocessable Payment Request"
+                "message" => "Payment Cancel"
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
@@ -76,32 +95,44 @@ class PaymentController
             "_response_status" => [
                 "status" => false,
                 "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Unprocessable Payment Request"
+                "message" => "Payment Failed"
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function ipnHandler(Request $request)
+    public function ipnHandler(Request $request, string $secretToken)
     {
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
+        if ($this->paymentService->checkSecretToken($secretToken)) {
+            DB::beginTransaction();
+            $paymentStatus = $this->paymentService->getPaymentStatus($request->msg_code);
+            $data['trnx_id'] = $request->trnx_info['trnx_id'];
+            $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
+            $data['payment_instrument_name'] = $request->pi_det_info['pi_name'];
+            $data['paid_amount'] = $request->trnx_info['trnx_amt'];
+            $data['response_message'] = $request->all();
+            $data['status'] = $paymentStatus;
 
-        $paymentStatus = $request->msg_code == PaymentTransactionLogHistory::TRANSACTION_COMPLETED_SUCCESSFULLY ? PaymentTransactionLogHistory::PAYMENT_SUCCESS : PaymentTransactionLogHistory::PAYMENT_PENDING;
-        $data['trnx_id'] = $request->trnx_info['trnx_id'];
-        $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
-        $data['payment_instrument_name'] = $request->pi_det_info['pi_name'];
-        $data['paid_amount'] = $request->trnx_info['trnx_amt'];
-        $data['response_message'] = $request->all();
-        $data['status'] = $paymentStatus;
-        $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
+            $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
-        if ($payment){
-            $payment->fill($data);
-            $payment->save();
-            $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
-            $courseEnroll->payment_status = $paymentStatus;
-            $courseEnroll->save();
+            Log::channel("ek_pay")->info("Payment Info in ipnHandler for mer_trnx_id=" . $request->trnx_info['mer_trnx_id'] . json_encode($payment));
+
+            try {
+                if ($payment) {
+                    $payment->fill($data);
+                    $payment->save();
+                    $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
+                    $courseEnroll->payment_status = $paymentStatus;
+                    $courseEnroll->save();
+                    DB::commit();
+                }
+            } catch (Throwable $exception) {
+                DB::rollBack();
+                throw $exception;
+            }
         }
+
     }
 
 

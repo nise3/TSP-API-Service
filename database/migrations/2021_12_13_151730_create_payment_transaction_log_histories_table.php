@@ -29,9 +29,10 @@ class CreatePaymentTransactionLogHistoriesTable extends Migration
             $table->unsignedDouble('paid_amount')->nullable();
             $table->string('trnx_currency')->comment('BDT');
             $table->string('order_detail')->nullable();
-            $table->json('request_payload');
-            $table->json('response_message');
+            $table->json('request_payload')->nullable();
+            $table->json('response_message')->nullable();
             $table->string('status')->default(2)->comment("1=>Success, 2=>Pending, 3=>Fail, 5=>Cancel");
+            $table->string('ipn_uri_secret_token')->nullable();
             $table->timestamps();
         });
     }

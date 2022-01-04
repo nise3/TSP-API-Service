@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\BaseModel;
 use Carbon\Carbon;
+use http\Url;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -16,14 +17,16 @@ class EkPayService
      * @return string
      * @throws RequestException
      */
-    public function paymentByEkPay(array $payLoad): string
+    public function paymentByEkPay(array $payLoad): mixed
     {
         $customerInfo = $payLoad['customer'];
         $paymentInfo = $payLoad['payment'];
+        $feedUri = $payLoad['feed_uri'];
+        $ipnInfo = $payLoad['ipn_info'];
 
-        $token = $this->ekPayInit($customerInfo, $paymentInfo);
+        $token = $this->ekPayInit($customerInfo, $paymentInfo, $ipnInfo, $feedUri);
         if (!empty($token)) {
-            $token = config('ekpay.ekpay_base_uri') . '?sToken=' . $token . '&trnsID=' . $paymentInfo['trnx_id'];
+            $token = (config('ekpay.is_sand_box') ? config('ekpay.sand_box.ekpay_base_uri') : config('ekpay.production.ekpay_base_uri')) . '?sToken=' . $token . '&trnsID=' . $paymentInfo['trnx_id'];
         }
         return $token;
     }
@@ -34,26 +37,21 @@ class EkPayService
      * @return mixed
      * @throws RequestException
      */
-    private function ekPayInit(array $customerInfo, array $paymentInfo): mixed
+    private function ekPayInit(array $customerInfo, array $paymentInfo, array $ipnInfo, array $feedUri): mixed
     {
         $time = Carbon::now()->format('Y-m-d H:i:s');
 
         $customerCleanName = preg_replace('/[^A-Za-z0-9 \-\.]/', '', $customerInfo['name']);
 
-        $baseUrl = BaseModel::INSTITUTE_REMOTE_BASE_URL;
-        if (request()->getHost() == 'localhost' || request()->getHost() == '127.0. 0.1') {
-            $baseUrl = BaseModel::INSTITUTE_LOCAL_BASE_URL;
-        }
-
         $ekPayPayload = [
             'mer_info' => [
-                'mer_reg_id' => config('ekpay.ek_pay_base_config.mer_info.mer_reg_id'),
-                'mer_pas_key' => config('ekpay.ek_pay_base_config.mer_info.mer_pas_key'),
+                'mer_reg_id' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.mer_info.mer_reg_id') : config('ekpay.production.mer_info.mer_reg_id'),
+                'mer_pas_key' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.mer_info.mer_pas_key') : config('ekpay.production.mer_info.mer_pas_key'),
             ],
             'feed_uri' => [
-                's_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
-                'f_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
-                'c_uri' => $baseUrl . config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
+                's_uri' => $feedUri['success'] ?? config('ekpay.ek_pay_base_config.feed_uri.success_uri'),
+                'f_uri' => $feedUri['failed'] ?? config('ekpay.ek_pay_base_config.feed_uri.fail_uri'),
+                'c_uri' => $feedUri['cancel'] ?? config('ekpay.ek_pay_base_config.feed_uri.cancel_uri'),
             ],
             'req_timestamp' => $time . ' GMT+6',
             'cust_info' => [
@@ -71,11 +69,11 @@ class EkPayService
                 'ord_det' => $paymentInfo['ord_det'] ?? 'Course Enrollment Fee',
             ],
             'ipn_info' => [
-                'ipn_channel' => config('ekpay.ek_pay_base_config.ipn_info.ipn_channel'),
-                'ipn_email' => config('ekpay.ek_pay_base_config.ipn_info.ipn_email'),
-                'ipn_uri' => $baseUrl . config('ekpay.ek_pay_base_config.ipn_info.ipn_uri'),
+                'ipn_channel' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.ipn_info.ipn_channel') : config('ekpay.production.ipn_info.ipn_channel'),
+                'ipn_email' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.ipn_info.ipn_email') : config('ekpay.production.ipn_info.ipn_email'),
+                'ipn_uri' => $ipnInfo['ipn_uri'],
             ],
-            'mac_addr' => config('ekpay.mac_addr'),
+            'mac_addr' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.mac_addr') : config('ekpay.production.mac_addr'),
         ];
 
         if (config('ekpay.debug')) {
@@ -83,18 +81,20 @@ class EkPayService
             Log::channel('ek_pay')->info("Ekpay Request PayLoad: " . json_encode($ekPayPayload));
         }
 
-        $url = config('ekpay.ekpay_base_uri') . "/merchant-api";
+        $url = (config('ekpay.is_sand_box') ? config('ekpay.sand_box.ekpay_base_uri') : config('ekpay.production.ekpay_base_uri')) . "/merchant-api";
 
-        return Http::withoutVerifying()
-            ->retry(3, 100, function ($exception) {
-                return $exception instanceof ConnectionException;
-            })
+        Log::info("ekpay-url:" . $url);
+
+        $res = Http::withoutVerifying()
             ->withHeaders([
                 "Content-Type" => 'application/json'
             ])
             ->post($url, $ekPayPayload)
             ->throw()
-            ->json('secure_token');
+            ->json(); //secure_token
+
+        Log::info("Http-log: " . json_encode($res));
+        return $res['secure_token'] ?? null;
 
     }
 }

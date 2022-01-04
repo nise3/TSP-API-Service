@@ -94,6 +94,27 @@ class InstituteController extends Controller
     }
 
     /**
+     * * Display the specified resource
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function instituteDetails(int $id): JsonResponse
+    {
+        $data = $this->instituteService->getOneInstitute($id);
+
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse
