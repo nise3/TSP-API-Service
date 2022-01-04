@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Services\BranchService;
+use App\Services\TrainingCenterService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -90,9 +91,12 @@ class BranchController extends Controller
     {
         $this->authorize('create', Branch::class);
         $validatedData = $this->branchService->validator($request)->validate();
-        $data = $this->branchService->store($validatedData);
+        $branch = $this->branchService->store($validatedData);
+
+        /** Create a default training center in time of Branch Create */
+        app(TrainingCenterService::class)->createDefaultTrainingCenter($branch);
         $response = [
-            'data' => $data,
+            'data' => $branch,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
