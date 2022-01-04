@@ -30,6 +30,9 @@
         },
         {
             "url": "http://institute.local:8009/api/v1"
+        },
+        {
+            "url": "https://nise-tsp.softbd/api/v1"
         }
     ],
     "paths": {
