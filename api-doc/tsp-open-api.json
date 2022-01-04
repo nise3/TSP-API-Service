@@ -455,6 +455,83 @@
                 }
             }
         },
+        "/public/institutes/{instituteId}": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "Get a specific public institute by Id",
+                "description": "API endpoint to Get a specific public institute by Id. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "institute_type_id": 2,
+                                        "code": "et",
+                                        "title": "Prof. Adolf Brekke",
+                                        "title_en": "Prof. Adolf Brekke",
+                                        "domain": "https://sipes.org",
+                                        "loc_division_id": 3,
+                                        "division_title": "ঢাকা",
+                                        "division_title_en": "Dhaka",
+                                        "loc_district_id": 18,
+                                        "district_title": "ঢাকা ",
+                                        "district_title_en": "DHAKA",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": "780 Cordell Ridges Suite 708\nNew Kamille, TX 44193-5278",
+                                        "address_en": "780 Cordell Ridges Suite 708\nNew Kamille, TX 44193-5278",
+                                        "location_latitude": "90.399402",
+                                        "location_longitude": "90.399402",
+                                        "google_map_src": "Ut quos velit saepe.",
+                                        "logo": "softbd.jpg",
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": "+1 (828) 409-5458",
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01782283151",
+                                        "mobile_numbers": "[\"01730372381\",\"01719292972\"]",
+                                        "email": "august51@yahoo.com",
+                                        "name_of_the_office_head": "Zion Swaniawski",
+                                        "name_of_the_office_head_en": "Zion Swaniawski",
+                                        "name_of_the_office_head_designation": "Principal",
+                                        "name_of_the_office_head_designation_en": "Principal",
+                                        "contact_person_name": "Ocie Nader",
+                                        "contact_person_name_en": "Ocie Nader",
+                                        "contact_person_mobile": "01702381057",
+                                        "contact_person_email": "effertz.elena@gleason.com",
+                                        "contact_person_designation": "HR Manager",
+                                        "contact_person_designation_en": "HR Manager",
+                                        "config": "Perspiciatis soluta repellendus perferendis provident illum harum.",
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2022-01-04T09:41:01.000000Z",
+                                        "updated_at": "2022-01-04T09:41:01.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute-admin-profile": {
             "get": {
                 "tags": [
@@ -4175,6 +4252,41 @@
                 "tags": [
                     "Course Enrollments"
                 ]
+            }
+        },
+        "/payment/pay-now": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Payment for course enrollment",
+                "description": "An API endpoint to pay for a course enrollment",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PayNow"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "redirect_url": "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuaXNlX3Rlc3QiLCJhdXRoIjoiUk9MRV9NRVJDSEFOVCIsImV4cCI6MTYzOTU4Njc2Mn0._MV4HYI5iwvrV_EAX_JmcAm4R_1c86cb5TEVrPhkehtPt0MmYrSK7X-XfC-v2t6myaNdgTy1KSfEJb7qq4B9Ug&trnsID=53c10403-87fb-435ed07",
+                                    "_response_status": {
+                                        "status": true,
+                                        "code": 200,
+                                        "message": "Success"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/reject-course-enrollment": {
