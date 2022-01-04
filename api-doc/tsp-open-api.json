@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "Institute Api Service",
+        "title": "TSP Api Service",
         "description": "It is a institute management api service that manages services related to institute",
         "termsOfService": "",
         "contact": {},
@@ -17,6 +17,9 @@
     ],
     "servers": [
         {
+            "url": "http://nise-tsp.softbd/api/v1"
+        },
+        {
             "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         },
         {
@@ -30,23 +33,20 @@
         },
         {
             "url": "http://institute.local:8009/api/v1"
-        },
-        {
-            "url": "https://nise-tsp.softbd/api/v1"
         }
     ],
     "paths": {
         "/": {
             "get": {
-                "summary": "Institute Api Service",
-                "description": "Institute management API service",
+                "summary": "TSP Api Service",
+                "description": "TSP API service",
                 "responses": {
                     "200": {
                         "description": "success",
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "service_name": "NISE-3 Institute Management API Service",
+                                    "service_name": "NISE-3 TSP API Service",
                                     "service_version": "V1",
                                     "lumen_version": "Lumen (8.2.4) (Laravel Components ^8.0)",
                                     "module_list": [
@@ -58,7 +58,7 @@
                                         "TrainingCenter"
                                     ],
                                     "description": [
-                                        "It is a institute management api service that manages services related to a institute"
+                                        "It is a TSP api service that manages services related to a institute"
                                     ]
                                 }
                             }
@@ -76,7 +76,7 @@
                     "institutes"
                 ],
                 "summary": "get_list",
-                "description": "API endpoint to get list of  institutes.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get list of  TSP.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
@@ -457,7 +457,9 @@
         },
         "/institute-admin-profile": {
             "get": {
-                "tags": ["Institute Admin Profile "],
+                "tags": [
+                    "Institute Admin Profile "
+                ],
                 "summary": "Get an institute admin profile",
                 "description": "An API endpoint to get an institute admin profile. A successfull request will give response with 200 status code",
                 "responses": {
@@ -531,7 +533,9 @@
         },
         "/institute-admin-profile-update": {
             "put": {
-                "tags": ["Institute Admin Profile "],
+                "tags": [
+                    "Institute Admin Profile "
+                ],
                 "summary": "Update institute admin profile",
                 "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
                 "requestBody": {
@@ -628,7 +632,7 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
@@ -4321,7 +4325,6 @@
                 "tags": [
                     "Dashboard Statistics"
                 ]
-
             }
         },
         "/public/institute-dashboard-statistics/{instituteId}": {
@@ -4393,7 +4396,6 @@
                 "tags": [
                     "Dashboard Statistics"
                 ]
-
             }
         },
         "/public/demanded-courses/{instituteId}": {
@@ -4410,7 +4412,7 @@
                         "description": "successfull",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": [
                                         {
                                             "Value": 20,
@@ -4453,7 +4455,7 @@
                         "description": "Successfull",
                         "content": {
                             "application/json": {
-                                "example":{}
+                                "example": {}
                             }
                         }
                     }
@@ -4461,7 +4463,6 @@
                 "tags": [
                     "Demanded Courses"
                 ]
-
             }
         }
     },
@@ -5281,11 +5282,10 @@
                     "language_medium"
                 ]
             },
-            "coursesUpdate":  {
+            "coursesUpdate": {
                 "type": "object",
                 "description": "Course",
                 "properties": {
-
                     "institute_id": {
                         "type": "integer"
                     },
