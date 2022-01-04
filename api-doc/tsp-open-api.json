@@ -4587,6 +4587,20 @@
             }
         },
         "schemas": {
+            "PayNow": {
+                "type": "object",
+                "properties": {
+                    "payment_gateway_type": {
+                        "type": "integer",
+                        "enum": [1,2,3,4,5],
+                        "description": "1=Ek-Pay"
+                    },
+                    "course_enrollment_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["payment_gateway_type","course_enrollment_id"]
+            },
             "batchAssign": {
                 "type": "object",
                 "description": "Assign batch to Course Enrollment",
