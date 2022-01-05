@@ -16,13 +16,13 @@ class CreateSagaSuccessEvents extends Migration
         Schema::create('saga_success_events', function (Blueprint $table) {
             $table->id();
             $table->string('uuid')->unique();
-            $table->string('connection');
-            $table->string('publisher');
-            $table->string('listener');
-            $table->string('exchange');
-            $table->string('routing_key');
-            $table->string('consumer');
-            $table->longText('event_data');
+            $table->string('connection', 50);
+            $table->string('publisher', 100);
+            $table->string('listener', 100);
+            $table->string('exchange', 100);
+            $table->string('routing_key', 100);
+            $table->string('consumer', 100);
+            $table->text('event_data');
             $table->timestamps();
         });
     }
