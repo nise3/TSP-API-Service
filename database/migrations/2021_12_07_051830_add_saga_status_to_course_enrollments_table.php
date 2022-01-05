@@ -29,7 +29,7 @@ class AddSagaStatusToCourseEnrollmentsTable extends Migration
     public function down()
     {
         Schema::table('course_enrollments', function (Blueprint $table) {
-            //
+            $table->dropColumn('saga_status');
         });
     }
 }

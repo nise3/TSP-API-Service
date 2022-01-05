@@ -19,14 +19,15 @@ class CreatePaymentTransactionLogHistoriesTable extends Migration
             $table->string('mer_trnx_id')->unique();
             $table->string('trnx_id')->nullable();
             $table->string('type');
-            $table->unsignedTinyInteger('payment_gateway_type')->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
+            $table->unsignedTinyInteger('payment_gateway_type')
+                ->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
             $table->string("payment_instrument_type")->nullable()->comment('Payment Instrument Type');
             $table->string("payment_instrument_name")->nullable()->comment('Payment Instrument Name');
-            $table->string('name');
-            $table->string('mobile');
-            $table->string('email');
-            $table->unsignedDouble('amount');
-            $table->unsignedDouble('paid_amount')->nullable();
+            $table->string('name', 500);
+            $table->string('mobile', 15);
+            $table->string('email', 150);
+            $table->unsignedDecimal('amount', 12, 4);
+            $table->unsignedDecimal('paid_amount', 12, 4)->nullable();
             $table->string('trnx_currency')->comment('BDT');
             $table->string('order_detail')->nullable();
             $table->json('request_payload')->nullable();
