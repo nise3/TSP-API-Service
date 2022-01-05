@@ -51,7 +51,8 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('token', function (Request $request) {
 
-            $token = $request->bearerToken();
+            $token = bearerUserToken($request);
+
             Log::info('Bearer Token: ' . $token);
 
             if (!$token) {

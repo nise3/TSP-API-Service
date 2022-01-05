@@ -101,3 +101,18 @@ if (!function_exists('generateOtp')) {
         return rand(pow(10, $digits - 1), pow(10, $digits) - 1);
     }
 }
+
+if (!function_exists("bearerUserToken")) {
+
+    function bearerUserToken(\Illuminate\Http\Request $request, $headerName = 'User-Token')
+    {
+        $header = $request->header($headerName);
+
+        $position = strrpos($header, 'Bearer ');
+
+        if ($position !== false) {
+            $header = substr($header, $position + 7);
+            return strpos($header, ',') !== false ? strstr(',', $header, true) : $header;
+        }
+    }
+}
