@@ -25,8 +25,8 @@ variables:
   serviceTargetPort: 80
 
   #app buil image
-  imageRepository: registry.bus-staging.softbdltd.com/nise3-institute-management-api-service
-
+  #imageRepository: registry.bus-staging.softbdltd.com/nise3-institute-management-api-service
+  imageRepository: rhysha/nise3-institute-management-api-service
 
   #auto scaling config
   #autoScalingEnabled: 0
