@@ -5,7 +5,7 @@ namespace App\Models;
 use Carbon\Carbon;
 
 /**
- * Class LocUpazila
+ * Class PaymentTransactionLogHistory
  * @package App\Models
  *
  * @property int id
