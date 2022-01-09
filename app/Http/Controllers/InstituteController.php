@@ -308,7 +308,7 @@ class InstituteController extends Controller
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
-                $this->instituteService->userInfoSendByMail($validated);
+                //$this->instituteService->userInfoSendByMail($validated);
 
                 /** Create a default training center in time of Institute Create */
                 app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
