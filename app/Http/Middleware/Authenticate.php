@@ -32,27 +32,29 @@ class Authenticate
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param  \Closure  $next
+     * @param \Closure $next
      * @param string|null $guard
      * @return mixed
      */
     public function handle(Request $request, Closure $next, string $guard = null)
     {
-        if (!Auth::id()) {
-            return response()->json([
-                "_response_status" => [
-                    "success" => false,
-                    "code" => ResponseAlias::HTTP_UNAUTHORIZED,
-                    "message" => "Unauthenticated action"
-                ]
-            ], ResponseAlias::HTTP_UNAUTHORIZED);
-        }
-        else{ // if auth user institute then set institute id for all private request
-            $authUser = Auth::user();
-            if($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id){
-                $request->offsetSet('institute_id', $authUser->institute_id);
+        if (!$request->headers->contains(BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY, '1')) {
+            if (!Auth::id()) {
+                return response()->json([
+                    "_response_status" => [
+                        "success" => false,
+                        "code" => ResponseAlias::HTTP_UNAUTHORIZED,
+                        "message" => "Unauthenticated action"
+                    ]
+                ], ResponseAlias::HTTP_UNAUTHORIZED);
+            } else { // if auth user institute then set institute id for all private request
+                $authUser = Auth::user();
+                if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
+                    $request->offsetSet('institute_id', $authUser->institute_id);
+                }
             }
         }
+
 
         return $next($request);
     }

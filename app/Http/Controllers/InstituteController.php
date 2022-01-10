@@ -80,8 +80,8 @@ class InstituteController extends Controller
         Log::debug('$requestHeaders', $requestHeaders);
 
         /** Policy not checking when service to service call true*/
-        if (empty($requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0]) ||
-            $requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0] === BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE) {
+        // TODO: Improve the service to service call mechanism
+        if (!$request->headers->contains(BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY, '1')) {
             $this->authorize('view', $institute);
         }
 
