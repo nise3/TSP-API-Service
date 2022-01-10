@@ -77,6 +77,8 @@ class InstituteController extends Controller
         $institute = $this->instituteService->getOneInstitute($id);
 
         $requestHeaders = $request->header();
+        Log::debug('$requestHeaders', $requestHeaders);
+
         /** Policy not checking when service to service call true*/
         if (empty($requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0]) ||
             $requestHeaders[BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY][0] === BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE) {
