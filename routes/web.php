@@ -75,7 +75,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
 
         /** Single Institute Fetch  */
-        $router->get("institutes/{id}", ["as" => "public.institute", "uses" => "InstituteController@instituteDetails"]);
+        $router->get("institutes/{id}", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
 
         $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
         $router->get('demanded-courses[/{instituteId}]', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
