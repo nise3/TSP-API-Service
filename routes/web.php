@@ -55,7 +55,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
 
         $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-        $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+        $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
@@ -77,8 +77,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Single Institute Fetch  */
         $router->get("institutes/{id}", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
 
-        $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-        $router->get('demanded-courses[/{instituteId}]', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+        $router->get('institute-dashboard-statistics/{instituteId}', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('demanded-courses/{instituteId}', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
     //Service to service direct call without any authorization and authentication

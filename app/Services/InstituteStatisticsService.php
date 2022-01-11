@@ -17,6 +17,10 @@ class InstituteStatisticsService
 {
 
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalCourseEnrollments(int $instituteId=null): int
     {
         $builder = CourseEnrollment::join("courses", function ($join) {
@@ -32,6 +36,10 @@ class InstituteStatisticsService
         return $builder->count('course_enrollments.id');
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalCourses(int $instituteId = null): int
     {
         $builder = Course::query();
@@ -45,7 +53,7 @@ class InstituteStatisticsService
     }
 
     /**
-     * @param int $instituteId
+     * @param int|null $instituteId
      * @return Collection|array
      */
     public function getDemandedCourses(int $instituteId = null): Collection|array
@@ -68,6 +76,10 @@ class InstituteStatisticsService
             ->get();
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalBatches(int $instituteId = null): int
     {
         $builder = Batch::join('courses', function ($join) {
@@ -83,6 +95,10 @@ class InstituteStatisticsService
         return $builder->count('batches.id');
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalRunningStudents(int $instituteId =null): int
     {
         $currentDate = Carbon::now();
@@ -107,6 +123,10 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalTrainers(int $instituteId = null): int
     {
         $builder = Trainer::query();
@@ -118,6 +138,10 @@ class InstituteStatisticsService
         return $builder->count('id');
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalTrainingCenters(int $instituteId=null): int
     {
         $builder = TrainingCenter::query();
@@ -132,16 +156,26 @@ class InstituteStatisticsService
     }
 
 
+    /**
+     * @return int
+     */
     public function getTotalDemandFromIndustry(): int
     {
         return 0;
     }
 
+    /**
+     * @return int
+     */
     public function getTotalCertificateIssue(): int
     {
         return 0;
     }
 
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
     public function getTotalTrendingCourse(int $instituteId = null): int
     {
         $builder = Course::query();
@@ -156,6 +190,10 @@ class InstituteStatisticsService
     }
 
 
+    /**
+     * @param int|null $instituteId
+     * @return array
+     */
     public function getDashboardStatisticalData(int $instituteId=null): array
     {
         $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
