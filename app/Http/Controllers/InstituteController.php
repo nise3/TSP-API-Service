@@ -75,15 +75,7 @@ class InstituteController extends Controller
     public function read(Request $request, int $id): JsonResponse
     {
         $institute = $this->instituteService->getOneInstitute($id);
-
-        $requestHeaders = $request->header();
-        Log::debug('$requestHeaders', $requestHeaders);
-
-        /** Policy not checking when service to service call true*/
-        // TODO: Improve the service to service call mechanism
-        if (!$request->headers->contains(BaseModel::DEFAULT_SERVICE_TO_SERVICE_CALL_KEY, '1')) {
-            $this->authorize('view', $institute);
-        }
+        $this->authorize('view', $institute);
 
         $response = [
             "data" => $institute,
