@@ -757,7 +757,7 @@ class InstituteService
     }
 
 
-    public function instituteAdminProfileValidator(Request $request, int $id = null): Validator
+    public function instituteProfileValidator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
 
@@ -833,6 +833,10 @@ class InstituteService
                 "string",
                 "max:500"
             ],
+            'logo' => [
+                'nullable',
+                'string',
+            ],
             'contact_person_name' => [
                 'required',
                 'max: 500',
@@ -852,11 +856,6 @@ class InstituteService
                 'nullable',
                 'max: 300',
                 "min:2"
-            ],
-            'row_status' => [
-                'required_if:' . $id . ',!=,null',
-                'nullable',
-                Rule::in(Institute::ROW_STATUSES),
             ],
             'created_by' => ['nullable', 'int'],
             'updated_by' => ['nullable', 'int'],

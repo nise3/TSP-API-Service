@@ -522,8 +522,7 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
-
-    public function getInstituteAdminProfile()
+    public function getInstituteProfile()
     {
         $authUser = Auth::user();
         $instituteId = null;
@@ -542,8 +541,7 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
-
-    public function updateInstituteAdminProfile(Request $request): JsonResponse
+    public function updateInstituteProfile(Request $request): JsonResponse
     {
         $authUser = Auth::user();
         $instituteId = null;
@@ -554,7 +552,7 @@ class InstituteController extends Controller
 
         $this->authorize('update', $institute);
 
-        $validated = $this->instituteService->instituteAdminProfileValidator($request, $instituteId)->validate();
+        $validated = $this->instituteService->instituteProfileValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
         $response = [
             'data' => $data ?: [],

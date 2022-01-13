@@ -2,8 +2,8 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "TSP Api Service",
-        "description": "It is a TSP api service that manages services related to institute",
+        "title": "Institute Api Service",
+        "description": "It is a institute management api service that manages services related to institute",
         "termsOfService": "",
         "contact": {},
         "license": {
@@ -16,9 +16,6 @@
         }
     ],
     "servers": [
-        {
-            "url": "http://nise-tsp.softbd/api/v1"
-        },
         {
             "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         },
@@ -38,15 +35,15 @@
     "paths": {
         "/": {
             "get": {
-                "summary": "TSP Api Service",
-                "description": "TSP API service",
+                "summary": "Institute Api Service",
+                "description": "Institute management API service",
                 "responses": {
                     "200": {
                         "description": "success",
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "service_name": "NISE-3 TSP API Service",
+                                    "service_name": "NISE-3 Institute Management API Service",
                                     "service_version": "V1",
                                     "lumen_version": "Lumen (8.2.4) (Laravel Components ^8.0)",
                                     "module_list": [
@@ -58,7 +55,7 @@
                                         "TrainingCenter"
                                     ],
                                     "description": [
-                                        "It is a TSP api service that manages services related to a institute"
+                                        "It is a institute management api service that manages services related to a institute"
                                     ]
                                 }
                             }
@@ -76,7 +73,7 @@
                     "institutes"
                 ],
                 "summary": "get_list",
-                "description": "API endpoint to get list of  TSP.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get list of  institutes.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
@@ -455,88 +452,9 @@
                 }
             }
         },
-        "/public/institutes/{instituteId}": {
-            "get": {
-                "tags": [
-                    "institutes"
-                ],
-                "summary": "Get a specific public institute by Id",
-                "description": "API endpoint to Get a specific public institute by Id. A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_id_path"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 2,
-                                        "institute_type_id": 2,
-                                        "code": "et",
-                                        "title": "Prof. Adolf Brekke",
-                                        "title_en": "Prof. Adolf Brekke",
-                                        "domain": "https://sipes.org",
-                                        "loc_division_id": 3,
-                                        "division_title": "ঢাকা",
-                                        "division_title_en": "Dhaka",
-                                        "loc_district_id": 18,
-                                        "district_title": "ঢাকা ",
-                                        "district_title_en": "DHAKA",
-                                        "loc_upazila_id": null,
-                                        "upazila_title": null,
-                                        "upazila_title_en": null,
-                                        "address": "780 Cordell Ridges Suite 708\nNew Kamille, TX 44193-5278",
-                                        "address_en": "780 Cordell Ridges Suite 708\nNew Kamille, TX 44193-5278",
-                                        "location_latitude": "90.399402",
-                                        "location_longitude": "90.399402",
-                                        "google_map_src": "Ut quos velit saepe.",
-                                        "logo": "softbd.jpg",
-                                        "country": "BD",
-                                        "phone_code": "880",
-                                        "primary_phone": "+1 (828) 409-5458",
-                                        "phone_numbers": null,
-                                        "primary_mobile": "01782283151",
-                                        "mobile_numbers": "[\"01730372381\",\"01719292972\"]",
-                                        "email": "august51@yahoo.com",
-                                        "name_of_the_office_head": "Zion Swaniawski",
-                                        "name_of_the_office_head_en": "Zion Swaniawski",
-                                        "name_of_the_office_head_designation": "Principal",
-                                        "name_of_the_office_head_designation_en": "Principal",
-                                        "contact_person_name": "Ocie Nader",
-                                        "contact_person_name_en": "Ocie Nader",
-                                        "contact_person_mobile": "01702381057",
-                                        "contact_person_email": "effertz.elena@gleason.com",
-                                        "contact_person_designation": "HR Manager",
-                                        "contact_person_designation_en": "HR Manager",
-                                        "config": "Perspiciatis soluta repellendus perferendis provident illum harum.",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2022-01-04T09:41:01.000000Z",
-                                        "updated_at": "2022-01-04T09:41:01.000000Z",
-                                        "deleted_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/institute-admin-profile": {
             "get": {
-                "tags": [
-                    "Institute Admin Profile "
-                ],
+                "tags": ["Institute Admin Profile "],
                 "summary": "Get an institute admin profile",
                 "description": "An API endpoint to get an institute admin profile. A successfull request will give response with 200 status code",
                 "responses": {
@@ -610,9 +528,7 @@
         },
         "/institute-admin-profile-update": {
             "put": {
-                "tags": [
-                    "Institute Admin Profile "
-                ],
+                "tags": ["Institute Admin Profile "],
                 "summary": "Update institute admin profile",
                 "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
                 "requestBody": {
@@ -709,7 +625,7 @@
                         "description": "Created",
                         "content": {
                             "application/json": {
-                                "example": {
+                                "example":{
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
@@ -4254,6 +4170,97 @@
                 ]
             }
         },
+        "/course-enroll/{id}/verify-sms-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Verify sms code for a course enrollment",
+                "description": "Verify sms code for a course enrollment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerficationCode"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Sms Code Successfully Send.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/course-enroll/{id}/resend-verification-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Resend verification code a specific course enrollment",
+                "description": "An API endpoint to resend verfication code for course enrollment",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerficationCode"
+                            }
+                        }
+                    }
+                },
+
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Sms Code Successfully ReSend.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/payment/pay-now": {
             "post": {
                 "tags": [
@@ -4437,6 +4444,7 @@
                 "tags": [
                     "Dashboard Statistics"
                 ]
+
             }
         },
         "/public/institute-dashboard-statistics/{instituteId}": {
@@ -4508,6 +4516,7 @@
                 "tags": [
                     "Dashboard Statistics"
                 ]
+
             }
         },
         "/public/demanded-courses/{instituteId}": {
@@ -4524,7 +4533,7 @@
                         "description": "successfull",
                         "content": {
                             "application/json": {
-                                "example": {
+                                "example":{
                                     "data": [
                                         {
                                             "Value": 20,
@@ -4567,7 +4576,7 @@
                         "description": "Successfull",
                         "content": {
                             "application/json": {
-                                "example": {}
+                                "example":{}
                             }
                         }
                     }
@@ -4575,6 +4584,7 @@
                 "tags": [
                     "Demanded Courses"
                 ]
+
             }
         }
     },
@@ -4587,20 +4597,6 @@
             }
         },
         "schemas": {
-            "PayNow": {
-                "type": "object",
-                "properties": {
-                    "payment_gateway_type": {
-                        "type": "integer",
-                        "enum": [1,2,3,4,5],
-                        "description": "1=Ek-Pay"
-                    },
-                    "course_enrollment_id": {
-                        "type": "integer"
-                    }
-                },
-                "required": ["payment_gateway_type","course_enrollment_id"]
-            },
             "batchAssign": {
                 "type": "object",
                 "description": "Assign batch to Course Enrollment",
@@ -5408,10 +5404,11 @@
                     "language_medium"
                 ]
             },
-            "coursesUpdate": {
+            "coursesUpdate":  {
                 "type": "object",
                 "description": "Course",
                 "properties": {
+
                     "institute_id": {
                         "type": "integer"
                     },
@@ -6030,6 +6027,28 @@
                     "freedom_fighter_status",
                     "physical_disability_status"
                 ]
+            },
+            "VerficationCode": {
+                "type": "object",
+                "properties": {
+                    "verification_code": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "PayNow": {
+                "type": "object",
+                "properties": {
+                    "payment_gateway_type": {
+                        "type": "integer",
+                        "enum": [1,2,3,4,5],
+                        "description": "1=Ek-Pay"
+                    },
+                    "course_enrollment_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["payment_gateway_type","course_enrollment_id"]
             },
             "address_info": {
                 "type": "object",
