@@ -54,6 +54,11 @@ variables:
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "nise*2022"
+    RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_VHOST: "aeihxlmw"
+    RABBITMQ_USER: "aeihxlmw"
+    RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
 
   STAGING:
     APP_ENV: "staging"
@@ -64,6 +69,11 @@ variables:
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+    RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_VHOST: "aeihxlmw"
+    RABBITMQ_USER: "aeihxlmw"
+    RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
 
   PRODUCTION:
     APP_ENV: "local"
@@ -74,6 +84,11 @@ variables:
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+    RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_VHOST: "aeihxlmw"
+    RABBITMQ_USER: "aeihxlmw"
+    RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
 
   #control git realese branch
   GIT_DEVELOPMENT_BRANCH: "develop"

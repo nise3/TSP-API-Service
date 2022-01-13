@@ -45,6 +45,11 @@ spec:
                     sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
                     sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
                     sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
+                    sed -i "s/RABBITMQ_HOST=.*$/RABBITMQ_HOST=$RABBITMQ_HOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_PORT=.*$/RABBITMQ_PORT=$RABBITMQ_PORT/g" /app/.env;
+                    sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
+                    sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
           volumeMounts:
