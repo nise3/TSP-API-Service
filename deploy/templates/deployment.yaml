@@ -23,22 +23,11 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: APP_ENV
-              value: "{{ .Values.variables.APP_ENV }}"
-            - name: APP_DEBUG
-              value: "{{ .Values.variables.APP_DEBUG }}"
-            - name: APP_URL
-              value: "{{ .Values.variables.APP_URL }}"
-            - name: DB_HOST
-              value: "{{ .Values.variables.DB_HOST }}"
-            - name: DB_PORT
-              value: "{{ .Values.variables.DB_PORT }}"
-            - name: DB_DATABASE
-              value: "{{ .Values.variables.DB_DATABASE }}"
-            - name: DB_USERNAME
-              value: "{{ .Values.variables.DB_USERNAME }}"
-            - name: DB_PASSWORD
-              value: {{ .Values.variables.DB_PASSWORD | default "" | quote }}
+            {{- $env := .Values.variables.APP_ENV -}}
+            {{- range $key, $val := $env }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
           lifecycle:
             postStart:
               exec:

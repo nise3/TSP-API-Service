@@ -45,29 +45,35 @@ variables:
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
   APP_ENV: "DEV"
 
-  DEV_APP_DEBUG: "false"
-  DEV_APP_URL: "gateway-dev.nise3.xyz"
-  DEV_DB_HOST: 192.168.10.95
-  DEV_DB_PORT: "3306"
-  DEV_DB_DATABASE: institute
-  DEV_DB_USERNAME: n3_institute
-  DEV_DB_PASSWORD: "nise*2022"
+  DEV:
+    APP_ENV: "local"
+    APP_DEBUG: "false"
+    APP_URL: "gateway-dev.nise3.xyz"
+    DB_HOST: 192.168.10.95
+    DB_PORT: "3306"
+    DB_DATABASE: institute
+    DB_USERNAME: n3_institute
+    DB_PASSWORD: "nise*2022"
 
-  STAGING_APP_DEBUG: "false"
-  STAGING_APP_URL: "gateway-dev.nise3.xyz"
-  STAGING_DB_HOST: 172.17.177.79
-  STAGING_DB_PORT: "3306"
-  STAGING_DB_DATABASE: institute
-  STAGING_DB_USERNAME: n3_institute
-  STAGING_DB_PASSWORD: "kvx6V3Y^7"
+  STAGING:
+    APP_ENV: "staging"
+    APP_DEBUG: "false"
+    APP_URL: "gateway-dev.nise3.xyz"
+    DB_HOST: 172.17.177.79
+    DB_PORT: "3306"
+    DB_DATABASE: institute
+    DB_USERNAME: n3_institute
+    DB_PASSWORD: "kvx6V3Y^7"
 
-  PRODUCTION_APP_DEBUG: "false"
-  PRODUCTION_APP_URL: "gateway-dev.nise3.xyz"
-  PRODUCTION_DB_HOST: 172.17.177.79
-  PRODUCTION_DB_PORT: "3306"
-  PRODUCTION_DB_DATABASE: institute
-  PRODUCTION_DB_USERNAME: n3_institute
-  PRODUCTION_DB_PASSWORD: "kvx6V3Y^7"
+  PRODUCTION:
+    APP_ENV: "local"
+    APP_DEBUG: "false"
+    APP_URL: "gateway-dev.nise3.xyz"
+    DB_HOST: 172.17.177.79
+    DB_PORT: "3306"
+    DB_DATABASE: institute
+    DB_USERNAME: n3_institute
+    DB_PASSWORD: "kvx6V3Y^7"
 
   #control git realese branch
   GIT_DEVELOPMENT_BRANCH: "develop"
