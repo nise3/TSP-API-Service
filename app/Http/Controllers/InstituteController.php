@@ -96,6 +96,7 @@ class InstituteController extends Controller
      */
     public function instituteDetails(int $id): JsonResponse
     {
+
         $data = $this->instituteService->getOneInstitute($id);
 
         $response = [

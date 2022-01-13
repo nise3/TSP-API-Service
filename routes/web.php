@@ -74,11 +74,15 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Program lists  */
         $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
 
-        /** Single Institute Fetch  */
-        $router->get("institutes/{id}", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
+        //public api by domain name identification
+        $router->group(['middleware' => 'public'], function () use ($router) {
+            $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
+            $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+            /** Single Institute Fetch  */
+            $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
+        });
 
-        $router->get('institute-dashboard-statistics/{instituteId}', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-        $router->get('demanded-courses/{instituteId}', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+
     });
 
     //Service to service direct call without any authorization and authentication

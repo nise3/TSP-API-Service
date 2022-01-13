@@ -34,8 +34,22 @@ class InstituteStatisticsController extends Controller
         $this->startTime = Carbon::now();
     }
 
-    public function dashboardStatistics(int $instituteId = null): JsonResponse
+    public function dashboardStatistics(): JsonResponse
     {
+        $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData();
+        $response['_response_status'] = [
+            "success" => true, "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+
+    }
+
+    public function publicDashboardStatistics(): JsonResponse
+    {
+        /** this should be set from PublicApiMiddleWare */
+        $instituteId = request()->get('institute_id');
+
         $response['data'] = $this->instituteStatisticsService->getDashboardStatisticalData($instituteId);
         $response['_response_status'] = [
             "success" => true, "code" => ResponseAlias::HTTP_OK,
@@ -45,22 +59,22 @@ class InstituteStatisticsController extends Controller
 
     }
 
-    public function demandingCourses(int $instituteId = null): JsonResponse
+    public function demandingCourses(): JsonResponse
     {
-        if (!$instituteId) {
-            /** @var User $authUser */
-            $authUser = Auth::user();
-            if ($authUser && $authUser->institute_id) {
-                $instituteId = $authUser->institute_id;
-            }
-        }
+        $demandingCourses = $this->instituteStatisticsService->getDemandedCourses();
+        $response['data'] = $demandingCourses->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
 
-        /**
-         * $request = [
-         * 'institute_id' => $instituteId
-         * ];
-         * $validated = $this->instituteStatisticsService->instituteIdValidator($request)->validate();
-         */
+    public function publicDemandingCourses(): JsonResponse
+    {
+        /** this should be set from PublicApiMiddleWare */
+        $instituteId = request()->get('institute_id');
 
         $demandingCourses = $this->instituteStatisticsService->getDemandedCourses($instituteId);
         $response['data'] = $demandingCourses->toArray();
@@ -71,6 +85,5 @@ class InstituteStatisticsController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
-
 
 }

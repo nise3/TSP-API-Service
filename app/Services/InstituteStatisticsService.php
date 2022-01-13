@@ -23,12 +23,13 @@ class InstituteStatisticsService
      */
     public function getTotalCourseEnrollments(int $instituteId=null): int
     {
+
         $builder = CourseEnrollment::join("courses", function ($join) {
             $join->on('courses.id', '=', 'course_enrollments.course_id')
                 ->whereNull('courses.deleted_at');
         });
 
-        if ($instituteId) { // from path param in public api
+        if ($instituteId) { // from public api
             $builder->where('course_enrollments.institute_id', $instituteId);
         } else { // for private auth api
             $builder->acl();
@@ -64,7 +65,7 @@ class InstituteStatisticsService
                     ->whereNull('courses.deleted_at');
             });
 
-        if ($instituteId) { // from path param in public api
+        if ($instituteId) { // from public api
             $builder->where('course_enrollments.institute_id', $instituteId);
         } else { // for private auth api
             $builder->acl();
@@ -194,7 +195,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return array
      */
-    public function getDashboardStatisticalData(int $instituteId=null): array
+    public function getDashboardStatisticalData($instituteId = null): array
     {
         $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
         $dashboardStatData ['total_course'] = $this->getTotalCourses($instituteId);

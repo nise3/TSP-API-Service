@@ -24,7 +24,7 @@ class ProgramService
      * @param Carbon $startTime
      * @return array
      */
-    public function getProgrammeList(array $request, Carbon $startTime): array
+    public function getProgramList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -52,91 +52,8 @@ class ProgramService
             'programs.created_at',
             'programs.updated_at',
             'programs.deleted_at',
+
         ])->acl();
-
-        $programsBuilder->join("institutes", function ($join) use ($rowStatus) {
-            $join->on('programs.institute_id', '=', 'institutes.id')
-                ->whereNull('institutes.deleted_at');
-        });
-
-        $programsBuilder->orderBy('programs.id', $order);
-
-        if (is_numeric($rowStatus)) {
-            $programsBuilder->where('programs.row_status', $rowStatus);
-        }
-
-        if (!empty($titleEn)) {
-            $programsBuilder->where('programs.title_en', 'like', '%' . $titleEn . '%');
-        }
-
-        if (!empty($title)) {
-            $programsBuilder->where('programs.title', 'like', '%' . $title . '%');
-        }
-
-        if (is_numeric($instituteId)) {
-            $programsBuilder->where('programs.institute_id', '=', $instituteId);
-        }
-
-
-        /** @var Collection $programs */
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
-            $pageSize = $pageSize ?: 10;
-            $programs = $programsBuilder->paginate($pageSize);
-            $paginateData = (object)$programs->toArray();
-            $response['current_page'] = $paginateData->current_page;
-            $response['total_page'] = $paginateData->last_page;
-            $response['page_size'] = $paginateData->per_page;
-            $response['total'] = $paginateData->total;
-        } else {
-            $programs = $programsBuilder->get();
-        }
-
-        $response['order'] = $order;
-        $response['data'] = $programs->toArray()['data'] ?? $programs->toArray();
-        $response['_response_status'] = [
-            "success" => true,
-            "code" => Response::HTTP_OK,
-            "query_time" => $startTime->diffInSeconds(Carbon::now()),
-        ];
-
-        return $response;
-    }
-
-
-    /**
-     * @param array $request
-     * @param Carbon $startTime
-     * @return array
-     */
-    public function getPublicProgramList(array $request, Carbon $startTime): array
-    {
-        $titleEn = $request['title_en'] ?? "";
-        $title = $request['title'] ?? "";
-        $pageSize = $request['page_size'] ?? "";
-        $paginate = $request['page'] ?? "";
-        $instituteId = $request['institute_id'] ?? "";
-        $rowStatus = $request['row_status'] ?? "";
-        $order = $request['order'] ?? "ASC";
-
-        /** @var Program|Builder $programsBuilder */
-        $programsBuilder = Program::select([
-            'programs.id',
-            'programs.title_en',
-            'programs.title',
-            'programs.institute_id',
-            'institutes.title_en as institute_title_en',
-            'institutes.title as institute_title',
-            'programs.code',
-            'programs.logo',
-            'programs.description_en',
-            'programs.description',
-            'programs.row_status',
-            'programs.created_by',
-            'programs.updated_by',
-            'programs.created_at',
-            'programs.updated_at',
-            'programs.deleted_at',
-        ]);
 
         $programsBuilder->join("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')

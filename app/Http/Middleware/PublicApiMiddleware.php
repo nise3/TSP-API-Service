@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use App\Models\BaseModel;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+
+class PublicApiMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param Request $request
+     * @param \Closure $next
+     * @param string|null $guard
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        if($request->headers->has('domain')){
+            $domain = $request->headers->get('domain');
+            $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'service-to-service-call/domain-identification/' . $domain;
+
+            $response = Http::withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
+                ->get($url)
+                ->throw(function ($response, $exception) {
+                    return $exception;
+                })
+                ->json();
+
+            if(!empty($response['data']['institute_id'])){
+                $request->offsetSet('institute_id', $response['data']['institute_id']);
+            }
+        }else{
+            return response()->json([
+                "_response_status" => [
+                    "success" => false,
+                    "code" => ResponseAlias::HTTP_NOT_FOUND,
+                    "message" => "Domain name not found in header"
+                ]
+            ], ResponseAlias::HTTP_UNAUTHORIZED);
+        }
+
+        return $next($request);
+
+    }
+}
