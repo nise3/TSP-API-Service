@@ -8,7 +8,7 @@ variables:
   hostName: institute-dev.nise3.xyz
 
   # if values is false, then creating ingress will be escape
-  enableEngress: false
+  enableEngress: true
 
   # app version, changing version will auto deploy the app to current version
   imageAppVersion: "1.0.23"
@@ -43,7 +43,7 @@ variables:
 
   # application config
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
-  APP_ENV: "DEV"
+  APP_ENV: "STAGING"
 
   DEV:
     APP_ENV: "local"

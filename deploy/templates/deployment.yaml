@@ -23,11 +23,24 @@ spec:
           ports:
             - containerPort: 80
           env:
-            {{- $env := .Values.variables.APP_ENV -}}
-            {{- range $key, $val := $env }}
+            {{ if eq .Values.variables.APP_ENV "LOCAL" }}
+            {{- range $key, $val := .Values.variables.DEV }}
             - name: {{ $key }}
               value: {{ $val | quote }}
             {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "STAGING" }}
+            {{- range $key, $val := .Values.variables.STAGING }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+            {{- range $key, $val := .Values.variables.PRODUCTION }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
           lifecycle:
             postStart:
               exec:
