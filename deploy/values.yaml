@@ -5,10 +5,12 @@
 
 variables:
 
-  hostName: institute.bus.softbd.xyz
+  hostName: institute-dev.nise3.xyz
+
+  # if values is false, then creating ingress will be escape
+  enableEngress: false
 
   # app version, changing version will auto deploy the app to current version
-
   imageAppVersion: "1.0.23"
 
   # increase this when you need scale up
@@ -25,8 +27,7 @@ variables:
   serviceTargetPort: 80
 
   #app buil image
-  #imageRepository: registry.bus-staging.softbdltd.com/nise3-institute-management-api-service
-  imageRepository: rhysha/nise3-institute-management-api-service
+  imageRepository: registry.nise3.xyz/nise3-institute-management-api-service
 
   #auto scaling config
   #autoScalingEnabled: 0
@@ -41,16 +42,32 @@ variables:
 
 
   # application config
+  # APP_ENV environment available values are DEV/STAGING/PRODUCTION
+  APP_ENV: "DEV"
 
-  APP_ENV: "local"
-  APP_DEBUG: "false"
-  APP_URL: "institute.bus.softbd.xyz"
-  DB_HOST: 172.17.177.79
-  DB_PORT: "3306"
-  DB_DATABASE: institute
-  DB_USERNAME: n3_institute
-  DB_PASSWORD: "kvx6V3Y^7"
+  DEV_APP_DEBUG: "false"
+  DEV_APP_URL: "gateway-dev.nise3.xyz"
+  DEV_DB_HOST: 192.168.10.95
+  DEV_DB_PORT: "3306"
+  DEV_DB_DATABASE: institute
+  DEV_DB_USERNAME: n3_institute
+  DEV_DB_PASSWORD: "nise*2022"
 
+  STAGING_APP_DEBUG: "false"
+  STAGING_APP_URL: "gateway-dev.nise3.xyz"
+  STAGING_DB_HOST: 172.17.177.79
+  STAGING_DB_PORT: "3306"
+  STAGING_DB_DATABASE: institute
+  STAGING_DB_USERNAME: n3_institute
+  STAGING_DB_PASSWORD: "kvx6V3Y^7"
+
+  PRODUCTION_APP_DEBUG: "false"
+  PRODUCTION_APP_URL: "gateway-dev.nise3.xyz"
+  PRODUCTION_DB_HOST: 172.17.177.79
+  PRODUCTION_DB_PORT: "3306"
+  PRODUCTION_DB_DATABASE: institute
+  PRODUCTION_DB_USERNAME: n3_institute
+  PRODUCTION_DB_PASSWORD: "kvx6V3Y^7"
 
   #control git realese branch
   GIT_DEVELOPMENT_BRANCH: "develop"
