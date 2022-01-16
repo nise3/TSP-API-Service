@@ -677,9 +677,9 @@
         "/institute-profile": {
             "get": {
                 "tags": [
-                    "Institute Admin Profile "
+                    "Institute Profile "
                 ],
-                "summary": "Get an institute admin profile",
+                "summary": "Get an institute  profile",
                 "description": "An API endpoint to get an institute admin profile. A successfull request will give response with 200 status code",
                 "responses": {
                     "200": {
@@ -753,9 +753,9 @@
         "/institute-profile-update": {
             "put": {
                 "tags": [
-                    "Institute Admin Profile "
+                    "Institute Profile "
                 ],
-                "summary": "Update institute admin profile",
+                "summary": "Update institute  profile",
                 "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
                 "requestBody": {
                     "content": {
