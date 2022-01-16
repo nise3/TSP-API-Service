@@ -750,7 +750,7 @@
                 }
             }
         },
-        "/institute-admin-profile-update": {
+        "/institute-profile-update": {
             "put": {
                 "tags": [
                     "Institute Admin Profile "
