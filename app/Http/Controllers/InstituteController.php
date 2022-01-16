@@ -64,6 +64,20 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function publicGetInstituteList(Request $request): JsonResponse
+    {
+        $filter = $this->instituteService->filterValidator($request)->validate();
+
+        $response = $this->instituteService->getInstituteList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 
     /**
      * * Display the specified resource

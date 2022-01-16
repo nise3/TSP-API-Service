@@ -79,6 +79,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         $router->get('institute-dashboard-statistics/{instituteId}', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
         $router->get('demanded-courses/{instituteId}', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+
+        /** Get All institutes */
+        $router->get('institutes', ["as" => "public.institutes", "uses" => "InstituteController@publicGetInstituteList"]);
+
     });
 
     //Service to service direct call without any authorization and authentication
