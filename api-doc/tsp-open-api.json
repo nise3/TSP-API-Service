@@ -461,7 +461,7 @@
                     "institutes"
                 ],
                 "summary": "get_list",
-                "description": "API endpoint to get list of  TSP.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to public get list of  TSP.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
