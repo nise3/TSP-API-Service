@@ -674,7 +674,7 @@
                 }
             }
         },
-        "/institute-admin-profile": {
+        "/institute-profile": {
             "get": {
                 "tags": [
                     "Institute Admin Profile "
