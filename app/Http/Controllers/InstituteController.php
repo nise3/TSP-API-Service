@@ -7,6 +7,7 @@ use App\Models\Institute;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use App\Services\TrainingCenterService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -64,13 +65,27 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function publicGetInstituteList(Request $request): JsonResponse
+    {
+        $filter = $this->instituteService->filterValidator($request)->validate();
+
+        $response = $this->instituteService->getInstituteList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 
     /**
      * * Display the specified resource
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function read(Request $request, int $id): JsonResponse
     {
@@ -524,13 +539,15 @@ class InstituteController extends Controller
 
     }
 
-    public function getInstituteAdminProfile()
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getInstituteProfile(Request $request): JsonResponse
     {
-        $authUser = Auth::user();
-        $instituteId = null;
-        if ($authUser && $authUser->institute_id) {
-            $instituteId = $authUser->institute_id;
-        }
+
+        $instituteId = $request->input('institute_id');
+
         $institute = $this->instituteService->getOneInstitute($instituteId);
 //        $institute = Institute::findOrFail($instituteId);
         $response = [
@@ -544,18 +561,22 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function updateInstituteAdminProfile(Request $request): JsonResponse
+    /**
+     * Institute Open Registration Rejection
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws AuthorizationException
+     */
+    public function updateInstituteProfile(Request $request): JsonResponse
     {
-        $authUser = Auth::user();
-        $instituteId = null;
-        if ($authUser && $authUser->institute_id) {
-            $instituteId = $authUser->institute_id;
-        }
-        $institute = Institute::findOrFail($instituteId);
+        $instituteId = $request->input('institute_id');
+
+        $institute = $this->instituteService->getOneInstitute($instituteId);
 
         $this->authorize('update', $institute);
 
-        $validated = $this->instituteService->instituteAdminProfileValidator($request, $instituteId)->validate();
+        $validated = $this->instituteService->instituteProfileValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
         $response = [
             'data' => $data ?: [],

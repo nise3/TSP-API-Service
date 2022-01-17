@@ -2,6 +2,35 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+
+/**
+ * Class PaymentTransactionLogHistory
+ * @package App\Models
+ *
+ * @property int id
+ * @property string order_id
+ * @property string mer_trnx_id
+ * @property string | null trnx_id
+ * @property string  type
+ * @property int | null  payment_gateway_type
+ * @property string | null payment_instrument_type
+ * @property string | null payment_instrument_name
+ * @property string name
+ * @property string mobile
+ * @property string email
+ * @property numeric amount
+ * @property numeric | null paid_amount
+ * @property numeric  trnx_currency
+ * @property string | null  order_detail
+ * @property string | null  request_payload
+ * @property string | null  response_message
+ * @property string   status
+ * @property string | null  ipn_uri_secret_token
+ * @property Carbon |null created_at
+ * @property Carbon |null updated_at
+ *
+*/
 class PaymentTransactionLogHistory extends BaseModel
 {
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;

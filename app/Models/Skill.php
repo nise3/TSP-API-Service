@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,6 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  * @property string title_en
  * @property string title
+ * @property Carbon |null created_at
+ * @property Carbon |null updated_at
+ * @property Carbon |null deleted_at
  */
 class Skill extends BaseModel
 {
