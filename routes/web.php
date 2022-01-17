@@ -81,8 +81,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             /** Single Institute Fetch  */
             $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
         });
-
-
     });
 
     //Service to service direct call without any authorization and authentication

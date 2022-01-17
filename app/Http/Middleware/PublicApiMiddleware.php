@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\BaseModel;
 use Closure;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -14,9 +15,9 @@ class PublicApiMiddleware
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param \Closure $next
-     * @param string|null $guard
+     * @param Closure $next
      * @return mixed
+     * @throws RequestException
      */
     public function handle(Request $request, Closure $next)
     {
