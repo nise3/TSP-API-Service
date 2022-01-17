@@ -541,14 +541,15 @@ class InstituteController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function getInstituteProfile(Request $request): JsonResponse
     {
-
         $instituteId = $request->input('institute_id');
-
         $institute = $this->instituteService->getOneInstitute($instituteId);
-//        $institute = Institute::findOrFail($instituteId);
+
+        $this->authorize('viewProfile', $institute);
+
         $response = [
             "data" => $institute,
             "_response_status" => [
@@ -573,7 +574,7 @@ class InstituteController extends Controller
 
         $institute = $this->instituteService->getOneInstitute($instituteId);
 
-        $this->authorize('update', $institute);
+        $this->authorize('updateProfile', $institute);
 
         $validated = $this->instituteService->instituteProfileValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
