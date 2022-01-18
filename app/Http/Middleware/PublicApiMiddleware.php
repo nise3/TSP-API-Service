@@ -21,8 +21,8 @@ class PublicApiMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->headers->has('domain')){
-            $domain = $request->headers->get('domain');
+        if($request->headers->has('Domain')){
+            $domain = $request->headers->get('Domain');
             $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'service-to-service-call/domain-identification/' . $domain;
 
             $response = Http::withOptions(['debug' => config("nise3.is_dev_mode"), 'verify' => config("nise3.should_ssl_verify")])
