@@ -118,6 +118,3 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 });
 
-$router->get("/test-code", function () {
-    return \App\Services\CommonServices\CodeGeneratorService::getMerchantId("SSP00000001TC0000001",36);
-});
