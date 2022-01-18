@@ -2,6 +2,7 @@
 
 namespace App\Services\CommonServices;
 
+use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Institute;
@@ -67,7 +68,7 @@ class CodeGeneratorService
         DB::beginTransaction();
         $code = "";
         try {
-            $instituteCode = Institute::findOrFail($sspId)->code;
+            $instituteCode = Institute::find($sspId)->code;
             $branchExistingCode = Branch::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
             if (!empty($branchExistingCode) && !empty($branchExistingCode->code)) {
                 $branchCode = explode(Branch::BRANCH_CODE_PREFIX, $branchExistingCode->code);
@@ -97,8 +98,8 @@ class CodeGeneratorService
         DB::beginTransaction();
         $code = "";
         try {
-            $instituteCode = Institute::findOrFail($sspId)->code;
-            $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
+            $instituteCode = Institute::find($sspId)->code;
+            $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->withTrashed()->orderBy("id", "DESC")->first();
             if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
                 $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
                 $trainingCenterCode = (int)sizeof($trainingCenterCode) > 1 ? end($trainingCenterCode) : time();
@@ -127,17 +128,47 @@ class CodeGeneratorService
         DB::beginTransaction();
         $code = "";
         try {
-            $instituteCode = Institute::findOrFail($sspId)->code;
-            $courseExistingCode = Course::where("institute_id", $sspId)->lockForUpdate()->orderBy("id", "DESC")->first();
+            $instituteCode = Institute::find($sspId)->code;
+            $courseExistingCode = Course::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
             if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
-                $courseCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $courseExistingCode->code);
+                $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
                 $courseCode = (int)sizeof($courseCode) > 1 ? end($courseCode) : time();
             } else {
                 $courseCode = 0;
             }
             $courseCode = $courseCode + 1;
-            $padLSize = TrainingCenter::TRAINING_CENTER_CODE_SIZE - strlen($courseCode);
-            $code = str_pad($instituteCode . TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $padLSize, '0') . $courseCode;
+            $padLSize = Course::COURSE_CODE_SIZE - strlen($courseCode);
+            $code = str_pad($instituteCode . Course::COURSE_CODE_PREFIX, $padLSize, '0') . $courseCode;
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            throw $throwable;
+        }
+
+        return $code;
+    }
+
+    /**
+     * @param int $courseId
+     * @return string
+     * @throws Throwable
+     */
+    public static function getBatchCode(int $courseId): string
+    {
+        DB::beginTransaction();
+        $code = "";
+        try {
+            $instituteCode = Course::find($courseId)->code;
+            $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
+            if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
+                $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
+                $batchCode = (int)sizeof($batchCode) > 1 ? end($batchCode) : time();
+            } else {
+                $batchCode = 0;
+            }
+            $batchCode = $batchCode + 1;
+            $padLSize = Batch::BATCH_CODE_SIZE - strlen($batchCode);
+            $code = str_pad($instituteCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
             DB::commit();
         } catch (Throwable $throwable) {
             DB::rollBack();

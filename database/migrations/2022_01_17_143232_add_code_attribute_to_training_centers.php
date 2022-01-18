@@ -14,7 +14,7 @@ class AddCodeAttributeToTrainingCenters extends Migration
     public function up()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            $table->char('code', 50)->after('id');
+            $table->char('code', 20)->unique()->after('id');
         });
     }
 

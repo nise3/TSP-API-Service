@@ -119,5 +119,5 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 });
 
 $router->get("/test-code", function () {
-    return \App\Services\CommonServices\CodeGeneratorService::getTrainingCenterCode(1);
+    return \App\Services\CommonServices\CodeGeneratorService::getBatchCode(1);
 });

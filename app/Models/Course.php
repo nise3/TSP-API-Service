@@ -61,7 +61,7 @@ class Course extends BaseModel
     ];
 
     public const COURSE_CODE_PREFIX = "C";
-    public const COURSE_CODE_ = "C";
+    public const COURSE_CODE_SIZE = 19;
 
     const COURSE_LEVEL_BEGINNER = 1;
     const COURSE_LEVEL_INTERMEDIATE = 2;

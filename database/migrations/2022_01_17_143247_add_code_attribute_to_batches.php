@@ -14,7 +14,7 @@ class AddCodeAttributeToBatches extends Migration
     public function up()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->char('code', 50)->after('id');
+            $table->char('code', 28)->unique()->after('id');
         });
     }
 

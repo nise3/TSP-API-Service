@@ -15,7 +15,7 @@ class ModifyInstituteCodeTypeToInstitutes extends Migration
     public function up()
     {
         Schema::table('institutes', function (Blueprint $table) {
-            DB::statement('ALTER TABLE institutes MODIFY code char(50) NOT NUll');
+            DB::statement('ALTER TABLE institutes MODIFY code char(11) NOT NUll');
         });
     }
 

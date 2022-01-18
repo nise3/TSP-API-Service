@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class ModifyCourseCodeTypeToCourses extends Migration
@@ -14,7 +15,7 @@ class ModifyCourseCodeTypeToCourses extends Migration
     public function up()
     {
         Schema::table('courses', function (Blueprint $table) {
-            DB::statement('ALTER TABLE courses MODIFY code char(50) NOT NUll');
+            DB::statement('ALTER TABLE courses MODIFY code char(19) NOT NUll');
         });
     }
 

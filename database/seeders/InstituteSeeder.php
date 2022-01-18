@@ -97,9 +97,10 @@ class InstituteSeeder extends Seeder
                 $courses = Course::factory()
                     ->state([
                         'institute_id' => $institute->id,
-                        'program_id' => $program->id
+                        'program_id' => $program->id,
+                        "code" => CodeGeneratorService::getCourseCode($institute->id)
                     ])
-                    ->count(2)
+                    ->count(1)
                     ->create();
 
                 foreach ($courses as $course) {
@@ -127,7 +128,8 @@ class InstituteSeeder extends Seeder
                     $batch = Batch::factory()->state([
                         'institute_id' => $institute->id,
                         'training_center_id' => $trainingCenter->id,
-                        'course_id' => $course->id
+                        'course_id' => $course->id,
+                        "code" => CodeGeneratorService::getBatchCode($course->id)
                     ])->create();
 
                     $index = random_int(0, $trainerIdsLen - 1);

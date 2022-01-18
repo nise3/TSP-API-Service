@@ -14,7 +14,7 @@ class AddCodeAttributeToBranches extends Migration
     public function up()
     {
         Schema::table('branches', function (Blueprint $table) {
-            $table->char('code', 50)->after('id');
+            $table->char('code', 18)->after('id');
         });
     }
 
