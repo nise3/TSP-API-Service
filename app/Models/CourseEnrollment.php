@@ -35,6 +35,8 @@ class CourseEnrollment extends BaseModel
     use ScopeRowStatusTrait, SoftDeletes;
 
     public const PAYMENT_STATUS_PAID = 1;
+    public const INVOICE_PREFIX = "EN";
+    public const INVOICE_SIZE = 38;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 

@@ -5,10 +5,12 @@ namespace App\Services\CommonServices;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\CourseEnrollment;
 use App\Models\Institute;
+use App\Models\InvoicePessimisticLocking;
+use App\Models\MerchantCodePessimisticLocking;
 use App\Models\SSPPessimisticLocking;
 use App\Models\TrainingCenter;
-use Faker\Provider\Uuid;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -178,5 +180,81 @@ class CodeGeneratorService
         return $code;
     }
 
+    /**
+     * @throws Throwable
+     */
+    public static function getInvoice(string $invoicePrefix): string
+    {
+        $invoice = "";
+        DB::beginTransaction();
+        try {
+            /** @var InvoicePessimisticLocking $existingSSPCode */
+            $existingCode = InvoicePessimisticLocking::lockForUpdate()->first();
+            $code = !empty($existingCode) && !empty($existingCode->code) ? $existingCode->code : 0;
+            $code = $code + 1;
+            $padSize = CourseEnrollment::INVOICE_SIZE - strlen($code);
+
+            /**
+             * Prefix+000000N. Ex: EN+BatchCode+incremental number
+             */
+            $invoice = str_pad($invoicePrefix . "#", $padSize, '0', STR_PAD_RIGHT) . $code;
+
+            /**
+             * Code Update
+             */
+            if ($existingCode) {
+                $existingCode->code = $code;
+                $existingCode->save();
+            } else {
+                InvoicePessimisticLocking::create([
+                    "code" => $code
+                ]);
+            }
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            throw $throwable;
+        }
+        return $invoice;
+    }
+
+
+    /**
+     * @throws Throwable
+     */
+    public static function getMerchantId(string $prefix, int $merchantIdSize): string
+    {
+        $merchantId = "";
+        DB::beginTransaction();
+        try {
+            /** @var SSPPessimisticLocking $existingSSPCode */
+            $existingCode = MerchantCodePessimisticLocking::lockForUpdate()->first();
+            $code = !empty($existingCode) && !empty($existingCode->code) ? $existingCode->code : 0;
+            $code = $code + 1;
+            $padSize = $merchantIdSize - strlen($code);
+
+            /**
+             * Prefix+000000N. Ex: TC Code+incremental number
+             */
+            $merchantId = str_pad($prefix."-", $padSize, '0', STR_PAD_RIGHT) . $code;
+
+            /**
+             * Code Update
+             */
+            if ($existingCode) {
+                $existingCode->code = $code;
+                $existingCode->save();
+            } else {
+                MerchantCodePessimisticLocking::create([
+                    "code" => $code
+                ]);
+            }
+            DB::commit();
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            throw $throwable;
+        }
+        return $merchantId;
+    }
 
 }
