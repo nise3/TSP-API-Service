@@ -29,6 +29,7 @@ use Illuminate\Support\Carbon;
  */
 class Batch extends BaseModel
 {
+    public const BATCH_CODE_PREFIX = "BT";
 
     use ScopeRowStatusTrait, SoftDeletes;
 

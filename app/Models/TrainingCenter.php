@@ -28,6 +28,9 @@ class TrainingCenter extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes, SoftDeletes;
 
+    public const TRAINING_CENTER_CODE_PREFIX = "TC";
+    public const TRAINING_CENTER_CODE_SIZE = 20;
+
     public const CENTER_LOCATION_TYPE_INSTITUTE_PREMISES = 1;
     public const CENTER_LOCATION_TYPE_BRANCH_PREMISES = 2;
     public const CENTER_LOCATION_TYPE_TRAINING_CENTER_PREMISES = 3;

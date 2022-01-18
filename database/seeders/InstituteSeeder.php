@@ -10,6 +10,7 @@ use App\Models\Program;
 use App\Models\Skill;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\InstituteService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,7 @@ class InstituteSeeder extends Seeder
      *
      * @return void
      * @throws \Exception
+     * @throws \Throwable
      */
     public function run()
     {
@@ -71,15 +73,17 @@ class InstituteSeeder extends Seeder
             Branch::factory()
                 ->state([
                     'institute_id' => $institute->id,
+                    "code" => CodeGeneratorService::getBranchCode($institute->id)
                 ])
-                ->count(3)
+                ->count(1)
                 ->create();
 
             $trainingCenters = TrainingCenter::factory()
                 ->state([
                     'institute_id' => $institute->id,
+                    'code' => CodeGeneratorService::getTrainingCenterCode($institute->id)
                 ])
-                ->count(6)
+                ->count(1)
                 ->create();
 
             $programs = Program::factory()

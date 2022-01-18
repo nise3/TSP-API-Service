@@ -60,6 +60,9 @@ class Course extends BaseModel
         'application_form_settings' => 'array'
     ];
 
+    public const COURSE_CODE_PREFIX = "C";
+    public const COURSE_CODE_ = "C";
+
     const COURSE_LEVEL_BEGINNER = 1;
     const COURSE_LEVEL_INTERMEDIATE = 2;
     const COURSE_LEVEL_EXPERT = 3;

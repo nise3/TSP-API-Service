@@ -37,7 +37,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
 
         /** Institute Profile Update */
-        $router->put("institute-profile-update", ["as" => "Institute.admin-profile-update", "uses" => "InstituteController@updateInstituteProfile"]);        /** Institute Admin Profile Update */
+        $router->put("institute-profile-update", ["as" => "Institute.admin-profile-update", "uses" => "InstituteController@updateInstituteProfile"]);
+        /** Institute Admin Profile Update */
 
         /** Get Institute Profile */
         $router->get("institute-profile", ["as" => "Institute.profile", "uses" => "InstituteController@getInstituteProfile"]);
@@ -117,7 +118,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 });
 
-$router->get("/idp-test", function () {
-    Illuminate\Support\Facades\Log::info('Idp-Log');
-    return "idp-User";
+$router->get("/test-code", function () {
+    return \App\Services\CommonServices\CodeGeneratorService::getTrainingCenterCode(1);
 });
