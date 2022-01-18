@@ -7,6 +7,7 @@ use App\Models\Institute;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use App\Services\TrainingCenterService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\RequestException;
 use \Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +85,7 @@ class InstituteController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function read(Request $request, int $id): JsonResponse
     {
@@ -536,15 +537,19 @@ class InstituteController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
-    public function getInstituteProfile()
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws AuthorizationException
+     */
+    public function getInstituteProfile(Request $request): JsonResponse
     {
-        $authUser = Auth::user();
-        $instituteId = null;
-        if ($authUser && $authUser->institute_id) {
-            $instituteId = $authUser->institute_id;
-        }
+        $instituteId = $request->input('institute_id');
         $institute = $this->instituteService->getOneInstitute($instituteId);
-//        $institute = Institute::findOrFail($instituteId);
+
+        $this->authorize('viewProfile', $institute);
+
         $response = [
             "data" => $institute,
             "_response_status" => [
@@ -555,16 +560,21 @@ class InstituteController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    /**
+     * Institute Open Registration Rejection
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws AuthorizationException
+     */
     public function updateInstituteProfile(Request $request): JsonResponse
     {
-        $authUser = Auth::user();
-        $instituteId = null;
-        if ($authUser && $authUser->institute_id) {
-            $instituteId = $authUser->institute_id;
-        }
-        $institute = Institute::findOrFail($instituteId);
+        $instituteId = $request->input('institute_id');
 
-        $this->authorize('update', $institute);
+        $institute = $this->instituteService->getOneInstitute($instituteId);
+
+        $this->authorize('updateProfile', $institute);
 
         $validated = $this->instituteService->instituteProfileValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
