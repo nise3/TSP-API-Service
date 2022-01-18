@@ -60,26 +60,26 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
-
+    /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
-        /** Course Filter */
-        $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
-
         /** Course details with trainer */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
 
-        /** Training Centers Filter */
-        $router->get('training-centers', ["as" => "training-centers.filter", "uses" => "TrainingCenterController@getTrainingCentersWithFilters"]);
-
-        /** Program lists  */
-        $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
-
         //public api by domain name identification
-        $router->group(['middleware' => 'public'], function () use ($router) {
+        $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
             $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
             /** Single Institute Fetch  */
-            $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@instituteDetails"]);
+            $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@institutePublicDetails"]);
+
+            /** Program lists  */
+            $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
+
+            /** Training Centers Filter */
+            $router->get('training-centers', ["as" => "training-centers.filter", "uses" => "TrainingCenterController@getTrainingCentersWithFilters"]);
+
+            /** Course Filter */
+            $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
     });
 

@@ -126,6 +126,28 @@ class InstituteController extends Controller
     }
 
     /**
+     * * Call from public landing page
+     * @throws Throwable
+     */
+    public function institutePublicDetails(): JsonResponse
+    {
+
+        /** this should be set from PublicApiMiddleWare */
+        $instituteId = request()->get('institute_id');
+        $data = $this->instituteService->getOneInstitute($instituteId);
+
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return JsonResponse

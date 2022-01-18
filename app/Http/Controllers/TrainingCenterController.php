@@ -203,6 +203,8 @@ class TrainingCenterController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return JsonResponse
      * @throws ValidationException
      */
     public function getTrainingCentersWithFilters(Request $request): JsonResponse
