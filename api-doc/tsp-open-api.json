@@ -455,7 +455,7 @@
                 }
             }
         },
-        "/public/institutes": {
+        "/public/institute-details": {
             "get": {
                 "tags": [
                     "institutes"
