@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class PublicApiMiddleware
@@ -22,6 +23,9 @@ class PublicApiMiddleware
     public function handle(Request $request, Closure $next)
     {
         if($request->headers->has('Domain')){
+            Log::info("AAAAAAAAAAAAAAAA");
+            Log::info($request->path());
+
             $domain = $request->headers->get('Domain');
             $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'service-to-service-call/domain-identification/' . $domain;
 
@@ -36,6 +40,10 @@ class PublicApiMiddleware
                 $request->offsetSet('institute_id', $response['data']['institute_id']);
             }
         }else{
+            Log::info("BBBBBBBBBBBBBBBBBBBBBBB");
+            Log::info($request->path());
+
+
             return response()->json([
                 "_response_status" => [
                     "success" => false,
