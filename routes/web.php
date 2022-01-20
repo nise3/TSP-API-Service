@@ -81,6 +81,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             /** Course Filter */
             $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
+
     });
 
     //Service to service direct call without any authorization and authentication
