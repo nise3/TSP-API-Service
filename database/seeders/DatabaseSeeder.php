@@ -13,6 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call('UsersTableSeeder');
+        $this->call([
+            GeoLocationDatabaseSeeder::class,
+            SkillSeeder::class,
+            PhysicalDisabilitySeeder::class,
+            EducationLevelSeeder::class,
+            EduGroupSeeder::class,
+            EduBoardSeeder::class,
+            ExamDegreeSeeder::class,
+            InstituteSeeder::class,
+            CourseEnrollmentSeeder::class,
+        ]);
     }
 }

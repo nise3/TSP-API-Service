@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Chart.Name }}
+  labels:
+    app:  {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app:  {{ .Chart.Name }}
+  replicas: {{ .Values.variables.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  {{ .Chart.Name }}
+    spec:
+      containers:
+        - name:  {{ .Chart.Name }}
+          image: "{{ .Values.variables.imageRepository }}:{{ .Values.variables.imageAppVersion  | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.variables.imagePullPolicy }}
+          ports:
+            - containerPort: 80
+          env:
+            {{ if eq .Values.variables.APP_ENV "LOCAL" }}
+            {{- range $key, $val := .Values.variables.DEV }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "STAGING" }}
+            {{- range $key, $val := .Values.variables.STAGING }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+            {{- range $key, $val := .Values.variables.PRODUCTION }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    mv /app/.env.example /app/.env;
+                    php artisan key:generate;
+                    sed -i "s/APP_ENV=.*$/APP_ENV=$APP_ENV/g" /app/.env;
+                    sed -i "s/APP_DEBUG=.*$/APP_DEBUG=$APP_DEBUG/g" /app/.env;
+                    sed -i "s/APP_URL=.*$/APP_URL=$APP_URL/g" /app/.env;
+                    sed -i "s/DB_HOST=.*$/DB_HOST=$DB_HOST/g" /app/.env;
+                    sed -i "s/DB_PORT=.*$/DB_PORT=$DB_PORT/g" /app/.env;
+                    sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
+                    sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
+                    sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
+                    sed -i "s/RABBITMQ_HOST=.*$/RABBITMQ_HOST=$RABBITMQ_HOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_PORT=.*$/RABBITMQ_PORT=$RABBITMQ_PORT/g" /app/.env;
+                    sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
+                    sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
+
+                    sed -i "s/WSO2_IDP_BASE_URL=.*$/WSO2_IDP_BASE_URL=$WSO2_IDP_BASE_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_BASE_USER_URL=.*$/WSO2_IDP_BASE_USER_URL=$WSO2_IDP_BASE_USER_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_USERNAME=.*$/WSO2_IDP_USERNAME=$WSO2_IDP_USERNAME/g" /app/.env;
+                    sed -i "s/WSO2_IDP_PASSWORD=.*$/WSO2_IDP_PASSWORD=$WSO2_IDP_PASSWORD/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_KEY=.*$/WSO2_IDP_CLIENT_KEY=$WSO2_IDP_CLIENT_KEY/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_SECRET=.*$/WSO2_IDP_CLIENT_SECRET=$WSO2_IDP_CLIENT_SECRET/g" /app/.env;
+
+                    sed -i "s/CORE_API_BASE_URL=.*$/CORE_API_BASE_URL=$CORE_API_BASE_URL/g" /app/.env;
+                    sed -i "s/YOUTH_API_BASE_URL=.*$/YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL/g" /app/.env;
+                    sed -i "s/TSP_API_BASE_URL=.*$/TSP_API_BASE_URL=$TSP_API_BASE_URL/g" /app/.env;
+                    sed -i "s/INDUSTRY_API_BASE_URL=.*$/INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL/g" /app/.env;
+                    sed -i "s/CMS_API_BASE_URL=.*$/CMS_API_BASE_URL=$CMS_API_BASE_URL/g" /app/.env;
+                    sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
+                    chown -R www-data:www-data /app;
+                    cd /app;
+          volumeMounts:
+          - name: "{{ .Chart.Name }}"
+            mountPath: /app/storage
+      volumes:
+      - name: "{{ .Chart.Name }}"
+        persistentVolumeClaim:
+          claimName: "{{ .Chart.Name }}-pv-claim"
+      imagePullSecrets:
+        - name: regcred

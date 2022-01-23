@@ -2,28 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * Class Skill
  * @package App\Models
- * @property int|null organization_id
  * @property string title_en
- * @property string title_bn
- * @property int | null description
- * @property-read Organization organization
+ * @property string title
  */
 class Skill extends BaseModel
 {
-    use ScopeRowStatusTrait;
+
+    use SoftDeletes;
+
+    public $timestamps = false;
     /**
      * @var string[]
      */
-    protected $guarded = ['id'];
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
+    /**
+     * @var string[]
+     */
+    protected $hidden = ["pivot"];
 
-    public function organization(): BelongsTo
+    /**
+     * @return BelongsToMany
+     */
+    public function trainingCenters(): BelongsToMany
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsToMany(TrainingCenter::class, 'training_center_skill');
+    }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(Course::class, 'course_skill');
     }
 }
