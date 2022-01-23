@@ -183,7 +183,7 @@ class CodeGeneratorService
     /**
      * @throws Throwable
      */
-    public static function getInvoice(string $invoicePrefix): string
+    public static function getInvoice(string $invoicePrefix,int $invoiceIdSize): string
     {
         $invoice = "";
         DB::beginTransaction();
@@ -192,10 +192,10 @@ class CodeGeneratorService
             $existingCode = InvoicePessimisticLocking::lockForUpdate()->first();
             $code = !empty($existingCode) && !empty($existingCode->code) ? $existingCode->code : 0;
             $code = $code + 1;
-            $padSize = CourseEnrollment::INVOICE_SIZE - strlen($code);
+            $padSize = $invoiceIdSize - strlen($code);
 
             /**
-             * Prefix+000000N. Ex: EN+BatchCode+incremental number
+             * Prefix+000000N. Ex: EN+Course Code+incremental number
              */
             $invoice = str_pad($invoicePrefix . "#", $padSize, '0', STR_PAD_RIGHT) . $code;
 
@@ -234,9 +234,9 @@ class CodeGeneratorService
             $padSize = $merchantIdSize - strlen($code);
 
             /**
-             * Prefix+000000N. Ex: TC Code+incremental number
+             * Prefix+000000N. Ex: EN + - + incremental number
              */
-            $merchantId = str_pad($prefix."-", $padSize, '0', STR_PAD_RIGHT) . $code;
+            $merchantId = str_pad($prefix, $padSize, '0', STR_PAD_RIGHT) . $code;
 
             /**
              * Code Update

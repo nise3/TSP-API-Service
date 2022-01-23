@@ -110,11 +110,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Batch and Program Title by Ids for Internal Api */
     $router->post("get-course-program-title-by-ids", ["as" => "institutes.get-course-program-title-by-ids", "uses" => "InstituteController@getCourseAndProgramTitleByIds"]);
 
-    $router->post('payment/pay-now', ["as" => "payment.pay-now", "uses" => "PaymentController@payNow"]);
-    $router->get('payment/success', ["as" => "payment.success", "uses" => "PaymentController@success"]);
-    $router->get('payment/failed', ["as" => "payment.fail", "uses" => "PaymentController@fail"]);
-    $router->get('payment/cancel', ["as" => "payment.cancel", "uses" => "PaymentController@cancel"]);
-    $router->post('payment/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "PaymentController@ipnHandler"]);
-
+    $router->group(["as" => "course-enrollment", "prefix" => "course-enrollment"], function () use ($router) {
+        $router->post('payment-by-ek-pay/pay-now', ["as" => "payment.pay-now", "uses" => "CourseEnrollmentPaymentController@payNowByEkPay"]);
+        $router->get('payment-by-ek-pay/success', ["as" => "payment.success", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentSuccess"]);
+        $router->get('payment-by-ek-pay/failed', ["as" => "payment.fail", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentFail"]);
+        $router->get('payment-by-ek-pay/cancel', ["as" => "payment.cancel", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentCancel"]);
+        $router->post('payment-by-ek-pay/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentIpnHandler"]);
+    });
 });
 

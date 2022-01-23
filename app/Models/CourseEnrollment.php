@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int id
  * @property int course_id
  * @property int youth_id
+ * @property string youth_code
  * @property int institute_id
  * @property int program_id
  * @property int|null training_center_id
@@ -36,7 +37,9 @@ class CourseEnrollment extends BaseModel
 
     public const PAYMENT_STATUS_PAID = 1;
     public const INVOICE_PREFIX = "EN";
-    public const INVOICE_SIZE = 38;
+    public const INVOICE_SIZE = 36;
+    const MERCHANT_ID_SIZE = 36;
+    const MERCHANT_PREFIX = "EN";
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 

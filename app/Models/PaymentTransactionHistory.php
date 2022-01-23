@@ -3,37 +3,32 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use PHPUnit\Util\Json;
 
 /**
- * Class PaymentTransactionLogHistory
- * @package App\Models
- *
+ * Class PaymentTransactionHistory
  * @property int id
- * @property string order_id
+ * @property string invoice
  * @property string mer_trnx_id
- * @property string | null trnx_id
- * @property string type
- * @property int | null payment_gateway_type
- * @property string | null payment_instrument_type
- * @property string | null payment_instrument_name
- * @property string name
- * @property string mobile
- * @property string email
- * @property numeric amount
- * @property numeric | null paid_amount
- * @property numeric trnx_currency
- * @property string | null order_detail
- * @property string | null request_payload
- * @property string | null response_message
- * @property string status
- * @property string | null ipn_uri_secret_token
- * @property Carbon |null created_at
- * @property Carbon |null updated_at
- *
+ * @property string trnx
+ * @property int payment_purpose_code
+ * @property int payment_gateway_type
+ * @property string customer_id
+ * @property string customer_name
+ * @property string customer_mobile
+ * @property string customer_email
+ * @property double amount
+ * @property double paid_amount
+ * @property string trnx_currency
+ * @property json request_payload
+ * @property json response_message
+ * @property int status
+ * @property Carbon created_at
+ * @property Carbon updated_at
  */
-class PaymentTransactionLogHistory extends BaseModel
+class PaymentTransactionHistory extends BaseModel
 {
-    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $guarded=BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
 
     /** Payment Status */
     public const PAYMENT_SUCCESS = 1;
