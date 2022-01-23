@@ -63,6 +63,20 @@ spec:
                     sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
                     sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
                     sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
+
+                    sed -i "s/WSO2_IDP_BASE_URL=.*$/WSO2_IDP_BASE_URL=$WSO2_IDP_BASE_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_BASE_USER_URL=.*$/WSO2_IDP_BASE_USER_URL=$WSO2_IDP_BASE_USER_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_USERNAME=.*$/WSO2_IDP_USERNAME=$WSO2_IDP_USERNAME/g" /app/.env;
+                    sed -i "s/WSO2_IDP_PASSWORD=.*$/WSO2_IDP_PASSWORD=$WSO2_IDP_PASSWORD/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_KEY=.*$/WSO2_IDP_CLIENT_KEY=$WSO2_IDP_CLIENT_KEY/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_SECRET=.*$/WSO2_IDP_CLIENT_SECRET=$WSO2_IDP_CLIENT_SECRET/g" /app/.env;
+
+                    sed -i "s/CORE_API_BASE_URL=.*$/CORE_API_BASE_URL=$CORE_API_BASE_URL/g" /app/.env;
+                    sed -i "s/YOUTH_API_BASE_URL=.*$/YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL/g" /app/.env;
+                    sed -i "s/TSP_API_BASE_URL=.*$/TSP_API_BASE_URL=$TSP_API_BASE_URL/g" /app/.env;
+                    sed -i "s/INDUSTRY_API_BASE_URL=.*$/INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL/g" /app/.env;
+                    sed -i "s/CMS_API_BASE_URL=.*$/CMS_API_BASE_URL=$CMS_API_BASE_URL/g" /app/.env;
+                    sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
           volumeMounts:
