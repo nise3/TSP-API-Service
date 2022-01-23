@@ -49,16 +49,32 @@ variables:
     APP_ENV: "local"
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
+
     DB_HOST: 192.168.10.95
     DB_PORT: "3306"
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "nise*2022"
+
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"
     RABBITMQ_VHOST: "aeihxlmw"
     RABBITMQ_USER: "aeihxlmw"
     RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
+
+    WSO2_IDP_BASE_URL: "https://192.168.13.206:9448/"
+    WSO2_IDP_BASE_USER_URL: "https://192.168.13.206:9448/scim2/Users"
+    WSO2_IDP_USERNAME: admin
+    WSO2_IDP_PASSWORD: admin
+    WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
+    WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
+
+    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
+    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
+    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
 
   STAGING:
     APP_ENV: "staging"
@@ -69,26 +85,60 @@ variables:
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"
     RABBITMQ_VHOST: "aeihxlmw"
     RABBITMQ_USER: "aeihxlmw"
     RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
 
+    WSO2_IDP_BASE_URL: "https://192.168.13.206:9448/"
+    WSO2_IDP_BASE_USER_URL: "https://192.168.13.206:9448/scim2/Users"
+    WSO2_IDP_USERNAME: admin
+    WSO2_IDP_PASSWORD: admin
+    WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
+    WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
+
+    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
+    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
+    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+
+
   PRODUCTION:
     APP_ENV: "local"
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
+
     DB_HOST: 172.17.177.79
     DB_PORT: "3306"
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"
     RABBITMQ_VHOST: "aeihxlmw"
     RABBITMQ_USER: "aeihxlmw"
     RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
+
+    WSO2_IDP_BASE_URL: "https://192.168.13.206:9448/"
+    WSO2_IDP_BASE_USER_URL: "https://192.168.13.206:9448/scim2/Users"
+    WSO2_IDP_USERNAME: admin
+    WSO2_IDP_PASSWORD: admin
+    WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
+    WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
+
+    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
+    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
+    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+
+
 
   #control git realese branch
   GIT_DEVELOPMENT_BRANCH: "develop"
