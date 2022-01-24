@@ -43,7 +43,7 @@ class CourseEnrollmentPaymentService
         /** EN+CourseCode+I=36 is an invoice id */
         $invoicePrefix = CourseEnrollment::INVOICE_PREFIX . $courseInfo->code;
         $ekPayMerchantIdSize = CourseEnrollment::MERCHANT_ID_SIZE;
-        $invoiceId = CodeGeneratorService::getInvoice($invoicePrefix, $ekPayMerchantIdSize); // Invoice id as a trnx_id;
+        $invoiceId = CodeGeneratorService::getNewInvoiceCode($invoicePrefix, $ekPayMerchantIdSize); // Invoice id as a trnx_id;
 
         $paymentGatewayPayLoad = [
             "invoice" => $invoiceId,

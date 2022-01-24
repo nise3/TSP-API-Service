@@ -5,7 +5,6 @@ namespace App\Services\CommonServices;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
-use App\Models\CourseEnrollment;
 use App\Models\Institute;
 use App\Models\InvoicePessimisticLocking;
 use App\Models\MerchantCodePessimisticLocking;
@@ -26,12 +25,11 @@ class CodeGeneratorService
      */
     public static function getSSPCode(): string
     {
-        $sspCode = "";
         DB::beginTransaction();
         try {
             /** @var SSPPessimisticLocking $existingSSPCode */
             $existingSSPCode = SSPPessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingSSPCode) && !empty($existingSSPCode->last_incremental_value) ? $existingSSPCode->last_incremental_value : 0;
+            $code = !empty($existingSSPCode) && $existingSSPCode->last_incremental_value ? $existingSSPCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = Institute::INSTITUTE_CODE_LENGTH - strlen($code);
 
@@ -52,11 +50,12 @@ class CodeGeneratorService
                 ]);
             }
             DB::commit();
+            return $sspCode;
         } catch (Throwable $throwable) {
             DB::rollBack();
             throw $throwable;
         }
-        return $sspCode;
+
     }
 
 
@@ -67,27 +66,21 @@ class CodeGeneratorService
      */
     public static function getBranchCode(int $sspId): string
     {
-        DB::beginTransaction();
-        $code = "";
-        try {
-            $instituteCode = Institute::find($sspId)->code;
-            $branchExistingCode = Branch::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
-            if (!empty($branchExistingCode) && !empty($branchExistingCode->code)) {
-                $branchCode = explode(Branch::BRANCH_CODE_PREFIX, $branchExistingCode->code);
-                $branchCode = sizeof($branchCode) > 1 ? end($branchCode) : time();
+        $instituteCode = Institute::find($sspId)->code;
+        $branchExistingCode = Branch::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
+        if (!empty($branchExistingCode) && $branchExistingCode->code) {
+            $branchCode = explode(Branch::BRANCH_CODE_PREFIX, $branchExistingCode->code);
+            if (count($branchCode) > 1) {
+                $branchCode = (int)end($branchCode);
             } else {
                 $branchCode = 0;
             }
-            $branchCode = $branchCode + 1;
-            $padLSize = Branch::BRANCH_CODE_SIZE - strlen($branchCode);
-            $code = str_pad($instituteCode . Branch::BRANCH_CODE_PREFIX, $padLSize, '0') . $branchCode;
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw $throwable;
+        } else {
+            $branchCode = 0;
         }
-
-        return $code;
+        $branchCode = $branchCode + 1;
+        $padLSize = Branch::BRANCH_CODE_SIZE - strlen($branchCode);
+        return str_pad($instituteCode . Branch::BRANCH_CODE_PREFIX, $padLSize, '0') . $branchCode;
     }
 
     /**
@@ -97,27 +90,21 @@ class CodeGeneratorService
      */
     public static function getTrainingCenterCode(int $sspId): string
     {
-        DB::beginTransaction();
-        $code = "";
-        try {
-            $instituteCode = Institute::find($sspId)->code;
-            $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->withTrashed()->orderBy("id", "DESC")->first();
-            if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
-                $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
-                $trainingCenterCode = (int)sizeof($trainingCenterCode) > 1 ? end($trainingCenterCode) : time();
+        $instituteCode = Institute::find($sspId)->code;
+        $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->withTrashed()->orderBy("id", "DESC")->first();
+        if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
+            $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
+            if (sizeof($trainingCenterCode) > 1) {
+                $trainingCenterCode = (int)end($trainingCenterCode);
             } else {
                 $trainingCenterCode = 0;
             }
-            $trainingCenterCode = $trainingCenterCode + 1;
-            $padLSize = TrainingCenter::TRAINING_CENTER_CODE_SIZE - strlen($trainingCenterCode);
-            $code = str_pad($instituteCode . TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $padLSize, '0') . $trainingCenterCode;
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw $throwable;
+        } else {
+            $trainingCenterCode = 0;
         }
-
-        return $code;
+        $trainingCenterCode = $trainingCenterCode + 1;
+        $padLSize = TrainingCenter::TRAINING_CENTER_CODE_SIZE - strlen($trainingCenterCode);
+        return str_pad($instituteCode . TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $padLSize, '0') . $trainingCenterCode;
     }
 
     /**
@@ -127,27 +114,21 @@ class CodeGeneratorService
      */
     public static function getCourseCode(int $sspId): string
     {
-        DB::beginTransaction();
-        $code = "";
-        try {
-            $instituteCode = Institute::find($sspId)->code;
-            $courseExistingCode = Course::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
-            if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
-                $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
-                $courseCode = (int)sizeof($courseCode) > 1 ? end($courseCode) : time();
+        $instituteCode = Institute::find($sspId)->code;
+        $courseExistingCode = Course::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
+        if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
+            $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
+            if (count($courseCode) > 1) {
+                $courseCode = (int)end($courseCode);
             } else {
                 $courseCode = 0;
             }
-            $courseCode = $courseCode + 1;
-            $padLSize = Course::COURSE_CODE_SIZE - strlen($courseCode);
-            $code = str_pad($instituteCode . Course::COURSE_CODE_PREFIX, $padLSize, '0') . $courseCode;
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw $throwable;
+        } else {
+            $courseCode = 0;
         }
-
-        return $code;
+        $courseCode = $courseCode + 1;
+        $padLSize = Course::COURSE_CODE_SIZE - strlen($courseCode);
+        return str_pad($instituteCode . Course::COURSE_CODE_PREFIX, $padLSize, '0') . $courseCode;
     }
 
     /**
@@ -157,40 +138,35 @@ class CodeGeneratorService
      */
     public static function getBatchCode(int $courseId): string
     {
-        DB::beginTransaction();
-        $code = "";
-        try {
-            $instituteCode = Course::find($courseId)->code;
-            $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
-            if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
-                $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
-                $batchCode = (int)sizeof($batchCode) > 1 ? end($batchCode) : time();
+        $instituteCode = Course::find($courseId)->code;
+        $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
+        if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
+            $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
+            if (count($batchCode) > 1) {
+                $batchCode = (int)end($batchCode);
             } else {
                 $batchCode = 0;
             }
-            $batchCode = $batchCode + 1;
-            $padLSize = Batch::BATCH_CODE_SIZE - strlen($batchCode);
-            $code = str_pad($instituteCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
-            DB::commit();
-        } catch (Throwable $throwable) {
-            DB::rollBack();
-            throw $throwable;
-        }
 
-        return $code;
+        } else {
+            $batchCode = 0;
+        }
+        $batchCode = $batchCode + 1;
+        $padLSize = Batch::BATCH_CODE_SIZE - strlen($batchCode);
+        return str_pad($instituteCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
     }
 
     /**
      * @throws Throwable
      */
-    public static function getInvoice(string $invoicePrefix,int $invoiceIdSize): string
+    public static function getNewInvoiceCode(string $invoicePrefix, int $invoiceIdSize): string
     {
         $invoice = "";
         DB::beginTransaction();
         try {
             /** @var InvoicePessimisticLocking $existingSSPCode */
             $existingCode = InvoicePessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingCode) && !empty($existingCode->last_incremental_value) ? $existingCode->last_incremental_value : 0;
+            $code = !empty($existingCode) && $existingCode->last_incremental_value ? $existingCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = $invoiceIdSize - strlen($code);
 
@@ -224,12 +200,11 @@ class CodeGeneratorService
      */
     public static function getMerchantId(string $prefix, int $merchantIdSize): string
     {
-        $merchantId = "";
         DB::beginTransaction();
         try {
             /** @var SSPPessimisticLocking $existingSSPCode */
             $existingCode = MerchantCodePessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingCode) && !empty($existingCode->last_incremental_value) ? $existingCode->last_incremental_value : 0;
+            $code = !empty($existingCode) && $existingCode->last_incremental_value ? $existingCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = $merchantIdSize - strlen($code);
 
@@ -250,11 +225,12 @@ class CodeGeneratorService
                 ]);
             }
             DB::commit();
+            return $merchantId;
         } catch (Throwable $throwable) {
             DB::rollBack();
             throw $throwable;
         }
-        return $merchantId;
+
     }
 
 }
