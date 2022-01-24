@@ -29,11 +29,12 @@ use Illuminate\Support\Carbon;
  */
 class Batch extends BaseModel
 {
-
     use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
+    public const BATCH_CODE_PREFIX = "BT";
+    public const BATCH_CODE_SIZE = 28;
     /**
      * @return BelongsTo
      */

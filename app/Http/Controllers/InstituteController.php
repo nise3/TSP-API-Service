@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use App\Services\TrainingCenterService;
@@ -163,7 +164,7 @@ class InstituteController extends Controller
         $this->authorize('create', $institute);
 
         $validatedData = $this->instituteService->validator($request)->validate();
-
+        $validatedData['code'] = CodeGeneratorService::getSSPCode();
         DB::beginTransaction();
 
         try {
@@ -312,7 +313,7 @@ class InstituteController extends Controller
 
         $institute = app(Institute::class);
         $validated = $this->instituteService->registerInstituteValidator($request)->validate();
-
+        $validated['code'] = CodeGeneratorService::getSSPCode();
         DB::beginTransaction();
         try {
             $institute = $this->instituteService->store($institute, $validated);

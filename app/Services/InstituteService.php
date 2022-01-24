@@ -582,12 +582,6 @@ class InstituteService
                 "required",
                 "int"
             ],
-            'code' => [
-                'required',
-                'string',
-                'max:150',
-                'unique:institutes,code,' . $id,
-            ],
             'title' => [
                 'required',
                 'string',

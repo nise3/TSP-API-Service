@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\Skill;
+use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class TrainingCenterService
@@ -439,6 +441,9 @@ class TrainingCenterService
             ->json();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function createDefaultTrainingCenter(BaseModel $model)
     {
         $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES;
@@ -450,6 +455,7 @@ class TrainingCenterService
             $branchId = $model->id;
         }
         $trainingCenterPayload = [
+            'code'=>CodeGeneratorService::getTrainingCenterCode($instituteId),
             'institute_id' => $instituteId,
             'branch_id' => $branchId,
             'center_location_type' => $centerLocationType,

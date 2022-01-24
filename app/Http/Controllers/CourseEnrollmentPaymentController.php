@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseEnrollment;
-use App\Models\PaymentTransactionLogHistory;
+use App\Models\PaymentTransactionHistory;
+use App\Models\PaymentTransactionLog;
+use App\Services\Payment\CourseEnrollmentPaymentService;
 use App\Services\Payment\PaymentService;
-use http\Exception\RuntimeException;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,13 +17,13 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class PaymentController
+class CourseEnrollmentPaymentController extends Controller
 {
-    public PaymentService $paymentService;
+    public CourseEnrollmentPaymentService $courseEnrollmentPaymentService;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(CourseEnrollmentPaymentService $courseEnrollmentPaymentService)
     {
-        $this->paymentService = $paymentService;
+        $this->courseEnrollmentPaymentService = $courseEnrollmentPaymentService;
     }
 
 
@@ -31,14 +33,14 @@ class PaymentController
      * @throws ValidationException
      * @throws Throwable
      */
-    public function payNow(Request $request): JsonResponse
+    public function payNowByEkPay(Request $request): JsonResponse
     {
-        $paymentValidationData = $this->paymentService->paymentValidator($request)->validate();
-        $response = $this->paymentService->paymentProcessing($paymentValidationData);
+
+        $paymentValidationData = $this->courseEnrollmentPaymentService->ekPayPaymentValidator($request)->validate();
+        $response = $this->courseEnrollmentPaymentService->enrollmentEkPayPaymentProcessing($paymentValidationData);
         $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
 
-
-        if ($this->paymentService->isNotSMSVerified($paymentValidationData)) {
+        if ($this->courseEnrollmentPaymentService->isNotSMSVerified($paymentValidationData)) {
             $statusCode = ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
             $response = [
                 "errors" => [
@@ -65,7 +67,7 @@ class PaymentController
         return Response::json($response, $statusCode);
     }
 
-    public function success(Request $request): JsonResponse
+    public function ekPayPaymentSuccess(Request $request): JsonResponse
     {
         $response = [
             "_response_status" => [
@@ -77,19 +79,7 @@ class PaymentController
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function fail(Request $request): JsonResponse
-    {
-        $response = [
-            "_response_status" => [
-                "status" => false,
-                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Payment Cancel"
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function cancel(Request $request): JsonResponse
+    public function ekPayPaymentFail(Request $request): JsonResponse
     {
         $response = [
             "_response_status" => [
@@ -101,20 +91,37 @@ class PaymentController
         return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function ipnHandler(Request $request, string $secretToken)
+    public function ekPayPaymentCancel(Request $request): JsonResponse
     {
+        $response = [
+            "_response_status" => [
+                "status" => false,
+                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
+                "message" => "Payment Cancel"
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function ekPayPaymentIpnHandler(Request $request, string $secretToken)
+    {
+
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
-        if ($this->paymentService->checkSecretToken($secretToken)) {
+
+        if (PaymentService::checkSecretToken($secretToken)) {
             DB::beginTransaction();
-            $paymentStatus = $this->paymentService->getPaymentStatus($request->msg_code);
+            $paymentStatus = PaymentService::getPaymentStatus($request->msg_code);
+
             $data['trnx_id'] = $request->trnx_info['trnx_id'];
-            $data['payment_instrument_type'] = $request->pi_det_info['pi_type'];
-            $data['payment_instrument_name'] = $request->pi_det_info['pi_name'];
             $data['paid_amount'] = $request->trnx_info['trnx_amt'];
             $data['response_message'] = $request->all();
             $data['status'] = $paymentStatus;
+            $data['transaction_completed_at'] = Carbon::now();
 
-            $payment = PaymentTransactionLogHistory::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
+            $payment = PaymentTransactionLog::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
             Log::channel("ek_pay")->info("Payment Info in ipnHandler for mer_trnx_id=" . $request->trnx_info['mer_trnx_id'] . json_encode($payment));
 
@@ -122,9 +129,25 @@ class PaymentController
                 if ($payment) {
                     $payment->fill($data);
                     $payment->save();
-                    $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
+                    /** @var CourseEnrollment $courseEnroll */
+                    $courseEnroll = CourseEnrollment::findOrFail($payment->payment_purpose_related_id);
                     $courseEnroll->payment_status = $paymentStatus;
                     $courseEnroll->save();
+
+                    if ($paymentStatus == PaymentTransactionHistory::PAYMENT_SUCCESS) {
+                        $paymentHistoryPayload = $payment->toArray();
+                        $paymentHistoryPayload['payment_purpose_related_id'] = $courseEnroll->id;
+                        $paymentHistoryPayload['customer_identity_code'] = $courseEnroll->youth_code;
+                        $paymentHistoryPayload['customer_name'] = $courseEnroll->first_name . " " . $courseEnroll->last_name;
+                        $paymentHistoryPayload['customer_email'] = $courseEnroll->email;
+                        $paymentHistoryPayload['customer_mobile'] = $courseEnroll->mobile;
+                        $paymentHistoryPayload['status'] = PaymentTransactionHistory::PAYMENT_SUCCESS;
+                        $paymentHistory = new PaymentTransactionHistory();
+                        $paymentHistory->fill($paymentHistoryPayload);
+                        $paymentHistory->save();
+                        $payment->payment_transaction_history_id = $paymentHistory->id;
+                        $payment->save();
+                    }
                     DB::commit();
                 }
             } catch (Throwable $exception) {
@@ -134,6 +157,4 @@ class PaymentController
         }
 
     }
-
-
 }

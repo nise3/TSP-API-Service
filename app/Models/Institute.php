@@ -32,6 +32,9 @@ class Institute extends BaseModel
         self::ROW_STATUS_REJECTED
     ];
 
+    public const INSTITUTE_CODE_PREFIX = "SSP";
+    public const INSTITUTE_CODE_LENGTH = 11;
+
     use ScopeRowStatusTrait, SoftDeletes;
 
     /**

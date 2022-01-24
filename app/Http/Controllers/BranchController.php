@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Services\BranchService;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\TrainingCenterService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
@@ -91,6 +92,8 @@ class BranchController extends Controller
     {
         $this->authorize('create', Branch::class);
         $validatedData = $this->branchService->validator($request)->validate();
+        $validatedData['code'] = CodeGeneratorService::getBranchCode($validatedData['institute_id']);
+
         $branch = $this->branchService->store($validatedData);
 
         /** Create a default training center in time of Branch Create */

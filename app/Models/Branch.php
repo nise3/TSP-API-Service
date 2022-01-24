@@ -20,6 +20,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Branch extends BaseModel
 {
+    public const BRANCH_CODE_PREFIX = "B";
+    public const BRANCH_CODE_SIZE = 18;
+
     use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
