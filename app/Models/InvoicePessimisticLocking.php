@@ -14,6 +14,9 @@ use Carbon\Carbon;
 class InvoicePessimisticLocking extends BaseModel
 {
     protected $table = 'invoice_pessimistic_lockings';
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'last_incremental_value';
     protected $guarded = [];
     protected $casts = [
         'last_incremental_value' => 'integer'

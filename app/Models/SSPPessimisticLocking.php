@@ -14,6 +14,9 @@ use Carbon\Carbon;
 class SSPPessimisticLocking extends BaseModel
 {
     protected $table = 'ssp_pessimistic_lockings';
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'last_incremental_value';
     protected $guarded = [];
     protected $casts = [
         'last_incremental_value' => 'integer'
