@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InvoicePessimisticLocking extends Model
 {
-    protected $table = 'ssp_pessimistic_lockings';
+    protected $table = 'invoice_pessimistic_lockings';
     protected $guarded = [];
     protected $casts = [
         'last_incremental_value' => 'integer'
