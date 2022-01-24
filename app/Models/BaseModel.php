@@ -35,6 +35,12 @@ abstract class BaseModel extends Model
     public const INSTITUTE_TYPE_NON_GOVT = 2;
     public const INSTITUTE_TYPE_OTHERS_ = 3;
 
+    public const INSTITUTE_TYPES = [
+        self::INSTITUTE_TYPE_GOVT,
+        self::INSTITUTE_TYPE_NON_GOVT,
+        self::INSTITUTE_TYPE_OTHERS_,
+    ];
+
 
     public const TRUE = 1;
     public const FALSE = 0;
@@ -98,7 +104,6 @@ abstract class BaseModel extends Model
     public const CMS_CLIENT_URL_TYPE = "CMS";
     public const IDP_SERVER_CLIENT_PROFILE_URL_TYPE = "IDP_SERVER_USER";
     public const IDP_SERVER_CLIENT_BASE_URL_TYPE = "IDP_SERVER";
-
 
 
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
