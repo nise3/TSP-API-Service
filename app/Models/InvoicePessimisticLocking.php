@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  *Class InvoicePessimisticLocking
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon created_at
  * @property Carbon updated_at
  */
-class InvoicePessimisticLocking extends Model
+class InvoicePessimisticLocking extends BaseModel
 {
     protected $table = 'invoice_pessimistic_lockings';
     protected $guarded = [];
