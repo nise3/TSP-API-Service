@@ -26,7 +26,7 @@ class AddYouthCodeToCourseEnrollments extends Migration
     public function down()
     {
         Schema::table('course_enrollments', function (Blueprint $table) {
-            //
+            $table->dropColumn('youth_code');
         });
     }
 }

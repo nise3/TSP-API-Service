@@ -31,7 +31,7 @@ class CodeGeneratorService
         try {
             /** @var SSPPessimisticLocking $existingSSPCode */
             $existingSSPCode = SSPPessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingSSPCode) && !empty($existingSSPCode->code) ? $existingSSPCode->code : 0;
+            $code = !empty($existingSSPCode) && !empty($existingSSPCode->last_incremental_value) ? $existingSSPCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = Institute::INSTITUTE_CODE_LENGTH - strlen($code);
 
@@ -44,11 +44,11 @@ class CodeGeneratorService
              * Code Update
              */
             if ($existingSSPCode) {
-                $existingSSPCode->code = $code;
+                $existingSSPCode->last_incremental_value = $code;
                 $existingSSPCode->save();
             } else {
                 SSPPessimisticLocking::create([
-                    "code" => $code
+                    "last_incremental_value" => $code
                 ]);
             }
             DB::commit();
@@ -190,7 +190,7 @@ class CodeGeneratorService
         try {
             /** @var InvoicePessimisticLocking $existingSSPCode */
             $existingCode = InvoicePessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingCode) && !empty($existingCode->code) ? $existingCode->code : 0;
+            $code = !empty($existingCode) && !empty($existingCode->last_incremental_value) ? $existingCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = $invoiceIdSize - strlen($code);
 
@@ -203,11 +203,11 @@ class CodeGeneratorService
              * Code Update
              */
             if ($existingCode) {
-                $existingCode->code = $code;
+                $existingCode->last_incremental_value = $code;
                 $existingCode->save();
             } else {
                 InvoicePessimisticLocking::create([
-                    "code" => $code
+                    "last_incremental_value" => $code
                 ]);
             }
             DB::commit();
@@ -229,7 +229,7 @@ class CodeGeneratorService
         try {
             /** @var SSPPessimisticLocking $existingSSPCode */
             $existingCode = MerchantCodePessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingCode) && !empty($existingCode->code) ? $existingCode->code : 0;
+            $code = !empty($existingCode) && !empty($existingCode->last_incremental_value) ? $existingCode->last_incremental_value : 0;
             $code = $code + 1;
             $padSize = $merchantIdSize - strlen($code);
 
@@ -242,11 +242,11 @@ class CodeGeneratorService
              * Code Update
              */
             if ($existingCode) {
-                $existingCode->code = $code;
+                $existingCode->last_incremental_value = $code;
                 $existingCode->save();
             } else {
                 MerchantCodePessimisticLocking::create([
-                    "code" => $code
+                    "last_incremental_value" => $code
                 ]);
             }
             DB::commit();

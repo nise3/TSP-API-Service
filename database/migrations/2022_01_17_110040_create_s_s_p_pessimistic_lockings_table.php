@@ -13,10 +13,8 @@ class CreateSSPPessimisticLockingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('s_s_p_pessimistic_lockings', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('code');
-            $table->timestamps();
+        Schema::create('ssp_pessimistic_lockings', function (Blueprint $table) {
+            $table->integer('last_incremental_value');
         });
     }
 
@@ -27,6 +25,6 @@ class CreateSSPPessimisticLockingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('s_s_p_pessimistic_lockings');
+        Schema::dropIfExists('ssp_pessimistic_lockings');
     }
 }

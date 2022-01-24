@@ -27,7 +27,7 @@ class ModifyCourseCodeTypeToCourses extends Migration
     public function down()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->dropColumn('code');
+            DB::statement('ALTER TABLE courses MODIFY code varchar(150) NOT NUll');
         });
     }
 }

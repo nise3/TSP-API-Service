@@ -29,7 +29,9 @@ class ModifyTrainerUniqueTypeToTrainers extends Migration
     public function down()
     {
         Schema::table('trainers', function (Blueprint $table) {
-          //
+          $table->unique('email', 'trainers_email_unique');
+          $table->unique('trainer_registration_number', 'trainers_trainer_registration_number_unique');
+          $table->unique('mobile', 'trainers_mobile_unique');
         });
     }
 }

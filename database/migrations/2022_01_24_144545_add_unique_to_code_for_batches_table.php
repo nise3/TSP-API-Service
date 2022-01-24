@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddCodeAttributeToBatches extends Migration
+class AddUniqueToCodeForBatchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddCodeAttributeToBatches extends Migration
      */
     public function up()
     {
-        Schema::table('batches', function (Blueprint $table) {
-            $table->char('code', 28)->after('id');
+        Schema::table('training_centers', function (Blueprint $table) {
+            $table->unique(['code']);
         });
     }
 
@@ -25,8 +25,8 @@ class AddCodeAttributeToBatches extends Migration
      */
     public function down()
     {
-        Schema::table('batches', function (Blueprint $table) {
-            $table->dropColumn('code');
+        Schema::table('training_centers', function (Blueprint $table) {
+            $table->dropUnique(['code']);
         });
     }
 }

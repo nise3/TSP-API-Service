@@ -27,7 +27,7 @@ class ModifyInstituteCodeTypeToInstitutes extends Migration
     public function down()
     {
         Schema::table('institutes', function (Blueprint $table) {
-            $table->dropColumn('code');
+            DB::statement('ALTER TABLE institutes MODIFY code varchar(150) NOT NUll');
         });
     }
 }

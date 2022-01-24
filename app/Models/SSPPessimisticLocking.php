@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  *Class SSPPessimisticLocking
@@ -14,5 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SSPPessimisticLocking extends BaseModel
 {
-    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $table = 'ssp_pessimistic_lockings';
+    protected $guarded = [];
+    protected $casts = [
+        'last_incremental_value' => 'integer'
+    ];
 }

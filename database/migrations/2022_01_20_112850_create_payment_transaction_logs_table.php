@@ -16,16 +16,16 @@ class CreatePaymentTransactionLogsTable extends Migration
         Schema::create('payment_transaction_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('payment_transaction_history_id')->nullable();
-            $table->string('invoice');
-            $table->string('mer_trnx_id')->unique();
-            $table->string('trnx_id')->nullable();
+            $table->char('invoice', 36);
+            $table->string('mer_trnx_id', 64)->unique();
+            $table->string('trnx_id', 100)->nullable();
             $table->unsignedInteger('payment_purpose_related_id');
             $table->unsignedTinyInteger('payment_purpose_code');
             $table->unsignedTinyInteger('payment_gateway_type')
                 ->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
             $table->unsignedDecimal('amount', 12, 4);
             $table->unsignedDecimal('paid_amount', 12, 4)->nullable();
-            $table->string('trnx_currency')->comment('BDT');
+            $table->char('trnx_currency', 3)->comment('BDT');
             $table->json('request_payload')->nullable();
             $table->json('response_message')->nullable();
             $table->string('status')->default(2)->comment("1=>Success, 2=>Pending, 3=>Fail, 5=>Cancel");

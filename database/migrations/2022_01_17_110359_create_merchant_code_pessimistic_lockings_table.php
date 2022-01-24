@@ -14,9 +14,7 @@ class CreateMerchantCodePessimisticLockingsTable extends Migration
     public function up()
     {
         Schema::create('merchant_code_pessimistic_lockings', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('code');
-            $table->timestamps();
+            $table->integer('last_incremental_value');
         });
     }
 
