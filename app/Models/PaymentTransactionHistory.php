@@ -11,9 +11,10 @@ use PHPUnit\Util\Json;
  * @property string invoice
  * @property string mer_trnx_id
  * @property string trnx
+ * @property int payment_purpose_related_id
  * @property int payment_purpose_code
  * @property int payment_gateway_type
- * @property string customer_id
+ * @property string customer_identity_code
  * @property string customer_name
  * @property string customer_mobile
  * @property string customer_email

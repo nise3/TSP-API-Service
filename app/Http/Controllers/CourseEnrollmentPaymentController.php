@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CourseEnrollment;
+use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLog;
-use App\Models\PaymentTransactionLogHistory;
 use App\Services\Payment\CourseEnrollmentPaymentService;
 use App\Services\Payment\PaymentService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -84,7 +85,7 @@ class CourseEnrollmentPaymentController extends Controller
             "_response_status" => [
                 "status" => false,
                 "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Payment Cancel"
+                "message" => "Payment Failed"
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
@@ -96,7 +97,7 @@ class CourseEnrollmentPaymentController extends Controller
             "_response_status" => [
                 "status" => false,
                 "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Payment Failed"
+                "message" => "Payment Cancel"
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
@@ -107,6 +108,7 @@ class CourseEnrollmentPaymentController extends Controller
      */
     public function ekPayPaymentIpnHandler(Request $request, string $secretToken)
     {
+
         Log::channel('ek_pay')->info("IPN RESPONSE: " . json_encode($request->all()));
 
         if (PaymentService::checkSecretToken($secretToken)) {
@@ -117,6 +119,7 @@ class CourseEnrollmentPaymentController extends Controller
             $data['paid_amount'] = $request->trnx_info['trnx_amt'];
             $data['response_message'] = $request->all();
             $data['status'] = $paymentStatus;
+            $data['transaction_completed_at'] = Carbon::now();
 
             $payment = PaymentTransactionLog::where('mer_trnx_id', $request->trnx_info['mer_trnx_id'])->first();
 
@@ -126,9 +129,25 @@ class CourseEnrollmentPaymentController extends Controller
                 if ($payment) {
                     $payment->fill($data);
                     $payment->save();
-                    $courseEnroll = CourseEnrollment::findOrFail($payment->order_id);
+                    /** @var CourseEnrollment $courseEnroll */
+                    $courseEnroll = CourseEnrollment::findOrFail($payment->payment_purpose_related_id);
                     $courseEnroll->payment_status = $paymentStatus;
                     $courseEnroll->save();
+
+                    if ($paymentStatus == PaymentTransactionHistory::PAYMENT_SUCCESS) {
+                        $paymentHistoryPayload = $payment->toArray();
+                        $paymentHistoryPayload['payment_purpose_related_id'] = $courseEnroll->id;
+                        $paymentHistoryPayload['customer_identity_code'] = $courseEnroll->youth_code;
+                        $paymentHistoryPayload['customer_name'] = $courseEnroll->first_name . " " . $courseEnroll->last_name;
+                        $paymentHistoryPayload['customer_email'] = $courseEnroll->email;
+                        $paymentHistoryPayload['customer_mobile'] = $courseEnroll->mobile;
+                        $paymentHistoryPayload['status'] = PaymentTransactionHistory::PAYMENT_SUCCESS;
+                        $paymentHistory = new PaymentTransactionHistory();
+                        $paymentHistory->fill($paymentHistoryPayload);
+                        $paymentHistory->save();
+                        $payment->payment_transaction_history_id = $paymentHistory->id;
+                        $payment->save();
+                    }
                     DB::commit();
                 }
             } catch (Throwable $exception) {

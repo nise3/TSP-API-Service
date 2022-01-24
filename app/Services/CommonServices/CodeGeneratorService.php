@@ -197,7 +197,7 @@ class CodeGeneratorService
             /**
              * Prefix+000000N. Ex: EN+Course Code+incremental number
              */
-            $invoice = str_pad($invoicePrefix . "#", $padSize, '0', STR_PAD_RIGHT) . $code;
+            $invoice = str_pad($invoicePrefix . "I", $padSize, '0', STR_PAD_RIGHT) . $code;
 
             /**
              * Code Update

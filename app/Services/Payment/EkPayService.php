@@ -2,10 +2,7 @@
 
 namespace App\Services\Payment;
 
-use App\Models\BaseModel;
 use Carbon\Carbon;
-use http\Url;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;

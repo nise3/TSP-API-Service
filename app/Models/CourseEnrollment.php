@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null last_name_en
  * @property string email
  * @property string mobile
+ * @property int payment_status
  * @property string | null verification_code
  * @property Carbon | null verification_code_sent_at
  * @property HasOne course

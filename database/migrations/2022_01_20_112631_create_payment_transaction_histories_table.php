@@ -18,10 +18,11 @@ class CreatePaymentTransactionHistoriesTable extends Migration
             $table->string('invoice');
             $table->string('mer_trnx_id')->unique();
             $table->string('trnx_id')->nullable();
+            $table->unsignedInteger('payment_purpose_related_id');
             $table->unsignedTinyInteger('payment_purpose_code');
             $table->unsignedTinyInteger('payment_gateway_type')
                 ->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
-            $table->string('customer_id');
+            $table->string('customer_identity_code');
             $table->string('customer_name', 500)->nullable();
             $table->string('customer_mobile', 15)->nullable();
             $table->string('customer_email', 150)->nullable();

@@ -4,9 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLog;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
 /**
  * class PaymentService
@@ -33,6 +31,7 @@ class PaymentService
         $parts = explode('/', $payload['ipn_info']['ipn_uri']);
         $ipnUriSecretToken = end($parts);
         $response = app(EkPayService::class)->paymentByEkPay($payload);
+
         if (!empty($response)) {
             $data['invoice'] = $payload['invoice'];
             $data['mer_trnx_id'] = $payload['payment']['trnx_id'];
@@ -43,16 +42,17 @@ class PaymentService
             $data['amount'] = $payload['payment']['trnx_amt'];
             $data['ipn_uri_secret_token'] = $ipnUriSecretToken;
             $data['request_payload'] = $payload;
+            $data['transaction_created_at'] = Carbon::now();
             $this->storeDataInPaymentLog($data);
         }
         return $response;
     }
 
 
-    private function storeDataInPaymentLog(array $paymentData)
+    private function storeDataInPaymentLog(array $paymentLogData)
     {
         $paymentLog = new PaymentTransactionLog();
-        $paymentLog->fill($paymentData);
+        $paymentLog->fill($paymentLogData);
         $paymentLog->save();
     }
 
@@ -86,31 +86,4 @@ class PaymentService
         return (bool)PaymentTransactionLog::where('ipn_uri_secret_token', $secretToken)->count('ipn_uri_secret_token');
     }
 
-    public function paymentValidator(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            "payment_gateway_type" => [
-                "required",
-                Rule::in(array_values(PaymentTransactionHistory::PAYMENT_GATEWAYS))
-            ],
-            "course_enrollment_id" => [
-                "required",
-                "int",
-                'exists:course_enrollments,id,deleted_at,NULL'
-            ],
-            "feed_uri.success" => [
-                "required",
-                "url"
-            ],
-            "feed_uri.failed" => [
-                "required",
-                "url"
-            ],
-            "feed_uri.cancel" => [
-                "required",
-                "url"
-            ]
-        ];
-        return Validator::make($request->all(), $rules);
-    }
 }

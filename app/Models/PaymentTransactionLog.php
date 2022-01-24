@@ -30,4 +30,9 @@ use PHPUnit\Util\Json;
 class PaymentTransactionLog extends BaseModel
 {
     protected $guarded=BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+
+    protected $casts = [
+        "request_payload" => 'array',
+        "response_message" => "array"
+    ];
 }

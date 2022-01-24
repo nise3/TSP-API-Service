@@ -7,14 +7,12 @@ use App\Models\BaseModel;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
-use App\Models\PaymentTransactionLogHistory;
 use App\Services\CommonServices\CodeGeneratorService;
 use Faker\Provider\Uuid;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use JetBrains\PhpStorm\NoReturn;
 use Throwable;
 
 class CourseEnrollmentPaymentService
@@ -40,7 +38,7 @@ class CourseEnrollmentPaymentService
             $baseUrl = BaseModel::INSTITUTE_LOCAL_BASE_URL;
         }
 
-        $ipnUri = $baseUrl . "api/v1/payment/ipn-handler/" . Uuid::uuid();
+        $ipnUri = $baseUrl . "api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/" . Uuid::uuid();
 
         /** EN+CourseCode+I=36 is an invoice id */
         $invoicePrefix = CourseEnrollment::INVOICE_PREFIX . $courseInfo->code;

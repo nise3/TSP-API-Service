@@ -19,7 +19,7 @@ class CreatePaymentTransactionLogsTable extends Migration
             $table->string('invoice');
             $table->string('mer_trnx_id')->unique();
             $table->string('trnx_id')->nullable();
-            $table->string('payment_purpose_related_id');
+            $table->unsignedInteger('payment_purpose_related_id');
             $table->unsignedTinyInteger('payment_purpose_code');
             $table->unsignedTinyInteger('payment_gateway_type')
                 ->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
