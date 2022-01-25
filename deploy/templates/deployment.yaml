@@ -23,22 +23,24 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: APP_ENV
-              value: "{{ .Values.variables.APP_ENV }}"
-            - name: APP_DEBUG
-              value: "{{ .Values.variables.APP_DEBUG }}"
-            - name: APP_URL
-              value: "{{ .Values.variables.APP_URL }}"
-            - name: DB_HOST
-              value: "{{ .Values.variables.DB_HOST }}"
-            - name: DB_PORT
-              value: "{{ .Values.variables.DB_PORT }}"
-            - name: DB_DATABASE
-              value: "{{ .Values.variables.DB_DATABASE }}"
-            - name: DB_USERNAME
-              value: "{{ .Values.variables.DB_USERNAME }}"
-            - name: DB_PASSWORD
-              value: {{ .Values.variables.DB_PASSWORD | default "" | quote }}
+            {{ if eq .Values.variables.APP_ENV "LOCAL" }}
+            {{- range $key, $val := .Values.variables.DEV }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "STAGING" }}
+            {{- range $key, $val := .Values.variables.STAGING }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
+            {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+            {{- range $key, $val := .Values.variables.PRODUCTION }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{end}}
           lifecycle:
             postStart:
               exec:
@@ -56,6 +58,25 @@ spec:
                     sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
                     sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
                     sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
+                    sed -i "s/RABBITMQ_HOST=.*$/RABBITMQ_HOST=$RABBITMQ_HOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_PORT=.*$/RABBITMQ_PORT=$RABBITMQ_PORT/g" /app/.env;
+                    sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
+                    sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
+                    sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
+
+                    sed -i "s/WSO2_IDP_BASE_URL=.*$/WSO2_IDP_BASE_URL=$WSO2_IDP_BASE_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_BASE_USER_URL=.*$/WSO2_IDP_BASE_USER_URL=$WSO2_IDP_BASE_USER_URL/g" /app/.env;
+                    sed -i "s/WSO2_IDP_USERNAME=.*$/WSO2_IDP_USERNAME=$WSO2_IDP_USERNAME/g" /app/.env;
+                    sed -i "s/WSO2_IDP_PASSWORD=.*$/WSO2_IDP_PASSWORD=$WSO2_IDP_PASSWORD/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_KEY=.*$/WSO2_IDP_CLIENT_KEY=$WSO2_IDP_CLIENT_KEY/g" /app/.env;
+                    sed -i "s/WSO2_IDP_CLIENT_SECRET=.*$/WSO2_IDP_CLIENT_SECRET=$WSO2_IDP_CLIENT_SECRET/g" /app/.env;
+
+                    sed -i "s/CORE_API_BASE_URL=.*$/CORE_API_BASE_URL=$CORE_API_BASE_URL/g" /app/.env;
+                    sed -i "s/YOUTH_API_BASE_URL=.*$/YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL/g" /app/.env;
+                    sed -i "s/TSP_API_BASE_URL=.*$/TSP_API_BASE_URL=$TSP_API_BASE_URL/g" /app/.env;
+                    sed -i "s/INDUSTRY_API_BASE_URL=.*$/INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL/g" /app/.env;
+                    sed -i "s/CMS_API_BASE_URL=.*$/CMS_API_BASE_URL=$CMS_API_BASE_URL/g" /app/.env;
+                    sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
           volumeMounts:
