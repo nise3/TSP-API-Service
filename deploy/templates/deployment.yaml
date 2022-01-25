@@ -63,6 +63,12 @@ spec:
                     sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
                     sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
                     sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
+                    sed -i "s/CORE_API_BASE_URL=.*$/CORE_API_BASE_URL=$CORE_API_BASE_URL/g" /app/.env;
+                    sed -i "s/YOUTH_API_BASE_URL=.*$/YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL/g" /app/.env;
+                    sed -i "s/TSP_API_BASE_URL=.*$/TSP_API_BASE_URL=$TSP_API_BASE_URL/g" /app/.env;
+                    sed -i "s/INDUSTRY_API_BASE_URL=.*$/INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL/g" /app/.env;
+                    sed -i "s/CMS_API_BASE_URL=.*$/CMS_API_BASE_URL=$CMS_API_BASE_URL/g" /app/.env;
+                    sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
           volumeMounts:
