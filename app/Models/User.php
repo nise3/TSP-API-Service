@@ -29,6 +29,7 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property int loc_upazila_id
  * @property int branch_id
  * @property int training_center_id
+ * @property int industry_association_id
  * @property int $row_status
  * @property Carbon $created_at
  * @property Carbon $updated_at
