@@ -4,16 +4,21 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Models\TrainingCenter;
+use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -284,13 +289,115 @@ class InstituteService
 
 
     /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function instituteUserDestroy(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->delete($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterApproval(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_ACTIVE;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterRejection(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_REJECTED;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function instituteUserApproval(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->put($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+
+    public function instituteUserRejection(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-rejection';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->put($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
+
+    /**
      * @param array $data
      * @return PromiseInterface|\Illuminate\Http\Client\Response|array
      * @throws RequestException
      */
     public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
@@ -344,6 +451,34 @@ class InstituteService
                 return $e;
             })
             ->json();
+    }
+
+
+
+    public function userInfoSendByMail(array $mailPayload)
+    {
+        $mailService = new MailService();
+        $mailService->setTo([
+            $mailPayload['contact_person_email']
+        ]);
+        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
+        $subject = $mailPayload['subject'] ?? "Institute Registration";
+
+        $mailService->setForm($from);
+        $mailService->setSubject($subject);
+        $mailService->setMessageBody([
+            "user_name" => $mailPayload['contact_person_mobile'],
+            "password" => $mailPayload['password']
+        ]);
+        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.institute-create-default-template';
+        $mailService->setTemplate($instituteRegistrationTemplate);
+        $mailService->sendMail();
+    }
+
+    public function userInfoSendBySMS(string $recipient, string $message)
+    {
+        $sms = new SmsService($recipient, $message);
+        $sms->sendSms();
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
@@ -619,6 +754,113 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
+
+    public function instituteProfileValidator(Request $request, int $id = null): Validator
+    {
+        $data = $request->all();
+
+        $customMessage = [
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
+        ];
+
+        $rules = [
+            'title' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'loc_division_id' => [
+                'required',
+                'integer',
+                'exists:loc_divisions,id,deleted_at,NULL'
+            ],
+            'loc_district_id' => [
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
+            ],
+            'location_latitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'location_longitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
+            'address' => [
+                'nullable',
+                'string'
+            ],
+            'address_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head' => [
+                'required',
+                'string',
+                'max:500'
+            ],
+            'name_of_the_office_head_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head_designation' => [
+                "required",
+                "string",
+                "max:500"
+            ],
+            'name_of_the_office_head_designation_en' => [
+                "nullable",
+                "string",
+                "max:500"
+            ],
+            'logo' => [
+                'nullable',
+                'string',
+            ],
+            'contact_person_name' => [
+                'required',
+                'max: 500',
+                'min:2'
+            ],
+            'contact_person_name_en' => [
+                'nullable',
+                'max: 250',
+                'min:2'
+            ],
+            'contact_person_designation' => [
+                'required',
+                'max: 500',
+                "min:2"
+            ],
+            'contact_person_designation_en' => [
+                'nullable',
+                'max: 300',
+                "min:2"
+            ],
+            'created_by' => ['nullable', 'int'],
+            'updated_by' => ['nullable', 'int'],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
     public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
         $customMessage = [
@@ -764,4 +1006,6 @@ class InstituteService
             ],
         ], $customMessage);
     }
+
+
 }

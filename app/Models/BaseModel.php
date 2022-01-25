@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Scopes\ScopeAcl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,13 +12,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class BaseModel extends Model
 {
-    use HasFactory;
+    use HasFactory, ScopeAcl;
 
     public const COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE = ['id', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_SIMPLE = ['id', 'created_at', 'updated_at'];
     public const COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE = ['id', 'created_at', 'updated_at', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at'];
     public const COMMON_GUARDED_FIELDS_NON_SOFT_DELETE = ['id', 'created_by', 'updated_by', 'created_at', 'updated_at'];
+
+    public const ADMIN_CREATED_USER_DEFAULT_PASSWORD = "ABcd1234";
 
     public const ROW_STATUS_INACTIVE = 0;
     public const ROW_STATUS_ACTIVE = 1;
@@ -77,10 +80,14 @@ abstract class BaseModel extends Model
     public const OCCUPATION_INFO = 'occupation_info';
     public const GUARDIAN_INFO = 'guardian_info';
 
-    public const SYSTEM_USER = 1;
-
-    /** Institute User Type*/
+    /** User Type*/
+    public const SYSTEM_USER_TYPE = 1;
+    public const ORGANIZATION_USER_TYPE = 2;
     public const INSTITUTE_USER_TYPE = 3;
+    public const YOUTH_USER_TYPE = 4;
+    public const INDUSTRY_ASSOCIATION_USER_TYPE = 5;
+
+
     public const DEFAULT_PAGE_SIZE = 10;
 
     /** Client Url End Point Type*/
@@ -88,8 +95,11 @@ abstract class BaseModel extends Model
     public const INSTITUTE_URL_CLIENT_TYPE = "INSTITUTE";
     public const CORE_CLIENT_URL_TYPE = "CORE";
     public const YOUTH_CLIENT_URL_TYPE = "YOUTH";
-    public const IDP_SERVER_CLIENT_URL_TYPE = "IDP_SERVER";
     public const CMS_CLIENT_URL_TYPE = "CMS";
+    public const IDP_SERVER_CLIENT_PROFILE_URL_TYPE = "IDP_SERVER_USER";
+    public const IDP_SERVER_CLIENT_BASE_URL_TYPE = "IDP_SERVER";
+
+
 
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
@@ -102,5 +112,28 @@ abstract class BaseModel extends Model
 
     public const INSTITUTE_REMOTE_BASE_URL = 'https://institute.bus-staging.softbdltd.com/';
     const INSTITUTE_LOCAL_BASE_URL = "http://localhost:8001/";
+    public const NISE3_FROM_EMAIL = "info@nise3.com";
+    public const SELF_EXCHANGE = 'institute';
 
+    /** Service to service internal calling header type */
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_KEY = 'service-to-service';
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_TRUE = true;
+    public const DEFAULT_SERVICE_TO_SERVICE_CALL_FLAG_FALSE = false;
+
+    /** Saga Status */
+    public const SAGA_STATUS_CREATE_PENDING = 1;
+    public const SAGA_STATUS_UPDATE_PENDING = 2;
+    public const SAGA_STATUS_DESTROY_PENDING = 3;
+    public const SAGA_STATUS_COMMIT = 4;
+    public const SAGA_STATUS_ROLLBACK = 5;
+
+    /** SAGA events Publisher & Consumer */
+    public const SAGA_CORE_SERVICE = 'core_service';
+    public const SAGA_INSTITUTE_SERVICE = 'institute_service';
+    public const SAGA_ORGANIZATION_SERVICE = 'organization_service';
+    public const SAGA_YOUTH_SERVICE = 'youth_service';
+    public const SAGA_CMS_SERVICE = 'cms_service';
+    public const SAGA_MAIL_SMS_SERVICE = 'mail_sms_service';
+
+    public const DATABASE_CONNECTION_ERROR_CODE = 2002;
 }

@@ -17,6 +17,7 @@ use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
 use App\Models\Youth;
 use App\Services\CommonServices\SmsService;
+use App\Services\CommonServices\MailService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -1245,6 +1246,34 @@ class CourseEnrollmentService
     }
 
     /**
+     * @param array $mailPayload
+     */
+    public function sendMailYouthAfterBatchAssign(array $mailPayload)
+    {
+        $enrollment = CourseEnrollment::findOrFail($mailPayload['enrollment_id']);
+        $batch = Batch::findOrFail($mailPayload['batch_id']);
+        $course = Course::findOrFail($enrollment->course_id);
+
+        $mailService = new MailService();
+        $mailService->setTo([
+            $enrollment['email']
+        ]);
+        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
+        $subject = $mailPayload['subject'] ?? "Batch Assign";
+
+        $mailService->setForm($from);
+        $mailService->setSubject($subject);
+        $mailService->setMessageBody([
+            "course_name" => $course->title,
+            "batch_info" => $batch->toArray()
+        ]);
+        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.batch-assign-template';
+        $mailService->setTemplate($instituteRegistrationTemplate);
+        $mailService->sendMail();
+
+    }
+
+    /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
      * @return Validator
@@ -1292,7 +1321,12 @@ class CourseEnrollmentService
         $requestData = $request->all();
 
         $rules = [
-            'enrollment_id' => ['required', 'int', 'min:1', 'exists:course_enrollments,id,deleted_at,NULL'],
+            'enrollment_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:course_enrollments,id,deleted_at,NULL'
+            ],
             'batch_id' => [
                 'required',
                 'int',
@@ -1331,6 +1365,7 @@ class CourseEnrollmentService
     /**
      * @param array $data
      * @return mixed
+     * @throws Throwable
      */
     public function assignBatch(array $data): CourseEnrollment
     {
@@ -1338,13 +1373,14 @@ class CourseEnrollmentService
         try {
             $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
             $courseEnrollment->batch_id = $data['batch_id'];
+            $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_UPDATE_PENDING;
+            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+            $courseEnrollment->save();
 
             $batch = Batch::find($data['batch_id']);
             $batch['available_seats'] = $batch['available_seats'] - 1;
             $batch->save();
 
-            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
-            $courseEnrollment->save();
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();

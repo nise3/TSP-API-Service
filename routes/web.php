@@ -3,7 +3,6 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Helpers\Classes\CustomRouter;
-use Illuminate\Http\Request;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -20,43 +19,76 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
 
-    $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
-    $customRouter()->resourceRoute('programs', 'ProgramController')->render();
-    $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();
-    $customRouter()->resourceRoute('batches', 'BatchController')->render();
-    $customRouter()->resourceRoute('courses', 'CourseController')->render();
-    $customRouter()->resourceRoute('branches', 'BranchController')->render();
-    $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
-    $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
+    /** Auth routes */
+    $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
+        $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
+        $customRouter()->resourceRoute('programs', 'ProgramController')->render();
+        $customRouter()->resourceRoute('training-centers', 'TrainingCenterController')->render();
+        $customRouter()->resourceRoute('batches', 'BatchController')->render();
+        $customRouter()->resourceRoute('courses', 'CourseController')->render();
+        $customRouter()->resourceRoute('branches', 'BranchController')->render();
+        $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
+        $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
 
-    $router->get('youth-enroll-courses', ["as" => "courses.filter", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
+        /** Assign Trainers to Batch */
+        $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
 
-    $router->get('institute-dashboard-statistics[/{instituteId}]', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
-    $router->get('demanded-courses[/{instituteId}]', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+        /** Institute Registration Approval */
+        $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
+
+        /** Institute Profile Update */
+        $router->put("institute-profile-update", ["as" => "Institute.admin-profile-update", "uses" => "InstituteController@updateInstituteProfile"]);        /** Institute Admin Profile Update */
+
+        /** Get Institute Profile */
+        $router->get("institute-profile", ["as" => "Institute.profile", "uses" => "InstituteController@getInstituteProfile"]);
+
+        /** Institute Registration Rejection */
+        $router->put("institute-registration-rejection/{instituteId}", ["as" => "Institute.institutes-registration-rejection", "uses" => "InstituteController@instituteRegistrationRejection"]);
+
+        /** Batch Assign*/
+        $router->post("batch-assign", ["as" => "course-enroll.batch-assign", "uses" => "CourseEnrollmentController@assignBatch"]);
+
+        /** Reject course enrollment application */
+        $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
+
+        /** Course All batches / Active batches / Up-coming batches */
+        $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
+
+        $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+    });
 
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
-
+    /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
-        /** Course Filter */
-        $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
-
         /** Course details with trainer */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
 
-        /** Training Centers Filter */
-        $router->get('training-centers', ["as" => "training-centers.filter", "uses" => "TrainingCenterController@getTrainingCentersWithFilters"]);
+        //public api by domain name identification
+        $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
+            $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
+            $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+            /** Single Institute Fetch  */
+            $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@institutePublicDetails"]);
 
-        /** Program lists  */
-        $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
+            /** Program lists  */
+            $router->get("programs", ["as" => "public.programs", "uses" => "ProgramController@getPublicProgramList"]);
 
-        /** Single Institute Fetch  */
-        $router->get("institutes/{id}", ["as" => "public.institute", "uses" => "InstituteController@instituteDetails"]);
+            /** Training Centers Filter */
+            $router->get('training-centers', ["as" => "training-centers.filter", "uses" => "TrainingCenterController@getTrainingCentersWithFilters"]);
+
+            /** Course Filter */
+            $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
+        });
+
     });
 
-
-    /** Assign Trainers to Batch */
-    $router->post('batches/{id}/assign-trainer-to-batch', ['as' => 'batches.assign-trainer-to-batch', 'uses' => 'BatchController@assignTrainerToBatch']);
+    //Service to service direct call without any authorization and authentication
+    $router->group(['prefix' => 'service-to-service-call', 'as' => 'service-to-service-call'], function () use ($router) {
+        /** Single Institute Fetch  */
+        $router->get("institutes/{id}", ["as" => "service-to-service-call.institute", "uses" => "InstituteController@instituteDetails"]);
+    });
 
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
@@ -70,31 +102,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Course Enrollment Verification Code resend */
     $router->post("course-enroll/{id}/resend-verification-code", ["as" => "course.resend-verification-code", "uses" => "CourseEnrollmentController@reSendVerificationCode"]);
 
-    /** Batch Assign*/
-    $router->post("batch-assign", ["as" => "course-enroll.batch-assign", "uses" => "CourseEnrollmentController@assignBatch"]);
-
-    /** Reject course enrollment application */
-    $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
-
-    /** Course All batches / Active batches / Up-coming batches */
-    $router->get('courses/{id}/training_centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getBatchesByCourseId']);
-
-
     /** Institute Title by Ids for Internal Api */
-    $router->post("get-institute-title-by-ids",
-        [
-            "as" => "institutes.get-institute-title-by-ids",
-            "uses" => "InstituteController@getInstituteTitleByIds"
-        ]
-    );
+    $router->post("get-institute-title-by-ids", ["as" => "institutes.get-institute-title-by-ids", "uses" => "InstituteController@getInstituteTitleByIds"]);
 
     /** Batch and Program Title by Ids for Internal Api */
-    $router->post("get-course-program-title-by-ids",
-        [
-            "as" => "institutes.get-course-program-title-by-ids",
-            "uses" => "InstituteController@getCourseAndProgramTitleByIds"
-        ]
-    );
+    $router->post("get-course-program-title-by-ids", ["as" => "institutes.get-course-program-title-by-ids", "uses" => "InstituteController@getCourseAndProgramTitleByIds"]);
 
     $router->post('payment/pay-now', ["as" => "payment.pay-now", "uses" => "PaymentController@payNow"]);
     $router->get('payment/success', ["as" => "payment.success", "uses" => "PaymentController@success"]);

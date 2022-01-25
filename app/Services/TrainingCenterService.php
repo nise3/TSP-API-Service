@@ -3,11 +3,15 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\Institute;
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
@@ -405,6 +409,62 @@ class TrainingCenterService
     public function destroy(TrainingCenter $trainingCenter): bool
     {
         return $trainingCenter->delete();
+    }
+
+
+    /**
+     * @param TrainingCenter $trainingCenter
+     * @return mixed
+     * @throws RequestException
+     */
+    public function trainingCenterUserDestroy(TrainingCenter $trainingCenter): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'training_center_id' => $trainingCenter->id,
+            'institute_id' => $trainingCenter->institute_id
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->delete($url, $userPostField)
+            ->throw(function ($response, $e) {
+                return $e;
+            })
+            ->json();
+    }
+
+    public function createDefaultTrainingCenter(BaseModel $model)
+    {
+        $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES;
+        $instituteId = $model->id;
+        $branchId = null;
+        if (isset($model->institute_id)) {
+            $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_BRANCH_PREMISES;
+            $instituteId = $model->institute_id;
+            $branchId = $model->id;
+        }
+        $trainingCenterPayload = [
+            'institute_id' => $instituteId,
+            'branch_id' => $branchId,
+            'center_location_type' => $centerLocationType,
+            'title' => $model->title,
+            'title_en' => $model->title_en,
+            'loc_division_id' => $model->loc_division_id,
+            'loc_district_id' => $model->loc_district_id,
+            'loc_upazila_id' => $model->loc_upazila_id,
+            'location_latitude' => $model->location_latitude,
+            'location_longitude' => $model->location_latitude,
+            'google_map_src' => $model->google_map_src,
+            'address' => $model->google_map_src,
+            'address_en' => $model->address_en,
+        ];
+        app(TrainingCenterService::class)->store($trainingCenterPayload);
     }
 
     /**

@@ -9,14 +9,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
- * Class BatcheController
+ * Class BatchController
  * @package App\Http\Controllers
  */
 class BatchController extends Controller
@@ -104,6 +103,7 @@ class BatchController extends Controller
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
+
             DB::commit();
         } catch (Throwable $e){
             DB::rollBack();
@@ -124,6 +124,7 @@ class BatchController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
+
         $validated = $this->batchService->validator($request)->validate();
         DB::beginTransaction();
         try{

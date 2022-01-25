@@ -14,11 +14,20 @@ class AddFieldsToCourseEnrollmentsTable extends Migration
     public function up()
     {
         Schema::table('course_enrollments', function (Blueprint $table) {
-            $table->string("verification_code", 10)->after('signature_image_path')->nullable()
+
+            $table->string("verification_code", 10)
+                ->after('signature_image_path')
+                ->nullable()
                 ->comment('SMS verification code');
-            $table->dateTime("verification_code_sent_at")->nullable()
+
+            $table->dateTime("verification_code_sent_at")
+                ->nullable()
+                ->after('row_status')
                 ->comment('SMS verification code sent at');
-            $table->dateTime("verification_code_verified_at")->nullable()
+
+            $table->dateTime("verification_code_verified_at")
+                ->nullable()
+                ->after('row_status')
                 ->comment('SMS verification code verified at');
         });
     }
@@ -34,7 +43,6 @@ class AddFieldsToCourseEnrollmentsTable extends Migration
             $table->dropColumn('verification_code');
             $table->dropColumn('verification_code_sent_at');
             $table->dropColumn('verification_code_verified_at');
-            $table->dropColumn('payment_status');
         });
     }
 }
