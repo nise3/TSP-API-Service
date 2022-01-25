@@ -49,7 +49,7 @@ variables:
 
   # application config
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
-  APP_ENV: "STAGING"
+  APP_ENV: "DEV"
 
   DEV:
     APP_ENV: "local"
