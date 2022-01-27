@@ -64,12 +64,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
         /** Course details with trainer */
-        $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@courseDetails"]);
+        $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@publicCourseDetails"]);
 
         //public api by domain name identification
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
-            $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+            $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@publicDemandingCourses"]);
             /** Single Institute Fetch  */
             $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@institutePublicDetails"]);
 
