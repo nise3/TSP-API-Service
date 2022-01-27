@@ -90,7 +90,7 @@ class TrainingCenterController extends Controller
         $this->authorize('create', TrainingCenter::class);
         $validatedData = $this->trainingCenterService->validator($request)->validate();
 
-        $validatedData['code'] = CodeGeneratorService::getTrainingCenterCode($validatedData['institute_id']);
+        $validatedData['code'] = CodeGeneratorService::getTrainingCenterCode();
 
         $data = $this->trainingCenterService->store($validatedData);
         $response = [

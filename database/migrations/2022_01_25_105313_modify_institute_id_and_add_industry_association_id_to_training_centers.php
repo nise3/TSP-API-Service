@@ -2,9 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AddUniqueToCodeForTrainingCentersTable extends Migration
+class ModifyInstituteIdAndAddIndustryAssociationIdToTrainingCenters extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +15,8 @@ class AddUniqueToCodeForTrainingCentersTable extends Migration
     public function up()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            $table->unique('code','training_centers_code_unique_index');
+            DB::statement('ALTER TABLE training_centers MODIFY institute_id int(255) NUll');
+            $table->unsignedInteger('industry_association_id')->nullable()->after('institute_id');
         });
     }
 
@@ -26,7 +28,8 @@ class AddUniqueToCodeForTrainingCentersTable extends Migration
     public function down()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            $table->dropUnique('code');
+            DB::statement('ALTER TABLE training_centers MODIFY institute_id int(255) NOT NUll');
+            $table->dropColumn('industry_association_id');
         });
     }
 }

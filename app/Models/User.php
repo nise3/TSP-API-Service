@@ -86,6 +86,11 @@ class User extends BaseModel implements
         return $this->user_type == BaseModel::INSTITUTE_USER_TYPE && $this->institute_id;
     }
 
+    public function isIndustryAssociationUser(): bool
+    {
+        return $this->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $this->industry_association_id;
+    }
+
     public function isTrainingCenterUser(): bool
     {
         return $this->isInstituteUser() && $this->training_center_id;
@@ -95,7 +100,6 @@ class User extends BaseModel implements
     {
         return $this->isInstituteUser() && $this->branch_id && $this->training_center_id == null;
     }
-
 
 
 }

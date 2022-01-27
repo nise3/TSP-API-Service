@@ -9,6 +9,7 @@ use App\Models\Institute;
 use App\Models\Skill;
 use App\Models\Trainer;
 use Carbon\Carbon;
+use Faker\Provider\Base;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
@@ -265,7 +266,7 @@ class CourseService
             $course["trainers"] = $trainers->toArray();
         }
 
-        if(is_numeric($youthId)){
+        if (is_numeric($youthId)) {
             $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
             $course["enrolled"] = (bool)$courseEnrollment;
         }
@@ -273,7 +274,7 @@ class CourseService
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
         /** @var Batch | Builder $batch */
         $batch = Batch::where('course_id', $course->id);
-        $batch->where(function($builder) use($curDate){
+        $batch->where(function ($builder) use ($curDate) {
             $builder->whereDate('batches.registration_start_date', '<=', $curDate);
             $builder->whereDate('batches.registration_end_date', '>=', $curDate);
         });
@@ -752,7 +753,7 @@ class CourseService
 
         if ($type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
             if ($type == self::COURSE_FILTER_RECENT || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
-                $coursesBuilder->where(function($builder) use($curDate){
+                $coursesBuilder->where(function ($builder) use ($curDate) {
                     $builder->whereDate('batches.registration_start_date', '<=', $curDate);
                     $builder->whereDate('batches.registration_end_date', '>=', $curDate);
                     $builder->whereNull('batches.deleted_at');
@@ -782,35 +783,34 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
 
-        }
-        else {
+        } else {
             $courses = $coursesBuilder->get();
         }
 
         /** Set course already enrolled OR not for youth */
-        if(is_numeric($youthId)){
+        if (is_numeric($youthId)) {
             $courseIds = $courses->pluck('id')->toArray();
-            if(count($courseIds) > 0){
+            if (count($courseIds) > 0) {
                 $youthEnrolledCourseIds = CourseEnrollment::whereIn('course_id', $courseIds)
                     ->where('youth_id', $youthId)
                     ->pluck('course_id')
                     ->toArray();
 
-                foreach ($courses as $course){
-                    $course['enrolled'] = (bool) in_array($course->id, $youthEnrolledCourseIds);
+                foreach ($courses as $course) {
+                    $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
                 }
             }
         }
 
         /** Set enrollable field in course */
         /** @var $batchBuilder $batchBuilder */
-        $onGoingRegCourseIds = Batch::where(function($builder) use($curDate){
-                $builder->whereDate('batches.registration_start_date', '<=', $curDate);
-                $builder->whereDate('batches.registration_end_date', '>=', $curDate);
-            })->pluck('course_id')->toArray();
+        $onGoingRegCourseIds = Batch::where(function ($builder) use ($curDate) {
+            $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+        })->pluck('course_id')->toArray();
 
-        foreach ($courses as $course){
-            $course['enrollable'] = (bool) in_array($course->id, $onGoingRegCourseIds);
+        foreach ($courses as $course) {
+            $course['enrollable'] = (bool)in_array($course->id, $onGoingRegCourseIds);
         }
 
 
@@ -870,11 +870,6 @@ class CourseService
         ];
 
         $rules = [
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id,deleted_at,NULL',
-            ],
             'branch_id' => [
                 'nullable',
                 'int',
@@ -1031,6 +1026,9 @@ class CourseService
             }
 
         }
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
+
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 

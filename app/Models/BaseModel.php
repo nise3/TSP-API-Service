@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Facade\ServiceToServiceCall;
 use App\Traits\Scopes\ScopeAcl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * Class BaseModel
@@ -141,4 +145,36 @@ abstract class BaseModel extends Model
     public const SAGA_MAIL_SMS_SERVICE = 'mail_sms_service';
 
     public const DATABASE_CONNECTION_ERROR_CODE = 2002;
+
+    #[ArrayShape(['institute_id' => "array", 'industry_association_id' => "array"])]
+    public static function industryOrIndustryAssociationValidationRules(): array
+    {
+        /** @var User $authUser */
+        $authUser = Auth::user();
+        return [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ]
+        ];
+    }
+
+    public function getIndustryAssociationData(array &$originalData)
+    {
+        $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
+        $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
+        $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
+
+    }
 }

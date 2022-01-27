@@ -2,6 +2,8 @@
 
 namespace App\Services\CommonServices;
 
+use App\Facade\ServiceToServiceCall;
+use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
@@ -10,6 +12,8 @@ use App\Models\InvoicePessimisticLocking;
 use App\Models\MerchantCodePessimisticLocking;
 use App\Models\SSPPessimisticLocking;
 use App\Models\TrainingCenter;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -84,14 +88,13 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int $sspId
+     * @param int|null $sspId
      * @return string
-     * @throws Throwable
      */
-    public static function getTrainingCenterCode(int $sspId): string
+    public static function getTrainingCenterCode(int $sspId = null): string
     {
-        $instituteCode = Institute::find($sspId)->code;
-        $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->withTrashed()->orderBy("id", "DESC")->first();
+        [$instituteCode, $trainingCenterExistingCode] = !empty($sspId) ? self::getCode(TrainingCenter::class, $sspId) : self::getCode(TrainingCenter::class);
+
         if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
             $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
             if (sizeof($trainingCenterCode) > 1) {
@@ -114,8 +117,8 @@ class CodeGeneratorService
      */
     public static function getCourseCode(int $sspId): string
     {
-        $instituteCode = Institute::find($sspId)->code;
-        $courseExistingCode = Course::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
+        [$instituteCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
+
         if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
             $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
             if (count($courseCode) > 1) {
@@ -232,5 +235,30 @@ class CodeGeneratorService
         }
 
     }
+
+    private static function getCode(string $model, int $id = null): array
+    {
+        /** @var User $authUser */
+        $authUser = Auth::user();
+        $queryAttribute = "institute_id";
+        $queryAttributeValue = "";
+        $code = "";
+        if ($authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+            $queryAttribute = "industry_association_id";
+            $queryAttributeValue = !empty($id) ? $id : $authUser->industry_association_id;
+            $code = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+        } else {
+            $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
+            $code = Institute::find($queryAttributeValue)->code;
+        }
+
+        $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
+
+        return [
+            $code,
+            $existingCode
+        ];
+    }
+
 
 }
