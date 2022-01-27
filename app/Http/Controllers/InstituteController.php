@@ -72,7 +72,7 @@ class InstituteController extends Controller
      * @throws Throwable
      * @throws ValidationException
      */
-    public function publicGetInstituteList(Request $request): JsonResponse
+    public function publicInstituteList(Request $request): JsonResponse
     {
         $filter = $this->instituteService->filterValidator($request)->validate();
 
