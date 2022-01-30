@@ -111,11 +111,10 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int $sspId
+     * @param int|null $sspId
      * @return string
-     * @throws Throwable
      */
-    public static function getCourseCode(int $sspId): string
+    public static function getCourseCode(int $sspId = null): string
     {
         [$instituteCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
 
@@ -135,14 +134,13 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int $courseId
+     * @param int|null $courseId
      * @return string
-     * @throws Throwable
      */
-    public static function getBatchCode(int $courseId): string
+    public static function getBatchCode(int $courseId = null): string
     {
-        $instituteCode = Course::find($courseId)->code;
-        $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
+        [$instituteCode, $batchExistingCode] = !empty($sspId) ? self::getCode(Batch::class, $sspId) : self::getCode(Batch::class);
+
         if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
             $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
             if (count($batchCode) > 1) {

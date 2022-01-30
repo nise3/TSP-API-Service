@@ -212,6 +212,7 @@ class TrainingCenterController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
+    //TODO: getTrainingCentersWithFilters config for industry association
     public function getTrainingCentersWithFilters(Request $request): JsonResponse
     {
         $filter = $this->trainingCenterService->filterValidator($request)->validate();

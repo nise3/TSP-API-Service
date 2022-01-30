@@ -6,6 +6,7 @@ use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Trainer
@@ -45,4 +46,13 @@ class Trainer extends BaseModel
         'skills' => 'array',
         'skills_en' => 'array',
     ];
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        if (Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
+    }
 }

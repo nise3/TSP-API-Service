@@ -7,6 +7,7 @@ use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Program
@@ -44,5 +45,14 @@ class Program extends BaseModel
     public function batch(): HasMany
     {
         return $this->hasMany(Batch::class, 'institute_id', 'id');
+    }
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        if (Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
     }
 }

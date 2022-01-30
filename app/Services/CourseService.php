@@ -60,6 +60,7 @@ class CourseService
                 'courses.level',
                 'courses.language_medium',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
                 'courses.branch_id',
@@ -99,28 +100,19 @@ class CourseService
             ]
         )->acl();
 
-        $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $coursesBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('programs.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
@@ -181,6 +173,7 @@ class CourseService
                 'courses.level',
                 'courses.language_medium',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
                 'courses.branch_id',
@@ -220,7 +213,7 @@ class CourseService
             ]
         );
 
-        $courseBuilder->join("institutes", function ($join) {
+        $courseBuilder->leftJoin("institutes", function ($join) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -1008,24 +1001,6 @@ class CourseService
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
         ];
-        if ($id == null) {
-            /** @var Institute $institute */
-            $institute = Institute::where('id', $requestData['institute_id'])->first();
-            if ($institute) {
-                /** Concat course code with institute code as prefix */
-                $requestData['code'] = $institute['code'] . "-" . $requestData['code'];
-                $rules['code'] = [
-                    'required',
-                    'string',
-                    'max:150',
-                    Rule::unique('courses', 'code')
-                        ->where(function (\Illuminate\Database\Query\Builder $query) {
-                            return $query->whereNull('deleted_at');
-                        })
-                ];
-            }
-
-        }
 
         $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
 
@@ -1068,7 +1043,6 @@ class CourseService
                 "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'institute_id' => 'nullable|int|gt:0',
             'program_id' => 'nullable|int|gt:0',
             'course_name' => 'nullable|string',
             'search_text' => 'nullable|string|min:2',
@@ -1133,6 +1107,8 @@ class CourseService
                 'min:1'
             ];
         }
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }

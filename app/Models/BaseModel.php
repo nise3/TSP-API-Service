@@ -170,11 +170,24 @@ abstract class BaseModel extends Model
         ];
     }
 
+    #[ArrayShape(['institute_id' => "string", 'industry_association_id' => "string"])]
+    public static function industryOrIndustryAssociationValidationRulesForFilter(): array
+    {
+
+        return [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0'
+        ];
+    }
+
+
     public function getIndustryAssociationData(array &$originalData)
     {
-        $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
-        $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
-        $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
+        if (!empty($originalData['industry_association_id'])) {
+            $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
+            $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
+            $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
+        }
 
     }
 }

@@ -183,6 +183,7 @@ class TrainingCenterService
         $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
+            'training_centers.industry_association_id',
             'training_centers.title_en',
             'training_centers.title',
             'training_centers.loc_division_id',

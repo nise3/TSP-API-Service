@@ -56,10 +56,7 @@ class Authenticate
             elseif ($authUser && $authUser->user_type==BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id){
                 $request->offsetSet('industry_association_id', $authUser->industry_association_id);
             }
-            //TODO: industry_association_id add to course related table
-            //TODO: industry_association_id add to ScopeAcl
-            //TODO: industry_association_id add to validation
-            //TODO: conditional requirement add to validation file
+
         }
 
         return $next($request);
