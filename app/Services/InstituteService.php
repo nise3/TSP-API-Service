@@ -574,7 +574,9 @@ class InstituteService
 
         $rules = [
             'permission_sub_group_id' => [
-                'required_if:' . $id . ',==,null',
+                Rule::requiredIf(function () use ($id) {
+                    return is_null($id);
+                }),
                 'nullable',
                 'int'
             ],
