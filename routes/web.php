@@ -66,7 +66,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Course details with trainer */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@publicCourseDetails"]);
 
-        //public api by domain name identification
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
             $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@publicDemandingCourses"]);

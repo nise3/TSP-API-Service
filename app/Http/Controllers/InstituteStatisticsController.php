@@ -45,6 +45,7 @@ class InstituteStatisticsController extends Controller
 
     }
 
+    //TODO: Very Very Importent for public
     public function publicDashboardStatistics(): JsonResponse
     {
         /** this should be set from PublicApiMiddleWare */
@@ -73,10 +74,8 @@ class InstituteStatisticsController extends Controller
 
     public function publicDemandingCourses(): JsonResponse
     {
-        /** this should be set from PublicApiMiddleWare */
-        $instituteId = request()->get('institute_id');
 
-        $demandingCourses = $this->instituteStatisticsService->getDemandedCourses($instituteId);
+        $demandingCourses = $this->instituteStatisticsService->getDemandedCourses();
         $response['data'] = $demandingCourses->toArray();
         $response['_response_status'] = [
             "success" => true,

@@ -2,11 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +23,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalCourseEnrollments(int $instituteId=null): int
+    public function getTotalCourseEnrollments(int $instituteId = null): int
     {
 
         $builder = CourseEnrollment::join("courses", function ($join) {
@@ -59,15 +61,26 @@ class InstituteStatisticsService
      */
     public function getDemandedCourses(int $instituteId = null): Collection|array
     {
+        $queryAttribute = null;
+        $queryAttributeValue = null;
+
+        if (request()->has('industry_association_id')) {
+            $queryAttribute = "industry_association_id";
+            $queryAttributeValue = request()->offsetGet('industry_association_id');
+        } else if (request()->has('institute_id') || $instituteId) {
+            $queryAttribute = "institute_id";
+            $queryAttributeValue = !empty($instituteId) ? $instituteId : request()->offsetGet('institute_id');
+        }
+
         $builder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id')
                     ->whereNull('courses.deleted_at');
             });
 
-        if ($instituteId) { // from public api
-            $builder->where('course_enrollments.institute_id', $instituteId);
-        } else { // for private auth api
+        if ($queryAttributeValue) {
+            $builder->where('course_enrollments.' . $queryAttribute, $queryAttributeValue);
+        } else {
             $builder->acl();
         }
 
@@ -100,7 +113,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalRunningStudents(int $instituteId =null): int
+    public function getTotalRunningStudents(int $instituteId = null): int
     {
         $currentDate = Carbon::now();
         $builder = Batch::join('courses', function ($join) {
@@ -143,7 +156,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalTrainingCenters(int $instituteId=null): int
+    public function getTotalTrainingCenters(int $instituteId = null): int
     {
         $builder = TrainingCenter::query();
 

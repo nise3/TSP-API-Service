@@ -116,9 +116,12 @@ class Course extends BaseModel
     public function toArray(): array
     {
         $originalData = parent::toArray();
-        if (Auth::user()->isIndustryAssociationUser()||!empty($originalData['industry_association_id'])) {
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
             $this->getIndustryAssociationData($originalData);
         }
+
         return $originalData;
     }
 

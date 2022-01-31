@@ -628,6 +628,7 @@ class CourseService
         $locUpazilaId = $request['loc_upazila_id'] ?? "";
         $skillIds = $request['skill_ids'] ?? [];
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $programId = $request['program_id'] ?? "";
         $availability = $request['availability'] ?? "";
         $language = $request['language_medium'] ?? "";
@@ -644,6 +645,7 @@ class CourseService
                 'courses.title_en',
                 'courses.title',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
                 'courses.program_id',
@@ -670,7 +672,7 @@ class CourseService
             ]
         );
 
-        $coursesBuilder->join("institutes", function ($join) use ($rowStatus, $instituteId) {
+        $coursesBuilder->leftJoin("institutes", function ($join) use ($rowStatus, $instituteId) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -715,6 +717,10 @@ class CourseService
 
         if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
+        }
+
+        if (is_numeric($industryAssociationId)) {
+            $coursesBuilder->where('courses.industry_association_id', '=', $industryAssociationId);
         }
 
         if (is_numeric($programId)) {

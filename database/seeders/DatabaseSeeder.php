@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             EduGroupSeeder::class,
             EduBoardSeeder::class,
             ExamDegreeSeeder::class,
-//            InstituteSeeder::class,
-//            CourseEnrollmentSeeder::class,
+            InstituteSeeder::class,
+            CourseEnrollmentSeeder::class,
         ]);
     }
 }

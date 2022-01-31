@@ -15,6 +15,7 @@ use App\Models\TrainingCenter;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -134,13 +135,13 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int|null $courseId
+     * @param int $courseId
      * @return string
      */
-    public static function getBatchCode(int $courseId = null): string
+    public static function getBatchCode(int $courseId): string
     {
-        [$instituteCode, $batchExistingCode] = !empty($sspId) ? self::getCode(Batch::class, $sspId) : self::getCode(Batch::class);
-
+        $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
+        $courseCode = Course::find($courseId)->code;
         if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
             $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
             if (count($batchCode) > 1) {
@@ -154,7 +155,7 @@ class CodeGeneratorService
         }
         $batchCode = $batchCode + 1;
         $padLSize = Batch::BATCH_CODE_SIZE - strlen($batchCode);
-        return str_pad($instituteCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
+        return str_pad($courseCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
     }
 
     /**
@@ -240,20 +241,26 @@ class CodeGeneratorService
         $authUser = Auth::user();
         $queryAttribute = "institute_id";
         $queryAttributeValue = "";
-        $code = "";
-        if ($authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+        $prefixCode = "";
+        if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $queryAttribute = "industry_association_id";
             $queryAttributeValue = !empty($id) ? $id : $authUser->industry_association_id;
-            $code = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+            $prefixCode = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
         } else {
-            $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
-            $code = Institute::find($queryAttributeValue)->code;
+            if ($authUser && $authUser->institute_id) {
+                $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
+            } else {
+                $queryAttributeValue = $id;
+            }
+
+            $prefixCode = Institute::find($queryAttributeValue);
+
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
-
+        Log::info('ssp-id.' . $id);
         return [
-            $code,
+            $prefixCode->code ?? "",
             $existingCode
         ];
     }

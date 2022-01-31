@@ -233,7 +233,7 @@ class CourseController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    //TODO: config for industry association
+
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request, $type)->validate();

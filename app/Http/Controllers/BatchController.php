@@ -90,7 +90,7 @@ class BatchController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->batchService->validator($request)->validate();
-        $validatedData['code'] = CodeGeneratorService::getBatchCode();
+        $validatedData['code'] = CodeGeneratorService::getBatchCode($validatedData['course_id']);
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
