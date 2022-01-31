@@ -58,7 +58,7 @@ variables:
 
     DB_HOST: "db-service.default"
     DB_PORT: "3306"
-    DB_DATABASE: "institute"
+    DB_DATABASE: "nise_ssp"
     DB_USERNAME: "core3"
     DB_PASSWORD: "core3"
 
