@@ -68,6 +68,10 @@ variables:
     RABBITMQ_USER: "default_user_8JE9yWDb4fHdn35Ua9w"
     RABBITMQ_PASSWORD: "OvK7CUJOlZHfLWbYeTjdTlbdG2GHfr1Q"
 
+    WSO2_APIM_BASE_URL: "https://apim-dev.nise3.xyz"
+    WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
+    WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
+
     WSO2_IDP_BASE_URL: "https://identity-dev.nise3.xyz"
     WSO2_IDP_BASE_USER_URL: "https://identity-dev.nise3.xyz/scim2/Users"
     WSO2_IDP_USERNAME: admin
