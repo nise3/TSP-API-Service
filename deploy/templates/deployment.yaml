@@ -84,9 +84,13 @@ spec:
           volumeMounts:
           - name: "{{ .Chart.Name }}"
             mountPath: /app/storage
+          - name: cmd-vol
+            mountPath: /vol 
       volumes:
       - name: "{{ .Chart.Name }}"
         persistentVolumeClaim:
           claimName: "{{ .Chart.Name }}-pv-claim"
+      - name: cmd-vol
+        emptyDir: {}
       imagePullSecrets:
         - name: regcred
