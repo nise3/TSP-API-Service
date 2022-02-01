@@ -32,6 +32,7 @@ class TrainerService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
 
@@ -40,6 +41,7 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.institute_id',
+            'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
             'trainers.branch_id',
@@ -98,26 +100,17 @@ class TrainerService
             'trainers.deleted_at',
         ])->acl();
 
-        $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $trainerBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('training_centers.row_status', $rowStatus);
-            }*/
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
-            }*/
         });
 
         $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
@@ -167,6 +160,10 @@ class TrainerService
             $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
         }
 
+        if (is_numeric($industryAssociationId)) {
+            $trainerBuilder->where('trainers.industry_association_id', '=', $industryAssociationId);
+        }
+
         if (is_numeric($branchId)) {
             $trainerBuilder->where('trainers.branch_id', '=', $branchId);
         }
@@ -209,6 +206,7 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'trainers.institute_id',
+            'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
             'trainers.branch_id',
@@ -267,7 +265,7 @@ class TrainerService
             'trainers.deleted_at',
         ]);
 
-        $trainerBuilder->join("institutes", function ($join) {
+        $trainerBuilder->leftJoin("institutes", function ($join) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -361,6 +359,7 @@ class TrainerService
         $trainerBuilder = Trainer::onlyTrashed()->select([
             'trainers.id',
             'trainers.institute_id',
+            'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
             'trainers.branch_id',
@@ -419,7 +418,7 @@ class TrainerService
             'trainers.deleted_at',
         ]);
 
-        $trainerBuilder->join("institutes", function ($join) {
+        $trainerBuilder->leftJoin("institutes", function ($join) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -517,11 +516,6 @@ class TrainerService
         ];
 
         $rules = [
-            'institute_id' => [
-                'required',
-                'exists:institutes,id,deleted_at,NULL',
-                'int',
-            ],
             'branch_id' => [
                 'nullable',
                 'exists:branches,id,deleted_at,NULL',
@@ -682,6 +676,9 @@ class TrainerService
                 'integer',
             ],
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
+
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -694,13 +691,11 @@ class TrainerService
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
-
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $rules = [
             'trainer_name_en' => 'nullable|max:250|min:2',
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'training_center_id' => 'nullable|exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
@@ -712,6 +707,10 @@ class TrainerService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+        ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 }

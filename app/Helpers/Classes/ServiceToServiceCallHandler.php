@@ -40,4 +40,55 @@ class ServiceToServiceCallHandler
 
         return $responseData;
     }
+
+    /**
+     * @param int $industryAssociationId
+     * @return mixed
+     * @throws RequestException
+     */
+    public function getIndustryAssociationCode(int $industryAssociationId): mixed
+    {
+        $url = clientUrl(BaseModel::ORGANIZATION_CLIENT_URL_TYPE) . 'service-to-service-call/industry-associations/' . $industryAssociationId . '/get-code';
+
+        $responseData = Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->get($url)
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+                throw $e;
+            })
+            ->json('data');
+
+
+        Log::info("industry_association_id:" . json_encode($responseData));
+
+        return $responseData;
+    }
+
+    public function getIndustryAssociationData(int $industryAssociationId): mixed
+    {
+        $url = clientUrl(BaseModel::ORGANIZATION_CLIENT_URL_TYPE) . 'service-to-service-call/industry-associations/' . $industryAssociationId;
+
+        $responseData = Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug'),
+                'timeout' => config('nise3.http_timeout'),
+            ])
+            ->get($url)
+            ->throw(function ($response, $e) use ($url) {
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+                throw $e;
+            })
+            ->json('data');
+
+
+        Log::info("industry_association_id:" . json_encode($responseData));
+
+        return $responseData;
+    }
 }

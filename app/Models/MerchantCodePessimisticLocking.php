@@ -15,6 +15,9 @@ use Illuminate\Database\Eloquent\Model;
 class MerchantCodePessimisticLocking extends Model
 {
     protected $table = 'merchant_code_pessimistic_lockings';
+    public $timestamps = false;
+    public $incrementing = false;
+    protected $primaryKey = 'last_incremental_value';
     protected $guarded = [];
     protected $casts = [
         'last_incremental_value' => 'integer'

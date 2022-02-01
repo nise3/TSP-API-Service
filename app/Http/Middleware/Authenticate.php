@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\BaseModel;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -32,11 +33,11 @@ class Authenticate
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param \Closure $next
+     * @param Closure $next
      * @param string|null $guard
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string $guard = null)
+    public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
         if (!Auth::id()) {
             return response()->json([
@@ -46,11 +47,16 @@ class Authenticate
                     "message" => "Unauthenticated action"
                 ]
             ], ResponseAlias::HTTP_UNAUTHORIZED);
-        } else { // if auth user institute then set institute id for all private request
+        } else {
+            /** if auth user institute then set institute id for all private request */
+            /** @var User $authUser */
             $authUser = Auth::user();
             if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
                 $request->offsetSet('institute_id', $authUser->institute_id);
+            } elseif ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id) {
+                $request->offsetSet('industry_association_id', $authUser->industry_association_id);
             }
+
         }
 
         return $next($request);

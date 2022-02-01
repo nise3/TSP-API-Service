@@ -27,6 +27,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
@@ -44,6 +45,7 @@ class CourseEnrollmentService
     public function getCourseEnrollmentList(array $request, Carbon $startTime): array
     {
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $firstName = $request['first_name'] ?? "";
         $firstNameEn = $request['first_name_en'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -64,6 +66,7 @@ class CourseEnrollmentService
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
                 'course_enrollments.institute_id',
+                'course_enrollments.industry_association_id',
                 'course_enrollments.program_id',
                 'programs.title as program_title',
                 'programs.title_en as program_title_en',
@@ -100,6 +103,10 @@ class CourseEnrollmentService
 
         if (is_numeric($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+        }
+
+        if (is_numeric($industryAssociationId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.industry_association_id', $industryAssociationId);
         }
 
         $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -275,7 +282,13 @@ class CourseEnrollmentService
         $courseEnrollment = app(CourseEnrollment::class);
 
         $course = Course::find($data['course_id']);
-        $data['institute_id'] = $course->institute_id;
+
+        if (!empty($course->institute_id)) {
+            $data['institute_id'] = $course->institute_id;
+        } elseif (!empty($course->industry_association_id)) {
+            $data['industry_association_id'] = $course->industry_association_id;
+        }
+
         $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
 
         $courseEnrollment->fill($data);
@@ -463,13 +476,12 @@ class CourseEnrollmentService
      */
     public function sendSmsVerificationCode(CourseEnrollment $courseEnrollment, string $code): bool
     {
-        $mobile_number = $courseEnrollment->mobile;
+        $mobile = $courseEnrollment->mobile;
         $message = "Your Course Enrollment Verification code : " . $code;
-        if ($mobile_number) {
-            if (sms()->send($mobile_number, $message)->is_successful()) {
-                Log::info('Sms send after enrollment to number--->'.$mobile_number);
-                return true;
-            }
+        if ($mobile) {
+            app(SmsService::class)->sendSms($message, $message);
+            Log::info('Sms send after enrollment to number--->' . $mobile);
+            return true;
         }
         return false;
     }
@@ -516,7 +528,6 @@ class CourseEnrollmentService
                 'int',
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
-            'institute_id' => 'nullable|int|gt:0',
             'course_id' => 'nullable|int|gt:0',
             'batch_id' => 'nullable|int|gt:0',
             'course_title' => 'nullable|string|min:2',
@@ -534,6 +545,8 @@ class CourseEnrollmentService
                 Rule::in(CourseEnrollment::ROW_STATUSES),
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
@@ -561,6 +574,10 @@ class CourseEnrollmentService
                 'required',
                 'int',
                 'min:1'
+            ],
+            'youth_code' => [
+                'required',
+                'string'
             ],
             'first_name' => [
                 'required',
@@ -595,7 +612,7 @@ class CourseEnrollmentService
                 'unique_with:course_enrollments,youth_id,deleted_at',
             ],
             'training_center_id' => [
-                'required',
+                'nullable',
                 'exists:training_centers,id,deleted_at,NULL',
                 'int',
                 'min:1'

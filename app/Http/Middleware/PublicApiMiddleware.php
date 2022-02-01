@@ -31,10 +31,14 @@ class PublicApiMiddleware
                     return $exception;
                 })
                 ->json();
-
             if(!empty($response['data']['institute_id'])){
                 $request->offsetSet('institute_id', $response['data']['institute_id']);
             }
+
+            if(!empty($response['data']['industry_association_id'])){
+                $request->offsetSet('industry_association_id', $response['data']['industry_association_id']);
+            }
+
         }else{
             return response()->json([
                 "_response_status" => [

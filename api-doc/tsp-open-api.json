@@ -3631,7 +3631,7 @@
                 }
             }
         },
-        "/courses/{courseId}/training_centers/batches": {
+        "/courses/{courseId}/training-centers/batches": {
             "get": {
                 "summary": "Training Centers with Batches",
                 "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",

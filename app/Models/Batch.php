@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Batch
@@ -35,6 +36,18 @@ class Batch extends BaseModel
 
     public const BATCH_CODE_PREFIX = "BT";
     public const BATCH_CODE_SIZE = 28;
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
+    }
+
     /**
      * @return BelongsTo
      */

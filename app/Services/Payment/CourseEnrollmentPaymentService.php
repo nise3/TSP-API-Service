@@ -24,7 +24,7 @@ class CourseEnrollmentPaymentService
     public function enrollmentEkPayPaymentProcessing(array $request)
     {
         /** @var CourseEnrollment $courseEnrollment */
-        $courseEnrollment = CourseEnrollment::find($request['course_enrollment_id']);
+        $courseEnrollment = CourseEnrollment::findOrFail($request['course_enrollment_id']);
 
         Log::channel('ek_pay')->info("Course enrollment Info for id-" . $courseEnrollment->id . json_encode($courseEnrollment));
 

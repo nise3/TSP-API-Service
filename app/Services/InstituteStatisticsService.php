@@ -9,7 +9,6 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
@@ -21,7 +20,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalCourseEnrollments(int $instituteId=null): int
+    public function getTotalCourseEnrollments(int $instituteId = null): int
     {
 
         $builder = CourseEnrollment::join("courses", function ($join) {
@@ -29,9 +28,11 @@ class InstituteStatisticsService
                 ->whereNull('courses.deleted_at');
         });
 
-        if ($instituteId) { // from public api
-            $builder->where('course_enrollments.institute_id', $instituteId);
-        } else { // for private auth api
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('course_enrollments.' . $queryAttribute, $queryAttributeValue);
+        } else {
             $builder->acl();
         }
         return $builder->count('course_enrollments.id');
@@ -45,9 +46,11 @@ class InstituteStatisticsService
     {
         $builder = Course::query();
 
-        if ($instituteId) { // from path param in public api
-            $builder->where('institute_id', $instituteId);
-        } else { // for private auth api
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+        } else {
             $builder->acl();
         }
         return $builder->count('id');
@@ -65,9 +68,11 @@ class InstituteStatisticsService
                     ->whereNull('courses.deleted_at');
             });
 
-        if ($instituteId) { // from public api
-            $builder->where('course_enrollments.institute_id', $instituteId);
-        } else { // for private auth api
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('course_enrollments.' . $queryAttribute, $queryAttributeValue);
+        } else {
             $builder->acl();
         }
 
@@ -88,9 +93,11 @@ class InstituteStatisticsService
                 ->whereNull('courses.deleted_at');
         });
 
-        if ($instituteId) { // from path param in public api
-            $builder->where('batches.institute_id', $instituteId);
-        } else { // for private auth api
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('batches.' . $queryAttribute, $queryAttributeValue);
+        } else {
             $builder->acl();
         }
         return $builder->count('batches.id');
@@ -100,7 +107,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalRunningStudents(int $instituteId =null): int
+    public function getTotalRunningStudents(int $instituteId = null): int
     {
         $currentDate = Carbon::now();
         $builder = Batch::join('courses', function ($join) {
@@ -110,8 +117,10 @@ class InstituteStatisticsService
             ->whereDate('batch_start_date', '<=', $currentDate)
             ->whereDate('batch_end_date', '>=', $currentDate);
 
-        if ($instituteId) { // from path param in public api
-            $builder->where('batches.institute_id', $instituteId);
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('batches.' . $queryAttribute, $queryAttributeValue);
         } else { // for private auth api
             $builder->acl();
         }
@@ -131,8 +140,11 @@ class InstituteStatisticsService
     public function getTotalTrainers(int $instituteId = null): int
     {
         $builder = Trainer::query();
-        if ($instituteId) { // from path param in public api
-            $builder->where('institute_id', $instituteId);
+
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('trainers.' . $queryAttribute, $queryAttributeValue);
         } else { // for private auth api
             $builder->acl();
         }
@@ -143,12 +155,14 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return int
      */
-    public function getTotalTrainingCenters(int $instituteId=null): int
+    public function getTotalTrainingCenters(int $instituteId = null): int
     {
         $builder = TrainingCenter::query();
 
-        if ($instituteId) { // from path param in public api
-            $builder->where('institute_id', $instituteId);
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('training_centers.' . $queryAttribute, $queryAttributeValue);
         } else { // for private auth api
             $builder->acl();
         }
@@ -181,8 +195,10 @@ class InstituteStatisticsService
     {
         $builder = Course::query();
 
-        if ($instituteId) { // from path param in public api
-            $builder->where('institute_id', $instituteId);
+        [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+        if ($queryAttributeValue) {
+            $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
         } else { // for private auth api
             $builder->acl();
         }
@@ -195,7 +211,7 @@ class InstituteStatisticsService
      * @param int|null $instituteId
      * @return array
      */
-    public function getDashboardStatisticalData($instituteId = null): array
+    public function getDashboardStatisticalData(int $instituteId = null): array
     {
         $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
         $dashboardStatData ['total_course'] = $this->getTotalCourses($instituteId);
@@ -208,6 +224,25 @@ class InstituteStatisticsService
         $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse($instituteId);
 
         return $dashboardStatData;
+    }
+
+    private static function querySelectorForIndustryAssociationOrInstituteForPublicDomain(int $instituteId = null): array
+    {
+
+        $queryAttribute = "institute_id";
+        $queryAttributeValue = null;
+
+        if (request()->has('industry_association_id')) {
+            $queryAttribute = "industry_association_id";
+            $queryAttributeValue = request()->offsetGet('industry_association_id');
+        } else if (request()->has('institute_id') || $instituteId) {
+            $queryAttributeValue = !empty($instituteId) ? $instituteId : request()->offsetGet('institute_id');
+        }
+
+        return [
+            $queryAttribute,
+            $queryAttributeValue
+        ];
     }
 
 }

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Facade\ServiceToServiceCall;
 use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class TrainingCenter
@@ -66,7 +68,7 @@ class TrainingCenter extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class, 'training_center_id', 'id');
+        return $this->hasMany(Batch::class, 'training_center_id', ' ');
     }
 
     /**
@@ -75,5 +77,16 @@ class TrainingCenter extends BaseModel
     public function skills(): BelongsToMany
     {
         return $this->belongsToMany(Skill::class, 'training_center_skill');
+    }
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
     }
 }
