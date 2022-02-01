@@ -650,8 +650,6 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'nullable|exists:institutes,id,deleted_at,NULL|int',
-            'industry_association_id' => 'nullable|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
@@ -683,6 +681,8 @@ class TrainingCenterService
                 'integer'
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
