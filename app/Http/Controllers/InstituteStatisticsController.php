@@ -45,7 +45,6 @@ class InstituteStatisticsController extends Controller
 
     }
 
-    //TODO: Very Very Importent for public
     public function publicDashboardStatistics(): JsonResponse
     {
         /** this should be set from PublicApiMiddleWare */
