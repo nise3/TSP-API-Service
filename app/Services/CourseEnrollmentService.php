@@ -612,7 +612,7 @@ class CourseEnrollmentService
                 'unique_with:course_enrollments,youth_id,deleted_at',
             ],
             'training_center_id' => [
-                'required',
+                'nullable',
                 'exists:training_centers,id,deleted_at,NULL',
                 'int',
                 'min:1'

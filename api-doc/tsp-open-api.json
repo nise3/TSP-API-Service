@@ -597,6 +597,101 @@
                 }
             }
         },
+        "/public/institutes": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "public_get_list",
+                "description": "API endpoint to get list of public TSP.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "institute_type_id": 0,
+                                            "code": "aut-consequatur-beatae-ipsa-qui-perferendis-porro-eos-reprehenderit-fugiat-soluta-unde-quis-quis-vero-iure-nobis-officiis-modi-porro",
+                                            "title": "Miss Leslie Spencer",
+                                            "title_en": "Tiara Gleichner",
+                                            "domain": "https://nicolas.com",
+                                            "loc_division_id": 3,
+                                            "division_title": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "address_en": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "location_latitude": "90.399402",
+                                            "location_longitude": "90.399402",
+                                            "google_map_src": "Rerum eum quae repellendus sunt.",
+                                            "logo": "softbd.jpg",
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": "+1-351-372-0784",
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01769141689",
+                                            "mobile_numbers": "[\"01760981346\",\"01787431992\"]",
+                                            "email": "ellsworth.dickens@hauck.info",
+                                            "name_of_the_office_head": null,
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": null,
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "",
+                                            "contact_person_name_en": "",
+                                            "contact_person_mobile": "",
+                                            "contact_person_email": "",
+                                            "contact_person_designation": "",
+                                            "contact_person_designation_en": "",
+                                            "config": "Adipisci enim voluptas hic quaerat quibusdam ex ad.",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-12T13:15:03.000000Z",
+                                            "updated_at": "2021-10-12T13:15:03.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/institutes/{instituteId}": {
             "get": {
                 "tags": [
@@ -3536,7 +3631,7 @@
                 }
             }
         },
-        "/courses/{courseId}/training_centers/batches": {
+        "/courses/{courseId}/training-centers/batches": {
             "get": {
                 "summary": "Training Centers with Batches",
                 "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",

@@ -14,7 +14,7 @@ class AddUniqueToCodeForTrainingCentersTable extends Migration
     public function up()
     {
         Schema::table('training_centers', function (Blueprint $table) {
-            $table->unique('code','training_centers_code_unique_index');
+            $table->unique('code',"training_center_code_unique_indexing");
         });
     }
 
