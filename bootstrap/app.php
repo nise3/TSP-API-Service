@@ -116,6 +116,10 @@ $app->register(Khbd\LaravelSmsBD\SMSServiceProvider::class);
 $app->register(Ixudra\Curl\CurlServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+if ($app->environment('local')) {
+    $app->register(App\Iseed\IseedServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
