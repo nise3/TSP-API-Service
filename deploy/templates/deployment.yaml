@@ -16,6 +16,22 @@ spec:
       labels:
         app:  {{ .Chart.Name }}
     spec:
+      {{ if .Values.variables.enableGitCommitCommandFetch }}
+      initContainers:
+      - name: git-command-fetch
+        image: everpeace/curl-jq
+        command:
+        - /bin/sh
+        - -c
+        - |
+          CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.githubProjectRepoID }}/repository/commits" | jq '.[0].message' | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
+          mkdir -p /vol
+          touch /vol/cmd.php
+          echo $CFETCH >> /vol/cmd.php
+        volumeMounts:
+          - mountPath: /vol
+            name: cmd-vol
+      {{end}}
       containers:
         - name:  {{ .Chart.Name }}
           image: "{{ .Values.variables.imageRepository }}:{{ .Values.variables.imageAppVersion  | default .Chart.AppVersion }}"
@@ -85,12 +101,23 @@ spec:
                     sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
+                    {{ if .Values.variables.enableGitCommitCommandFetch }}
+                    cat /vol/cmd.php | bash
+                    {{end}}
           volumeMounts:
           - name: "{{ .Chart.Name }}"
             mountPath: /app/storage
+            {{ if .Values.variables.enableGitCommitCommandFetch }}
+          - name: cmd-vol
+            mountPath: /vol
+            {{end}}
       volumes:
       - name: "{{ .Chart.Name }}"
         persistentVolumeClaim:
           claimName: "{{ .Chart.Name }}-pv-claim"
+          {{ if .Values.variables.enableGitCommitCommandFetch }}
+      - name: cmd-vol
+        emptyDir: {}
+          {{end}}
       imagePullSecrets:
         - name: regcred
