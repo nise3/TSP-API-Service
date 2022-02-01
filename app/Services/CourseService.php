@@ -648,6 +648,7 @@ class CourseService
                 'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
+                'institutes.logo',
                 'courses.program_id',
                 'programs.title as program_title',
                 'programs.title_en as program_title_en',
