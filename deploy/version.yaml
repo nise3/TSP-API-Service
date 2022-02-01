@@ -1,8 +1,5 @@
 variables:
 
-  #app build image
-  enableImageBuild: "false"
-
   # app version, changing version will auto deploy the app to current version
   imageAppVersion: "1.0.33"
 
