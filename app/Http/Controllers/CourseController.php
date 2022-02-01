@@ -91,7 +91,7 @@ class CourseController extends Controller
         $this->authorize('create', Course::class);
 
         $validated = $this->courseService->validator($request)->validate();
-        $validated['code'] = CodeGeneratorService::getCourseCode($validated['institute_id']);
+        $validated['code'] = CodeGeneratorService::getCourseCode();
         $course = $this->courseService->store($validated);
 
         $response = [
@@ -233,6 +233,7 @@ class CourseController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
+
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request, $type)->validate();

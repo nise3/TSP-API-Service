@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Institute
@@ -115,6 +116,18 @@ class CourseEnrollment extends BaseModel
     {
         parent::boot();
         static::addGlobalScope(new SagaStatusGlobalScope);
+    }
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+
+        return $originalData;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\Skill;
+use App\Models\User;
 use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -63,6 +65,7 @@ class TrainingCenterService
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
+            'training_centers.industry_association_id',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
@@ -78,7 +81,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ])->acl();
 
-        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -133,7 +136,6 @@ class TrainingCenterService
 
         $trainingCentersBuilder->groupBy('training_centers.id');
 
-
         /** @var Collection $trainingCentersBuilder */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
@@ -176,12 +178,14 @@ class TrainingCenterService
         $skillIds = $request['skill_ids'] ?? [];
         $locDistrictId = $request['loc_district_id'] ?? "";
         $locUpzilaId = $request['loc_upazila_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
 
 
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
+            'training_centers.industry_association_id',
             'training_centers.title_en',
             'training_centers.title',
             'training_centers.loc_division_id',
@@ -211,7 +215,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ]);
 
-        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
             /*if (is_numeric($rowStatus)) {
@@ -247,6 +251,9 @@ class TrainingCenterService
         }
         if (is_numeric($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
+        }
+        if (is_numeric($industryAssociationId)) {
+            $trainingCentersBuilder->where('training_centers.industry_association_id', '=', $industryAssociationId);
         }
         if (is_numeric($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', '=', $rowStatus);
@@ -307,6 +314,7 @@ class TrainingCenterService
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
+            'training_centers.industry_association_id',
             'training_centers.title_en',
             'training_centers.title',
             'training_centers.loc_division_id',
@@ -337,7 +345,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ]);
 
-        $trainingCenterBuilder->join("institutes", function ($join) {
+        $trainingCenterBuilder->leftJoin("institutes", function ($join) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -461,7 +469,7 @@ class TrainingCenterService
             $branchId = $model->id;
         }
         $trainingCenterPayload = [
-            'code'=>CodeGeneratorService::getTrainingCenterCode($instituteId),
+            'code' => CodeGeneratorService::getTrainingCenterCode($instituteId),
             'institute_id' => $instituteId,
             'branch_id' => $branchId,
             'center_location_type' => $centerLocationType,
@@ -490,13 +498,11 @@ class TrainingCenterService
             $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
-
         $customMessage = [
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         $rules = [
-            'institute_id' => 'required|exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'center_location_type' => [
                 'sometimes',
@@ -534,6 +540,9 @@ class TrainingCenterService
                 'min:1'
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
+
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -641,7 +650,6 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'nullable|exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
@@ -673,6 +681,8 @@ class TrainingCenterService
                 'integer'
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }

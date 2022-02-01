@@ -2,6 +2,8 @@
 
 namespace App\Services\CommonServices;
 
+use App\Facade\ServiceToServiceCall;
+use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Branch;
 use App\Models\Course;
@@ -10,7 +12,10 @@ use App\Models\InvoicePessimisticLocking;
 use App\Models\MerchantCodePessimisticLocking;
 use App\Models\SSPPessimisticLocking;
 use App\Models\TrainingCenter;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -84,14 +89,13 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int $sspId
+     * @param int|null $sspId
      * @return string
-     * @throws Throwable
      */
-    public static function getTrainingCenterCode(int $sspId): string
+    public static function getTrainingCenterCode(int $sspId = null): string
     {
-        $instituteCode = Institute::find($sspId)->code;
-        $trainingCenterExistingCode = TrainingCenter::where("institute_id", $sspId)->withTrashed()->orderBy("id", "DESC")->first();
+        [$instituteCode, $trainingCenterExistingCode] = !empty($sspId) ? self::getCode(TrainingCenter::class, $sspId) : self::getCode(TrainingCenter::class);
+
         if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
             $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
             if (sizeof($trainingCenterCode) > 1) {
@@ -108,14 +112,13 @@ class CodeGeneratorService
     }
 
     /**
-     * @param int $sspId
+     * @param int|null $sspId
      * @return string
-     * @throws Throwable
      */
-    public static function getCourseCode(int $sspId): string
+    public static function getCourseCode(int $sspId = null): string
     {
-        $instituteCode = Institute::find($sspId)->code;
-        $courseExistingCode = Course::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
+        [$instituteCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
+
         if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
             $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
             if (count($courseCode) > 1) {
@@ -134,12 +137,11 @@ class CodeGeneratorService
     /**
      * @param int $courseId
      * @return string
-     * @throws Throwable
      */
     public static function getBatchCode(int $courseId): string
     {
-        $instituteCode = Course::find($courseId)->code;
         $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
+        $courseCode = Course::find($courseId)->code;
         if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
             $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
             if (count($batchCode) > 1) {
@@ -153,7 +155,7 @@ class CodeGeneratorService
         }
         $batchCode = $batchCode + 1;
         $padLSize = Batch::BATCH_CODE_SIZE - strlen($batchCode);
-        return str_pad($instituteCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
+        return str_pad($courseCode . Batch::BATCH_CODE_PREFIX, $padLSize, '0') . $batchCode;
     }
 
     /**
@@ -232,5 +234,36 @@ class CodeGeneratorService
         }
 
     }
+
+    private static function getCode(string $model, int $id = null): array
+    {
+        /** @var User $authUser */
+        $authUser = Auth::user();
+        $queryAttribute = "institute_id";
+        $queryAttributeValue = "";
+        $prefixCode = "";
+        if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+            $queryAttribute = "industry_association_id";
+            $queryAttributeValue = !empty($id) ? $id : $authUser->industry_association_id;
+            $prefixCode = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+        } else {
+            if ($authUser && $authUser->institute_id) {
+                $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
+            } else {
+                $queryAttributeValue = $id;
+            }
+
+            $prefixCode = Institute::find($queryAttributeValue);
+
+        }
+
+        $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
+        Log::info('ssp-id.' . $id);
+        return [
+            $prefixCode->code ?? "",
+            $existingCode
+        ];
+    }
+
 
 }

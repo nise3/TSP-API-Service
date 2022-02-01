@@ -454,7 +454,6 @@ class InstituteService
     }
 
 
-
     public function userInfoSendByMail(array $mailPayload)
     {
         $mailService = new MailService();
@@ -879,7 +878,8 @@ class InstituteService
             ],
             'institute_type_id' => [
                 'required',
-                'int'
+                'int',
+                Rule::in(BaseModel::INSTITUTE_TYPES)
             ],
             "name_of_the_office_head" => [
                 "required",

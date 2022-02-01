@@ -7,7 +7,10 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class AuthUser
  * @package App\Facade
+ *
  * @method static array|mixed getAuthUserWithRolePermission(string $idpUserId)
+ * @method static array|mixed getIndustryAssociationCode(int $industryAssociationId)
+ * @method static array|mixed getIndustryAssociationData(int $industryAssociationId)
  *
  * @see \App\Helpers\Classes\ServiceToServiceCallHandler
  */
