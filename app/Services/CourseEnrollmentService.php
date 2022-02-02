@@ -1290,6 +1290,8 @@ class CourseEnrollmentService
             ]
         );
 
+        $coursesEnrollmentBuilder->whereNotNull('course_enrollments.batch_id');
+
         if (!empty($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
