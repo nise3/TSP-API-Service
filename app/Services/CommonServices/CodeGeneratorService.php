@@ -240,27 +240,23 @@ class CodeGeneratorService
         /** @var User $authUser */
         $authUser = Auth::user();
         $queryAttribute = "institute_id";
-        $queryAttributeValue = "";
-        $prefixCode = "";
         if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $queryAttribute = "industry_association_id";
             $queryAttributeValue = !empty($id) ? $id : $authUser->industry_association_id;
-            $prefixCode = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+            $parentEntity = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
         } else {
             if ($authUser && $authUser->institute_id) {
                 $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
             } else {
                 $queryAttributeValue = $id;
             }
-
-            $prefixCode = Institute::find($queryAttributeValue);
-
+            $parentEntity = Institute::find($queryAttributeValue);
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
         Log::info('ssp-id.' . $id);
         return [
-            $prefixCode->code ?? "",
+            $parentEntity->code ?? "",
             $existingCode
         ];
     }
