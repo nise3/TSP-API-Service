@@ -1266,11 +1266,11 @@ class CourseEnrollmentService
     /**
      * @param array $request
      * @param Carbon $startTime
-     * @param int $instituteId
      * @return array
      */
-    public function getInstituteTraineeYouths(array $request, Carbon $startTime, int $instituteId): array
+    public function getInstituteTraineeYouths(array $request, Carbon $startTime): array
     {
+        $instituteId = $request['institute_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -1290,7 +1290,9 @@ class CourseEnrollmentService
             ]
         );
 
-        $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+        if (!empty($instituteId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+        }
 
         $coursesEnrollmentBuilder->join("institutes", function ($join) {
             $join->on('course_enrollments.institute_id', '=', 'institutes.id')
@@ -1324,7 +1326,7 @@ class CourseEnrollmentService
             $indexedYouths[$item['id']] = $item;
         }
 
-        foreach ($courseEnrollments as $courseEnrollment){
+        foreach ($courseEnrollments as $courseEnrollment) {
             $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
         }
 
@@ -1424,6 +1426,11 @@ class CourseEnrollmentService
         $requestData = $request->all();
 
         $rules = [
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL'
+            ],
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [
