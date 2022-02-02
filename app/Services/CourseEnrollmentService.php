@@ -1319,15 +1319,17 @@ class CourseEnrollmentService
         }
 
         $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
-        $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
-        $indexedYouths = [];
+        if($youthIds){
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+            $indexedYouths = [];
 
-        foreach ($youthProfiles as $item) {
-            $indexedYouths[$item['id']] = $item;
-        }
+            foreach ($youthProfiles as $item) {
+                $indexedYouths[$item['id']] = $item;
+            }
 
-        foreach ($courseEnrollments as $courseEnrollment) {
-            $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+            foreach ($courseEnrollments as $courseEnrollment) {
+                $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+            }
         }
 
         $response['order'] = $order;
