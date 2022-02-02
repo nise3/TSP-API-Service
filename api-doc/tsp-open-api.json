@@ -4639,6 +4639,42 @@
                 ]
             }
         },
+        "/institute_trainee_youths/{instituteId}": {
+            "get": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Get institute trainee youth",
+                "description": "API endpoint to Get institute trainee youth.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute-dashboard-statistics": {
             "get": {
                 "summary": "Get institute dashboard statistics",
