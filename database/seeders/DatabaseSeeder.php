@@ -24,5 +24,8 @@ class DatabaseSeeder extends Seeder
 //            InstituteSeeder::class,
 //            CourseEnrollmentSeeder::class,
         ]);
+        $this->call(InstitutesTableSeeder::class);
+        $this->call(BranchesTableSeeder::class);
+        $this->call(TrainingCentersTableSeeder::class);
     }
 }

@@ -1,0 +1,257 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
+class TrainingCentersTableSeeder extends Seeder
+{
+
+    /**
+     * Auto generated seed file
+     *
+     * @return void
+     */
+    public function run()
+    {
+        
+
+        Schema::disableForeignKeyConstraints();
+
+        DB::table('training_centers')->truncate();
+        
+        \DB::table('training_centers')->insert(array (
+            0 => 
+            array (
+                'id' => 1,
+                'code' => '12355',
+                'institute_id' => 26,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'সফট বিডি',
+                'title_en' => 'Soft BD',
+                'loc_division_id' => 3,
+                'loc_district_id' => 18,
+                'loc_upazila_id' => 112,
+                'location_latitude' => '23.7470486',
+                'location_longitude' => '90.3943522',
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-09 18:20:48',
+                'updated_at' => '2022-02-01 11:18:03',
+                'deleted_at' => NULL,
+            ),
+            1 => 
+            array (
+                'id' => 2,
+                'code' => '45675754',
+                'institute_id' => 27,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'সফট বিডি 2',
+                'title_en' => 'Soft BD 2',
+                'loc_division_id' => 3,
+                'loc_district_id' => 18,
+                'loc_upazila_id' => 112,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-10 13:06:37',
+                'updated_at' => '2022-02-01 12:20:01',
+                'deleted_at' => NULL,
+            ),
+            2 => 
+            array (
+                'id' => 3,
+                'code' => '689776',
+                'institute_id' => 27,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'test',
+                'title_en' => 'tt',
+                'loc_division_id' => 2,
+                'loc_district_id' => 8,
+                'loc_upazila_id' => 53,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => 'address',
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-12 14:51:47',
+                'updated_at' => '2022-01-12 14:51:47',
+                'deleted_at' => NULL,
+            ),
+            3 => 
+            array (
+                'id' => 4,
+                'code' => '23564365',
+                'institute_id' => 28,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'Rouzex',
+                'title_en' => NULL,
+                'loc_division_id' => 6,
+                'loc_district_id' => 60,
+                'loc_upazila_id' => 481,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-16 15:54:27',
+                'updated_at' => '2022-01-16 15:54:27',
+                'deleted_at' => NULL,
+            ),
+            4 => 
+            array (
+                'id' => 5,
+                'code' => '2432543',
+                'institute_id' => 31,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'sss',
+                'title_en' => 'ddd',
+                'loc_division_id' => 2,
+                'loc_district_id' => 10,
+                'loc_upazila_id' => NULL,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-23 14:38:22',
+                'updated_at' => '2022-01-23 14:38:22',
+                'deleted_at' => NULL,
+            ),
+            5 => 
+            array (
+                'id' => 6,
+                'code' => '4575687689',
+                'institute_id' => 26,
+                'industry_association_id' => NULL,
+                'branch_id' => 1,
+                'center_location_type' => 2,
+                'title' => 'branch-1',
+                'title_en' => 'ব্রাঞ্চ',
+                'loc_division_id' => NULL,
+                'loc_district_id' => NULL,
+                'loc_upazila_id' => NULL,
+                'location_latitude' => '24.8408601',
+                'location_longitude' => '89.3591157',
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-23 15:12:19',
+                'updated_at' => '2022-02-01 16:24:32',
+                'deleted_at' => NULL,
+            ),
+            6 => 
+            array (
+                'id' => 7,
+                'code' => 'sdfsdfsdfTC000000001',
+                'institute_id' => 26,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'tedd',
+                'title_en' => NULL,
+                'loc_division_id' => NULL,
+                'loc_district_id' => NULL,
+                'loc_upazila_id' => NULL,
+                'location_latitude' => '25.0954203',
+                'location_longitude' => '91.8973229',
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-01-31 18:41:45',
+                'updated_at' => '2022-02-01 12:22:48',
+                'deleted_at' => '2022-02-01 12:22:48',
+            ),
+            7 => 
+            array (
+                'id' => 8,
+                'code' => 'sdfsdfsdfTC000000002',
+                'institute_id' => 26,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'টেস্ট',
+                'title_en' => 'Test',
+                'loc_division_id' => NULL,
+                'loc_district_id' => NULL,
+                'loc_upazila_id' => NULL,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-02-01 12:26:32',
+                'updated_at' => '2022-02-01 16:24:17',
+                'deleted_at' => NULL,
+            ),
+            8 => 
+            array (
+                'id' => 9,
+                'code' => 'sdfsdfsdfTC000000003',
+                'institute_id' => 26,
+                'industry_association_id' => NULL,
+                'branch_id' => NULL,
+                'center_location_type' => 1,
+                'title' => 'wewerw',
+                'title_en' => NULL,
+                'loc_division_id' => NULL,
+                'loc_district_id' => NULL,
+                'loc_upazila_id' => NULL,
+                'location_latitude' => NULL,
+                'location_longitude' => NULL,
+                'google_map_src' => NULL,
+                'address' => NULL,
+                'address_en' => NULL,
+                'row_status' => 1,
+                'created_by' => NULL,
+                'updated_by' => NULL,
+                'created_at' => '2022-02-01 12:31:31',
+                'updated_at' => '2022-02-01 12:31:35',
+                'deleted_at' => '2022-02-01 12:31:35',
+            ),
+        ));
+
+        Schema::enableForeignKeyConstraints();
+
+        
+    }
+}
