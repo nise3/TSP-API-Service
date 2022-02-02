@@ -34,24 +34,24 @@ class CodeGeneratorService
         try {
             /** @var SSPPessimisticLocking $existingSSPCode */
             $existingSSPCode = SSPPessimisticLocking::lockForUpdate()->first();
-            $code = !empty($existingSSPCode) && $existingSSPCode->last_incremental_value ? $existingSSPCode->last_incremental_value : 0;
-            $code = $code + 1;
-            $padSize = Institute::INSTITUTE_CODE_LENGTH - strlen($code);
+            $lastIncrementalVal = !empty($existingSSPCode) && $existingSSPCode->last_incremental_value ? $existingSSPCode->last_incremental_value : 0;
+            $lastIncrementalVal = $lastIncrementalVal + 1;
+            $padSize = Institute::INSTITUTE_CODE_LENGTH - strlen((string)$lastIncrementalVal);
 
             /**
              * Prefix+000000N. Ex: SSP0000001
              */
-            $sspCode = str_pad(Institute::INSTITUTE_CODE_PREFIX, $padSize, '0', STR_PAD_RIGHT) . $code;
+            $sspCode = str_pad(Institute::INSTITUTE_CODE_PREFIX, $padSize, '0', STR_PAD_RIGHT) . $lastIncrementalVal;
 
             /**
              * Code Update
              */
             if ($existingSSPCode) {
-                $existingSSPCode->last_incremental_value = $code;
+                $existingSSPCode->last_incremental_value = $lastIncrementalVal;
                 $existingSSPCode->save();
             } else {
                 SSPPessimisticLocking::create([
-                    "last_incremental_value" => $code
+                    "last_incremental_value" => $lastIncrementalVal
                 ]);
             }
             DB::commit();
