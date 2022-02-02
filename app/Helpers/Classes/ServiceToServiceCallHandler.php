@@ -91,4 +91,31 @@ class ServiceToServiceCallHandler
 
         return $responseData;
     }
+
+    /**
+     * @param array $youthIds
+     * @return mixed
+     * @throws RequestException
+     */
+    public function getYouthProfilesByIds(array $youthIds): mixed
+    {
+        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'service-to-service-call/youth-profiles';
+        $postField = [
+            "youth_ids" => $youthIds
+        ];
+
+        $youthData = Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug'),
+            'timeout' => config("nise3.http_timeout")
+        ])->post($url, $postField)->throw(function ($response, $e) use ($url) {
+            Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
+            return $e;
+        })
+            ->json('data');
+
+        Log::info("Youth Data:" . json_encode($youthData));
+
+        return $youthData;
+    }
 }
