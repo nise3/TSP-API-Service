@@ -4867,9 +4867,6 @@
                     "institute_id": {
                         "type": "integer"
                     },
-                    "code": {
-                        "type": "string"
-                    },
                     "description": {
                         "type": "string"
                     },
@@ -4903,10 +4900,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -5026,7 +5019,6 @@
                 "required": [
                     "permission_sub_group_id",
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -5048,10 +5040,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -5176,7 +5164,6 @@
                 },
                 "required": [
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -5514,9 +5501,6 @@
                 "type": "object",
                 "description": "Course",
                 "properties": {
-                    "code": {
-                        "type": "string"
-                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -5634,7 +5618,6 @@
                     }
                 },
                 "required": [
-                    "code",
                     "skills",
                     "title",
                     "level",
