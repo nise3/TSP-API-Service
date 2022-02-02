@@ -16,15 +16,16 @@ class SspPessimisticLockingsTableSeeder extends Seeder
      */
     public function run()
     {
-        
-
         Schema::disableForeignKeyConstraints();
 
         DB::table('ssp_pessimistic_lockings')->truncate();
-        
+
+        DB::table('ssp_pessimistic_lockings')->insert([
+            [
+                'last_incremental_value' => 3,
+            ]
+        ]);
 
         Schema::enableForeignKeyConstraints();
-
-        
     }
 }

@@ -21,12 +21,8 @@ class DatabaseSeeder extends Seeder
             EduGroupSeeder::class,
             EduBoardSeeder::class,
             ExamDegreeSeeder::class,
-//            InstituteSeeder::class,
-//            CourseEnrollmentSeeder::class,
+            InstitutesTableSeeder::class,
+            TrainingCentersTableSeeder::class,
         ]);
-/*        $this->call(InstitutesTableSeeder::class);
-        $this->call(BranchesTableSeeder::class);
-        $this->call(TrainingCentersTableSeeder::class);
-        $this->call(SspPessimisticLockingsTableSeeder::class);*/
     }
 }
