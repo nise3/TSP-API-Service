@@ -4639,6 +4639,259 @@
                 ]
             }
         },
+        "/institute_trainee_youths": {
+            "get": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Get institute trainee youth",
+                "description": "API endpoint to Get institute trainee youth.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "institute_id": 1,
+                                            "institute_title": "Shaina Sanford",
+                                            "institute_title_en": "Shaina Sanford",
+                                            "row_status": 2,
+                                            "created_at": "2022-02-02T07:56:36.000000Z",
+                                            "updated_at": "2022-02-02T07:56:36.000000Z",
+                                            "youth_details": {
+                                                "id": 1,
+                                                "username": "dibbert.prince@example.org",
+                                                "user_name_type": 1,
+                                                "first_name": "Mr. Marco Marquardt",
+                                                "first_name_en": null,
+                                                "last_name": "Mr. Marco Marquardt",
+                                                "last_name_en": null,
+                                                "expected_salary": null,
+                                                "job_level": null,
+                                                "loc_division_id": null,
+                                                "division_title": null,
+                                                "division_title_en": null,
+                                                "loc_district_id": null,
+                                                "district_title": null,
+                                                "district_title_en": null,
+                                                "loc_upazila_id": null,
+                                                "upazila_title": null,
+                                                "upazila_title_en": null,
+                                                "gender": 1,
+                                                "religion": null,
+                                                "is_freelance_profile": 0,
+                                                "marital_status": null,
+                                                "nationality": 1,
+                                                "email": "dibbert.prince@example.org",
+                                                "mobile": "01785842402",
+                                                "identity_number_type": null,
+                                                "identity_number": null,
+                                                "date_of_birth": "-000001-11-30T00:00:00.000000Z",
+                                                "freedom_fighter_status": 1,
+                                                "physical_disability_status": 0,
+                                                "does_belong_to_ethnic_group": 0,
+                                                "bio": null,
+                                                "bio_en": null,
+                                                "photo": null,
+                                                "cv_path": null,
+                                                "signature_image_path": null,
+                                                "row_status": 1,
+                                                "created_at": "2022-02-02T07:58:17.000000Z",
+                                                "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                "profile_completed": 83,
+                                                "total_job_experience": {
+                                                    "year": 6,
+                                                    "month": 5
+                                                },
+                                                "physical_disabilities": [],
+                                                "youth_languages_proficiencies": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "language_id": 2,
+                                                        "reading_proficiency_level": 2,
+                                                        "writing_proficiency_level": 1,
+                                                        "speaking_proficiency_level": 2,
+                                                        "understand_proficiency_level": 2,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "language_title": "ইংরেজি",
+                                                        "language_title_en": "English"
+                                                    },
+                                                    {
+                                                        "id": 59,
+                                                        "youth_id": 1,
+                                                        "language_id": 1,
+                                                        "reading_proficiency_level": 1,
+                                                        "writing_proficiency_level": 1,
+                                                        "speaking_proficiency_level": 2,
+                                                        "understand_proficiency_level": 2,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "language_title": "বাংলা",
+                                                        "language_title_en": "Bengali"
+                                                    }
+                                                ],
+                                                "skills": [],
+                                                "youth_educations": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "education_level_id": 0,
+                                                        "exam_degree_id": null,
+                                                        "exam_degree_name": null,
+                                                        "exam_degree_name_en": null,
+                                                        "major_or_concentration": null,
+                                                        "major_or_concentration_en": null,
+                                                        "edu_group_id": null,
+                                                        "edu_board_id": null,
+                                                        "institute_name": "",
+                                                        "institute_name_en": null,
+                                                        "is_foreign_institute": 0,
+                                                        "foreign_institute_country_id": null,
+                                                        "result": null,
+                                                        "marks_in_percentage": null,
+                                                        "cgpa_scale": null,
+                                                        "cgpa": null,
+                                                        "year_of_passing": null,
+                                                        "duration": null,
+                                                        "achievements": null,
+                                                        "achievements_en": null,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "expected_year_of_passing": null,
+                                                        "exam_degree_title": null,
+                                                        "exam_degree_title_en": null,
+                                                        "edu_group_title": null,
+                                                        "edu_group_title_en": null,
+                                                        "edu_board_title": null,
+                                                        "edu_board_title_en": null,
+                                                        "education_level_title": null,
+                                                        "education_level_title_en": null
+                                                    }
+                                                ],
+                                                "youth_job_experiences": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "employment_type_id": 1,
+                                                        "company_name": "Rosenbaum PLC",
+                                                        "company_name_en": "Rosenbaum PLC",
+                                                        "position": "Biologist",
+                                                        "position_en": "Biologist",
+                                                        "location": "252 Donnelly Spurs",
+                                                        "location_en": "252 Donnelly Spurs",
+                                                        "job_responsibilities": "Gas Processing Plant Operator",
+                                                        "job_responsibilities_en": "Gas Processing Plant Operator",
+                                                        "start_date": "2013-10-14T00:00:00.000000Z",
+                                                        "end_date": "2020-03-16T00:00:00.000000Z",
+                                                        "is_currently_working": 0,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "area_of_experiences": [],
+                                                        "area_of_businesses": []
+                                                    }
+                                                ],
+                                                "youth_certifications": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "certification_name": "Boris Hintz",
+                                                        "certification_name_en": "Boris Hintz",
+                                                        "institute_name": "Meredith Hill",
+                                                        "institute_name_en": "Meredith Hill",
+                                                        "location": "43866 Bradtke Burgs Suite 211",
+                                                        "location_en": "17529 Kunze Island Apt. 419",
+                                                        "start_date": "1978-09-02T00:00:00.000000Z",
+                                                        "end_date": "1978-09-03T00:00:00.000000Z",
+                                                        "certificate_file_path": "Boris Hintz",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "youth_id": 1,
+                                                        "certification_name": "Adriana Sipes",
+                                                        "certification_name_en": "Adriana Sipes",
+                                                        "institute_name": "Prof. Rodger Durgan",
+                                                        "institute_name_en": "Prof. Rodger Durgan",
+                                                        "location": "362 Amely Union",
+                                                        "location_en": "8562 Richie Lock Apt. 563",
+                                                        "start_date": "1982-10-30T00:00:00.000000Z",
+                                                        "end_date": "1982-10-31T00:00:00.000000Z",
+                                                        "certificate_file_path": "Adriana Sipes",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_portfolios": [
+
+                                                    {
+                                                        "id": 4,
+                                                        "youth_id": 1,
+                                                        "title": "Mail Machine Operator",
+                                                        "title_en": "Mail Machine Operator",
+                                                        "description": "Sed quia nemo nihil .",
+                                                        "description_en": "Sed quia nemo nihil non ut .",
+                                                        "file_path": "C:\\Users\\HP\\AppData\\Local\\Temp\\fak401A.tmp",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 5,
+                                                        "youth_id": 1,
+                                                        "title": "Forming Machine Operator",
+                                                        "title_en": "Forming Machine Operator",
+                                                        "description": "Neque quia dolore accusantium commodi .",
+                                                        "description_en": "Neque quia dolore accusantium commodi nostrum .",
+                                                        "file_path": "C:\\Users\\HP\\AppData\\Local\\Temp\\fak401B.tmp",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_addresses": []
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute-dashboard-statistics": {
             "get": {
                 "summary": "Get institute dashboard statistics",
@@ -4867,9 +5120,6 @@
                     "institute_id": {
                         "type": "integer"
                     },
-                    "code": {
-                        "type": "string"
-                    },
                     "description": {
                         "type": "string"
                     },
@@ -4903,10 +5153,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -5026,7 +5272,6 @@
                 "required": [
                     "permission_sub_group_id",
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -5048,10 +5293,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -5176,7 +5417,6 @@
                 },
                 "required": [
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -5514,9 +5754,6 @@
                 "type": "object",
                 "description": "Course",
                 "properties": {
-                    "code": {
-                        "type": "string"
-                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -5634,7 +5871,6 @@
                     }
                 },
                 "required": [
-                    "code",
                     "skills",
                     "title",
                     "level",
