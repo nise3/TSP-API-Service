@@ -1333,6 +1333,42 @@ class CourseEnrollmentService
      * return use Illuminate\Support\Facades\Validator;
      * @return Validator
      */
+    public function instituteTraineeYouthsFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
+        ];
+
+        $requestData = $request->all();
+
+        $rules = [
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'nullable',
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in(CourseEnrollment::ROW_STATUSES),
+            ]
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
+    }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return Validator
+     */
     public function batchAssignmentValidator(Request $request): Validator
     {
         $requestData = $request->all();

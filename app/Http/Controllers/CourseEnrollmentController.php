@@ -73,6 +73,14 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @throws ValidationException
+     */
+    public function getInstituteTraineeYouths(Request $request, int $instituteId){
+        $validated = $this->courseEnrollService->instituteTraineeYouthsFilterValidator($request)->validate();
+
+    }
+
 
     /**
      * Display the specified resource
