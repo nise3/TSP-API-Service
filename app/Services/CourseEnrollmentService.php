@@ -3,6 +3,7 @@
 
 namespace App\Services;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
@@ -1251,6 +1252,82 @@ class CourseEnrollmentService
         } else {
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
+        $response['order'] = $order;
+        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @param int $instituteId
+     * @return array
+     */
+    public function getInstituteTraineeYouths(array $request, Carbon $startTime, int $instituteId): array
+    {
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
+        $coursesEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'course_enrollments.institute_id',
+                'institutes.title as institute_title',
+                'institutes.title_en as institute_title_en',
+                'course_enrollments.row_status',
+                'course_enrollments.created_at',
+                'course_enrollments.updated_at'
+            ]
+        );
+
+        $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+
+        $coursesEnrollmentBuilder->join("institutes", function ($join) {
+            $join->on('course_enrollments.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
+        $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
+
+        if (is_numeric($rowStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        /** @var Collection $courseEnrollments */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courseEnrollments = $coursesEnrollmentBuilder->paginate($pageSize);
+            $paginateData = (object)$courseEnrollments->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courseEnrollments = $coursesEnrollmentBuilder->get();
+        }
+
+        $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
+        $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+        $indexedYouths = [];
+
+        foreach ($youthProfiles as $item) {
+            $indexedYouths[$item['id']] = $item;
+        }
+
+        foreach ($courseEnrollments as $courseEnrollment){
+            $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+        }
+
         $response['order'] = $order;
         $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
         $response['_response_status'] = [

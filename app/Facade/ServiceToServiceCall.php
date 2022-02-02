@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array|mixed getAuthUserWithRolePermission(string $idpUserId)
  * @method static array|mixed getIndustryAssociationCode(int $industryAssociationId)
  * @method static array|mixed getIndustryAssociationData(int $industryAssociationId)
+ * @method static array|mixed getYouthProfilesByIds(array $youthIds)
  *
  * @see \App\Helpers\Classes\ServiceToServiceCallHandler
  */
