@@ -8,6 +8,7 @@ use Carbon\Carbon;
  *Class SSPPessimisticLocking
  * @property int id
  * @property int code
+ * @property int last_incremental_value
  * @property Carbon created_at
  * @property Carbon updated_at
  */

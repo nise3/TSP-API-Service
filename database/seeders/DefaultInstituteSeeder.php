@@ -16,7 +16,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class InstituteSeeder extends Seeder
+class DefaultInstituteSeeder extends Seeder
 {
     const createInstitute = true;
     const createIdpUser = false;
