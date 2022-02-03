@@ -4639,6 +4639,39 @@
                 ]
             }
         },
+        "/course-enroll/{id}/verify-sms-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Verify sms code",
+                "description": "API endpoint to Verify sms code . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseEnrollmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CourseEnrollByVerification"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute_trainee_youths": {
             "get": {
                 "tags": [
@@ -6500,6 +6533,19 @@
                     "physical_disability_status"
                 ]
             },
+            "CourseEnrollByVerification": {
+                "type": "object",
+                "description": "Verification code",
+                "properties": {
+                    "verification_code": {
+                        "type": "integer",
+                        "minimum": 4
+                    }
+                },
+                "required": [
+                    "verification_code"
+                ]
+            },
             "address_info": {
                 "type": "object",
                 "properties": {
@@ -7061,6 +7107,16 @@
             },
             "courseId": {
                 "name": "courseId",
+                "in": "path",
+                "description": "course id to get training centers with batches",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "courseEnrollmentId": {
+                "name": "id",
                 "in": "path",
                 "description": "course id to get training centers with batches",
                 "required": true,
