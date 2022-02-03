@@ -752,7 +752,7 @@ class InstituteService
     }
 
 
-    public function instituteProfileValidator(Request $request, int $id = null): Validator
+    public function instituteProfileUpdateValidator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
 
