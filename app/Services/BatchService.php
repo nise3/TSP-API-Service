@@ -601,8 +601,6 @@ class BatchService
                 $join->whereDate('batches.registration_end_date', '>=', $currentTime);
             } else if (!$active && $upcoming) {
                 $join->whereDate('batches.registration_start_date', '>', $currentTime);
-            } else {
-                $join->whereDate('batches.registration_end_date', '>=', $currentTime);
             }
         })
             ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'training_centers.loc_division_id')
