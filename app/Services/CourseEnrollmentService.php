@@ -1290,6 +1290,8 @@ class CourseEnrollmentService
             ]
         );
 
+        $coursesEnrollmentBuilder->whereNotNull('course_enrollments.batch_id');
+
         if (!empty($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
         }
@@ -1319,15 +1321,17 @@ class CourseEnrollmentService
         }
 
         $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
-        $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
-        $indexedYouths = [];
+        if($youthIds){
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+            $indexedYouths = [];
 
-        foreach ($youthProfiles as $item) {
-            $indexedYouths[$item['id']] = $item;
-        }
+            foreach ($youthProfiles as $item) {
+                $indexedYouths[$item['id']] = $item;
+            }
 
-        foreach ($courseEnrollments as $courseEnrollment) {
-            $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+            foreach ($courseEnrollments as $courseEnrollment) {
+                $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+            }
         }
 
         $response['order'] = $order;
@@ -1501,15 +1505,17 @@ class CourseEnrollmentService
 
     /**
      * @param array $data
+     * @param Batch $batch
      * @return mixed
      * @throws Throwable
      */
-    public function assignBatch(array $data): CourseEnrollment
+    public function assignBatch(array $data, Batch $batch): CourseEnrollment
     {
         DB::beginTransaction();
         try {
             $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
             $courseEnrollment->batch_id = $data['batch_id'];
+            $courseEnrollment->training_center_id = $batch->training_center_id;
             $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_UPDATE_PENDING;
             $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
             $courseEnrollment->save();

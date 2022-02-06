@@ -206,8 +206,8 @@ class CourseEnrollmentController extends Controller
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
             $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
-            $this->courseEnrollService->assignBatch($validated);
             $batch = Batch::findOrFail($validated['batch_id']);
+            $this->courseEnrollService->assignBatch($validated, $batch);
             $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [
