@@ -266,6 +266,8 @@ class CourseService
         if (is_numeric($youthId)) {
             $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
             $course["enrolled"] = (bool)$courseEnrollment;
+            $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
+            $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
@@ -795,13 +797,20 @@ class CourseService
         if (is_numeric($youthId)) {
             $courseIds = $courses->pluck('id')->toArray();
             if (count($courseIds) > 0) {
-                $youthEnrolledCourseIds = CourseEnrollment::whereIn('course_id', $courseIds)
+                /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
+                $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
                     ->where('youth_id', $youthId)
-                    ->pluck('course_id')
-                    ->toArray();
+                    ->get();
+
+                $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
+                $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
 
                 foreach ($courses as $course) {
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
+                    if($course['enrolled']){
+                        $course['payment_status'] = (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
+                        $course['verified'] = !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
+                    }
                 }
             }
         }
