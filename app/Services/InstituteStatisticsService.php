@@ -10,6 +10,7 @@ use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\ArrayShape;
 
 
@@ -248,10 +249,11 @@ class InstituteStatisticsService
     {
         $builder = Course::query();
         $builder->select([
-            "courses.title as course_title"
+            "courses.title as course_title",
+            "courses.title_en as course_title_en"
         ]);
 
-        $builder->selectRaw('COUNT(course_enrollments.course_id) AS total_enrollments');
+        $builder->selectRaw('COUNT(course_enrollments.id) AS total_enrollments');
         $builder->join('course_enrollments', 'course_enrollments.course_id', "courses.id");
         $builder->groupBy('course_enrollments.course_id');
         $builder->orderBy('total_enrollments', "DESC");
@@ -273,7 +275,7 @@ class InstituteStatisticsService
     {
         return [
             "total_popular_courses" => $this->getPopularCoursesWithEnrollments(true),
-            "total_skill_development_center" => []
+            "total_skill_development_center" => $this->getTotalTrainingCenterWithTrained(true)
         ];
     }
 
@@ -294,6 +296,31 @@ class InstituteStatisticsService
             $queryAttribute,
             $queryAttributeValue
         ];
+    }
+
+    private function getTotalTrainingCenterWithTrained(bool $isNiseStatistics = false): array
+    {
+        $builder = CourseEnrollment::query();
+        $builder->select([
+            "training_centers.title as training_center_title",
+            "training_centers.title_en as training_center_title_en",
+        ]);
+
+        $builder->selectRaw('COUNT(course_enrollments.id) AS total_trained');
+        $builder->join('training_centers', 'course_enrollments.training_center_id', "training_centers.id");
+        $builder->groupBy('course_enrollments.training_center_id');
+        $builder->orderBy('total_trained', "DESC");
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain();
+            if ($queryAttributeValue) {
+                $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+
+        return $builder->limit(4)->get()->toArray();
     }
 
 }
