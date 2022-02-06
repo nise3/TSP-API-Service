@@ -49,6 +49,7 @@ class CourseService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -130,6 +131,9 @@ class CourseService
 
         if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
+        }
+        if (is_numeric($industryAssociationId)) {
+            $coursesBuilder->where('courses.industry_association_id', '=', $industryAssociationId);
         }
 
         /** @var Collection $courses */

@@ -9,6 +9,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -545,18 +546,8 @@ class BatchService
         $active = $request->get('active') === "true";
         $upcoming = $request->get('upcoming') === "true";
 
-        /** @var Course $course */
-        $course = Course::findOrFail($id);
-
-        $queryAttribute = "institute_id";
-        $queryAttributeValue = $course->institute_id;
-        if (Auth::user()->isIndustryAssociationUser()) {
-            $queryAttribute = "industry_association_id";
-            $queryAttributeValue = $course->industry_association_id;
-        }
-
-        /** @var Course|Builder $courseBuilder */
-        $courseBuilder = TrainingCenter::select([
+        /** @var TrainingCenter|Builder $trainingCenterBuilder */
+        $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.title',
             'training_centers.title_en',
@@ -594,7 +585,7 @@ class BatchService
             DB::raw('GROUP_CONCAT(batches.row_status) as batch_row_statuses')
         ]);
 
-        $courseBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
+        $trainingCenterBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
             $join->on('batches.training_center_id', '=', 'training_centers.id');
             if ($active && !$upcoming) {
                 $join->whereDate('batches.registration_start_date', '<=', $currentTime);
@@ -606,16 +597,13 @@ class BatchService
             ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'training_centers.loc_division_id')
             ->leftJoin('loc_districts', 'loc_districts.id', '=', 'training_centers.loc_district_id')
             ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
-            ->where([
-                ['training_centers.' . $queryAttribute, '=', $queryAttributeValue],
-                ['batches.course_id', '=', $id],
-                ['batches.' . $queryAttribute, '=', $queryAttributeValue]
-            ])
+            ->where(['batches.course_id', '=', $id])
             ->groupBy('training_centers.id')
             ->whereNull('training_centers.deleted_at')
-            ->whereNull('batches.deleted_at');
+            ->whereNull('batches.deleted_at')
+            ->acl();
 
-        $result = $courseBuilder->get();
+        $result = $trainingCenterBuilder->get();
 
         $trainingCenterWiseBatches = $result->toArray()['data'] ?? $result->toArray();
 

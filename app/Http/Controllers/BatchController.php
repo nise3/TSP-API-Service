@@ -254,6 +254,7 @@ class BatchController extends Controller
      */
     public function getBatchesByCourseId(Request $request, $id): JsonResponse
     {
+
         $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
 
         return Response::json($response);
