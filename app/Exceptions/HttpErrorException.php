@@ -5,6 +5,9 @@ namespace App\Exceptions;
 
 use Illuminate\Http\Client\RequestException;
 
+/**
+ *
+ */
 class HttpErrorException extends RequestException
 {
 
