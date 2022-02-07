@@ -984,6 +984,15 @@
                         "$ref": "#/components/parameters/institute_id_path"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegistrationApproval"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -6544,6 +6553,18 @@
                 },
                 "required": [
                     "verification_code"
+                ]
+            },
+            "instituteRegistrationApproval": {
+                "type": "object",
+                "description": "instituteRegistrationApprovalSchema",
+                "properties": {
+                    "permission_sub_group_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "permission_sub_group_id"
                 ]
             },
             "address_info": {
