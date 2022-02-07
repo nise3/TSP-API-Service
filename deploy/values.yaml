@@ -17,10 +17,10 @@ variables:
   ltsAcme: false
 
   # app version, changing version will auto deploy the app to current version
-  imageAppVersion: "2.0.2"
+  imageAppVersion: "2.0.3"
 
   # increase this when you need scale up
-  replicaCount: 1
+  replicaCount: 2
 
   imagePullPolicy: IfNotPresent
 
