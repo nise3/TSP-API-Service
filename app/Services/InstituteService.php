@@ -337,16 +337,21 @@ class InstituteService
     }
 
     /**
+     * @param Request $request
      * @param Institute $institute
      * @return mixed
      * @throws RequestException
      */
-    public function instituteUserApproval(Institute $institute): mixed
+    public function instituteUserApproval(Request $request,Institute $institute): mixed
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
         $userPostField = [
+            'permission_sub_group_id' => $request->input('permission_sub_group_id') ?? "",
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'institute_id' => $institute->id,
+            'name_en' => $institute->contact_person_name ?? "",
+            'name' => $institute->contact_person_name ?? "",
+            'row_status' => $institute->row_status ,
         ];
 
         return Http::withOptions(
