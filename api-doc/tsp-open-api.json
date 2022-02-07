@@ -982,6 +982,9 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/institute_id_path"
+                    },
+                    {
+                        "$ref": "#/components/parameters/permission_sub_group_id"
                     }
                 ],
                 "responses": {
