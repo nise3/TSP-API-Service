@@ -73,6 +73,18 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function getInstituteTraineeYouths(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->instituteTraineeYouthsFilterValidator($request)->validate();
+        $response = $this->courseEnrollService->getInstituteTraineeYouths($validated, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 
     /**
      * Display the specified resource
@@ -194,8 +206,8 @@ class CourseEnrollmentController extends Controller
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
             $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
-            $this->courseEnrollService->assignBatch($validated);
             $batch = Batch::findOrFail($validated['batch_id']);
+            $this->courseEnrollService->assignBatch($validated, $batch);
             $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [

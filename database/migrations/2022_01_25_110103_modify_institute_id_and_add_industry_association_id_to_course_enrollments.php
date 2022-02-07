@@ -15,7 +15,7 @@ class ModifyInstituteIdAndAddIndustryAssociationIdToCourseEnrollments extends Mi
     public function up()
     {
         Schema::table('course_enrollments', function (Blueprint $table) {
-            DB::statement('ALTER TABLE course_enrollments MODIFY institute_id int(255) NUll');
+            DB::statement('ALTER    TABLE course_enrollments MODIFY institute_id int(255) NUll');
             $table->unsignedInteger('industry_association_id')->nullable()->after('institute_id');
         });
     }
