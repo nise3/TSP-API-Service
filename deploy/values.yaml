@@ -68,6 +68,10 @@ variables:
     DB_USERNAME: "core3"
     DB_PASSWORD: "core3"
 
+    REDIS_HOST: "redis.redis"
+    REDIS_PASSWORD: "k?admin"
+    REDIS_PORT: 6379
+
     RABBITMQ_HOST: "rabbitmqcluster.default"
     RABBITMQ_PORT: "5672"
     RABBITMQ_VHOST: "/"
