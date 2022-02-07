@@ -342,7 +342,7 @@ class InstituteService
      * @return mixed
      * @throws RequestException
      */
-    public function instituteUserApproval(Request $request,Institute $institute): mixed
+    public function instituteUserApproval(Request $request, Institute $institute): mixed
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
         $userPostField = [
@@ -351,7 +351,7 @@ class InstituteService
             'institute_id' => $institute->id,
             'name_en' => $institute->contact_person_name ?? "",
             'name' => $institute->contact_person_name ?? "",
-            'row_status' => $institute->row_status ,
+            'row_status' => $institute->row_status,
         ];
 
         return Http::withOptions(
@@ -481,8 +481,8 @@ class InstituteService
 
     public function userInfoSendBySMS(string $recipient, string $message)
     {
-        $sms = new SmsService($recipient, $message);
-        $sms->sendSms();
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array

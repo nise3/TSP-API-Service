@@ -529,6 +529,11 @@ class InstituteController extends Controller
         try {
             $this->instituteService->InstituteStatusChangeAfterRejection($institute);
             $this->instituteService->InstituteUserRejection($institute);
+            /** Sms send after institute approval */
+            $recipient = $institute->contact_person_mobile;
+            $message = "Sorry, " . $institute->contact_person_name . " You are rejected as institute user";
+            $this->instituteService->userInfoSendBySMS($recipient, $message);
+
             DB::commit();
             $response = [
                 '_response_status' => [
