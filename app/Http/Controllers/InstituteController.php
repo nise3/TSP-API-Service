@@ -469,45 +469,42 @@ class InstituteController extends Controller
 
     /**
      * Institute Open Registration Approval
+     * @param Request $request
      * @param int $instituteId
      * @return JsonResponse
+     * @throws RequestException
      * @throws Throwable
      */
-    public function instituteRegistrationApproval(int $instituteId): JsonResponse
+    public function instituteRegistrationApproval(Request $request, int $instituteId): JsonResponse
     {
         /** @var Institute $institute */
         $institute = Institute::findOrFail($instituteId);
 
+        if ($institute->row_status == BaseModel::ROW_STATUS_PENDING) {
+            throw_if(empty($request->input('permission_sub_group_id')), ValidationException::withMessages([
+                "permission_sub_group_id is required.[50000]"
+            ]));
+        }
+
         DB::beginTransaction();
         try {
-            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
-                $this->instituteService->InstituteStatusChangeAfterApproval($institute);
-                $this->instituteService->InstituteUserApproval($institute);
+            $this->instituteService->InstituteUserApproval($request, $institute);
+            $this->instituteService->InstituteStatusChangeAfterApproval($institute);
 
-                /** Sms send after institute approval */
-                $recipient = $institute->contact_person_mobile;
-                $message = "Congratulation, " . $institute->contact_person_name . " You are approved as institute user";
-                $this->instituteService->userInfoSendBySMS($recipient, $message);
+            /** Sms send after institute approval */
+            $recipient = $institute->contact_person_mobile;
+            $message = "Congratulation, " . $institute->contact_person_name . " You are approved as institute user";
+            $this->instituteService->userInfoSendBySMS($recipient, $message);
 
-                DB::commit();
-                $response = [
-                    '_response_status' => [
-                        "success" => true,
-                        "code" => ResponseAlias::HTTP_OK,
-                        "message" => "Institute Registration  approved successfully",
-                        "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-                    ]
-                ];
-            } else {
-                $response = [
-                    '_response_status' => [
-                        "success" => false,
-                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
-                        "message" => "No pending status found for this Institute",
-                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                    ]
-                ];
-            }
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute Registration approved successfully",
+                    "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+                ]
+            ];
 
 
         } catch (Throwable $e) {
@@ -530,29 +527,17 @@ class InstituteController extends Controller
 
         DB::beginTransaction();
         try {
-            if ($institute && $institute->row_status == BaseModel::ROW_STATUS_PENDING) {
-                $this->instituteService->InstituteStatusChangeAfterRejection($institute);
-                $this->instituteService->InstituteUserRejection($institute);
-                DB::commit();
-                $response = [
-                    '_response_status' => [
-                        "success" => true,
-                        "code" => ResponseAlias::HTTP_OK,
-                        "message" => "Institute Registration  rejected successfully",
-                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                    ]
-                ];
-            } else {
-                $response = [
-                    '_response_status' => [
-                        "success" => false,
-                        "code" => ResponseAlias::HTTP_BAD_REQUEST,
-                        "message" => "No pending status found for this Institute",
-                        "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-                    ]
-                ];
-            }
-
+            $this->instituteService->InstituteStatusChangeAfterRejection($institute);
+            $this->instituteService->InstituteUserRejection($institute);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Institute Registration  rejected successfully",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now())
+                ]
+            ];
 
         } catch (Throwable $e) {
             DB::rollBack();
