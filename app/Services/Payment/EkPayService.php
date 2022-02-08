@@ -2,6 +2,7 @@
 
 namespace App\Services\Payment;
 
+use App\Exceptions\HttpErrorException;
 use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -86,8 +87,13 @@ class EkPayService
             ->withHeaders([
                 "Content-Type" => 'application/json'
             ])
+            ->timeout(10)
             ->post($url, $ekPayPayload)
-            ->throw()
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
             ->json(); //secure_token
 
         Log::info("Http-log: " . json_encode($res));

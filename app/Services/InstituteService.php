@@ -2,25 +2,23 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Models\TrainingCenter;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\In;
-use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 
 /**
@@ -304,12 +302,14 @@ class InstituteService
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->delete($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -337,27 +337,34 @@ class InstituteService
     }
 
     /**
+     * @param Request $request
      * @param Institute $institute
      * @return mixed
      * @throws RequestException
      */
-    public function instituteUserApproval(Institute $institute): mixed
+    public function instituteUserApproval(Request $request, Institute $institute): mixed
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
         $userPostField = [
+            'permission_sub_group_id' => $request->input('permission_sub_group_id') ?? "",
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'institute_id' => $institute->id,
+            'name_en' => $institute->contact_person_name ?? "",
+            'name' => $institute->contact_person_name ?? "",
+            'row_status' => $institute->row_status,
         ];
 
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->put($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -379,12 +386,14 @@ class InstituteService
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->put($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -411,13 +420,14 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -442,42 +452,22 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
 
-
-    public function userInfoSendByMail(array $mailPayload)
-    {
-        $mailService = new MailService();
-        $mailService->setTo([
-            $mailPayload['contact_person_email']
-        ]);
-        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
-        $subject = $mailPayload['subject'] ?? "Institute Registration";
-
-        $mailService->setForm($from);
-        $mailService->setSubject($subject);
-        $mailService->setMessageBody([
-            "user_name" => $mailPayload['contact_person_mobile'],
-            "password" => $mailPayload['password']
-        ]);
-        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.institute-create-default-template';
-        $mailService->setTemplate($instituteRegistrationTemplate);
-        $mailService->sendMail();
-    }
-
     public function userInfoSendBySMS(string $recipient, string $message)
     {
-        $sms = new SmsService($recipient, $message);
-        $sms->sendSms();
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array

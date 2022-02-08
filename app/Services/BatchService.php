@@ -4,14 +4,12 @@
 namespace App\Services;
 
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
-use App\Models\User;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -280,13 +278,14 @@ class BatchService
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'delete-calender-event-by-batch-id/' . $batchId;
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->delete($url)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }

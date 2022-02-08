@@ -984,6 +984,15 @@
                         "$ref": "#/components/parameters/institute_id_path"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegistrationApproval"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -5520,6 +5529,9 @@
                     "name_of_the_office_head_designation_en": {
                         "type": "string"
                     },
+                    "logo": {
+                        "type": "string"
+                    },
                     "contact_person_name": {
                         "type": "string",
                         "maxLength": 500
@@ -6544,6 +6556,18 @@
                 },
                 "required": [
                     "verification_code"
+                ]
+            },
+            "instituteRegistrationApproval": {
+                "type": "object",
+                "description": "instituteRegistrationApprovalSchema",
+                "properties": {
+                    "permission_sub_group_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "permission_sub_group_id"
                 ]
             },
             "address_info": {
