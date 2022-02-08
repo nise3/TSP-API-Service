@@ -1321,7 +1321,7 @@ class CourseEnrollmentService
         }
 
         $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
-        if($youthIds){
+        if ($youthIds) {
             $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
             $indexedYouths = [];
 
@@ -1343,34 +1343,6 @@ class CourseEnrollmentService
         ];
 
         return $response;
-    }
-
-    /**
-     * @param array $mailPayload
-     */
-    public function sendMailYouthAfterBatchAssign(array $mailPayload)
-    {
-        $enrollment = CourseEnrollment::findOrFail($mailPayload['enrollment_id']);
-        $batch = Batch::findOrFail($mailPayload['batch_id']);
-        $course = Course::findOrFail($enrollment->course_id);
-
-        $mailService = new MailService();
-        $mailService->setTo([
-            $enrollment['email']
-        ]);
-        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
-        $subject = $mailPayload['subject'] ?? "Batch Assign";
-
-        $mailService->setForm($from);
-        $mailService->setSubject($subject);
-        $mailService->setMessageBody([
-            "course_name" => $course->title,
-            "batch_info" => $batch->toArray()
-        ]);
-        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.batch-assign-template';
-        $mailService->setTemplate($instituteRegistrationTemplate);
-        $mailService->sendMail();
-
     }
 
     /**

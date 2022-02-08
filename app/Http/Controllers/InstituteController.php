@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Services\CommonServices\CodeGeneratorService;
+use App\Services\CommonServices\MailService;
 use App\Services\CourseService;
 use App\Services\ProgramService;
 use App\Services\TrainingCenterService;
@@ -198,12 +199,19 @@ class InstituteController extends Controller
 
             if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']) {
 
-                /** Mail & SMS send after user registration */
-                $this->instituteService->userInfoSendByMail($validatedData);
+                /** Mail send after user registration */
+                $to = array($validatedData['contact_person_email']);
+                $from = BaseModel::NISE3_FROM_EMAIL;
+                $subject = "User Registration Information";
+                $message = "Congratulation, You are successfully complete your registration as " . $validatedData['title'] . " user. Your Username: " . $validatedData['contact_person_mobile'] . " and Password: " . $validatedData['password'];
+                $messageBody = MailService::templateView($message);
 
+                $mailService = new MailService($to, $from, $subject, $messageBody);
+                $mailService->sendMail();
+
+                /** SMS send after user registration */
                 $recipient = $validatedData['contact_person_mobile'];
-                $message = "Dear, " . $validatedData['contact_person_name'] . " your username: " . $validatedData['contact_person_mobile'] . " & password: " . $validatedData['password'];
-
+                $message = "Congratulation, You are successfully complete your registration as a " . $validatedData['title'] . " user";
                 $this->instituteService->userInfoSendBySMS($recipient, $message);
 
                 /** Create a default training center in time of Institute Create */
@@ -341,7 +349,21 @@ class InstituteController extends Controller
 
             if (isset($createdRegisterUser['_response_status']['success']) && $createdRegisterUser['_response_status']['success']) {
                 $response['data'] = $institute;
-                $this->instituteService->userInfoSendByMail($validated);
+
+                /** Mail send after user registration */
+                $to = array($validated['contact_person_email']);
+                $from = BaseModel::NISE3_FROM_EMAIL;
+                $subject = "User Registration Information";
+                $message = "Congratulation, You are successfully complete your registration as " . $validated['title'] . " user. Username: " . $validated['contact_person_mobile'] . " & Password: " . $validated['password'] . " You are an inactive user until approved by System Admin.";
+                $messageBody = MailService::templateView($message);
+                $mailService = new MailService($to, $from, $subject, $messageBody);
+                $mailService->sendMail();
+
+                /** SMS send after user registration */
+                $recipient = $validated['contact_person_mobile'];
+                $message = "Congratulation, You are successfully complete your registration as a " . $validated['title'] . " user. You are an inactive user until approved by System Admin.";
+                $this->instituteService->userInfoSendBySMS($recipient, $message);
+
 
                 /** Create a default training center in time of Institute Create */
                 app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
@@ -491,9 +513,18 @@ class InstituteController extends Controller
             $this->instituteService->InstituteUserApproval($request, $institute);
             $this->instituteService->InstituteStatusChangeAfterApproval($institute);
 
+            /** Mail send after user registration */
+            $to = array($institute->contact_person_email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Approval Information";
+            $message = "Congratulation, You are  approved as a " . $institute->title . " user. You are now active user";
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
             /** Sms send after institute approval */
             $recipient = $institute->contact_person_mobile;
-            $message = "Congratulation, " . $institute->contact_person_name . " You are approved as institute user";
+            $message = "Congratulation, You are approved as a " . $institute->title . " user";
             $this->instituteService->userInfoSendBySMS($recipient, $message);
 
             DB::commit();
@@ -529,9 +560,19 @@ class InstituteController extends Controller
         try {
             $this->instituteService->InstituteStatusChangeAfterRejection($institute);
             $this->instituteService->InstituteUserRejection($institute);
+
+            /** Mail send after user registration */
+            $to = array($institute->contact_person_email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Rejection Information";
+            $message = "You are rejected as a " . $institute->title . " user. You are now inactive user";
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
             /** Sms send after institute approval */
             $recipient = $institute->contact_person_mobile;
-            $message = "Sorry, " . $institute->contact_person_name . " You are rejected as institute user";
+            $message = "You are rejected as a " . $institute->title . " user";
             $this->instituteService->userInfoSendBySMS($recipient, $message);
 
             DB::commit();

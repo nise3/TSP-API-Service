@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 
 /**
@@ -461,27 +462,6 @@ class InstituteService
                 throw new HttpErrorException($httpResponse);
             })
             ->json();
-    }
-
-
-    public function userInfoSendByMail(array $mailPayload)
-    {
-        $mailService = new MailService();
-        $mailService->setTo([
-            $mailPayload['contact_person_email']
-        ]);
-        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
-        $subject = $mailPayload['subject'] ?? "Institute Registration";
-
-        $mailService->setForm($from);
-        $mailService->setSubject($subject);
-        $mailService->setMessageBody([
-            "user_name" => $mailPayload['contact_person_mobile'],
-            "password" => $mailPayload['password']
-        ]);
-        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.institute-create-default-template';
-        $mailService->setTemplate($instituteRegistrationTemplate);
-        $mailService->sendMail();
     }
 
     public function userInfoSendBySMS(string $recipient, string $message)

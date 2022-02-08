@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use App\Services\CourseEnrollmentService;
 use Carbon\Carbon;
 use Exception;
@@ -161,7 +162,6 @@ class CourseEnrollmentController extends Controller
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
         $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
         $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
-
         $response = [
             '_response_status' => [
                 "success" => $verifySmsStatus,
@@ -224,8 +224,20 @@ class CourseEnrollmentController extends Controller
             /** Trigger Event to Cms Service via RabbitMQ  */
             event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
 
-            /** Send Mail Event */
-            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
+            /** Mail send */
+            $to = array($courseEnrollmentDataAfterUpdate->email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "Batch Assignment Information";
+            $message = "Congratulation,You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** Sms send */
+            $recipient = $courseEnrollmentDataAfterUpdate->mobile;
+            $smsMessage = "You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
 
             $response = [
                 '_response_status' => [

@@ -148,6 +148,9 @@ class CourseEnrollmentPaymentController extends Controller
                         $payment->payment_transaction_history_id = $paymentHistory->id;
                         $payment->save();
                     }
+
+                    $this->courseEnrollmentPaymentService->confirmationMailAndSmsSend($courseEnroll);
+
                     DB::commit();
                 }
             } catch (Throwable $exception) {

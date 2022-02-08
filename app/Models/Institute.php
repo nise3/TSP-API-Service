@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null config
  * @property string contact_person_name
  * @property string contact_person_mobile
+ * @property string contact_person_email
  */
 class Institute extends BaseModel
 {
@@ -54,7 +55,6 @@ class Institute extends BaseModel
         'phone_numbers' => 'array',
         'mobile_numbers' => 'array',
     ];
-    private mixed $contact_person_name;
 
     /**
      * @return string|null
