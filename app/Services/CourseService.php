@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -266,6 +267,8 @@ class CourseService
         if (is_numeric($youthId)) {
             $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
             $course["enrolled"] = (bool)$courseEnrollment;
+            $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
+            $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
@@ -789,19 +792,36 @@ class CourseService
 
         } else {
             $courses = $coursesBuilder->get();
+            Log::info("The courses");
+            Log::info(json_encode($courses));
         }
 
-        /** Set course already enrolled OR not for youth */
+        /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
         if (is_numeric($youthId)) {
             $courseIds = $courses->pluck('id')->toArray();
             if (count($courseIds) > 0) {
-                $youthEnrolledCourseIds = CourseEnrollment::whereIn('course_id', $courseIds)
-                    ->where('youth_id', $youthId)
-                    ->pluck('course_id')
-                    ->toArray();
+                /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
+                $youthEnrolledCourses = CourseEnrollment::get();
+
+                Log::info("youthEnrolledCourses");
+                Log::info(json_encode($courseIds));
+                Log::info(json_encode($youthId));
+                Log::info(json_encode($youthEnrolledCourses));
+
+                $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
+                $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
+
+                Log::info("youthEnrolledCourseGroupByCourseIds");
+                Log::info(json_encode($youthEnrolledCourseGroupByCourseIds));
 
                 foreach ($courses as $course) {
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
+                    if($course['enrolled']){
+                        Log::info("Youth Id: " . $youthId);
+                        Log::info("Youth enrolled in this course Id: " . $courses->id);
+                        $course['payment_status'] = (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
+                        $course['verified'] = !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
+                    }
                 }
             }
         }

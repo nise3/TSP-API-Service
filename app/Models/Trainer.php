@@ -47,7 +47,8 @@ class Trainer extends BaseModel
         'skills_en' => 'array',
     ];
 
-    public function toArray(): array
+    // TODO: This method should be checked . It gives error.
+    /*public function toArray(): array
     {
         $originalData = parent::toArray();
         $authUser = Auth::user();
@@ -56,5 +57,5 @@ class Trainer extends BaseModel
             $this->getIndustryAssociationData($originalData);
         }
         return $originalData;
-    }
+    }*/
 }
