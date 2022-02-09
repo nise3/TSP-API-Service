@@ -792,8 +792,6 @@ class CourseService
 
         } else {
             $courses = $coursesBuilder->get();
-            Log::info("The courses");
-            Log::info(json_encode($courses));
         }
 
         /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
@@ -801,12 +799,9 @@ class CourseService
             $courseIds = $courses->pluck('id')->toArray();
             if (count($courseIds) > 0) {
                 /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
-                $youthEnrolledCourses = CourseEnrollment::get();
-
-                Log::info("youthEnrolledCourses");
-                Log::info(json_encode($courseIds));
-                Log::info(json_encode($youthId));
-                Log::info(json_encode($youthEnrolledCourses));
+                $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
+                    ->where('youth_id', $youthId)
+                    ->get();
 
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
                 $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
