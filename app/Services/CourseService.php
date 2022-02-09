@@ -805,6 +805,9 @@ class CourseService
                     ->where('youth_id', $youthId)
                     ->get();
 
+                Log::info("youthEnrolledCourses");
+                Log::info(json_encode($youthEnrolledCourses));
+
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
                 $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
 
