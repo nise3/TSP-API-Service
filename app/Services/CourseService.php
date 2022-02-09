@@ -806,6 +806,8 @@ class CourseService
                     ->get();
 
                 Log::info("youthEnrolledCourses");
+                Log::info(json_encode($courseIds));
+                Log::info(json_encode($youthId));
                 Log::info(json_encode($youthEnrolledCourses));
 
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
