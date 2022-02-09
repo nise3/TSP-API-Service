@@ -792,10 +792,9 @@ class CourseService
 
         } else {
             $courses = $coursesBuilder->get();
+            Log::info("The courses");
+            Log::info(json_encode($courses));
         }
-
-        Log::info("The courses");
-        Log::info(json_encode($courses));
 
         /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
         if (is_numeric($youthId)) {
