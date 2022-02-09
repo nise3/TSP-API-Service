@@ -35,12 +35,6 @@ spec:
       containers:
         - name:  {{ .Chart.Name }}
           image: "{{ .Values.variables.imageRepository }}:{{ .Values.variables.imageAppVersion  | default .Chart.AppVersion }}"
-          command:
-            - php
-          args:
-            - artisan
-            - queue:work
-            - --queue=institute.course.enrollment.q,institute.batch.calender.q
           imagePullPolicy: {{ .Values.variables.imagePullPolicy }}
           ports:
             - containerPort: 80
