@@ -259,5 +259,5 @@ return [
             ],
         ],
     ],
-    'consume' => ''
+    'consume' => 'institute.course.enrollment.q,institute.batch.calender.q'
 ];
