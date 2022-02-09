@@ -17,7 +17,7 @@ variables:
   ltsAcme: false
 
   # app version, changing version will auto deploy the app to current version
-  imageAppVersion: "2.0.6"
+  imageAppVersion: "2.0.7"
 
   # increase this when you need scale up
   replicaCount: 2
@@ -68,7 +68,9 @@ variables:
     DB_USERNAME: "core3"
     DB_PASSWORD: "core3"
 
-    REDIS_HOST: "redis.redis"
+    CACHE_DRIVER: "redis"
+    REDIS_CLIENT: "predis"
+    REDIS_HOST: "redis-headless.redis-node"
     REDIS_PASSWORD: "k?admin"
     REDIS_PORT: 6379
 
