@@ -801,8 +801,7 @@ class CourseService
             $courseIds = $courses->pluck('id')->toArray();
             if (count($courseIds) > 0) {
                 /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
-                $youthEnrolledCourses = CourseEnrollment::where('youth_id', $youthId)
-                    ->get();
+                $youthEnrolledCourses = CourseEnrollment::get();
 
                 Log::info("youthEnrolledCourses");
                 Log::info(json_encode($courseIds));
