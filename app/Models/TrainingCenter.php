@@ -79,14 +79,15 @@ class TrainingCenter extends BaseModel
         return $this->belongsToMany(Skill::class, 'training_center_skill');
     }
 
-    public function toArray(): array
-    {
-        $originalData = parent::toArray();
-        $authUser = Auth::user();
-
-        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
-            $this->getIndustryAssociationData($originalData);
-        }
-        return $originalData;
-    }
+    // TODO: This method should be checked . It gives error.
+//    public function toArray(): array
+//    {
+//        $originalData = parent::toArray();
+//        $authUser = Auth::user();
+//
+//        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+//            $this->getIndustryAssociationData($originalData);
+//        }
+//        return $originalData;
+//    }
 }

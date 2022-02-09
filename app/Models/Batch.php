@@ -37,16 +37,18 @@ class Batch extends BaseModel
     public const BATCH_CODE_PREFIX = "BT";
     public const BATCH_CODE_SIZE = 28;
 
-    public function toArray(): array
-    {
-        $originalData = parent::toArray();
-        $authUser = Auth::user();
+    // TODO: This method should be checked . It gives error.
 
-        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
-            $this->getIndustryAssociationData($originalData);
-        }
-        return $originalData;
-    }
+//    public function toArray(): array
+//    {
+//        $originalData = parent::toArray();
+//        $authUser = Auth::user();
+//
+//        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+//            $this->getIndustryAssociationData($originalData);
+//        }
+//        return $originalData;
+//    }
 
     /**
      * @return BelongsTo

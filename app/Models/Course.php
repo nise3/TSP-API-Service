@@ -113,17 +113,19 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
 
-    public function toArray(): array
-    {
-        $originalData = parent::toArray();
-        $authUser = Auth::user();
+    // TODO: This method should be checked . It gives error.
 
-        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
-            $this->getIndustryAssociationData($originalData);
-        }
-
-        return $originalData;
-    }
+//    public function toArray(): array
+//    {
+//        $originalData = parent::toArray();
+//        $authUser = Auth::user();
+//
+//        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+//            $this->getIndustryAssociationData($originalData);
+//        }
+//
+//        return $originalData;
+//    }
 
 
     /**

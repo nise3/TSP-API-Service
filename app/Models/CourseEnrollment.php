@@ -118,7 +118,8 @@ class CourseEnrollment extends BaseModel
         static::addGlobalScope(new SagaStatusGlobalScope);
     }
 
-    public function toArray(): array
+    // TODO: This method should be checked . It gives error.
+    /*public function toArray(): array
     {
         $originalData = parent::toArray();
         $authUser = Auth::user();
@@ -128,7 +129,7 @@ class CourseEnrollment extends BaseModel
         }
 
         return $originalData;
-    }
+    }*/
 
     /**
      * @return BelongsToMany
