@@ -644,11 +644,6 @@ class CourseService
         $courseLevel = $request['level'] ?? "";
         $youthId = $request['youth_id'] ?? "";
 
-        Log::info("All ids set from request");
-        Log::info($instituteId);
-        Log::info($industryAssociationId);
-        Log::info($youthId);
-
         /** @var Course|Builder $coursesBuilder */
         $coursesBuilder = Course::select(
             [
