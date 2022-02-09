@@ -3,9 +3,6 @@
 namespace App\Services\CommonServices;
 
 use App\Events\MailSendEvent;
-use App\Models\BaseModel;
-use App\Models\Batch;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
