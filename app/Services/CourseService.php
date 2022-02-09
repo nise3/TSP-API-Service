@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -793,7 +794,7 @@ class CourseService
             $courses = $coursesBuilder->get();
         }
 
-        /** Set course already enrolled OR not for youth */
+        /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
         if (is_numeric($youthId)) {
             $courseIds = $courses->pluck('id')->toArray();
             if (count($courseIds) > 0) {
@@ -805,9 +806,14 @@ class CourseService
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
                 $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
 
+                Log::info("youthEnrolledCourseGroupByCourseIds");
+                Log::info(json_encode($youthEnrolledCourseGroupByCourseIds));
+
                 foreach ($courses as $course) {
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
                     if($course['enrolled']){
+                        Log::info("Youth Id: " . $youthId);
+                        Log::info("Youth enrolled in this course Id: " . $courses->id);
                         $course['payment_status'] = (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
                         $course['verified'] = !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
                     }
