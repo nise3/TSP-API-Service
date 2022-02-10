@@ -812,7 +812,7 @@ class CourseService
 
                 foreach ($courses as $course) {
                     Log::info("Youth Id: " . $youthId);
-                    Log::info("Youth enrolled in this course Id: " . $courses->id);
+                    Log::info("Youth enrolled in this course Id: " . $course->id);
 
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
                     $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
