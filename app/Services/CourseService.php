@@ -269,7 +269,7 @@ class CourseService
             $course["enrolled"] = (bool)$courseEnrollment;
             $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
             $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
-            $course["enrollment_id"] = !empty($courseEnrollment) && (bool)$courseEnrollment->id;
+            $course["enrollment_id"] = !empty($courseEnrollment) && !empty($courseEnrollment->id) ? $courseEnrollment->id : null;
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
@@ -817,7 +817,7 @@ class CourseService
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
                     $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
                     $course['verified'] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
-                    $course["enrollment_id"] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['id']);
+                    $course["enrollment_id"] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['id']) ? $youthEnrolledCourseGroupByCourseIds[$course->id][0]['id'] : null;
                 }
             }
         }
