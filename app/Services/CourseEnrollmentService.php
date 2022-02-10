@@ -633,7 +633,19 @@ class CourseEnrollmentService
                 'exists:courses,id,deleted_at,NULL',
                 'int',
                 'min:1',
-                'unique_with:course_enrollments,youth_id,deleted_at',
+                //'unique_with:course_enrollments,youth_id,deleted_at,
+                function ($attr, $value, $failed) use ($data){
+                    $courseEnrollments = CourseEnrollment::where('youth_id', $data['youth_id'])->where('course_id', $value)->get();
+                    foreach ($courseEnrollments as $courseEnrollment){
+                        if($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_CREATE_PENDING ||
+                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_UPDATE_PENDING ||
+                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_DESTROY_PENDING){
+                            $failed("You already enrolled in this course but enrollment process is in Pending status");
+                        } else if($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_COMMIT){
+                            $failed("You already enrolled in this course!");
+                        }
+                    }
+                }
             ],
             'training_center_id' => [
                 'nullable',

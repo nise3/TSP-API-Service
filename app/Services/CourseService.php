@@ -8,6 +8,7 @@ use App\Models\CourseEnrollment;
 use App\Models\Institute;
 use App\Models\Skill;
 use App\Models\Trainer;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Faker\Provider\Base;
 use Illuminate\Contracts\Validation\Validator;
@@ -265,10 +266,15 @@ class CourseService
         }
 
         if (is_numeric($youthId)) {
-            $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
+            $courseEnrollment = CourseEnrollment::where('course_id', $id)
+                ->where('youth_id', $youthId)
+                ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                ->withoutGlobalScope(SagaStatusGlobalScope::class)
+                ->first();
             $course["enrolled"] = (bool)$courseEnrollment;
             $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
             $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
+            $course["enrollment_id"] = !empty($courseEnrollment) && !empty($courseEnrollment->id) ? $courseEnrollment->id : null;
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
@@ -801,6 +807,8 @@ class CourseService
                 /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
                 $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
                     ->where('youth_id', $youthId)
+                    ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                    ->withoutGlobalScope(SagaStatusGlobalScope::class)
                     ->get();
 
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
@@ -810,13 +818,13 @@ class CourseService
                 Log::info(json_encode($youthEnrolledCourseGroupByCourseIds));
 
                 foreach ($courses as $course) {
+                    Log::info("Youth Id: " . $youthId);
+                    Log::info("Youth enrolled in this course Id: " . $course->id);
+
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
-                    if($course['enrolled']){
-                        Log::info("Youth Id: " . $youthId);
-                        Log::info("Youth enrolled in this course Id: " . $courses->id);
-                        $course['payment_status'] = (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
-                        $course['verified'] = !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
-                    }
+                    $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
+                    $course['verified'] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
+                    $course["enrollment_id"] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['id']) ? $youthEnrolledCourseGroupByCourseIds[$course->id][0]['id'] : null;
                 }
             }
         }
