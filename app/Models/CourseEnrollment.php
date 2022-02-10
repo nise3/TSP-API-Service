@@ -198,12 +198,12 @@ class CourseEnrollment extends BaseModel
 
     public function course(): HasOne
     {
-        return $this->hasOne(Course::class, 'course_id');
+        return $this->hasOne(Course::class);
     }
 
     public function batch(): HasOne
     {
-        return $this->hasOne(Batch::class, 'batch_id');
+        return $this->hasOne(Batch::class);
     }
 
 }
