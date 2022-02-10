@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int payment_status
  * @property string | null verification_code
  * @property Carbon | null verification_code_sent_at
+ * @property Carbon | null verification_code_verified_at
  * @property HasOne course
  */
 class CourseEnrollment extends BaseModel

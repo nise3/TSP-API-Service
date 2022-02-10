@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLogHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
@@ -456,6 +457,7 @@ class CourseEnrollmentService
      */
     public function verifySMSCode(int $id, string $code): bool
     {
+        /** @var CourseEnrollment $courseEnrollment */
         $courseEnrollment = CourseEnrollment::where("id", $id)
             ->where("verification_code", $code)
             ->where("row_status", BaseModel::ROW_STATUS_PENDING)
@@ -469,6 +471,27 @@ class CourseEnrollmentService
         return false;
     }
 
+    public function isFreeCourse(int $id): int
+    {
+        /** @var CourseEnrollment $courseEnrollment */
+        $courseEnrollment = CourseEnrollment::where("id", $id)
+            ->where("row_status", BaseModel::ROW_STATUS_PENDING)
+            ->first();
+
+        $verificationSuccessStatus = 0;
+        if ($courseEnrollment) {
+            /** Course fee zero check for free course */
+            if ((doubleval($courseEnrollment->course->course_fee) == 0)) {
+                $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+                $courseEnrollment->payment_status = PaymentTransactionHistory::PAYMENT_SUCCESS;
+                $courseEnrollment->save();
+                $verificationSuccessStatus = 1;
+            }
+
+        }
+        return $verificationSuccessStatus;
+    }
+
     /**
      * @param CourseEnrollment $courseEnrollment
      * @param string $code
@@ -480,7 +503,7 @@ class CourseEnrollmentService
         $mobile = $courseEnrollment->mobile;
         $message = "Your Course Enrollment Verification code : " . $code;
         if ($mobile) {
-            app(SmsService::class)->sendSms($message, $message);
+            app(SmsService::class)->sendSms($mobile, $message);
             Log::info('Sms send after enrollment to number--->' . $mobile);
             return true;
         }

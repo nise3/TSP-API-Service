@@ -34,8 +34,8 @@ class PaymentTransactionHistory extends BaseModel
     /** Payment Status */
     public const PAYMENT_SUCCESS = 1;
     public const PAYMENT_PENDING = 2;
-    public const PAYMENT_FAIL = 3;
-    public const PAYMENT_CANCEL = 4;
+    public const PAYMENT_CANCEL = 3;
+    public const PAYMENT_FAIL = 4;
 
     /** Payment Gateway Type */
     public const EK_PAY_LABEL = "ek_pay";

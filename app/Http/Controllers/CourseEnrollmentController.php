@@ -160,9 +160,13 @@ class CourseEnrollmentController extends Controller
     public function verifyCode(Request $request, int $id): JsonResponse
     {
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
+
         $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
         $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
         $response = [
+            "data" => [
+                "free_course" => $this->courseEnrollService->isFreeCourse($id)
+            ],
             '_response_status' => [
                 "success" => $verifySmsStatus,
                 "code" => $statusCode,

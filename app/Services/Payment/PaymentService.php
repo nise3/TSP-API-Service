@@ -2,6 +2,8 @@
 
 namespace App\Services\Payment;
 
+use App\Models\BaseModel;
+use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLog;
 use Carbon\Carbon;
@@ -65,18 +67,30 @@ class PaymentService
 
     /**
      * @param string $msgCode
-     * @return int
+     * @return array
      */
-    public static function getPaymentStatus(string $msgCode): int
+    public static function getPaymentAndEnrollmentStatus(string $msgCode): array
     {
         if ($msgCode == PaymentTransactionHistory::TRANSACTION_COMPLETED_SUCCESSFULLY) {
-            return PaymentTransactionHistory::PAYMENT_SUCCESS;
+            return [
+                PaymentTransactionHistory::PAYMENT_SUCCESS,
+                BaseModel::ROW_STATUS_ACTIVE
+            ];
         } elseif ($msgCode == PaymentTransactionHistory::TRANSACTION_COMPLETED_FAIL) {
-            return PaymentTransactionHistory::PAYMENT_FAIL;
+            return [
+                PaymentTransactionHistory::PAYMENT_FAIL,
+                BaseModel::ROW_STATUS_FAILED
+            ];
         } elseif ($msgCode == PaymentTransactionHistory::TRANSACTION_COMPLETED_CANCEL) {
-            return PaymentTransactionHistory::PAYMENT_CANCEL;
+            return [
+                PaymentTransactionHistory::PAYMENT_CANCEL,
+                BaseModel::ROW_STATUS_REJECTED
+            ];
         } else {
-            return PaymentTransactionHistory::PAYMENT_PENDING;
+            return [
+                PaymentTransactionHistory::PAYMENT_PENDING,
+                BaseModel::ROW_STATUS_PENDING
+            ];
         }
 
     }

@@ -113,7 +113,7 @@ class CourseEnrollmentPaymentController extends Controller
 
         if (PaymentService::checkSecretToken($secretToken)) {
             DB::beginTransaction();
-            $paymentStatus = PaymentService::getPaymentStatus($request->msg_code);
+            [$paymentStatus, $courseEnrollmentStatus] = PaymentService::getPaymentAndEnrollmentStatus($request->msg_code);
 
             $data['trnx_id'] = $request->trnx_info['trnx_id'];
             $data['paid_amount'] = $request->trnx_info['trnx_amt'];
@@ -129,9 +129,11 @@ class CourseEnrollmentPaymentController extends Controller
                 if ($payment) {
                     $payment->fill($data);
                     $payment->save();
+
                     /** @var CourseEnrollment $courseEnroll */
                     $courseEnroll = CourseEnrollment::findOrFail($payment->payment_purpose_related_id);
                     $courseEnroll->payment_status = $paymentStatus;
+                    $courseEnroll->row_status = $courseEnrollmentStatus;
                     $courseEnroll->save();
 
                     if ($paymentStatus == PaymentTransactionHistory::PAYMENT_SUCCESS) {
