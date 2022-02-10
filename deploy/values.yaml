@@ -87,7 +87,7 @@ variables:
     WSO2_IDP_BASE_URL: "https://identity-dev.nise3.xyz"
     WSO2_IDP_BASE_USER_URL: "https://identity-dev.nise3.xyz/scim2/Users"
     WSO2_IDP_USERNAME: admin
-    WSO2_IDP_PASSWORD: admin
+    WSO2_IDP_PASSWORD: Iadmin
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
