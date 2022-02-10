@@ -8,6 +8,7 @@ use App\Models\CourseEnrollment;
 use App\Models\Institute;
 use App\Models\Skill;
 use App\Models\Trainer;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Faker\Provider\Base;
 use Illuminate\Contracts\Validation\Validator;
@@ -265,7 +266,11 @@ class CourseService
         }
 
         if (is_numeric($youthId)) {
-            $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
+            $courseEnrollment = CourseEnrollment::where('course_id', $id)
+                ->where('youth_id', $youthId)
+                ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                ->withoutGlobalScope(SagaStatusGlobalScope::class)
+                ->first();
             $course["enrolled"] = (bool)$courseEnrollment;
             $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
             $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
@@ -802,6 +807,8 @@ class CourseService
                 /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
                 $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
                     ->where('youth_id', $youthId)
+                    ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                    ->withoutGlobalScope(SagaStatusGlobalScope::class)
                     ->get();
 
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
