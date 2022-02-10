@@ -17,6 +17,7 @@ class SkillSeeder extends Seeder
     {
         Schema::disableForeignKeyConstraints();
         Skill::query()->truncate();
+
         $skills = [
             [
                 'id' => '1',
@@ -80,28 +81,28 @@ class SkillSeeder extends Seeder
             ],
             [
                 'id' => '13',
-                "title" => "কম্পিউটার মেকানিক",
-                "title_en" => "Computer Mechanic"
+                "title" => "কম্পিউটার প্রযুক্তি",
+                "title_en" => "Computer Technology"
             ],
             [
                 'id' => '14',
-                "title" => "বৈদ্যুতিক মেকানিক",
-                "title_en" => "Electrical Mechanic"
+                "title" => "বৈদ্যুতিক প্রযুক্তি",
+                "title_en" => "Electrical Technology"
             ],
             [
                 'id' => '15',
-                "title" => "যান্ত্রিক মেকানিক",
-                "title_en" => "Mechanical Mechanic"
+                "title" => "যান্ত্রিক প্রযুক্তি",
+                "title_en" => "Mechanical Technology"
             ],
             [
                 'id' => '16',
-                "title" => "রাসায়নিক কারিগর",
-                "title_en" => "Chemical Technician"
+                "title" => "রাসায়নিক প্রযুক্তি",
+                "title_en" => "Chemical Technology"
             ],
             [
                 'id' => '17',
-                "title" => "ফার্মাসিউটিক্যাল কারিগর",
-                "title_en" => "Pharmaceutical Technician"
+                "title" => "ফার্মাসিউটিক্যাল প্রযুক্তি",
+                "title_en" => "Pharmaceutical Technology"
             ],
             [
                 'id' => '18',
@@ -157,6 +158,73 @@ class SkillSeeder extends Seeder
                 'id' => '28',
                 "title" => "কম্পিউটার প্রশিক্ষণ",
                 "title_en" => "Computer Training"
+            ],
+            [
+                'id' => '29',
+                "title" => "সাংগঠনিক সংস্কৃতি",
+                "title_en" => "Organizational Culture"
+            ],
+            [
+                'id' => '30',
+                "title" => "ব্যবসায়িক লেখা",
+                "title_en" => "Business Writing"
+            ],
+            [
+                'id' => '31',
+                "title" => "কুকিং",
+                "title_en" => "Cooking"
+            ],
+            [
+                "title" => "টেক্সটাইল প্রযুক্তি",
+                "title_en" => "Textile Technology"
+            ],
+            [
+                "title" => "টেক্সটাইল ইঞ্জিনিয়ারিং",
+                "title_en" => "Textile Engineering"
+            ],
+            [
+                "title" => "কম্পিউটার ইঞ্জিনিয়ারিং",
+                "title_en" => "Computer Engineering"
+            ],
+            [
+                "title" => "ফার্মাকোলজি",
+                "title_en" => "Pharmacology"
+            ],
+            [
+                "title" => "জৈব রসায়ন",
+                "title_en" => "Biochemistry"
+            ],
+            [
+                "title" => "বায়োটেকনোলজি",
+                "title_en" => "Biotechnology"
+            ],
+            [
+                "title" => "ফার্মাসিউটিক্যাল ইঞ্জিনিয়ারিং",
+                "title_en" => "Pharmaceutical Engineering"
+            ],
+            [
+                "title" => "ফার্মেসি প্রযুক্তি",
+                "title_en" => "Pharmacy Technology"
+            ],
+            [
+                "title" => "ভেটেরিনারি প্রযুক্তি",
+                "title_en" => "Veterinary Technology"
+            ],
+            [
+                "title" => "পশুচিকিৎসা",
+                "title_en" => "Veterinary"
+            ],
+            [
+                "title" => "কৃষিবিদ্যা",
+                "title_en" => "Agriculture"
+            ],
+            [
+                "title" => "যন্ত্রপাতি প্রযুক্তি",
+                "title_en" => "Appliances Technology"
+            ],
+            [
+                "title" => "যন্ত্রপাতি প্রকৌশল",
+                "title_en" => "Appliances Engineering"
             ]
         ];
 
