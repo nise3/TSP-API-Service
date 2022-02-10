@@ -118,20 +118,22 @@ class CourseEnrollmentPaymentService
      */
     public function confirmationMailAndSmsSend(CourseEnrollment $courseEnroll)
     {
-        /** Mail send*/
-        $to = array($courseEnroll->email);
-        $from = BaseModel::NISE3_FROM_EMAIL;
-        $subject = "Course Enrollment Information";
-        $message = "Congratulation, You are successfully enrolled in " . $courseEnroll->course->title . ". You are assigned in any batch later.";
-        $messageBody = MailService::templateView($message);
-        $mailService = new MailService($to, $from, $subject, $messageBody);
-        $mailService->sendMail();
+        if (!empty($courseEnroll)) {
+            /** Mail send*/
+            $to = array($courseEnroll->email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "Course Enrollment Information";
+            $message = "Congratulation, You are successfully enrolled in " . $courseEnroll->course->title . ". You are assigned in any batch later.";
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
 
-        /** Sms send */
-        $recipient = $courseEnroll->mobile;
-        $smsMessage = "You are successfully enrolled in " . $courseEnroll->course->title;
-        $smsService = new SmsService();
-        $smsService->sendSms($recipient, $smsMessage);
+            /** Sms send */
+            $recipient = $courseEnroll->mobile;
+            $smsMessage = "You are successfully enrolled in " . $courseEnroll->course->title;
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
+        }
 
     }
 }

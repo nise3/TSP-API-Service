@@ -159,6 +159,8 @@ class CourseEnrollmentController extends Controller
      */
     public function verifyCode(Request $request, int $id): JsonResponse
     {
+        Log::info("veryCodePayload" . json_encode($request->all()));
+
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
 
         $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);

@@ -9,7 +9,6 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
-use App\Models\PaymentTransactionLogHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
 use App\Models\EnrollmentEducation;
@@ -17,9 +16,8 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
-use App\Models\Youth;
 use App\Services\CommonServices\SmsService;
-use App\Services\CommonServices\MailService;
+use App\Services\Payment\CourseEnrollmentPaymentService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -29,8 +27,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
@@ -486,6 +482,7 @@ class CourseEnrollmentService
                 $courseEnrollment->payment_status = PaymentTransactionHistory::PAYMENT_SUCCESS;
                 $courseEnrollment->save();
                 $verificationSuccessStatus = 1;
+                app(CourseEnrollmentPaymentService::class)->confirmationMailAndSmsSend($courseEnrollment);
             }
 
         }
