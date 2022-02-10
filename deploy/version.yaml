@@ -1,7 +1,7 @@
 variables:
 
   # app version, changing version will auto deploy the app to current version
-  imageAppVersion: "2.1.3"
+  imageAppVersion: "2.1.4"
 
   #app buil image
   imageRepository: "registry.nise3.xyz/nise3-institute-management-api-service"
