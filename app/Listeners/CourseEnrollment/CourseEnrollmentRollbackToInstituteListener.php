@@ -47,7 +47,7 @@ class CourseEnrollmentRollbackToInstituteListener
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->find($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
                 $courseEnrollment->deleted_at = $this->currentTime;
                 $courseEnrollment->save();

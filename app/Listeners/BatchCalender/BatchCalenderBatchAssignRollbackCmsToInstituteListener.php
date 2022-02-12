@@ -8,6 +8,7 @@ use App\Models\CourseEnrollment;
 use App\Services\RabbitMQService;
 use Illuminate\Support\Facades\DB;
 use PDOException;
+use PhpParser\Builder;
 use Throwable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -42,8 +43,8 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
             if (!$alreadyConsumed) {
                 DB::beginTransaction();
 
-                /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                /** @var CourseEnrollment|Builder $courseEnrollment */
+                $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
                 $courseEnrollment->batch_id = $data['saga_previous_data']['batch_id'];
                 $courseEnrollment->saga_status = $data['saga_previous_data']['saga_status'];
                 $courseEnrollment->row_status = $data['saga_previous_data']['row_status'];
