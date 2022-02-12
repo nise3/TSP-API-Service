@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Carbon deleted_at
+ * @method static withoutGlobalScope(string $class)
  */
 class CourseEnrollment extends BaseModel
 {

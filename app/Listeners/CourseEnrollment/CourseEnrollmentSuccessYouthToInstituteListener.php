@@ -53,7 +53,7 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
                 /** @var CourseEnrollment $courseEnrollment */
                 Log::info("before fetching enrolled course: ");
                 Log::info($data['enrollment_id']);
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id'])->withoutGlobalScope(SagaStatusGlobalScope::class);
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->find($data['enrollment_id']);
                 Log::info("Enrolled Course: ");
                 Log::info(json_encode($courseEnrollment));
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
