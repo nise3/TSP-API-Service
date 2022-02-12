@@ -51,6 +51,8 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
                 $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                Log::info("Enrolled Course: ");
+                Log::info(json_encode($courseEnrollment));
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
                 $courseEnrollment->save();
             }
