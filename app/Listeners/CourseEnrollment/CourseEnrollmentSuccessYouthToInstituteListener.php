@@ -5,6 +5,7 @@ namespace App\Listeners\CourseEnrollment;
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 use Exception;
 use PDOException;
@@ -40,7 +41,11 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
                 json_encode($event)
             );
 
+            Log::info("Before checking event already consumed");
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
+            Log::info("After checking event already consumed. alreadyConsumed: ");
+            Log::info(json_encode($alreadyConsumed));
+
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
                 $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);

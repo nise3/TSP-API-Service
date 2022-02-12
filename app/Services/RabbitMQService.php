@@ -227,6 +227,8 @@ class RabbitMQService
      */
     public function checkEventAlreadyConsumed(): bool {
         $uuid = $this->getRabbitMqMessageUuid();
+        Log::info("Inside checking event already consumed. UUID: ");
+        Log::info(json_encode($uuid));
 
         /** @var SagaSuccessEvent $sagaEvent */
         $sagaEvent = SagaSuccessEvent::where('uuid', $uuid)->first();
