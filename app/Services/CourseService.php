@@ -814,13 +814,7 @@ class CourseService
                 $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
                 $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
 
-                Log::info("youthEnrolledCourseGroupByCourseIds");
-                Log::info(json_encode($youthEnrolledCourseGroupByCourseIds));
-
                 foreach ($courses as $course) {
-                    Log::info("Youth Id: " . $youthId);
-                    Log::info("Youth enrolled in this course Id: " . $course->id);
-
                     $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
                     $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
                     $course['verified'] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
