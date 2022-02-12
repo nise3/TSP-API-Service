@@ -4,6 +4,7 @@ namespace App\Listeners\CourseEnrollment;
 
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Throwable;
@@ -45,14 +46,14 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             Log::info("After checking event already consumed. alreadyConsumed: ");
             Log::info(json_encode($alreadyConsumed));
-            Log::info("The commit status: ");
+            Log::info("The commit status here: ");
             Log::info(json_encode(BaseModel::SAGA_STATUS_COMMIT));
 
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
                 Log::info("before fetching enrolled course: ");
                 Log::info($data['enrollment_id']);
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::find($data['enrollment_id'])->withoutGlobalScope(SagaStatusGlobalScope::class);
                 Log::info("Enrolled Course: ");
                 Log::info(json_encode($courseEnrollment));
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;

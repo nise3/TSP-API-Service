@@ -34,6 +34,9 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon | null verification_code_verified_at
  * @property int saga_status
  * @property HasOne course
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ * @property Carbon deleted_at
  */
 class CourseEnrollment extends BaseModel
 {

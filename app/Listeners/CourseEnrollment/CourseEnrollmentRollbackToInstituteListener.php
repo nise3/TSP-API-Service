@@ -3,6 +3,7 @@
 namespace App\Listeners\CourseEnrollment;
 
 use App\Models\BaseModel;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -46,7 +47,7 @@ class CourseEnrollmentRollbackToInstituteListener
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::find($data['enrollment_id'])->withoutGlobalScope(SagaStatusGlobalScope::class);
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
                 $courseEnrollment->deleted_at = $this->currentTime;
                 $courseEnrollment->save();
