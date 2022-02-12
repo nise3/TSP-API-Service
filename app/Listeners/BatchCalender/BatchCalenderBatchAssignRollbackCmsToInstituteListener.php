@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\RabbitMQService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Support\Facades\DB;
 use PDOException;
 use PhpParser\Builder;
@@ -44,7 +45,7 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
                 DB::beginTransaction();
 
                 /** @var CourseEnrollment|Builder $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
                 $courseEnrollment->batch_id = $data['saga_previous_data']['batch_id'];
                 $courseEnrollment->saga_status = $data['saga_previous_data']['saga_status'];
                 $courseEnrollment->row_status = $data['saga_previous_data']['row_status'];

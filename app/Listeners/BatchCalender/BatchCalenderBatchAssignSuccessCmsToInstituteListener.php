@@ -5,6 +5,7 @@ namespace App\Listeners\BatchCalender;
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Services\RabbitMQService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Database\QueryException;
 use Throwable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -37,7 +38,7 @@ class BatchCalenderBatchAssignSuccessCmsToInstituteListener implements ShouldQue
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
                 $courseEnrollment->save();
             }
