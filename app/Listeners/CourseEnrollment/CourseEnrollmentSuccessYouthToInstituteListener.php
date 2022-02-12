@@ -45,6 +45,8 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             Log::info("After checking event already consumed. alreadyConsumed: ");
             Log::info(json_encode($alreadyConsumed));
+            Log::info("The commit status: ");
+            Log::info(json_encode(BaseModel::SAGA_STATUS_COMMIT));
 
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
