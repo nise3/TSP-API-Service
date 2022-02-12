@@ -50,15 +50,18 @@ class CourseEnrollmentRollbackToInstituteListener
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
                 $courseEnrollment->deleted_at = $this->currentTime;
                 $courseEnrollment->save();
-
-                /** Store the event as a Success event into Database */
-                $this->rabbitMQService->sagaSuccessEvent(
-                    $publisher,
-                    BaseModel::SAGA_INSTITUTE_SERVICE,
-                    get_class($this),
-                    json_encode($data)
-                );
             }
+
+            /**
+             * Store the event as a Success event into Database.
+             * If this event already previously consumed then again store it to saga_success_table to identify that this event again successfully consumed.
+             */
+            $this->rabbitMQService->sagaSuccessEvent(
+                $publisher,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data)
+            );
         } catch (Throwable $e) {
             if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {
                 /** Technical Recoverable Error Occurred. RETRY mechanism with DLX-DLQ apply now by sending a rejection */

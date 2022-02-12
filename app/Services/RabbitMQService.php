@@ -268,7 +268,7 @@ class RabbitMQService
      * @param Exception|null $error
      * @return array
      */
-    public function createSagaPayload(String $publisher, String $consumer, String $listener, String $eventData, Exception $error = null): array {
+    public function createSagaPayload(String $publisher, String $consumer, String $listener, String $eventData, \Throwable $error = null): array {
         $uuid = $this->getRabbitMqMessageUuid();
         $exchange = $this->getRabbitMqMessageExchange();
         $routingKey = $this->getRabbitMqMessageRoutingKey();
@@ -323,7 +323,7 @@ class RabbitMQService
      * @param Exception $error
      * @return void
      */
-    public function sagaErrorEvent(String $publisher, String $consumer, String $listener, String $eventData, Exception $error){
+    public function sagaErrorEvent(String $publisher, String $consumer, String $listener, String $eventData, \Throwable $error){
         $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData, $error);
 
         /** Check weather the event already stored in Error Table or Not. If not then Store. */

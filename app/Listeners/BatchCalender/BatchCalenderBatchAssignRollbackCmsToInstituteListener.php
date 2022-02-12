@@ -53,15 +53,19 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
                 $batch = Batch::find($data['batch_id']);
                 $batch->avilable_seats += 1;
 
-                /** Store the event as a Success event into Database */
-                $this->rabbitMQService->sagaSuccessEvent(
-                    $publisher,
-                    BaseModel::SAGA_INSTITUTE_SERVICE,
-                    get_class($this),
-                    json_encode($data)
-                );
                 DB::commit();
             }
+
+            /**
+             * Store the event as a Success event into Database.
+             * If this event already previously consumed then again store it to saga_success_table to identify that this event again successfully consumed.
+             */
+            $this->rabbitMQService->sagaSuccessEvent(
+                $publisher,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data)
+            );
         } catch (Throwable $e) {
             DB::rollBack();
             if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {
