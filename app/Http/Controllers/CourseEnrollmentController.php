@@ -213,6 +213,7 @@ class CourseEnrollmentController extends Controller
             $batch = Batch::findOrFail($validated['batch_id']);
             $this->courseEnrollService->assignBatch($validated, $batch);
 
+            /** Remove SagaStatusGlobalScope as in above assignBatch() method already saga_status has been changed to UPDATE_PENDING */
             $courseEnrollmentDataAfterUpdate = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [
