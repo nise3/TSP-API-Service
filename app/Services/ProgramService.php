@@ -191,6 +191,7 @@ class ProgramService
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
+
         /** @var User $authUser */
         $authUser = Auth::user();
         $rules = [
@@ -210,12 +211,12 @@ class ProgramService
                 'nullable',
                 'string',
                 'max:100',
-                Rule::unique('programs')->where(function ($query) use ($request, $authUser) {
+                Rule::unique('programs')->where(function ($query) use ($request) {
                     $validationQuery = $query;
-                    if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
-                        $validationQuery = $query->where('code', $request->get('code'))->where('institute_id', $authUser->institute_id);
-                    } elseif ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id) {
-                        $validationQuery = $query->where('code', $request->get('code'))->where('industry_association_id', $authUser->industry_association_id);
+                    if ($request->has('institute_id') && $request->get('institute_id')) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('institute_id', $request->get('institute_id'));
+                    } elseif ($request->has('industry_association_id') && $request->get('industry_association_id')) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('industry_association_id', $request->get('industry_association_id'));
                     }
                     return $validationQuery;
                 })->ignore($id)
