@@ -596,7 +596,7 @@ class BatchService
             ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'training_centers.loc_division_id')
             ->leftJoin('loc_districts', 'loc_districts.id', '=', 'training_centers.loc_district_id')
             ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
-            ->where(['batches.course_id', '=', $id])
+            ->where('batches.course_id', '=', $id)
             ->groupBy('training_centers.id')
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at')

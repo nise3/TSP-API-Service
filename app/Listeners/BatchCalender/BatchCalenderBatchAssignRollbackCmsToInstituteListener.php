@@ -6,8 +6,10 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\RabbitMQService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Support\Facades\DB;
 use PDOException;
+use PhpParser\Builder;
 use Throwable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -42,8 +44,8 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
             if (!$alreadyConsumed) {
                 DB::beginTransaction();
 
-                /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                /** @var CourseEnrollment|Builder $courseEnrollment */
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
                 $courseEnrollment->batch_id = $data['saga_previous_data']['batch_id'];
                 $courseEnrollment->saga_status = $data['saga_previous_data']['saga_status'];
                 $courseEnrollment->row_status = $data['saga_previous_data']['row_status'];
@@ -53,15 +55,19 @@ class BatchCalenderBatchAssignRollbackCmsToInstituteListener implements ShouldQu
                 $batch = Batch::find($data['batch_id']);
                 $batch->avilable_seats += 1;
 
-                /** Store the event as a Success event into Database */
-                $this->rabbitMQService->sagaSuccessEvent(
-                    $publisher,
-                    BaseModel::SAGA_INSTITUTE_SERVICE,
-                    get_class($this),
-                    json_encode($data)
-                );
                 DB::commit();
             }
+
+            /**
+             * Store the event as a Success event into Database.
+             * If this event already previously consumed then again store it to saga_success_table to identify that this event again successfully consumed.
+             */
+            $this->rabbitMQService->sagaSuccessEvent(
+                $publisher,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data)
+            );
         } catch (Throwable $e) {
             DB::rollBack();
             if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {

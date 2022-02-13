@@ -4,7 +4,9 @@ namespace App\Listeners\CourseEnrollment;
 
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 use Exception;
 use PDOException;
@@ -41,20 +43,24 @@ class CourseEnrollmentSuccessYouthToInstituteListener implements ShouldQueue
             );
 
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
+
             if (!$alreadyConsumed) {
                 /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::find($data['enrollment_id']);
+                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
                 $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
                 $courseEnrollment->save();
-
-                /** Store the event as a Success event into Database */
-                $this->rabbitMQService->sagaSuccessEvent(
-                    BaseModel::SAGA_YOUTH_SERVICE,
-                    BaseModel::SAGA_INSTITUTE_SERVICE,
-                    get_class($this),
-                    json_encode($data)
-                );
             }
+
+            /**
+             * Store the event as a Success event into Database.
+             * If this event already previously consumed then again store it to saga_success_table to identify that this event again successfully consumed.
+             */
+            $this->rabbitMQService->sagaSuccessEvent(
+                BaseModel::SAGA_YOUTH_SERVICE,
+                BaseModel::SAGA_INSTITUTE_SERVICE,
+                get_class($this),
+                json_encode($data)
+            );
         } catch (Throwable $e) {
             if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {
                 /** Technical Recoverable Error Occurred. RETRY mechanism with DLX-DLQ apply now by sending a rejection */

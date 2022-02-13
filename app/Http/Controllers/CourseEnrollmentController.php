@@ -9,14 +9,12 @@ use App\Models\CourseEnrollment;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use App\Services\CourseEnrollmentService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -214,7 +212,9 @@ class CourseEnrollmentController extends Controller
 
             $batch = Batch::findOrFail($validated['batch_id']);
             $this->courseEnrollService->assignBatch($validated, $batch);
-            $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
+
+            /** Remove SagaStatusGlobalScope as in above assignBatch() method already saga_status has been changed to UPDATE_PENDING */
+            $courseEnrollmentDataAfterUpdate = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [
                 'batch_title' => $batch->title,
