@@ -146,7 +146,7 @@ variables:
 
 
   PRODUCTION:
-    APP_ENV: "production"
+    APP_ENV: "local"
     APP_DEBUG: "false"
     APP_URL: "nise3-institute.default"
 
