@@ -4496,7 +4496,7 @@
                 ]
             }
         },
-        "/payment/pay-now": {
+        "/course-enrollment/payment-by-ek-pay/pay-now": {
             "post": {
                 "tags": [
                     "Course Enrollments"

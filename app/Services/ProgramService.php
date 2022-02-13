@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -189,7 +191,8 @@ class ProgramService
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
-
+        /** @var User $authUser */
+        $authUser = Auth::user();
         $rules = [
             'title_en' => [
                 'nullable',
@@ -205,9 +208,17 @@ class ProgramService
             ],
             'code' => [
                 'nullable',
-                'unique:programs,code,' . $id,
                 'string',
                 'max:100',
+                Rule::unique('programs')->where(function ($query) use ($request, $authUser) {
+                    $validationQuery = $query;
+                    if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('institute_id', $authUser->institute_id);
+                    } elseif ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('industry_association_id', $authUser->industry_association_id);
+                    }
+                    return $validationQuery;
+                })->ignore($id)
             ],
             'description' => [
                 'nullable',
