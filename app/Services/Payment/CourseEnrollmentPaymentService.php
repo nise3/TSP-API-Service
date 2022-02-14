@@ -35,8 +35,7 @@ class CourseEnrollmentPaymentService
 
         Log::channel('ek_pay')->info("Course Info for course_id-" . $courseEnrollment->course_id . json_encode($courseInfo));
 
-
-        $ipnUri = env('API_GATEWAY_BASE_URL', 'https://gateway-dev.nise3.xyz') . "/" . env('PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI', 'payment-gateway-ipn') . "/" . env('EK_PAY_IPN_URI', 'course-enrollment/payment-by-ek-pay/ipn-handler') . "/" . Uuid::uuid() . "?apikey=" . env('API_GATEWAY_API_KEY');
+        $ipnUri = env('API_GATEWAY_BASE_URL', 'https://gateway-dev.nise3.xyz') . "/" . env('PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI', 'payment-gateway-ipn') . "/" . env('EK_PAY_IPN_URI', 'course-enrollment/payment-by-ek-pay/ipn-handler') . "/" . Uuid::uuid() . "?apikey=" . urlencode(env('API_GATEWAY_API_KEY'));
 
         /** EN+CourseCode+I=36 is an invoice id */
         $invoicePrefix = CourseEnrollment::INVOICE_PREFIX . $courseInfo->code;
