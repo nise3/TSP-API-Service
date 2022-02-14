@@ -160,6 +160,7 @@ class CourseEnrollmentController extends Controller
         Log::info("veryCodePayload" . json_encode($request->all()));
 
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
+        Log::info("validated data: " . json_encode($validated));
 
         $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
         $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
