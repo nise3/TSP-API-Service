@@ -3727,6 +3727,94 @@
                 }
             }
         },
+        "/public/courses/{courseId}/training-centers/batches": {
+            "get": {
+                "summary": "Public Training Centers with Batches",
+                "description": "API endpoint to get public training centers with batches.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/active"
+                    },
+                    {
+                        "$ref": "#/components/parameters/upcoming"
+                    }
+                ],
+                "tags": [
+                    "Training Centers with Batches"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCentersWithBatches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 13,
+                                        "title": "Leanna Mayer",
+                                        "title_en": "Mrs. Sylvia Considine",
+                                        "division_title_en": "Barisal",
+                                        "division_title_bn": "বরিশাল",
+                                        "division_bbs_code": "10",
+                                        "district_title_en": "BARGUNA",
+                                        "district_title_bn": "বরগুনা",
+                                        "district_bbs_code": "04",
+                                        "is_sadar_district": 0,
+                                        "upazila_title_en": "BAMNA",
+                                        "upazila_title_bn": "বামনা",
+                                        "upazila_bbs_code": null,
+                                        "is_sadar_upazila": 0,
+                                        "address": "271 Delmer Harbor Apt. 133 Keatontown, WI 70536-1415",
+                                        "address_en": "763 Dickinson Row Apt. 641 New Niko, OH 56397",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": "5836 Beahan Extension Hegmannfort, VT 82074",
+                                        "row_status": 1,
+                                        "batches": [
+                                            {
+                                                "id": "1",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
+                                                "number_of_seat": "43",
+                                                "registration_start_date": "2021-10-27",
+                                                "registration_end_date": "2021-10-27",
+                                                "batch_start_date": "2021-10-27",
+                                                "batch_end_date": "2021-10-27",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            },
+                                            {
+                                                "id": "6",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
+                                                "number_of_seat": "57",
+                                                "registration_start_date": "2021-11-16",
+                                                "registration_end_date": "2021-11-16",
+                                                "batch_start_date": "2021-11-16",
+                                                "batch_end_date": "2021-11-16",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/public/course-list/{type}": {
             "get": {
                 "summary": "Course List with type ",
