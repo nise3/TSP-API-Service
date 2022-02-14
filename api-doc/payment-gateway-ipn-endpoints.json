@@ -1,0 +1,59 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Payment Gateway IPN Endpoints",
+        "description": "Payment Gateway IPN Endpoints",
+        "version": "1.0.0",
+        "license": {
+            "name": "MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://nise3-institute.default"
+        },
+        {
+            "url": "http://localhost:8001"
+        }
+    ],
+    "security": [
+        {
+            "ApiKeyAuth": []
+        }
+    ],
+    "paths": {
+        "/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler": {
+            "post": {
+                "summary": "Endpoint to Receive Payment Acknowledgement from EkPage Payment Gateway",
+                "parameters": [
+                    {
+                        "name": "secretToken",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "apikey"
+            }
+        },
+        "parameters": {
+        },
+        "schemas": {
+        }
+    }
+}
