@@ -45,22 +45,22 @@ spec:
             - containerPort: 80
           env:
             {{ if eq .Values.variables.APP_ENV "DEV" }}
-              {{ - range $key, $val := .Values.variables.DEV }}
+              {{- range $key, $val := .Values.variables.DEV }}
               - name: {{ $key }}
                 value: {{ $val | quote }}
-              {{ - end }}
+              {{- end }}
               {{end}}
               {{ if eq .Values.variables.APP_ENV "STAGING" }}
-              {{ - range $key, $val := .Values.variables.STAGING }}
+              {{- range $key, $val := .Values.variables.STAGING }}
               - name: {{ $key }}
                 value: {{ $val | quote }}
-              {{ - end }}
+              {{- end }}
               {{end}}
               {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
-              {{ - range $key, $val := .Values.variables.PRODUCTION }}
+              {{- range $key, $val := .Values.variables.PRODUCTION }}
               - name: {{ $key }}
                 value: {{ $val | quote }}
-              {{ - end }}
+              {{- end }}
               {{end}}
           lifecycle:
             postStart:
