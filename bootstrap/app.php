@@ -68,6 +68,8 @@ $app->configure('nise3RabbitMq');
 $app->configure('database');
 $app->configure('ekpay');
 $app->configure('sms');
+$app->configure('elasticSearchLogConfig');
+$app->configure('lumenDefaultLogConfig');
 
 /*
 |--------------------------------------------------------------------------
