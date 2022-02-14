@@ -10,10 +10,10 @@ variables:
   # if values is false, then creating ingress will be escape
   enableEngress: false
 
-    # ingress cluster-issuer class
+  # ingress cluster-issuer class
   ingressClusterIssuer: "k-issuer"
 
-    # is lts acme, value is boolean
+  # is lts acme, value is boolean
   ltsAcme: false
 
   # app version, changing version will auto deploy the app to current version
@@ -62,6 +62,13 @@ variables:
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
 
+    EK_PAY_DEBUG: "true"
+    IS_SANDBOX: "true"
+
+    LOG_CHANNEL: "stack"
+    ELASTIC_HOST: "http://localhost:9200"
+    ELASTIC_LOGS_INDEX: "tsp_file_logs"
+
     DB_HOST: "db-service.default"
     DB_PORT: 3306
     DB_DATABASE: "nise_ssp"
@@ -102,11 +109,16 @@ variables:
     APP_ENV: "staging"
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
+
     DB_HOST: 172.17.177.79
     DB_PORT: "3306"
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+
+    LOG_CHANNEL: "stack"
+    ELASTIC_HOST: "http://localhost:9200"
+    ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"
@@ -139,6 +151,13 @@ variables:
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
+
+    EK_PAY_DEBUG: "true"
+    IS_SANDBOX: "true"
+
+    LOG_CHANNEL: "stack"
+    ELASTIC_HOST: "http://localhost:9200"
+    ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"

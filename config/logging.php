@@ -35,6 +35,19 @@ return [
     */
 
     'channels' => [
+        'elasticsearch' => [
+            'driver' => 'monolog',
+            'level' => 'debug',
+            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
+            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
+            'formatter_with' => [
+                'index' => env('ELASTIC_LOGS_INDEX'),
+                'type' => '_doc',
+            ],
+            'handler_with' => [
+                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
+            ],
+        ],
         'idp_user' => [
             'driver' => 'daily',
             'path' => storage_path('logs/idp-user-logs/' . date('Y/F/') . 'idp-user.log'),
@@ -50,31 +63,26 @@ return [
             'path' => storage_path('logs/ek-pay-logs/' . date('Y/F/') . 'ek-pay.log'),
             'level' => 'info'
         ],
-
         'saga' => [
             'driver' => 'daily',
             'path' => storage_path('logs/saga-logs/' . date('Y/F/') . 'saga.log'),
             'level' => 'info'
         ],
-
         'stack' => [
             'driver' => 'stack',
             'channels' => ['daily'],
         ],
-
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/' . date('Y/F/') . 'lumen.log'),
             'level' => 'debug',
         ],
-
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/' . date('Y/F/') . 'lumen.log'),
             'level' => 'debug',
             'days' => 14,
         ],
-
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
@@ -82,7 +90,6 @@ return [
             'emoji' => ':boom:',
             'level' => 'critical',
         ],
-
         'papertrail' => [
             'driver' => 'monolog',
             'level' => 'debug',
@@ -92,7 +99,6 @@ return [
                 'port' => env('PAPERTRAIL_PORT'),
             ],
         ],
-
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,
@@ -100,17 +106,14 @@ return [
                 'stream' => 'php://stderr',
             ],
         ],
-
         'syslog' => [
             'driver' => 'syslog',
             'level' => 'debug',
         ],
-
         'errorlog' => [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
-
         'null' => [
             'driver' => 'monolog',
             'handler' => NullHandler::class,
