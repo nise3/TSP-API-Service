@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://nise3-institute.default"
+            "url": "http://nise3-institute.default/api/v1"
         },
         {
             "url": "http://localhost:8001"
@@ -22,13 +22,21 @@
         }
     ],
     "paths": {
-        "/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler": {
+        "/course-enrollment/payment-by-ek-pay/ipn-handler": {
             "post": {
                 "summary": "Endpoint to Receive Payment Acknowledgement from EkPage Payment Gateway",
                 "parameters": [
                     {
                         "name": "secretToken",
                         "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "apikey",
+                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string"

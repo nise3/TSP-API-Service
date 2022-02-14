@@ -75,6 +75,10 @@ spec:
                     sed -i "s/APP_DEBUG=.*$/APP_DEBUG=$APP_DEBUG/g" /app/.env;
                     sed -i "s/APP_URL=.*$/APP_URL=$APP_URL/g" /app/.env;
 
+                    sed -i "s/API_GATEWAY_BASE_URL=.*$/API_GATEWAY_BASE_URL=$API_GATEWAY_BASE_URL/g" /app/.env;
+                    sed -i "s/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=.*$/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=$PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI/g" /app/.env;
+                    sed -i "s/API_GATEWAY_API_KEY=.*$/API_GATEWAY_API_KEY=$API_GATEWAY_API_KEY/g" /app/.env;
+
                     sed -i "s/DB_HOST=.*$/DB_HOST=$DB_HOST/g" /app/.env;
                     sed -i "s/DB_PORT=.*$/DB_PORT=$DB_PORT/g" /app/.env;
                     sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;

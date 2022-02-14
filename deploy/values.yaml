@@ -17,7 +17,7 @@ variables:
   ltsAcme: false
 
   # app version, changing version will auto deploy the app to current version
-  imageAppVersion: "2.1.20"
+  imageAppVersion: "2.1.21"
 
   # increase this when you need scale up
   replicaCount: 2
@@ -62,11 +62,15 @@ variables:
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
 
+    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn"
+    API_GATEWAY_API_KEY: "eyJ4NXQiOiJOVGRtWmpNNFpEazNOalkwWXpjNU1tWm1PRGd3TVRFM01XWXdOREU1TVdSbFpEZzROemM0WkE9PSIsImtpZCI6ImdhdGV3YXlfY2VydGlmaWNhdGVfYWxpYXMiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJhZG1pbkBjYXJib24uc3VwZXIiLCJhcHBsaWNhdGlvbiI6eyJvd25lciI6ImFkbWluIiwidGllclF1b3RhVHlwZSI6bnVsbCwidGllciI6IlVubGltaXRlZCIsIm5hbWUiOiJEZWZhdWx0QXBwbGljYXRpb24iLCJpZCI6MSwidXVpZCI6ImY0NjQyMjBkLTI3ZjItNGUxZC05YmNmLThjZDcyMzY0ZGY4OSJ9LCJpc3MiOiJodHRwczpcL1wvYXBpbS1kZXYubmlzZTMueHl6OjQ0M1wvb2F1dGgyXC90b2tlbiIsInRpZXJJbmZvIjp7IlVubGltaXRlZCI6eyJ0aWVyUXVvdGFUeXBlIjoicmVxdWVzdENvdW50IiwiZ3JhcGhRTE1heENvbXBsZXhpdHkiOjAsImdyYXBoUUxNYXhEZXB0aCI6MCwic3RvcE9uUXVvdGFSZWFjaCI6dHJ1ZSwic3Bpa2VBcnJlc3RMaW1pdCI6MCwic3Bpa2VBcnJlc3RVbml0IjpudWxsfX0sImtleXR5cGUiOiJQUk9EVUNUSU9OIiwicGVybWl0dGVkUmVmZXJlciI6IiIsInN1YnNjcmliZWRBUElzIjpbeyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6IkFQUFRva2VuYW5kU1NPVG9rZW5HZW5lcmF0aW9uQVBJcyIsImNvbnRleHQiOiJcL2JhY2stY2hhbm5lbFwvMS4wLjAiLCJwdWJsaXNoZXIiOiJhZG1pbiIsInZlcnNpb24iOiIxLjAuMCIsInN1YnNjcmlwdGlvblRpZXIiOiJVbmxpbWl0ZWQifSx7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiQ29yZUFwaVNlcnZpY2UiLCJjb250ZXh0IjoiXC9jb3JlXC8xLjAuMCIsInB1Ymxpc2hlciI6ImFkbWluIiwidmVyc2lvbiI6IjEuMC4wIiwic3Vic2NyaXB0aW9uVGllciI6IlVubGltaXRlZCJ9LHsic3Vic2NyaWJlclRlbmFudERvbWFpbiI6ImNhcmJvbi5zdXBlciIsIm5hbWUiOiJJbmR1c3RyeUluZHVzdHJ5QXNzb2NpYXRpb25BUElTZXJ2aWNlIiwiY29udGV4dCI6IlwvaW5kdXN0cnktYXNzb2NpYXRpb25cLzEuMC4wIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoiMS4wLjAiLCJzdWJzY3JpcHRpb25UaWVyIjoiVW5saW1pdGVkIn0seyJzdWJzY3JpYmVyVGVuYW50RG9tYWluIjoiY2FyYm9uLnN1cGVyIiwibmFtZSI6Ik5pc2UzQ01TQXBpU2VydmljZSIsImNvbnRleHQiOiJcL2Ntc1wvMS4wLjAiLCJwdWJsaXNoZXIiOiJhZG1pbiIsInZlcnNpb24iOiIxLjAuMCIsInN1YnNjcmlwdGlvblRpZXIiOiJVbmxpbWl0ZWQifSx7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiVFNQQXBpU2VydmljZSIsImNvbnRleHQiOiJcL3RzcFwvMS4wLjAiLCJwdWJsaXNoZXIiOiJhZG1pbiIsInZlcnNpb24iOiIxLjAuMCIsInN1YnNjcmlwdGlvblRpZXIiOiJVbmxpbWl0ZWQifSx7InN1YnNjcmliZXJUZW5hbnREb21haW4iOiJjYXJib24uc3VwZXIiLCJuYW1lIjoiWW91dGhNYW5hZ2VtZW50U2VydmljZSIsImNvbnRleHQiOiJcL3lvdXRoXC8xLjAuMCIsInB1Ymxpc2hlciI6ImFkbWluIiwidmVyc2lvbiI6IjEuMC4wIiwic3Vic2NyaXB0aW9uVGllciI6IlVubGltaXRlZCJ9LHsic3Vic2NyaWJlclRlbmFudERvbWFpbiI6ImNhcmJvbi5zdXBlciIsIm5hbWUiOiJQYXltZW50R2F0ZXdheUlQTkVuZHBvaW50cyIsImNvbnRleHQiOiJcL3BheW1lbnQtZ2F0ZXdheS1pcG5cLzEuMC4wIiwicHVibGlzaGVyIjoiYWRtaW4iLCJ2ZXJzaW9uIjoiMS4wLjAiLCJzdWJzY3JpcHRpb25UaWVyIjoiVW5saW1pdGVkIn1dLCJ0b2tlbl90eXBlIjoiYXBpS2V5IiwicGVybWl0dGVkSVAiOiIiLCJpYXQiOjE2NDQ4MjE2MzMsImp0aSI6IjZmMTgxMjU3LTc4NDgtNDkxMC1iZDk4LWRlMGI0MGYyYzRjNSJ9.GCF0H8SFfaiJD5hnj1rN8_EAI5t_pDIq_kKZDyajv9ObuyJ4vYQJ3Eq1EKVOs7dU1m3DMKMDyLiD9QI0yxY03QecQFwjEn9gDEj0bx6e20HOx3S0RLNqytjImQnClwmZ8_7Gfj4spVUd_RiOIXa7RRQ7RXzfrubfwkEUHpguFtOJknUxsEi_t6DBvrl95d6VuPscCSzTy-7TmlYh3mcVI-AQgmlja2ZFOOttAja9GaW8ARhjHh6QuNKeR0IunWiPeT5iRDgtDICadQ5C_doT4B1GebGlhgGFAbnXYvSZQ9yih5fbZeSmfSuPlIFKl2MC2JCYnJMiVvimzmcpb9BeAA=="
+
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
 
-    LOG_CHANNEL: "stack"
-    ELASTIC_HOST: "http://localhost:9200"
+    LOG_CHANNEL: "elasticsearch"
+    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
     ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     DB_HOST: "db-service.default"
@@ -116,8 +120,8 @@ variables:
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
 
-    LOG_CHANNEL: "stack"
-    ELASTIC_HOST: "http://localhost:9200"
+    LOG_CHANNEL: "elasticsearch"
+    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
     ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
@@ -152,11 +156,15 @@ variables:
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
 
+    PAYMENT_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_API_KEY: ""
+
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
 
-    LOG_CHANNEL: "stack"
-    ELASTIC_HOST: "http://localhost:9200"
+    LOG_CHANNEL: "elasticsearch"
+    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
     ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"

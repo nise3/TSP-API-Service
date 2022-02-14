@@ -120,7 +120,6 @@ abstract class BaseModel extends Model
     public const PASSWORD_REGEX = 'regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
     public const PASSWORD_VALIDATION_MESSAGE = 'The password must contain at least one uppercase, lowercase letter and at least one number.[66000]';
 
-    public const INSTITUTE_REMOTE_BASE_URL = 'https://institute.bus-staging.softbdltd.com/';
     const INSTITUTE_LOCAL_BASE_URL = "http://localhost:8001/";
     public const NISE3_FROM_EMAIL = "noreply@nise.gov.bd";
     public const SELF_EXCHANGE = 'institute';
