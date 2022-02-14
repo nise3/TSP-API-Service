@@ -159,6 +159,8 @@ class CourseEnrollmentPaymentController extends Controller
                 DB::rollBack();
                 throw $exception;
             }
+        } else {
+            Log::debug('ipn-handler-secret-token-info', $request->all());
         }
 
     }

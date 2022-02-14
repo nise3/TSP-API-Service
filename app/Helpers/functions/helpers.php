@@ -122,3 +122,17 @@ if (!function_exists("bearerUserToken")) {
         }
     }
 }
+
+if (!function_exists("logSelector")) {
+
+    /**
+     * @return array
+     */
+    function logSelector(): array
+    {
+        if (env('LOG_CHANNEL') == 'elasticsearch') {
+            return config('elasticSearchLogConfig');
+        }
+        return config('lumenDefaultLogConfig');
+    }
+}
