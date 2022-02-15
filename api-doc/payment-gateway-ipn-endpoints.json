@@ -24,6 +24,7 @@
     "paths": {
         "/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}": {
             "post": {
+                "x-wso2-disable-security": true,
                 "summary": "Endpoint to Receive Payment Acknowledgement from EkPage Payment Gateway",
                 "parameters": [
                     {
