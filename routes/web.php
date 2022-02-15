@@ -65,6 +65,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Course details with trainer */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@publicCourseDetails"]);
         $router->get("institutes", ["as" => "public.institutes", "uses" => "InstituteController@publicInstituteList"]);
+        /** Course All batches / Active batches / Up-coming batches */
+        $router->get('courses/{id}/training-centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getPublicBatchesByCourseId']);
 
         /** nise-statistics */
         $router->get('nise-statistics',["as"=>"nise-statistics","uses"=>"InstituteStatisticsController@niseStatistics"]);

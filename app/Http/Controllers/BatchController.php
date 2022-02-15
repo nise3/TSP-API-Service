@@ -250,7 +250,9 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function getBatchesByCourseId(Request $request, $id): JsonResponse
     {
@@ -259,4 +261,18 @@ class BatchController extends Controller
 
         return Response::json($response);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getPublicBatchesByCourseId(Request $request, $id): JsonResponse
+    {
+
+        $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
+
+        return Response::json($response);
+    }
+
 }
