@@ -16,11 +16,6 @@
             "url": "http://localhost:8001"
         }
     ],
-    "security": [
-        {
-            "ApiKeyAuth": []
-        }
-    ],
     "paths": {
         "/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}": {
             "post": {
@@ -30,14 +25,6 @@
                     {
                         "name": "secretToken",
                         "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "apikey",
-                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -53,13 +40,6 @@
         }
     },
     "components": {
-        "securitySchemes": {
-            "ApiKeyAuth": {
-                "type": "apiKey",
-                "in": "header",
-                "name": "apikey"
-            }
-        },
         "parameters": {
         },
         "schemas": {
