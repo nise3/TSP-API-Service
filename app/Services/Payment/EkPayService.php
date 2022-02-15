@@ -76,7 +76,7 @@ class EkPayService
 
         if (config('ekpay.debug')) {
             Log::channel('ek_pay')->info("Youth Name: " . $customerInfo['name'] . ' , Youth Enroll ID: ' . $paymentInfo['ord_id']);
-            Log::channel('ek_pay')->info("Ekpay Request PayLoad: " . json_encode($ekPayPayload));
+            Log::channel('ek_pay')->info("Ekpay Request PayLoad: " . json_encode($ekPayPayload,JSON_PRETTY_PRINT));
         }
 
         $url = (config('ekpay.is_sand_box') ? config('ekpay.sand_box.ekpay_base_uri') : config('ekpay.production.ekpay_base_uri')) . "/merchant-api";
@@ -96,7 +96,7 @@ class EkPayService
             })
             ->json(); //secure_token
 
-        Log::info("Http-log: " . json_encode($res));
+        Log::info("Http-log: " . json_encode($res,JSON_PRETTY_PRINT));
         return $res['secure_token'] ?? null;
 
     }
