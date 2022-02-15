@@ -110,6 +110,7 @@ class CourseEnrollmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Exception
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
