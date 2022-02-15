@@ -43,8 +43,8 @@ return [
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
             'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
             'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX'),
-                'type' => 'idp_user',
+                'index' => env('ELASTIC_LOGS_INDEX')."_idp_user",
+                'type' => '_doc',
             ],
             'handler_with' => [
                 'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
@@ -56,8 +56,8 @@ return [
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
             'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
             'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX'),
-                'type' => 'ek_pay',
+                'index' => env('ELASTIC_LOGS_INDEX')."_ek_pay",
+                'type' => '_doc',
             ],
             'handler_with' => [
                 'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
@@ -69,8 +69,8 @@ return [
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
             'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
             'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX'),
-                'type' => 'mail_sms',
+                'index' => env('ELASTIC_LOGS_INDEX')."_mail_sms",
+                'type' => '_doc',
             ],
             'handler_with' => [
                 'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
@@ -82,8 +82,8 @@ return [
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
             'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
             'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX'),
-                'type' => 'saga',
+                'index' => env('ELASTIC_LOGS_INDEX')."_saga",
+                'type' => '_doc',
             ],
             'handler_with' => [
                 'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
