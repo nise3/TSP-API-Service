@@ -58,6 +58,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
     });
 
+
+    $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
     $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);
 
     /** Public Apis */
