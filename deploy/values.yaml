@@ -157,7 +157,7 @@ variables:
     DB_PASSWORD: "kvx6V3Y^7"
 
     PAYMENT_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
     PAYMENT_GATEWAY_IPN_ENDPOINT_API_KEY: ""
 
     EK_PAY_DEBUG: "true"
