@@ -449,22 +449,32 @@ class CourseEnrollmentService
     /**
      * @param int $id
      * @param string $code
-     * @return bool
+     * @return array
      */
-    public function verifySMSCode(int $id, string $code): bool
+    public function verifySMSCode(int $id, string $code): array
     {
         /** @var CourseEnrollment $courseEnrollment */
         $courseEnrollment = CourseEnrollment::where("id", $id)
             ->where("verification_code", $code)
             ->where("row_status", BaseModel::ROW_STATUS_PENDING)
             ->first();
-
+        $verifyStatus = false;
+        $verifyMessage = 'Unprocessable Request';
         if ($courseEnrollment) {
-            $courseEnrollment->verification_code_verified_at = Carbon::now();
-            $courseEnrollment->save();
-            return true;
+
+            $verifyStatus = true;
+            $verifyMessage = 'Sms Verification is already done';
+
+            if (!$courseEnrollment->verification_code_verified_at) {
+                $courseEnrollment->verification_code_verified_at = Carbon::now();
+                $courseEnrollment->save();
+                $verifyMessage = 'Sms Verification is done';
+            }
         }
-        return false;
+        return [
+            $verifyStatus,
+            $verifyMessage
+        ];
     }
 
     public function isFreeCourse(int $id): int
@@ -476,9 +486,11 @@ class CourseEnrollmentService
 
         $verificationSuccessStatus = 0;
         if ($courseEnrollment) {
-
+            Log::channel('ek_pay')->info("Course Fee for Free Course= " . $courseEnrollment->course->course_fee);
+            Log::channel('ek_pay')->info("Parsing Value Of course fee= " . doubleval($courseEnrollment->course->course_fee));
             /** Course fee zero check for free course */
-            if ((doubleval($courseEnrollment->course->course_fee) == 0)) {
+            if (doubleval($courseEnrollment->course->course_fee) == 0) {
+                Log::channel('ek_pay')->info("Free Course");
                 $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
                 $courseEnrollment->payment_status = PaymentTransactionHistory::PAYMENT_SUCCESS;
                 $courseEnrollment->save();

@@ -163,16 +163,16 @@ class CourseEnrollmentController extends Controller
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
         Log::info("validated data: " . json_encode($validated));
 
-        $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
-        $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
+        [$verifyStatus, $verifyMessage] = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
+        $statusCode = $verifyStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
         $response = [
             "data" => [
                 "free_course" => $this->courseEnrollService->isFreeCourse($id)
             ],
             '_response_status' => [
-                "success" => $verifySmsStatus,
+                "success" => $verifyStatus,
                 "code" => $statusCode,
-                "message" => $verifySmsStatus ? "Sms Verification is done" : "Unprocessable Request",
+                "message" => $verifyMessage,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
