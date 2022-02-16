@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Course
@@ -118,6 +119,7 @@ class Course extends BaseModel
         $originalData = parent::toArray();
         if (!empty($originalData['industry_association_id'])) {
             $this->getIndustryAssociationData($originalData);
+            Log::info("course data: " . json_encode($originalData));
         }
         return $originalData;
     }
