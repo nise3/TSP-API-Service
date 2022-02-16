@@ -38,56 +38,20 @@ return [
 
         /** start Custom channel */
         'idp_user' => [
-            'driver' => 'monolog',
-            'level' => 'info',
-            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
-            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
-            'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX')."_idp_user",
-                'type' => '_doc',
-            ],
-            'handler_with' => [
-                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
-            ],
+            'driver' => 'stack',
+            'channels' => ['elastic_info_log'],
         ],
         'ek_pay' => [
-            'driver' => 'monolog',
-            'level' => 'info',
-            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
-            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
-            'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX')."_ek_pay",
-                'type' => '_doc',
-            ],
-            'handler_with' => [
-                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
-            ],
+            'driver' => 'stack',
+            'channels' => ['elastic_info_log'],
         ],
         'mail_sms' => [
-            'driver' => 'monolog',
-            'level' => 'info',
-            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
-            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
-            'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX')."_mail_sms",
-                'type' => '_doc',
-            ],
-            'handler_with' => [
-                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
-            ],
+            'driver' => 'stack',
+            'channels' => ['elastic_info_log'],
         ],
         'saga' => [
-            'driver' => 'monolog',
-            'level' => 'info',
-            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
-            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
-            'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX')."_saga",
-                'type' => '_doc',
-            ],
-            'handler_with' => [
-                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
-            ],
+            'driver' => 'stack',
+            'channels' => ['elastic_info_log'],
         ],
 
         /** end Custom channel */
@@ -97,6 +61,28 @@ return [
             'channels' => ['daily'],
         ],
         'daily' => [
+            'driver' => 'stack',
+            'channels' => ['elastic_debug_log'],
+        ],
+        'single' => [
+            'driver' => 'stack',
+            'channels' => ['elastic_debug_log'],
+        ],
+        'slack' => [
+            'driver' => 'monolog',
+            'level' => 'critical',
+            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
+            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
+            'formatter_with' => [
+                'index' => env('ELASTIC_LOGS_INDEX'),
+                'type' => '_doc',
+            ],
+            'handler_with' => [
+                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
+            ]
+        ],
+
+        'elastic_debug_log' => [
             'driver' => 'monolog',
             'level' => 'debug',
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
@@ -109,22 +95,10 @@ return [
                 'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
             ]
         ],
-        'single' => [
+
+        'elastic_info_log' => [
             'driver' => 'monolog',
-            'level' => 'debug',
-            'handler' => \Monolog\Handler\ElasticsearchHandler::class,
-            'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
-            'formatter_with' => [
-                'index' => env('ELASTIC_LOGS_INDEX'),
-                'type' => '_doc',
-            ],
-            'handler_with' => [
-                'client' => \Elasticsearch\ClientBuilder::create()->setHosts([env('ELASTIC_HOST')])->build(),
-            ],
-        ],
-        'slack' => [
-            'driver' => 'monolog',
-            'level' => 'critical',
+            'level' => 'info',
             'handler' => \Monolog\Handler\ElasticsearchHandler::class,
             'formatter' => \Monolog\Formatter\ElasticsearchFormatter::class,
             'formatter_with' => [

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Course
@@ -112,7 +113,16 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_PAID,
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
-    
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        if (!empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
+    }
+
     /**
      * @return BelongsTo
      */
@@ -149,5 +159,6 @@ class Course extends BaseModel
     {
         return $this->hasMany(CourseEnrollment::class, 'course_id');
     }
+
 
 }

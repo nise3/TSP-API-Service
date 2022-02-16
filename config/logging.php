@@ -1,3 +1,3 @@
 <?php
 
-return logSelector();
+return env('LOG_CHANNEL') === 'elasticsearch' ? config('elasticSearchLogConfig') : config('lumenDefaultLogConfig');
