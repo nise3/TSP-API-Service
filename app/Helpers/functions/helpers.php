@@ -7,37 +7,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 if (!function_exists("clientUrl")) {
     function clientUrl($type)
     {
-        if (!in_array(request()->getHost(), ['localhost', '127.0.0.1'])) {
-            if ($type == BaseModel::CORE_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.core.dev") : config("httpclientendpoint.core.prod");
-            } elseif ($type == BaseModel::ORGANIZATION_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.organization.dev") : config("httpclientendpoint.organization.prod");
-            } elseif ($type == BaseModel::INSTITUTE_URL_CLIENT_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.institute.dev") : config("httpclientendpoint.institute.prod");
-            } elseif ($type == BaseModel::CMS_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.cms.dev") : config("httpclientendpoint.cms.prod");
-            } elseif ($type == BaseModel::YOUTH_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.youth.dev") : config("httpclientendpoint.youth.prod");
-            } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-            }
-
-        } else {
-            if ($type == BaseModel::CORE_CLIENT_URL_TYPE) {
-                return config("httpclientendpoint.core.local");
-            } elseif ($type == BaseModel::ORGANIZATION_CLIENT_URL_TYPE) {
-                return config("httpclientendpoint.organization.local");
-            } elseif ($type == BaseModel::INSTITUTE_URL_CLIENT_TYPE) {
-                return config("httpclientendpoint.institute.local");
-            } elseif ($type == BaseModel::YOUTH_CLIENT_URL_TYPE) {
-                return config("httpclientendpoint.youth.local");
-            } elseif ($type == BaseModel::CMS_CLIENT_URL_TYPE) {
-                return config("httpclientendpoint.cms.local");
-            } elseif ($type == BaseModel::IDP_SERVER_CLIENT_URL_TYPE) {
-                return config("nise3.is_dev_mode") ? config("httpclientendpoint.idp_server.dev") : config("httpclientendpoint.idp_server.prod");
-            }
-        }
-        return "";
+        return config("httpclientendpoint." . $type);
     }
 }
 
@@ -98,6 +68,12 @@ if (!function_exists("idpUserErrorMessage")) {
                 $errors['_response_status']['message'] = "HTTP 401 Unauthorized Error in IDP server";
                 return $errors;
             }
+            case ResponseAlias::HTTP_BAD_REQUEST:
+            {
+                $errors['_response_status']['code'] = ResponseAlias::HTTP_BAD_REQUEST;
+                $errors['_response_status']['message'] = "HTTP 400 BAD Request Error in IDP server";
+                return $errors;
+            }
             case 0:
             {
                 $errors['_response_status']['message'] = $exception->getHandlerContext()['error'] ?? " SSL Certificate Error: An expansion of the 400 Bad Request response code, used when the client has provided an invalid client certificate";
@@ -110,6 +86,15 @@ if (!function_exists("idpUserErrorMessage")) {
 
         }
     }
+
+//    if (!function_exists("getInstituteId")) {
+//        function getInstituteId(): int|null
+//        {
+//            $authUser = \Illuminate\Support\Facades\Auth::user();
+//            return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id ? $authUser->institute_id : request()->get('institute_id');
+//        }
+//    }
+
 }
 
 if (!function_exists('generateOtp')) {
@@ -120,5 +105,34 @@ if (!function_exists('generateOtp')) {
     function generateOtp(int $digits): int
     {
         return rand(pow(10, $digits - 1), pow(10, $digits) - 1);
+    }
+}
+
+if (!function_exists("bearerUserToken")) {
+
+    function bearerUserToken(\Illuminate\Http\Request $request, $headerName = 'User-Token')
+    {
+        $header = $request->header($headerName);
+
+        $position = strrpos($header, 'Bearer ');
+
+        if ($position !== false) {
+            $header = substr($header, $position + 7);
+            return strpos($header, ',') !== false ? strstr(',', $header, true) : $header;
+        }
+    }
+}
+
+if (!function_exists("logSelector")) {
+
+    /**
+     * @return array
+     */
+    function logSelector(): array
+    {
+        if (env('LOG_CHANNEL') == 'elasticsearch') {
+            return config('elasticSearchLogConfig');
+        }
+        return config('lumenDefaultLogConfig');
     }
 }

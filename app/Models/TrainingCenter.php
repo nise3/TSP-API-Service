@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Facade\ServiceToServiceCall;
 use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class TrainingCenter
@@ -26,7 +28,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class TrainingCenter extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes, SoftDeletes;
+
+    public const TRAINING_CENTER_CODE_PREFIX = "TC";
+    public const TRAINING_CENTER_CODE_SIZE = 20;
 
     public const CENTER_LOCATION_TYPE_INSTITUTE_PREMISES = 1;
     public const CENTER_LOCATION_TYPE_BRANCH_PREMISES = 2;
@@ -63,7 +68,7 @@ class TrainingCenter extends BaseModel
      */
     public function batch(): HasMany
     {
-        return $this->hasMany(Batch::class, 'training_center_id', 'id');
+        return $this->hasMany(Batch::class, 'training_center_id', ' ');
     }
 
     /**
@@ -73,4 +78,16 @@ class TrainingCenter extends BaseModel
     {
         return $this->belongsToMany(Skill::class, 'training_center_skill');
     }
+
+    // TODO: This method should be checked . It gives error.
+//    public function toArray(): array
+//    {
+//        $originalData = parent::toArray();
+//        $authUser = Auth::user();
+//
+//        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+//            $this->getIndustryAssociationData($originalData);
+//        }
+//        return $originalData;
+//    }
 }

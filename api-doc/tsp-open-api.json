@@ -2,8 +2,8 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "Institute Api Service",
-        "description": "It is a institute management api service that manages services related to institute",
+        "title": "TSP Api Service",
+        "description": "It is a TSP api service that manages services related to institute",
         "termsOfService": "",
         "contact": {},
         "license": {
@@ -16,6 +16,9 @@
         }
     ],
     "servers": [
+        {
+            "url": "http://nise-tsp.softbd/api/v1"
+        },
         {
             "url": "https://institute.bus-staging.softbdltd.com/api/v1"
         },
@@ -35,15 +38,15 @@
     "paths": {
         "/": {
             "get": {
-                "summary": "Institute Api Service",
-                "description": "Institute management API service",
+                "summary": "TSP Api Service",
+                "description": "TSP API service",
                 "responses": {
                     "200": {
                         "description": "success",
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "service_name": "NISE-3 Institute Management API Service",
+                                    "service_name": "NISE-3 TSP API Service",
                                     "service_version": "V1",
                                     "lumen_version": "Lumen (8.2.4) (Laravel Components ^8.0)",
                                     "module_list": [
@@ -55,7 +58,7 @@
                                         "TrainingCenter"
                                     ],
                                     "description": [
-                                        "It is a institute management api service that manages services related to a institute"
+                                        "It is a TSP api service that manages services related to a institute"
                                     ]
                                 }
                             }
@@ -73,7 +76,7 @@
                     "institutes"
                 ],
                 "summary": "get_list",
-                "description": "API endpoint to get list of  institutes.A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to get list of  TSP.A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/page"
@@ -452,6 +455,243 @@
                 }
             }
         },
+        "/public/institute-details": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "get_list",
+                "description": "API endpoint to public get list of  TSP.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "institute_type_id": 2,
+                                            "code": "222",
+                                            "title": "WinkingNonBlondes",
+                                            "title_en": "WinkingNonBlondes",
+                                            "domain": "RedHotChILLIPAPer",
+                                            "loc_division_id": 1,
+                                            "division_title": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "loc_district_id": 1,
+                                            "district_title": "বরগুনা",
+                                            "district_title_en": "BARGUNA",
+                                            "loc_upazila_id": 1,
+                                            "upazila_title": "বাগেরহাট সদর",
+                                            "upazila_title_en": "BAGERHAT SADAR",
+                                            "address": "AAqua,MadrasaQuarter,Mymensingh",
+                                            "address_en": "AAqua,MadrasaQuarter,Mymensingh",
+                                            "location_latitude": null,
+                                            "location_longitude": "12",
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": "",
+                                            "mobile_numbers": null,
+                                            "email": "RunMarufRun@gmail.com",
+                                            "name_of_the_office_head": "HurramSultan",
+                                            "name_of_the_office_head_en": "Rosa Mendez Lolita",
+                                            "name_of_the_office_head_designation": "Rosa Mendez Lolita",
+                                            "name_of_the_office_head_designation_en": "Lola Montez",
+                                            "contact_person_name": "Lola Montez",
+                                            "contact_person_name_en": "aaaa",
+                                            "contact_person_mobile": "01303318029",
+                                            "contact_person_email": "ddd@gmail.com",
+                                            "contact_person_designation": "01789988999",
+                                            "contact_person_designation_en": "Swordman",
+                                            "config": null,
+                                            "row_status": 2,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "institute_type_id": 3,
+                                            "code": "333",
+                                            "title": "RollingPanda",
+                                            "title_en": "RollingPanda",
+                                            "domain": "LockUpYourBunny",
+                                            "loc_division_id": 2,
+                                            "division_title": "চট্টগ্রাম",
+                                            "division_title_en": "Chittagong",
+                                            "loc_district_id": 2,
+                                            "district_title": "বরিশাল",
+                                            "district_title_en": "BARISAL",
+                                            "loc_upazila_id": 2,
+                                            "upazila_title": "চিতলমারী",
+                                            "upazila_title_en": "CHITALMARI",
+                                            "address": "La La Land",
+                                            "address_en": "La La Land",
+                                            "location_latitude": null,
+                                            "location_longitude": "23",
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": "",
+                                            "mobile_numbers": null,
+                                            "email": "Talk-Maruf-Talk@gmail.com",
+                                            "name_of_the_office_head": "Alice Goodwin",
+                                            "name_of_the_office_head_en": "Salma Hayek",
+                                            "name_of_the_office_head_designation": "Salma Hayek",
+                                            "name_of_the_office_head_designation_en": "Afroditi",
+                                            "contact_person_name": "Afroditi",
+                                            "contact_person_name_en": "Afroditi",
+                                            "contact_person_mobile": "01303318029",
+                                            "contact_person_email": "FFF@gmail.com",
+                                            "contact_person_designation": "01344455445",
+                                            "contact_person_designation_en": "ShootingPicaso",
+                                            "config": null,
+                                            "row_status": 2,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/institutes": {
+            "get": {
+                "tags": [
+                    "institutes"
+                ],
+                "summary": "public_get_list",
+                "description": "API endpoint to get list of public TSP.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "institute_type_id": 0,
+                                            "code": "aut-consequatur-beatae-ipsa-qui-perferendis-porro-eos-reprehenderit-fugiat-soluta-unde-quis-quis-vero-iure-nobis-officiis-modi-porro",
+                                            "title": "Miss Leslie Spencer",
+                                            "title_en": "Tiara Gleichner",
+                                            "domain": "https://nicolas.com",
+                                            "loc_division_id": 3,
+                                            "division_title": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "address_en": "43865 Funk Dale Suite 596\nBradtkebury, LA 13162-3204",
+                                            "location_latitude": "90.399402",
+                                            "location_longitude": "90.399402",
+                                            "google_map_src": "Rerum eum quae repellendus sunt.",
+                                            "logo": "softbd.jpg",
+                                            "country": "BD",
+                                            "phone_code": "880",
+                                            "primary_phone": "+1-351-372-0784",
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01769141689",
+                                            "mobile_numbers": "[\"01760981346\",\"01787431992\"]",
+                                            "email": "ellsworth.dickens@hauck.info",
+                                            "name_of_the_office_head": null,
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": null,
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "",
+                                            "contact_person_name_en": "",
+                                            "contact_person_mobile": "",
+                                            "contact_person_email": "",
+                                            "contact_person_designation": "",
+                                            "contact_person_designation_en": "",
+                                            "config": "Adipisci enim voluptas hic quaerat quibusdam ex ad.",
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2021-10-12T13:15:03.000000Z",
+                                            "updated_at": "2021-10-12T13:15:03.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/institutes/{instituteId}": {
             "get": {
                 "tags": [
@@ -529,6 +769,158 @@
                 }
             }
         },
+        "/institute-profile": {
+            "get": {
+                "tags": [
+                    "Institute Profile "
+                ],
+                "summary": "Get an institute  profile",
+                "description": "An API endpoint to get an institute admin profile. A successfull request will give response with 200 status code",
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_type_id": 2,
+                                        "code": "222",
+                                        "title": "WinkingNonBlondes",
+                                        "title_en": "WinkingNonBlondes",
+                                        "domain": "RedHotChILLIPAPer",
+                                        "loc_division_id": 1,
+                                        "division_title": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 1,
+                                        "district_title": "বরগুনা",
+                                        "district_title_en": "BARGUNA",
+                                        "loc_upazila_id": 1,
+                                        "upazila_title": "বাগেরহাট সদর",
+                                        "upazila_title_en": "BAGERHAT SADAR",
+                                        "address": "AAqua,MadrasaQuarter,Mymensingh",
+                                        "address_en": "AAqua,MadrasaQuarter,Mymensingh",
+                                        "location_latitude": null,
+                                        "location_longitude": "12",
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": "",
+                                        "mobile_numbers": null,
+                                        "email": "RunMarufRun@gmail.com",
+                                        "name_of_the_office_head": "HurramSultan",
+                                        "name_of_the_office_head_en": "Rosa Mendez Lolita",
+                                        "name_of_the_office_head_designation": "Rosa Mendez Lolita",
+                                        "name_of_the_office_head_designation_en": "Lola Montez",
+                                        "contact_person_name": "Lola Montez",
+                                        "contact_person_name_en": "aaaa",
+                                        "contact_person_mobile": "01303318029",
+                                        "contact_person_email": "ddd@gmail.com",
+                                        "contact_person_designation": "01789988999",
+                                        "contact_person_designation_en": "Swordman",
+                                        "config": null,
+                                        "row_status": 2,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": null,
+                                        "updated_at": null,
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institute-profile-update": {
+            "put": {
+                "tags": [
+                    "Institute Profile "
+                ],
+                "summary": "Update institute  profile",
+                "description": "An Api endpoint to update an institute admin profile and return 201 while updated succesffully",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/institutesAdminUpdate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 4,
+                                        "institute_type_id": 1,
+                                        "code": "555",
+                                        "title": "QQQTTTT",
+                                        "title_en": null,
+                                        "domain": null,
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "loc_upazila_id": "1",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": null,
+                                        "address_en": null,
+                                        "address": null,
+                                        "logo": null,
+                                        "country": "BD",
+                                        "phone_code": "880",
+                                        "primary_phone": null,
+                                        "phone_numbers": [
+                                            "01376728953"
+                                        ],
+                                        "primary_mobile": "01300099090",
+                                        "mobile_numbers": [
+                                            "01300099090"
+                                        ],
+                                        "email": "aa@gmail.com",
+                                        "name_of_the_office_head": "qqwqwqwqw",
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": "dddddddddddd",
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "ddddddddddddddddd",
+                                        "contact_person_name_en": null,
+                                        "contact_person_mobile": "01300097090",
+                                        "contact_person_email": "hh@gmail.com",
+                                        "contact_person_designation": "dddfdf",
+                                        "contact_person_designation_en": null,
+                                        "config": null,
+                                        "row_status": "1",
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-12-14T06:55:05.000000Z",
+                                        "updated_at": "2021-12-14T11:02:55.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Institute updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute-open-registration": {
             "post": {
                 "tags": [
@@ -551,58 +943,30 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "institute_type_id": 0,
-                                        "code": "quia-error-at-recusandae-doloremque-nam-quasi-deserunt-sed-saepe-iusto-officia-voluptatem-reprehenderit-et-optio-optio-cum-in-est",
-                                        "title": "Dr. Cristopher Schiller V",
-                                        "title_en": "Prof. Shyann Armstrong",
-                                        "domain": "https://cummings.info",
-                                        "loc_division_id": 3,
-                                        "division_title": "ঢাকা",
-                                        "division_title_en": "Dhaka",
-                                        "loc_district_id": 18,
-                                        "district_title": "ঢাকা ",
-                                        "district_title_en": "DHAKA",
-                                        "loc_upazila_id": null,
-                                        "upazila_title": null,
-                                        "upazila_title_en": null,
-                                        "address": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
-                                        "address_en": "30324 Malika Gardens\nWest Rickieburgh, WA 15635",
-                                        "location_latitude": "90.399452",
-                                        "location_longitude": "90.399452",
-                                        "google_map_src": "Sed saepe aut aut enim eum.",
-                                        "logo": "softbd.jpg",
-                                        "country": "BD",
-                                        "phone_code": "880",
-                                        "primary_phone": "1-843-507-1994",
-                                        "phone_numbers": null,
-                                        "primary_mobile": "01715665360",
-                                        "mobile_numbers": "[\"01748950423\",\"01727659808\"]",
-                                        "email": "xbergstrom@corwin.biz",
-                                        "name_of_the_office_head": null,
-                                        "name_of_the_office_head_en": null,
-                                        "name_of_the_office_head_designation": null,
-                                        "name_of_the_office_head_designation_en": null,
-                                        "contact_person_name": "",
-                                        "contact_person_name_en": null,
-                                        "contact_person_mobile": "",
-                                        "contact_person_email": "",
-                                        "contact_person_designation": "",
-                                        "contact_person_designation_en": null,
-                                        "config": "Magnam fugiat laudantium temporibus eaque tenetur.",
-                                        "row_status": 1,
-                                        "created_by": null,
-                                        "updated_by": null,
-                                        "created_at": "2021-10-13T08:48:09.000000Z",
-                                        "updated_at": "2021-10-13T08:48:09.000000Z",
-                                        "deleted_at": null
-                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "Institute added successfully",
-                                        "query_time": 0
+                                        "message": "Institute Successfully Created",
+                                        "query_time": 1
+                                    },
+                                    "data": {
+                                        "title": "বিতাক",
+                                        "title_en": "BITAC",
+                                        "institute_type_id": "1",
+                                        "name_of_the_office_head": "asdfsadfsf",
+                                        "name_of_the_office_head_designation": "aaaaa",
+                                        "email": "abc@gmail.com",
+                                        "primary_mobile": "01558292976",
+                                        "contact_person_mobile": "01858682610",
+                                        "contact_person_name": "asjhsklakllskla",
+                                        "contact_person_designation": "asddddddd",
+                                        "contact_person_email": "abac46164@gmail.com",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "1",
+                                        "address": "sadfasdfdasf",
+                                        "updated_at": "2021-12-02T09:09:22.000000Z",
+                                        "created_at": "2021-12-02T09:09:22.000000Z",
+                                        "id": 33
                                     }
                                 }
                             }
@@ -620,6 +984,15 @@
                         "$ref": "#/components/parameters/institute_id_path"
                     }
                 ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/instituteRegistrationApproval"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -3267,7 +3640,7 @@
                 }
             }
         },
-        "/courses/{courseId}/training_centers/batches": {
+        "/courses/{courseId}/training-centers/batches": {
             "get": {
                 "summary": "Training Centers with Batches",
                 "description": "API endpoint to get training centers with batches.A successful request response will show 200 HTTP status code",
@@ -3354,6 +3727,94 @@
                 }
             }
         },
+        "/public/courses/{courseId}/training-centers/batches": {
+            "get": {
+                "summary": "Public Training Centers with Batches",
+                "description": "API endpoint to get public training centers with batches.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/active"
+                    },
+                    {
+                        "$ref": "#/components/parameters/upcoming"
+                    }
+                ],
+                "tags": [
+                    "Training Centers with Batches"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/trainingCentersWithBatches"
+                                },
+                                "example": {
+                                    "data": {
+                                        "id": 13,
+                                        "title": "Leanna Mayer",
+                                        "title_en": "Mrs. Sylvia Considine",
+                                        "division_title_en": "Barisal",
+                                        "division_title_bn": "বরিশাল",
+                                        "division_bbs_code": "10",
+                                        "district_title_en": "BARGUNA",
+                                        "district_title_bn": "বরগুনা",
+                                        "district_bbs_code": "04",
+                                        "is_sadar_district": 0,
+                                        "upazila_title_en": "BAMNA",
+                                        "upazila_title_bn": "বামনা",
+                                        "upazila_bbs_code": null,
+                                        "is_sadar_upazila": 0,
+                                        "address": "271 Delmer Harbor Apt. 133 Keatontown, WI 70536-1415",
+                                        "address_en": "763 Dickinson Row Apt. 641 New Niko, OH 56397",
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": "5836 Beahan Extension Hegmannfort, VT 82074",
+                                        "row_status": 1,
+                                        "batches": [
+                                            {
+                                                "id": "1",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
+                                                "number_of_seat": "43",
+                                                "registration_start_date": "2021-10-27",
+                                                "registration_end_date": "2021-10-27",
+                                                "batch_start_date": "2021-10-27",
+                                                "batch_end_date": "2021-10-27",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            },
+                                            {
+                                                "id": "6",
+                                                "title": "Miss Leonie Pollich II",
+                                                "title_en": "Ellis Turner",
+                                                "number_of_seat": "57",
+                                                "registration_start_date": "2021-11-16",
+                                                "registration_end_date": "2021-11-16",
+                                                "batch_start_date": "2021-11-16",
+                                                "batch_end_date": "2021-11-16",
+                                                "available_seats": "0",
+                                                "batch_row_status": "1"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/public/course-list/{type}": {
             "get": {
                 "summary": "Course List with type ",
@@ -4123,98 +4584,7 @@
                 ]
             }
         },
-        "/course-enroll/{id}/verify-sms-code": {
-            "post": {
-                "tags": [
-                    "Course Enrollments"
-                ],
-                "summary": "Verify sms code for a course enrollment",
-                "description": "Verify sms code for a course enrollment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VerficationCode"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Sms Code Successfully Send.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/course-enroll/{id}/resend-verification-code": {
-            "post": {
-                "tags": [
-                    "Course Enrollments"
-                ],
-                "summary": "Resend verification code a specific course enrollment",
-                "description": "An API endpoint to resend verfication code for course enrollment",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/VerficationCode"
-                            }
-                        }
-                    }
-                },
-
-                "responses": {
-                    "200": {
-                        "description": "successfull",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Sms Code Successfully ReSend.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/payment/pay-now": {
+        "/course-enrollment/payment-by-ek-pay/pay-now": {
             "post": {
                 "tags": [
                     "Course Enrollments"
@@ -4366,7 +4736,326 @@
                 ]
             }
         },
-        "/institute-dashboard-statistics/{instituteId}": {
+        "/course-enroll/{id}/verify-sms-code": {
+            "post": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Verify sms code",
+                "description": "API endpoint to Verify sms code . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseEnrollmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CourseEnrollByVerification"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institute_trainee_youths": {
+            "get": {
+                "tags": [
+                    "Course Enrollments"
+                ],
+                "summary": "Get institute trainee youth",
+                "description": "API endpoint to Get institute trainee youth.A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/institute_row_status"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "institute_id": 1,
+                                            "institute_title": "Shaina Sanford",
+                                            "institute_title_en": "Shaina Sanford",
+                                            "row_status": 2,
+                                            "created_at": "2022-02-02T07:56:36.000000Z",
+                                            "updated_at": "2022-02-02T07:56:36.000000Z",
+                                            "youth_details": {
+                                                "id": 1,
+                                                "username": "dibbert.prince@example.org",
+                                                "user_name_type": 1,
+                                                "first_name": "Mr. Marco Marquardt",
+                                                "first_name_en": null,
+                                                "last_name": "Mr. Marco Marquardt",
+                                                "last_name_en": null,
+                                                "expected_salary": null,
+                                                "job_level": null,
+                                                "loc_division_id": null,
+                                                "division_title": null,
+                                                "division_title_en": null,
+                                                "loc_district_id": null,
+                                                "district_title": null,
+                                                "district_title_en": null,
+                                                "loc_upazila_id": null,
+                                                "upazila_title": null,
+                                                "upazila_title_en": null,
+                                                "gender": 1,
+                                                "religion": null,
+                                                "is_freelance_profile": 0,
+                                                "marital_status": null,
+                                                "nationality": 1,
+                                                "email": "dibbert.prince@example.org",
+                                                "mobile": "01785842402",
+                                                "identity_number_type": null,
+                                                "identity_number": null,
+                                                "date_of_birth": "-000001-11-30T00:00:00.000000Z",
+                                                "freedom_fighter_status": 1,
+                                                "physical_disability_status": 0,
+                                                "does_belong_to_ethnic_group": 0,
+                                                "bio": null,
+                                                "bio_en": null,
+                                                "photo": null,
+                                                "cv_path": null,
+                                                "signature_image_path": null,
+                                                "row_status": 1,
+                                                "created_at": "2022-02-02T07:58:17.000000Z",
+                                                "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                "profile_completed": 83,
+                                                "total_job_experience": {
+                                                    "year": 6,
+                                                    "month": 5
+                                                },
+                                                "physical_disabilities": [],
+                                                "youth_languages_proficiencies": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "language_id": 2,
+                                                        "reading_proficiency_level": 2,
+                                                        "writing_proficiency_level": 1,
+                                                        "speaking_proficiency_level": 2,
+                                                        "understand_proficiency_level": 2,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "language_title": "ইংরেজি",
+                                                        "language_title_en": "English"
+                                                    },
+                                                    {
+                                                        "id": 59,
+                                                        "youth_id": 1,
+                                                        "language_id": 1,
+                                                        "reading_proficiency_level": 1,
+                                                        "writing_proficiency_level": 1,
+                                                        "speaking_proficiency_level": 2,
+                                                        "understand_proficiency_level": 2,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "language_title": "বাংলা",
+                                                        "language_title_en": "Bengali"
+                                                    }
+                                                ],
+                                                "skills": [],
+                                                "youth_educations": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "education_level_id": 0,
+                                                        "exam_degree_id": null,
+                                                        "exam_degree_name": null,
+                                                        "exam_degree_name_en": null,
+                                                        "major_or_concentration": null,
+                                                        "major_or_concentration_en": null,
+                                                        "edu_group_id": null,
+                                                        "edu_board_id": null,
+                                                        "institute_name": "",
+                                                        "institute_name_en": null,
+                                                        "is_foreign_institute": 0,
+                                                        "foreign_institute_country_id": null,
+                                                        "result": null,
+                                                        "marks_in_percentage": null,
+                                                        "cgpa_scale": null,
+                                                        "cgpa": null,
+                                                        "year_of_passing": null,
+                                                        "duration": null,
+                                                        "achievements": null,
+                                                        "achievements_en": null,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "expected_year_of_passing": null,
+                                                        "exam_degree_title": null,
+                                                        "exam_degree_title_en": null,
+                                                        "edu_group_title": null,
+                                                        "edu_group_title_en": null,
+                                                        "edu_board_title": null,
+                                                        "edu_board_title_en": null,
+                                                        "education_level_title": null,
+                                                        "education_level_title_en": null
+                                                    }
+                                                ],
+                                                "youth_job_experiences": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "employment_type_id": 1,
+                                                        "company_name": "Rosenbaum PLC",
+                                                        "company_name_en": "Rosenbaum PLC",
+                                                        "position": "Biologist",
+                                                        "position_en": "Biologist",
+                                                        "location": "252 Donnelly Spurs",
+                                                        "location_en": "252 Donnelly Spurs",
+                                                        "job_responsibilities": "Gas Processing Plant Operator",
+                                                        "job_responsibilities_en": "Gas Processing Plant Operator",
+                                                        "start_date": "2013-10-14T00:00:00.000000Z",
+                                                        "end_date": "2020-03-16T00:00:00.000000Z",
+                                                        "is_currently_working": 0,
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null,
+                                                        "area_of_experiences": [],
+                                                        "area_of_businesses": []
+                                                    }
+                                                ],
+                                                "youth_certifications": [
+                                                    {
+                                                        "id": 1,
+                                                        "youth_id": 1,
+                                                        "certification_name": "Boris Hintz",
+                                                        "certification_name_en": "Boris Hintz",
+                                                        "institute_name": "Meredith Hill",
+                                                        "institute_name_en": "Meredith Hill",
+                                                        "location": "43866 Bradtke Burgs Suite 211",
+                                                        "location_en": "17529 Kunze Island Apt. 419",
+                                                        "start_date": "1978-09-02T00:00:00.000000Z",
+                                                        "end_date": "1978-09-03T00:00:00.000000Z",
+                                                        "certificate_file_path": "Boris Hintz",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "youth_id": 1,
+                                                        "certification_name": "Adriana Sipes",
+                                                        "certification_name_en": "Adriana Sipes",
+                                                        "institute_name": "Prof. Rodger Durgan",
+                                                        "institute_name_en": "Prof. Rodger Durgan",
+                                                        "location": "362 Amely Union",
+                                                        "location_en": "8562 Richie Lock Apt. 563",
+                                                        "start_date": "1982-10-30T00:00:00.000000Z",
+                                                        "end_date": "1982-10-31T00:00:00.000000Z",
+                                                        "certificate_file_path": "Adriana Sipes",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_portfolios": [
+
+                                                    {
+                                                        "id": 4,
+                                                        "youth_id": 1,
+                                                        "title": "Mail Machine Operator",
+                                                        "title_en": "Mail Machine Operator",
+                                                        "description": "Sed quia nemo nihil .",
+                                                        "description_en": "Sed quia nemo nihil non ut .",
+                                                        "file_path": "C:\\Users\\HP\\AppData\\Local\\Temp\\fak401A.tmp",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 5,
+                                                        "youth_id": 1,
+                                                        "title": "Forming Machine Operator",
+                                                        "title_en": "Forming Machine Operator",
+                                                        "description": "Neque quia dolore accusantium commodi .",
+                                                        "description_en": "Neque quia dolore accusantium commodi nostrum .",
+                                                        "file_path": "C:\\Users\\HP\\AppData\\Local\\Temp\\fak401B.tmp",
+                                                        "created_at": "2022-02-02T07:58:17.000000Z",
+                                                        "updated_at": "2022-02-02T07:58:17.000000Z",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_addresses": []
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/institute-dashboard-statistics": {
+            "get": {
+                "summary": "Get institute dashboard statistics",
+                "description": "API endpoint to get institute dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "Successfull",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "total_Enroll": 80,
+                                    "total_Course": 4,
+                                    "total_Batch": 72,
+                                    "total_running_students": 182,
+                                    "total_trainers": 18,
+                                    "total_Demand_From_Industry": 0,
+                                    "total_Certificate_Issue": 0,
+                                    "Total_Trending_Course": 0,
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Dashboard Statistics"
+                ]
+            }
+        },
+        "/public/institute-dashboard-statistics/{instituteId}": {
             "get": {
                 "summary": "Get institute dashboard statistics",
                 "description": "API endpoint to aGet institute dashboard statistics. A successful request response will show 200 HTTP status code",
@@ -4404,7 +5093,7 @@
                 ]
             }
         },
-        "/institute-dashboard-statistics": {
+        "/public/institute-dashboard-statistics": {
             "get": {
                 "summary": "Get institute dashboard statistics",
                 "description": "API endpoint to get institute dashboard statistics. A successful request response will show 200 HTTP status code",
@@ -4435,10 +5124,9 @@
                 "tags": [
                     "Dashboard Statistics"
                 ]
-
             }
         },
-        "/demanded-courses/{instituteId}": {
+        "/public/demanded-courses/{instituteId}": {
             "get": {
                 "summary": "Get demanded courses",
                 "description": "API endpoint to get demanded courses. A successful request response will show 200 HTTP status code",
@@ -4452,7 +5140,7 @@
                         "description": "successfull",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": [
                                         {
                                             "Value": 20,
@@ -4495,7 +5183,7 @@
                         "description": "Successfull",
                         "content": {
                             "application/json": {
-                                "example":{}
+                                "example": {}
                             }
                         }
                     }
@@ -4503,7 +5191,6 @@
                 "tags": [
                     "Demanded Courses"
                 ]
-
             }
         }
     },
@@ -4516,6 +5203,20 @@
             }
         },
         "schemas": {
+            "PayNow": {
+                "type": "object",
+                "properties": {
+                    "payment_gateway_type": {
+                        "type": "integer",
+                        "enum": [1,2,3,4,5],
+                        "description": "1=Ek-Pay"
+                    },
+                    "course_enrollment_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": ["payment_gateway_type","course_enrollment_id"]
+            },
             "batchAssign": {
                 "type": "object",
                 "description": "Assign batch to Course Enrollment",
@@ -4549,9 +5250,6 @@
                     "institute_id": {
                         "type": "integer"
                     },
-                    "code": {
-                        "type": "string"
-                    },
                     "description": {
                         "type": "string"
                     },
@@ -4571,7 +5269,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title"
                 ]
             },
@@ -4586,10 +5283,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -4709,7 +5402,6 @@
                 "required": [
                     "permission_sub_group_id",
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -4731,10 +5423,6 @@
                         "type": "integer",
                         "example": 1,
                         "description": "0 => Non Govt, 1 => Govt"
-                    },
-                    "code": {
-                        "type": "string",
-                        "maxLength": 150
                     },
                     "title": {
                         "type": "string",
@@ -4859,7 +5547,6 @@
                 },
                 "required": [
                     "institute_type_id",
-                    "code",
                     "loc_division_id",
                     "loc_district_id",
                     "title",
@@ -4870,6 +5557,101 @@
                     "contact_person_name",
                     "contact_person_mobile",
                     "contact_person_email",
+                    "contact_person_designation"
+                ]
+            },
+            "institutesAdminUpdate": {
+                "type": "object",
+                "description": "Institutes management Service",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "maxLength": 1000,
+                        "minLength": 2
+                    },
+                    "title_en": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 2
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "location_latitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "location_longitude": {
+                        "type": "string",
+                        "maxLength": 50
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "name_of_the_office_head_designation_en": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "contact_person_name": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_name_en": {
+                        "type": "string",
+                        "maxLength": 250
+                    },
+                    "contact_person_designation": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "contact_person_designation_en": {
+                        "type": "string",
+                        "maxLength": 300
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "example": 1
+                    }
+                },
+                "required": [
+                    "loc_division_id",
+                    "loc_district_id",
+                    "title",
+                    "name_of_the_office_head",
+                    "name_of_the_office_head_designation",
+                    "contact_person_name",
                     "contact_person_designation"
                 ]
             },
@@ -5049,7 +5831,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title",
                     "center_location_type"
                 ]
@@ -5099,7 +5880,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "title"
                 ]
             },
@@ -5107,9 +5887,6 @@
                 "type": "object",
                 "description": "Course",
                 "properties": {
-                    "code": {
-                        "type": "string"
-                    },
                     "institute_id": {
                         "type": "integer"
                     },
@@ -5227,19 +6004,16 @@
                     }
                 },
                 "required": [
-                    "code",
-                    "institute_id",
                     "skills",
                     "title",
                     "level",
                     "language_medium"
                 ]
             },
-            "coursesUpdate":  {
+            "coursesUpdate": {
                 "type": "object",
                 "description": "Course",
                 "properties": {
-
                     "institute_id": {
                         "type": "integer"
                     },
@@ -5357,7 +6131,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "skills",
                     "title",
                     "level",
@@ -5501,7 +6274,6 @@
                     }
                 },
                 "required": [
-                    "institute_id",
                     "trainer_name",
                     "trainer_registration_number",
                     "email",
@@ -5861,27 +6633,30 @@
                     "physical_disability_status"
                 ]
             },
-            "VerficationCode": {
+            "CourseEnrollByVerification": {
                 "type": "object",
+                "description": "Verification code",
                 "properties": {
                     "verification_code": {
-                        "type": "integer"
-                    }
-                }
-            },
-            "PayNow": {
-                "type": "object",
-                "properties": {
-                    "payment_gateway_type": {
                         "type": "integer",
-                        "enum": [1,2,3,4,5],
-                        "description": "1=Ek-Pay"
-                    },
-                    "course_enrollment_id": {
+                        "minimum": 4
+                    }
+                },
+                "required": [
+                    "verification_code"
+                ]
+            },
+            "instituteRegistrationApproval": {
+                "type": "object",
+                "description": "instituteRegistrationApprovalSchema",
+                "properties": {
+                    "permission_sub_group_id": {
                         "type": "integer"
                     }
                 },
-                "required": ["payment_gateway_type","course_enrollment_id"]
+                "required": [
+                    "permission_sub_group_id"
+                ]
             },
             "address_info": {
                 "type": "object",
@@ -6066,7 +6841,8 @@
                 "required": true,
                 "name": "instituteId",
                 "schema": {
-                    "type": "integer"
+                    "type": "integer",
+                    "example": "1"
                 }
             },
             "institute_type_id": {
@@ -6443,6 +7219,16 @@
             },
             "courseId": {
                 "name": "courseId",
+                "in": "path",
+                "description": "course id to get training centers with batches",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "courseEnrollmentId": {
+                "name": "id",
                 "in": "path",
                 "description": "course id to get training centers with batches",
                 "required": true,

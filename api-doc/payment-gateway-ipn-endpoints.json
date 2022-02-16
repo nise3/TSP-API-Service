@@ -1,0 +1,125 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Payment Gateway IPN Endpoints",
+        "description": "Payment Gateway IPN Endpoints",
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://nise3-institute.default/api/v1"
+        },
+        {
+            "url": "http://localhost:8001"
+        }
+    ],
+    "security": [
+        {
+            "default": []
+        }
+    ],
+    "paths": {
+        "/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}": {
+            "post": {
+                "summary": "Endpoint to Receive Payment Acknowledgement from EkPage Payment Gateway",
+                "parameters": [
+                    {
+                        "name": "secretToken",
+                        "in": "path",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ],
+                "x-auth-type": "None",
+                "x-throttling-tier": null,
+                "x-wso2-disable-security": true,
+                "x-wso2-application-security": {
+                    "security-types": [
+                    ],
+                    "optional": true
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {},
+        "parameters": {},
+        "securitySchemes": {
+            "default": {
+                "type": "oauth2",
+                "flows": {
+                    "implicit": {
+                        "authorizationUrl": "https://test.com",
+                        "scopes": {}
+                    }
+                }
+            }
+        }
+    },
+    "x-wso2-disable-security": true,
+    "x-wso2-auth-header": "Authorization",
+    "x-wso2-cors": {
+        "corsConfigurationEnabled": false,
+        "accessControlAllowOrigins": [
+            "*"
+        ],
+        "accessControlAllowCredentials": false,
+        "accessControlAllowHeaders": [
+            "authorization",
+            "token",
+            "User-Token",
+            "Domain",
+            "Access-Control-Allow-Origin",
+            "Content-Type",
+            "SOAPAction",
+            "apikey",
+            "Internal-Key"
+        ],
+        "accessControlAllowMethods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE",
+            "PATCH",
+            "OPTIONS"
+        ]
+    },
+    "x-wso2-production-endpoints": {
+        "urls": [
+            "http://nise3-institute.default/api/v1"
+        ],
+        "type": "http"
+    },
+    "x-wso2-sandbox-endpoints": {
+        "urls": [
+            "http://nise3-institute.default/api/v1"
+        ],
+        "type": "http"
+    },
+    "x-wso2-basePath": "/payment-gateway-ipn/1.0.0",
+    "x-wso2-transports": [
+        "http",
+        "https"
+    ],
+    "x-wso2-response-cache": {
+        "enabled": false,
+        "cacheTimeoutInSeconds": 300
+    }
+}

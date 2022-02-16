@@ -21,7 +21,7 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property string mobile
  * @property string profile_pic
  * @property int $role_id
- * @property int $user_type
+ * @property int user_type
  * @property int organization_id
  * @property int institute_id
  * @property int loc_division_id
@@ -29,6 +29,7 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property int loc_upazila_id
  * @property int branch_id
  * @property int training_center_id
+ * @property int industry_association_id
  * @property int $row_status
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -61,33 +62,44 @@ class User extends BaseModel implements
         return $this;
     }
 
-    public function hasPermission($key): bool
+    public function hasPermission($ability): bool
     {
         if (!(!empty($this->permissions) && $this->permissions instanceof Collection)) {
             return false;
         }
 
-        return $this->permissions->contains($key);
+        return $this->permissions->contains($ability);
     }
 
-    public static function isInstituteUser(): bool
+    public function isSystemUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+        return $this->user_type == BaseModel::SYSTEM_USER_TYPE;
     }
 
-    public static function isTrainingCenterUser(): bool
+    public function isOrganizationUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->training_center_id;
+        return $this->user_type == BaseModel::ORGANIZATION_USER_TYPE && $this->organization_id;
     }
 
-    public static function isBranchUser(): bool
+    public function isInstituteUser(): bool
     {
-        $authUser = Auth::user();
-        return $authUser && $authUser->branch_id && $authUser->training_center_id == null;
+        return $this->user_type == BaseModel::INSTITUTE_USER_TYPE && $this->institute_id;
     }
 
+    public function isIndustryAssociationUser(): bool
+    {
+        return $this->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $this->industry_association_id;
+    }
+
+    public function isTrainingCenterUser(): bool
+    {
+        return $this->isInstituteUser() && $this->training_center_id;
+    }
+
+    public function isBranchUser(): bool
+    {
+        return $this->isInstituteUser() && $this->branch_id && $this->training_center_id == null;
+    }
 
 
 }

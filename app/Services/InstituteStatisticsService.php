@@ -10,64 +10,137 @@ use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use JetBrains\PhpStorm\ArrayShape;
 
 
 class InstituteStatisticsService
 {
 
 
-    public function getTotalCourseEnrollments(): int
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalCourseEnrollments(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-       return CourseEnrollment::join("courses", function ($join) {
+
+        $builder = CourseEnrollment::join("courses", function ($join) {
             $join->on('courses.id', '=', 'course_enrollments.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('course_enrollments.id');
-    }
+        });
 
-    public function getTotalCourses(): int
-    {
-        return Course::acl()->count('id');
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+            if ($queryAttributeValue) {
+                $builder->where('course_enrollments.' . $queryAttribute, $queryAttributeValue);
+            } else {
+                $builder->acl();
+            }
+        }
+
+        return $builder->count('course_enrollments.id');
     }
 
     /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalCourses(int $instituteId = null, bool $isNiseStatistics = false): int
+    {
+        $builder = Course::query();
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+            if ($queryAttributeValue) {
+                $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+            } else {
+                $builder->acl();
+            }
+        }
+        return $builder->count('id');
+    }
+
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
      * @return Collection|array
      */
-    public function getDemandedCourses(): Collection|array
+    public function getDemandedCourses(int $instituteId = null, bool $isNiseStatistics = false): Collection|array
     {
-        /** @var CourseEnrollment $courseEnrollmentBuilder */
-        $courseEnrollmentBuilder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
+        $builder = CourseEnrollment::select(DB::raw('count(DISTINCT(course_enrollments.id)) as value , courses.title as name '))
             ->join('courses', function ($join) {
                 $join->on('courses.id', '=', 'course_enrollments.course_id')
-                ->whereNull('courses.deleted_at');
+                    ->whereNull('courses.deleted_at');
             });
-        $courseEnrollmentBuilder->acl();
 
-        return $courseEnrollmentBuilder->groupby('course_enrollments.course_id')
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+            if ($queryAttributeValue) {
+                $builder->where('course_enrollments.' . $queryAttribute, $queryAttributeValue);
+            } else {
+                $builder->acl();
+            }
+        }
+
+        return $builder->groupby('course_enrollments.course_id')
             ->orderby('value', 'DESC')
             ->limit(6)
             ->get();
     }
 
-    public function getTotalBatches(): int
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalBatches(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-        return Batch::join('courses', function ($join) {
+        $builder = Batch::join('courses', function ($join) {
             $join->on('courses.id', '=', 'batches.course_id')
                 ->whereNull('courses.deleted_at');
-        })->acl()->count('batches.id');
+        });
 
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+            if ($queryAttributeValue) {
+                $builder->where('batches.' . $queryAttribute, $queryAttributeValue);
+            } else {
+                $builder->acl();
+            }
+        }
+        return $builder->count('batches.id');
     }
 
-    public function getTotalRunningStudents(): int
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalRunningStudents(int $instituteId = null, bool $isNiseStatistics = false): int
     {
         $currentDate = Carbon::now();
-        $batches = Batch::join('courses', function ($join) {
+        $builder = Batch::join('courses', function ($join) {
             $join->on('courses.id', '=', 'batches.course_id')
                 ->whereNull('courses.deleted_at');
-            })
+        })
             ->whereDate('batch_start_date', '<=', $currentDate)
-            ->whereDate('batch_end_date', '>=', $currentDate)
-            ->acl()
-            ->get();
+            ->whereDate('batch_end_date', '>=', $currentDate);
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+            if ($queryAttributeValue) {
+                $builder->where('batches.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+        $batches = $builder->get();
 
         $totalRunningStudent = 0;
         foreach ($batches as $batch) {
@@ -76,49 +149,178 @@ class InstituteStatisticsService
         return $totalRunningStudent;
     }
 
-    public function getTotalTrainers(): int
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalTrainers(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-        return Trainer::acl()->count('id');
+        $builder = Trainer::query();
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+            if ($queryAttributeValue) {
+                $builder->where('trainers.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+        return $builder->count('id');
     }
 
-    public function getTotalTrainingCenters(): int
+    /**
+     * @param int|null $instituteId
+     * @param bool $isNiseStatistics
+     * @return int
+     */
+    public function getTotalTrainingCenters(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-        $trainingCenterBuilder = TrainingCenter::query();
-        $trainingCenterBuilder->acl();
-        return $trainingCenterBuilder->count('id');
+        $builder = TrainingCenter::query();
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+            if ($queryAttributeValue) {
+                $builder->where('training_centers.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+        return $builder->count('id');
 
     }
 
 
+    /**
+     * @return int
+     */
     public function getTotalDemandFromIndustry(): int
     {
         return 0;
     }
 
+    /**
+     * @return int
+     */
     public function getTotalCertificateIssue(): int
     {
         return 0;
     }
 
-    public function getTotalTrendingCourse(): int
+    /**
+     * @param int|null $instituteId
+     * @return int
+     */
+    public function getTotalTrendingCourse(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-        return Course::acl()->count('id');
+        $builder = Course::query();
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
+
+            if ($queryAttributeValue) {
+                $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+        return $builder->count('id');
     }
 
 
-    public function getDashboardStatisticalData(): array
+    /**
+     * @param int|null $instituteId
+     * @return array
+     */
+    public function getDashboardStatisticalData(int $instituteId = null): array
     {
-        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments();
-        $dashboardStatData ['total_course'] = $this->getTotalCourses();
-        $dashboardStatData ['total_batch'] = $this->getTotalBatches();
-        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents();
-        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers();
-        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters();
+        $dashboardStatData ['total_enroll'] = $this->getTotalCourseEnrollments($instituteId);
+        $dashboardStatData ['total_course'] = $this->getTotalCourses($instituteId);
+        $dashboardStatData ['total_batch'] = $this->getTotalBatches($instituteId);
+        $dashboardStatData ['total_running_students'] = $this->getTotalRunningStudents($instituteId);
+        $dashboardStatData ['total_trainers'] = $this->getTotalTrainers($instituteId);
+        $dashboardStatData ['total_training_centers'] = $this->getTotalTrainingCenters($instituteId);
         $dashboardStatData ['total_demand_from_industry'] = $this->getTotalDemandFromIndustry();
         $dashboardStatData ['total_certificate_issue'] = $this->getTotalCertificateIssue();
-        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse();
-        return $dashboardStatData;
+        $dashboardStatData ['total_trending_course'] = $this->getTotalTrendingCourse($instituteId);
 
+        return $dashboardStatData;
+    }
+
+    private function getPopularCoursesWithEnrollments(bool $isNiseStatistics = false): array
+    {
+        $builder = Course::query();
+        $builder->select([
+            "courses.title as course_title",
+            "courses.title_en as course_title_en"
+        ]);
+
+        $builder->selectRaw('COUNT(course_enrollments.id) AS total_enrollments');
+        $builder->join('course_enrollments', 'course_enrollments.course_id', "courses.id");
+        $builder->groupBy('course_enrollments.course_id');
+        $builder->orderBy('total_enrollments', "DESC");
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain();
+            if ($queryAttributeValue) {
+                $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+
+        return $builder->limit(4)->get()->toArray();
+    }
+
+    #[ArrayShape(["total_popular_courses" => "array", "total_skill_development_center" => "array"])]
+    public function getNiseStatistics(): array
+    {
+        return [
+            "total_popular_courses" => $this->getPopularCoursesWithEnrollments(true),
+            "total_skill_development_center" => $this->getTotalTrainingCenterWithTrained(true)
+        ];
+    }
+
+    private static function querySelectorForIndustryAssociationOrInstituteForPublicDomain(int $instituteId = null): array
+    {
+
+        $queryAttribute = "institute_id";
+        $queryAttributeValue = null;
+
+        if (request()->has('industry_association_id')) {
+            $queryAttribute = "industry_association_id";
+            $queryAttributeValue = request()->offsetGet('industry_association_id');
+        } else if (request()->has('institute_id') || $instituteId) {
+            $queryAttributeValue = !empty($instituteId) ? $instituteId : request()->offsetGet('institute_id');
+        }
+
+        return [
+            $queryAttribute,
+            $queryAttributeValue
+        ];
+    }
+
+    private function getTotalTrainingCenterWithTrained(bool $isNiseStatistics = false): array
+    {
+        $builder = CourseEnrollment::query();
+        $builder->select([
+            "training_centers.title as training_center_title",
+            "training_centers.title_en as training_center_title_en",
+        ]);
+
+        $builder->selectRaw('COUNT(course_enrollments.id) AS total_trained');
+        $builder->join('training_centers', 'course_enrollments.training_center_id', "training_centers.id");
+        $builder->groupBy('course_enrollments.training_center_id');
+        $builder->orderBy('total_trained', "DESC");
+
+        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
+            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain();
+            if ($queryAttributeValue) {
+                $builder->where('courses.' . $queryAttribute, $queryAttributeValue);
+            } else { // for private auth api
+                $builder->acl();
+            }
+        }
+
+        return $builder->limit(4)->get()->toArray();
     }
 
 }

@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Services\BranchService;
-use Exception;
+use App\Services\CommonServices\CodeGeneratorService;
+use App\Services\TrainingCenterService;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -45,11 +48,13 @@ class BranchController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', Branch::class);
+
         $filter = $this->branchService->filterValidator($request)->validate();
 
         $response = $this->branchService->getBranchList($filter, $this->startTime);
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -59,10 +64,12 @@ class BranchController extends Controller
      */
     public function read($id): JsonResponse
     {
-        $data = $this->branchService->getOneBranch($id, $this->startTime);
+        $branch = $this->branchService->getOneBranch($id, $this->startTime);
+
+        $this->authorize('view', $branch);
 
         $response = [
-            "data" => $data ?: [],
+            "data" => $branch,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -70,7 +77,7 @@ class BranchController extends Controller
             ]
         ];
 
-        return Response::json($response,ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
 
@@ -83,10 +90,16 @@ class BranchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Branch::class);
         $validatedData = $this->branchService->validator($request)->validate();
-        $data = $this->branchService->store($validatedData);
+        $validatedData['code'] = CodeGeneratorService::getBranchCode($validatedData['institute_id']);
+
+        $branch = $this->branchService->store($validatedData);
+
+        /** Create a default training center in time of Branch Create */
+        app(TrainingCenterService::class)->createDefaultTrainingCenter($branch);
         $response = [
-            'data' => $data ?: [],
+            'data' => $branch,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -110,16 +123,18 @@ class BranchController extends Controller
     {
         $branch = Branch::findOrFail($id);
 
+        $this->authorize('update', $branch);
+
         $validated = $this->branchService->validator($request)->validate();
 
         $data = $this->branchService->update($branch, $validated);
 
         $response = [
-            'data' => $data ?: [],
+            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Brnach Update successfully.",
+                "message" => "Branch Update successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -129,23 +144,36 @@ class BranchController extends Controller
 
 
     /**
-     *  *  remove the specified resource from storage
+     * Remove the specified resource from storage
      * @param int $id
      * @return JsonResponse
+     * @throws RequestException|Throwable
      */
     public function destroy(int $id): JsonResponse
     {
         $branch = Branch::findOrFail($id);
 
-        $this->branchService->destroy($branch);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Branch deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $this->authorize('delete', $branch);
+
+        DB::beginTransaction();
+        try {
+            $this->branchService->destroy($branch);
+            $this->branchService->branchUserDestroy($branch);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Branch deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
 
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -172,7 +200,8 @@ class BranchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {

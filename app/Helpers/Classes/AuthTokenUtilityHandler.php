@@ -18,40 +18,20 @@ class AuthTokenUtilityHandler
      */
     public function getIdpServerIdFromToken($data, bool $verify = false): mixed
     {
-        $sections = explode('.', $data);
-
-        throw_if((count($sections) < 3), AuthenticationException::class, 'Invalid number of sections of Auth Tokens (<3)', Response::HTTP_BAD_REQUEST);
-
-        list($header, $claims, $signature) = $sections;
-
-        preg_match("/['\"]sub['\"]:['\"](.*?)['\"][,]/", base64_decode($claims), $matches);
-
-        return count($matches) > 1 ? $matches[1] : "";
+        $payload = $this->decode($data);
+        return $payload->sub;
     }
     /**
      * @param $data
-     * @param bool $verify
+     * @param false $verify
      * @return mixed
-     * @throws \Throwable
+     * @throws Throwable
      */
-    private function decode($data, bool $verify = false): mixed
+    public function getIdpServerUserTypeFromToken($data, bool $verify = false): mixed
     {
-        $sections = explode('.', $data);
-        throw_if((count($sections) < 3), AuthenticationException::class, 'Invalid number of sections of Tokens (<3)',);
+        $payload = $this->decode($data);
 
-        list($header, $claims, $signature) = $sections;
-
-        $header = json_decode(base64_decode($header));
-        $claims = json_decode(base64_decode($claims));
-
-        $signature = json_decode(base64_decode($signature));
-        $key = $this->getJwtKey();
-
-        if ($verify) {
-            throw_if($this->verify($key, $header, $claims, $signature), AuthenticationException::class,'Signature could not be verified');
-        }
-
-        return $claims;
+        return $payload->user_type;
     }
 
     /**
@@ -68,5 +48,27 @@ class AuthTokenUtilityHandler
     private function verify($key, $header, $claims, $signature): bool
     {
         return true;
+    }
+
+
+    private function decode($token){
+
+        $tks = explode('.', $token);
+
+        throw_if((count($tks) < 3), AuthenticationException::class, 'Invalid number of sections of Tokens (<3)',);
+
+        list($header, $body, $signature) = $tks;
+        $input=$body;
+        $remainder = strlen($input) % 4;
+        if ($remainder) {
+            $padlen = 4 - $remainder;
+            $input .= str_repeat('=', $padlen);
+        }
+        $input = (base64_decode(strtr($input, '-_', '+/')));
+
+        $max_int_length = strlen((string) PHP_INT_MAX) - 1;
+        $json_without_bigints = preg_replace('/:\s*(-?\d{'.$max_int_length.',})/', ': "$1"', $input);
+
+        return json_decode($json_without_bigints);
     }
 }

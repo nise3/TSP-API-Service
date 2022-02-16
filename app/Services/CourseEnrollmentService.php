@@ -3,11 +3,12 @@
 
 namespace App\Services;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
-use App\Models\PaymentTransactionLogHistory;
+use App\Models\PaymentTransactionHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
 use App\Models\EnrollmentEducation;
@@ -15,8 +16,8 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
-use App\Models\Youth;
 use App\Services\CommonServices\SmsService;
+use App\Services\Payment\CourseEnrollmentPaymentService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Validation\Validator;
@@ -26,7 +27,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
@@ -43,6 +43,7 @@ class CourseEnrollmentService
     public function getCourseEnrollmentList(array $request, Carbon $startTime): array
     {
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $firstName = $request['first_name'] ?? "";
         $firstNameEn = $request['first_name_en'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -63,6 +64,7 @@ class CourseEnrollmentService
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
                 'course_enrollments.institute_id',
+                'course_enrollments.industry_association_id',
                 'course_enrollments.program_id',
                 'programs.title as program_title',
                 'programs.title_en as program_title_en',
@@ -99,6 +101,10 @@ class CourseEnrollmentService
 
         if (is_numeric($instituteId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+        }
+
+        if (is_numeric($industryAssociationId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.industry_association_id', $industryAssociationId);
         }
 
         $coursesEnrollmentBuilder->join("courses", function ($join) use ($rowStatus) {
@@ -274,7 +280,13 @@ class CourseEnrollmentService
         $courseEnrollment = app(CourseEnrollment::class);
 
         $course = Course::find($data['course_id']);
-        $data['institute_id'] = $course->institute_id;
+
+        if (!empty($course->institute_id)) {
+            $data['institute_id'] = $course->institute_id;
+        } elseif (!empty($course->industry_association_id)) {
+            $data['industry_association_id'] = $course->industry_association_id;
+        }
+
         $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
 
         $courseEnrollment->fill($data);
@@ -441,6 +453,7 @@ class CourseEnrollmentService
      */
     public function verifySMSCode(int $id, string $code): bool
     {
+        /** @var CourseEnrollment $courseEnrollment */
         $courseEnrollment = CourseEnrollment::where("id", $id)
             ->where("verification_code", $code)
             ->where("row_status", BaseModel::ROW_STATUS_PENDING)
@@ -454,6 +467,29 @@ class CourseEnrollmentService
         return false;
     }
 
+    public function isFreeCourse(int $id): int
+    {
+        /** @var CourseEnrollment $courseEnrollment */
+        $courseEnrollment = CourseEnrollment::where("id", $id)
+            ->where("row_status", BaseModel::ROW_STATUS_PENDING)
+            ->first();
+
+        $verificationSuccessStatus = 0;
+        if ($courseEnrollment) {
+
+            /** Course fee zero check for free course */
+            if ((doubleval($courseEnrollment->course->course_fee) == 0)) {
+                $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+                $courseEnrollment->payment_status = PaymentTransactionHistory::PAYMENT_SUCCESS;
+                $courseEnrollment->save();
+                $verificationSuccessStatus = 1;
+                app(CourseEnrollmentPaymentService::class)->confirmationMailAndSmsSend($courseEnrollment);
+            }
+
+        }
+        return $verificationSuccessStatus;
+    }
+
     /**
      * @param CourseEnrollment $courseEnrollment
      * @param string $code
@@ -462,13 +498,12 @@ class CourseEnrollmentService
      */
     public function sendSmsVerificationCode(CourseEnrollment $courseEnrollment, string $code): bool
     {
-        $mobile_number = $courseEnrollment->mobile;
+        $mobile = $courseEnrollment->mobile;
         $message = "Your Course Enrollment Verification code : " . $code;
-        if ($mobile_number) {
-            if (sms()->send($mobile_number, $message)->is_successful()) {
-                Log::info('Sms send after enrollment to number--->'.$mobile_number);
-                return true;
-            }
+        if ($mobile) {
+            app(SmsService::class)->sendSms($mobile, $message);
+            Log::info('Sms send after enrollment to number--->' . $mobile);
+            return true;
         }
         return false;
     }
@@ -515,7 +550,6 @@ class CourseEnrollmentService
                 'int',
                 Rule::in([BaseModel::TRUE, BaseModel::FALSE])
             ],
-            'institute_id' => 'nullable|int|gt:0',
             'course_id' => 'nullable|int|gt:0',
             'batch_id' => 'nullable|int|gt:0',
             'course_title' => 'nullable|string|min:2',
@@ -533,6 +567,8 @@ class CourseEnrollmentService
                 Rule::in(CourseEnrollment::ROW_STATUSES),
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
@@ -560,6 +596,10 @@ class CourseEnrollmentService
                 'required',
                 'int',
                 'min:1'
+            ],
+            'youth_code' => [
+                'required',
+                'string'
             ],
             'first_name' => [
                 'required',
@@ -591,10 +631,22 @@ class CourseEnrollmentService
                 'exists:courses,id,deleted_at,NULL',
                 'int',
                 'min:1',
-                'unique_with:course_enrollments,youth_id,deleted_at',
+                //'unique_with:course_enrollments,youth_id,deleted_at,
+                function ($attr, $value, $failed) use ($data) {
+                    $courseEnrollments = CourseEnrollment::where('youth_id', $data['youth_id'])->where('course_id', $value)->get();
+                    foreach ($courseEnrollments as $courseEnrollment) {
+                        if ($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_CREATE_PENDING ||
+                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_UPDATE_PENDING ||
+                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_DESTROY_PENDING) {
+                            $failed("You already enrolled in this course but enrollment process is in Pending status");
+                        } else if ($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_COMMIT) {
+                            $failed("You already enrolled in this course!");
+                        }
+                    }
+                }
             ],
             'training_center_id' => [
-                'required',
+                'nullable',
                 'exists:training_centers,id,deleted_at,NULL',
                 'int',
                 'min:1'
@@ -1245,6 +1297,88 @@ class CourseEnrollmentService
     }
 
     /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getInstituteTraineeYouths(array $request, Carbon $startTime): array
+    {
+        $instituteId = $request['institute_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
+        $coursesEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'course_enrollments.institute_id',
+                'institutes.title as institute_title',
+                'institutes.title_en as institute_title_en',
+                'course_enrollments.row_status',
+                'course_enrollments.created_at',
+                'course_enrollments.updated_at'
+            ]
+        );
+
+        $coursesEnrollmentBuilder->whereNotNull('course_enrollments.batch_id');
+
+        if (!empty($instituteId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.institute_id', $instituteId);
+        }
+
+        $coursesEnrollmentBuilder->join("institutes", function ($join) {
+            $join->on('course_enrollments.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
+        $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
+
+        if (is_numeric($rowStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        /** @var Collection $courseEnrollments */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courseEnrollments = $coursesEnrollmentBuilder->paginate($pageSize);
+            $paginateData = (object)$courseEnrollments->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courseEnrollments = $coursesEnrollmentBuilder->get();
+        }
+
+        $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
+        if ($youthIds) {
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+            $indexedYouths = [];
+
+            foreach ($youthProfiles as $item) {
+                $indexedYouths[$item['id']] = $item;
+            }
+
+            foreach ($courseEnrollments as $courseEnrollment) {
+                $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+            }
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
+    /**
      * @param Request $request
      * return use Illuminate\Support\Facades\Validator;
      * @return Validator
@@ -1287,12 +1421,58 @@ class CourseEnrollmentService
      * return use Illuminate\Support\Facades\Validator;
      * @return Validator
      */
+    public function instituteTraineeYouthsFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
+        ];
+
+        $requestData = $request->all();
+
+        $rules = [
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL'
+            ],
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'nullable',
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in(CourseEnrollment::ROW_STATUSES),
+            ]
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
+    }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return Validator
+     */
     public function batchAssignmentValidator(Request $request): Validator
     {
         $requestData = $request->all();
 
         $rules = [
-            'enrollment_id' => ['required', 'int', 'min:1', 'exists:course_enrollments,id,deleted_at,NULL'],
+            'enrollment_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:course_enrollments,id,deleted_at,NULL'
+            ],
             'batch_id' => [
                 'required',
                 'int',
@@ -1330,21 +1510,25 @@ class CourseEnrollmentService
 
     /**
      * @param array $data
+     * @param Batch $batch
      * @return mixed
+     * @throws Throwable
      */
-    public function assignBatch(array $data): CourseEnrollment
+    public function assignBatch(array $data, Batch $batch): CourseEnrollment
     {
         DB::beginTransaction();
         try {
             $courseEnrollment = CourseEnrollment::findOrFail($data['enrollment_id']);
             $courseEnrollment->batch_id = $data['batch_id'];
+            $courseEnrollment->training_center_id = $batch->training_center_id;
+            $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_UPDATE_PENDING;
+            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
+            $courseEnrollment->save();
 
             $batch = Batch::find($data['batch_id']);
             $batch['available_seats'] = $batch['available_seats'] - 1;
             $batch->save();
 
-            $courseEnrollment->row_status = BaseModel::ROW_STATUS_ACTIVE;
-            $courseEnrollment->save();
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();

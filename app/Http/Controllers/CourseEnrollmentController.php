@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
+use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use App\Services\CourseEnrollmentService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
+use App\Events\CourseEnrollment\CourseEnrollmentEvent;
 
 class CourseEnrollmentController extends Controller
 {
@@ -70,6 +72,18 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function getInstituteTraineeYouths(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->instituteTraineeYouthsFilterValidator($request)->validate();
+        $response = $this->courseEnrollService->getInstituteTraineeYouths($validated, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 
     /**
      * Display the specified resource
@@ -95,7 +109,8 @@ class CourseEnrollmentController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException|RequestException
+     * @throws ValidationException
+     * @throws Exception
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
@@ -117,7 +132,10 @@ class CourseEnrollmentController extends Controller
             unset($validated['email']); // youth can't update email. So remove this from array
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
 
-            $this->updateYouthProfileAfterEnrollment($validated);
+            /** Trigger EVENT to Youth Service via RabbitMQ  */
+            $validated['enrollment_id'] = $courseEnroll->id;
+            event(new CourseEnrollmentEvent($validated));
+
             $response = [
                 "data" => $courseEnroll,
                 '_response_status' => [
@@ -140,11 +158,17 @@ class CourseEnrollmentController extends Controller
      */
     public function verifyCode(Request $request, int $id): JsonResponse
     {
+        Log::info("veryCodePayload" . json_encode($request->all()));
+
         $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
+        Log::info("validated data: " . json_encode($validated));
+
         $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
         $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
-
         $response = [
+            "data" => [
+                "free_course" => $this->courseEnrollService->isFreeCourse($id)
+            ],
             '_response_status' => [
                 "success" => $verifySmsStatus,
                 "code" => $statusCode,
@@ -186,8 +210,42 @@ class CourseEnrollmentController extends Controller
         DB::beginTransaction();
         try {
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
-            $courseEnrollment = $this->courseEnrollService->assignBatch($validated);
-            $this->createCalenderEventsForBatchAssign($courseEnrollment);
+            $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
+
+            $batch = Batch::findOrFail($validated['batch_id']);
+            $this->courseEnrollService->assignBatch($validated, $batch);
+
+            /** Remove SagaStatusGlobalScope as in above assignBatch() method already saga_status has been changed to UPDATE_PENDING */
+            $courseEnrollmentDataAfterUpdate = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($validated['enrollment_id']);
+
+            $calenderEventPayload = [
+                'batch_title' => $batch->title,
+                'batch_title_en' => $batch->title_en,
+                'youth_id' => $courseEnrollmentDataAfterUpdate->youth_id,
+                'enrollment_id' => $courseEnrollmentDataAfterUpdate->id,
+                'batch_id' => $batch->id,
+                'batch_start_date' => $batch->batch_start_date,
+                'batch_end_date' => $batch->batch_end_date,
+                'saga_previous_data' => $courseEnrollmentDataBeforeUpdate->toArray()
+            ];
+
+            /** Trigger Event to Cms Service via RabbitMQ  */
+            event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
+
+            /** Mail send */
+            $to = array($courseEnrollmentDataAfterUpdate->email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "Batch Assignment Information";
+            $message = "Congratulation,You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** Sms send */
+            $recipient = $courseEnrollmentDataAfterUpdate->mobile;
+            $smsMessage = "You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
 
             $response = [
                 '_response_status' => [
@@ -207,26 +265,6 @@ class CourseEnrollmentController extends Controller
 
     }
 
-    private function createCalenderEventsForBatchAssign(CourseEnrollment $courseEnrollment)
-    {
-        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'create-event-after-batch-assign';
-        $data = [
-            "batch" => Batch::find($courseEnrollment->batch_id),
-            "youth_id" => $courseEnrollment->youth_id
-        ];
-
-        return Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $data)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
-    }
 
     /**
      * @param Request $request
@@ -248,27 +286,5 @@ class CourseEnrollmentController extends Controller
         ];
 
         return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-    /**
-     * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
-     * @throws RequestException
-     */
-    public function updateYouthProfileAfterEnrollment(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
-    {
-        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'youth-update-after-course-enrollment';
-
-        return Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
-        ])
-            ->post($url, $data)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
-            })
-            ->json();
     }
 }

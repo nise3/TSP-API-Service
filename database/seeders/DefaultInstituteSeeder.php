@@ -10,12 +10,13 @@ use App\Models\Program;
 use App\Models\Skill;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\InstituteService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-class InstituteSeeder extends Seeder
+class DefaultInstituteSeeder extends Seeder
 {
     const createInstitute = true;
     const createIdpUser = false;
@@ -25,6 +26,7 @@ class InstituteSeeder extends Seeder
      *
      * @return void
      * @throws \Exception
+     * @throws \Throwable
      */
     public function run()
     {
@@ -71,31 +73,34 @@ class InstituteSeeder extends Seeder
             Branch::factory()
                 ->state([
                     'institute_id' => $institute->id,
+                    "code" => CodeGeneratorService::getBranchCode($institute->id)
                 ])
-                ->count(3)
+                ->count(1)
                 ->create();
 
             $trainingCenters = TrainingCenter::factory()
                 ->state([
                     'institute_id' => $institute->id,
+                    'code' => CodeGeneratorService::getTrainingCenterCode($institute->id)
                 ])
-                ->count(6)
+                ->count(1)
                 ->create();
 
             $programs = Program::factory()
                 ->state([
                     'institute_id' => $institute->id,
                 ])
-                ->count(2)
+                ->count(1)
                 ->create();
 
             foreach ($programs as $program) {
                 $courses = Course::factory()
                     ->state([
                         'institute_id' => $institute->id,
-                        'program_id' => $program->id
+                        'program_id' => $program->id,
+                        "code" => CodeGeneratorService::getCourseCode($program->institute_id)
                     ])
-                    ->count(2)
+                    ->count(1)
                     ->create();
 
                 foreach ($courses as $course) {
@@ -113,7 +118,7 @@ class InstituteSeeder extends Seeder
                 $trainers = Trainer::factory()->state([
                     'institute_id' => $institute->id,
                     'training_center_id' => $trainingCenter->id
-                ])->count(3)->create();
+                ])->count(1)->create();
 
                 $trainerIds = $trainers->pluck('id')->toArray();
                 $trainerIdsLen = count($trainerIds);
@@ -123,7 +128,8 @@ class InstituteSeeder extends Seeder
                     $batch = Batch::factory()->state([
                         'institute_id' => $institute->id,
                         'training_center_id' => $trainingCenter->id,
-                        'course_id' => $course->id
+                        'course_id' => $course->id,
+                        "code" => CodeGeneratorService::getBatchCode($course->id)
                     ])->create();
 
                     $index = random_int(0, $trainerIdsLen - 1);
@@ -131,7 +137,7 @@ class InstituteSeeder extends Seeder
                     $batch->trainers()->attach($trainerId);
                 }
 
-                $trainingCenter->skills()->sync($skillIdCollection->random(3)->toArray());
+                $trainingCenter->skills()->sync($skillIdCollection->random(1)->toArray());
             }
         }
 

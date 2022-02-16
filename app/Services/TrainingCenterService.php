@@ -2,16 +2,26 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
+use App\Models\Institute;
 use App\Models\Skill;
+use App\Models\User;
+use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class TrainingCenterService
@@ -56,10 +66,13 @@ class TrainingCenterService
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institutetitle',
+            'institutes.title as institute_title',
+            'training_centers.industry_association_id',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
+            'training_centers.location_latitude',
+            'training_centers.location_longitude',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -70,7 +83,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ])->acl();
 
-        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -125,7 +138,6 @@ class TrainingCenterService
 
         $trainingCentersBuilder->groupBy('training_centers.id');
 
-
         /** @var Collection $trainingCentersBuilder */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
@@ -168,12 +180,14 @@ class TrainingCenterService
         $skillIds = $request['skill_ids'] ?? [];
         $locDistrictId = $request['loc_district_id'] ?? "";
         $locUpzilaId = $request['loc_upazila_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
 
 
         /** @var TrainingCenter|Builder $trainingCentersBuilder */
         $trainingCentersBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
+            'training_centers.industry_association_id',
             'training_centers.title_en',
             'training_centers.title',
             'training_centers.loc_division_id',
@@ -187,10 +201,12 @@ class TrainingCenterService
             'loc_upazilas.title_en as upazila_title_en',
             'training_centers.institute_id',
             'institutes.title_en as institute_title_en',
-            'institutes.title as institutetitle',
+            'institutes.title as institute_title',
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
+            'training_centers.location_latitude',
+            'training_centers.location_longitude',
             'training_centers.address',
             'training_centers.google_map_src',
             'training_centers.row_status',
@@ -201,7 +217,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ]);
 
-        $trainingCentersBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $trainingCentersBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
             /*if (is_numeric($rowStatus)) {
@@ -237,6 +253,9 @@ class TrainingCenterService
         }
         if (is_numeric($branchId)) {
             $trainingCentersBuilder->where('training_centers.branch_id', '=', $branchId);
+        }
+        if (is_numeric($industryAssociationId)) {
+            $trainingCentersBuilder->where('training_centers.industry_association_id', '=', $industryAssociationId);
         }
         if (is_numeric($rowStatus)) {
             $trainingCentersBuilder->where('training_centers.row_status', '=', $rowStatus);
@@ -297,6 +316,7 @@ class TrainingCenterService
         $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.center_location_type',
+            'training_centers.industry_association_id',
             'training_centers.title_en',
             'training_centers.title',
             'training_centers.loc_division_id',
@@ -314,6 +334,8 @@ class TrainingCenterService
             'training_centers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
+            'training_centers.location_latitude',
+            'training_centers.location_longitude',
             'training_centers.address',
             'training_centers.address_en',
             'training_centers.google_map_src',
@@ -325,7 +347,7 @@ class TrainingCenterService
             'training_centers.deleted_at',
         ]);
 
-        $trainingCenterBuilder->join("institutes", function ($join) {
+        $trainingCenterBuilder->leftJoin("institutes", function ($join) {
             $join->on('training_centers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -407,6 +429,68 @@ class TrainingCenterService
         return $trainingCenter->delete();
     }
 
+
+    /**
+     * @param TrainingCenter $trainingCenter
+     * @return mixed
+     * @throws RequestException
+     */
+    public function trainingCenterUserDestroy(TrainingCenter $trainingCenter): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'training_center_id' => $trainingCenter->id,
+            'institute_id' => $trainingCenter->institute_id
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug')
+            ])
+            ->timeout(5)
+            ->delete($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function createDefaultTrainingCenter(BaseModel $model)
+    {
+        $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_INSTITUTE_PREMISES;
+        $instituteId = $model->id;
+        $branchId = null;
+        if (isset($model->institute_id)) {
+            $centerLocationType = TrainingCenter::CENTER_LOCATION_TYPE_BRANCH_PREMISES;
+            $instituteId = $model->institute_id;
+            $branchId = $model->id;
+        }
+        $trainingCenterPayload = [
+            'code' => CodeGeneratorService::getTrainingCenterCode($instituteId),
+            'institute_id' => $instituteId,
+            'branch_id' => $branchId,
+            'center_location_type' => $centerLocationType,
+            'title' => $model->title,
+            'title_en' => $model->title_en,
+            'loc_division_id' => $model->loc_division_id,
+            'loc_district_id' => $model->loc_district_id,
+            'loc_upazila_id' => $model->loc_upazila_id,
+            'location_latitude' => $model->location_latitude,
+            'location_longitude' => $model->location_latitude,
+            'google_map_src' => $model->google_map_src,
+            'address' => $model->google_map_src,
+            'address_en' => $model->address_en,
+        ];
+        app(TrainingCenterService::class)->store($trainingCenterPayload);
+    }
+
     /**
      * @param Request $request
      * @param null $id
@@ -418,13 +502,11 @@ class TrainingCenterService
             $skill_ids = is_array($request->get('skill_ids')) ? $request->get('skill_ids') : explode(',', $request->get('skill_ids'));
             $request->offsetSet('skill_ids', $skill_ids);
         }
-
         $customMessage = [
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         $rules = [
-            'institute_id' => 'required|exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'center_location_type' => [
                 'sometimes',
@@ -462,6 +544,9 @@ class TrainingCenterService
                 'min:1'
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
+
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -569,7 +654,6 @@ class TrainingCenterService
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'nullable|exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'order' => [
                 'string',
@@ -601,6 +685,8 @@ class TrainingCenterService
                 'integer'
             ]
         ];
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }

@@ -4,19 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Batch;
 use App\Services\BatchService;
+use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 /**
- * Class BatcheController
+ * Class BatchController
  * @package App\Http\Controllers
  */
 class BatchController extends Controller
@@ -90,6 +90,7 @@ class BatchController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->batchService->validator($request)->validate();
+        $validatedData['code'] = CodeGeneratorService::getBatchCode($validatedData['course_id']);
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
@@ -104,8 +105,9 @@ class BatchController extends Controller
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
+
             DB::commit();
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
@@ -124,9 +126,10 @@ class BatchController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
+
         $validated = $this->batchService->validator($request)->validate();
         DB::beginTransaction();
-        try{
+        try {
             $data = $this->batchService->update($batch, $validated);
             $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
             $response = [
@@ -139,7 +142,7 @@ class BatchController extends Controller
                 ]
             ];
             DB::commit();
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
@@ -247,12 +250,29 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function getBatchesByCourseId(Request $request, $id): JsonResponse
     {
+
         $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
 
         return Response::json($response);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getPublicBatchesByCourseId(Request $request, $id): JsonResponse
+    {
+
+        $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
+
+        return Response::json($response);
+    }
+
 }

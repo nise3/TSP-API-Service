@@ -2,13 +2,12 @@
 
 namespace App\Models;
 
-
-use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Batch
@@ -31,10 +30,25 @@ use Illuminate\Support\Carbon;
  */
 class Batch extends BaseModel
 {
-
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
+
+    public const BATCH_CODE_PREFIX = "BT";
+    public const BATCH_CODE_SIZE = 28;
+
+    // TODO: This method should be checked . It gives error.
+
+//    public function toArray(): array
+//    {
+//        $originalData = parent::toArray();
+//        $authUser = Auth::user();
+//
+//        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+//            $this->getIndustryAssociationData($originalData);
+//        }
+//        return $originalData;
+//    }
 
     /**
      * @return BelongsTo

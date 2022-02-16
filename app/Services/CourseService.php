@@ -8,13 +8,16 @@ use App\Models\CourseEnrollment;
 use App\Models\Institute;
 use App\Models\Skill;
 use App\Models\Trainer;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
+use Faker\Provider\Base;
 use Illuminate\Contracts\Validation\Validator;
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\Rule;
 
@@ -48,6 +51,7 @@ class CourseService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -59,6 +63,7 @@ class CourseService
                 'courses.level',
                 'courses.language_medium',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
                 'courses.branch_id',
@@ -98,28 +103,19 @@ class CourseService
             ]
         )->acl();
 
-        $coursesBuilder->join("institutes", function ($join) use ($rowStatus) {
+        $coursesBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('courses.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->leftJoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('programs.row_status', $rowStatus);
-            }*/
         });
 
         $coursesBuilder->orderBy('courses.id', $order);
@@ -137,6 +133,9 @@ class CourseService
 
         if (is_numeric($instituteId)) {
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
+        }
+        if (is_numeric($industryAssociationId)) {
+            $coursesBuilder->where('courses.industry_association_id', '=', $industryAssociationId);
         }
 
         /** @var Collection $courses */
@@ -180,6 +179,7 @@ class CourseService
                 'courses.level',
                 'courses.language_medium',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
                 'courses.branch_id',
@@ -219,7 +219,7 @@ class CourseService
             ]
         );
 
-        $courseBuilder->join("institutes", function ($join) {
+        $courseBuilder->leftJoin("institutes", function ($join) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -265,15 +265,22 @@ class CourseService
             $course["trainers"] = $trainers->toArray();
         }
 
-        if(is_numeric($youthId)){
-            $courseEnrollment = CourseEnrollment::where('course_id', $id)->where('youth_id', $youthId)->first();
+        if (is_numeric($youthId)) {
+            $courseEnrollment = CourseEnrollment::where('course_id', $id)
+                ->where('youth_id', $youthId)
+                ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                ->withoutGlobalScope(SagaStatusGlobalScope::class)
+                ->first();
             $course["enrolled"] = (bool)$courseEnrollment;
+            $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
+            $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
+            $course["enrollment_id"] = !empty($courseEnrollment) && !empty($courseEnrollment->id) ? $courseEnrollment->id : null;
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
         /** @var Batch | Builder $batch */
         $batch = Batch::where('course_id', $course->id);
-        $batch->where(function($builder) use($curDate){
+        $batch->where(function ($builder) use ($curDate) {
             $builder->whereDate('batches.registration_start_date', '<=', $curDate);
             $builder->whereDate('batches.registration_end_date', '>=', $curDate);
         });
@@ -634,6 +641,7 @@ class CourseService
         $locUpazilaId = $request['loc_upazila_id'] ?? "";
         $skillIds = $request['skill_ids'] ?? [];
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $programId = $request['program_id'] ?? "";
         $availability = $request['availability'] ?? "";
         $language = $request['language_medium'] ?? "";
@@ -650,8 +658,10 @@ class CourseService
                 'courses.title_en',
                 'courses.title',
                 'courses.institute_id',
+                'courses.industry_association_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
+                'institutes.logo',
                 'courses.program_id',
                 'programs.title as program_title',
                 'programs.title_en as program_title_en',
@@ -676,7 +686,7 @@ class CourseService
             ]
         );
 
-        $coursesBuilder->join("institutes", function ($join) use ($rowStatus, $instituteId) {
+        $coursesBuilder->leftJoin("institutes", function ($join) use ($rowStatus, $instituteId) {
             $join->on('courses.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -723,6 +733,10 @@ class CourseService
             $coursesBuilder->where('courses.institute_id', '=', $instituteId);
         }
 
+        if (is_numeric($industryAssociationId)) {
+            $coursesBuilder->where('courses.industry_association_id', '=', $industryAssociationId);
+        }
+
         if (is_numeric($programId)) {
             $coursesBuilder->where('courses.program_id', '=', $programId);
         }
@@ -752,7 +766,7 @@ class CourseService
 
         if ($type == self::COURSE_FILTER_RECENT || is_numeric($availability)) {
             if ($type == self::COURSE_FILTER_RECENT || $availability == self::COURSE_FILTER_AVAILABILITY_RUNNING) {
-                $coursesBuilder->where(function($builder) use($curDate){
+                $coursesBuilder->where(function ($builder) use ($curDate) {
                     $builder->whereDate('batches.registration_start_date', '<=', $curDate);
                     $builder->whereDate('batches.registration_end_date', '>=', $curDate);
                     $builder->whereNull('batches.deleted_at');
@@ -782,35 +796,42 @@ class CourseService
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
 
-        }
-        else {
+        } else {
             $courses = $coursesBuilder->get();
         }
 
-        /** Set course already enrolled OR not for youth */
-        if(is_numeric($youthId)){
+        /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
+        if (is_numeric($youthId)) {
             $courseIds = $courses->pluck('id')->toArray();
-            if(count($courseIds) > 0){
-                $youthEnrolledCourseIds = CourseEnrollment::whereIn('course_id', $courseIds)
+            if (count($courseIds) > 0) {
+                /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
+                $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
                     ->where('youth_id', $youthId)
-                    ->pluck('course_id')
-                    ->toArray();
+                    ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                    ->withoutGlobalScope(SagaStatusGlobalScope::class)
+                    ->get();
 
-                foreach ($courses as $course){
-                    $course['enrolled'] = (bool) in_array($course->id, $youthEnrolledCourseIds);
+                $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
+                $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
+
+                foreach ($courses as $course) {
+                    $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
+                    $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
+                    $course['verified'] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
+                    $course["enrollment_id"] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['id']) ? $youthEnrolledCourseGroupByCourseIds[$course->id][0]['id'] : null;
                 }
             }
         }
 
         /** Set enrollable field in course */
         /** @var $batchBuilder $batchBuilder */
-        $onGoingRegCourseIds = Batch::where(function($builder) use($curDate){
-                $builder->whereDate('batches.registration_start_date', '<=', $curDate);
-                $builder->whereDate('batches.registration_end_date', '>=', $curDate);
-            })->pluck('course_id')->toArray();
+        $onGoingRegCourseIds = Batch::where(function ($builder) use ($curDate) {
+            $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+        })->pluck('course_id')->toArray();
 
-        foreach ($courses as $course){
-            $course['enrollable'] = (bool) in_array($course->id, $onGoingRegCourseIds);
+        foreach ($courses as $course) {
+            $course['enrollable'] = (bool)in_array($course->id, $onGoingRegCourseIds);
         }
 
 
@@ -870,11 +891,6 @@ class CourseService
         ];
 
         $rules = [
-            'institute_id' => [
-                'required',
-                'int',
-                'exists:institutes,id,deleted_at,NULL',
-            ],
             'branch_id' => [
                 'nullable',
                 'int',
@@ -1013,24 +1029,9 @@ class CourseService
             'created_by' => ['nullable', 'integer'],
             'updated_by' => ['nullable', 'integer'],
         ];
-        if ($id == null) {
-            /** @var Institute $institute */
-            $institute = Institute::where('id', $requestData['institute_id'])->first();
-            if ($institute) {
-                /** Concat course code with institute code as prefix */
-                $requestData['code'] = $institute['code'] . "-" . $requestData['code'];
-                $rules['code'] = [
-                    'required',
-                    'string',
-                    'max:150',
-                    Rule::unique('courses', 'code')
-                        ->where(function (\Illuminate\Database\Query\Builder $query) {
-                            return $query->whereNull('deleted_at');
-                        })
-                ];
-            }
 
-        }
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
+
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 
@@ -1070,7 +1071,6 @@ class CourseService
                 "integer",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'institute_id' => 'nullable|int|gt:0',
             'program_id' => 'nullable|int|gt:0',
             'course_name' => 'nullable|string',
             'search_text' => 'nullable|string|min:2',
@@ -1135,6 +1135,8 @@ class CourseService
                 'min:1'
             ];
         }
+
+        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }

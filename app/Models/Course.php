@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\File;
  * @property string code
  * @property int id
  * @property int institute_id
+ * @property int industry_association_id
  * @property int program_id
  * @property double course_fee
  * @property string duration
@@ -44,7 +45,7 @@ use Illuminate\Support\Facades\File;
  */
 class Course extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl, CascadeSoftDeletes;
+    use ScopeRowStatusTrait, SoftDeletes, CascadeSoftDeletes;
 
     protected $table = 'courses';
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
@@ -60,6 +61,9 @@ class Course extends BaseModel
     protected $casts = [
         'application_form_settings' => 'array'
     ];
+
+    public const COURSE_CODE_PREFIX = "C";
+    public const COURSE_CODE_SIZE = 19;
 
     const COURSE_LEVEL_BEGINNER = 1;
     const COURSE_LEVEL_INTERMEDIATE = 2;
@@ -108,8 +112,7 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_PAID,
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
-
-
+    
     /**
      * @return BelongsTo
      */

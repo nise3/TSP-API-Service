@@ -6,6 +6,7 @@ use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Trainer
@@ -37,7 +38,7 @@ use Illuminate\Support\Carbon;
  */
 class Trainer extends BaseModel
 {
-    use ScopeRowStatusTrait, SoftDeletes, ScopeAcl;
+    use ScopeRowStatusTrait, SoftDeletes;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
@@ -45,4 +46,16 @@ class Trainer extends BaseModel
         'skills' => 'array',
         'skills_en' => 'array',
     ];
+
+    // TODO: This method should be checked . It gives error.
+    /*public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
+    }*/
 }

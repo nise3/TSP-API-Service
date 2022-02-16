@@ -7,6 +7,7 @@ return [
     'http_debug' => env("HTTP_DEBUG_MODE", false),
     "should_ssl_verify" => env("IS_SSL_VERIFY", false),
     "http_timeout" => env("HTTP_TIMEOUT", 60),
+    "user_cache_ttl" => 86400,
 
     'nationalities' => [
         '1' => ['en' => 'Bangladeshi', 'bn' => 'Bangladeshi'],

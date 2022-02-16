@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
+use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +17,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 
 /**
@@ -284,13 +287,126 @@ class InstituteService
 
 
     /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function instituteUserDestroy(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug')
+            ])
+            ->timeout(5)
+            ->delete($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterApproval(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_ACTIVE;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Institute $institute
+     * @return Institute
+     */
+    public function instituteStatusChangeAfterRejection(Institute $institute): institute
+    {
+        $institute->row_status = BaseModel::ROW_STATUS_REJECTED;
+        $institute->save();
+        return $institute;
+    }
+
+    /**
+     * @param Request $request
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+    public function instituteUserApproval(Request $request, Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
+        $userPostField = [
+            'permission_sub_group_id' => $request->input('permission_sub_group_id') ?? "",
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+            'name_en' => $institute->contact_person_name ?? "",
+            'name' => $institute->contact_person_name ?? "",
+            'row_status' => $institute->row_status,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug')
+            ])
+            ->timeout(5)
+            ->put($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+    /**
+     * @param Institute $institute
+     * @return mixed
+     * @throws RequestException
+     */
+
+    public function instituteUserRejection(Institute $institute): mixed
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-rejection';
+        $userPostField = [
+            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'institute_id' => $institute->id,
+        ];
+
+        return Http::withOptions(
+            [
+                'verify' => config('nise3.should_ssl_verify'),
+                'debug' => config('nise3.http_debug')
+            ])
+            ->timeout(5)
+            ->put($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+
+    /**
      * @param array $data
      * @return PromiseInterface|\Illuminate\Http\Client\Response|array
      * @throws RequestException
      */
     public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
     {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'organization-or-institute-user-create';
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
         $userPostField = [
             'permission_sub_group_id' => $data['permission_sub_group_id'],
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
@@ -304,13 +420,14 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -335,15 +452,22 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
+    }
+
+    public function userInfoSendBySMS(string $recipient, string $message)
+    {
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
@@ -439,19 +563,15 @@ class InstituteService
 
         $rules = [
             'permission_sub_group_id' => [
-                'required_if:' . $id . ',==,null',
+                Rule::requiredIf(function () use ($id) {
+                    return is_null($id);
+                }),
                 'nullable',
                 'int'
             ],
             "institute_type_id" => [
                 "required",
                 "int"
-            ],
-            'code' => [
-                'required',
-                'string',
-                'max:150',
-                'unique:institutes,code,' . $id,
             ],
             'title' => [
                 'required',
@@ -619,6 +739,113 @@ class InstituteService
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
+
+    public function instituteProfileUpdateValidator(Request $request, int $id = null): Validator
+    {
+        $data = $request->all();
+
+        $customMessage = [
+            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
+        ];
+
+        $rules = [
+            'title' => [
+                'required',
+                'string',
+                'max:1000',
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'loc_division_id' => [
+                'required',
+                'integer',
+                'exists:loc_divisions,id,deleted_at,NULL'
+            ],
+            'loc_district_id' => [
+                'required',
+                'integer',
+                'exists:loc_districts,id,deleted_at,NULL'
+            ],
+            'loc_upazila_id' => [
+                'nullable',
+                'integer',
+                'exists:loc_upazilas,id,deleted_at,NULL'
+            ],
+            'location_latitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'location_longitude' => [
+                'nullable',
+                'string',
+                'max:50'
+            ],
+            'google_map_src' => [
+                'nullable',
+                'string'
+            ],
+            'address' => [
+                'nullable',
+                'string'
+            ],
+            'address_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head' => [
+                'required',
+                'string',
+                'max:500'
+            ],
+            'name_of_the_office_head_en' => [
+                'nullable',
+                'string'
+            ],
+            'name_of_the_office_head_designation' => [
+                "required",
+                "string",
+                "max:500"
+            ],
+            'name_of_the_office_head_designation_en' => [
+                "nullable",
+                "string",
+                "max:500"
+            ],
+            'logo' => [
+                'nullable',
+                'string',
+            ],
+            'contact_person_name' => [
+                'required',
+                'max: 500',
+                'min:2'
+            ],
+            'contact_person_name_en' => [
+                'nullable',
+                'max: 250',
+                'min:2'
+            ],
+            'contact_person_designation' => [
+                'required',
+                'max: 500',
+                "min:2"
+            ],
+            'contact_person_designation_en' => [
+                'nullable',
+                'max: 300',
+                "min:2"
+            ],
+            'created_by' => ['nullable', 'int'],
+            'updated_by' => ['nullable', 'int'],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
     public function registerInstituteValidator(Request $request, int $id = null): Validator
     {
         $customMessage = [
@@ -639,7 +866,8 @@ class InstituteService
             ],
             'institute_type_id' => [
                 'required',
-                'int'
+                'int',
+                Rule::in(BaseModel::INSTITUTE_TYPES)
             ],
             "name_of_the_office_head" => [
                 "required",
@@ -764,4 +992,6 @@ class InstituteService
             ],
         ], $customMessage);
     }
+
+
 }
