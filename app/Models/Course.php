@@ -119,7 +119,6 @@ class Course extends BaseModel
         $originalData = parent::toArray();
         if (!empty($originalData['industry_association_id'])) {
             $this->getIndustryAssociationData($originalData);
-            Log::info("course data: " . json_encode($originalData));
         }
         return $originalData;
     }
