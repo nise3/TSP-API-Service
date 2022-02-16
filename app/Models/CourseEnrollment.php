@@ -124,15 +124,18 @@ class CourseEnrollment extends BaseModel
         static::addGlobalScope(new SagaStatusGlobalScope);
     }
 
-
-    public function toArray(): array
+    // TODO: This method should be checked . It gives error.
+    /*public function toArray(): array
     {
         $originalData = parent::toArray();
-        if (!empty($originalData['industry_association_id'])) {
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
             $this->getIndustryAssociationData($originalData);
         }
+
         return $originalData;
-    }
+    }*/
 
     /**
      * @return BelongsToMany
@@ -200,12 +203,12 @@ class CourseEnrollment extends BaseModel
 
     public function course(): HasOne
     {
-        return $this->hasOne(Course::class, 'id', 'course_id');
+        return $this->hasOne(Course::class,'id','course_id');
     }
 
     public function batch(): HasOne
     {
-        return $this->hasOne(Batch::class, 'id', 'batch_id');
+        return $this->hasOne(Batch::class,'id','batch_id');
     }
 
 }

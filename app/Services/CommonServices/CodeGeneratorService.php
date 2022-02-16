@@ -71,7 +71,7 @@ class CodeGeneratorService
      */
     public static function getBranchCode(int $sspId): string
     {
-        $instituteCode = Institute::findOrFail($sspId)->code;
+        $instituteCode = Institute::find($sspId)->code;
         $branchExistingCode = Branch::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
         if (!empty($branchExistingCode) && $branchExistingCode->code) {
             $branchCode = explode(Branch::BRANCH_CODE_PREFIX, $branchExistingCode->code);
@@ -94,7 +94,7 @@ class CodeGeneratorService
      */
     public static function getTrainingCenterCode(int $sspId = null): string
     {
-        [$prefixCode, $trainingCenterExistingCode] = !empty($sspId) ? self::getCode(TrainingCenter::class, $sspId) : self::getCode(TrainingCenter::class);
+        [$instituteCode, $trainingCenterExistingCode] = !empty($sspId) ? self::getCode(TrainingCenter::class, $sspId) : self::getCode(TrainingCenter::class);
 
         if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
             $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
@@ -108,7 +108,7 @@ class CodeGeneratorService
         }
         $trainingCenterCode = $trainingCenterCode + 1;
         $padLSize = TrainingCenter::TRAINING_CENTER_CODE_SIZE - strlen($trainingCenterCode);
-        return str_pad($prefixCode . TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $padLSize, '0') . $trainingCenterCode;
+        return str_pad($instituteCode . TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $padLSize, '0') . $trainingCenterCode;
     }
 
     /**
@@ -117,7 +117,7 @@ class CodeGeneratorService
      */
     public static function getCourseCode(int $sspId = null): string
     {
-        [$prefixCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
+        [$instituteCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
 
         if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
             $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
@@ -131,7 +131,7 @@ class CodeGeneratorService
         }
         $courseCode = $courseCode + 1;
         $padLSize = Course::COURSE_CODE_SIZE - strlen($courseCode);
-        return str_pad($prefixCode . Course::COURSE_CODE_PREFIX, $padLSize, '0') . $courseCode;
+        return str_pad($instituteCode . Course::COURSE_CODE_PREFIX, $padLSize, '0') . $courseCode;
     }
 
     /**
@@ -141,7 +141,7 @@ class CodeGeneratorService
     public static function getBatchCode(int $courseId): string
     {
         $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
-        $courseCode = Course::findOrFail($courseId)->code;
+        $courseCode = Course::find($courseId)->code;
         if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
             $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
             if (count($batchCode) > 1) {
@@ -250,13 +250,13 @@ class CodeGeneratorService
             } else {
                 $queryAttributeValue = $id;
             }
-            $parentEntity = Institute::findOrFail($queryAttributeValue);
+            $parentEntity = Institute::find($queryAttributeValue);
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
         Log::info('ssp-id.' . $id);
         return [
-            $parentEntity->code,
+            $parentEntity->code ?? "",
             $existingCode
         ];
     }
