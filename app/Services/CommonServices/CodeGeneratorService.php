@@ -71,7 +71,7 @@ class CodeGeneratorService
      */
     public static function getBranchCode(int $sspId): string
     {
-        $instituteCode = Institute::find($sspId)->code;
+        $instituteCode = Institute::findOrFail($sspId)->code;
         $branchExistingCode = Branch::where("institute_id", $sspId)->orderBy("id", "DESC")->first();
         if (!empty($branchExistingCode) && $branchExistingCode->code) {
             $branchCode = explode(Branch::BRANCH_CODE_PREFIX, $branchExistingCode->code);
@@ -141,7 +141,7 @@ class CodeGeneratorService
     public static function getBatchCode(int $courseId): string
     {
         $batchExistingCode = Batch::where("course_id", $courseId)->withTrashed()->orderBy("id", "DESC")->first();
-        $courseCode = Course::find($courseId)->code;
+        $courseCode = Course::findOrFail($courseId)->code;
         if (!empty($batchExistingCode) && !empty($batchExistingCode->code)) {
             $batchCode = explode(Batch::BATCH_CODE_PREFIX, $batchExistingCode->code);
             if (count($batchCode) > 1) {
@@ -250,7 +250,7 @@ class CodeGeneratorService
             } else {
                 $queryAttributeValue = $id;
             }
-            $parentEntity = Institute::find($queryAttributeValue);
+            $parentEntity = Institute::findOrFail($queryAttributeValue);
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
