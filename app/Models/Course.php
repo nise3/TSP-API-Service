@@ -112,7 +112,7 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_PAID,
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
-    
+
     /**
      * @return BelongsTo
      */
@@ -148,6 +148,16 @@ class Course extends BaseModel
     public function courseEnrollments(): HasMany
     {
         return $this->hasMany(CourseEnrollment::class, 'course_id');
+    }
+
+
+    public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        if (!empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+        return $originalData;
     }
 
 }
