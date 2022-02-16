@@ -183,8 +183,11 @@ abstract class BaseModel extends Model
 
     public function getIndustryAssociationData(array &$originalData)
     {
+        if (!empty($originalData['industry_association_id'])) {
             $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
             $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
             $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
+        }
+
     }
 }
