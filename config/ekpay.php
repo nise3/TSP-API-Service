@@ -13,11 +13,7 @@ return [
         'ipn_info' => [
             'ipn_channel' => '1',
             'ipn_email' => 'noreply@nise.gov.bd',
-<<<<<<< HEAD
-            'ipn_uri' => 'http://localhost:8001/api/v1/payment/ipn-handler',
-=======
             'ipn_uri' => 'http://localhost:8001/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}'
->>>>>>> develop-phase-two
         ]
     ],
     "production" => [
