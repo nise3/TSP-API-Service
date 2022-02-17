@@ -24,9 +24,10 @@ class ProgramService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getProgramList(array $request, Carbon $startTime): array
+    public function getProgramList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -57,7 +58,11 @@ class ProgramService
             'programs.updated_at',
             'programs.deleted_at',
 
-        ])->acl();
+        ]);
+
+        if(!$isPublicApi){
+            $programsBuilder->acl();
+        }
 
         $programsBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')

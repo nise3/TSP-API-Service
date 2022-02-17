@@ -68,13 +68,13 @@ class ProgramController extends Controller
         $this->authorize('view', $program);
 
         $response = [
-        "data" => $program,
-        "_response_status" => [
-            "success" => true,
-            "code" => ResponseAlias::HTTP_OK,
-            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-        ]
-    ];
+            "data" => $program,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -206,7 +206,8 @@ class ProgramController extends Controller
     {
         $filter = $this->programmeService->filterValidator($request)->validate();
 
-        $response = $this->programmeService->getProgramList($filter, $this->startTime);
+        $response = $this->programmeService->getProgramList($filter, $this->startTime, true);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

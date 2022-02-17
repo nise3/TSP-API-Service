@@ -540,7 +540,7 @@ class BatchService
      * @param $currentTime
      * @return array
      */
-    public function batchesWithTrainingCenters(Request $request, $id, $currentTime): array
+    public function batchesWithTrainingCenters(Request $request, $id, $currentTime, bool $isPublicApi = false): array
     {
         $active = $request->get('active') === "true";
         $upcoming = $request->get('upcoming') === "true";
@@ -599,8 +599,11 @@ class BatchService
             ->where('batches.course_id', '=', $id)
             ->groupBy('training_centers.id')
             ->whereNull('training_centers.deleted_at')
-            ->whereNull('batches.deleted_at')
-            ->acl();
+            ->whereNull('batches.deleted_at');
+
+            if(!$isPublicApi){
+                $trainingCenterBuilder->acl();
+            }
 
         $result = $trainingCenterBuilder->get();
 

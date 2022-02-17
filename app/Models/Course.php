@@ -112,7 +112,7 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_PAID,
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
-    
+
     /**
      * @return BelongsTo
      */

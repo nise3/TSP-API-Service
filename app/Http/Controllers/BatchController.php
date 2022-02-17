@@ -270,7 +270,7 @@ class BatchController extends Controller
     public function getPublicBatchesByCourseId(Request $request, $id): JsonResponse
     {
 
-        $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
+        $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime, true);
 
         return Response::json($response);
     }
