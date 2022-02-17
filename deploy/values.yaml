@@ -150,6 +150,10 @@ variables:
     APP_DEBUG: "false"
     APP_URL: "nise3-institute.default"
 
+    LOG_CHANNEL: "elasticsearch"
+    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
+    ELASTIC_LOGS_INDEX: "tsp_file_logs"
+
     DB_HOST: "db-service.default"
     DB_PORT: 3306
     DB_DATABASE: nise_ssp
