@@ -1375,7 +1375,12 @@ class CourseEnrollmentService
             }
 
             foreach ($courseEnrollments as $courseEnrollment) {
-                $courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+                //TODO: this line should be checked. If not need then remove it
+                //$courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
+                $name = $indexedYouths[$courseEnrollment['youth_id']]['first_name'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name'] ?? "";
+                $nameEn = $indexedYouths[$courseEnrollment['youth_id']]['first_name_en'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name_en'] ?? "";
+                $courseEnrollment['youth_name'] = $name;
+                $courseEnrollment['youth_name_en'] = $nameEn;
             }
         }
 
