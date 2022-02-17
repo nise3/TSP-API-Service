@@ -63,13 +63,6 @@ variables:
     APP_DEBUG: "false"
     APP_URL: "gateway-dev.nise3.xyz"
 
-    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
-    API_GATEWAY_API_KEY: ""
-
-    EK_PAY_DEBUG: "true"
-    IS_SANDBOX: "true"
-
     LOG_CHANNEL: "elasticsearch"
     ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
     ELASTIC_LOGS_INDEX: "tsp_file_logs"
@@ -92,7 +85,14 @@ variables:
     RABBITMQ_USER: "default_user_8JE9yWDb4fHdn35Ua9w"
     RABBITMQ_PASSWORD: "OvK7CUJOlZHfLWbYeTjdTlbdG2GHfr1Q"
 
-    WSO2_APIM_BASE_URL: "https://apim-dev.nise3.xyz"
+    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
+    API_GATEWAY_API_KEY: ""
+
+    EK_PAY_DEBUG: "true"
+    IS_SANDBOX: "true"
+
+    WSO2_APIM_BASE_URL: "https:/apim.nise.gov.bd"
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
     WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
 
@@ -156,22 +156,24 @@ variables:
     DB_USERNAME: dbmaster
     DB_PASSWORD: jR{sadmtbdkrishiqbRj
 
-    PAYMENT_GATEWAY_BASE_URL: "https://apim-gateway.nise.gov.bd"
+    CACHE_DRIVER: "redis"
+    REDIS_CLIENT: "predis"
+    REDIS_HOST: "redis-headless.redis-node"
+    REDIS_PASSWORD: "k?admin"
+    REDIS_PORT: 6379
+
+    RABBITMQ_HOST: "rabbitmqcluster.default"
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_VHOST: "/"
+    RABBITMQ_USER: "default_user_F6TVq9AKwb_MuJ79Ho7"
+    RABBITMQ_PASSWORD: "wYUjdbPnBX7Wqk2Omfnarc6sHrwd-QlD"
+
+    API_GATEWAY_BASE_URL: "https://apim-gateway.nise.gov.bd"
     PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_API_KEY: ""
+    API_GATEWAY_API_KEY: ""
 
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
-
-    LOG_CHANNEL: "elasticsearch"
-    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
-    ELASTIC_LOGS_INDEX: "tsp_file_logs"
-
-    RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
-    RABBITMQ_PORT: "5672"
-    RABBITMQ_VHOST: "aeihxlmw"
-    RABBITMQ_USER: "aeihxlmw"
-    RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
 
     WSO2_APIM_BASE_URL: "https://apim.nise.gov.bd"
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
