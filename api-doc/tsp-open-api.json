@@ -3865,6 +3865,9 @@
                         }
                     },
                     {
+                        "$ref": "#/components/parameters/search_text"
+                    },
+                    {
                         "name": "row_status",
                         "in": "query",
                         "required": false,
@@ -6696,6 +6699,14 @@
             }
         },
         "parameters": {
+            "search_text": {
+                "name": "search_text",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "country": {
                 "name": "country",
                 "in": "query",
