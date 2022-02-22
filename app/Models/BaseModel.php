@@ -38,12 +38,22 @@ abstract class BaseModel extends Model
 
     public const INSTITUTE_TYPE_GOVT = 1;
     public const INSTITUTE_TYPE_NON_GOVT = 2;
-    public const INSTITUTE_TYPE_OTHERS_ = 3;
+    public const INSTITUTE_TYPE_OTHERS = 3;
+
+    public const BOTH_CERTIFICATE_AND_TRAINING = 1;
+    public const ONLY_CERTIFICATE = 2;
+    public const ONLY_TRAINING = 3;
 
     public const INSTITUTE_TYPES = [
         self::INSTITUTE_TYPE_GOVT,
         self::INSTITUTE_TYPE_NON_GOVT,
-        self::INSTITUTE_TYPE_OTHERS_,
+        self::INSTITUTE_TYPE_OTHERS,
+    ];
+
+    public const SERVICE_TYPES = [
+        self::BOTH_CERTIFICATE_AND_TRAINING,
+        self::ONLY_CERTIFICATE,
+        self::ONLY_TRAINING,
     ];
 
 

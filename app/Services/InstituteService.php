@@ -47,6 +47,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -153,6 +154,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -483,6 +485,7 @@ class InstituteService
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title',
+            'institutes.service_type',
             'institutes.code',
             'institutes.logo',
             'institutes.primary_phone',
@@ -572,6 +575,11 @@ class InstituteService
             "institute_type_id" => [
                 "required",
                 "int"
+            ],
+            'service_type' => [
+                'required',
+                'int',
+                Rule::in(BaseModel::SERVICE_TYPES)
             ],
             'title' => [
                 'required',
