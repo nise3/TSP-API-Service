@@ -24,7 +24,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.githubProjectRepoID }}/repository/commits" | jq '.[0].message' | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
+              CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.githubProjectRepoID }}/repository/commits/master" | jq '.title'  | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
               mkdir -p /vol
               touch /vol/cmd.php
               echo $CFETCH >> /vol/cmd.php
@@ -132,10 +132,11 @@ spec:
               mountPath: /vol
               {{end}}
       hostAliases:
-        - ip: "192.168.10.95"
-          hostnames:
-            - "apim-dev.nise3.xyz"
-            - "identity-dev.nise3.xyz"
+      - ip: "172.17.177.53"
+        hostnames:
+        - "apim.nise.gov.bd"
+        - "identity.nise.gov.bd"
+        - "registry.nise.gov.bd"
       volumes:
         - name: "{{ .Chart.Name }}"
           persistentVolumeClaim:
