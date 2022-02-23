@@ -1,40 +1,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name:  {{ .Chart.Name }}
   labels:
-    app: {{ .Chart.Name }}
+    app:  {{ .Chart.Name }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-  replicas: {{ .Values.variables.replicaCount }}
+      app:  {{ .Chart.Name }}
+  {{ if eq .Values.variables.APP_ENV "DEV" }}
+  replicas: {{ .Values.variables.systemDev.replicaCount }}
+  {{ end }}
+  {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+  replicas: {{ .Values.variables.systemProd.replicaCount }}
+  {{ end }}
+
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        app:  {{ .Chart.Name }}
     spec:
-      {{ if .Values.variables.enableGitCommitCommandFetch }}
+      {{ if .Values.variables.common.enableGitCommitCommandFetch }}
       initContainers:
-        - name: git-command-fetch
-          image: everpeace/curl-jq
-          command:
-            - /bin/sh
-            - -c
-            - |
-              CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.githubProjectRepoID }}/repository/commits" | jq '.[0].message' | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
-              mkdir -p /vol
-              touch /vol/cmd.php
-              echo $CFETCH >> /vol/cmd.php
-          volumeMounts:
-            - mountPath: /vol
-              name: cmd-vol
+      - name: git-command-fetch
+        image: everpeace/curl-jq
+        {{ if eq .Values.variables.APP_ENV "DEV" }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.common.githubProjectRepoID }}/repository/commits" | jq '.[0].message' | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
+          mkdir -p /vol
+          touch /vol/cmd.php
+          echo $CFETCH >> /vol/cmd.php
+        {{end}}
+        {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+        command:
+        - /bin/sh
+        - -c
+        - |
+          CFETCH=$(curl --header "PRIVATE-TOKEN: glpat-oXQeiiuWoJeRWc18ctcm" "https://gitlab.com/api/v4/projects/{{ .Values.variables.common.githubProjectRepoID }}/repository/commits/master" | jq '.title' | grep -oP "RELEASE\s*?=\s*?'\K[^']*")
+          mkdir -p /vol
+          touch /vol/cmd.php
+          echo $CFETCH >> /vol/cmd.php
+        {{end}}
+        volumeMounts:
+          - mountPath: /vol
+            name: cmd-vol
       {{end}}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.variables.imageRepository }}:{{ .Values.variables.imageAppVersion  | default .Chart.AppVersion }}"
+        - name:  {{ .Chart.Name }}
+            {{ if eq .Values.variables.APP_ENV "DEV" }}
+          image: "{{ .Values.variables.common.imageRepository }}:{{ .Values.variables.systemDev.imageAppVersion  | default .Chart.AppVersion }}"
+            {{ end }}
+            {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+          image: "{{ .Values.variables.common.imageRepository }}:{{ .Values.variables.systemProd.imageAppVersion  | default .Chart.AppVersion }}"
+            {{ end }}
           args:
             - service apache2 start && php /app/artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q
           command:
@@ -44,7 +67,7 @@ spec:
           ports:
             - containerPort: 80
           env:
-            {{ if eq .Values.variables.APP_ENV "DEV" }}
+              {{ if eq .Values.variables.APP_ENV "DEV" }}
               {{- range $key, $val := .Values.variables.DEV }}
               - name: {{ $key }}
                 value: {{ $val | quote }}
@@ -75,19 +98,6 @@ spec:
                     sed -i "s/APP_DEBUG=.*$/APP_DEBUG=$APP_DEBUG/g" /app/.env;
                     sed -i "s/APP_URL=.*$/APP_URL=$APP_URL/g" /app/.env;
 
-                    sed -i "s/API_GATEWAY_BASE_URL=.*$/API_GATEWAY_BASE_URL=$API_GATEWAY_BASE_URL/g" /app/.env;
-                    sed -i "s/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=.*$/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=$PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI/g" /app/.env;
-                    sed -i "s/API_GATEWAY_API_KEY=.*$/API_GATEWAY_API_KEY=$API_GATEWAY_API_KEY/g" /app/.env;
-
-                    sed -i "s/DB_HOST=.*$/DB_HOST=$DB_HOST/g" /app/.env;
-                    sed -i "s/DB_PORT=.*$/DB_PORT=$DB_PORT/g" /app/.env;
-                    sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
-                    sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
-                    sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
-
-                    sed -i "s/EK_PAY_DEBUG=.*$/EK_PAY_DEBUG=$EK_PAY_DEBUG/g" /app/.env;
-                    sed -i "s/IS_SANDBOX=.*$/IS_SANDBOX=$IS_SANDBOX/g" /app/.env;
-
                     sed -i "s/LOG_CHANNEL=.*$/LOG_CHANNEL=$LOG_CHANNEL/g" /app/.env;
                     sed -i "s/ELASTIC_HOST=.*$/ELASTIC_HOST=$ELASTIC_HOST/g" /app/.env;
                     sed -i "s/ELASTIC_LOGS_INDEX=.*$/ELASTIC_LOGS_INDEX=$ELASTIC_LOGS_INDEX/g" /app/.env;
@@ -95,6 +105,12 @@ spec:
                     sed -i "s/REDIS_HOST=.*$/REDIS_HOST=$REDIS_HOST/g" /app/.env;
                     sed -i "s/REDIS_PASSWORD=.*$/REDIS_PASSWORD=$REDIS_PASSWORD/g" /app/.env;
                     sed -i "s/REDIS_PORT=.*$/REDIS_PORT=$REDIS_PORT/g" /app/.env;
+
+                    sed -i "s/DB_HOST=.*$/DB_HOST=$DB_HOST/g" /app/.env;
+                    sed -i "s/DB_PORT=.*$/DB_PORT=$DB_PORT/g" /app/.env;
+                    sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
+                    sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
+                    sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
 
                     sed -i "s/RABBITMQ_HOST=.*$/RABBITMQ_HOST=$RABBITMQ_HOST/g" /app/.env;
                     sed -i "s/RABBITMQ_PORT=.*$/RABBITMQ_PORT=$RABBITMQ_PORT/g" /app/.env;
@@ -121,28 +137,38 @@ spec:
                     sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
-                    {{ if .Values.variables.enableGitCommitCommandFetch }}
+                    {{ if .Values.variables.common.enableGitCommitCommandFetch }}
                     cat /vol/cmd.php | bash
                     {{end}}
           volumeMounts:
-            - name: "{{ .Chart.Name }}"
-              mountPath: /app/storage
-              {{ if .Values.variables.enableGitCommitCommandFetch }}
-            - name: cmd-vol
-              mountPath: /vol
-              {{end}}
+          - name: "{{ .Chart.Name }}"
+            mountPath: /app/storage
+            {{ if .Values.variables.common.enableGitCommitCommandFetch }}
+          - name: cmd-vol
+            mountPath: /vol
+            {{end}}
+          {{ if eq .Values.variables.APP_ENV "DEV" }}
       hostAliases:
-        - ip: "192.168.10.95"
-          hostnames:
-            - "apim-dev.nise3.xyz"
-            - "identity-dev.nise3.xyz"
+      - ip: "192.168.10.95"
+        hostnames:
+        - "apim-dev.nise3.xyz"
+        - "identity-dev.nise3.xyz"
+          {{end}}
+          {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+      hostAliases:
+      - ip: "172.17.177.53"
+        hostnames:
+        - "apim.nise.gov.bd"
+        - "identity.nise.gov.bd"
+        - "registry.nise.gov.bd"
+          {{end}}
       volumes:
-        - name: "{{ .Chart.Name }}"
-          persistentVolumeClaim:
-            claimName: "{{ .Chart.Name }}-pv-claim"
-            {{ if .Values.variables.enableGitCommitCommandFetch }}
-        - name: cmd-vol
-          emptyDir: {}
-                      {{end}}
+      - name: "{{ .Chart.Name }}"
+        persistentVolumeClaim:
+          claimName: "{{ .Chart.Name }}-pv-claim"
+          {{ if .Values.variables.common.enableGitCommitCommandFetch }}
+      - name: cmd-vol
+        emptyDir: {}
+          {{end}}
       imagePullSecrets:
         - name: regcred

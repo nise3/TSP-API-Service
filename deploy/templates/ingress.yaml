@@ -1,21 +1,38 @@
-{{ if .Values.variables.enableEngress }}
-
+{{ if or (and (eq .Values.variables.APP_ENV "DEV") .Values.variables.systemDev.enableEngress) (and (eq .Values.variables.APP_ENV "PRODUCTION") .Values.variables.systemProd.enableEngress) }}
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: "{{ .Chart.Name }}-ingress"
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    kubernetes.io/ingress.class: nginx
-    kubernetes.io/tls-acme: 'true'
-    nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+    {{ if eq .Values.variables.APP_ENV "DEV" }}
+{{ toYaml .Values.variables.systemDev.annotations | indent 4 }}
+    {{ end }}
+    {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+{{ toYaml .Values.variables.systemProd.annotations | indent 4 }}
+    {{ end }}
 spec:
   tls:
     - hosts:
-        - "{{ .Values.variables.hostName }}"
+        {{ if eq .Values.variables.APP_ENV "DEV" }}
+        - "{{ .Values.variables.DEV.APP_URL }}"
+        {{end}}
+        {{ if eq .Values.variables.APP_ENV "STAGING" }}
+        - "{{ .Values.variables.STAGING.APP_URL }}"
+        {{end}}
+        {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+        - "{{ .Values.variables.PRODUCTION.APP_URL }}"
+        {{end}}
       secretName: "{{ .Chart.Name }}-secret"
   rules:
-    - host: "{{ .Values.variables.hostName }}"
+        {{ if eq .Values.variables.APP_ENV "LOCAL" }}
+    - host: "{{ .Values.variables.DEV.APP_URL }}"
+        {{end}}
+        {{ if eq .Values.variables.APP_ENV "STAGING" }}
+    - host: "{{ .Values.variables.STAGING.APP_URL }}"
+        {{end}}
+        {{ if eq .Values.variables.APP_ENV "PRODUCTION" }}
+    - host: "{{ .Values.variables.PRODUCTION.APP_URL }}"
+        {{end}}
       http:
         paths:
           - path: /
