@@ -53,30 +53,30 @@ variables:
     RABBITMQ_USER: "default_user_8JE9yWDb4fHdn35Ua9w"
     RABBITMQ_PASSWORD: "OvK7CUJOlZHfLWbYeTjdTlbdG2GHfr1Q"
 
-    API_GATEWAY_BASE_URL: https:\/\/gateway-dev.nise3.xyz
+    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
     PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
     API_GATEWAY_API_KEY: ""
 
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
 
-    WSO2_APIM_BASE_URL: https:\/\/apim-dev.nise3.xyz/
+    WSO2_APIM_BASE_URL: "https://apim-dev.nise3.xyz"
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
     WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
 
-    WSO2_IDP_BASE_URL: https:\/\/identity-dev.nise3.xyz
-    WSO2_IDP_BASE_USER_URL: https:\/\/identity-dev.nise3.xyz\/scim2\/Users
+    WSO2_IDP_BASE_URL: "https://identity-dev.nise3.xyz"
+    WSO2_IDP_BASE_USER_URL: "https://identity-dev.nise3.xyz/scim2/Users"
     WSO2_IDP_USERNAME: admin
     WSO2_IDP_PASSWORD: Iadmin
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: http:\/\/nise3-core.default/api/v1/
-    YOUTH_API_BASE_URL: http:\/\/nise3-youth.default/api/v1/
-    TSP_API_BASE_URL: http:\/\/nise3-institute.default/api/v1/
-    INDUSTRY_API_BASE_URL: http:\/\/nise3-org.default/api/v1/
-    CMS_API_BASE_URL: http:\/\/nise3-cms.default/api/v1/
-    MAIL_API_BASE_URL: http:\/\/nise3-mail.default/api/v1/
+    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
+    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
+    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
 
   STAGING:
     APP_ENV: "staging"
@@ -141,30 +141,30 @@ variables:
     RABBITMQ_USER: "default_user_F6TVq9AKwb_MuJ79Ho7"
     RABBITMQ_PASSWORD: "wYUjdbPnBX7Wqk2Omfnarc6sHrwd-QlD"
 
-    API_GATEWAY_BASE_URL: https:\/\/apim-gateway.nise.gov.bd
+    API_GATEWAY_BASE_URL: "https://apim-gateway.nise.gov.bd"
     PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
     API_GATEWAY_API_KEY: ""
 
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
 
-    WSO2_APIM_BASE_URL: https:\/\/apim.nise.gov.bd
+    WSO2_APIM_BASE_URL: "https://apim.nise.gov.bd"
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
     WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
 
-    WSO2_IDP_BASE_URL: https:\/\/identity.nise.gov.bd
-    WSO2_IDP_BASE_USER_URL: https:\/\/identity.nise.gov.bd\/scim2\/Users
+    WSO2_IDP_BASE_URL: "https://identity.nise.gov.bd"
+    WSO2_IDP_BASE_USER_URL: "https://identity.nise.gov.bd/scim2/Users"
     WSO2_IDP_USERNAME: identity_admin
     WSO2_IDP_PASSWORD: "7r7Z-GmZp-BkAf-kZWm"
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: http:\/\/nise3-core.default\/api\/v1\/
-    YOUTH_API_BASE_URL: http:\/\/nise3-youth.default\/api\/v1\/
-    TSP_API_BASE_URL: http:\/\/nise3-institute.default\/api\/v1\/
-    INDUSTRY_API_BASE_URL: http:\/\/nise3-org.default\/api\/v1\/
-    CMS_API_BASE_URL: http:\/\/nise3-cms.default\/api\/v1\/
-    MAIL_API_BASE_URL: http:\/\/nise3-mail.default\/api\/v1\/
+    CORE_API_BASE_URL: "http://nise3-core.default/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3-youth.default/api/v1/"
+    TSP_API_BASE_URL: "http://nise3-institute.default/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
+    CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
 
   common:
       imagePullPolicy: "IfNotPresent"
