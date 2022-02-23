@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
@@ -27,8 +26,6 @@ use Throwable;
  */
 class InstituteService
 {
-    public TrainingCenterService $trainingCenterService;
-
     /**
      * @param array $request
      * @param Carbon $startTime
