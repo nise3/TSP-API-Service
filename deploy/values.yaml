@@ -71,12 +71,12 @@ variables:
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
-    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
-    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
-    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
-    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
-    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+    CORE_API_BASE_URL: "http://nise3-core.default/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3-youth.default/api/v1/"
+    TSP_API_BASE_URL: "http://nise3-institute.default/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
+    CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
 
   STAGING:
     APP_ENV: "staging"
@@ -106,12 +106,12 @@ variables:
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
-    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
-    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
-    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
-    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
-    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+    CORE_API_BASE_URL: "http://nise3-core.default/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3-youth.default/api/v1/"
+    TSP_API_BASE_URL: "http://nise3-institute.default/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
+    CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
 
 
   PRODUCTION:
