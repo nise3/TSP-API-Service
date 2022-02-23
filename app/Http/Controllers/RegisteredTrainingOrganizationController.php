@@ -156,7 +156,7 @@ class RegisteredTrainingOrganizationController extends Controller
         $this->authorize('create', $rto);
 
         $validatedData = $this->rtoService->validator($request)->validate();
-        $validatedData['code'] = CodeGeneratorService::getSSPCode();
+        $validatedData['code'] = CodeGeneratorService::getRTOCode();
         DB::beginTransaction();
 
         try {

@@ -8,6 +8,8 @@ use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\RegisteredTrainingOrganization;
+use App\Services\CommonServices\SmsService;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -284,6 +286,45 @@ class RegisteredTrainingOrganizationService
                 throw new HttpErrorException($httpResponse);
             })
             ->json();
+    }
+
+    /**
+     * @param array $data
+     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
+     * @throws RequestException
+     */
+    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
+        $userPostField = [
+            'permission_sub_group_id' => $data['permission_sub_group_id'],
+            'user_type' => BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE,
+            'registered_training_organization_id' => $data['registered_training_organization_id'],
+            'username' => $data['contact_person_mobile'],
+            'name_en' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
+            'email' => $data['contact_person_email'],
+            'mobile' => $data['contact_person_mobile'],
+        ];
+
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug')
+        ])
+            ->timeout(5)
+            ->post($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+    public function userInfoSendBySMS(string $recipient, string $message)
+    {
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
     }
 
     /**
