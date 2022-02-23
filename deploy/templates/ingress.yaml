@@ -24,7 +24,7 @@ spec:
         {{end}}
       secretName: "{{ .Chart.Name }}-secret"
   rules:
-        {{ if eq .Values.variables.APP_ENV "LOCAL" }}
+        {{ if eq .Values.variables.APP_ENV "DEV" }}
     - host: "{{ .Values.variables.DEV.APP_URL }}"
         {{end}}
         {{ if eq .Values.variables.APP_ENV "STAGING" }}

@@ -102,6 +102,11 @@ spec:
                     sed -i "s/ELASTIC_HOST=.*$/ELASTIC_HOST=$ELASTIC_HOST/g" /app/.env;
                     sed -i "s/ELASTIC_LOGS_INDEX=.*$/ELASTIC_LOGS_INDEX=$ELASTIC_LOGS_INDEX/g" /app/.env;
 
+                    sed -i "s/API_GATEWAY_BASE_URL=.*$/API_GATEWAY_BASE_URL=$API_GATEWAY_BASE_URL/g" /app/.env;
+                    sed -i "s/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=.*$/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=$PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI/g" /app/.env;
+                    sed -i "s/API_GATEWAY_API_KEY=.*$/API_GATEWAY_API_KEY=$API_GATEWAY_API_KEY/g" /app/.env;
+
+
                     sed -i "s/REDIS_HOST=.*$/REDIS_HOST=$REDIS_HOST/g" /app/.env;
                     sed -i "s/REDIS_PASSWORD=.*$/REDIS_PASSWORD=$REDIS_PASSWORD/g" /app/.env;
                     sed -i "s/REDIS_PORT=.*$/REDIS_PORT=$REDIS_PORT/g" /app/.env;

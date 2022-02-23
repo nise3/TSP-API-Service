@@ -1,7 +1,7 @@
 <?php
 return [
     "is_sand_box" => env('IS_SANDBOX', false),
-    "debug" => true,
+    "debug" =>  env('EK_PAY_DEBUG', false),
     "trnx_currency" => 'BDT',
     "sand_box" => [
         "ekpay_base_uri" => 'https://sandbox.ekpay.gov.bd/ekpaypg/v1',

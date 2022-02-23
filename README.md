@@ -12,3 +12,4 @@ RELEASE = 'php artisan migrate:fresh --seed'
 ## License
  Softbd LTD
 
+-
