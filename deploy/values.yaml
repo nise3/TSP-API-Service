@@ -60,7 +60,7 @@ variables:
     EK_PAY_DEBUG: "true"
     IS_SANDBOX: "true"
 
-    WSO2_APIM_BASE_URL: https:\/apim.nise.gov.bd
+    WSO2_APIM_BASE_URL: https:\/\/apim-dev.nise3.xyz/
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
     WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
 
