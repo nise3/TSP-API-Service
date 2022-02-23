@@ -7,6 +7,7 @@ use App\Models\Trainer;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -515,7 +516,24 @@ class TrainerService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'branch_id' => [
                 'nullable',
                 'exists:branches,id,deleted_at,NULL',
@@ -677,8 +695,6 @@ class TrainerService
             ],
         ];
 
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
-
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -692,6 +708,8 @@ class TrainerService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'trainer_name_en' => 'nullable|max:250|min:2',
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
@@ -708,8 +726,6 @@ class TrainerService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }

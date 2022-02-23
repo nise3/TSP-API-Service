@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             InstitutesTableSeeder::class,
             TrainingCentersTableSeeder::class,
             CountryTableSeeder::class,
+            SspPessimisticLockingsTableSeeder::class
         ]);
     }
 }

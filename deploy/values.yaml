@@ -5,42 +5,10 @@
 
 variables:
 
-  hostName: institute-dev.nise3.xyz
+  devImageVersion: &dev_image "2.2.11"
 
-  # if values is false, then creating ingress will be escape
-  enableEngress: false
+  productionImageVersion: &prod_image "2.2.11"
 
-  # ingress cluster-issuer class
-  ingressClusterIssuer: "k-issuer"
-
-  # is lts acme, value is boolean
-  ltsAcme: false
-
-  # app version, changing version will auto deploy the app to current version
-  imageAppVersion: "2.2.10"
-
-  # increase this when you need scale up
-  replicaCount: 2
-
-  imagePullPolicy: IfNotPresent
-
-  serviceType: ClusterIP
-
-  # service port, this provide traffic to ingress within this port
-  servicePort: 80
-
-  # target container port
-  serviceTargetPort: 80
-
-  #app buil image
-
-  imageRepository: "registry.nise.gov.bd/nise3-institute-management-api-service"
-
-  #git hub project id
-  githubProjectRepoID: "28218768"
-
-  #fetch laravel php artisan or bash command and run on run
-  enableGitCommitCommandFetch: true
 
   #auto scaling config
   #autoScalingEnabled: 0
@@ -53,22 +21,15 @@ variables:
 
   #autoScalingTargetMemoryUtilizationPercentage: 80
 
-
   # application config
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
   APP_ENV: "DEV"
 
   DEV:
+
     APP_ENV: "local"
-    APP_DEBUG: "false"
-    APP_URL: "gateway-dev.nise3.xyz"
-
-    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
-    API_GATEWAY_API_KEY: ""
-
-    EK_PAY_DEBUG: "true"
-    IS_SANDBOX: "true"
+    APP_DEBUG: "true"
+    APP_URL: &devHost "gateway-dev.nise3.xyz"
 
     LOG_CHANNEL: "elasticsearch"
     ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
@@ -92,6 +53,13 @@ variables:
     RABBITMQ_USER: "default_user_8JE9yWDb4fHdn35Ua9w"
     RABBITMQ_PASSWORD: "OvK7CUJOlZHfLWbYeTjdTlbdG2GHfr1Q"
 
+    API_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
+    API_GATEWAY_API_KEY: ""
+
+    EK_PAY_DEBUG: "true"
+    IS_SANDBOX: "true"
+
     WSO2_APIM_BASE_URL: "https://apim-dev.nise3.xyz"
     WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
     WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
@@ -113,17 +81,17 @@ variables:
   STAGING:
     APP_ENV: "staging"
     APP_DEBUG: "false"
-    APP_URL: "gateway-dev.nise3.xyz"
+    APP_URL: &stagingHost "gateway-dev.nise3.xyz"
+
+    LOG_CHANNEL: "elasticsearch"
+    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
+    ELASTIC_LOGS_INDEX: cms_file_logs
 
     DB_HOST: 172.17.177.79
     DB_PORT: "3306"
     DB_DATABASE: institute
     DB_USERNAME: n3_institute
     DB_PASSWORD: "kvx6V3Y^7"
-
-    LOG_CHANNEL: "elasticsearch"
-    ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
-    ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
     RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
     RABBITMQ_PORT: "5672"
@@ -138,58 +106,138 @@ variables:
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
-    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
-    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
-    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
-    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
-    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+    CORE_API_BASE_URL: "http://nise3-core.default/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3-youth.default/api/v1/"
+    TSP_API_BASE_URL: "http://nise3-institute.default/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
+    CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
 
 
   PRODUCTION:
     APP_ENV: "local"
     APP_DEBUG: "false"
-    APP_URL: "gateway-dev.nise3.xyz"
-
-    DB_HOST: 172.17.177.79
-    DB_PORT: "3306"
-    DB_DATABASE: institute
-    DB_USERNAME: n3_institute
-    DB_PASSWORD: "kvx6V3Y^7"
-
-    PAYMENT_GATEWAY_BASE_URL: "https://gateway-dev.nise3.xyz"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
-    PAYMENT_GATEWAY_IPN_ENDPOINT_API_KEY: ""
-
-    EK_PAY_DEBUG: "true"
-    IS_SANDBOX: "true"
+    APP_URL: &prodHost "nise3-institute.default"
 
     LOG_CHANNEL: "elasticsearch"
     ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
     ELASTIC_LOGS_INDEX: "tsp_file_logs"
 
-    RABBITMQ_HOST: "jaguar.rmq.cloudamqp.com"
-    RABBITMQ_PORT: "5672"
-    RABBITMQ_VHOST: "aeihxlmw"
-    RABBITMQ_USER: "aeihxlmw"
-    RABBITMQ_PASSWORD: "uC1-78rvplV09_2sVy5vEnLwG-iUdiWJ"
+    DB_HOST: "db-service.default"
+    DB_PORT: 3306
+    DB_DATABASE: nise_ssp
+    DB_USERNAME: dbmaster
+    DB_PASSWORD: jR{sadmtbdkrishiqbRj
 
-    WSO2_IDP_BASE_URL: "https://192.168.13.206:9448/"
-    WSO2_IDP_BASE_USER_URL: "https://192.168.13.206:9448/scim2/Users"
-    WSO2_IDP_USERNAME: admin
-    WSO2_IDP_PASSWORD: admin
+    CACHE_DRIVER: "redis"
+    REDIS_CLIENT: "predis"
+    REDIS_HOST: "redis-headless.redis-node"
+    REDIS_PASSWORD: "k?admin"
+    REDIS_PORT: 6379
+
+    RABBITMQ_HOST: "rabbitmqcluster.default"
+    RABBITMQ_PORT: "5672"
+    RABBITMQ_VHOST: "/"
+    RABBITMQ_USER: "default_user_F6TVq9AKwb_MuJ79Ho7"
+    RABBITMQ_PASSWORD: "wYUjdbPnBX7Wqk2Omfnarc6sHrwd-QlD"
+
+    API_GATEWAY_BASE_URL: "https://apim-gateway.nise.gov.bd"
+    PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
+    API_GATEWAY_API_KEY: ""
+
+    EK_PAY_DEBUG: "true"
+    IS_SANDBOX: "true"
+
+    WSO2_APIM_BASE_URL: "https://apim.nise.gov.bd"
+    WSO2_APIM_CLIENT_KEY: "_cjSdJTrsXe_0JpFgJl6ZggHXl0a"
+    WSO2_APIM_CLIENT_SECRET: "fSlTTavyBqqWyRnfW51YctCbeWEa"
+
+    WSO2_IDP_BASE_URL: "https://identity.nise.gov.bd"
+    WSO2_IDP_BASE_USER_URL: "https://identity.nise.gov.bd/scim2/Users"
+    WSO2_IDP_USERNAME: identity_admin
+    WSO2_IDP_PASSWORD: "7r7Z-GmZp-BkAf-kZWm"
     WSO2_IDP_CLIENT_KEY: "u13j1BX4H7VuuutmtkbI5z27_5Qa"
     WSO2_IDP_CLIENT_SECRET: "Sygpg0CyFLLsXxO7ExytffHw7fwa"
 
-    CORE_API_BASE_URL: "http://nise3.core.api.local/api/v1/"
-    YOUTH_API_BASE_URL: "http://nise3.youth.api.local/api/v1/"
-    TSP_API_BASE_URL: "http://nise3.institute.api.local/api/v1/"
-    INDUSTRY_API_BASE_URL: "http://nise3.org.api.local/api/v1/"
-    CMS_API_BASE_URL: "http://nise3.cms.api.local/api/v1/"
-    MAIL_API_BASE_URL: "http://nise3.mail.api.local/api/v1/"
+    CORE_API_BASE_URL: "http://nise3-core.default/api/v1/"
+    YOUTH_API_BASE_URL: "http://nise3-youth.default/api/v1/"
+    TSP_API_BASE_URL: "http://nise3-institute.default/api/v1/"
+    INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
+    CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
+    MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
+
+  common:
+      imagePullPolicy: "IfNotPresent"
+
+      serviceType: "ClusterIP"
+
+      # service port, this provide traffic to ingress within this port
+      servicePort: 80
+
+      # target container port
+      serviceTargetPort: 80
+
+      #app buil image
+      imageRepository: "registry.nise.gov.bd/nise3-institute-management-api-service"
+
+      #git hub project id
+      githubProjectRepoID: "28218768"
+
+      #fetch laravel php artisan or bash command and run on run
+      enableGitCommitCommandFetch: true
+
+  systemDev:
+      # do not change even in merge keep current changes
+      hostName: *devHost
+
+      # if values is false, then creating ingress will be escape
+      enableEngress: false
+
+      # ingress cluster-issuer class
+      ingressClusterIssuer: &ing_issuer "k-issuer"
+
+        # is lts acme, value is boolean
+      ltsAcme: false
+
+      # app version, changing version will auto deploy the app to current version
+      imageAppVersion: *dev_image
+
+      # increase this when you need scale up
+      replicaCount: 1
+
+      developBranch: "master"
+
+      annotations:
+        cert-manager.io/cluster-issuer: *ing_issuer
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
 
 
+      #application environment v
+  systemProd:
+      # do not change even in merge keep current changes
+      hostName: *prodHost
 
-  #control git realese branch
-  GIT_DEVELOPMENT_BRANCH: "develop"
-  GIT_PRODUCTION_BRANCH: "master"
+      # if values is false, then creating ingress will be escape
+      enableEngress: false
+
+      # ingress cluster-issuer class
+      ingressClusterIssuer: &ing_issuer "k-issuer"
+
+        # is lts acme, value is boolean
+      ltsAcme: false
+
+      # app version, changing version will auto deploy the app to current version
+      imageAppVersion: *prod_image
+
+      # increase this when you need scale up
+      replicaCount: 1
+
+      developBranch: "master"
+
+      #application environment v
+
+      annotations:
+        cert-manager.io/cluster-issuer: *ing_issuer
+        kubernetes.io/ingress.class: nginx
+        nginx.ingress.kubernetes.io/ssl-passthrough: 'true'

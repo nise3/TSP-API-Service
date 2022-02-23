@@ -640,8 +640,7 @@ class InstituteService
             'primary_phone' => [
                 'nullable',
                 'string',
-                'max:20',
-                'regex:/^[0-9]+$/'
+                'max:20'
             ],
             'phone_numbers' => [
                 'nullable',
@@ -650,7 +649,6 @@ class InstituteService
             'phone_numbers.*' => [
                 'nullable',
                 'string',
-                'regex:/^[0-9]+$/'
             ],
             'primary_mobile' => [
                 'required',
@@ -683,7 +681,7 @@ class InstituteService
                 'string'
             ],
             'name_of_the_office_head_designation' => [
-                "required",
+                "nullable",
                 "string",
                 "max:500"
             ],

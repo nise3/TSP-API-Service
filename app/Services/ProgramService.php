@@ -60,7 +60,7 @@ class ProgramService
 
         ]);
 
-        if(!$isPublicApi){
+        if (!$isPublicApi) {
             $programsBuilder->acl();
         }
 
@@ -199,7 +199,23 @@ class ProgramService
 
         /** @var User $authUser */
         $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'title_en' => [
                 'nullable',
                 'string',
@@ -246,8 +262,6 @@ class ProgramService
             'created_by' => ['nullable', 'integer', 'max:10'],
             'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
@@ -334,6 +348,8 @@ class ProgramService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
@@ -348,8 +364,6 @@ class ProgramService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
