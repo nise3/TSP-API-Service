@@ -1,7 +1,7 @@
 <?php
 return [
     "is_sand_box" => env('IS_SANDBOX', false),
-    "debug" => true,
+    "debug" =>  env('EK_PAY_DEBUG', false),
     "trnx_currency" => 'BDT',
     "sand_box" => [
         "ekpay_base_uri" => 'https://sandbox.ekpay.gov.bd/ekpaypg/v1',
@@ -12,8 +12,8 @@ return [
         ],
         'ipn_info' => [
             'ipn_channel' => '1',
-            'ipn_email' => 'tasmidur.softbdltd@gmail.com',
-            'ipn_uri' => 'http://localhost:8001/api/v1/payment/ipn-handler',
+            'ipn_email' => 'noreply@nise.gov.bd',
+            'ipn_uri' => 'http://localhost:8001/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}'
         ]
     ],
     "production" => [
@@ -26,7 +26,7 @@ return [
         'ipn_info' => [
             'ipn_channel' => '1',
             'ipn_email' => 'noreply@nise.gov.bd',
-            'ipn_uri' => 'http://localhost:8001/api/v1/payment/ipn-handler'
+            'ipn_uri' => 'http://localhost:8001/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}'
         ]
     ],
     'feed_uri' => [

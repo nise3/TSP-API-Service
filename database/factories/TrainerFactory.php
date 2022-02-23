@@ -15,7 +15,7 @@ class TrainerFactory extends Factory
             'trainer_name_en' => $this->faker->name,
             'trainer_name' => $this->faker->name,
             'trainer_registration_number' => $this->faker->uuid(),
-            'email' => $this->faker->safeEmail(),
+            'email' => $this->faker->unique->safeEmail(),
             'mobile' => $this->faker->numerify('017########'),
             'about_me' => $this->faker->sentence,
             'nationality' => 'Bangladeshi',

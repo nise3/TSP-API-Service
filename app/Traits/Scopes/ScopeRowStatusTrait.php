@@ -18,14 +18,17 @@ trait ScopeRowStatusTrait
 {
     public function scopeActive($query): Builder
     {
+        $tableName = $this->getTable();
+
         /**  @var Builder $query */
-        return $query->where('row_status', BaseModel::ROW_STATUS_ACTIVE);
+        return $query->where($tableName . '.row_status', BaseModel::ROW_STATUS_ACTIVE);
     }
 
     public function scopeInactive($query): Builder
     {
+        $tableName = $this->getTable();
         /**  @var Builder $query */
-        return $query->where('row_status', BaseModel::ROW_STATUS_INACTIVE);
+        return $query->where($tableName . '.row_status', BaseModel::ROW_STATUS_INACTIVE);
     }
 
 }

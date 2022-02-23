@@ -216,7 +216,8 @@ class RabbitMQService
     /**
      * @return array
      */
-    public function getRabbitMqMessage(): array {
+    public function getRabbitMqMessage(): array
+    {
         $rabbitMq = app(RabbitMQ::class);
         $rabbitMqJob = $rabbitMq->getRabbitMqJob();
         return json_decode(json_encode($rabbitMqJob->getRabbitMQMessage()), true);
@@ -225,18 +226,20 @@ class RabbitMQService
     /**
      * @return bool
      */
-    public function checkEventAlreadyConsumed(): bool {
+    public function checkEventAlreadyConsumed(): bool
+    {
         $uuid = $this->getRabbitMqMessageUuid();
 
         /** @var SagaSuccessEvent $sagaEvent */
         $sagaEvent = SagaSuccessEvent::where('uuid', $uuid)->first();
-        return (bool) $sagaEvent;
+        return (bool)$sagaEvent;
     }
 
     /**
      * @return string
      */
-    public function getRabbitMqMessageUuid(): string {
+    public function getRabbitMqMessageUuid(): string
+    {
         $message = $this->getRabbitMqMessage();
         $messageBody = $message['body'] ? json_decode($message['body'], true) : "";
         return $messageBody['uuid'] ?? "";
@@ -245,7 +248,8 @@ class RabbitMQService
     /**
      * @return string
      */
-    public function getRabbitMqMessageExchange(): string {
+    public function getRabbitMqMessageExchange(): string
+    {
         $message = $this->getRabbitMqMessage();
         $messageDeliveryInfo = $message['delivery_info'] ?? "";
         return $messageDeliveryInfo['exchange'] ?? "";
@@ -254,7 +258,8 @@ class RabbitMQService
     /**
      * @return string
      */
-    public function getRabbitMqMessageRoutingKey(): string {
+    public function getRabbitMqMessageRoutingKey(): string
+    {
         $message = $this->getRabbitMqMessage();
         $messageDeliveryInfo = $message['delivery_info'] ?? "";
         return $messageDeliveryInfo['routing_key'] ?? "";
@@ -268,7 +273,8 @@ class RabbitMQService
      * @param Exception|null $error
      * @return array
      */
-    public function createSagaPayload(String $publisher, String $consumer, String $listener, String $eventData, Exception $error = null): array {
+    public function createSagaPayload(string $publisher, string $consumer, string $listener, string $eventData, \Throwable $error = null): array
+    {
         $uuid = $this->getRabbitMqMessageUuid();
         $exchange = $this->getRabbitMqMessageExchange();
         $routingKey = $this->getRabbitMqMessageRoutingKey();
@@ -282,7 +288,7 @@ class RabbitMQService
             'consumer' => $consumer,
             'event_data' => $eventData
         ];
-        if($error){
+        if ($error) {
             $sagaPayload['error_message'] = $error->getMessage();
         }
         return $sagaPayload;
@@ -295,7 +301,8 @@ class RabbitMQService
      * @param String $eventData
      * @return void
      */
-    public function sagaSuccessEvent(String $publisher, String $consumer, String $listener, String $eventData): void {
+    public function sagaSuccessEvent(string $publisher, string $consumer, string $listener, string $eventData): void
+    {
         $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData);
 
         /** Remove the event from Error table if exist */
@@ -323,12 +330,13 @@ class RabbitMQService
      * @param Exception $error
      * @return void
      */
-    public function sagaErrorEvent(String $publisher, String $consumer, String $listener, String $eventData, Exception $error){
+    public function sagaErrorEvent(string $publisher, string $consumer, string $listener, string $eventData, \Throwable $error)
+    {
         $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData, $error);
 
         /** Check weather the event already stored in Error Table or Not. If not then Store. */
         $errorEvent = SagaErrorEvent::where('uuid', $sagaPayload['uuid'])->first();
-        if(!$errorEvent){
+        if (!$errorEvent) {
             /** @var SagaErrorEvent|Builder $errorEvent */
             $errorEvent = app(SagaErrorEvent::class);
             $errorEvent->fill($sagaPayload);
@@ -338,14 +346,15 @@ class RabbitMQService
         /** Log in saga.log */
         Log::channel('saga')->info('########################################### ERROR in Event Consumed Start ###########################################');
         Log::channel('saga')->info('Database Index ########### ' . $errorEvent['id']);
-        Log::channel('saga')->info('Error Message ############ '. $error->getMessage());
+        Log::channel('saga')->info('Error Message ############ ' . $error->getMessage());
         Log::channel('saga')->info('Event Transfer Info ###### ', $errorEvent->toArray());
         Log::channel('saga')->info('Event Data ############### ', json_decode($eventData, true));
         Log::channel('saga')->info('Error Trac Trace ######### ' . $error->getTraceAsString());
         Log::channel('saga')->info('############################################ ERROR in Event Consumed End ############################################');
     }
 
-    public function receiveEventSuccessfully(String $publisher, String $consumer, String $listener, String $eventData){
+    public function receiveEventSuccessfully(string $publisher, string $consumer, string $listener, string $eventData)
+    {
         $sagaPayload = $this->createSagaPayload($publisher, $consumer, $listener, $eventData);
 
         /** Log in saga.log */

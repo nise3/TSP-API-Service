@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Batch;
 use App\Services\BatchService;
+use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -89,6 +90,7 @@ class BatchController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->batchService->validator($request)->validate();
+        $validatedData['code'] = CodeGeneratorService::getBatchCode($validatedData['course_id']);
         DB::beginTransaction();
         try {
             $data = $this->batchService->store($validatedData);
@@ -105,7 +107,7 @@ class BatchController extends Controller
             ];
 
             DB::commit();
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
@@ -127,7 +129,7 @@ class BatchController extends Controller
 
         $validated = $this->batchService->validator($request)->validate();
         DB::beginTransaction();
-        try{
+        try {
             $data = $this->batchService->update($batch, $validated);
             $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
             $response = [
@@ -140,7 +142,7 @@ class BatchController extends Controller
                 ]
             ];
             DB::commit();
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
@@ -248,12 +250,29 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function getBatchesByCourseId(Request $request, $id): JsonResponse
     {
+
         $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime);
 
         return Response::json($response);
     }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getPublicBatchesByCourseId(Request $request, $id): JsonResponse
+    {
+
+        $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime, true);
+
+        return Response::json($response);
+    }
+
 }

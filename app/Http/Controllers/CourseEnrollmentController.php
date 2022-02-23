@@ -7,15 +7,14 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use App\Services\CourseEnrollmentService;
+use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
 use Exception;
-use GuzzleHttp\Promise\PromiseInterface;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -73,6 +72,18 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function getInstituteTraineeYouths(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->instituteTraineeYouthsFilterValidator($request)->validate();
+        $response = $this->courseEnrollService->getInstituteTraineeYouths($validated, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 
     /**
      * Display the specified resource
@@ -99,6 +110,7 @@ class CourseEnrollmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Exception
      */
     public function courseEnrollment(Request $request): JsonResponse
     {
@@ -146,15 +158,21 @@ class CourseEnrollmentController extends Controller
      */
     public function verifyCode(Request $request, int $id): JsonResponse
     {
-        $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
-        $verifySmsStatus = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
-        $statusCode = $verifySmsStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
+        Log::info("veryCodePayload" . json_encode($request->all()));
 
+        $validated = $this->courseEnrollService->smsCodeValidation($request)->validate();
+        Log::info("validated data: " . json_encode($validated));
+
+        [$verifyStatus, $verifyMessage] = $this->courseEnrollService->verifySMSCode($id, $validated['verification_code']);
+        $statusCode = $verifyStatus ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
         $response = [
+            "data" => [
+                "free_course" => $this->courseEnrollService->isFreeCourse($id)
+            ],
             '_response_status' => [
-                "success" => $verifySmsStatus,
+                "success" => $verifyStatus,
                 "code" => $statusCode,
-                "message" => $verifySmsStatus ? "Sms Verification is done" : "Unprocessable Request",
+                "message" => $verifyMessage,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -194,9 +212,11 @@ class CourseEnrollmentController extends Controller
             $validated = $this->courseEnrollService->batchAssignmentValidator($request)->validate();
             $courseEnrollmentDataBeforeUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
 
-            $this->courseEnrollService->assignBatch($validated);
             $batch = Batch::findOrFail($validated['batch_id']);
-            $courseEnrollmentDataAfterUpdate = CourseEnrollment::findOrFail($validated['enrollment_id']);
+            $this->courseEnrollService->assignBatch($validated, $batch);
+
+            /** Remove SagaStatusGlobalScope as in above assignBatch() method already saga_status has been changed to UPDATE_PENDING */
+            $courseEnrollmentDataAfterUpdate = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($validated['enrollment_id']);
 
             $calenderEventPayload = [
                 'batch_title' => $batch->title,
@@ -212,8 +232,20 @@ class CourseEnrollmentController extends Controller
             /** Trigger Event to Cms Service via RabbitMQ  */
             event(new BatchCalenderYouthBatchAssignEvent($calenderEventPayload));
 
-            /** Send Mail Event */
-            $this->courseEnrollService->sendMailYouthAfterBatchAssign($validated);
+            /** Mail send */
+            $to = array($courseEnrollmentDataAfterUpdate->email);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "Batch Assignment Information";
+            $message = "Congratulation,You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** Sms send */
+            $recipient = $courseEnrollmentDataAfterUpdate->mobile;
+            $smsMessage = "You have assigned in " . $courseEnrollmentDataAfterUpdate->batch->title;
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
 
             $response = [
                 '_response_status' => [

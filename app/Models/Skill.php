@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Skill
  * @package App\Models
+ * @property int id
  * @property string title_en
  * @property string title
  * @property Carbon |null created_at

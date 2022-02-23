@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSagaStatusToBatchesTable extends Migration
+class AddCodeAttributeToBatches extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,7 @@ class AddSagaStatusToBatchesTable extends Migration
     public function up()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->unsignedTinyInteger("saga_status")
-                ->after('row_status')
-                ->default(1)
-                ->comment('1=>create_pending, 2=>update_pending, 3=>destroy_pending, 4=>commit, 5=>rollback');
+            $table->char('code', 28)->after('id');
         });
     }
 
@@ -29,7 +26,7 @@ class AddSagaStatusToBatchesTable extends Migration
     public function down()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->dropColumn('saga_status');
+            $table->dropColumn('code');
         });
     }
 }
