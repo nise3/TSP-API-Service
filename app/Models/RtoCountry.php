@@ -10,12 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class RtoCountry
  * @package App\Models
- * @property int id
- * @property string title_en
- * @property string title
- * @property Carbon |null created_at
- * @property Carbon |null updated_at
- * @property Carbon |null deleted_at
+ * @property int country_id
  */
 class RtoCountry extends Model
 {
