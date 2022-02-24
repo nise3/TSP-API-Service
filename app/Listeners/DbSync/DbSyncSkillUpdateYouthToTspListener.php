@@ -3,10 +3,7 @@
 namespace App\Listeners\DbSync;
 
 use App\Models\BaseModel;
-use App\Models\CourseEnrollment;
 use App\Models\Skill;
-use App\Services\RabbitMQService;
-use App\Traits\Scopes\SagaStatusGlobalScope;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\QueryException;
@@ -16,15 +13,6 @@ use Throwable;
 
 class DbSyncSkillUpdateYouthToTspListener implements ShouldQueue
 {
-    private RabbitMQService $rabbitMQService;
-
-    /**
-     * @param RabbitMQService $rabbitMQService
-     */
-    public function __construct(RabbitMQService $rabbitMQService)
-    {
-        $this->rabbitMQService = $rabbitMQService;
-    }
 
     /**
      * @param $event
@@ -38,51 +26,29 @@ class DbSyncSkillUpdateYouthToTspListener implements ShouldQueue
 
         try {
 
-            $this->rabbitMQService->receiveEventSuccessfully(
-                BaseModel::SAGA_YOUTH_SERVICE,
-                BaseModel::SAGA_INSTITUTE_SERVICE,
-                get_class($this),
-                json_encode($event)
-            );
+            throw_if(!(isset($data['operation']) && in_array($data['operation'], ['add', 'update', 'delete']) && !empty($data['skill_data'])));
 
-            $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
+            $id = trim($data['skill_data']['id']);
 
-            if (!$alreadyConsumed) {
-
-                $skill = Skill::findOrFail($data['id']);
-
-                if(isset($data['operation'])) {
-
-
+            if ($data['operation'] === 'add') {
+                $skill = Skill::find($id);
+                if (!($skill && $skill->id)) {
+                    Skill::create($data['skill_data']);
                 }
-
+            } else if ($data['operation'] === 'update') {
+                $skill = Skill::findOrFail($id);
+                $skill->title_en = trim($data['skill_data']['title_en']);
+                $skill->title = trim($data['skill_data']['title']);
+                $skill->save();
+            } else if ($data['operation'] === 'delete') {
+                $skill = Skill::findOrFail($id);
+                $skill->delete();
             }
-
-            /**
-             * Store the event as a Success event into Database.
-             * If this event already previously consumed then again store it to saga_success_table to identify that this event again successfully consumed.
-             */
-            $this->rabbitMQService->sagaSuccessEvent(
-                BaseModel::SAGA_YOUTH_SERVICE,
-                BaseModel::SAGA_INSTITUTE_SERVICE,
-                get_class($this),
-                json_encode($data)
-            );
 
         } catch (Throwable $e) {
             if ($e instanceof QueryException && $e->getCode() == BaseModel::DATABASE_CONNECTION_ERROR_CODE) {
                 /** Technical Recoverable Error Occurred. RETRY mechanism with DLX-DLQ apply now by sending a rejection */
                 throw new PDOException("Database Connectivity Error");
-            } else {
-                /** Technical Non-recoverable Error "OR" Business Rule violation Error Occurred */
-                /** Store the event as an Error event into Database */
-                $this->rabbitMQService->sagaErrorEvent(
-                    BaseModel::SAGA_YOUTH_SERVICE,
-                    BaseModel::SAGA_INSTITUTE_SERVICE,
-                    get_class($this),
-                    json_encode($data),
-                    $e,
-                );
             }
         }
     }
