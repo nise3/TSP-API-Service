@@ -29,6 +29,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('branches', 'BranchController')->render();
         $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
         $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
+        $customRouter()->resourceRoute('rto-countries', 'RtoCountryController')->render();
         $customRouter()->resourceRoute('registered-training-organizations', 'RegisteredTrainingOrganizationController')->render();
 
         /** Institute Registration Approval */
