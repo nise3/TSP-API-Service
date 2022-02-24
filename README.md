@@ -1,7 +1,7 @@
 # NISE3 Institute Management API Service
 
 ```shell
-RELEASE = 'php artisan migrate:fresh --seed'
+RELEASE = 'php artisan list'
 ```
 ## Official Documentation
  
