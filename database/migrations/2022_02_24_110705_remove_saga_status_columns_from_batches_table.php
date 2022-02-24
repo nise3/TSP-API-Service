@@ -14,7 +14,14 @@ class RemoveSagaStatusColumnsFromBatchesTable extends Migration
     public function up()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->dropColumn('saga_status');
+
+            if (Schema::hasColumn('batches', 'saga_status'))
+            {
+                Schema::table('batches', function (Blueprint $table)
+                {
+                    $table->dropColumn('saga_status');
+                });
+            }
         });
     }
 

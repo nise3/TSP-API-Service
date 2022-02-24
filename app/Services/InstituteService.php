@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
@@ -27,8 +26,6 @@ use Throwable;
  */
 class InstituteService
 {
-    public TrainingCenterService $trainingCenterService;
-
     /**
      * @param array $request
      * @param Carbon $startTime
@@ -47,6 +44,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -153,6 +151,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -483,6 +482,7 @@ class InstituteService
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title',
+            'institutes.service_type',
             'institutes.code',
             'institutes.logo',
             'institutes.primary_phone',
@@ -572,6 +572,11 @@ class InstituteService
             "institute_type_id" => [
                 "required",
                 "int"
+            ],
+            'service_type' => [
+                'required',
+                'int',
+                Rule::in(BaseModel::SERVICE_TYPES)
             ],
             'title' => [
                 'required',
