@@ -25,7 +25,7 @@ class PublicApiMiddleware
     {
         if ($request->headers->has('Domain')) {
             $domain = $request->headers->get('Domain');
-            $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'service-to-service-call/domain-identification/' . $domain;
+            $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'service-to-service-call/domain-identification?domain=' . $domain;
 
             $response = Http::withOptions([
                 'debug' => config("nise3.is_dev_mode"),

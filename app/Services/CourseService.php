@@ -702,6 +702,13 @@ class CourseService
 
         if (!empty($searchText) || !empty($locUpazilaId) || !empty($locDistrictId)) {
             $coursesBuilder->join('training_centers', 'training_centers.id', '=', 'batches.training_center_id');
+            if(!empty($locUpazilaId)) {
+                $coursesBuilder->where('training_centers.loc_upazila_id',$locUpazilaId);
+            }
+            if(!empty($locDistrictId)){
+
+                $coursesBuilder->where('training_centers.loc_district_id',$locDistrictId);
+            }
             $coursesBuilder->join('course_skill', 'course_skill.course_id', '=', 'courses.id');
 
             /** Search courses by search_text */
