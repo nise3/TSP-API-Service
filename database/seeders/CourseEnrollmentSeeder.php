@@ -6,7 +6,6 @@ use App\Models\BaseModel;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use Illuminate\Database\Seeder;
-use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 

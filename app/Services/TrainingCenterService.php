@@ -506,7 +506,24 @@ class TrainingCenterService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'center_location_type' => [
                 'sometimes',
@@ -544,8 +561,6 @@ class TrainingCenterService
                 'min:1'
             ]
         ];
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -650,6 +665,8 @@ class TrainingCenterService
         ];
 
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
@@ -685,8 +702,6 @@ class TrainingCenterService
                 'integer'
             ]
         ];
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }

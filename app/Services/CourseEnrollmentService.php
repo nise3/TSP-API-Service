@@ -553,6 +553,8 @@ class CourseEnrollmentService
         $requestData = $request->all();
 
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'first_name' => 'nullable|max:500|min:2',
             'first_name_en' => 'nullable|max:250|min:2',
             'program_id' => 'nullable|int|gt:0',
@@ -580,7 +582,6 @@ class CourseEnrollmentService
             ]
         ];
 
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
@@ -1139,7 +1140,7 @@ class CourseEnrollmentService
         if (!empty($request['payment_info'])) {
             $rules['payment_gateway_type'] = [
                 'required',
-                Rule::in(array_values(PaymentTransactionLogHistory::PAYMENT_GATEWAYS))
+                Rule::in(array_values(PaymentTransactionHistory::PAYMENT_GATEWAYS))
             ];
         }
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
