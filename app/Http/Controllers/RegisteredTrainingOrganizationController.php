@@ -167,7 +167,7 @@ class RegisteredTrainingOrganizationController extends Controller
                 throw new RuntimeException('Saving RTO to DB failed!', 500);
             }
 
-            $validatedData['rto_id'] = $rto->id;
+            $validatedData['registered_training_organization_id'] = $rto->id;
 
             $validatedData['password'] = BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
 

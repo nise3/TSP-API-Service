@@ -76,7 +76,7 @@ class CodeGeneratorService
             $existingRTOCode = SSPPessimisticLocking::lockForUpdate()->first();
             $lastIncrementalVal = !empty($existingRTOCode) && $existingRTOCode->last_incremental_value ? $existingRTOCode->last_incremental_value : 0;
             $lastIncrementalVal = $lastIncrementalVal + 1;
-            $padSize = RegisteredTrainingOrganization::RTO_CODE_PREFIX - strlen((string)$lastIncrementalVal);
+            $padSize = RegisteredTrainingOrganization::RTO_CODE_LENGTH - strlen((string)$lastIncrementalVal);
 
             /**
              * Prefix+000000N. Ex: RTO0000001

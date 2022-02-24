@@ -4855,6 +4855,67 @@
                 }
             }
         },
+        "/registered-training-organizations": {
+            "get": {
+                "tags": ["Registerd training organization"],
+                "summary": "Get all registered training organizations",
+                "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Registerd training organization"],
+                "summary": "Get all registered training organizations",
+                "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTrainingOrganization"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute_trainee_youths": {
             "get": {
                 "tags": [
@@ -5289,6 +5350,130 @@
             }
         },
         "schemas": {
+            "RegisterTrainingOrganization": {
+                "type": "object",
+                "properties": {
+                    "permission_sub_group_id": {
+                        "type": "integer",
+                        "description": "Required if id = null"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "country_id": {
+                        "type": "integer",
+                        "description": "Must exist in countries table"
+                    },
+                    "loc_division_id": {
+                        "type": "integer",
+                        "description": "Must exist in loc_divisions table"
+                    },
+                    "loc_district_id": {
+                        "type": "integer",
+                        "description": "Must exist in loc_districts table"
+                    },
+                    "loc_upazila_id": {
+                        "type": "integer",
+                        "description": "Must exist in loc_upazilas table"
+                    },
+                    "location_latitude": {
+                        "type": "string"
+                    },
+                    "location_longitude": {
+                        "type": "string"
+                    },
+                    "google_map_src": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "address_en": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "primary_phone": {
+                        "type": "string"
+                    },
+                    "phone_numbers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "primary_mobile": {
+                        "type": "string"
+                    },
+                    "mobile_numbers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_en": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation": {
+                        "type": "string"
+                    },
+                    "name_of_the_office_head_designation_en": {
+                        "type": "string"
+                    },
+                    "contact_person_name": {
+                        "type": "string"
+                    },
+                    "contact_person_name_en": {
+                        "type": "string"
+                    },
+                    "contact_person_mobile": {
+                        "type": "string",
+                        "description": "Unique in registered_training_organizations table "
+                    },
+                    "contact_person_email": {
+                        "type": "string",
+                        "description": "Unique in registered_training_organizations table "
+                    },
+                    "contact_person_designation": {
+                        "type": "string"
+                    },
+                    "contact_person_designation_en": {
+                        "type": "string"
+                    },
+                    "config": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [0,1,2,3,4],
+                        "description": "INACTIVE = 0;ACTIVE = 1;PENDING = 2;REJECTED = 3;FAILED = 4 . Required when id != null"
+                    }
+                },
+                "required": [
+                    "title",
+                    "country_id",
+                    "loc_division_id",
+                    "loc_district_id",
+                    "primary_mobile",
+                    "email",
+                    "name_of_the_office_head",
+                    "name_of_the_office_head_designation",
+                    "contact_person_name",
+                    "contact_person_mobile",
+                    "contact_person_email",
+                    "contact_person_designation"
+                ]
+            },
             "CreateRtoCountries": {
                 "type": "object",
                 "properties": {

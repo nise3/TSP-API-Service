@@ -355,6 +355,10 @@ class RegisteredTrainingOrganizationService
                 'nullable',
                 'int'
             ],
+            "code" => [
+                'string',
+                'required'
+            ],
             'title' => [
                 'required',
                 'string',
