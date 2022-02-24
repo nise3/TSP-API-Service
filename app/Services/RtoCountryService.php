@@ -46,7 +46,7 @@ class RtoCountryService
 
         /** @var Collection $courses */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
-            $pageSize = $pageSize ?: 10;
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $countries = $rtoBuilder->paginate($pageSize);
             $paginateData = (object)$countries->toArray();
             $response['current_page'] = $paginateData->current_page;
@@ -69,16 +69,14 @@ class RtoCountryService
 
     public function store(array $data): mixed
     {
-
         DB::table('rto_countries')->truncate();
         $countryIds = $data["country_ids"];
         foreach ($countryIds as $countryId){
-            $countryArray["country_id"] = $countryId;
             $country = new RtoCountry();
-            $country->fill($countryArray);
+            $country->country_id = $countryId;
             $country->save();
         }
-        return 1;
+        return true;
     }
 
 
@@ -118,7 +116,7 @@ class RtoCountryService
 
         $rules = [
             'country_ids' => [
-                'nullable',
+                'required',
                 'array',
                 'min:1'
             ],
