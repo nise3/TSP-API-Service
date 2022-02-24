@@ -94,52 +94,51 @@ spec:
                   - >
                     mv /app/.env.example /app/.env;
                     php artisan key:generate;
-                    sed -i "s/APP_ENV=.*$/APP_ENV=$APP_ENV/g" /app/.env;
-                    sed -i "s/APP_DEBUG=.*$/APP_DEBUG=$APP_DEBUG/g" /app/.env;
-                    sed -i "s/APP_URL=.*$/APP_URL=$APP_URL/g" /app/.env;
+                    sed -i "s|APP_ENV=.*$|APP_ENV=$APP_ENV|g" /app/.env;
+                    sed -i "s|APP_DEBUG=.*$|APP_DEBUG=$APP_DEBUG|g" /app/.env;
+                    sed -i "s|APP_URL=.*$|APP_URL=$APP_URL|g" /app/.env;
 
-                    sed -i "s/LOG_CHANNEL=.*$/LOG_CHANNEL=$LOG_CHANNEL/g" /app/.env;
-                    sed -i "s/ELASTIC_HOST=.*$/ELASTIC_HOST=$ELASTIC_HOST/g" /app/.env;
-                    sed -i "s/ELASTIC_LOGS_INDEX=.*$/ELASTIC_LOGS_INDEX=$ELASTIC_LOGS_INDEX/g" /app/.env;
+                    sed -i "s|LOG_CHANNEL=.*$|LOG_CHANNEL=$LOG_CHANNEL|g" /app/.env;
+                    sed -i "s|ELASTIC_HOST=.*$|ELASTIC_HOST=$ELASTIC_HOST|g" /app/.env;
+                    sed -i "s|ELASTIC_LOGS_INDEX=.*$|ELASTIC_LOGS_INDEX=$ELASTIC_LOGS_INDEX|g" /app/.env;
 
-                    sed -i "s/API_GATEWAY_BASE_URL=.*$/API_GATEWAY_BASE_URL=$API_GATEWAY_BASE_URL/g" /app/.env;
-                    sed -i "s/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=.*$/PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=$PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI/g" /app/.env;
-                    sed -i "s/API_GATEWAY_API_KEY=.*$/API_GATEWAY_API_KEY=$API_GATEWAY_API_KEY/g" /app/.env;
+                    sed -i "s|REDIS_HOST=.*$|REDIS_HOST=$REDIS_HOST|g" /app/.env;
+                    sed -i "s|REDIS_PASSWORD=.*$|REDIS_PASSWORD=$REDIS_PASSWORD|g" /app/.env;
+                    sed -i "s|REDIS_PORT=.*$|REDIS_PORT=$REDIS_PORT|g" /app/.env;
 
+                    sed -i "s|DB_HOST=.*$|DB_HOST=$DB_HOST|g" /app/.env;
+                    sed -i "s|DB_PORT=.*$|DB_PORT=$DB_PORT|g" /app/.env;
+                    sed -i "s|DB_DATABASE=.*$|DB_DATABASE=$DB_DATABASE|g" /app/.env;
+                    sed -i "s|DB_USERNAME=.*$|DB_USERNAME=$DB_USERNAME|g" /app/.env;
+                    sed -i "s|DB_PASSWORD=.*$|DB_PASSWORD=$DB_PASSWORD|g" /app/.env;
 
-                    sed -i "s/REDIS_HOST=.*$/REDIS_HOST=$REDIS_HOST/g" /app/.env;
-                    sed -i "s/REDIS_PASSWORD=.*$/REDIS_PASSWORD=$REDIS_PASSWORD/g" /app/.env;
-                    sed -i "s/REDIS_PORT=.*$/REDIS_PORT=$REDIS_PORT/g" /app/.env;
+                    sed -i "s|RABBITMQ_HOST=.*$|RABBITMQ_HOST=$RABBITMQ_HOST|g" /app/.env;
+                    sed -i "s|RABBITMQ_PORT=.*$|RABBITMQ_PORT=$RABBITMQ_PORT|g" /app/.env;
+                    sed -i "s|RABBITMQ_VHOST=.*$|RABBITMQ_VHOST=$RABBITMQ_VHOST|g" /app/.env;
+                    sed -i "s|RABBITMQ_USER=.*$|RABBITMQ_USER=$RABBITMQ_USER|g" /app/.env;
+                    sed -i "s|RABBITMQ_PASSWORD=.*$|RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD|g" /app/.env;
 
-                    sed -i "s/DB_HOST=.*$/DB_HOST=$DB_HOST/g" /app/.env;
-                    sed -i "s/DB_PORT=.*$/DB_PORT=$DB_PORT/g" /app/.env;
-                    sed -i "s/DB_DATABASE=.*$/DB_DATABASE=$DB_DATABASE/g" /app/.env;
-                    sed -i "s/DB_USERNAME=.*$/DB_USERNAME=$DB_USERNAME/g" /app/.env;
-                    sed -i "s/DB_PASSWORD=.*$/DB_PASSWORD=$DB_PASSWORD/g" /app/.env;
+                    sed -i "s|WSO2_APIM_BASE_URL=.*$|WSO2_APIM_BASE_URL=$WSO2_APIM_BASE_URL|g" /app/.env;
+                    sed -i "s|WSO2_APIM_CLIENT_KEY=.*$|WSO2_APIM_CLIENT_KEY=$WSO2_APIM_CLIENT_KEY|g" /app/.env;
+                    sed -i "s|WSO2_APIM_CLIENT_SECRET=.*$|WSO2_APIM_CLIENT_SECRET=$WSO2_APIM_CLIENT_SECRET|g" /app/.env;
 
-                    sed -i "s/RABBITMQ_HOST=.*$/RABBITMQ_HOST=$RABBITMQ_HOST/g" /app/.env;
-                    sed -i "s/RABBITMQ_PORT=.*$/RABBITMQ_PORT=$RABBITMQ_PORT/g" /app/.env;
-                    sed -i "s/RABBITMQ_VHOST=.*$/RABBITMQ_VHOST=$RABBITMQ_VHOST/g" /app/.env;
-                    sed -i "s/RABBITMQ_USER=.*$/RABBITMQ_USER=$RABBITMQ_USER/g" /app/.env;
-                    sed -i "s/RABBITMQ_PASSWORD=.*$/RABBITMQ_PASSWORD=$RABBITMQ_PASSWORD/g" /app/.env;
+                    sed -i "s|WSO2_IDP_BASE_URL=.*$|WSO2_IDP_BASE_URL=$WSO2_IDP_BASE_URL|g" /app/.env;
+                    sed -i "s|WSO2_IDP_BASE_USER_URL=.*$|WSO2_IDP_BASE_USER_URL=$WSO2_IDP_BASE_USER_URL|g" /app/.env;
+                    sed -i "s|WSO2_IDP_USERNAME=.*$|WSO2_IDP_USERNAME=$WSO2_IDP_USERNAME|g" /app/.env;
+                    sed -i "s|WSO2_IDP_PASSWORD=.*$|WSO2_IDP_PASSWORD=$WSO2_IDP_PASSWORD|g" /app/.env;
+                    sed -i "s|WSO2_IDP_CLIENT_KEY=.*$|WSO2_IDP_CLIENT_KEY=$WSO2_IDP_CLIENT_KEY|g" /app/.env;
+                    sed -i "s|WSO2_IDP_CLIENT_SECRET=.*$|WSO2_IDP_CLIENT_SECRET=$WSO2_IDP_CLIENT_SECRET|g" /app/.env;
 
-                    sed -i "s/WSO2_APIM_BASE_URL=.*$/WSO2_APIM_BASE_URL=$WSO2_APIM_BASE_URL/g" /app/.env;
-                    sed -i "s/WSO2_APIM_CLIENT_KEY=.*$/WSO2_APIM_CLIENT_KEY=$WSO2_APIM_CLIENT_KEY/g" /app/.env;
-                    sed -i "s/WSO2_APIM_CLIENT_SECRET=.*$/WSO2_APIM_CLIENT_SECRET=$WSO2_APIM_CLIENT_SECRET/g" /app/.env;
+                    sed -i "s|CORE_API_BASE_URL=.*$|CORE_API_BASE_URL=$CORE_API_BASE_URL|g" /app/.env;
+                    sed -i "s|YOUTH_API_BASE_URL=.*$|YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL|g" /app/.env;
+                    sed -i "s|TSP_API_BASE_URL=.*$|TSP_API_BASE_URL=$TSP_API_BASE_URL|g" /app/.env;
+                    sed -i "s|INDUSTRY_API_BASE_URL=.*$|INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL|g" /app/.env;
+                    sed -i "s|CMS_API_BASE_URL=.*$|CMS_API_BASE_URL=$CMS_API_BASE_URL|g" /app/.env;
+                    sed -i "s|MAIL_API_BASE_URL=.*$|MAIL_API_BASE_URL=$MAIL_API_BASE_URL|g" /app/.env;
 
-                    sed -i "s/WSO2_IDP_BASE_URL=.*$/WSO2_IDP_BASE_URL=$WSO2_IDP_BASE_URL/g" /app/.env;
-                    sed -i "s/WSO2_IDP_BASE_USER_URL=.*$/WSO2_IDP_BASE_USER_URL=$WSO2_IDP_BASE_USER_URL/g" /app/.env;
-                    sed -i "s/WSO2_IDP_USERNAME=.*$/WSO2_IDP_USERNAME=$WSO2_IDP_USERNAME/g" /app/.env;
-                    sed -i "s/WSO2_IDP_PASSWORD=.*$/WSO2_IDP_PASSWORD=$WSO2_IDP_PASSWORD/g" /app/.env;
-                    sed -i "s/WSO2_IDP_CLIENT_KEY=.*$/WSO2_IDP_CLIENT_KEY=$WSO2_IDP_CLIENT_KEY/g" /app/.env;
-                    sed -i "s/WSO2_IDP_CLIENT_SECRET=.*$/WSO2_IDP_CLIENT_SECRET=$WSO2_IDP_CLIENT_SECRET/g" /app/.env;
-
-                    sed -i "s/CORE_API_BASE_URL=.*$/CORE_API_BASE_URL=$CORE_API_BASE_URL/g" /app/.env;
-                    sed -i "s/YOUTH_API_BASE_URL=.*$/YOUTH_API_BASE_URL=$YOUTH_API_BASE_URL/g" /app/.env;
-                    sed -i "s/TSP_API_BASE_URL=.*$/TSP_API_BASE_URL=$TSP_API_BASE_URL/g" /app/.env;
-                    sed -i "s/INDUSTRY_API_BASE_URL=.*$/INDUSTRY_API_BASE_URL=$INDUSTRY_API_BASE_URL/g" /app/.env;
-                    sed -i "s/CMS_API_BASE_URL=.*$/CMS_API_BASE_URL=$CMS_API_BASE_URL/g" /app/.env;
-                    sed -i "s/MAIL_API_BASE_URL=.*$/MAIL_API_BASE_URL=$MAIL_API_BASE_URL/g" /app/.env;
+                    sed -i "s|API_GATEWAY_BASE_URL=.*$|API_GATEWAY_BASE_URL=$API_GATEWAY_BASE_URL|g" /app/.env;
+                    sed -i "s|PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=.*$|PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI=$PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI|g" /app/.env;
+                    sed -i "s|API_GATEWAY_API_KEY=.*$|API_GATEWAY_API_KEY=$API_GATEWAY_API_KEY|g" /app/.env;
                     chown -R www-data:www-data /app;
                     cd /app;
                     {{ if .Values.variables.common.enableGitCommitCommandFetch }}

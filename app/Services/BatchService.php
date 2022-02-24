@@ -10,6 +10,7 @@ use App\Models\Batch;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -400,7 +401,24 @@ class BatchService
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'title' => [
                 'required',
                 'string',
@@ -470,7 +488,6 @@ class BatchService
             ],
         ];
 
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
@@ -491,6 +508,8 @@ class BatchService
         ];
 
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
@@ -508,7 +527,6 @@ class BatchService
             ],
         ];
 
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
         return Validator::make($request->all(), $rules, $customMessage);
     }
 

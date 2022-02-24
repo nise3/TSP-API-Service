@@ -94,7 +94,7 @@ class CodeGeneratorService
      */
     public static function getTrainingCenterCode(int $sspId = null): string
     {
-        [$instituteCode, $trainingCenterExistingCode] = !empty($sspId) ? self::getCode(TrainingCenter::class, $sspId) : self::getCode(TrainingCenter::class);
+        [$instituteCode, $trainingCenterExistingCode] = self::getCode(TrainingCenter::class, $sspId);
 
         if (!empty($trainingCenterExistingCode) && !empty($trainingCenterExistingCode->code)) {
             $trainingCenterCode = explode(TrainingCenter::TRAINING_CENTER_CODE_PREFIX, $trainingCenterExistingCode->code);
@@ -117,7 +117,7 @@ class CodeGeneratorService
      */
     public static function getCourseCode(int $sspId = null): string
     {
-        [$instituteCode, $courseExistingCode] = !empty($sspId) ? self::getCode(Course::class, $sspId) : self::getCode(Course::class);
+        [$instituteCode, $courseExistingCode] = self::getCode(Course::class, $sspId);
 
         if (!empty($courseExistingCode) && !empty($courseExistingCode->code)) {
             $courseCode = explode(Course::COURSE_CODE_PREFIX, $courseExistingCode->code);
@@ -239,17 +239,17 @@ class CodeGeneratorService
     {
         /** @var User $authUser */
         $authUser = Auth::user();
-        $queryAttribute = "institute_id";
         if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $queryAttribute = "industry_association_id";
-            $queryAttributeValue = !empty($id) ? $id : $authUser->industry_association_id;
+            $queryAttributeValue = $id ?? $authUser->industry_association_id;
             $parentEntity = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+        } else if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
+            $queryAttribute = "institute_id";
+            $queryAttributeValue = $id ?? $authUser->institute_id;
+            $parentEntity = Institute::findOrFail($queryAttributeValue);
         } else {
-            if ($authUser && $authUser->institute_id) {
-                $queryAttributeValue = !empty($id) ? $id : $authUser->institute_id;
-            } else {
-                $queryAttributeValue = $id;
-            }
+            $queryAttribute = request()->get('institute_id') ? "institute_id" : "industry_association_id";
+            $queryAttributeValue = request()->get('institute_id') ?? request()->get('industry_association_id');
             $parentEntity = Institute::findOrFail($queryAttributeValue);
         }
 
