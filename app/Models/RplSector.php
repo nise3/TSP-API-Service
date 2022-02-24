@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\Scopes\ScopeRowStatusTrait;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * App\Models\Role
+ *
+ * @property int id
+ * @property string title_en
+ * @property string title
+ * @property string description
+ * @property array translations
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ */
+class RplSector extends BaseModel
+{
+    use ScopeRowStatusTrait, SoftDeletes;
+
+    /**
+     * @var string[]
+     */
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
+
+    protected $casts = [
+        'translations' => 'array'
+    ];
+
+}

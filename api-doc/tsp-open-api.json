@@ -4772,6 +4772,83 @@
                 }
             }
         },
+
+        "/rto-countries": {
+            "get": {
+                "tags": ["Rto Countries"],
+                "summary": "Get all Rto countries",
+                "description": "API endpoint to Get all Rto countries . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "succesful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "country_id": 1,
+                                            "title": "Afghanistan",
+                                            "title_en": "Afghanistan",
+                                            "code": "AF"
+                                        },
+                                        {
+                                            "country_id": 5,
+                                            "title": "American Samoa",
+                                            "title_en": "American Samoa",
+                                            "code": "AS"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Rto Countries"],
+                "summary": "Create  Rto countries",
+                "description": "API endpoint to Create Rto countries . A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateRtoCountries"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Rto Country added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/institute_trainee_youths": {
             "get": {
                 "tags": [
@@ -5206,6 +5283,18 @@
             }
         },
         "schemas": {
+            "CreateRtoCountries": {
+                "type": "object",
+                "properties": {
+                    "country_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "description": "Must exist in countries table"
+                    }
+                }
+            },
             "PayNow": {
                 "type": "object",
                 "properties": {

@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Institute;
 use App\Models\InvoicePessimisticLocking;
 use App\Models\MerchantCodePessimisticLocking;
+use App\Models\RegisteredTrainingOrganization;
 use App\Models\SSPPessimisticLocking;
 use App\Models\TrainingCenter;
 use App\Models\User;
@@ -56,6 +57,45 @@ class CodeGeneratorService
             }
             DB::commit();
             return $sspCode;
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            throw $throwable;
+        }
+
+    }
+
+    /**
+     * @return string
+     * @throws Throwable
+     */
+    public static function getRTOCode(): string
+    {
+        DB::beginTransaction();
+        try {
+            /** @var SSPPessimisticLocking $existingRTOCode */
+            $existingRTOCode = SSPPessimisticLocking::lockForUpdate()->first();
+            $lastIncrementalVal = !empty($existingRTOCode) && $existingRTOCode->last_incremental_value ? $existingRTOCode->last_incremental_value : 0;
+            $lastIncrementalVal = $lastIncrementalVal + 1;
+            $padSize = RegisteredTrainingOrganization::RTO_CODE_PREFIX - strlen((string)$lastIncrementalVal);
+
+            /**
+             * Prefix+000000N. Ex: RTO0000001
+             */
+            $rtoCode = str_pad(RegisteredTrainingOrganization::RTO_CODE_PREFIX, $padSize, '0', STR_PAD_RIGHT) . $lastIncrementalVal;
+
+            /**
+             * Code Update
+             */
+            if ($existingRTOCode) {
+                $existingRTOCode->last_incremental_value = $lastIncrementalVal;
+                $existingRTOCode->save();
+            } else {
+                SSPPessimisticLocking::create([
+                    "last_incremental_value" => $lastIncrementalVal
+                ]);
+            }
+            DB::commit();
+            return $rtoCode;
         } catch (Throwable $throwable) {
             DB::rollBack();
             throw $throwable;
