@@ -28,7 +28,8 @@ class RtoCountryService
 
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
-
+        $title = $request['title'] ?? "";
+        $titleEn = $request['title_en'] ?? "";
 
         $rtoBuilder = RtoCountry::select(
             [
@@ -43,6 +44,14 @@ class RtoCountryService
         $rtoBuilder->leftJoin('countries',function ($join){
            $join->on("countries.id",'=',"rto_countries.country_id");
         });
+
+        if(!empty($title)){
+            $rtoBuilder->where('countries.title',$title);
+        }
+
+        if(!empty($titleEn)){
+            $rtoBuilder->where('countries.title_en',$titleEn);
+        }
 
         /** @var Collection $courses */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -103,6 +112,8 @@ class RtoCountryService
         $rules = [
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
+            'title' => 'string|nullable|max:600|min:2',
+            'title_en' => 'string|nullable|max:600|min:2',
         ];
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules);
     }
