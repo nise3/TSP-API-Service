@@ -8,6 +8,7 @@ use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\RegisteredTrainingOrganization;
+use App\Models\RplSector;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
@@ -21,112 +22,55 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegisteredTrainingOrganizationService
+class RplSectorService
 {
-
     /**
      * @param array $request
      * @param Carbon $startTime
      * @return array
      */
-    public function getRtoList(array $request, Carbon $startTime): array
+    public function getRplSectorList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
-        $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var RegisteredTrainingOrganization|Builder $rtoBuilder */
-        $rtoBuilder = RegisteredTrainingOrganization::select([
-            'registered_training_organizations.id',
-            'registered_training_organizations.code',
-            'registered_training_organizations.title',
-            'registered_training_organizations.title_en',
-            'registered_training_organizations.loc_division_id',
-            'registered_training_organizations.country_id',
-            'loc_divisions.title as division_title',
-            'loc_divisions.title_en as division_title_en',
-            'registered_training_organizations.loc_district_id',
-            'loc_districts.title as district_title',
-            'loc_districts.title_en as district_title_en',
-            'registered_training_organizations.loc_upazila_id',
-            'loc_upazilas.title as upazila_title',
-            'loc_upazilas.title_en as upazila_title_en',
-            'registered_training_organizations.address',
-            'registered_training_organizations.address_en',
-            'registered_training_organizations.location_latitude',
-            'registered_training_organizations.location_longitude',
-            'registered_training_organizations.google_map_src',
-            'registered_training_organizations.logo',
-            'registered_training_organizations.phone_code',
-            'registered_training_organizations.primary_phone',
-            'registered_training_organizations.phone_numbers',
-            'registered_training_organizations.primary_mobile',
-            'registered_training_organizations.mobile_numbers',
-            'registered_training_organizations.email',
-            'registered_training_organizations.name_of_the_office_head',
-            'registered_training_organizations.name_of_the_office_head_en',
-            'registered_training_organizations.name_of_the_office_head_designation',
-            'registered_training_organizations.name_of_the_office_head_designation_en',
-            'registered_training_organizations.contact_person_name',
-            'registered_training_organizations.contact_person_name_en',
-            'registered_training_organizations.contact_person_mobile',
-            'registered_training_organizations.contact_person_email',
-            'registered_training_organizations.contact_person_designation',
-            'registered_training_organizations.contact_person_designation_en',
-            'registered_training_organizations.config',
-            'registered_training_organizations.row_status',
-            'registered_training_organizations.created_by',
-            'registered_training_organizations.updated_by',
-            'registered_training_organizations.created_at',
-            'registered_training_organizations.updated_at',
-            'registered_training_organizations.deleted_at',
+        /** @var RplSector|Builder $rplSectorBuilder */
+        $rplSectorBuilder = RplSector::select([
+            'rpl_sectors.id',
+            'rpl_sectors.title',
+            'rpl_sectors.title_en',
+            'rpl_sectors.translations',
+            'rpl_sectors.created_at',
+            'rpl_sectors.updated_at',
+            'rpl_sectors.deleted_at',
         ]);
 
-        $rtoBuilder->orderBy('registered_training_organizations.id', $order);
-
-        $rtoBuilder->leftJoin('loc_divisions', function ($join) {
-            $join->on('loc_divisions.id', '=', 'registered_training_organizations.loc_division_id')
-                ->whereNull('loc_divisions.deleted_at');
-        });
-
-        $rtoBuilder->leftJoin('loc_districts', function ($join) use ($rowStatus) {
-            $join->on('loc_districts.id', '=', 'registered_training_organizations.loc_district_id')
-                ->whereNull('loc_districts.deleted_at');
-        });
-
-        $rtoBuilder->leftJoin('loc_upazilas', function ($join) use ($rowStatus) {
-            $join->on('loc_upazilas.id', '=', 'registered_training_organizations.loc_upazila_id')
-                ->whereNull('loc_upazilas.deleted_at');
-        });
-
-        if (is_numeric($rowStatus)) {
-            $rtoBuilder->where('registered_training_organizations.row_status', $rowStatus);
-        }
+        $rplSectorBuilder->orderBy('rpl_sectors.id', $order);
 
         if (!empty($titleEn)) {
-            $rtoBuilder->where('registered_training_organizations.title_en', 'like', '%' . $titleEn . '%');
+            $rplSectorBuilder->where('rpl_sectors.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $rtoBuilder->where('registered_training_organizations.title', 'like', '%' . $title . '%');
+            $rplSectorBuilder->where('rpl_sectors.title', 'like', '%' . $title . '%');
         }
 
-        /** @var Collection $rtos */
+        /** @var Collection $rplSectors */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $rtos = $rtoBuilder->paginate($pageSize);
-            $paginateData = (object)$rtos->toArray();
+            $rplSectors = $rplSectorBuilder->paginate($pageSize);
+            $paginateData = (object)$rplSectors->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $rtos = $rtoBuilder->get();
+            $rplSectors = $rplSectorBuilder->get();
         }
         $response['order'] = $order;
-        $response['data'] = $rtos->toArray()['data'] ?? $rtos->toArray();
+        $response['data'] = $rplSectors->toArray()['data'] ?? $rplSectors->toArray();
 
         $response['_response_status'] = [
             "success" => true,
@@ -138,11 +82,11 @@ class RegisteredTrainingOrganizationService
 
     /**
      * @param int $id
-     * @return RegisteredTrainingOrganization
+     * @return RplSector
      */
-    public function getOneRto(int $id): RegisteredTrainingOrganization
+    public function getOneRplSector(int $id): RplSector
     {
-        /** @var RegisteredTrainingOrganization|Builder $registeredTrainingOrganizationBuilder */
+        /** @var RplSector|Builder $rplSectorBuilder */
         $registeredTrainingOrganizationBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
             'registered_training_organizations.code',
