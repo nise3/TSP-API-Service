@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             ExamDegreeSeeder::class,
             InstitutesTableSeeder::class,
             TrainingCentersTableSeeder::class,
-            SspPessimisticLockingsTableSeeder::class
+            SspPessimisticLockingsTableSeeder::class,
+            CoursesTableSeeder::class,
+            BatchesTableSeeder::class,
         ]);
     }
 }
