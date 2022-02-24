@@ -37,6 +37,7 @@ class InstituteService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
+        $serviceType = $request['service_type'] ?? BaseModel::ONLY_TRAINING;
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -90,6 +91,9 @@ class InstituteService
             'institutes.deleted_at',
         ]);
 
+        if (!empty($serviceType)){
+            $instituteBuilder->where('institutes.service_type',$serviceType);
+        }
         $instituteBuilder->orderBy('institutes.id', $order);
 
         $instituteBuilder->leftJoin('loc_divisions', function ($join) {
@@ -985,6 +989,10 @@ class InstituteService
             "institute_type_id" => [
                 "nullable",
                 "int"
+            ],
+            'service_type' => [
+                'nullable',
+                'int'
             ],
             'order' => [
                 'string',
