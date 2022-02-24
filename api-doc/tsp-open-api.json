@@ -4819,8 +4819,8 @@
             },
             "post": {
                 "tags": ["Rto Countries"],
-                "summary": "Create a Rto countries",
-                "description": "API endpoint to Create a Rto countries . A successful request response will show 200 HTTP status code",
+                "summary": "Create  Rto countries",
+                "description": "API endpoint to Create Rto countries . A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
