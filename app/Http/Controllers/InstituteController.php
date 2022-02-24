@@ -214,8 +214,11 @@ class InstituteController extends Controller
                 $message = "Congratulation, You are successfully complete your registration as a " . $validatedData['title'] . " user";
                 $this->instituteService->userInfoSendBySMS($recipient, $message);
 
-                /** Create a default training center in time of Institute Create */
-                app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
+                if($validatedData['service_type'] != BaseModel::ONLY_CERTIFICATE){
+                    /** Create a default training center in time of Institute Create */
+                    app(TrainingCenterService::class)->createDefaultTrainingCenter($institute);
+                }
+
                 DB::commit();
                 $response['data'] = $institute;
                 return Response::json($response, ResponseAlias::HTTP_CREATED);
