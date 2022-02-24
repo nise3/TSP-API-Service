@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Trainer;
 use Illuminate\Http\Request;
@@ -324,6 +325,24 @@ class TrainerService
         $trainer = app(Trainer::class);
         $trainer->fill($data);
         $trainer->Save();
+
+        /** Core service call + IDP user create */
+        $user = ServiceToServiceCall::createCoreUser($data);
+
+        /** Youth service call */
+        $youth = ServiceToServiceCall::createTrainerYouthUser($data);
+
+
+        /** Save youth_id to trainer */
+        $trainer->youth_id = $youth['id'];
+        $trainer->save();
+
+
+
+        $trainer->institutes()->sync([
+            $data['institute_id']
+        ]);
+
         return $trainer;
     }
 
