@@ -87,188 +87,54 @@ class RplSectorService
     public function getOneRplSector(int $id): RplSector
     {
         /** @var RplSector|Builder $rplSectorBuilder */
-        $registeredTrainingOrganizationBuilder = RegisteredTrainingOrganization::select([
-            'registered_training_organizations.id',
-            'registered_training_organizations.code',
-            'registered_training_organizations.title',
-            'registered_training_organizations.title_en',
-            'registered_training_organizations.loc_division_id',
-            'registered_training_organizations.country_id',
-            'loc_divisions.title as division_title',
-            'loc_divisions.title_en as division_title_en',
-            'registered_training_organizations.loc_district_id',
-            'loc_districts.title as district_title',
-            'loc_districts.title_en as district_title_en',
-            'registered_training_organizations.loc_upazila_id',
-            'loc_upazilas.title as upazila_title',
-            'loc_upazilas.title_en as upazila_title_en',
-            'registered_training_organizations.address',
-            'registered_training_organizations.address_en',
-            'registered_training_organizations.location_latitude',
-            'registered_training_organizations.location_longitude',
-            'registered_training_organizations.google_map_src',
-            'registered_training_organizations.logo',
-            'registered_training_organizations.phone_code',
-            'registered_training_organizations.primary_phone',
-            'registered_training_organizations.phone_numbers',
-            'registered_training_organizations.primary_mobile',
-            'registered_training_organizations.mobile_numbers',
-            'registered_training_organizations.email',
-            'registered_training_organizations.name_of_the_office_head',
-            'registered_training_organizations.name_of_the_office_head_en',
-            'registered_training_organizations.name_of_the_office_head_designation',
-            'registered_training_organizations.name_of_the_office_head_designation_en',
-            'registered_training_organizations.contact_person_name',
-            'registered_training_organizations.contact_person_name_en',
-            'registered_training_organizations.contact_person_mobile',
-            'registered_training_organizations.contact_person_email',
-            'registered_training_organizations.contact_person_designation',
-            'registered_training_organizations.contact_person_designation_en',
-            'registered_training_organizations.config',
-            'registered_training_organizations.row_status',
-            'registered_training_organizations.created_by',
-            'registered_training_organizations.updated_by',
-            'registered_training_organizations.created_at',
-            'registered_training_organizations.updated_at',
-            'registered_training_organizations.deleted_at',
+        $rplSectorBuilder = RegisteredTrainingOrganization::select([
+            'rpl_sectors.id',
+            'rpl_sectors.title',
+            'rpl_sectors.title_en',
+            'rpl_sectors.translations',
+            'rpl_sectors.created_at',
+            'rpl_sectors.updated_at',
+            'rpl_sectors.deleted_at',
         ]);
 
-        $registeredTrainingOrganizationBuilder->leftJoin('loc_divisions', function ($join) {
-            $join->on('loc_divisions.id', '=', 'registered_training_organizations.loc_division_id')
-                ->whereNull('loc_divisions.deleted_at');
-        });
-
-        $registeredTrainingOrganizationBuilder->leftJoin('loc_districts', function ($join) {
-            $join->on('loc_districts.id', '=', 'registered_training_organizations.loc_district_id')
-                ->whereNull('loc_districts.deleted_at');
-        });
-
-        $registeredTrainingOrganizationBuilder->leftJoin('loc_upazilas', function ($join) {
-            $join->on('loc_upazilas.id', '=', 'registered_training_organizations.loc_upazila_id')
-                ->whereNull('loc_upazilas.deleted_at');
-        });
-
         if (is_numeric($id)) {
-            $registeredTrainingOrganizationBuilder->where('registered_training_organizations.id', $id);
+            $rplSectorBuilder->where('rpl_sectors.id', $id);
         }
 
-        return $registeredTrainingOrganizationBuilder->firstOrFail();
+        return $rplSectorBuilder->firstOrFail();
     }
 
     /**
-     * @param RegisteredTrainingOrganization $rto
      * @param array $data
-     * @return RegisteredTrainingOrganization
+     * @return RplSector
      */
-    public function store(RegisteredTrainingOrganization $rto, array $data): RegisteredTrainingOrganization
+    public function store(array $data): RplSector
     {
-        if (!empty($data['google_map_src'])) {
-            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
-        }
-        $rto->fill($data);
-        $rto->save();
-        return $rto;
+        $rplSector = app()->make(RplSector::class);
+        $rplSector->fill($data);
+        $rplSector->save();
+        return $rplSector;
     }
 
     /**
-     * @param RegisteredTrainingOrganization $rto
+     * @param RplSector $rplSector
      * @param array $data
-     * @return RegisteredTrainingOrganization
+     * @return RplSector
      */
-    public function update(RegisteredTrainingOrganization $rto, array $data): RegisteredTrainingOrganization
+    public function update(RplSector $rplSector, array $data): RplSector
     {
-        if (!empty($data['google_map_src'])) {
-            $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
-        }
-
-        $rto->fill($data);
-        $rto->save();
-        return $rto;
+        $rplSector->fill($data);
+        $rplSector->save();
+        return $rplSector;
     }
 
     /**
-     * @param RegisteredTrainingOrganization $rto
+     * @param RplSector $rplSector
      * @return bool
      */
-    public function destroy(RegisteredTrainingOrganization $rto): bool
+    public function destroy(RplSector $rplSector): bool
     {
-        return $rto->delete();
-    }
-
-    public function parseGoogleMapSrc(?string $googleMapSrc): ?string
-    {
-        if (!empty($googleMapSrc) && preg_match('/src="([^"]+)"/', $googleMapSrc, $match)) {
-            $googleMapSrc = $match[1];
-        }
-        return $googleMapSrc;
-    }
-
-
-    /**
-     * @param RegisteredTrainingOrganization $rto
-     * @return mixed
-     * @throws RequestException
-     */
-    public function rtoUserDestroy(RegisteredTrainingOrganization $rto): mixed
-    {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
-        $userPostField = [
-            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
-            'registered_training_organization_id' => $rto->id,
-        ];
-
-        return Http::withOptions(
-            [
-                'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug')
-            ])
-            ->timeout(5)
-            ->delete($url, $userPostField)
-            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
-                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
-                throw new HttpErrorException($httpResponse);
-            })
-            ->json();
-    }
-
-    /**
-     * @param array $data
-     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
-     * @throws RequestException
-     */
-    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
-    {
-        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
-        $userPostField = [
-            'permission_sub_group_id' => $data['permission_sub_group_id'],
-            'user_type' => BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE,
-            'registered_training_organization_id' => $data['registered_training_organization_id'],
-            'username' => $data['contact_person_mobile'],
-            'name_en' => $data['contact_person_name'],
-            'name' => $data['contact_person_name'],
-            'email' => $data['contact_person_email'],
-            'mobile' => $data['contact_person_mobile'],
-        ];
-
-        return Http::withOptions([
-            'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug')
-        ])
-            ->timeout(5)
-            ->post($url, $userPostField)
-            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
-                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
-                throw new HttpErrorException($httpResponse);
-            })
-            ->json();
-    }
-
-    public function userInfoSendBySMS(string $recipient, string $message)
-    {
-        $sms = new SmsService();
-        $sms->sendSms($recipient, $message);
+        return $rplSector->delete();
     }
 
     /**
@@ -279,13 +145,6 @@ class RplSectorService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
-
-        if (!empty($data['phone_numbers'])) {
-            $data["phone_numbers"] = isset($data['phone_numbers']) && is_array($data['phone_numbers']) ? $data['phone_numbers'] : explode(',', $data['phone_numbers']);
-        }
-        if (!empty($data['mobile_numbers'])) {
-            $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
-        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
