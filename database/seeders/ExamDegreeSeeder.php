@@ -19,138 +19,28 @@ class ExamDegreeSeeder extends Seeder
 
         ExamDegree::query()->truncate();
         $examDegrees = [
-            [
-                "education_level_id" => 1,
-                "code" => "PSC",
-                "title" => "পিএসসি",
-                "title_en" => "PSC"
-            ],
-            [
-                "education_level_id" => 1,
-                "code" => "EBTEDAYEE",
-                "title" => "ইবতেদায়ি (মাদ্রাসা)",
-                "title_en" => "Ebtedayee (Madrasah)"
-            ],
-            [
-                "education_level_id" => 1,
-                "code" => "FIVE_PASS",
-                "title" => "5 Pass",
-                "title_en" => "5 Pass"
-            ],
-            [
-                "education_level_id" => 1,
-                "code" => "OTHERS",
-                "title" => "Others",
-                "title_en" => "Others"
-            ],
-            [
-                "education_level_id" => 2,
-                "code" => "JSC",
-                "title" => "জেএসসি",
-                "title_en" => "JSC"
-            ],
-            [
-                "education_level_id" => 2,
-                "code" => "JDC",
-                "title" => "জেডিসি (মাদ্রাসা)",
-                "title_en" => "JDC (Madrasah)"
-            ],
-            [
-                "education_level_id" => 2,
-                "code" => "EIGHT_PASS",
-                "title" => "8 Pass",
-                "title_en" => "8 Pass"
-            ],
-            [
-                "education_level_id" => 2,
-                "code" => "OTHERS",
-                "title" => "Others",
-                "title_en" => "Others"
-            ],
-            [
-                "education_level_id" => 3,
-                "code" => "SSC",
-                "title" => "এসএসসি",
-                "title_en" => "SSC"
-            ],
-            [
-                "education_level_id" => 3,
-                "code" => "O_LEVEL",
-                "title" => "ও লেভেল",
-                "title_en" => "O Level"
-            ],
-            [
-                "education_level_id" => 3,
-                "code" => "DAKHIL",
-                "title" => "দাখিল (মাদ্রাসা)",
-                "title_en" => "Dakhil (Madrasah)"
-            ],
-            [
-                "education_level_id" => 3,
-                "code" => "SSC_VOC",
-                "title" => "এসএসসি (ভোকেশনাল)",
-                "title_en" => "SSC (Vocational)"
-            ],
-            [
-                "education_level_id" => 3,
-                "code" => "OTHERS",
-                "title" => "Others",
-                "title_en" => "Others"
-            ],
-            [
-                "education_level_id" => 4,
-                "code" => "HSC",
-                "title" => "এইচএসসি",
-                "title_en" => "HSC"
-            ],
-            [
-                "education_level_id" => 4,
-                "code" => "A_LEVEL",
-                "title" => "এ লেভেল",
-                "title_en" => "A Level"
-            ],
-            [
-                "education_level_id" => 4,
-                "code" => "ALIM",
-                "title" => "আলিম (মাদ্রাসা)",
-                "title_en" => "Alim (Madrasah)"
-            ],
-            [
-                "education_level_id" => 4,
-                "code" => "HSC_VOC",
-                "title" => "এইচএসসি  (ভোকেশনাল)",
-                "title_en" => "HSC (Vocational)"
-            ],
-            [
-                "education_level_id" => 4,
-                "code" => "OTHERS",
-                "title" => "Others",
-                "title_en" => "Others"
-            ],
-            [
-                "education_level_id" => 5,
-                "code" => "DIPLOMA_IT",
-                "title" => "ডিপ্লোমা ইন আইটি",
-                "title_en" => "Diploma in IT"
-            ],
-            [
-                "education_level_id" => 6,
-                "code" => "BSC",
-                "title" => "ব্যাচেলর অফ সায়েন্স",
-                "title_en" => "Bachelor of Science"
-            ],
-            [
-                "education_level_id" => 6,
-                "code" => "BA",
-                "title" => "ব্যাচেলর অফ আর্টস",
-                "title_en" => "Bachelor of Arts"
-            ],
-            [
-                "education_level_id" => 7,
-                "code" => "MSC",
-                "title" => "মাস্টার্স অফ সায়েন্স",
-                "title_en" => "Master of Science"
-            ]
+            array('id' => '1', 'education_level_id' => '1', 'code' => 'PSC', 'title_en' => 'PSC', 'title' => 'পিএসসি', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '2', 'education_level_id' => '1', 'code' => 'EBTEDAYEE', 'title_en' => 'Ebtedayee (Madrasah)', 'title' => 'ইবতেদায়ি (মাদ্রাসা)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '3', 'education_level_id' => '1', 'code' => 'FIVE_PASS', 'title_en' => '5 Pass', 'title' => '5 Pass', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '4', 'education_level_id' => '1', 'code' => 'OTHERS', 'title_en' => 'Others', 'title' => 'Others', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '5', 'education_level_id' => '2', 'code' => 'JSC', 'title_en' => 'JSC', 'title' => 'জেএসসি', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '6', 'education_level_id' => '2', 'code' => 'JDC', 'title_en' => 'JDC (Madrasah)', 'title' => 'জেডিসি (মাদ্রাসা)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '7', 'education_level_id' => '2', 'code' => 'EIGHT_PASS', 'title_en' => '8 Pass', 'title' => '8 Pass', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '8', 'education_level_id' => '2', 'code' => 'OTHERS', 'title_en' => 'Others', 'title' => 'Others', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '9', 'education_level_id' => '3', 'code' => 'SSC', 'title_en' => 'JSC', 'title' => 'এসএসসি', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '10', 'education_level_id' => '3', 'code' => 'O_LEVEL', 'title_en' => 'O Level', 'title' => 'ও লেভেল', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '11', 'education_level_id' => '3', 'code' => 'DAKHIL', 'title_en' => 'Dakhil (Madrasah)', 'title' => 'দাখিল (মাদ্রাসা)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '12', 'education_level_id' => '3', 'code' => 'SSC_VOC', 'title_en' => 'SSC (Vocational)', 'title' => 'এসএসসি (ভোকেশনাল)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '13', 'education_level_id' => '3', 'code' => 'OTHERS', 'title_en' => 'Others', 'title' => 'Others', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '14', 'education_level_id' => '4', 'code' => 'HSC', 'title_en' => 'HSC', 'title' => 'এইচএসসি', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '15', 'education_level_id' => '4', 'code' => 'A_LEVEL', 'title_en' => 'A Level', 'title' => 'এ লেভেল', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '16', 'education_level_id' => '4', 'code' => 'ALIM', 'title_en' => 'Alim (Madrasah)', 'title' => 'আলিম (মাদ্রাসা)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '17', 'education_level_id' => '4', 'code' => 'HSC_VOC', 'title_en' => 'HSC (Vocational)', 'title' => 'এইচএসসি  (ভোকেশনাল)', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '18', 'education_level_id' => '4', 'code' => 'OTHERS', 'title_en' => 'Others', 'title' => 'Others', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '19', 'education_level_id' => '5', 'code' => 'DIPLOMA_IT', 'title_en' => 'Diploma in IT', 'title' => 'ডিপ্লোমা ইন আইটি', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '20', 'education_level_id' => '6', 'code' => 'BSC', 'title_en' => 'Bachelor of Science', 'title' => 'ব্যাচেলর অফ সায়েন্স', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '21', 'education_level_id' => '6', 'code' => 'BA', 'title_en' => 'Bachelor of Arts', 'title' => 'ব্যাচেলর অফ আর্টস', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL),
+            array('id' => '22', 'education_level_id' => '7', 'code' => 'MSC', 'title_en' => 'Master of Science', 'title' => 'মাস্টার্স অফ সায়েন্স', 'row_status' => '1', 'created_at' => NULL, 'updated_at' => NULL, 'deleted_at' => NULL)
         ];
         ExamDegree::insert($examDegrees);
         Schema::enableForeignKeyConstraints();
