@@ -31,7 +31,6 @@ class RtoCountryService
         $title = $request['title'] ?? "";
         $titleEn = $request['title_en'] ?? "";
 
-
         $rtoBuilder = RtoCountry::select(
             [
                 'rto_countries.country_id',
@@ -113,6 +112,8 @@ class RtoCountryService
         $rules = [
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
+            'title' => 'string|nullable|max:600|min:2',
+            'title_en' => 'string|nullable|max:600|min:2',
         ];
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules);
     }
