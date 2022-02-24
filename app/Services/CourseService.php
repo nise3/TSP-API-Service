@@ -16,6 +16,7 @@ use App\Models\BaseModel;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -897,7 +898,24 @@ class CourseService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'branch_id' => [
                 'nullable',
                 'int',
@@ -1037,8 +1055,6 @@ class CourseService
             'updated_by' => ['nullable', 'integer'],
         ];
 
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRules(), $rules);
-
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
 
@@ -1066,6 +1082,8 @@ class CourseService
         }
 
         $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [
@@ -1142,8 +1160,6 @@ class CourseService
                 'min:1'
             ];
         }
-
-        $rules = array_merge(BaseModel::industryOrIndustryAssociationValidationRulesForFilter(), $rules);
 
         return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
     }
