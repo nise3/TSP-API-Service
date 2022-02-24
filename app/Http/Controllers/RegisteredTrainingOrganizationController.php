@@ -32,7 +32,7 @@ class RegisteredTrainingOrganizationController extends Controller
     private Carbon $startTime;
 
     /**
-     * InstituteController constructor.
+     * RegisteredTrainingOrganizationController constructor.
      * @param RegisteredTrainingOrganizationService $rtoService
      */
 

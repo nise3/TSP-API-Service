@@ -460,7 +460,7 @@ class TrainingCenterService
     }
 
     /**
-     * @throws Throwable
+     * @param BaseModel $model
      */
     public function createDefaultTrainingCenter(BaseModel $model)
     {
