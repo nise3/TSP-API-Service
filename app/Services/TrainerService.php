@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class TrainerService
@@ -319,29 +321,38 @@ class TrainerService
     /**
      * @param array $data
      * @return Trainer
+     * @throws Throwable
      */
     public function store(array $data): Trainer
     {
         $trainer = app(Trainer::class);
-        $trainer->fill($data);
-        $trainer->Save();
+        DB::beginTransaction();
+        $youth = null;
+        try {
+            /** Youth service call */
+            $youth = ServiceToServiceCall::createTrainerYouthUser($data);
 
-        /** Core service call + IDP user create */
-        $user = ServiceToServiceCall::createCoreUser($data);
+            /** Save trainer with youth_id */
+            $data['youth_id'] = $youth['id'];
+            $trainer->fill($data);
+            $trainer->save();
 
-        /** Youth service call */
-        $youth = ServiceToServiceCall::createTrainerYouthUser($data);
+            /** Sync in institute_trainer pivot table */
+            $trainer->institutes()->sync([
+                $data['institute_id']
+            ]);
 
+            /** Core service call */
+            $user = ServiceToServiceCall::createTrainerCoreUser($trainer, $youth);
 
-        /** Save youth_id to trainer */
-        $trainer->youth_id = $youth['id'];
-        $trainer->save();
-
-
-
-        $trainer->institutes()->sync([
-            $data['institute_id']
-        ]);
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            if(!empty($youth)){
+                ServiceToServiceCall::rollbackTrainerYouthUser($youth);
+            }
+            throw $e;
+        }
 
         return $trainer;
     }
