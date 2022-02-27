@@ -14,6 +14,6 @@ RELEASE = 'php artisan list'
 
 ## RabbitMQ consume command
 ```shell
-php artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q
+php artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q,institute.db.sync.q
 ```
 
