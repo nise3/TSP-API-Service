@@ -101,6 +101,7 @@ class RplSectorController extends Controller
     public function store(Request $request): JsonResponse
     {
         //$this->authorize('create', RplSector::class);
+        //dd($request->all());
 
         $validated = $this->rplSectorService->validator($request)->validate();
         $rplSector = $this->rplSectorService->store($validated);

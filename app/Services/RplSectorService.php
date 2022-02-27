@@ -163,17 +163,14 @@ class RplSectorService
                 'array',
                 'min:1'
             ],
-            'translations.country_id' => [
+            'translations.*' => [
                 Rule::requiredIf(!empty($data['translations'])),
-                'nullable',
-                'int',
-                'exists:countries,id,deleted_at,NULL'
+                'array',
+                'min:1'
             ],
-            'translations.title' => [
-                Rule::requiredIf(!empty($data['translations'])),
-                'nullable'
-            ],
-
+            'translations.*.title' => [
+                Rule::requiredIf(!empty($data['translations']))
+            ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
