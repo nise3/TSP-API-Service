@@ -326,8 +326,9 @@ class TrainerService
     public function store(array $data): Trainer
     {
         $trainer = app(Trainer::class);
-        DB::beginTransaction();
         $youth = null;
+
+        DB::beginTransaction();
         try {
             /** Youth service call */
             $youth = ServiceToServiceCall::createTrainerYouthUser($data);
@@ -337,13 +338,17 @@ class TrainerService
             $trainer->fill($data);
             $trainer->save();
 
+            /** Core service call */
+            $trainer['role_id'] = $data['role_id'];
+            ServiceToServiceCall::createTrainerCoreUser($trainer, $youth);
+
             /** Sync in institute_trainer pivot table */
             $trainer->institutes()->sync([
                 $data['institute_id']
             ]);
 
-            /** Core service call */
-            $user = ServiceToServiceCall::createTrainerCoreUser($trainer, $youth);
+            /** Sync in institute_skill pivot table */
+            $trainer->skills()->sync($data['skills']);
 
             DB::commit();
         } catch (Throwable $e) {
@@ -574,6 +579,10 @@ class TrainerService
                 "nullable",
                 "int"
             ],
+            'role_id' => [
+                'required',
+                'int'
+            ],
             'branch_id' => [
                 'nullable',
                 'exists:branches,id,deleted_at,NULL',
@@ -658,13 +667,17 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'skills' => [
-                'nullable',
-                'string'
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
             ],
-            'skills_en' => [
-                'nullable',
-                'string'
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
             ],
             'present_address_division_id' => [
                 'nullable',
