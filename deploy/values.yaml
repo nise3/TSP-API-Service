@@ -113,7 +113,6 @@ variables:
     CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
     MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
 
-
   PRODUCTION:
     APP_ENV: "local"
     APP_DEBUG: "false"
