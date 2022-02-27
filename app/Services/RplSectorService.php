@@ -187,7 +187,7 @@ class RplSectorService
         }
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
-            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+            //'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
@@ -200,11 +200,11 @@ class RplSectorService
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
-            'row_status' => [
-                "nullable",
-                "int",
-                Rule::in(Institute::ROW_STATUSES),
-            ],
+//            'row_status' => [
+//                "nullable",
+//                "int",
+//                Rule::in(Institute::ROW_STATUSES),
+//            ],
         ], $customMessage);
     }
 }
