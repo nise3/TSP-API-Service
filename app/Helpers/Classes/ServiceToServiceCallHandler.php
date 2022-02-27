@@ -207,7 +207,10 @@ class ServiceToServiceCallHandler
             'mobile' => $trainer['mobile'],
             'loc_division_id' => $trainer['present_address_division_id'] ?? "",
             'loc_district_id' => $trainer['present_address_district_id'] ?? "",
-            'loc_upazila_id' => $trainer['present_address_upazila_id'] ?? ""
+            'loc_upazila_id' => $trainer['present_address_upazila_id'] ?? "",
+            'password' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'password_confirmation' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'row_status' => BaseModel::ROW_STATUS_ACTIVE
         ];
 
         $postField = [
