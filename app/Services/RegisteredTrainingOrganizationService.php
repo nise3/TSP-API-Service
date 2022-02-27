@@ -269,7 +269,7 @@ class RegisteredTrainingOrganizationService
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
         $userPostField = [
-            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'user_type' => BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE,
             'registered_training_organization_id' => $rto->id,
         ];
 
