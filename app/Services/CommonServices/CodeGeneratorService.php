@@ -277,8 +277,10 @@ class CodeGeneratorService
 
     private static function getCode(string $model, int $id = null): array
     {
+
         /** @var User $authUser */
         $authUser = Auth::user();
+        $parentEntity = null;
         if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $queryAttribute = "industry_association_id";
             $queryAttributeValue = $id ?? $authUser->industry_association_id;
@@ -286,17 +288,28 @@ class CodeGeneratorService
         } else if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
             $queryAttribute = "institute_id";
             $queryAttributeValue = $id ?? $authUser->institute_id;
-            $parentEntity = Institute::findOrFail($queryAttributeValue);
+            $parentEntity = Institute::findOrFail($queryAttributeValue)->code;
         } else {
-            $queryAttribute = request()->get('institute_id') ? "institute_id" : "industry_association_id";
-            $queryAttributeValue = request()->get('institute_id') ?? request()->get('industry_association_id');
-            $parentEntity = Institute::findOrFail($queryAttributeValue);
+
+            $queryAttributeValueForInstitute = $id ?? request()->get('institute_id');
+            $queryAttributeValueForIndustryAssociation = $id ?? request()->get('industry_association_id');
+
+            $queryAttribute = $queryAttributeValueForInstitute ? "institute_id" : "industry_association_id";
+            $queryAttributeValue = $queryAttributeValueForInstitute ?? $queryAttributeValueForIndustryAssociation;
+
+            if (!empty($queryAttributeValueForInstitute)) {
+                $parentEntity = Institute::findOrFail($queryAttributeValue)->code;
+            } elseif (!empty($queryAttributeValueForIndustryAssociation)) {
+                $parentEntity = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+            }
+
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
-        Log::info('ssp-id.' . $id);
+
+        Log::info('Attribute Id in time of code generate.' . $id . " existingCode: " . $existingCode);
         return [
-            $parentEntity->code ?? "",
+            $parentEntity,
             $existingCode
         ];
     }

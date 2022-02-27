@@ -5,9 +5,9 @@
 
 variables:
 
-  devImageVersion: &dev_image "2.2.14"
+  devImageVersion: &dev_image "2.2.15"
 
-  productionImageVersion: &prod_image "2.2.14"
+  productionImageVersion: &prod_image "2.2.15"
 
 
   #auto scaling config
@@ -23,7 +23,7 @@ variables:
 
   # application config
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
-  APP_ENV: "DEV"
+  APP_ENV: "PRODUCTION"
 
   DEV:
 
@@ -112,7 +112,6 @@ variables:
     INDUSTRY_API_BASE_URL: "http://nise3-org.default/api/v1/"
     CMS_API_BASE_URL: "http://nise3-cms.default/api/v1/"
     MAIL_API_BASE_URL: "http://nise3-mail.default/api/v1/"
-
 
   PRODUCTION:
     APP_ENV: "local"
