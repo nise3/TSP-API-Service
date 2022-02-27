@@ -67,4 +67,12 @@ class Trainer extends BaseModel
     {
         return $this->belongsToMany(Institute::class, 'institute_trainers', 'trainer_id', 'institute_id');
     }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Institute::class, 'trainer_skills', 'trainer_id', 'skill_id');
+    }
 }
