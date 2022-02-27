@@ -4885,7 +4885,61 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example": {}
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 3,
+                                            "code": "RTO00000006",
+                                            "title": "HondaManiac",
+                                            "title_en": null,
+                                            "loc_division_id": 1,
+                                            "country_id": "1",
+                                            "division_title": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "loc_district_id": 2,
+                                            "district_title": "বরিশাল",
+                                            "district_title_en": "BARISAL",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": null,
+                                            "address_en": null,
+                                            "location_latitude": null,
+                                            "location_longitude": null,
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "phone_code": "880",
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01889988991",
+                                            "mobile_numbers": null,
+                                            "email": "dd@gmail.com",
+                                            "name_of_the_office_head": "ggg",
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": "RRRR",
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "asasasas",
+                                            "contact_person_name_en": null,
+                                            "contact_person_mobile": "01889999150",
+                                            "contact_person_email": "arrr5oooj0ii@gmail.com",
+                                            "contact_person_designation": "fffasas",
+                                            "contact_person_designation_en": null,
+                                            "config": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2022-02-27T09:14:59.000000Z",
+                                            "updated_at": "2022-02-27T09:14:59.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
                             }
                         }
                     }
@@ -4909,7 +4963,299 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example": {}
+                                "example":{
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RTO Successfully Created",
+                                        "query_time": 0
+                                    },
+                                    "data": {
+                                        "code": "RTO00000006",
+                                        "title": "HondaManiac",
+                                        "country_id": "1",
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "2",
+                                        "primary_mobile": "01889988991",
+                                        "email": "dd@gmail.com",
+                                        "name_of_the_office_head": "ggg",
+                                        "name_of_the_office_head_designation": "RRRR",
+                                        "contact_person_name": "asasasas",
+                                        "contact_person_mobile": "01889999150",
+                                        "contact_person_email": "arrr5oooj0ii@gmail.com",
+                                        "contact_person_designation": "fffasas",
+                                        "row_status": "1",
+                                        "updated_at": "2022-02-27T09:14:59.000000Z",
+                                        "created_at": "2022-02-27T09:14:59.000000Z",
+                                        "id": 3
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/registered-training-organizations": {
+            "get": {
+                "tags": ["Registerd training organization"],
+                "summary": "Get all public registered training organizations",
+                "description": "API endpoint to Get all public registered training organizations . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 3,
+                                            "code": "RTO00000006",
+                                            "title": "HondaManiac",
+                                            "title_en": null,
+                                            "loc_division_id": 1,
+                                            "country_id": "1",
+                                            "division_title": "বরিশাল",
+                                            "division_title_en": "Barisal",
+                                            "loc_district_id": 2,
+                                            "district_title": "বরিশাল",
+                                            "district_title_en": "BARISAL",
+                                            "loc_upazila_id": null,
+                                            "upazila_title": null,
+                                            "upazila_title_en": null,
+                                            "address": null,
+                                            "address_en": null,
+                                            "location_latitude": null,
+                                            "location_longitude": null,
+                                            "google_map_src": null,
+                                            "logo": null,
+                                            "phone_code": "880",
+                                            "primary_phone": null,
+                                            "phone_numbers": null,
+                                            "primary_mobile": "01889988991",
+                                            "mobile_numbers": null,
+                                            "email": "dd@gmail.com",
+                                            "name_of_the_office_head": "ggg",
+                                            "name_of_the_office_head_en": null,
+                                            "name_of_the_office_head_designation": "RRRR",
+                                            "name_of_the_office_head_designation_en": null,
+                                            "contact_person_name": "asasasas",
+                                            "contact_person_name_en": null,
+                                            "contact_person_mobile": "01889999150",
+                                            "contact_person_email": "arrr5oooj0ii@gmail.com",
+                                            "contact_person_designation": "fffasas",
+                                            "contact_person_designation_en": null,
+                                            "config": null,
+                                            "row_status": 1,
+                                            "created_by": null,
+                                            "updated_by": null,
+                                            "created_at": "2022-02-27T09:14:59.000000Z",
+                                            "updated_at": "2022-02-27T09:14:59.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/registered-training-organizations/{rtoId}": {
+            "get": {
+                "tags": ["Registerd training organization"],
+                "summary": "Get a Registerd training organization",
+                "description": "API endpoint to Get a Registerd training organization . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 3,
+                                        "code": "122112122",
+                                        "title": "Hondurous",
+                                        "title_en": null,
+                                        "loc_division_id": 1,
+                                        "country_id": "1",
+                                        "division_title": "বরিশাল",
+                                        "division_title_en": "Barisal",
+                                        "loc_district_id": 2,
+                                        "district_title": "বরিশাল",
+                                        "district_title_en": "BARISAL",
+                                        "loc_upazila_id": null,
+                                        "upazila_title": null,
+                                        "upazila_title_en": null,
+                                        "address": null,
+                                        "address_en": null,
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": null,
+                                        "logo": null,
+                                        "phone_code": "880",
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01889988991",
+                                        "mobile_numbers": null,
+                                        "email": "rrr@gmail.com",
+                                        "name_of_the_office_head": "ggg",
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": "RRRR",
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "asasasas",
+                                        "contact_person_name_en": null,
+                                        "contact_person_mobile": "01889999140",
+                                        "contact_person_email": "ppp5oooj0ii@gmail.com",
+                                        "contact_person_designation": "fffasas",
+                                        "contact_person_designation_en": null,
+                                        "config": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2022-02-27T09:14:59.000000Z",
+                                        "updated_at": "2022-02-27T10:26:36.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Registerd training organization"],
+                "summary": "Update a registered training organizations",
+                "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTrainingOrganization"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 3,
+                                        "code": "122112122",
+                                        "title": "Hondurous",
+                                        "title_en": null,
+                                        "loc_division_id": "1",
+                                        "loc_district_id": "2",
+                                        "loc_upazila_id": null,
+                                        "location_latitude": null,
+                                        "location_longitude": null,
+                                        "google_map_src": null,
+                                        "address_en": null,
+                                        "address": null,
+                                        "logo": null,
+                                        "country_id": "1",
+                                        "phone_code": "880",
+                                        "primary_phone": null,
+                                        "phone_numbers": null,
+                                        "primary_mobile": "01889988991",
+                                        "mobile_numbers": null,
+                                        "email": "rrr@gmail.com",
+                                        "name_of_the_office_head": "ggg",
+                                        "name_of_the_office_head_en": null,
+                                        "name_of_the_office_head_designation": "RRRR",
+                                        "name_of_the_office_head_designation_en": null,
+                                        "contact_person_name": "asasasas",
+                                        "contact_person_name_en": null,
+                                        "contact_person_mobile": "01889999140",
+                                        "contact_person_email": "ppp5oooj0ii@gmail.com",
+                                        "contact_person_designation": "fffasas",
+                                        "contact_person_designation_en": null,
+                                        "config": null,
+                                        "row_status": "1",
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2022-02-27T09:14:59.000000Z",
+                                        "updated_at": "2022-02-27T10:26:36.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RTO updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Registerd training organization"],
+                "summary": "Delete a Registered training organization",
+                "description": "API endpoint toDelete a Registered training organization . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RTO deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
                             }
                         }
                     }
@@ -7502,6 +7848,16 @@
                 "name": "batchId",
                 "in": "path",
                 "description": "trainer id",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            },
+            "rtoId": {
+                "name": "rtoId",
+                "in": "path",
+                "description": "rtoId",
                 "required": true,
                 "schema": {
                     "type": "integer",
