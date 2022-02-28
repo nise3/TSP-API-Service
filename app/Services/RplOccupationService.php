@@ -4,32 +4,25 @@
 namespace App\Services;
 
 
-use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
-use App\Models\Institute;
 use App\Models\RegisteredTrainingOrganization;
-use App\Models\RplSector;
-use App\Services\CommonServices\SmsService;
-use GuzzleHttp\Promise\PromiseInterface;
+use App\Models\RplOccupation;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class RplSectorService
+class RplOccupationService
 {
     /**
      * @param array $request
      * @param Carbon $startTime
      * @return array
      */
-    public function getRplSectorList(array $request, Carbon $startTime): array
+    public function getRplOccupationList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -37,40 +30,41 @@ class RplSectorService
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var RplSector|Builder $rplSectorBuilder */
-        $rplSectorBuilder = RplSector::select([
-            'rpl_sectors.id',
-            'rpl_sectors.title',
-            'rpl_sectors.title_en',
-            'rpl_sectors.translations',
-            'rpl_sectors.created_at',
-            'rpl_sectors.updated_at',
-            'rpl_sectors.deleted_at',
+        /** @var RplOccupation|Builder $rplOccupationBuilder */
+        $rplOccupationBuilder = RplOccupation::select([
+            'rpl_occupations.id',
+            'rpl_occupations.title',
+            'rpl_occupations.title_en',
+            'rpl_occupations.rpl_sector_id',
+            'rpl_occupations.translations',
+            'rpl_occupations.created_at',
+            'rpl_occupations.updated_at',
+            'rpl_occupations.deleted_at',
         ]);
 
-        $rplSectorBuilder->orderBy('rpl_sectors.id', $order);
+        $rplOccupationBuilder->orderBy('rpl_occupations.id', $order);
 
         if (!empty($titleEn)) {
-            $rplSectorBuilder->where('rpl_sectors.title_en', 'like', '%' . $titleEn . '%');
+            $rplOccupationBuilder->where('rpl_occupations.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $rplSectorBuilder->where('rpl_sectors.title', 'like', '%' . $title . '%');
+            $rplOccupationBuilder->where('rpl_occupations.title', 'like', '%' . $title . '%');
         }
 
-        /** @var Collection $rplSectors */
+        /** @var Collection $rplOccupations */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $rplSectors = $rplSectorBuilder->paginate($pageSize);
-            $paginateData = (object)$rplSectors->toArray();
+            $rplOccupations = $rplOccupationBuilder->paginate($pageSize);
+            $paginateData = (object)$rplOccupations->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $rplSectors = $rplSectorBuilder->get();
+            $rplOccupations = $rplOccupationBuilder->get();
         }
         $response['order'] = $order;
-        $response['data'] = $rplSectors->toArray()['data'] ?? $rplSectors->toArray();
+        $response['data'] = $rplOccupations->toArray()['data'] ?? $rplOccupations->toArray();
 
         $response['_response_status'] = [
             "success" => true,
@@ -82,59 +76,60 @@ class RplSectorService
 
     /**
      * @param int $id
-     * @return RplSector
+     * @return RplOccupation
      */
-    public function getOneRplSector(int $id): RplSector
+    public function getOneRplOccupation(int $id): RplOccupation
     {
-        /** @var RplSector|Builder $rplSectorBuilder */
-        $rplSectorBuilder = RplSector::select([
-            'rpl_sectors.id',
-            'rpl_sectors.title',
-            'rpl_sectors.title_en',
-            'rpl_sectors.translations',
-            'rpl_sectors.created_at',
-            'rpl_sectors.updated_at',
-            'rpl_sectors.deleted_at',
+        /** @var RplOccupation|Builder $rplOccupationBuilder */
+        $rplOccupationBuilder = RplOccupation::select([
+            'rpl_occupations.id',
+            'rpl_occupations.title',
+            'rpl_occupations.title_en',
+            'rpl_occupations.rpl_sector_id',
+            'rpl_occupations.translations',
+            'rpl_occupations.created_at',
+            'rpl_occupations.updated_at',
+            'rpl_occupations.deleted_at',
         ]);
 
         if (is_numeric($id)) {
-            $rplSectorBuilder->where('rpl_sectors.id', $id);
+            $rplOccupationBuilder->where('rpl_Occupations.id', $id);
         }
 
-        return $rplSectorBuilder->firstOrFail();
+        return $rplOccupationBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return RplSector
+     * @return RplOccupation
      */
-    public function store(array $data): RplSector
+    public function store(array $data): RplOccupation
     {
-        $rplSector = app()->make(RplSector::class);
-        $rplSector->fill($data);
-        $rplSector->save();
-        return $rplSector;
+        $rplOccupation = app()->make(RplOccupation::class);
+        $rplOccupation->fill($data);
+        $rplOccupation->save();
+        return $rplOccupation;
     }
 
     /**
-     * @param RplSector $rplSector
+     * @param RplOccupation $rplOccupation
      * @param array $data
-     * @return RplSector
+     * @return RplOccupation
      */
-    public function update(RplSector $rplSector, array $data): RplSector
+    public function update(RplOccupation $rplOccupation, array $data): RplOccupation
     {
-        $rplSector->fill($data);
-        $rplSector->save();
-        return $rplSector;
+        $rplOccupation->fill($data);
+        $rplOccupation->save();
+        return $rplOccupation;
     }
 
     /**
-     * @param RplSector $rplSector
+     * @param RplOccupation $rplOccupation
      * @return bool
      */
-    public function destroy(RplSector $rplSector): bool
+    public function destroy(RplOccupation $rplOccupation): bool
     {
-        return $rplSector->delete();
+        return $rplOccupation->delete();
     }
 
     /**
