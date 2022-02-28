@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddYouthIdToTrainersTable extends Migration
+class RemoveInstituteIdToTrainersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,9 @@ class AddYouthIdToTrainersTable extends Migration
     public function up()
     {
         Schema::table('trainers', function (Blueprint $table) {
-            $table->unsignedInteger('trainer_id')->nullable()->after('industry_association_id');
+            $table->dropColumn('institute_id');
+            $table->dropColumn('trainer_id');
+            $table->unsignedInteger('youth_id')->nullable()->after('id');
         });
     }
 
@@ -26,7 +28,9 @@ class AddYouthIdToTrainersTable extends Migration
     public function down()
     {
         Schema::table('trainers', function (Blueprint $table) {
-            $table->dropColumn('trainer_id');
+            $table->unsignedInteger('institute_id');
+            $table->unsignedInteger('trainer_id');
+            $table->dropColumn('youth_id');
         });
     }
 }
