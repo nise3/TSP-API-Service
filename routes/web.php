@@ -32,6 +32,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rto-countries', 'RtoCountryController')->render();
         $customRouter()->resourceRoute('registered-training-organizations', 'RegisteredTrainingOrganizationController')->render();
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
+        $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
 
 
         /** Institute Registration Approval */
