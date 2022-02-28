@@ -6773,6 +6773,9 @@
                     "institute_id": {
                         "type": "integer"
                     },
+                    "role_id": {
+                        "type": "integer"
+                    },
                     "branch_id": {
                         "type": "integer"
                     },
@@ -6851,10 +6854,10 @@
                         "type": "string"
                     },
                     "skills": {
-                        "type": "string"
-                    },
-                    "skills_en": {
-                        "type": "string"
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     },
                     "present_address_division_id": {
                         "type": "integer"
@@ -6903,9 +6906,11 @@
                     }
                 },
                 "required": [
+                    "role_id",
                     "trainer_name",
                     "trainer_registration_number",
                     "email",
+                    "skills",
                     "mobile",
                     "date_of_birth",
                     "gender",
