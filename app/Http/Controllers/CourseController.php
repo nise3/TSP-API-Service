@@ -244,6 +244,17 @@ class CourseController extends Controller
 
     /**
      * @param Request $request
+     * @return JsonResponse
+     */
+    public function youthFeedCourses(Request $request): JsonResponse
+    {
+        $data = $request->all();
+        $response = $this->courseService->getYouthFeedCourses($data, $this->startTime);
+        return Response::json($response);
+    }
+
+    /**
+     * @param Request $request
      * @param int $youthId
      * @return array
      */
