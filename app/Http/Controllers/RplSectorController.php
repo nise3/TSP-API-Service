@@ -129,7 +129,7 @@ class RplSectorController extends Controller
     {
         $rplSector = RplSector::findOrFail($id);
 
-        $this->authorize('update', $rplSector);
+        //$this->authorize('update', $rplSector);
 
         $validated = $this->rplSectorService->validator($request, $id)->validate();
         $data = $this->rplSectorService->update($rplSector, $validated);
@@ -138,7 +138,7 @@ class RplSectorController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RTO updated successfully.",
+                "message" => "RPL Sector updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -165,7 +165,7 @@ class RplSectorController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RTO deleted successfully.",
+                    "message" => "RPL Sector deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
