@@ -40,6 +40,7 @@ class RtoCountryController extends Controller
 
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', RtoCountry::class);
 
         $filter = $this->rtoCountryService->filterValidator($request)->validate();
         $response = $this->rtoCountryService->getRtoCountryList($filter, $this->startTime);
@@ -55,6 +56,8 @@ class RtoCountryController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+
+        $this->authorize('create', RtoCountry::class);
 
         $validated = $this->rtoCountryService->validator($request)->validate();
         $this->rtoCountryService->store($validated);
