@@ -5,11 +5,14 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Trainer;
+use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -326,8 +329,9 @@ class TrainerService
     public function store(array $data): Trainer
     {
         $trainer = app(Trainer::class);
-        DB::beginTransaction();
         $youth = null;
+
+        DB::beginTransaction();
         try {
             /** Youth service call */
             $youth = ServiceToServiceCall::createTrainerYouthUser($data);
@@ -342,10 +346,31 @@ class TrainerService
                 $data['institute_id']
             ]);
 
+            /** Sync in institute_skill pivot table */
+            $trainer->skills()->sync($data['skills']);
+
             /** Core service call */
-            $user = ServiceToServiceCall::createTrainerCoreUser($trainer, $youth);
+            $trainerData = $trainer->toArray();
+            $trainerData['role_id'] = $data['role_id'];
+            ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
 
             DB::commit();
+
+            /** Mail send after user registration */
+            $to = array($youth['email']);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Registration Information";
+            $message = "Congratulation, You are successfully registered as a Trainer user. Username: " . $youth['username'] . " & Password: " . BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** SMS send after user registration */
+            $recipient = $youth['mobile'];
+            $smsMessage = "Congratulation, You are successfully registered as a Trainer user.";
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
+
         } catch (Throwable $e) {
             DB::rollBack();
             if(!empty($youth)){
@@ -542,18 +567,24 @@ class TrainerService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $data = $request->all();
+
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
+
+        if (!empty($data["skills"])) {
+            $data["skills"] = isset($data['skills']) && is_array($data['skills']) ? $data['skills'] : explode(',', $data['skills']);
+        }
 
         $authUser = Auth::user();
 
         $rules = [
             'institute_id' => [
-                Rule::requiredIf(function () use ($authUser, $request) {
+                Rule::requiredIf(function () use ($authUser, $data) {
                     if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
                         return true;
-                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('industry_association_id'))) {
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($data['industry_association_id'])) {
                         return true;
                     }
                     return false;
@@ -563,16 +594,20 @@ class TrainerService
                 "int"
             ],
             'industry_association_id' => [
-                Rule::requiredIf(function () use ($authUser, $request) {
+                Rule::requiredIf(function () use ($authUser, $data) {
                     if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
                         return true;
-                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('institute_id'))) {
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($data['institute_id'])) {
                         return true;
                     }
                     return false;
                 }),
                 "nullable",
                 "int"
+            ],
+            'role_id' => [
+                'required',
+                'int'
             ],
             'branch_id' => [
                 'nullable',
@@ -658,21 +693,25 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'skills' => [
-                'nullable',
-                'string'
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
             ],
-            'skills_en' => [
-                'nullable',
-                'string'
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
             ],
             'present_address_division_id' => [
-                'nullable',
+                'required',
                 'integer',
                 'exists:loc_divisions,id,deleted_at,NULL',
             ],
             'present_address_district_id' => [
-                'nullable',
+                'required',
                 'integer',
                 'exists:loc_districts,id,deleted_at,NULL',
             ],
@@ -735,7 +774,7 @@ class TrainerService
             ],
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
     public function filterValidator(Request $request): Validator
