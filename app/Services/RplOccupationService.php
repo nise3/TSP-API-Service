@@ -29,6 +29,7 @@ class RplOccupationService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
+        $rplSectorId = $request['rpl_sector_id'] ?? "";
 
         /** @var RplOccupation|Builder $rplOccupationBuilder */
         $rplOccupationBuilder = RplOccupation::select([
@@ -49,6 +50,9 @@ class RplOccupationService
         }
         if (!empty($title)) {
             $rplOccupationBuilder->where('rpl_occupations.title', 'like', '%' . $title . '%');
+        }
+        if (!empty($rplSectorId)) {
+            $rplOccupationBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
         }
 
         /** @var Collection $rplOccupations */
@@ -93,7 +97,7 @@ class RplOccupationService
         ]);
 
         if (is_numeric($id)) {
-            $rplOccupationBuilder->where('rpl_Occupations.id', $id);
+            $rplOccupationBuilder->where('rpl_occupations.id', $id);
         }
 
         return $rplOccupationBuilder->firstOrFail();
@@ -142,6 +146,12 @@ class RplOccupationService
         $data = $request->all();
 
         $rules = [
+            'rpl_sector_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:rpl_sectors,id,deleted_at,NULL',
+            ],
             'title' => [
                 'required',
                 'string',
@@ -187,6 +197,7 @@ class RplOccupationService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'country_id' => 'nullable|int',
+            'rpl_sector_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',

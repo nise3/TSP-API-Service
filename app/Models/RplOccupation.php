@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class RplOccupation extends Model
+class RplOccupation extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes;
 
