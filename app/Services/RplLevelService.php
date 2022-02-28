@@ -185,7 +185,12 @@ class RplLevelService
             'sequence_order' => [
                 'required',
                 'int',
-                'min:1'
+                'min:1',
+                Rule::unique('rpl_levels', 'sequence_order')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
+                        return $query->where('rpl_occupation_id', $data['rpl_occupation_id']);
+                    })
             ],
             'translations.*' => [
                 Rule::requiredIf(!empty($data['translations'])),
