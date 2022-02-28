@@ -31,4 +31,14 @@ class RplSector extends BaseModel
         'translations' => 'array'
     ];
 
+
+    public function getTitleAttribute()
+    {
+        if(request()->get('country_id') && $this->attributes['translations']){
+           $translations = json_decode($this->attributes['translations'],true);
+           return $translations[request()->get('country_id')]['title'];
+        }
+        return $this->attributes['title'];
+    }
+
 }

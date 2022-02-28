@@ -146,180 +146,33 @@ class RplSectorService
     {
         $data = $request->all();
 
-        $customMessage = [
-            'row_status.in' => 'Row status must be within 1 or 0. [30000]'
-        ];
-
         $rules = [
-            'permission_sub_group_id' => [
-                Rule::requiredIf(function () use ($id) {
-                    return is_null($id);
-                }),
-                'nullable',
-                'int'
-            ],
             'title' => [
                 'required',
                 'string',
-                'max:1000',
+                'max:500',
             ],
             'title_en' => [
                 'nullable',
                 'string',
-                'max:500',
+                'max:300',
                 'min:2'
             ],
-            'country_id' => [
-                'required',
-                'integer',
-                'exists:countries,id,deleted_at,NULL'
-            ],
-            'loc_division_id' => [
-                'required',
-                'integer',
-                'exists:loc_divisions,id,deleted_at,NULL'
-            ],
-            'loc_district_id' => [
-                'required',
-                'integer',
-                'exists:loc_districts,id,deleted_at,NULL'
-            ],
-            'loc_upazila_id' => [
+            'translations' => [
                 'nullable',
-                'integer',
-                'exists:loc_upazilas,id,deleted_at,NULL'
+                'array',
+                'min:1'
             ],
-            'location_latitude' => [
-                'nullable',
-                'string',
-                'max:50'
+            'translations.*' => [
+                Rule::requiredIf(!empty($data['translations'])),
+                'array',
+                'min:1'
             ],
-            'location_longitude' => [
-                'nullable',
-                'string',
-                'max:50'
-            ],
-            'google_map_src' => [
-                'nullable',
-                'string'
-            ],
-            'address' => [
-                'nullable',
-                'string'
-            ],
-            'address_en' => [
-                'nullable',
-                'string'
-            ],
-            'logo' => [
-                'nullable',
-                'string',
-            ],
-            'primary_phone' => [
-                'nullable',
-                'string',
-                'max:20'
-            ],
-            'phone_numbers' => [
-                'nullable',
-                'array'
-            ],
-            'phone_numbers.*' => [
-                'nullable',
-                'string'
-            ],
-            'primary_mobile' => [
-                'required',
-                'string',
-                BaseModel::MOBILE_REGEX
-            ],
-            'mobile_numbers' => [
-                'nullable',
-                'array'
-            ],
-            'mobile_numbers.*' => [
-                'nullable',
-                'string',
-                BaseModel::MOBILE_REGEX
-            ],
-
-            'email' => [
-                'required',
-                'email',
-                'max:254'
-            ],
-
-            'name_of_the_office_head' => [
-                'required',
-                'string',
-                'max:500'
-            ],
-            'name_of_the_office_head_en' => [
-                'nullable',
-                'string'
-            ],
-            'name_of_the_office_head_designation' => [
-                "required",
-                "string",
-                "max:500"
-            ],
-            'name_of_the_office_head_designation_en' => [
-                "nullable",
-                "string",
-                "max:500"
-            ],
-            'contact_person_name' => [
-                'required',
-                'max: 500',
-                'min:2'
-            ],
-            'contact_person_name_en' => [
-                'nullable',
-                'max: 250',
-                'min:2'
-            ],
-            'contact_person_mobile' => [
-                'required',
-                BaseModel::MOBILE_REGEX,
-                Rule::unique('registered_training_organizations', 'contact_person_mobile')
-                    ->ignore($id)
-                    ->where(function (\Illuminate\Database\Query\Builder $query) {
-                        return $query->whereNull('deleted_at');
-                    })
-            ],
-            'contact_person_email' => [
-                'required',
-                'email',
-                Rule::unique('registered_training_organizations', 'contact_person_email')
-                    ->ignore($id)
-                    ->where(function (\Illuminate\Database\Query\Builder $query) {
-                        return $query->whereNull('deleted_at');
-                    })
-            ],
-            'contact_person_designation' => [
-                'required',
-                'max: 500',
-                "min:2"
-            ],
-            'contact_person_designation_en' => [
-                'nullable',
-                'max: 300',
-                "min:2"
-            ],
-            'config' => [
-                'nullable',
-                'string'
-            ],
-            'row_status' => [
-                'required_if:' . $id . ',!=,null',
-                'nullable',
-                Rule::in(Institute::ROW_STATUSES),
-            ],
-            'created_by' => ['nullable', 'int'],
-            'updated_by' => ['nullable', 'int'],
-
+            'translations.*.title' => [
+                Rule::requiredIf(!empty($data['translations']))
+            ]
         ];
-        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 
 
@@ -338,6 +191,7 @@ class RplSectorService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'country_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
