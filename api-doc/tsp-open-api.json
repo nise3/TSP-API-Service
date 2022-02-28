@@ -4855,6 +4855,260 @@
                 }
             }
         },
+        "/rpl-sectors": {
+            "post": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Create an rpl sector",
+                "description": "API endpoint toCreate an rpl sector . A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/rplSector"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "UruyaChanda",
+                                        "title_en": "UruyaChanda",
+                                        "translations": [
+                                            {
+                                                "title": "Borneo"
+                                            },
+                                            {
+                                                "title": "Oldie Yorkshire"
+                                            }
+                                        ],
+                                        "updated_at": "2022-02-28T05:42:39.000000Z",
+                                        "created_at": "2022-02-28T05:42:39.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Sector added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Get all rpl sector",
+                "description": "API endpoint to Get all rpl sector. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "SSD",
+                                            "title_en": "ssd",
+                                            "translations": [
+                                                {
+                                                    "title": "New Samoa"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:01.000000Z",
+                                            "updated_at": "2022-02-28T05:42:01.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title": "UruyaChanda",
+                                            "title_en": "UruyaChanda",
+                                            "translations": [
+                                                {
+                                                    "title": "Borneo"
+                                                },
+                                                {
+                                                    "title": "Oldie Yorkshire"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:39.000000Z",
+                                            "updated_at": "2022-02-28T05:42:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rpl-sectors/{rplSectorId}": {
+            "get": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Get an rpl sector",
+                "description": "API endpoint to Get an rpl sector. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplSectorId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "UruyaChanda",
+                                        "title_en": "UruyaChanda",
+                                        "translations": [
+                                            {
+                                                "title": "Borneo"
+                                            },
+                                            {
+                                                "title": "Oldie Yorkshire"
+                                            }
+                                        ],
+                                        "created_at": "2022-02-28T05:42:39.000000Z",
+                                        "updated_at": "2022-02-28T05:42:39.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Update an rpl sector",
+                "description": "API endpoint to Update an rpl sector. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplSectorId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/rplSector"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Uzumaki Barrage",
+                                        "title_en": "Uzumaki Barrage",
+                                        "translations": [
+                                            {
+                                                "title": "Borneo"
+                                            },
+                                            {
+                                                "title": "Oldie Yorkshire"
+                                            }
+                                        ],
+                                        "created_at": "2022-02-28T05:42:39.000000Z",
+                                        "updated_at": "2022-02-28T06:06:48.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Sector updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Delete an rpl sector",
+                "description": "API endpoint to delete an rpl sector. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplSectorId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Sector deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/registered-training-organizations": {
             "get": {
                 "tags": ["Registerd training organization"],
@@ -5696,6 +5950,24 @@
             }
         },
         "schemas": {
+            "rplSector": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "translations": {
+                        "type": "object",
+                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                    }
+                },
+                "required": [
+                    "title"
+                ]
+            },
             "RegisterTrainingOrganization": {
                 "type": "object",
                 "properties": {
@@ -6915,7 +7187,10 @@
                     "date_of_birth",
                     "gender",
                     "marital_status",
-                    "nationality"
+                    "nationality",
+                    "trainer_registration_number",
+                    "present_address_division_id",
+                    "present_address_district_id"
                 ]
             },
             "trainerBatch": {
@@ -7330,6 +7605,14 @@
             }
         },
         "parameters": {
+            "country_id": {
+                "name": "country_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "search_text": {
                 "name": "search_text",
                 "in": "query",
@@ -7847,6 +8130,15 @@
                             false
                         ]
                     }
+                }
+            },
+            "rplSectorId": {
+                "name": "rplSectorId",
+                "in": "path",
+                "description": "rplSectorId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "batchId": {
