@@ -45,7 +45,7 @@ class RplSectorController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        //$this->authorize('viewAny', RplSector::class);
+        $this->authorize('viewAny', RplSector::class);
 
         $filter = $this->rplSectorService->filterValidator($request)->validate();
 
@@ -78,7 +78,7 @@ class RplSectorController extends Controller
     public function read(Request $request, int $id): JsonResponse
     {
         $rto = $this->rplSectorService->getOneRplSector($id);
-        //$this->authorize('view', $rto);
+        $this->authorize('view', $rto);
 
         $response = [
             "data" => $rto,
@@ -100,7 +100,7 @@ class RplSectorController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        //$this->authorize('create', RplSector::class);
+        $this->authorize('create', RplSector::class);
 
         $validated = $this->rplSectorService->validator($request)->validate();
         $rplSector = $this->rplSectorService->store($validated);
@@ -129,7 +129,7 @@ class RplSectorController extends Controller
     {
         $rplSector = RplSector::findOrFail($id);
 
-        //$this->authorize('update', $rplSector);
+        $this->authorize('update', $rplSector);
 
         $validated = $this->rplSectorService->validator($request, $id)->validate();
         $data = $this->rplSectorService->update($rplSector, $validated);

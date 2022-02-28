@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RplOccupation;
-use App\Services\RplOccupationService;
+use App\Models\RplLevel;
+use App\Services\RplLevelService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,25 +14,25 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class RplOccupationController extends Controller
+class RplLevelController extends Controller
 {
     /**
-     * @var RplOccupationService
+     * @var RplLevelService
      */
-    public RplOccupationService $rplOccupationService;
+    public RplLevelService $rplLevelService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * RplOccupationController constructor.
-     * @param RplOccupationService $rplOccupationService
+     * RplLevelController constructor.
+     * @param RplLevelService $rplLevelService
      */
 
-    public function __construct(RplOccupationService $rplOccupationService)
+    public function __construct(RplLevelService $rplLevelService)
     {
-        $this->rplOccupationService = $rplOccupationService;
+        $this->rplLevelService = $rplLevelService;
         $this->startTime = Carbon::now();
     }
 
@@ -45,11 +45,11 @@ class RplOccupationController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', RplOccupation::class);
+        $this->authorize('viewAny', RplLevel::class);
 
-        $filter = $this->rplOccupationService->filterValidator($request)->validate();
+        $filter = $this->rplLevelService->filterValidator($request)->validate();
 
-        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime);
+        $response = $this->rplLevelService->getRplLevelList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -61,9 +61,9 @@ class RplOccupationController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->rplOccupationService->filterValidator($request)->validate();
+        $filter = $this->rplLevelService->filterValidator($request)->validate();
 
-        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime);
+        $response = $this->rplLevelService->getRplLevelList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,7 +77,7 @@ class RplOccupationController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $rto = $this->rplOccupationService->getOneRplOccupation($id);
+        $rto = $this->rplLevelService->getOneRplLevel($id);
         $this->authorize('view', $rto);
 
         $response = [
@@ -100,17 +100,17 @@ class RplOccupationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', RplOccupation::class);
+        $this->authorize('create', RplLevel::class);
 
-        $validated = $this->rplOccupationService->validator($request)->validate();
-        $rplOccupation = $this->rplOccupationService->store($validated);
+        $validated = $this->rplLevelService->validator($request)->validate();
+        $rplLevel = $this->rplLevelService->store($validated);
 
         $response = [
-            'data' => $rplOccupation,
+            'data' => $rplLevel,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RPL Occupation added successfully",
+                "message" => "RPL Level added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -127,18 +127,18 @@ class RplOccupationController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $rplOccupation = RplOccupation::findOrFail($id);
+        $rplLevel = RplLevel::findOrFail($id);
 
-        $this->authorize('update', $rplOccupation);
+        $this->authorize('update', $rplLevel);
 
-        $validated = $this->rplOccupationService->validator($request, $id)->validate();
-        $data = $this->rplOccupationService->update($rplOccupation, $validated);
+        $validated = $this->rplLevelService->validator($request, $id)->validate();
+        $data = $this->rplLevelService->update($rplLevel, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "RPL Level updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,19 +153,19 @@ class RplOccupationController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $rplOccupation = RplOccupation::findOrFail($id);
+        $rplLevel = RplLevel::findOrFail($id);
 
-        $this->authorize('delete', $rplOccupation);
+        $this->authorize('delete', $rplLevel);
 
         DB::beginTransaction();
         try {
-            $this->rplOccupationService->destroy($rplOccupation);
+            $this->rplLevelService->destroy($rplLevel);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RPL Occupation deleted successfully.",
+                    "message" => "RPL Level deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
