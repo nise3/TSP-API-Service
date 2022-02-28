@@ -78,7 +78,7 @@ class RplSectorController extends Controller
     public function read(Request $request, int $id): JsonResponse
     {
         $rto = $this->rplSectorService->getOneRplSector($id);
-        $this->authorize('view', $rto);
+        //$this->authorize('view', $rto);
 
         $response = [
             "data" => $rto,
@@ -101,7 +101,6 @@ class RplSectorController extends Controller
     public function store(Request $request): JsonResponse
     {
         //$this->authorize('create', RplSector::class);
-        //dd($request->all());
 
         $validated = $this->rplSectorService->validator($request)->validate();
         $rplSector = $this->rplSectorService->store($validated);

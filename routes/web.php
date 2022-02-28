@@ -19,9 +19,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
 
-    $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
-
-
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
@@ -34,6 +31,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
         $customRouter()->resourceRoute('rto-countries', 'RtoCountryController')->render();
         $customRouter()->resourceRoute('registered-training-organizations', 'RegisteredTrainingOrganizationController')->render();
+        $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
+
 
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);

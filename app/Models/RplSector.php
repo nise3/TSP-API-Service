@@ -36,7 +36,7 @@ class RplSector extends BaseModel
     {
         if(request()->get('country_id') && $this->attributes['translations']){
            $translations = json_decode($this->attributes['translations'],true);
-           return $translations[request()->get('country_id')]['title'];
+           return $translations[request()->get('country_id')]['title'] ?? $this->attributes['title'];
         }
         return $this->attributes['title'];
     }
