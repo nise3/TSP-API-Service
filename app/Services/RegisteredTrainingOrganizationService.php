@@ -33,6 +33,7 @@ class RegisteredTrainingOrganizationService
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
+        $instituteId = $request['institute_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -41,6 +42,7 @@ class RegisteredTrainingOrganizationService
         /** @var RegisteredTrainingOrganization|Builder $rtoBuilder */
         $rtoBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.code',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
@@ -113,6 +115,10 @@ class RegisteredTrainingOrganizationService
             $rtoBuilder->where('registered_training_organizations.title', 'like', '%' . $title . '%');
         }
 
+        if (!empty($instituteId)) {
+            $rtoBuilder->where('registered_training_organizations.institute_id', $instituteId);
+        }
+
         /** @var Collection $rtos */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
@@ -146,6 +152,7 @@ class RegisteredTrainingOrganizationService
         $registeredTrainingOrganizationBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
             'registered_training_organizations.code',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
@@ -355,6 +362,11 @@ class RegisteredTrainingOrganizationService
                 'nullable',
                 'int'
             ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL'
+            ],
             "code" => [
                 'string',
                 'required'
@@ -541,6 +553,7 @@ class RegisteredTrainingOrganizationService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
+            'institute_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [

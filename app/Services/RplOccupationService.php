@@ -37,6 +37,8 @@ class RplOccupationService
             'rpl_occupations.title',
             'rpl_occupations.title_en',
             'rpl_occupations.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_occupations.translations',
             'rpl_occupations.created_at',
             'rpl_occupations.updated_at',
@@ -44,6 +46,11 @@ class RplOccupationService
         ]);
 
         $rplOccupationBuilder->orderBy('rpl_occupations.id', $order);
+
+        $rplOccupationBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
 
         if (!empty($titleEn)) {
             $rplOccupationBuilder->where('rpl_occupations.title_en', 'like', '%' . $titleEn . '%');

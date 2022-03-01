@@ -34,7 +34,11 @@ class RplLevelService
         $rplLevelBuilder = RplLevel::select([
             'rpl_levels.id',
             'rpl_levels.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_levels.rpl_occupation_id',
+            'rpl_occupations.title_en as rpl_occupation_title_en',
+            'rpl_occupations.title as rpl_occupation_title',
             'rpl_levels.title',
             'rpl_levels.title_en',
             'rpl_levels.translations',
@@ -45,6 +49,16 @@ class RplLevelService
         ]);
 
         $rplLevelBuilder->orderBy('rpl_levels.id', $order);
+
+        $rplLevelBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_levels.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
+        $rplLevelBuilder->join('rpl_occupations', function ($join){
+            $join->on('rpl_levels.rpl_occupation_id', '=', 'rpl_occupations.id')
+                ->whereNull('rpl_occupations.deleted_at');
+        });
 
         if (!empty($titleEn)) {
             $rplLevelBuilder->where('rpl_levels.title_en', 'like', '%' . $titleEn . '%');
