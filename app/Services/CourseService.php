@@ -896,6 +896,7 @@ class CourseService
                 'courses.created_at',
                 'courses.updated_at',
                 'courses.deleted_at',
+                'courses.created_at as feed_sort_date',
                 DB::raw('COUNT(distinct course_enrollments.id) as total_enroll')
             ]
         );
