@@ -5,9 +5,9 @@
 
 variables:
 
-  devImageVersion: &dev_image "2.2.15"
+  devImageVersion: &dev_image "2.2.16"
 
-  productionImageVersion: &prod_image "2.2.15"
+  productionImageVersion: &prod_image "2.2.16"
 
 
   #auto scaling config
@@ -23,7 +23,7 @@ variables:
 
   # application config
   # APP_ENV environment available values are DEV/STAGING/PRODUCTION
-  APP_ENV: "DEV"
+  APP_ENV: "PRODUCTION"
 
   DEV:
 
@@ -115,7 +115,7 @@ variables:
 
   PRODUCTION:
     APP_ENV: "local"
-    APP_DEBUG: "false"
+    APP_DEBUG: "true"
     APP_URL: &prodHost "nise3-institute.default"
 
     LOG_CHANNEL: "elasticsearch"

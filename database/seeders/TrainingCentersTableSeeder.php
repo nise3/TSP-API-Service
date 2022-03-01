@@ -22,6 +22,5 @@ class TrainingCentersTableSeeder extends Seeder
 
         Schema::enableForeignKeyConstraints();
 
-
     }
 }
