@@ -20,9 +20,10 @@ class RplOccupationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplOccupationList(array $request, Carbon $startTime): array
+    public function getRplOccupationList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -44,6 +45,10 @@ class RplOccupationService
             'rpl_occupations.updated_at',
             'rpl_occupations.deleted_at',
         ]);
+
+        if(!$isPublicApi){
+            $rplOccupationBuilder->acl();
+        }
 
         $rplOccupationBuilder->orderBy('rpl_occupations.id', $order);
 

@@ -27,9 +27,10 @@ class RplSectorService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplSectorList(array $request, Carbon $startTime): array
+    public function getRplSectorList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -47,6 +48,10 @@ class RplSectorService
             'rpl_sectors.updated_at',
             'rpl_sectors.deleted_at',
         ]);
+
+        if(!$isPublicApi){
+            $rplSectorBuilder->acl();
+        }
 
         $rplSectorBuilder->orderBy('rpl_sectors.id', $order);
 
