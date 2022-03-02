@@ -217,7 +217,7 @@ class RplLevelService
                 Rule::unique('rpl_levels', 'sequence_order')
                     ->ignore($id)
                     ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
-                        return $query->where('rpl_occupation_id', $data['rpl_occupation_id']);
+                        return $query->where('rpl_occupation_id', $data['rpl_occupation_id'])->whereNull('deleted_at');
                     })
             ],
             'translations.*' => [
