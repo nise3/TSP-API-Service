@@ -47,7 +47,6 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.institute_id',
             'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
@@ -67,8 +66,6 @@ class TrainerService
             'trainers.about_me_en',
             'trainers.educational_qualification',
             'trainers.educational_qualification_en',
-            'trainers.skills',
-            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -105,12 +102,16 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
             'trainers.deleted_at',
-        ])->acl();
+        ]);
 
+        $trainerBuilder->leftJoin("institute_trainers", function ($join) use ($rowStatus) {
+            $join->on('institute_trainers.trainer_id', '=', 'trainers.id');
+        });
         $trainerBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
-            $join->on('trainers.institute_id', '=', 'institutes.id')
+            $join->on('institute_trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
+
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
@@ -164,7 +165,7 @@ class TrainerService
         }
 
         if (is_numeric($instituteId)) {
-            $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
+            $trainerBuilder->where('institute_trainers.institute_id', '=', $instituteId);
         }
 
         if (is_numeric($industryAssociationId)) {
@@ -178,6 +179,8 @@ class TrainerService
         if (is_numeric($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
+
+        $trainerBuilder->with('skills');
 
         /** @var Collection $trainers */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -212,10 +215,7 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.institute_id',
             'trainers.industry_association_id',
-            'institutes.title_en as institutes_title_en',
-            'institutes.title as institutes_title',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
@@ -232,8 +232,6 @@ class TrainerService
             'trainers.about_me_en',
             'trainers.educational_qualification',
             'trainers.educational_qualification_en',
-            'trainers.skills',
-            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -272,10 +270,6 @@ class TrainerService
             'trainers.deleted_at',
         ]);
 
-        $trainerBuilder->leftJoin("institutes", function ($join) {
-            $join->on('trainers.institute_id', '=', 'institutes.id')
-                ->whereNull('institutes.deleted_at');
-        });
         $trainerBuilder->leftJoin("training_centers", function ($join) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
@@ -316,6 +310,9 @@ class TrainerService
         });
 
         $trainerBuilder->where('trainers.id', $id);
+
+        $trainerBuilder->with('institutes');
+        $trainerBuilder->with('skills');
 
         /** @var Trainer $trainer */
         return $trainerBuilder->firstOrFail();
