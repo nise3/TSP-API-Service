@@ -309,6 +309,26 @@ class YouthAssessmentService
                 'int',
                 'min:1',
                 'exists:rto_batches,id,deleted_at,NULL',
+            ],
+            'answers' => [
+                'required',
+                'array',
+                'min:1'
+            ],
+            'answers.*' => [
+                Rule::requiredIf(!empty($data['answers'])),
+                'array',
+                'min:1'
+            ],
+            'answers.*.question_id' => [
+                Rule::requiredIf(!empty($data['answers'])),
+                'int',
+                'min:1'
+            ],
+            'answers.*.answer' => [
+                Rule::requiredIf(!empty($data['answers'])),
+                'int',
+                Rule::in([1,2,3,4])
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
@@ -339,5 +359,21 @@ class YouthAssessmentService
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
         ], $customMessage);
+    }
+
+    public function assignToBatchValidator(Request $request, int $id)
+    {
+        $data = $request->all();
+
+        $rules = [
+            'rto_batch_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:rto_batches,id,deleted_at,NULL',
+            ],
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 }

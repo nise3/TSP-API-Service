@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\YouthAssessment;
 use App\Models\RplOccupation;
 use App\Services\YouthAssessmentService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -35,13 +36,15 @@ class YouthAssessmentController extends Controller
         $this->youthAssessmentService = $youthAssessmentService;
         $this->startTime = Carbon::now();
     }
+
     /**
      * Display a listing of the resource.
      *
      * @param Request $request
      * @return JsonResponse
+     * @throws AuthorizationException|ValidationException
      */
-    public function getList(Request $request)
+    public function getList(Request $request): JsonResponse
     {
         $this->authorize('viewAny', YouthAssessment::class);
         $filter = $this->youthAssessmentService->filterValidator($request)->validate();
@@ -69,8 +72,9 @@ class YouthAssessmentController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
-    public function read(Request $request, int $id)
+    public function read(Request $request, int $id): JsonResponse
     {
         $youthAssessment = $this->youthAssessmentService->getOneYouthAssessment($id);
         $this->authorize('view', $youthAssessment);
@@ -93,9 +97,9 @@ class YouthAssessmentController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        // $this->authorize('create', YouthAssessment::class); // not needed
+        // $this->authorize('create', YouthAssessment::class); // not needed for public
         $validated = $this->youthAssessmentService->validator($request)->validate();
         $youthAssessment = $this->youthAssessmentService->store($validated);
 
@@ -118,7 +122,7 @@ class YouthAssessmentController extends Controller
      * @param  int $id
      * @return JsonResponse
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $youthAssessment = YouthAssessment::findOrFail($id);
 
@@ -139,13 +143,40 @@ class YouthAssessmentController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param  int $id
+     * @return JsonResponse
+     */
+    public function assignToBatch(Request $request, int $id): JsonResponse
+    {
+        $youthAssessment = YouthAssessment::findOrFail($id);
+
+        $this->authorize('update', YouthAssessment::class);
+
+        $validated = $this->youthAssessmentService->assignToBatchValidator($request, $id)->validate();
+        $data = $this->youthAssessmentService->update($youthAssessment, $validated);
+        $response = [
+            'data' => $data,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "RPL Occupation updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\YouthAssessment $youthAssessment
+     * @param int $id
      * @return JsonResponse
      * @throws Throwable
      */
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $youthAssessment = YouthAssessment::findOrFail($id);
 

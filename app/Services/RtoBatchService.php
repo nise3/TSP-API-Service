@@ -28,7 +28,9 @@ class RtoBatchService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
-        $rplSectorId = $request['rpl_occupation_id'] ?? "";
+        $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $rplSectorId = $request['rpl_sector_id'] ?? "";
+        $rplLevelId = $request['rpl_level_id'] ?? "";
 
         /** @var RtoBatch|Builder $rtoBatchBuilder */
         $rtoBatchBuilder = RtoBatch::select([
@@ -39,6 +41,14 @@ class RtoBatchService
             'rto_batches.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
+
+            'rpl_occupations.rpl_sector_id as rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
+
+            'rto_batches.rpl_level_id',
+            'rpl_levels.title_en as rpl_level_title_en',
+            'rpl_levels.title as rpl_level_title',
 
             'rto_batches.created_at',
             'rto_batches.updated_at',
@@ -52,14 +62,30 @@ class RtoBatchService
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
+        $rtoBatchBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
+        $rtoBatchBuilder->join('rpl_levels', function ($join){
+            $join->on('rto_batches.rpl_level_id', '=', 'rpl_levels.id')
+                ->whereNull('rpl_levels.deleted_at');
+        });
+
         if (!empty($titleEn)) {
             $rtoBatchBuilder->where('rto_batches.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
             $rtoBatchBuilder->where('rto_batches.title', 'like', '%' . $title . '%');
         }
+        if (!empty($rplOccupationId)) {
+            $rtoBatchBuilder->where('rto_batches.rpl_occupation_id', $rplOccupationId);
+        }
         if (!empty($rplSectorId)) {
-            $rtoBatchBuilder->where('rto_batches.rpl_occupation_id', $rplSectorId);
+            $rtoBatchBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
+        }
+        if (!empty($rplLevelId)) {
+            $rtoBatchBuilder->where('rto_batches.rpl_level_id', $rplLevelId);
         }
 
         /** @var Collection $rtoBatches */
@@ -101,6 +127,14 @@ class RtoBatchService
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
+            'rpl_occupations.rpl_sector_id as rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
+
+            'rto_batches.rpl_level_id',
+            'rpl_levels.title_en as rpl_level_title_en',
+            'rpl_levels.title as rpl_level_title',
+
             'rto_batches.created_at',
             'rto_batches.updated_at',
             'rto_batches.deleted_at',
@@ -113,6 +147,16 @@ class RtoBatchService
         $rtoBatchBuilder->join('rpl_occupations', function ($join){
             $join->on('rto_batches.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
+        });
+
+        $rtoBatchBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
+        $rtoBatchBuilder->join('rpl_levels', function ($join){
+            $join->on('rto_batches.rpl_level_id', '=', 'rpl_levels.id')
+                ->whereNull('rpl_levels.deleted_at');
         });
 
         return $rtoBatchBuilder->firstOrFail();
