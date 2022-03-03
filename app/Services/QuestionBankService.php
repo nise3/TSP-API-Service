@@ -58,13 +58,13 @@ class QuestionBankService
             $questionBankBuilder->acl();
         }
 
-        $questionBankBuilder->orderBy('rpl_sectors.id', $order);
+        $questionBankBuilder->orderBy('question_banks.id', $order);
 
         if (!empty($titleEn)) {
-            $questionBankBuilder->where('rpl_sectors.title_en', 'like', '%' . $titleEn . '%');
+            $questionBankBuilder->where('question_banks.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $questionBankBuilder->where('rpl_sectors.title', 'like', '%' . $title . '%');
+            $questionBankBuilder->where('question_banks.title', 'like', '%' . $title . '%');
         }
 
         /** @var Collection $questionBanks */
@@ -94,7 +94,7 @@ class QuestionBankService
      * @param int $id
      * @return RplSector
      */
-    public function getOneQuestionBank(int $id): RplSector
+    public function getOneQuestionBank(int $id): QuestionBank
     {
         /** @var QuestionBank|Builder $questionBankBuilder */
         $questionBankBuilder = QuestionBank::select([
@@ -128,7 +128,7 @@ class QuestionBankService
 
     /**
      * @param array $data
-     * @return RplSector
+     * @return QuestionBank
      */
     public function store(array $data): QuestionBank
     {
