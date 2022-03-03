@@ -4910,7 +4910,6 @@
             }
         },
 
-
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5243,6 +5242,7 @@
             }
 
         },
+
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -5916,6 +5916,7 @@
                 }
             }
         },
+
         "/subjects": {
             "post": {
                 "tags": [
