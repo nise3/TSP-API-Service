@@ -46,11 +46,11 @@ class QuestionBankController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Subject::class);
+        $this->authorize('viewAny', QuestionBankService::class);
 
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->questionBankService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime);
+        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -62,9 +62,9 @@ class QuestionBankController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->questionBankService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime,false);
+        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime,false);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
