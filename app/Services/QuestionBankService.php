@@ -94,7 +94,7 @@ class QuestionBankService
      * @param int $id
      * @return RplSector
      */
-    public function getOneQuestionBank(int $id): RplSector
+    public function getOneQuestionBank(int $id): QuestionBank
     {
         /** @var QuestionBank|Builder $questionBankBuilder */
         $questionBankBuilder = QuestionBank::select([

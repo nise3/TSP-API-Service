@@ -6970,6 +6970,217 @@
                     "Demanded Courses"
                 ]
             }
+        },
+
+
+        "/question-banks": {
+            "get": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Get all Question Banks",
+                "description": "API endpoint to Get all Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Create a Question Banks",
+                "description": "API endpoint to Create a Question Banks. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/questionBank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "Cholo arekbar uri",
+                                        "title_en": "NeverAvoidRafa",
+                                        "type": "1",
+                                        "subject_id": "1",
+                                        "option_1": "NoTommorrow",
+                                        "option_2": "YesTommorrow",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "answer": "1",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-03T09:36:42.000000Z",
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/question-banks/{questionBankId}": {
+            "get": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Get a Question Banks",
+                "description": "API endpoint to Get a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Cholo arekbar uri",
+                                        "title_en": "NeverAvoidRafa",
+                                        "type": 1,
+                                        "subject_id": 1,
+                                        "option_1": "NoTommorrow",
+                                        "option_1_en": "",
+                                        "option_2": "YesTommorrow",
+                                        "option_2_en": "",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_3_en": "",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "option_4_en": "",
+                                        "difficulty_level": 1,
+                                        "answer": 1,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "updated_at": "2022-03-03T09:36:42.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Update a Question Banks",
+                "description": "API endpoint to update a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/questionBank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Octopus Garden",
+                                        "title_en": "The beatles",
+                                        "type": "1",
+                                        "subject_id": "1",
+                                        "option_1": "NoTommorrow",
+                                        "option_1_en": "",
+                                        "option_2": "YesTommorrow",
+                                        "option_2_en": "",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "option_3_en": "",
+                                        "option_4_en": "",
+                                        "difficulty_level": 1,
+                                        "answer": "1",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "updated_at": "2022-03-03T09:48:54.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Question Bank updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Delete a Question Banks",
+                "description": "API endpoint to delete a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Question Bank deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -6981,6 +7192,69 @@
             }
         },
         "schemas": {
+            "questionBank": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "1=>Yes 2=>No"
+                    },
+                    "subject_id": {
+                        "type": "integer",
+                        "description": "Must exist in subjects table"
+                    },
+                    "option_1": {
+                        "type": "string"
+                    },
+                    "option_1_en": {
+                        "type": "string"
+                    },
+                    "option_2": {
+                        "type": "string"
+                    },
+                    "option_2_en": {
+                        "type": "string"
+                    },
+                    "option_3": {
+                        "type": "string"
+                    },
+                    "option_3_en": {
+                        "type": "string"
+                    },
+                    "option_4": {
+                        "type": "string"
+                    },
+                    "option_4_en": {
+                        "type": "string"
+                    },
+                    "answer": {
+                       "type": "integer"
+                   },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "title",
+                    "type",
+                    "subject_id",
+                    "option_1",
+                    "option_2",
+                    "option_3",
+                    "option_4",
+                    "answer"
+
+                ]
+            },
             "subject": {
                 "type": "object",
                 "properties": {
@@ -9317,6 +9591,14 @@
                 "schema": {
                     "type": "integer",
                     "example": "1"
+                }
+            },
+            "questionBankId": {
+                "name": "questionBankId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "courseId": {
