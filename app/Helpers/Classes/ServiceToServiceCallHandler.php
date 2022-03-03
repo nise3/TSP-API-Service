@@ -198,7 +198,6 @@ class ServiceToServiceCallHandler
         $trainerInfo = [
             'user_type' => BaseModel::YOUTH_USER_TYPE,
             'username' => $trainer['mobile'],
-            'institute_id' => $authUser['id'],
             'trainer_id' => $trainer['id'],
             'role_id' => $trainer['role_id'],
             'name_en' => $trainer['trainer_name_en'] ?? "",
@@ -212,6 +211,13 @@ class ServiceToServiceCallHandler
             'password_confirmation' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
             'row_status' => BaseModel::ROW_STATUS_ACTIVE
         ];
+
+        /** Set the id who is creating this TRAINER */
+        if($authUser['user_type'] == BaseModel::INSTITUTE_USER_TYPE){
+            $trainerInfo['institute_id'] = $authUser['id'];
+        } else if($authUser['user_type'] == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE){
+            $trainerInfo['industry_association_id'] = $authUser['id'];
+        }
 
         $postField = [
             "trainer_info" => $trainerInfo,
