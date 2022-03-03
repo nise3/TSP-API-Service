@@ -4858,6 +4858,59 @@
                 }
             }
         },
+        "/public/rto-countries": {
+            "get": {
+                "tags": ["Rto Countries"],
+                "summary": "Get all public Rto countries",
+                "description": "API endpoint to Get all public Rto countries . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "succesful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "country_id": 1,
+                                            "title": "Afghanistan",
+                                            "title_en": "Afghanistan",
+                                            "code": "AF"
+                                        },
+                                        {
+                                            "country_id": 5,
+                                            "title": "American Samoa",
+                                            "title_en": "American Samoa",
+                                            "code": "AS"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5863,6 +5916,49 @@
                 }
             }
         },
+        "/subjects": {
+            "post": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Create a subject",
+                "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/subject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "HoolooHooloKittie",
+                                        "title_en": "Salma Hayek",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-03T05:23:25.000000Z",
+                                        "created_at": "2022-03-03T05:23:25.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Subject added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
 
         "/registered-training-organizations": {
             "get": {
@@ -6705,6 +6801,26 @@
             }
         },
         "schemas": {
+            "subject": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+
+                },
+                "required": [
+                    "title"
+                ]
+            },
             "rplOccupation": {
                 "type": "object",
                 "properties": {
