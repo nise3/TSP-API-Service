@@ -7452,6 +7452,255 @@
                     }
                 }
             }
+        },
+
+        "/youth-assessment": {
+            "post": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Create a youth assessment",
+                "description": "API endpoint to Create a youth assessment. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Get all youth assessment",
+                "description": "API endpoint to Get all youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/youth-assessment/{youthAssessmentId}": {
+            "get": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Get a youth assessment",
+                "description": "API endpoint to Get a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": {
+                                        "id": 1,
+                                        "youth_id": 1,
+                                        "assessment_id": 2,
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rto_country_id": 1,
+                                        "rto_country_title_en": "Afghanistan",
+                                        "rto_country_title": "Afghanistan",
+                                        "target_country_id": 1,
+                                        "target_country_title_en": "Afghanistan",
+                                        "target_country_title": "Afghanistan",
+                                        "rto_id": 1,
+                                        "rto_title_en": "BabyLolAmONTEZZ",
+                                        "rto_title": "BabyLolAmONTEZZ",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Update a youth assessment",
+                "description": "API endpoint to update a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "2",
+                                        "rto_id": "1",
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:57:51.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Occupation updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Delete a youth assessment",
+                "description": "API endpoint to delete a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Youth Assessment deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -7463,6 +7712,56 @@
             }
         },
         "schemas": {
+            "YouthAssessment": {
+                "type": "object",
+                "properties": {
+                    "rpl_sector_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_sectors table"
+                    },
+                    "rpl_occupation_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_occupations table"
+                    },
+                    "rpl_level_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_levels table"
+                    },
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "assessment_id": {
+                        "type": "integer",
+                        "description": "Must exist in assessments table"
+                    },
+                    "target_country_id": {
+                        "type": "integer",
+                        "description": "Must exist in  rto_countries table"
+                    },
+                    "rto_country_id": {
+                        "type": "integer",
+                        "description": "Must exist in country_id column in rto_countries table"
+                    },
+                    "rto_id": {
+                        "type": "integer",
+                        "description": "Must exist in registered_training_organizations table"
+                    },
+                    "rto_batch_id": {
+                        "type": "integer",
+                        "description": "Must exist in rto_batches table"
+                    }
+                },
+                "required": [
+                    "rpl_sector_id",
+                    "rpl_occupation_id",
+                    "rpl_level_id",
+                    "youth_id",
+                    "assessment_id",
+                    "target_country_id",
+                    "rto_country_id",
+                    "rto_id"
+                ]
+            },
             "assessment": {
                 "type": "object",
                 "properties": {
@@ -9907,6 +10206,15 @@
             "questionBankId": {
                 "name": "questionBankId",
                 "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youthAssessmentId": {
+                "name": "youthAssessmentId",
+                "in": "path",
+                "description": "youthAssessmentId",
                 "required": true,
                 "schema": {
                     "type": "integer"

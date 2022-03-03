@@ -302,7 +302,7 @@ class YouthAssessmentService
                 'required',
                 'int',
                 'min:1',
-                'rtos:registered_training_organizations,id,deleted_at,NULL',
+                'exists:registered_training_organizations,id,deleted_at,NULL',
             ],
             'rto_batch_id' => [
                 'nullable',
