@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
+use App\Models\QuestionBank;
 use App\Services\QuestionBankService;
-use App\Services\SubjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,11 +77,11 @@ class QuestionBankController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $subject = $this->subjectService->getOneSubject($id);
-        $this->authorize('view', $subject);
+        $questionBank = $this->questionBankService->getOneQuestionBank($id);
+        $this->authorize('view', $questionBank);
 
         $response = [
-            "data" => $subject,
+            "data" => $questionBank,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -101,17 +100,17 @@ class QuestionBankController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Subject::class);
+        $this->authorize('create', QuestionBank::class);
 
-        $validated = $this->subjectService->validator($request)->validate();
-        $subject = $this->subjectService->store($validated);
+        $validated = $this->questionBankService->validator($request)->validate();
+        $questionBank = $this->questionBankService->store($validated);
 
         $response = [
-            'data' => $subject,
+            'data' => $questionBank,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Subject added successfully",
+                "message" => "Question Bank added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -128,18 +127,18 @@ class QuestionBankController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $questionBank = QuestionBank::findOrFail($id);
 
-        $this->authorize('update', $subject);
+        $this->authorize('update', $questionBank);
 
-        $validated = $this->subjectService->validator($request, $id)->validate();
-        $data = $this->subjectService->update($subject, $validated);
+        $validated = $this->questionBankService->validator($request, $id)->validate();
+        $data = $this->questionBankService->update($questionBank, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Subject updated successfully.",
+                "message" => "Question Bank updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -154,19 +153,19 @@ class QuestionBankController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $questionBank = QuestionBank::findOrFail($id);
 
-        $this->authorize('delete', $subject);
+        $this->authorize('delete', $questionBank);
 
         DB::beginTransaction();
         try {
-            $this->subjectService->destroy($subject);
+            $this->questionBankService->destroy($questionBank);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Subject deleted successfully.",
+                    "message" => "Question Bank deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
