@@ -5112,6 +5112,84 @@
                 }
             }
         },
+        "/public/rpl-sectors": {
+            "get": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Get public rpl sectors",
+                "description": "API endpoint to Get all public rpl sectors. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "SSD",
+                                            "title_en": "ssd",
+                                            "translations": [
+                                                {
+                                                    "title": "New Samoa"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:01.000000Z",
+                                            "updated_at": "2022-02-28T05:42:01.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title": "UruyaChanda",
+                                            "title_en": "UruyaChanda",
+                                            "translations": [
+                                                {
+                                                    "title": "Borneo"
+                                                },
+                                                {
+                                                    "title": "Oldie Yorkshire"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:39.000000Z",
+                                            "updated_at": "2022-02-28T05:42:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -5383,13 +5461,99 @@
                 }
             }
         },
+        "/public/rpl-levels": {
+            "get": {
+                "tags": [
+                    "RPL Levels"
+                ],
+                "summary": "Get all public rpl level",
+                "description": "API endpoint to Get all public rpl level. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rpl_occupation_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rplSectorId_q"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "rpl_sector_id": 1,
+                                            "rpl_occupation_id": 1,
+                                            "title": "aaa",
+                                            "title_en": "aaa",
+                                            "translations": null,
+                                            "sequence_order": 1,
+                                            "created_at": "2022-02-28T11:21:20.000000Z",
+                                            "updated_at": "2022-02-28T11:21:20.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "rpl_sector_id": 1,
+                                            "rpl_occupation_id": 1,
+                                            "title": "Homicide",
+                                            "title_en": "Retribution",
+                                            "translations": [
+                                                {
+                                                    "title": "Uma thorman"
+                                                },
+                                                {
+                                                    "title": "PokerKing"
+                                                }
+                                            ],
+                                            "sequence_order": 2,
+                                            "created_at": "2022-02-28T11:22:45.000000Z",
+                                            "updated_at": "2022-02-28T11:22:45.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/rpl-occupations": {
             "get": {
                 "tags": [
                     "RPL Occupations"
                 ],
-                "summary": "Create an rpl occupation",
-                "description": "API endpoint to Create an rpl occupation. A successful request response will show 200 HTTP status code",
+                "summary": "Get all rpl occupations",
+                "description": "API endpoint to get all rpl occupations. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/country_id"
@@ -5631,6 +5795,75 @@
                 }
             }
         },
+        "/public/rpl-occupations": {
+            "get": {
+                "tags": [
+                    "RPL Occupations"
+                ],
+                "summary": "Get public rpl occupations",
+                "description": "API endpoint to get public rpl occupations. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rplSectorId_q"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Uzumaki Barrage",
+                                            "title_en": "Uzumaki Barrage",
+                                            "rpl_sector_id": 1,
+                                            "translations": [
+                                                {
+                                                    "title": "Borneo"
+                                                },
+                                                {
+                                                    "title": "Oldie Yorkshire"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T07:03:47.000000Z",
+                                            "updated_at": "2022-02-28T07:03:47.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/registered-training-organizations": {
             "get": {
                 "tags": ["Registerd training organization"],
