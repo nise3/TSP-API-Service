@@ -5918,47 +5918,6 @@
         },
 
         "/subjects": {
-            "post": {
-                "tags": [
-                    "Subjects"
-                ],
-                "summary": "Create a subject",
-                "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/subject"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "title": "HoolooHooloKittie",
-                                        "title_en": "Salma Hayek",
-                                        "row_status": "1",
-                                        "updated_at": "2022-03-03T05:23:25.000000Z",
-                                        "created_at": "2022-03-03T05:23:25.000000Z",
-                                        "id": 1
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Subject added successfully",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "get": {
                 "tags": [
                     "Subjects"
@@ -6015,6 +5974,47 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Create a subject",
+                "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/subject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "HoolooHooloKittie",
+                                        "title_en": "Salma Hayek",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-03T05:23:25.000000Z",
+                                        "created_at": "2022-03-03T05:23:25.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Subject added successfully",
                                         "query_time": 0
                                     }
                                 }
