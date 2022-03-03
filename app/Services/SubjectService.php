@@ -18,6 +18,7 @@ class SubjectService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
     public function getSubjectList(array $request, Carbon $startTime, bool $isPublicApi = false): array
