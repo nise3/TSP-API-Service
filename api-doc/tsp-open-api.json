@@ -1506,6 +1506,9 @@
                         "$ref": "#/components/parameters/title_optional"
                     },
                     {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
                         "$ref": "#/components/parameters/row_status_optional"
                     }
                 ],
@@ -8392,6 +8395,14 @@
             "title_en_optional": {
                 "in": "query",
                 "name": "title_en",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "address": {
+                "name": "address",
+                "in": "query",
                 "required": false,
                 "schema": {
                     "type": "string"
