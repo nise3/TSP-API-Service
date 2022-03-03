@@ -63,7 +63,7 @@ class RplSectorController extends Controller
     {
         $filter = $this->rplSectorService->filterValidator($request)->validate();
 
-        $response = $this->rplSectorService->getRplSectorList($filter, $this->startTime);
+        $response = $this->rplSectorService->getRplSectorList($filter, $this->startTime,true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

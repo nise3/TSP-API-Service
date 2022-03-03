@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RplOccupation;
-use App\Services\RplOccupationService;
+use App\Models\Subject;
+use App\Services\SubjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,25 +14,25 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class RplOccupationController extends Controller
+class SubjectController extends Controller
 {
     /**
-     * @var RplOccupationService
+     * @var SubjectService
      */
-    public RplOccupationService $rplOccupationService;
+    public SubjectService $subjectService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * RplOccupationController constructor.
-     * @param RplOccupationService $rplOccupationService
+     * SubjectController constructor.
+     * @param SubjectService $subjectService
      */
 
-    public function __construct(RplOccupationService $rplOccupationService)
+    public function __construct(SubjectService $subjectService)
     {
-        $this->rplOccupationService = $rplOccupationService;
+        $this->subjectService = $subjectService;
         $this->startTime = Carbon::now();
     }
 
@@ -45,11 +45,11 @@ class RplOccupationController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', RplOccupation::class);
+        $this->authorize('viewAny', Subject::class);
 
-        $filter = $this->rplOccupationService->filterValidator($request)->validate();
+        $filter = $this->subjectService->filterValidator($request)->validate();
 
-        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime);
+        $response = $this->subjectService->getSubjectList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -61,9 +61,9 @@ class RplOccupationController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->rplOccupationService->filterValidator($request)->validate();
+        $filter = $this->subjectService->filterValidator($request)->validate();
 
-        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime,true);
+        $response = $this->subjectService->getSubjectList($filter, $this->startTime,false);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,11 +77,11 @@ class RplOccupationController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $rto = $this->rplOccupationService->getOneRplOccupation($id);
-        $this->authorize('view', $rto);
+        $subject = $this->subjectService->getOneSubject($id);
+        $this->authorize('view', $subject);
 
         $response = [
-            "data" => $rto,
+            "data" => $subject,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -100,17 +100,17 @@ class RplOccupationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', RplOccupation::class);
+        $this->authorize('create', Subject::class);
 
-        $validated = $this->rplOccupationService->validator($request)->validate();
-        $rplOccupation = $this->rplOccupationService->store($validated);
+        $validated = $this->subjectService->validator($request)->validate();
+        $subject = $this->subjectService->store($validated);
 
         $response = [
-            'data' => $rplOccupation,
+            'data' => $subject,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RPL Occupation added successfully",
+                "message" => "Subject added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -127,18 +127,18 @@ class RplOccupationController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $rplOccupation = RplOccupation::findOrFail($id);
+        $subject = Subject::findOrFail($id);
 
-        $this->authorize('update', $rplOccupation);
+        $this->authorize('update', $subject);
 
-        $validated = $this->rplOccupationService->validator($request, $id)->validate();
-        $data = $this->rplOccupationService->update($rplOccupation, $validated);
+        $validated = $this->subjectService->validator($request, $id)->validate();
+        $data = $this->subjectService->update($subject, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "Subject updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,19 +153,19 @@ class RplOccupationController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $rplOccupation = RplOccupation::findOrFail($id);
+        $subject = Subject::findOrFail($id);
 
-        $this->authorize('delete', $rplOccupation);
+        $this->authorize('delete', $subject);
 
         DB::beginTransaction();
         try {
-            $this->rplOccupationService->destroy($rplOccupation);
+            $this->subjectService->destroy($subject);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RPL Occupation deleted successfully.",
+                    "message" => "Subject deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

@@ -3,26 +3,17 @@
 
 namespace App\Services;
 
-
-use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
-use App\Models\Institute;
-use App\Models\RegisteredTrainingOrganization;
-use App\Models\RplSector;
-use App\Services\CommonServices\SmsService;
-use GuzzleHttp\Promise\PromiseInterface;
+use App\Models\Subject;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class RplSectorService
+class SubjectService
 {
     /**
      * @param array $request
@@ -30,52 +21,57 @@ class RplSectorService
      * @param bool $isPublicApi
      * @return array
      */
-    public function getRplSectorList(array $request, Carbon $startTime, bool $isPublicApi = false): array
+    public function getSubjectList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
+        $rowStatus = $request['row_status'] ?? "ASC";
 
-        /** @var RplSector|Builder $rplSectorBuilder */
-        $rplSectorBuilder = RplSector::select([
-            'rpl_sectors.id',
-            'rpl_sectors.title',
-            'rpl_sectors.title_en',
-            'rpl_sectors.translations',
-            'rpl_sectors.created_at',
-            'rpl_sectors.updated_at',
-            'rpl_sectors.deleted_at',
+        /** @var Subject|Builder $subjectBuilder */
+        $subjectBuilder = Subject::select([
+            'subjects.id',
+            'subjects.title',
+            'subjects.title_en',
+            'subjects.row_status',
+            'subjects.created_at',
+            'subjects.updated_at',
+            'subjects.deleted_at',
         ]);
 
         if(!$isPublicApi){
-            $rplSectorBuilder->acl();
+            $subjectBuilder->acl();
         }
 
-        $rplSectorBuilder->orderBy('rpl_sectors.id', $order);
+        $subjectBuilder->orderBy('subjects.id', $order);
 
         if (!empty($titleEn)) {
-            $rplSectorBuilder->where('rpl_sectors.title_en', 'like', '%' . $titleEn . '%');
+            $subjectBuilder->where('subjects.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $rplSectorBuilder->where('rpl_sectors.title', 'like', '%' . $title . '%');
+            $subjectBuilder->where('subjects.title', 'like', '%' . $title . '%');
         }
 
-        /** @var Collection $rplSectors */
+        if (is_numeric($rowStatus)) {
+            $subjectBuilder->where('subjects.row_status', $rowStatus);
+        }
+
+        /** @var Collection $subjects */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $rplSectors = $rplSectorBuilder->paginate($pageSize);
-            $paginateData = (object)$rplSectors->toArray();
+            $subjects = $subjectBuilder->paginate($pageSize);
+            $paginateData = (object)$subjects->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $rplSectors = $rplSectorBuilder->get();
+            $subjects = $subjectBuilder->get();
         }
         $response['order'] = $order;
-        $response['data'] = $rplSectors->toArray()['data'] ?? $rplSectors->toArray();
+        $response['data'] = $subjects->toArray()['data'] ?? $subjects->toArray();
 
         $response['_response_status'] = [
             "success" => true,
@@ -87,59 +83,59 @@ class RplSectorService
 
     /**
      * @param int $id
-     * @return RplSector
+     * @return Subject
      */
-    public function getOneRplSector(int $id): RplSector
+    public function getOneSubject(int $id): Subject
     {
-        /** @var RplSector|Builder $rplSectorBuilder */
-        $rplSectorBuilder = RplSector::select([
-            'rpl_sectors.id',
-            'rpl_sectors.title',
-            'rpl_sectors.title_en',
-            'rpl_sectors.translations',
-            'rpl_sectors.created_at',
-            'rpl_sectors.updated_at',
-            'rpl_sectors.deleted_at',
+        /** @var Subject|Builder $subjectBuilder */
+        $subjectBuilder = Subject::select([
+            'subjects.id',
+            'subjects.title',
+            'subjects.title_en',
+            'subjects.row_status',
+            'subjects.created_at',
+            'subjects.updated_at',
+            'subjects.deleted_at',
         ]);
 
         if (is_numeric($id)) {
-            $rplSectorBuilder->where('rpl_sectors.id', $id);
+            $subjectBuilder->where('subjects.id', $id);
         }
 
-        return $rplSectorBuilder->firstOrFail();
+        return $subjectBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return RplSector
+     * @return Subject
      */
-    public function store(array $data): RplSector
+    public function store(array $data): Subject
     {
-        $rplSector = app()->make(RplSector::class);
-        $rplSector->fill($data);
-        $rplSector->save();
-        return $rplSector;
+        $subject = app()->make(Subject::class);
+        $subject->fill($data);
+        $subject->save();
+        return $subject;
     }
 
     /**
-     * @param RplSector $rplSector
+     * @param Subject $subject
      * @param array $data
-     * @return RplSector
+     * @return Subject
      */
-    public function update(RplSector $rplSector, array $data): RplSector
+    public function update(Subject $subject, array $data): Subject
     {
-        $rplSector->fill($data);
-        $rplSector->save();
-        return $rplSector;
+        $subject->fill($data);
+        $subject->save();
+        return $subject;
     }
 
     /**
-     * @param RplSector $rplSector
+     * @param Subject $subject
      * @return bool
      */
-    public function destroy(RplSector $rplSector): bool
+    public function destroy(Subject $subject): bool
     {
-        return $rplSector->delete();
+        return $subject->delete();
     }
 
     /**
@@ -163,19 +159,11 @@ class RplSectorService
                 'max:300',
                 'min:2'
             ],
-            'translations' => [
+            'row_status' => [
+                'required_if:' . $id . ',!=,null',
                 'nullable',
-                'array',
-                'min:1'
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-            'translations.*' => [
-                Rule::requiredIf(!empty($data['translations'])),
-                'array',
-                'min:1'
-            ],
-            'translations.*.title' => [
-                Rule::requiredIf(!empty($data['translations']))
-            ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
@@ -192,11 +180,10 @@ class RplSectorService
         }
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
-            //'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'country_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
@@ -205,11 +192,10 @@ class RplSectorService
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
             ],
-//            'row_status' => [
-//                "nullable",
-//                "int",
-//                Rule::in(Institute::ROW_STATUSES),
-//            ],
+            'row_status' => [
+                "nullable",
+                "int"
+            ],
         ], $customMessage);
     }
 }

@@ -34,6 +34,7 @@ class RegisteredTrainingOrganizationService
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
+        $countryId = $request['country_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -48,6 +49,8 @@ class RegisteredTrainingOrganizationService
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
             'registered_training_organizations.country_id',
+            'countries.title as country_title',
+            'countries.title_en as country_title_en',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'registered_training_organizations.loc_district_id',
@@ -104,6 +107,11 @@ class RegisteredTrainingOrganizationService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
+        $rtoBuilder->leftJoin('countries', function ($join) use ($rowStatus) {
+            $join->on('countries.id', '=', 'registered_training_organizations.country_id')
+                ->whereNull('countries.deleted_at');
+        });
+
         if (is_numeric($rowStatus)) {
             $rtoBuilder->where('registered_training_organizations.row_status', $rowStatus);
         }
@@ -117,6 +125,10 @@ class RegisteredTrainingOrganizationService
 
         if (!empty($instituteId)) {
             $rtoBuilder->where('registered_training_organizations.institute_id', $instituteId);
+        }
+
+        if (!empty($countryId)) {
+            $rtoBuilder->where('registered_training_organizations.country_id', $countryId);
         }
 
         /** @var Collection $rtos */
@@ -385,7 +397,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:countries,id,deleted_at,NULL'
+                'exists:rto_countries,id,deleted_at,NULL'
             ],
             'loc_division_id' => [
                 'required',
@@ -554,6 +566,7 @@ class RegisteredTrainingOrganizationService
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'institute_id' => 'nullable|min:1',
+            'country_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [

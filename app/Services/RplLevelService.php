@@ -18,9 +18,10 @@ class RplLevelService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplLevelList(array $request, Carbon $startTime): array
+    public function getRplLevelList(array $request, Carbon $startTime , bool $isPublicApi = false): array
     {
         $rplSectorId = $request['rpl_sector_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
@@ -47,6 +48,10 @@ class RplLevelService
             'rpl_levels.updated_at',
             'rpl_levels.deleted_at',
         ]);
+
+        if(!$isPublicApi){
+            $rplLevelBuilder->acl();
+        }
 
         $rplLevelBuilder->orderBy('rpl_levels.id', $order);
 

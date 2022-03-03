@@ -47,6 +47,13 @@ class RtoCountryController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    public function getPublicList(Request $request): JsonResponse
+    {
+        $filter = $this->rtoCountryService->filterValidator($request)->validate();
+        $response = $this->rtoCountryService->getRtoCountryList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

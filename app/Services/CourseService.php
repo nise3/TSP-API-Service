@@ -919,7 +919,7 @@ class CourseService
         $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
         $coursesBuilder->whereNull('batches.deleted_at');
 
-        $coursesBuilder->selectRaw("SUM(1) as feed_item_type");
+        $coursesBuilder->selectRaw("1 as feed_item_type");
 
         $coursesBuilder->groupBy("courses.id");
         $coursesBuilder->orderByDesc('total_enroll');

@@ -1506,6 +1506,9 @@
                         "$ref": "#/components/parameters/title_optional"
                     },
                     {
+                        "$ref": "#/components/parameters/address"
+                    },
+                    {
                         "$ref": "#/components/parameters/row_status_optional"
                     }
                 ],
@@ -4855,6 +4858,58 @@
                 }
             }
         },
+        "/public/rto-countries": {
+            "get": {
+                "tags": ["Rto Countries"],
+                "summary": "Get all public Rto countries",
+                "description": "API endpoint to Get all public Rto countries . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "succesful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "country_id": 1,
+                                            "title": "Afghanistan",
+                                            "title_en": "Afghanistan",
+                                            "code": "AF"
+                                        },
+                                        {
+                                            "country_id": 5,
+                                            "title": "American Samoa",
+                                            "title_en": "American Samoa",
+                                            "code": "AS"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5109,6 +5164,85 @@
                 }
             }
         },
+        "/public/rpl-sectors": {
+            "get": {
+                "tags": [
+                    "RPL SECTORS"
+                ],
+                "summary": "Get public rpl sectors",
+                "description": "API endpoint to Get all public rpl sectors. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "SSD",
+                                            "title_en": "ssd",
+                                            "translations": [
+                                                {
+                                                    "title": "New Samoa"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:01.000000Z",
+                                            "updated_at": "2022-02-28T05:42:01.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title": "UruyaChanda",
+                                            "title_en": "UruyaChanda",
+                                            "translations": [
+                                                {
+                                                    "title": "Borneo"
+                                                },
+                                                {
+                                                    "title": "Oldie Yorkshire"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T05:42:39.000000Z",
+                                            "updated_at": "2022-02-28T05:42:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -5380,13 +5514,99 @@
                 }
             }
         },
+        "/public/rpl-levels": {
+            "get": {
+                "tags": [
+                    "RPL Levels"
+                ],
+                "summary": "Get all public rpl level",
+                "description": "API endpoint to Get all public rpl level. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rpl_occupation_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rplSectorId_q"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "rpl_sector_id": 1,
+                                            "rpl_occupation_id": 1,
+                                            "title": "aaa",
+                                            "title_en": "aaa",
+                                            "translations": null,
+                                            "sequence_order": 1,
+                                            "created_at": "2022-02-28T11:21:20.000000Z",
+                                            "updated_at": "2022-02-28T11:21:20.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "rpl_sector_id": 1,
+                                            "rpl_occupation_id": 1,
+                                            "title": "Homicide",
+                                            "title_en": "Retribution",
+                                            "translations": [
+                                                {
+                                                    "title": "Uma thorman"
+                                                },
+                                                {
+                                                    "title": "PokerKing"
+                                                }
+                                            ],
+                                            "sequence_order": 2,
+                                            "created_at": "2022-02-28T11:22:45.000000Z",
+                                            "updated_at": "2022-02-28T11:22:45.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/rpl-occupations": {
             "get": {
                 "tags": [
                     "RPL Occupations"
                 ],
-                "summary": "Create an rpl occupation",
-                "description": "API endpoint to Create an rpl occupation. A successful request response will show 200 HTTP status code",
+                "summary": "Get all rpl occupations",
+                "description": "API endpoint to get all rpl occupations. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/country_id"
@@ -5628,6 +5848,298 @@
                 }
             }
         },
+        "/public/rpl-occupations": {
+            "get": {
+                "tags": [
+                    "RPL Occupations"
+                ],
+                "summary": "Get public rpl occupations",
+                "description": "API endpoint to get public rpl occupations. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/country_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rplSectorId_q"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Uzumaki Barrage",
+                                            "title_en": "Uzumaki Barrage",
+                                            "rpl_sector_id": 1,
+                                            "translations": [
+                                                {
+                                                    "title": "Borneo"
+                                                },
+                                                {
+                                                    "title": "Oldie Yorkshire"
+                                                }
+                                            ],
+                                            "created_at": "2022-02-28T07:03:47.000000Z",
+                                            "updated_at": "2022-02-28T07:03:47.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/subjects": {
+            "get": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Get all subjects",
+                "description": "API endpoint to get all subject. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "HoolooHooloKittie",
+                                            "title_en": "Salma Hayek",
+                                            "row_status": 1,
+                                            "created_at": "2022-03-03T05:23:25.000000Z",
+                                            "updated_at": "2022-03-03T05:23:25.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title": "BeMyHuckleBerryFriend",
+                                            "title_en": "Roxana Mewww",
+                                            "row_status": 1,
+                                            "created_at": "2022-03-03T05:27:39.000000Z",
+                                            "updated_at": "2022-03-03T05:27:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Create a subject",
+                "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/subject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "HoolooHooloKittie",
+                                        "title_en": "Salma Hayek",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-03T05:23:25.000000Z",
+                                        "created_at": "2022-03-03T05:23:25.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Subject added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/subjects/{subjectId}": {
+            "get": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Get a subject",
+                "description": "API endpoint to get a subject. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/subjectId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 4,
+                                        "title": "Face of Melinda 'neath blackened Hair",
+                                        "title_en": "Deceiving damsel",
+                                        "row_status": 1,
+                                        "created_at": "2022-03-03T06:00:48.000000Z",
+                                        "updated_at": "2022-03-03T06:00:48.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Update a subject",
+                "description": "API endpoint to update a subject. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/subjectId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/subject"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Goo Goo Dolls",
+                                        "title_en": "Miranda Kerr",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T05:27:39.000000Z",
+                                        "updated_at": "2022-03-03T05:57:29.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Subject updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Subjects"
+                ],
+                "summary": "Delete a subject",
+                "description": "API endpoint to delete a subject. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/subjectId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Subject deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
         "/registered-training-organizations": {
             "get": {
                 "tags": ["Registerd training organization"],
@@ -6469,6 +6981,26 @@
             }
         },
         "schemas": {
+            "subject": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+
+                },
+                "required": [
+                    "title"
+                ]
+            },
             "rplOccupation": {
                 "type": "object",
                 "properties": {
@@ -8397,6 +8929,14 @@
                     "type": "string"
                 }
             },
+            "address": {
+                "name": "address",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "title": {
                 "in": "query",
                 "required": true,
@@ -8562,6 +9102,14 @@
             },
             "branch_id": {
                 "name": "branch_id",
+                "required": true,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "subjectId": {
+                "name": "subjectId",
                 "required": true,
                 "in": "query",
                 "schema": {

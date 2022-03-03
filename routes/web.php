@@ -34,6 +34,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
+        $customRouter()->resourceRoute('subjects', 'SubjectController')->render();
         $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
         $customRouter()->resourceRoute('youth-assessment', 'YouthAssessmentController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
@@ -81,6 +82,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** nise-statistics */
         $router->get('nise-statistics', ["as" => "nise-statistics", "uses" => "InstituteStatisticsController@niseStatistics"]);
+
+        $router->get("rto-countries", ["as" => "public.rto-countries", "uses" => "RtoCountryController@getPublicList"]);
+        $router->get("rpl-sectors", ["as" => "public.rpl-sectors", "uses" => "RplSectorController@getPublicList"]);
+        $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
+        $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
+
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);

@@ -63,7 +63,7 @@ class RplLevelController extends Controller
     {
         $filter = $this->rplLevelService->filterValidator($request)->validate();
 
-        $response = $this->rplLevelService->getRplLevelList($filter, $this->startTime);
+        $response = $this->rplLevelService->getRplLevelList($filter, $this->startTime,true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,11 +77,11 @@ class RplLevelController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $rto = $this->rplLevelService->getOneRplLevel($id);
-        $this->authorize('view', $rto);
+        $rplLevel = $this->rplLevelService->getOneRplLevel($id);
+        $this->authorize('view', $rplLevel);
 
         $response = [
-            "data" => $rto,
+            "data" => $rplLevel,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
