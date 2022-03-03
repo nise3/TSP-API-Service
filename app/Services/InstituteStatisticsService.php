@@ -9,6 +9,7 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\ArrayShape;
@@ -156,16 +157,23 @@ class InstituteStatisticsService
      */
     public function getTotalTrainers(int $instituteId = null, bool $isNiseStatistics = false): int
     {
-        $builder = Trainer::query();
-        if (!$isNiseStatistics) /** It invokes in time of institute wise statistics */ {
-            [$queryAttribute, $queryAttributeValue] = self::querySelectorForIndustryAssociationOrInstituteForPublicDomain($instituteId);
-            if ($queryAttributeValue) {
-                $builder->where('trainers.' . $queryAttribute, $queryAttributeValue);
-            } else { // for private auth api
-                $builder->acl();
-            }
+        $authUser = Auth::user();
+
+        $trainerBuilder = Trainer::query();
+        $trainerBuilder->leftJoin('institute_trainers', 'trainers.id', '=', 'institute_trainers.trainer_id');
+
+        /**instituteId will be provided from domain for public dashboard statistics**/
+        if (!empty($instituteId)) {
+            $trainerBuilder->where('institute_trainers.institute_id', $instituteId);
         }
-        return $builder->count('id');
+
+        if ($authUser && $authUser->isInstituteUser()) {
+            $trainerBuilder->where('institute_trainers.institute_id', $authUser->institute_id);
+        } else if ($authUser && $authUser->isIndustryAssociationUser()) {
+            $trainerBuilder->where('institute_trainers.industry_association_id', $authUser->industry_association_id);
+        }
+
+        return $trainerBuilder->count('trainers.id');
     }
 
     /**
