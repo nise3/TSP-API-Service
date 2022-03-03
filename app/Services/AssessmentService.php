@@ -28,7 +28,9 @@ class AssessmentService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
-        $rplSectorId = $request['rpl_occupation_id'] ?? "";
+        $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $rplSectorId = $request['rpl_sector_id'] ?? "";
+        $rplLevelId = $request['rpl_level_id'] ?? "";
 
         /** @var Assessment|Builder $assessmentBuilder */
         $assessmentBuilder = Assessment::select([
@@ -39,6 +41,10 @@ class AssessmentService
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
+
+            'rpl_occupations.rpl_sector_id as rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
 
             'assessments.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
@@ -56,6 +62,11 @@ class AssessmentService
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
+        $assessmentBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
         $assessmentBuilder->join('rpl_levels', function ($join){
             $join->on('assessments.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
@@ -67,8 +78,14 @@ class AssessmentService
         if (!empty($title)) {
             $assessmentBuilder->where('assessments.title', 'like', '%' . $title . '%');
         }
+        if (!empty($rplOccupationId)) {
+            $assessmentBuilder->where('assessments.rpl_occupation_id', $rplOccupationId);
+        }
         if (!empty($rplSectorId)) {
-            $assessmentBuilder->where('assessments.rpl_occupation_id', $rplSectorId);
+            $assessmentBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
+        }
+        if (!empty($rplLevelId)) {
+            $assessmentBuilder->where('assessments.rpl_level_id', $rplLevelId);
         }
 
         /** @var Collection $assessmentes */
@@ -110,6 +127,10 @@ class AssessmentService
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
+            'rpl_occupations.rpl_sector_id as rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
+
             'assessments.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
@@ -126,6 +147,11 @@ class AssessmentService
         $assessmentBuilder->join('rpl_occupations', function ($join){
             $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
+        });
+
+        $assessmentBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
         });
 
         $assessmentBuilder->join('rpl_levels', function ($join){

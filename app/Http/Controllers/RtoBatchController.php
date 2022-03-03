@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RplOccupation;
 use App\Models\RtoBatch;
 use App\Services\RtoBatchService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -39,11 +40,11 @@ class RtoBatchController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function getList(Request $request)
+    public function getList(Request $request): JsonResponse
     {
         $this->authorize('viewAny', RtoBatch::class);
         $filter = $this->rtoBatchService->filterValidator($request)->validate();
@@ -68,12 +69,12 @@ class RtoBatchController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function read(Request $request, int $id)
+    public function read(Request $request, int $id): JsonResponse
     {
         $rtoBatch = $this->rtoBatchService->getOneRtoBatch($id);
         $this->authorize('view', $rtoBatch);
@@ -92,12 +93,12 @@ class RtoBatchController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->authorize('create', RtoBatch::class);
         $validated = $this->rtoBatchService->validator($request)->validate();
@@ -118,12 +119,12 @@ class RtoBatchController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException|ValidationException
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $rtoBatch = RtoBatch::findOrFail($id);
 
@@ -146,11 +147,11 @@ class RtoBatchController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\RtoBatch $rtoBatch
+     * @param int $id
      * @return JsonResponse
      * @throws Throwable
      */
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $rtoBatch = RplOccupation::findOrFail($id);
 

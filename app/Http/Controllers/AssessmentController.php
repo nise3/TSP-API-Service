@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assessment;
 use App\Models\RplOccupation;
 use App\Services\AssessmentService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -41,9 +42,9 @@ class AssessmentController extends Controller
      *
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException|ValidationException
      */
-    public function getList(Request $request)
+    public function getList(Request $request): JsonResponse
     {
         $this->authorize('viewAny', Assessment::class);
         $filter = $this->assessmentService->filterValidator($request)->validate();
@@ -71,9 +72,9 @@ class AssessmentController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function read(Request $request, int $id)
+    public function read(Request $request, int $id): JsonResponse
     {
         $assessment = $this->assessmentService->getOneAssessment($id);
         $this->authorize('view', $assessment);
@@ -95,9 +96,9 @@ class AssessmentController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $this->authorize('create', Assessment::class);
         $validated = $this->assessmentService->validator($request)->validate();
@@ -121,9 +122,9 @@ class AssessmentController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException|ValidationException
      */
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $assessment = Assessment::findOrFail($id);
 
@@ -146,11 +147,11 @@ class AssessmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Assessment $assessment
+     * @param int $id
      * @return JsonResponse
      * @throws Throwable
      */
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $assessment = RplOccupation::findOrFail($id);
 
