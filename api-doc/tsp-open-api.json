@@ -7005,7 +7005,37 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example": {}
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 2,
+                                            "title": "ssss",
+                                            "title_en": null,
+                                            "type": 2,
+                                            "subject_id": 1,
+                                            "option_1": "1",
+                                            "option_1_en": "",
+                                            "option_2": "1",
+                                            "option_2_en": "",
+                                            "option_3": "2",
+                                            "option_3_en": "",
+                                            "option_4": "1",
+                                            "option_4_en": "",
+                                            "difficulty_level": 1,
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-03T11:04:26.000000Z",
+                                            "updated_at": "2022-03-03T11:04:26.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
                             }
                         }
                     }
@@ -7202,6 +7232,66 @@
 
 
         "/assessment": {
+            "get": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Hooligan Cats",
+                                            "title_en": "Another Brick In the wall",
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "created_at": "2022-03-03T10:24:46.000000Z",
+                                            "updated_at": "2022-03-03T10:44:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Assessment"
@@ -7277,6 +7367,83 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Update an assessments",
+                "description": "API endpoint to update an assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Hooligan Cats",
+                                        "title_en": "Another Brick In the wall",
+                                        "rpl_level_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "updated_at": "2022-03-03T10:44:39.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Occupation updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Delete an assessments",
+                "description": "API endpoint to Delete an assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Assessment deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -9498,6 +9665,14 @@
                 "name": "upazila_id",
                 "in": "query",
                 "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "assessment_id": {
+                "name": "assessment_id",
+                "required": false,
+                "in": "query",
                 "schema": {
                     "type": "integer"
                 }
