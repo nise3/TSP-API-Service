@@ -6970,6 +6970,737 @@
                     "Demanded Courses"
                 ]
             }
+        },
+
+
+        "/question-banks": {
+            "get": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Get all Question Banks",
+                "description": "API endpoint to Get all Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 2,
+                                            "title": "ssss",
+                                            "title_en": null,
+                                            "type": 2,
+                                            "subject_id": 1,
+                                            "option_1": "1",
+                                            "option_1_en": "",
+                                            "option_2": "1",
+                                            "option_2_en": "",
+                                            "option_3": "2",
+                                            "option_3_en": "",
+                                            "option_4": "1",
+                                            "option_4_en": "",
+                                            "difficulty_level": 1,
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-03T11:04:26.000000Z",
+                                            "updated_at": "2022-03-03T11:04:26.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Create a Question Banks",
+                "description": "API endpoint to Create a Question Banks. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/questionBank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "Cholo arekbar uri",
+                                        "title_en": "NeverAvoidRafa",
+                                        "type": "1",
+                                        "subject_id": "1",
+                                        "option_1": "NoTommorrow",
+                                        "option_2": "YesTommorrow",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "answer": "1",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-03T09:36:42.000000Z",
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/question-banks/{questionBankId}": {
+            "get": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Get a Question Banks",
+                "description": "API endpoint to Get a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Cholo arekbar uri",
+                                        "title_en": "NeverAvoidRafa",
+                                        "type": 1,
+                                        "subject_id": 1,
+                                        "option_1": "NoTommorrow",
+                                        "option_1_en": "",
+                                        "option_2": "YesTommorrow",
+                                        "option_2_en": "",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_3_en": "",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "option_4_en": "",
+                                        "difficulty_level": 1,
+                                        "answer": 1,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "updated_at": "2022-03-03T09:36:42.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Update a Question Banks",
+                "description": "API endpoint to update a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/questionBank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Octopus Garden",
+                                        "title_en": "The beatles",
+                                        "type": "1",
+                                        "subject_id": "1",
+                                        "option_1": "NoTommorrow",
+                                        "option_1_en": "",
+                                        "option_2": "YesTommorrow",
+                                        "option_2_en": "",
+                                        "option_3": "ShutupTommorrow",
+                                        "option_4": "SpeakUpTommorrow",
+                                        "option_3_en": "",
+                                        "option_4_en": "",
+                                        "difficulty_level": 1,
+                                        "answer": "1",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T09:36:42.000000Z",
+                                        "updated_at": "2022-03-03T09:48:54.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Question Bank updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Question Banks"
+                ],
+                "summary": "Delete a Question Banks",
+                "description": "API endpoint to delete a Question Banks. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/questionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Question Bank deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+        "/assessment": {
+            "get": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "Hooligan Cats",
+                                            "title_en": "Another Brick In the wall",
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "created_at": "2022-03-03T10:24:46.000000Z",
+                                            "updated_at": "2022-03-03T10:44:39.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "NewDivide",
+                                        "updated_at": "2022-03-03T10:24:46.000000Z",
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/assessment/{assessmentId}": {
+            "get": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "NewDivide",
+                                        "title_en": "NewDivide",
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "updated_at": "2022-03-03T10:24:46.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Update an assessments",
+                "description": "API endpoint to update an assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "Hooligan Cats",
+                                        "title_en": "Another Brick In the wall",
+                                        "rpl_level_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "updated_at": "2022-03-03T10:44:39.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Occupation updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Delete an assessments",
+                "description": "API endpoint to Delete an assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Assessment deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/youth-assessment": {
+            "post": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Create a youth assessment",
+                "description": "API endpoint to Create a youth assessment. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Get all youth assessment",
+                "description": "API endpoint to Get all youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/youth-assessment/{youthAssessmentId}": {
+            "get": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Get a youth assessment",
+                "description": "API endpoint to Get a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": {
+                                        "id": 1,
+                                        "youth_id": 1,
+                                        "assessment_id": 2,
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rto_country_id": 1,
+                                        "rto_country_title_en": "Afghanistan",
+                                        "rto_country_title": "Afghanistan",
+                                        "target_country_id": 1,
+                                        "target_country_title_en": "Afghanistan",
+                                        "target_country_title": "Afghanistan",
+                                        "rto_id": 1,
+                                        "rto_title_en": "BabyLolAmONTEZZ",
+                                        "rto_title": "BabyLolAmONTEZZ",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Update a youth assessment",
+                "description": "API endpoint to update a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "2",
+                                        "rto_id": "1",
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:57:51.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RPL Occupation updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Delete a youth assessment",
+                "description": "API endpoint to delete a youth assessment. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Youth Assessment deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -6981,6 +7712,143 @@
             }
         },
         "schemas": {
+            "YouthAssessment": {
+                "type": "object",
+                "properties": {
+                    "rpl_sector_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_sectors table"
+                    },
+                    "rpl_occupation_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_occupations table"
+                    },
+                    "rpl_level_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_levels table"
+                    },
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "assessment_id": {
+                        "type": "integer",
+                        "description": "Must exist in assessments table"
+                    },
+                    "target_country_id": {
+                        "type": "integer",
+                        "description": "Must exist in  rto_countries table"
+                    },
+                    "rto_country_id": {
+                        "type": "integer",
+                        "description": "Must exist in country_id column in rto_countries table"
+                    },
+                    "rto_id": {
+                        "type": "integer",
+                        "description": "Must exist in registered_training_organizations table"
+                    },
+                    "rto_batch_id": {
+                        "type": "integer",
+                        "description": "Must exist in rto_batches table"
+                    }
+                },
+                "required": [
+                    "rpl_sector_id",
+                    "rpl_occupation_id",
+                    "rpl_level_id",
+                    "youth_id",
+                    "assessment_id",
+                    "target_country_id",
+                    "rto_country_id",
+                    "rto_id"
+                ]
+            },
+            "assessment": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "rpl_occupation_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_occupations table"
+                    },
+                    "rpl_level_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_levels table"
+                    }
+                },
+                "required": [
+                    "title",
+                    "rpl_occupation_id",
+                    "rpl_level_id"
+                ]
+            },
+            "questionBank": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "1=>Yes 2=>No"
+                    },
+                    "subject_id": {
+                        "type": "integer",
+                        "description": "Must exist in subjects table"
+                    },
+                    "option_1": {
+                        "type": "string"
+                    },
+                    "option_1_en": {
+                        "type": "string"
+                    },
+                    "option_2": {
+                        "type": "string"
+                    },
+                    "option_2_en": {
+                        "type": "string"
+                    },
+                    "option_3": {
+                        "type": "string"
+                    },
+                    "option_3_en": {
+                        "type": "string"
+                    },
+                    "option_4": {
+                        "type": "string"
+                    },
+                    "option_4_en": {
+                        "type": "string"
+                    },
+                    "answer": {
+                       "type": "integer"
+                   },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [1,2],
+                        "description": "1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "title",
+                    "type",
+                    "subject_id",
+                    "option_1",
+                    "option_2",
+                    "option_3",
+                    "option_4",
+                    "answer"
+
+                ]
+            },
             "subject": {
                 "type": "object",
                 "properties": {
@@ -9100,6 +9968,14 @@
                     "type": "integer"
                 }
             },
+            "assessment_id": {
+                "name": "assessment_id",
+                "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "branch_id": {
                 "name": "branch_id",
                 "required": true,
@@ -9317,6 +10193,31 @@
                 "schema": {
                     "type": "integer",
                     "example": "1"
+                }
+            },
+            "assessmentId": {
+                "name": "assessmentId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "questionBankId": {
+                "name": "questionBankId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youthAssessmentId": {
+                "name": "youthAssessmentId",
+                "in": "path",
+                "description": "youthAssessmentId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "courseId": {

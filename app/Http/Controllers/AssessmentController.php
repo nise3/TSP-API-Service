@@ -153,7 +153,7 @@ class AssessmentController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $assessment = RplOccupation::findOrFail($id);
+        $assessment = Assessment::findOrFail($id);
 
         $this->authorize('delete', $assessment);
 
@@ -165,7 +165,7 @@ class AssessmentController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RPL Occupation deleted successfully.",
+                    "message" => "Assessment deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

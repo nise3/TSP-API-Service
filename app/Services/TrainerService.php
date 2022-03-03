@@ -349,7 +349,11 @@ class TrainerService
             /** Core service call */
             $trainerData = $trainer->toArray();
             $trainerData['role_id'] = $data['role_id'];
-            ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
+            $coreUser = ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
+
+            $trainer['role_id'] = $coreUser['role_id'] ?? "";
+            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "" ;
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['institute_id'] : "" ;
 
             DB::commit();
 

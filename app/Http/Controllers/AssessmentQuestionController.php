@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssessmentQuestion;
 use App\Models\QuestionBank;
 use App\Services\QuestionBankService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -14,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class QuestionBankController extends Controller
+class AssessmentQuestionController extends Controller
 {
     /**
      * @var QuestionBankService
@@ -45,7 +46,7 @@ class QuestionBankController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBank::class);
+        $this->authorize('viewAny', QuestionBankService::class);
 
         $filter = $this->questionBankService->filterValidator($request)->validate();
 
