@@ -15,7 +15,7 @@
         "anis072/lumen-queue-rabbitmq": "^12.0",
         "doctrine/dbal": "^3.3",
         "dyrynda/laravel-cascade-soft-deletes": "^4.1",
-        "elasticsearch/elasticsearch": "^8.0",
+        "elasticsearch/elasticsearch": "^7.0",
         "felixkiss/uniquewith-validator": "^3.4",
         "flipbox/lumen-generator": "^8.2",
         "guzzlehttp/guzzle": "^7.3",
