@@ -80,6 +80,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** nise-statistics */
         $router->get('nise-statistics', ["as" => "nise-statistics", "uses" => "InstituteStatisticsController@niseStatistics"]);
 
+        $router->get("rto-countries", ["as" => "public.rto-countries", "uses" => "RtoCountryController@getPublicList"]);
+
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
             $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@publicDemandingCourses"]);
