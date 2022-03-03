@@ -1,0 +1,235 @@
+<?php
+
+
+namespace App\Services;
+
+
+use App\Models\BaseModel;
+use App\Models\Assessment;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\Response;
+
+class AssessmentService
+{
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getAssessmentList(array $request, Carbon $startTime): array
+    {
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $rplSectorId = $request['rpl_occupation_id'] ?? "";
+
+        /** @var Assessment|Builder $assessmentBuilder */
+        $assessmentBuilder = Assessment::select([
+            'assessments.id',
+            'assessments.title',
+            'assessments.title_en',
+
+            'assessments.rpl_occupation_id',
+            'rpl_occupations.title_en as rpl_occupation_title_en',
+            'rpl_occupations.title as rpl_occupation_title',
+
+            'assessments.rpl_level_id',
+            'rpl_levels.title_en as rpl_level_title_en',
+            'rpl_levels.title as rpl_level_title',
+
+            'assessments.created_at',
+            'assessments.updated_at',
+            'assessments.deleted_at',
+        ]);
+
+        $assessmentBuilder->orderBy('assessments.id', $order);
+
+        $assessmentBuilder->join('rpl_occupations', function ($join){
+            $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+                ->whereNull('rpl_occupations.deleted_at');
+        });
+
+        $assessmentBuilder->join('rpl_levels', function ($join){
+            $join->on('assessments.rpl_level_id', '=', 'rpl_levels.id')
+                ->whereNull('rpl_levels.deleted_at');
+        });
+
+        if (!empty($titleEn)) {
+            $assessmentBuilder->where('assessments.title_en', 'like', '%' . $titleEn . '%');
+        }
+        if (!empty($title)) {
+            $assessmentBuilder->where('assessments.title', 'like', '%' . $title . '%');
+        }
+        if (!empty($rplSectorId)) {
+            $assessmentBuilder->where('assessments.rpl_occupation_id', $rplSectorId);
+        }
+
+        /** @var Collection $assessmentes */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $assessmentes = $assessmentBuilder->paginate($pageSize);
+            $paginateData = (object)$assessmentes->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $assessmentes = $assessmentBuilder->get();
+        }
+        $response['order'] = $order;
+        $response['data'] = $assessmentes->toArray()['data'] ?? $assessmentes->toArray();
+
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    /**
+     * @param int $id
+     * @return Assessment
+     */
+    public function getOneAssessment(int $id): Assessment
+    {
+        /** @var Assessment|Builder $assessmentBuilder */
+        $assessmentBuilder = Assessment::select([
+            'assessments.id',
+            'assessments.title',
+            'assessments.title_en',
+
+            'assessments.rpl_occupation_id',
+            'rpl_occupations.title_en as rpl_occupation_title_en',
+            'rpl_occupations.title as rpl_occupation_title',
+
+            'assessments.rpl_level_id',
+            'rpl_levels.title_en as rpl_level_title_en',
+            'rpl_levels.title as rpl_level_title',
+
+            'assessments.created_at',
+            'assessments.updated_at',
+            'assessments.deleted_at',
+        ]);
+
+        if (is_numeric($id)) {
+            $assessmentBuilder->where('assessments.id', $id);
+        }
+
+        $assessmentBuilder->join('rpl_occupations', function ($join){
+            $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+                ->whereNull('rpl_occupations.deleted_at');
+        });
+
+        $assessmentBuilder->join('rpl_levels', function ($join){
+            $join->on('assessments.rpl_level_id', '=', 'rpl_levels.id')
+                ->whereNull('rpl_levels.deleted_at');
+        });
+
+        return $assessmentBuilder->firstOrFail();
+    }
+
+    /**
+     * @param array $data
+     * @return Assessment
+     */
+    public function store(array $data): Assessment
+    {
+        $assessment = app()->make(Assessment::class);
+        $assessment->fill($data);
+        $assessment->save();
+        return $assessment;
+    }
+
+    /**
+     * @param Assessment $assessment
+     * @param array $data
+     * @return Assessment
+     */
+    public function update(Assessment $assessment, array $data): Assessment
+    {
+        $assessment->fill($data);
+        $assessment->save();
+        return $assessment;
+    }
+
+    /**
+     * @param Assessment $assessment
+     * @return bool
+     */
+    public function destroy(Assessment $assessment): bool
+    {
+        return $assessment->delete();
+    }
+
+    /**
+     * @param Request $request
+     * @param int|null $id
+     * @return Validator
+     */
+    public function validator(Request $request, int $id = null): Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'title' => [
+                'required',
+                'string',
+                'max:600',
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:300',
+                'min:2'
+            ],
+            'rpl_occupation_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
+            'rpl_level_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:rpl_levels,id,deleted_at,NULL',
+            ],
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return Validator
+     */
+    public function filterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'assessment_id' => 'nullable|int',
+            'title_en' => 'nullable|min:2',
+            'title' => 'nullable|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'integer|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+        ], $customMessage);
+    }
+}

@@ -34,6 +34,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
+        $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
+        $customRouter()->resourceRoute('youth-assessment', 'YouthAssessmentController')->render();
+        $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
 
 
         /** Institute Registration Approval */
