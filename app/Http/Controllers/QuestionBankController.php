@@ -45,7 +45,7 @@ class QuestionBankController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBankService::class);
+        $this->authorize('viewAny', QuestionBank::class);
 
         $filter = $this->questionBankService->filterValidator($request)->validate();
 
