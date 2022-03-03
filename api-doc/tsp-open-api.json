@@ -7198,6 +7198,93 @@
                     }
                 }
             }
+        },
+
+
+        "/assessment": {
+            "post": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "NewDivide",
+                                        "updated_at": "2022-03-03T10:24:46.000000Z",
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RPL Occupation added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/assessment/{assessmentId}": {
+            "get": {
+                "tags": [
+                    "Assessment"
+                ],
+                "summary": "Get all assessments",
+                "description": "API endpoint to Get all assessments. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "NewDivide",
+                                        "title_en": "NewDivide",
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "created_at": "2022-03-03T10:24:46.000000Z",
+                                        "updated_at": "2022-03-03T10:24:46.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -7209,6 +7296,30 @@
             }
         },
         "schemas": {
+            "assessment": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "rpl_occupation_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_occupations table"
+                    },
+                    "rpl_level_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_levels table"
+                    }
+                },
+                "required": [
+                    "title",
+                    "rpl_occupation_id",
+                    "rpl_level_id"
+                ]
+            },
             "questionBank": {
                 "type": "object",
                 "properties": {
@@ -9608,6 +9719,14 @@
                 "schema": {
                     "type": "integer",
                     "example": "1"
+                }
+            },
+            "assessmentId": {
+                "name": "assessmentId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "questionBankId": {
