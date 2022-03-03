@@ -63,6 +63,7 @@ class RplOccupationService
         if (!empty($title)) {
             $rplOccupationBuilder->where('rpl_occupations.title', 'like', '%' . $title . '%');
         }
+
         if (!empty($rplSectorId)) {
             $rplOccupationBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
         }

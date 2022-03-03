@@ -385,7 +385,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:countries,id,deleted_at,NULL'
+                'exists:rto_countries,id,deleted_at,NULL'
             ],
             'loc_division_id' => [
                 'required',
