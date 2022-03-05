@@ -339,9 +339,20 @@ class TrainerService
             $trainer->save();
 
             /** Sync in institute_trainer pivot table */
-            $trainer->institutes()->sync([
-                $data['institute_id']
-            ]);
+            $pivotTableData = [];
+            if(!empty($data['institute_id'])){
+                $pivotTableData[] = [
+                    "institute_id" => $data['institute_id'],
+                    "industry_association_id" => null
+                ];
+            }
+            if(!empty($data['industry_association_id'])){
+                $pivotTableData[] = [
+                    "institute_id" => null,
+                    "industry_association_id" => $data['industry_association_id']
+                ];
+            }
+            $trainer->institutes()->sync($pivotTableData);
 
             /** Sync in institute_skill pivot table */
             $trainer->skills()->sync($data['skills']);
