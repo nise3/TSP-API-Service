@@ -30,6 +30,7 @@ class QuestionBankService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
+        $subjectId = $request['subject_id'] ?? "";
 
         /** @var QuestionBank|Builder $questionBankBuilder */
         $questionBankBuilder = QuestionBank::select([
@@ -65,6 +66,10 @@ class QuestionBankService
         }
         if (!empty($title)) {
             $questionBankBuilder->where('question_banks.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($subjectId)) {
+            $questionBankBuilder->where('question_banks.subject_id', $subjectId);
         }
 
         /** @var Collection $questionBanks */
@@ -263,6 +268,7 @@ class QuestionBankService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
+            'subject_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [
