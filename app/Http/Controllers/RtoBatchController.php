@@ -109,7 +109,7 @@ class RtoBatchController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RPL Occupation added successfully",
+                "message" => "RTO batch added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -137,7 +137,7 @@ class RtoBatchController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "RTO batch updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -193,7 +193,7 @@ class RtoBatchController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RPL Occupation deleted successfully.",
+                    "message" => "RTO batch deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

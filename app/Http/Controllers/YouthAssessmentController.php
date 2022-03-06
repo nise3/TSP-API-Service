@@ -110,7 +110,7 @@ class YouthAssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RPL Occupation added successfully",
+                "message" => "Youth assessment added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -137,7 +137,7 @@ class YouthAssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "Youth assessment updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -164,7 +164,7 @@ class YouthAssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "Youth assessment assigned to batch successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
