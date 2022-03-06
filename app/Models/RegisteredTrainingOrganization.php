@@ -79,4 +79,9 @@ class RegisteredTrainingOrganization extends BaseModel
     {
         return $this->belongsToMany(RplSector::class,'rto_sector_exceptions','registered_training_organization_id','sector_id')->withTimestamps();
     }
+
+    public function occupationExceptions(): BelongsToMany
+    {
+        return $this->belongsToMany(RplOccupation::class,'rto_occupation_exceptions','registered_training_organization_id','occupation_id')->withTimestamps();
+    }
 }

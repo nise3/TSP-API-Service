@@ -249,9 +249,8 @@ class RegisteredTrainingOrganizationService
             $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
         }
         if (!empty($data['rto_occupation_exceptions'])) {
-            $rto->sectorExceptions()->sync($data['rto_occupation_exceptions']);
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
         }
-
 
         return $rto;
     }
@@ -269,6 +268,16 @@ class RegisteredTrainingOrganizationService
 
         $rto->fill($data);
         $rto->save();
+
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
+
         return $rto;
     }
 
@@ -436,7 +445,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:rto_countries,country_id,deleted_at,NULL'
+                'exists:rto_countries,country_id'
             ],
             'loc_division_id' => [
                 'required',
