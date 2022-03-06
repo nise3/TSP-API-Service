@@ -39,6 +39,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('youth-assessment', 'YouthAssessmentController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
         $customRouter()->resourceRoute('question-banks', 'QuestionBankController')->render();
+        $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
 
 
         /** Institute Registration Approval */
@@ -92,6 +93,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-sectors", ["as" => "public.rpl-sectors", "uses" => "RplSectorController@getPublicList"]);
         $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
+        $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
         $router->post("youth-assessment", ["as" => "public.youth-assessment", "uses" => "YouthAssessmentController@store"]);
 
