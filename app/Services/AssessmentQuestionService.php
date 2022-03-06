@@ -4,8 +4,10 @@
 namespace App\Services;
 
 
+use App\Models\Assessment;
 use App\Models\BaseModel;
 use App\Models\AssessmentQuestion;
+use App\Models\QuestionBank;
 use App\Models\RplSector;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,14 +28,22 @@ class AssessmentQuestionService
     public function getAssessmentQuestionList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
+        $rplLevelId = $request['rpl_level_id'] ?? "";
+        $rplOccupationId = $request['rpl_occupation_id'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var AssessmentQuestion|Builder $questionBankBuilder */
-        $questionBankBuilder = AssessmentQuestion::select([
-            'assessment_questions.id',
+        /** @var AssessmentQuestion|Builder $assessmentQuestionBuilder */
+        $assessmentQuestionBuilder = AssessmentQuestion::select([
+            'assessment_questions.assessment_id',
+            'assessments.title as assessment_title',
+            'assessments.title_en as assessment_title_en',
+            'assessment_questions.assessment_id',
+            'assessment_questions.question_id',
+            'question_banks.title as question_title',
+            'question_banks.title_en as question_title_en',
             'assessment_questions.title',
             'assessment_questions.title_en',
             'assessment_questions.type',
@@ -46,41 +56,58 @@ class AssessmentQuestionService
             'assessment_questions.option_3_en',
             'assessment_questions.option_4',
             'assessment_questions.option_4_en',
-            'assessment_questions.difficulty_level',
             'assessment_questions.answer',
             'assessment_questions.row_status',
             'assessment_questions.created_at',
             'assessment_questions.updated_at',
-            'assessment_questions.deleted_at',
         ]);
 
         if (!$isPublicApi) {
-            $questionBankBuilder->acl();
+            $assessmentQuestionBuilder->acl();
         }
 
-        $questionBankBuilder->orderBy('assessment_questions.id', $order);
+        $assessmentQuestionBuilder->orderBy('assessment_questions.assessment_id', $order);
 
+        $assessmentQuestionBuilder->join("assessments", function ($join) {
+            $join->on('assessment_questions.assessment_id', '=', 'assessments.id')
+                ->whereNull('assessments.deleted_at');
+        });
+
+        $assessmentQuestionBuilder->join("question_banks", function ($join) {
+            $join->on('assessment_questions.question_id', '=', 'question_banks.id')
+                ->whereNull('assessments.deleted_at');
+        });
         if (!empty($titleEn)) {
-            $questionBankBuilder->where('assessment_questions.title_en', 'like', '%' . $titleEn . '%');
+            $assessmentQuestionBuilder->where('assessment_questions.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $questionBankBuilder->where('assessment_questions.title', 'like', '%' . $title . '%');
+            $assessmentQuestionBuilder->where('assessment_questions.title', 'like', '%' . $title . '%');
+        }
+        if($isPublicApi){
+            $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplLevelId);
+            $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplOccupationId);
+            $assessmentIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_id')->toArray();
+            $randomAssessmentId = $assessmentIds[array_rand($assessmentIds)];
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_id',$randomAssessmentId);
+
         }
 
-        /** @var Collection $questionBanks */
+        /** @var Collection $assessmentQuestions */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $questionBanks = $questionBankBuilder->paginate($pageSize);
-            $paginateData = (object)$questionBanks->toArray();
+            $assessmentQuestions = $assessmentQuestionBuilder->paginate($pageSize);
+            $paginateData = (object)$assessmentQuestions->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $questionBanks = $questionBankBuilder->get();
+            $assessmentQuestions = $assessmentQuestionBuilder->get();
         }
+
+
         $response['order'] = $order;
-        $response['data'] = $questionBanks->toArray()['data'] ?? $questionBanks->toArray();
+        $response['data'] = $assessmentQuestions->toArray()['data'] ?? $assessmentQuestions->toArray();
 
         $response['_response_status'] = [
             "success" => true,
@@ -91,72 +118,19 @@ class AssessmentQuestionService
     }
 
     /**
-     * @param int $id
-     * @return RplSector
+     * @param array $data
      */
-    public function getOneAssessmentQuestion(int $id): AssessmentQuestion
+    public function store(array $data)
     {
-        /** @var AssessmentQuestion|Builder $questionBankBuilder */
-        $questionBankBuilder = AssessmentQuestion::select([
-            'assessment_questions.id',
-            'assessment_questions.title',
-            'assessment_questions.title_en',
-            'assessment_questions.type',
-            'assessment_questions.subject_id',
-            'assessment_questions.option_1',
-            'assessment_questions.option_1_en',
-            'assessment_questions.option_2',
-            'assessment_questions.option_2_en',
-            'assessment_questions.option_3',
-            'assessment_questions.option_3_en',
-            'assessment_questions.option_4',
-            'assessment_questions.option_4_en',
-            'assessment_questions.difficulty_level',
-            'assessment_questions.answer',
-            'assessment_questions.row_status',
-            'assessment_questions.created_at',
-            'assessment_questions.updated_at',
-            'assessment_questions.deleted_at',
-        ]);
 
-        if (is_numeric($id)) {
-            $questionBankBuilder->where('assessment_questions.id', $id);
+        foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
+        }
+        foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            AssessmentQuestion::insert($assessmentQuestion);
         }
 
-        return $questionBankBuilder->firstOrFail();
-    }
 
-    /**
-     * @param array $data
-     * @return AssessmentQuestion
-     */
-    public function store(array $data): AssessmentQuestion
-    {
-        $questionBank = app()->make(AssessmentQuestion::class);
-        $questionBank->fill($data);
-        $questionBank->save();
-        return $questionBank;
-    }
-
-    /**
-     * @param AssessmentQuestion $questionBank
-     * @param array $data
-     * @return AssessmentQuestion
-     */
-    public function update(AssessmentQuestion $questionBank, array $data): AssessmentQuestion
-    {
-        $questionBank->fill($data);
-        $questionBank->save();
-        return $questionBank;
-    }
-
-    /**
-     * @param AssessmentQuestion $questionBank
-     * @return bool
-     */
-    public function destroy(AssessmentQuestion $questionBank): bool
-    {
-        return $questionBank->delete();
     }
 
     /**
@@ -207,8 +181,8 @@ class AssessmentQuestionService
                 'int',
                 'exists:subjects,id,deleted_at,NULL'
             ],
-            'assessment_questions.*.assessment_questions.*.option_1' => [
-                'required',
+            'assessment_questions.*.option_1' => [
+                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
                 'string',
                 'max:600'
             ],
@@ -218,7 +192,7 @@ class AssessmentQuestionService
                 'max:300'
             ],
             'assessment_questions.*.option_2' => [
-                'required',
+                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
                 'string',
                 'max:600'
             ],
@@ -228,7 +202,7 @@ class AssessmentQuestionService
                 'max:300'
             ],
             'assessment_questions.*.option_3' => [
-                'required',
+                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
                 'string',
                 'max:600'
             ],
@@ -238,7 +212,7 @@ class AssessmentQuestionService
                 'max:300'
             ],
             'assessment_questions.*.option_4' => [
-                'required',
+                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
                 'string',
                 'max:600'
             ],
@@ -249,7 +223,8 @@ class AssessmentQuestionService
             ],
             'assessment_questions.*.answer' => [
                 'required',
-                'int'
+                'int',
+                Rule::in(QuestionBank::ANSWERS)
             ],
             'assessment_questions.*.row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -280,6 +255,44 @@ class AssessmentQuestionService
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                "nullable",
+                "int"
+            ],
+        ], $customMessage);
+    }
+
+    /**
+     * @param Request $request
+     * @return Validator
+     */
+    public function publicFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'title_en' => 'nullable|min:2',
+            'title' => 'nullable|min:2',
+            'page_size' => 'int|gt:0',
+            'page' => 'integer|gt:0',
+            'rpl_level_id' => [
+                'int',
+                'required',
+            ],
+            'rpl_occupation_id' => [
+                'int',
+                'required',
+            ],
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

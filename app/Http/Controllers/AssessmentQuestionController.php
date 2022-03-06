@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AssessmentQuestion;
 use App\Models\QuestionBank;
-use App\Services\QuestionBankService;
+use App\Services\AssessmentQuestionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,9 +18,9 @@ use Throwable;
 class AssessmentQuestionController extends Controller
 {
     /**
-     * @var QuestionBankService
+     * @var AssessmentQuestionService
      */
-    public QuestionBankService $questionBankService;
+    public AssessmentQuestionService $assessmentQuestionService;
     /**
      * @var Carbon
      */
@@ -28,12 +28,12 @@ class AssessmentQuestionController extends Controller
 
     /**
      * QuestionBankController constructor.
-     * @param QuestionBankService $questionBankService
+     * @param AssessmentQuestionService $assessmentQuestionService
      */
 
-    public function __construct(QuestionBankService $questionBankService)
+    public function __construct(AssessmentQuestionService $assessmentQuestionService)
     {
-        $this->questionBankService = $questionBankService;
+        $this->assessmentQuestionService = $assessmentQuestionService;
         $this->startTime = Carbon::now();
     }
 
@@ -46,11 +46,10 @@ class AssessmentQuestionController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBankService::class);
+        $this->authorize('viewAny', QuestionBank::class);
+        $filter = $this->assessmentQuestionService->filterValidator($request)->validate();
 
-        $filter = $this->questionBankService->filterValidator($request)->validate();
-
-        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime);
+        $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -62,35 +61,12 @@ class AssessmentQuestionController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->questionBankService->filterValidator($request)->validate();
+        $filter = $this->assessmentQuestionService->publicFilterValidator($request)->validate();
 
-        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime,false);
+        $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime, true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-
-    /**
-     * * Display the specified resource
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws AuthorizationException
-     */
-    public function read(Request $request, int $id): JsonResponse
-    {
-        $questionBank = $this->questionBankService->getOneQuestionBank($id);
-        $this->authorize('view', $questionBank);
-
-        $response = [
-            "data" => $questionBank,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -102,12 +78,11 @@ class AssessmentQuestionController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', QuestionBank::class);
-
-        $validated = $this->questionBankService->validator($request)->validate();
-        $questionBank = $this->questionBankService->store($validated);
+        $validated = $this->assessmentQuestionService->validator($request)->validate();
+        $this->assessmentQuestionService->store($validated);
 
         $response = [
-            'data' => $questionBank,
+
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -118,63 +93,4 @@ class AssessmentQuestionController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
-    /**
-     * * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     * @throws ValidationException
-     */
-    public function update(Request $request, int $id): JsonResponse
-    {
-        $questionBank = QuestionBank::findOrFail($id);
-
-        $this->authorize('update', $questionBank);
-
-        $validated = $this->questionBankService->validator($request, $id)->validate();
-        $data = $this->questionBankService->update($questionBank, $validated);
-        $response = [
-            'data' => $data,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Question Bank updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-    /**
-     *Remove the specified resource from storage.
-     * @param int $id
-     * @return JsonResponse
-     * @throws Throwable
-     */
-    public function destroy(int $id): JsonResponse
-    {
-        $questionBank = QuestionBank::findOrFail($id);
-
-        $this->authorize('delete', $questionBank);
-
-        DB::beginTransaction();
-        try {
-            $this->questionBankService->destroy($questionBank);
-            DB::commit();
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Question Bank deleted successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
-        } catch (Throwable $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
 }

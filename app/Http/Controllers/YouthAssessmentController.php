@@ -101,14 +101,16 @@ class YouthAssessmentController extends Controller
     {
         // $this->authorize('create', YouthAssessment::class); // not needed for public
         $validated = $this->youthAssessmentService->validator($request)->validate();
+        $answers = $this->youthAssessmentService->answersValidator($request)->validate();
         $youthAssessment = $this->youthAssessmentService->store($validated);
+        $youthAssessment = $this->youthAssessmentService->updateResult($youthAssessment, $answers);
 
         $response = [
             'data' => $youthAssessment,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RPL Occupation added successfully",
+                "message" => "Youth assessment added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -135,7 +137,7 @@ class YouthAssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "Youth assessment updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -162,7 +164,7 @@ class YouthAssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RPL Occupation updated successfully.",
+                "message" => "Youth assessment assigned to batch successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
