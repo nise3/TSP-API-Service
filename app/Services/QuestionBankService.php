@@ -188,7 +188,7 @@ class QuestionBankService
                 'exists:subjects,id,deleted_at,NULL'
             ],
             'option_1' => [
-                'required',
+                'nullable',
                 'string',
                 'max:600'
             ],
@@ -198,7 +198,7 @@ class QuestionBankService
                 'max:300'
             ],
             'option_2' => [
-                'required',
+                'nullable',
                 'string',
                 'max:600'
             ],
@@ -208,7 +208,6 @@ class QuestionBankService
                 'max:300'
             ],
             'option_3' => [
-                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
                 'nullable',
                 'string',
                 'max:600'
@@ -219,7 +218,6 @@ class QuestionBankService
                 'max:300'
             ],
             'option_4' => [
-                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
                 'nullable',
                 'string',
                 'max:600'
