@@ -270,4 +270,24 @@ class RtoBatchService
             ],
         ], $customMessage);
     }
+
+    /**
+     * @param Request $request
+     * @return Validator
+     */
+    public function assignAssessorValidator(Request $request): Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'assessor_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:trainers,id,deleted_at,NULL',
+            ],
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
+    }
 }

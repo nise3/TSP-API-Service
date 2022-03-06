@@ -68,7 +68,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
         $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
 
-        $router->post('youth-assessment/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "YouthAssessment@assignToBatch"]);
+        $router->post('youth-assessment/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "YouthAssessmentController@assignToBatch"]);
+        $router->post('rto-batches/{id}/assign-assessor', ["as" => "institute.rto-batches-assign-assessor", "uses" => "RtoBatchController@assignAssessor"]);
 
     });
 
@@ -92,7 +93,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
 
-        $router->post("youth-assessment", ["as" => "public.youth-assessment", "uses" => "YouthAssessment@store"]);
+        $router->post("youth-assessment", ["as" => "public.youth-assessment", "uses" => "YouthAssessmentController@store"]);
 
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {

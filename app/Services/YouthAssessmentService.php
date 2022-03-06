@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\AssessmentQuestion;
 use App\Models\BaseModel;
 use App\Models\YouthAssessment;
 use Illuminate\Contracts\Validation\Validator;
@@ -227,6 +228,39 @@ class YouthAssessmentService
     }
 
     /**
+     * @param array $data
+     * @return YouthAssessment
+     */
+    public function updateResult(YouthAssessment $youthAssessment, array $data): YouthAssessment
+    {
+        $correct = 0;
+        $assessmentId = $data['$assessment_id'];
+        $answers = $data['answers'];
+        $columns = [
+            'assessment_questions.assessment_id',
+            'assessment_questions.question_id',
+            'assessment_questions.answer',
+        ];
+        $assessmentQs = AssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
+        $questions = [];
+        foreach ($assessmentQs as $ques) {
+            $questions[$ques['question_id']] = $ques['answer'];
+        }
+        foreach ($answers as $ans) {
+            $qid = $ans['question_id'];
+            $answer = $ans['answer'];
+            $correct += ($questions[$qid] == $answer) ? 1 : 0;
+        }
+        $update = [
+            'result' => $correct == count($assessmentQs) ? 1 : 0,
+            'score' => $correct / count($assessmentQs),
+        ];
+        $youthAssessment->fill($update);
+        $youthAssessment->save();
+        return $youthAssessment;
+    }
+
+    /**
      * @param YouthAssessment $youthAssessment
      * @param array $data
      * @return YouthAssessment
@@ -309,6 +343,26 @@ class YouthAssessmentService
                 'int',
                 'min:1',
                 'exists:rto_batches,id,deleted_at,NULL',
+            ]
+        ];
+        return \Illuminate\Support\Facades\Validator::make($data, $rules);
+    }
+
+    /**
+     * @param Request $request
+     * @param int|null $id
+     * @return Validator
+     */
+    public function answersValidator(Request $request, int $id = null): Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'assessment_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:assessments,id,deleted_at,NULL',
             ],
             'answers' => [
                 'required',

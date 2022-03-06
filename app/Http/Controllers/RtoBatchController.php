@@ -141,7 +141,35 @@ class RtoBatchController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-            return Response::json($response, ResponseAlias::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param  int $id
+     * @return JsonResponse
+     */
+    public function assignAssessor(Request $request, int $id): JsonResponse
+    {
+        $youthAssessment = RtoBatch::findOrFail($id);
+
+        $this->authorize('update', RtoBatch::class);
+
+        $validated = $this->rtoBatchService->assignAssessorValidator($request)->validate();
+        $data = $this->rtoBatchService->update($youthAssessment, $validated);
+        $response = [
+            'data' => $data,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Assessor assigned successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
