@@ -92,7 +92,7 @@ class QuestionBankService
 
     /**
      * @param int $id
-     * @return RplSector
+     * @return QuestionBank
      */
     public function getOneQuestionBank(int $id): QuestionBank
     {
@@ -188,6 +188,7 @@ class QuestionBankService
                 'exists:subjects,id,deleted_at,NULL'
             ],
             'option_1' => [
+                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
                 'nullable',
                 'string',
                 'max:600'
@@ -198,7 +199,8 @@ class QuestionBankService
                 'max:300'
             ],
             'option_2' => [
-                'nullable',
+                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
+                'required',
                 'string',
                 'max:600'
             ],
@@ -208,6 +210,7 @@ class QuestionBankService
                 'max:300'
             ],
             'option_3' => [
+                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
                 'nullable',
                 'string',
                 'max:600'
@@ -218,6 +221,7 @@ class QuestionBankService
                 'max:300'
             ],
             'option_4' => [
+                Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
                 'nullable',
                 'string',
                 'max:600'
