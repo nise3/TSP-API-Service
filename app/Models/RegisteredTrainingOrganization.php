@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -69,5 +70,13 @@ class RegisteredTrainingOrganization extends BaseModel
     public function title(): ?string
     {
         return $this->title || $this->title_en;
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function sectorExceptions(): BelongsToMany
+    {
+        return $this->belongsToMany(RplSector::class,'rto_sector_exceptions','registered_training_organization_id','sector_id')->withTimestamps();
     }
 }

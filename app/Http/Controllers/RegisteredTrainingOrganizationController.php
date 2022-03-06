@@ -153,7 +153,7 @@ class RegisteredTrainingOrganizationController extends Controller
         /** @var RegisteredTrainingOrganization $rto */
         $rto = app(RegisteredTrainingOrganization::class);
 
-        $this->authorize('create', $rto);
+//        $this->authorize('create', $rto);
 
         $validatedData = $this->rtoService->validator($request)->validate();
         $validatedData['code'] = CodeGeneratorService::getRTOCode();
