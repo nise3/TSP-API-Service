@@ -8113,42 +8113,15 @@
                         }
                     }
                 },
-
                 "responses": {
                     "200": {
                         "description": "successful",
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "order": "ASC",
-                                    "data": [
-                                        {
-                                            "assessment_id": 1,
-                                            "assessment_title": "assessment1",
-                                            "assessment_title_en": "assessment1",
-                                            "question_id": 1,
-                                            "question_title": "abc",
-                                            "question_title_en": "abc",
-                                            "title": "question1",
-                                            "title_en": "question1",
-                                            "type": 1,
-                                            "subject_id": 1,
-                                            "option_1": "a",
-                                            "option_1_en": "a",
-                                            "option_2": "b",
-                                            "option_2_en": "b",
-                                            "option_3": "c",
-                                            "option_3_en": "c",
-                                            "option_4": "d",
-                                            "option_4_en": "d",
-                                            "answer": 1,
-                                            "row_status": 1,
-                                            "created_at": "2022-03-07T05:21:38.000000Z",
-                                            "updated_at": "2022-03-07T05:21:41.000000Z"
-                                        }
-                                    ],
                                     "_response_status": {
                                         "success": true,
+                                        "message":"Assessment Questions  added successfully",
                                         "code": 200,
                                         "query_time": 0
                                     }
@@ -8655,6 +8628,18 @@
                     "permission_sub_group_id": {
                         "type": "integer",
                         "description": "Required if id = null"
+                    },
+                    "rto_occupation_exceptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "rto_sector_exceptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     },
                     "title": {
                         "type": "string"
