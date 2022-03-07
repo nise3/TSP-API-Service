@@ -82,12 +82,15 @@ class AssessmentQuestionService
         if (!empty($title)) {
             $assessmentQuestionBuilder->where('assessment_questions.title', 'like', '%' . $title . '%');
         }
-        if($isPublicApi){
-            $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplLevelId);
-            $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplOccupationId);
-            $assessmentIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_id')->toArray();
-            $randomAssessmentId = $assessmentIds[array_rand($assessmentIds)];
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_id',$randomAssessmentId);
+        if ($isPublicApi) {
+            $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplLevelId);
+            $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplOccupationId);
+            $assessmentIds = $assessmentQuestionBuilder->pluck('assessment_questions.assessment_id')->toArray();
+            if (!empty($assessmentIds)) {
+                $randomAssessmentId = $assessmentIds[array_rand($assessmentIds)];
+                $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $randomAssessmentId);
+            }
+
 
         }
 
