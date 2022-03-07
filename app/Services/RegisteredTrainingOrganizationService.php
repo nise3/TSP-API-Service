@@ -240,8 +240,18 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
+
         $rto->fill($data);
         $rto->save();
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
         return $rto;
     }
 
@@ -258,6 +268,16 @@ class RegisteredTrainingOrganizationService
 
         $rto->fill($data);
         $rto->save();
+
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
+
         return $rto;
     }
 
@@ -361,12 +381,40 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['mobile_numbers'])) {
             $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
         }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $data["rto_occupation_exceptions"] = isset($data['rto_occupation_exceptions']) && is_array($data['rto_occupation_exceptions']) ? $data['rto_occupation_exceptions'] : explode(',', $data['rto_occupation_exceptions']);
+        }
+        if (!empty($data['rto_sector_exceptions'])) {
+            $data["rto_sector_exceptions"] = isset($data['rto_sector_exceptions']) && is_array($data['rto_sector_exceptions']) ? $data['rto_sector_exceptions'] : explode(',', $data['rto_sector_exceptions']);
+        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         $rules = [
+            'rto_sector_exceptions' => [
+                'nullable',
+                'array',
+            ],
+            'rto_sector_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_sector_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_sectors,id,deleted_at,NULL',
+            ],
+            'rto_occupation_exceptions' => [
+                'array',
+                'nullable',
+            ],
+            'rto_occupation_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_occupation_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
             'permission_sub_group_id' => [
                 Rule::requiredIf(function () use ($id) {
                     return is_null($id);
@@ -397,7 +445,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:rto_countries,country_id,deleted_at,NULL'
+                'exists:rto_countries,country_id'
             ],
             'loc_division_id' => [
                 'required',
