@@ -3817,7 +3817,6 @@
                 }
             }
         },
-
         "/public/course-list/{type}": {
             "get": {
                 "summary": "Course List with type ",
@@ -4775,10 +4774,11 @@
                 }
             }
         },
-
         "/rto-countries": {
             "get": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Get all Rto countries",
                 "description": "API endpoint to Get all Rto countries . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -4827,7 +4827,9 @@
                 }
             },
             "post": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Create  Rto countries",
                 "description": "API endpoint to Create Rto countries . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -4860,7 +4862,9 @@
         },
         "/public/rto-countries": {
             "get": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Get all public Rto countries",
                 "description": "API endpoint to Get all public Rto countries . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -4909,7 +4913,6 @@
                 }
             }
         },
-
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5150,7 +5153,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -5240,9 +5243,7 @@
                     }
                 }
             }
-
         },
-
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -5396,7 +5397,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 2,
                                         "rpl_sector_id": 1,
@@ -5599,7 +5600,6 @@
                 }
             }
         },
-
         "/rpl-occupations": {
             "get": {
                 "tags": [
@@ -5687,7 +5687,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "rpl_sector_id": "1",
                                         "title": "Uzumaki Barrage",
@@ -5916,7 +5916,6 @@
                 }
             }
         },
-
         "/subjects": {
             "get": {
                 "tags": [
@@ -5949,7 +5948,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
@@ -6139,10 +6138,11 @@
                 }
             }
         },
-
         "/registered-training-organizations": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6231,7 +6231,9 @@
                 }
             },
             "post": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -6248,7 +6250,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
@@ -6283,7 +6285,9 @@
         },
         "/public/registered-training-organizations": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all public registered training organizations",
                 "description": "API endpoint to Get all public registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6374,7 +6378,9 @@
         },
         "/registered-training-organizations/{rtoId}": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get a Registerd training organization",
                 "description": "API endpoint to Get a Registerd training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6445,7 +6451,9 @@
                 }
             },
             "put": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Update a registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6520,7 +6528,9 @@
                 }
             },
             "delete": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Delete a Registered training organization",
                 "description": "API endpoint toDelete a Registered training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6758,7 +6768,6 @@
                                                     }
                                                 ],
                                                 "youth_portfolios": [
-
                                                     {
                                                         "id": 4,
                                                         "youth_id": 1,
@@ -6971,8 +6980,6 @@
                 ]
             }
         },
-
-
         "/question-banks": {
             "get": {
                 "tags": [
@@ -7229,8 +7236,6 @@
                 }
             }
         },
-
-
         "/assessment": {
             "get": {
                 "tags": [
@@ -7453,7 +7458,6 @@
                 }
             }
         },
-
         "/youth-assessment": {
             "post": {
                 "tags": [
@@ -7532,7 +7536,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "rpl_sector_id": "1",
                                         "rpl_occupation_id": "1",
@@ -7576,7 +7580,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 1,
                                         "youth_id": 1,
@@ -7701,6 +7705,217 @@
                     }
                 }
             }
+        },
+        "/assessment-questions": {
+            "get": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Assessment Question List",
+                "description": "API endpoint to Get Assessment Question List. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "assessment_id": 1,
+                                            "assessment_title": "assessment1",
+                                            "assessment_title_en": "assessment1",
+                                            "question_id": 1,
+                                            "question_title": "abc",
+                                            "question_title_en": "abc",
+                                            "title": "question1",
+                                            "title_en": "question1",
+                                            "type": 1,
+                                            "subject_id": 1,
+                                            "option_1": "a",
+                                            "option_1_en": "a",
+                                            "option_2": "b",
+                                            "option_2_en": "b",
+                                            "option_3": "c",
+                                            "option_3_en": "c",
+                                            "option_4": "d",
+                                            "option_4_en": "d",
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-07T05:21:38.000000Z",
+                                            "updated_at": "2022-03-07T05:21:41.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Store Assessment Question ",
+                "description": "API endpoint to Store Assessment Question List. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssessmentQuestion"
+                            }
+                        }
+                    }
+                },
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "assessment_id": 1,
+                                            "assessment_title": "assessment1",
+                                            "assessment_title_en": "assessment1",
+                                            "question_id": 1,
+                                            "question_title": "abc",
+                                            "question_title_en": "abc",
+                                            "title": "question1",
+                                            "title_en": "question1",
+                                            "type": 1,
+                                            "subject_id": 1,
+                                            "option_1": "a",
+                                            "option_1_en": "a",
+                                            "option_2": "b",
+                                            "option_2_en": "b",
+                                            "option_3": "c",
+                                            "option_3_en": "c",
+                                            "option_4": "d",
+                                            "option_4_en": "d",
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-07T05:21:38.000000Z",
+                                            "updated_at": "2022-03-07T05:21:41.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/assessment-questions": {
+            "get": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Assessment Question Public List",
+                "description": "API endpoint to Get Assessment Question Public List. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    },{
+                        "$ref": "#/components/parameters/rpl_level_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rpl_occupation_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "assessment_id": 1,
+                                            "assessment_title": "assessment1",
+                                            "assessment_title_en": "assessment1",
+                                            "question_id": 1,
+                                            "question_title": "abc",
+                                            "question_title_en": "abc",
+                                            "title": "question1",
+                                            "title_en": "question1",
+                                            "type": 1,
+                                            "subject_id": 1,
+                                            "option_1": "a",
+                                            "option_1_en": "a",
+                                            "option_2": "b",
+                                            "option_2_en": "b",
+                                            "option_3": "c",
+                                            "option_3_en": "c",
+                                            "option_4": "d",
+                                            "option_4_en": "d",
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-07T05:21:38.000000Z",
+                                            "updated_at": "2022-03-07T05:21:41.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -7797,7 +8012,10 @@
                     },
                     "type": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "1=>Yes 2=>No"
                     },
                     "subject_id": {
@@ -7829,11 +8047,14 @@
                         "type": "string"
                     },
                     "answer": {
-                       "type": "integer"
-                   },
+                        "type": "integer"
+                    },
                     "row_status": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "1=>Active 2=>Inactive"
                     }
                 },
@@ -7846,8 +8067,16 @@
                     "option_3",
                     "option_4",
                     "answer"
-
                 ]
+            },
+            "AssessmentQuestion": {
+                "type": "object",
+                "properties": {
+                    "assessment_questions": {
+                        "type": "object",
+                        "example": "[\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=2',\n            'subject_id=1',\n            'option_1=a',\n            'option_1_en=b',\n            'option_2=b',\n            'option_2_en=b',\n            'option_3=c',\n            'option_3_en=c',\n            'option_4=d',\n            'option_4_en=d',\n            'answer=1',\n            'row_status=1',\n\n\t],\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=1',\n            'answer=1',\n            'row_status=1',\n\t]\n\n]"
+                    }
+                }
             },
             "subject": {
                 "type": "object",
@@ -7860,10 +8089,12 @@
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "Required when updating. 1=>Active 2=>Inactive"
                     }
-
                 },
                 "required": [
                     "title"
@@ -7884,7 +8115,7 @@
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     }
                 },
                 "required": [
@@ -7906,17 +8137,16 @@
                     "title": {
                         "type": "string"
                     },
-                    "title_en":{
+                    "title_en": {
                         "type": "string"
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     },
                     "sequence_order": {
                         "type": "integer"
                     }
-
                 },
                 "required": [
                     "rpl_sector_id",
@@ -7936,7 +8166,7 @@
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     }
                 },
                 "required": [
@@ -8048,7 +8278,13 @@
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [0,1,2,3,4],
+                        "enum": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
                         "description": "INACTIVE = 0;ACTIVE = 1;PENDING = 2;REJECTED = 3;FAILED = 4 . Required when id != null"
                     }
                 },
@@ -8084,14 +8320,23 @@
                 "properties": {
                     "payment_gateway_type": {
                         "type": "integer",
-                        "enum": [1,2,3,4,5],
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
                         "description": "1=Ek-Pay"
                     },
                     "course_enrollment_id": {
                         "type": "integer"
                     }
                 },
-                "required": ["payment_gateway_type","course_enrollment_id"]
+                "required": [
+                    "payment_gateway_type",
+                    "course_enrollment_id"
+                ]
             },
             "batchAssign": {
                 "type": "object",
@@ -9587,7 +9832,7 @@
                     "type": "integer"
                 }
             },
-            "rpl_occupation_id": {
+            "rpl_occupation_id_optional": {
                 "name": "rpl_occupation_id",
                 "in": "query",
                 "required": false,
@@ -9813,6 +10058,23 @@
                     "type": "string"
                 }
             },
+            "rpl_level_id": {
+                "in": "query",
+                "required": true,
+                "name": "rpl_level_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "rpl_occupation_id": {
+                "in": "query",
+                "required": true,
+                "name": "rpl_occupation_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -10156,7 +10418,6 @@
                     "type": "integer"
                 }
             },
-
             "rplSectorId": {
                 "name": "rplSectorId",
                 "in": "path",

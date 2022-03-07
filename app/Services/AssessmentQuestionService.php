@@ -40,7 +40,6 @@ class AssessmentQuestionService
             'assessment_questions.assessment_id',
             'assessments.title as assessment_title',
             'assessments.title_en as assessment_title_en',
-            'assessment_questions.assessment_id',
             'assessment_questions.question_id',
             'question_banks.title as question_title',
             'question_banks.title_en as question_title_en',
