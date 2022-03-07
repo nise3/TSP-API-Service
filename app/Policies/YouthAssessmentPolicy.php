@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\RplSector;
+use App\Models\YouthAssessment;
 use App\Models\User;
 
 class YouthAssessmentPolicy
@@ -22,10 +22,10 @@ class YouthAssessmentPolicy
      * Determine whether the user can view the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param YouthAssessment $youthAssessment
      * @return mixed
      */
-    public function view(User $authUser, RplSector $rplSector): bool
+    public function view(User $authUser, YouthAssessment $youthAssessment): bool
     {
         return $authUser->hasPermission('view_single_youth_assessment');
     }
@@ -45,10 +45,10 @@ class YouthAssessmentPolicy
      * Determine whether the user can update the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param YouthAssessment $youthAssessment
      * @return mixed
      */
-    public function update(User $authUser, RplSector $rplSector): bool
+    public function update(User $authUser, YouthAssessment $youthAssessment): bool
     {
         return $authUser->hasPermission('update_youth_assessment');
     }
@@ -57,10 +57,10 @@ class YouthAssessmentPolicy
      * Determine whether the user can delete the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param YouthAssessment $youthAssessment
      * @return mixed
      */
-    public function delete(User $authUser, RplSector $rplSector): bool
+    public function delete(User $authUser, YouthAssessment $youthAssessment): bool
     {
         return $authUser->hasPermission('delete_youth_assessment');
     }

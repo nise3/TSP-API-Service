@@ -7790,7 +7790,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "RPL Occupation added successfully",
+                                        "message": "Youth assessment added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -7831,23 +7831,41 @@
                         "content": {
                             "application/json": {
                                 "example":{
-                                    "data": {
-                                        "rpl_sector_id": "1",
-                                        "rpl_occupation_id": "1",
-                                        "rpl_level_id": "1",
-                                        "youth_id": "1",
-                                        "assessment_id": "2",
-                                        "target_country_id": "1",
-                                        "rto_country_id": "1",
-                                        "rto_id": "1",
-                                        "updated_at": "2022-03-03T11:43:20.000000Z",
-                                        "created_at": "2022-03-03T11:43:20.000000Z",
-                                        "id": 1
-                                    },
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "assessment_id": 2,
+                                            "rto_batch_id": 1,
+                                            "result": null,
+                                            "score": null,
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "rpl_sector_id": 1,
+                                            "rpl_sector_title_en": "aaa",
+                                            "rpl_sector_title": "aaaa",
+                                            "rto_country_id": 2,
+                                            "rto_country_title_en": "Åland Islands",
+                                            "rto_country_title": "Åland Islands",
+                                            "target_country_id": 1,
+                                            "target_country_title_en": "Afghanistan",
+                                            "target_country_title": "Afghanistan",
+                                            "rto_id": 1,
+                                            "rto_title_en": "BabyLolAmONTEZZ",
+                                            "rto_title": "BabyLolAmONTEZZ",
+                                            "created_at": "2022-03-03T11:43:20.000000Z",
+                                            "updated_at": "2022-03-07T04:32:21.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "RPL Occupation added successfully",
+                                        "code": 200,
                                         "query_time": 0
                                     }
                                 }
@@ -7961,7 +7979,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "RPL Occupation updated successfully.",
+                                        "message": "Youth assessment updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8048,6 +8066,54 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Youth assessment assigned to batch successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/youth-assessment": {
+            "post": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Create a public youth assessment",
+                "description": "API endpoint to Create public a youth assessment. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth assessment added successfully",
                                         "query_time": 0
                                     }
                                 }
