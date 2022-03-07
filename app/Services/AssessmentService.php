@@ -37,6 +37,7 @@ class AssessmentService
             'assessments.id',
             'assessments.title',
             'assessments.title_en',
+            'assessments.passing_score',
 
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -122,6 +123,7 @@ class AssessmentService
             'assessments.id',
             'assessments.title',
             'assessments.title_en',
+            'assessments.passing_score',
 
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -227,6 +229,12 @@ class AssessmentService
                 'int',
                 'min:1',
                 'exists:rpl_levels,id,deleted_at,NULL',
+            ],
+            'passing_score' => [
+                'required',
+                'int',
+                'min:1',
+                'max:100',
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
