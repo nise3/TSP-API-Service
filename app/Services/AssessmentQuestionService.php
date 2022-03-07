@@ -127,8 +127,10 @@ class AssessmentQuestionService
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
-        foreach ($data['assessment_questions'] as $assessmentQuestion) {
-            AssessmentQuestion::insert($assessmentQuestion);
+        foreach ($data['assessment_questions'] as $assessmentQuestionData) {
+            $assessmentQuestion = app(AssessmentQuestion::class);
+            $assessmentQuestion->fill($assessmentQuestionData);
+            $assessmentQuestion->save();
         }
 
 
