@@ -205,7 +205,7 @@ class QuestionBankService
             ],
             'option_2' => [
                 Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
-                'required',
+                'nullable',
                 'string',
                 'max:600'
             ],
