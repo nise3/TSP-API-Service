@@ -128,7 +128,7 @@ class YouthAssessmentController extends Controller
     {
         $youthAssessment = YouthAssessment::findOrFail($id);
 
-        $this->authorize('update', YouthAssessment::class);
+        $this->authorize('update', $youthAssessment);
 
         $validated = $this->youthAssessmentService->validator($request, $id)->validate();
         $data = $this->youthAssessmentService->update($youthAssessment, $validated);
