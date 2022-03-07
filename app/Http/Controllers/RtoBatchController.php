@@ -181,7 +181,7 @@ class RtoBatchController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $rtoBatch = RplOccupation::findOrFail($id);
+        $rtoBatch = RtoBatch::findOrFail($id);
 
         $this->authorize('delete', $rtoBatch);
 
