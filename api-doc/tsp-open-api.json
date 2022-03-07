@@ -10890,7 +10890,7 @@
                 }
             },
             "rplSectorId_q": {
-                "name": "rplSectorId",
+                "name": "rpl_sector_id",
                 "in": "query",
                 "description": "rplSectorId",
                 "required": false,
