@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\Assessment;
 use App\Models\AssessmentQuestion;
 use App\Models\BaseModel;
 use App\Models\YouthAssessment;
@@ -241,6 +242,7 @@ class YouthAssessmentService
             'assessment_questions.question_id',
             'assessment_questions.answer',
         ];
+        $assessment = Assessment::select(['assessment.passing_score'])->where('id', $assessmentId)->first();
         $assessmentQs = AssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
         $questions = [];
         foreach ($assessmentQs as $ques) {
@@ -251,9 +253,10 @@ class YouthAssessmentService
             $answer = $ans['answer'];
             $correct += ($questions[$qid] == $answer) ? 1 : 0;
         }
+        $score = ($correct / count($assessmentQs)) * 100;
         $update = [
-            'result' => $correct == count($assessmentQs) ? 1 : 0,
-            'score' => $correct / count($assessmentQs),
+            'result' => $score >= $assessment->passing_score ? 1 : 0,
+            'score' => $score,
         ];
         $youthAssessment->fill($update);
         $youthAssessment->save();
