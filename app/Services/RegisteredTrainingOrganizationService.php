@@ -8,6 +8,8 @@ use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
 use App\Models\RegisteredTrainingOrganization;
+use App\Services\CommonServices\SmsService;
+use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +33,8 @@ class RegisteredTrainingOrganizationService
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
+        $instituteId = $request['institute_id'] ?? "";
+        $countryId = $request['country_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -39,11 +43,14 @@ class RegisteredTrainingOrganizationService
         /** @var RegisteredTrainingOrganization|Builder $rtoBuilder */
         $rtoBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.code',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
             'registered_training_organizations.country_id',
+            'countries.title as country_title',
+            'countries.title_en as country_title_en',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'registered_training_organizations.loc_district_id',
@@ -100,6 +107,11 @@ class RegisteredTrainingOrganizationService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
+        $rtoBuilder->leftJoin('countries', function ($join) use ($rowStatus) {
+            $join->on('countries.id', '=', 'registered_training_organizations.country_id')
+                ->whereNull('countries.deleted_at');
+        });
+
         if (is_numeric($rowStatus)) {
             $rtoBuilder->where('registered_training_organizations.row_status', $rowStatus);
         }
@@ -109,6 +121,14 @@ class RegisteredTrainingOrganizationService
         }
         if (!empty($title)) {
             $rtoBuilder->where('registered_training_organizations.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($instituteId)) {
+            $rtoBuilder->where('registered_training_organizations.institute_id', $instituteId);
+        }
+
+        if (!empty($countryId)) {
+            $rtoBuilder->where('registered_training_organizations.country_id', $countryId);
         }
 
         /** @var Collection $rtos */
@@ -144,6 +164,7 @@ class RegisteredTrainingOrganizationService
         $registeredTrainingOrganizationBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
             'registered_training_organizations.code',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
@@ -219,8 +240,18 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
+
         $rto->fill($data);
         $rto->save();
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
         return $rto;
     }
 
@@ -237,6 +268,16 @@ class RegisteredTrainingOrganizationService
 
         $rto->fill($data);
         $rto->save();
+
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
+
         return $rto;
     }
 
@@ -267,7 +308,7 @@ class RegisteredTrainingOrganizationService
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-delete';
         $userPostField = [
-            'user_type' => BaseModel::INSTITUTE_USER_TYPE,
+            'user_type' => BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE,
             'registered_training_organization_id' => $rto->id,
         ];
 
@@ -287,6 +328,45 @@ class RegisteredTrainingOrganizationService
     }
 
     /**
+     * @param array $data
+     * @return PromiseInterface|\Illuminate\Http\Client\Response|array
+     * @throws RequestException
+     */
+    public function createUser(array $data): PromiseInterface|\Illuminate\Http\Client\Response|array
+    {
+        $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'admin-user-create';
+        $userPostField = [
+            'permission_sub_group_id' => $data['permission_sub_group_id'],
+            'user_type' => BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE,
+            'registered_training_organization_id' => $data['registered_training_organization_id'],
+            'username' => $data['contact_person_mobile'],
+            'name_en' => $data['contact_person_name'],
+            'name' => $data['contact_person_name'],
+            'email' => $data['contact_person_email'],
+            'mobile' => $data['contact_person_mobile'],
+        ];
+
+        return Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug')
+        ])
+            ->timeout(5)
+            ->post($url, $userPostField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json();
+    }
+
+    public function userInfoSendBySMS(string $recipient, string $message)
+    {
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
+    }
+
+    /**
      * @param Request $request
      * @param int|null $id
      * @return Validator
@@ -301,18 +381,55 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['mobile_numbers'])) {
             $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
         }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $data["rto_occupation_exceptions"] = isset($data['rto_occupation_exceptions']) && is_array($data['rto_occupation_exceptions']) ? $data['rto_occupation_exceptions'] : explode(',', $data['rto_occupation_exceptions']);
+        }
+        if (!empty($data['rto_sector_exceptions'])) {
+            $data["rto_sector_exceptions"] = isset($data['rto_sector_exceptions']) && is_array($data['rto_sector_exceptions']) ? $data['rto_sector_exceptions'] : explode(',', $data['rto_sector_exceptions']);
+        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         $rules = [
+            'rto_sector_exceptions' => [
+                'nullable',
+                'array',
+            ],
+            'rto_sector_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_sector_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_sectors,id,deleted_at,NULL',
+            ],
+            'rto_occupation_exceptions' => [
+                'array',
+                'nullable',
+            ],
+            'rto_occupation_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_occupation_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
             'permission_sub_group_id' => [
                 Rule::requiredIf(function () use ($id) {
                     return is_null($id);
                 }),
                 'nullable',
                 'int'
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL'
+            ],
+            "code" => [
+                'string',
+                'required'
             ],
             'title' => [
                 'required',
@@ -328,7 +445,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:countries,id,deleted_at,NULL'
+                'exists:rto_countries,country_id'
             ],
             'loc_division_id' => [
                 'required',
@@ -496,6 +613,8 @@ class RegisteredTrainingOrganizationService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
+            'institute_id' => 'nullable|min:1',
+            'country_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [

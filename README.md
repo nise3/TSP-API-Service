@@ -1,7 +1,7 @@
 # NISE3 Institute Management API Service
 
 ```shell
-RELEASE = 'php artisan migrate:fresh --seed'
+RELEASE = 'php artisan list'
 ```
 ## Official Documentation
  
@@ -12,4 +12,8 @@ RELEASE = 'php artisan migrate:fresh --seed'
 ## License
  Softbd LTD
 
--
+## RabbitMQ consume command
+```shell
+php artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q,institute.db.sync.q
+```
+

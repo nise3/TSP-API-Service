@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
@@ -27,8 +26,6 @@ use Throwable;
  */
 class InstituteService
 {
-    public TrainingCenterService $trainingCenterService;
-
     /**
      * @param array $request
      * @param Carbon $startTime
@@ -40,6 +37,7 @@ class InstituteService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
+        $serviceType = $request['service_type'] ?? BaseModel::ONLY_TRAINING;
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -47,6 +45,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -92,6 +91,9 @@ class InstituteService
             'institutes.deleted_at',
         ]);
 
+        if (!empty($serviceType)){
+            $instituteBuilder->where('institutes.service_type',$serviceType);
+        }
         $instituteBuilder->orderBy('institutes.id', $order);
 
         $instituteBuilder->leftJoin('loc_divisions', function ($join) {
@@ -153,6 +155,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -483,6 +486,7 @@ class InstituteService
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title',
+            'institutes.service_type',
             'institutes.code',
             'institutes.logo',
             'institutes.primary_phone',
@@ -572,6 +576,11 @@ class InstituteService
             "institute_type_id" => [
                 "required",
                 "int"
+            ],
+            'service_type' => [
+                'required',
+                'int',
+                Rule::in(BaseModel::SERVICE_TYPES)
             ],
             'title' => [
                 'required',
@@ -980,6 +989,10 @@ class InstituteService
             "institute_type_id" => [
                 "nullable",
                 "int"
+            ],
+            'service_type' => [
+                'nullable',
+                'int'
             ],
             'order' => [
                 'string',

@@ -31,11 +31,16 @@ trait ScopeAcl
                     $query = $query->where($tableName . '.branch_id', $authUser->branch_id);
                 }
             }
-
-            $query->where($tableName . '.institute_id', $authUser->institute_id);
+            if (Schema::hasColumn($tableName, 'institute_id')) {
+                $query->where($tableName . '.institute_id', $authUser->institute_id);
+            }
         } else if ($authUser && $authUser->isIndustryAssociationUser()) { // industry association user
             if (Schema::hasColumn($tableName, 'industry_association_id')) {
                 $query = $query->where($tableName . '.industry_association_id', $authUser->industry_association_id);
+            }
+        } else if ($authUser && $authUser->isRtoUser()) {  // RTO User
+            if (Schema::hasColumn($tableName, 'registered_training_organization_id')) {
+                $query = $query->where($tableName . '.registered_training_organization_id', $authUser->registered_training_organization_id);
             }
         }
 

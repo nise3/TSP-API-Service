@@ -17,7 +17,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_institute');
+        return $authUser->hasPermission('view_any_institute') || $authUser->hasPermission('view_any_certificate_authority');
     }
 
     /**
@@ -29,7 +29,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function view(User $authUser, Institute $institute): bool
     {
-        return $authUser->hasPermission('view_single_institute');
+        return $authUser->hasPermission('view_single_institute') || $authUser->hasPermission('view_single_certificate_authority');
     }
 
     /**
@@ -39,7 +39,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_institute');
+        return $authUser->hasPermission('create_institute') || $authUser->hasPermission('create_certificate_authority');
     }
 
     /**
@@ -51,7 +51,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function update(User $authUser, Institute $institute): bool
     {
-        return $authUser->hasPermission('update_institute');
+        return $authUser->hasPermission('update_institute') || $authUser->hasPermission('update_certificate_authority');
     }
 
     /**
@@ -62,7 +62,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function delete(User $authUser, Institute $institute): bool
     {
-        return $authUser->hasPermission('delete_institute');
+        return $authUser->hasPermission('delete_institute') || $authUser->hasPermission('delete_certificate_authority');
     }
 
 
@@ -73,7 +73,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function viewProfile(User $authUser, Institute $institute): bool
     {
-        return $authUser->hasPermission('view_institute_profile');
+        return $authUser->hasPermission('view_institute_profile') || $authUser->hasPermission('view_certificate_authority_profile');;
     }
 
     /**
@@ -83,7 +83,7 @@ class InstitutePolicy extends BasePolicy
      */
     public function updateProfile(User $authUser, Institute $institute): bool
     {
-        return $authUser->hasPermission('update_institute_profile');
+        return $authUser->hasPermission('update_institute_profile') || $authUser->hasPermission('update_certificate_authority_profile');
 
     }
 }

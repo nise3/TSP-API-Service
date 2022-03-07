@@ -10,6 +10,7 @@ use App\Models\Course;
 use App\Models\Institute;
 use App\Models\InvoicePessimisticLocking;
 use App\Models\MerchantCodePessimisticLocking;
+use App\Models\RegisteredTrainingOrganization;
 use App\Models\SSPPessimisticLocking;
 use App\Models\TrainingCenter;
 use App\Models\User;
@@ -56,6 +57,45 @@ class CodeGeneratorService
             }
             DB::commit();
             return $sspCode;
+        } catch (Throwable $throwable) {
+            DB::rollBack();
+            throw $throwable;
+        }
+
+    }
+
+    /**
+     * @return string
+     * @throws Throwable
+     */
+    public static function getRTOCode(): string
+    {
+        DB::beginTransaction();
+        try {
+            /** @var SSPPessimisticLocking $existingRTOCode */
+            $existingRTOCode = SSPPessimisticLocking::lockForUpdate()->first();
+            $lastIncrementalVal = !empty($existingRTOCode) && $existingRTOCode->last_incremental_value ? $existingRTOCode->last_incremental_value : 0;
+            $lastIncrementalVal = $lastIncrementalVal + 1;
+            $padSize = RegisteredTrainingOrganization::RTO_CODE_LENGTH - strlen((string)$lastIncrementalVal);
+
+            /**
+             * Prefix+000000N. Ex: RTO0000001
+             */
+            $rtoCode = str_pad(RegisteredTrainingOrganization::RTO_CODE_PREFIX, $padSize, '0', STR_PAD_RIGHT) . $lastIncrementalVal;
+
+            /**
+             * Code Update
+             */
+            if ($existingRTOCode) {
+                $existingRTOCode->last_incremental_value = $lastIncrementalVal;
+                $existingRTOCode->save();
+            } else {
+                SSPPessimisticLocking::create([
+                    "last_incremental_value" => $lastIncrementalVal
+                ]);
+            }
+            DB::commit();
+            return $rtoCode;
         } catch (Throwable $throwable) {
             DB::rollBack();
             throw $throwable;
@@ -237,8 +277,10 @@ class CodeGeneratorService
 
     private static function getCode(string $model, int $id = null): array
     {
+
         /** @var User $authUser */
         $authUser = Auth::user();
+        $parentEntity = null;
         if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $queryAttribute = "industry_association_id";
             $queryAttributeValue = $id ?? $authUser->industry_association_id;
@@ -246,17 +288,28 @@ class CodeGeneratorService
         } else if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
             $queryAttribute = "institute_id";
             $queryAttributeValue = $id ?? $authUser->institute_id;
-            $parentEntity = Institute::findOrFail($queryAttributeValue);
+            $parentEntity = Institute::findOrFail($queryAttributeValue)->code;
         } else {
-            $queryAttribute = request()->get('institute_id') ? "institute_id" : "industry_association_id";
-            $queryAttributeValue = request()->get('institute_id') ?? request()->get('industry_association_id');
-            $parentEntity = Institute::findOrFail($queryAttributeValue);
+
+            $queryAttributeValueForInstitute = $id ?? request()->get('institute_id');
+            $queryAttributeValueForIndustryAssociation = $id ?? request()->get('industry_association_id');
+
+            $queryAttribute = $queryAttributeValueForInstitute ? "institute_id" : "industry_association_id";
+            $queryAttributeValue = $queryAttributeValueForInstitute ?? $queryAttributeValueForIndustryAssociation;
+
+            if (!empty($queryAttributeValueForInstitute)) {
+                $parentEntity = Institute::findOrFail($queryAttributeValue)->code;
+            } elseif (!empty($queryAttributeValueForIndustryAssociation)) {
+                $parentEntity = ServiceToServiceCall::getIndustryAssociationCode($queryAttributeValue);
+            }
+
         }
 
         $existingCode = $model::where($queryAttribute, $queryAttributeValue)->withTrashed()->orderBy("id", "DESC")->first();
-        Log::info('ssp-id.' . $id);
+
+        Log::info('Attribute Id in time of code generate.' . $id . " existingCode: " . $existingCode);
         return [
-            $parentEntity->code ?? "",
+            $parentEntity,
             $existingCode
         ];
     }
