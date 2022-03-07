@@ -82,11 +82,10 @@ class AssessmentQuestionController extends Controller
         $this->assessmentQuestionService->store($validated);
 
         $response = [
-
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Question Bank added successfully",
+                "message" => "Assessment Question  added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
