@@ -30,7 +30,11 @@ class YouthAssessmentService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
-        $rplSectorId = $request['rpl_occupation_id'] ?? "";
+        $assessmentId = $request['assessment_id'] ?? "";
+        $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $rplLevelId = $request['rpl_level_id'] ?? "";
+        $rplSectorId = $request['rpl_sector_id'] ?? "";
+        $rtoBatchId = $request['rto_batch_id'] ?? "";
 
         /** @var YouthAssessment|Builder $youthAssessmentBuilder */
         $youthAssessmentBuilder = YouthAssessment::select([
@@ -108,8 +112,20 @@ class YouthAssessmentService
         if (!empty($title)) {
             $youthAssessmentBuilder->where('youth_assessments.title', 'like', '%' . $title . '%');
         }
+        if (!empty($rplassessmentId)) {
+            $youthAssessmentBuilder->where('youth_assessments.assessment_id', $assessmentId);
+        }
+        if (!empty($rplOccupationId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rpl_occupation_id', $rplOccupationId);
+        }
+        if (!empty($rplLevelId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rpl_level_id', $rplLevelId);
+        }
         if (!empty($rplSectorId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rpl_occupation_id', $rplSectorId);
+            $youthAssessmentBuilder->where('youth_assessments.rpl_sector_id', $rplSectorId);
+        }
+        if (!empty($rtoBatchId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rto_batch_id', $rtoBatchId);
         }
 
         /** @var Collection $youthAssessments */
@@ -407,6 +423,10 @@ class YouthAssessmentService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'assessment_id' => 'nullable|int',
+            'rpl_occupation_id' => 'nullable|int',
+            'rpl_level_id' => 'nullable|int',
+            'rpl_sector_id' => 'nullable|int',
+            'rto_batch_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
