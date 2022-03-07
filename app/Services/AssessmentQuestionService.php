@@ -124,7 +124,6 @@ class AssessmentQuestionService
      */
     public function store(array $data)
     {
-
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
@@ -183,46 +182,6 @@ class AssessmentQuestionService
                 'int',
                 'exists:subjects,id,deleted_at,NULL'
             ],
-            'assessment_questions.*.option_1' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_1_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_2' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_2_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_3' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_3_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_4' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_4_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
             'assessment_questions.*.answer' => [
                 'required',
                 'int',
@@ -234,6 +193,50 @@ class AssessmentQuestionService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
+        foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            if($assessmentQuestion['type']==AssessmentQuestion::TYPE_MCQ){
+                $rules['assessment_questions.*.option_1']=[
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_1_en']=[
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_2']=[
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_2_en']=[
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_3']=[
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_3_en']=[
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_4']=[
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.*.option_4_en']=[
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+            }
+        }
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 
