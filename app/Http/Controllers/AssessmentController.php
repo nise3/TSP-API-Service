@@ -128,7 +128,7 @@ class AssessmentController extends Controller
     {
         $assessment = Assessment::findOrFail($id);
 
-        $this->authorize('update', Assessment::class);
+        $this->authorize('update', $assessment);
 
         $validated = $this->assessmentService->validator($request, $id)->validate();
         $data = $this->assessmentService->update($assessment, $validated);

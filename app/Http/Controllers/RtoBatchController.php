@@ -128,7 +128,7 @@ class RtoBatchController extends Controller
     {
         $rtoBatch = RtoBatch::findOrFail($id);
 
-        $this->authorize('update', RtoBatch::class);
+        $this->authorize('update', $rtoBatch);
 
         $validated = $this->rtoBatchService->validator($request, $id)->validate();
         $data = $this->rtoBatchService->update($rtoBatch, $validated);
