@@ -169,6 +169,8 @@ class RegisteredTrainingOrganizationService
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
             'registered_training_organizations.country_id',
+            'countries.title as country_title',
+            'countries.title_en as country_title_en',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'registered_training_organizations.loc_district_id',
@@ -223,9 +225,12 @@ class RegisteredTrainingOrganizationService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (is_numeric($id)) {
-            $registeredTrainingOrganizationBuilder->where('registered_training_organizations.id', $id);
-        }
+        $registeredTrainingOrganizationBuilder->leftJoin('countries', function ($join){
+            $join->on('countries.id', '=', 'registered_training_organizations.country_id')
+                ->whereNull('countries.deleted_at');
+        });
+
+        $registeredTrainingOrganizationBuilder->where('registered_training_organizations.id', $id);
 
         return $registeredTrainingOrganizationBuilder->firstOrFail();
     }
