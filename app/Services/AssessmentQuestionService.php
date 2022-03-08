@@ -129,7 +129,7 @@ class AssessmentQuestionService
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
-            unset($assessmentQuestionData['id']);
+            unset($assessmentQuestionData['id'],$assessmentQuestionData['difficulty_level'],$assessmentQuestionData['deleted_at'],);
             $assessmentQuestion = app(AssessmentQuestion::class);
             $assessmentQuestion->fill($assessmentQuestionData);
             $assessmentQuestion->save();
