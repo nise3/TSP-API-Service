@@ -259,7 +259,7 @@ class YouthAssessmentService
             'assessment_questions.question_id',
             'assessment_questions.answer',
         ];
-        $assessment = Assessment::select(['assessment.passing_score'])->where('id', $assessmentId)->first();
+        $assessment = Assessment::select(['assessments.passing_score'])->where('id', $assessmentId)->first();
         $assessmentQs = AssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
         $questions = [];
         foreach ($assessmentQs as $ques) {
