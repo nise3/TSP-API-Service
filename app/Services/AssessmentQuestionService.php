@@ -146,7 +146,6 @@ class AssessmentQuestionService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
-        Log::info("Assessment Data: " . json_encode($data));
 
         $rules = [
             'assessment_questions' => [
@@ -199,7 +198,9 @@ class AssessmentQuestionService
             ],
         ];
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            Log::info("Inside assessment_questions foreach");
             if ($assessmentQuestion['type'] == AssessmentQuestion::TYPE_MCQ) {
+                Log::info("Inside TYPE_MCQ");
                 $rules['assessment_questions.*.option_1'] = [
                     'required',
                     'string',
