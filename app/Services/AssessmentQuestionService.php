@@ -197,51 +197,54 @@ class AssessmentQuestionService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
+
+        $index = 0;
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             Log::info("Inside assessment_questions foreach");
             if ($assessmentQuestion['type'] == AssessmentQuestion::TYPE_MCQ) {
                 Log::info("Inside TYPE_MCQ");
-                $rules['assessment_questions.*.option_1'] = [
+                $rules['assessment_questions' . $index . 'option_1'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_1_en'] = [
+                $rules['assessment_questions' . $index . 'option_1_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_2'] = [
+                $rules['assessment_questions' . $index . 'option_2'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_2_en'] = [
+                $rules['assessment_questions' . $index . 'option_2_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_3'] = [
+                $rules['assessment_questions' . $index . 'option_3'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_3_en'] = [
+                $rules['assessment_questions' . $index . 'option_3_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_4'] = [
+                $rules['assessment_questions' . $index . 'option_4'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_4_en'] = [
+                $rules['assessment_questions' . $index . 'option_4_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
             }
+            ++$index;
         }
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
