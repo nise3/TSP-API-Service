@@ -125,10 +125,10 @@ class AssessmentQuestionService
     public function store(array $data)
     {
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
-            unset($assessmentQuestion['id']);
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
+            unset($assessmentQuestionData['id']);
             $assessmentQuestion = app(AssessmentQuestion::class);
             $assessmentQuestion->fill($assessmentQuestionData);
             $assessmentQuestion->save();
