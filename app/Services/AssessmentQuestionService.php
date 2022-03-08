@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -145,6 +146,7 @@ class AssessmentQuestionService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
+        Log::info("Assessment Data: " . json_encode($data));
 
         $rules = [
             'assessment_questions' => [
