@@ -125,6 +125,7 @@ class AssessmentQuestionService
     public function store(array $data)
     {
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            unset($assessmentQuestion['id']);
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
@@ -196,43 +197,43 @@ class AssessmentQuestionService
             ],
         ];
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
-            if($assessmentQuestion['type']==AssessmentQuestion::TYPE_MCQ){
-                $rules['assessment_questions.*.option_1']=[
+            if ($assessmentQuestion['type'] == AssessmentQuestion::TYPE_MCQ) {
+                $rules['assessment_questions.*.option_1'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_1_en']=[
+                $rules['assessment_questions.*.option_1_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_2']=[
+                $rules['assessment_questions.*.option_2'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_2_en']=[
+                $rules['assessment_questions.*.option_2_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_3']=[
+                $rules['assessment_questions.*.option_3'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_3_en']=[
+                $rules['assessment_questions.*.option_3_en'] = [
                     'nullable',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_4']=[
+                $rules['assessment_questions.*.option_4'] = [
                     'required',
                     'string',
                     'max:600'
                 ];
-                $rules['assessment_questions.*.option_4_en']=[
+                $rules['assessment_questions.*.option_4_en'] = [
                     'nullable',
                     'string',
                     'max:600'
