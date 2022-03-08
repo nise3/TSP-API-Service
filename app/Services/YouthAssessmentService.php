@@ -245,13 +245,14 @@ class YouthAssessmentService
     }
 
     /**
+     * @param YouthAssessment $youthAssessment
      * @param array $data
      * @return YouthAssessment
      */
     public function updateResult(YouthAssessment $youthAssessment, array $data): YouthAssessment
     {
         $correct = 0;
-        $assessmentId = $data['$assessment_id'];
+        $assessmentId = $data['assessment_id'];
         $answers = $data['answers'];
         $columns = [
             'assessment_questions.assessment_id',
