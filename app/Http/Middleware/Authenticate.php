@@ -51,10 +51,14 @@ class Authenticate
             /** if auth user institute then set institute id for all private request */
             /** @var User $authUser */
             $authUser = Auth::user();
-            if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
+            if ($authUser->isInstituteUser()) {
                 $request->offsetSet('institute_id', $authUser->institute_id);
-            } elseif ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id) {
+            } else if ($authUser->isOrganizationUser()) {
+                $request->offsetSet('organization_id', $authUser->organization_id);
+            } else if ($authUser->isIndustryAssociationUser()) {
                 $request->offsetSet('industry_association_id', $authUser->industry_association_id);
+            } else if ($authUser->isRtoUser()) {
+                $request->offsetSet('registered_training_organization_id', $authUser->registered_training_organization_id);
             }
 
         }

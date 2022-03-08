@@ -6,7 +6,6 @@ use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 use Exception;
 use PDOException;

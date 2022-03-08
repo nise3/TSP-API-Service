@@ -401,20 +401,31 @@ class BatchService
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
+        /** @var User $authUser */
         $authUser = Auth::user();
 
         $rules = [
             'institute_id' => [
-                Rule::requiredIf(function () use ($authUser) {
-                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                Rule::requiredIf(function () use ($authUser, $request) {
+                    if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('industry_association_id'))) {
+                        return true;
+                    }
+                    return false;
                 }),
                 "nullable",
                 "exists:institutes,id,deleted_at,NULL",
                 "int"
             ],
             'industry_association_id' => [
-                Rule::requiredIf(function () use ($authUser) {
-                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                Rule::requiredIf(function () use ($authUser, $request) {
+                    if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('institute_id'))) {
+                        return true;
+                    }
+                    return false;
                 }),
                 "nullable",
                 "int"

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\Scopes\ScopeAcl;
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -58,4 +59,20 @@ class Trainer extends BaseModel
         }
         return $originalData;
     }*/
+
+    /**
+     * @return BelongsToMany
+     */
+    public function institutes(): BelongsToMany
+    {
+        return $this->belongsToMany(Institute::class, 'institute_trainers', 'trainer_id', 'institute_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'trainer_skills', 'trainer_id', 'skill_id');
+    }
 }

@@ -29,6 +29,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('branches', 'BranchController')->render();
         $customRouter()->resourceRoute('trainers', 'TrainerController')->render();
         $customRouter()->resourceRoute('course-enrollments', 'CourseEnrollmentController')->render();
+        $customRouter()->resourceRoute('rto-countries', 'RtoCountryController')->render();
+        $customRouter()->resourceRoute('registered-training-organizations', 'RegisteredTrainingOrganizationController')->render();
+        $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
+        $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
+        $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
+
 
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
@@ -66,6 +72,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Course details with trainer */
         $router->get("courses/{id}", ["as" => "public.courses.course-details", "uses" => "CourseController@publicCourseDetails"]);
         $router->get("institutes", ["as" => "public.institutes", "uses" => "InstituteController@publicInstituteList"]);
+        $router->get("registered-training-organizations", ["as" => "public.registered-training-organizations", "uses" => "RegisteredTrainingOrganizationController@getPublicList"]);
         /** Course All batches / Active batches / Up-coming batches */
         $router->get('courses/{id}/training-centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getPublicBatchesByCourseId']);
 
@@ -75,6 +82,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
             $router->get('demanded-courses', ["as" => "public.institute.demanding-courses", "uses" => "InstituteStatisticsController@publicDemandingCourses"]);
+
             /** Single Institute Fetch  */
             $router->get("institute-details", ["as" => "public.institute.details", "uses" => "InstituteController@institutePublicDetails"]);
 
@@ -94,6 +102,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->group(['prefix' => 'service-to-service-call', 'as' => 'service-to-service-call'], function () use ($router) {
         /** Single Institute Fetch  */
         $router->get("institutes/{id}", ["as" => "service-to-service-call.institute", "uses" => "InstituteController@instituteDetails"]);
+
+        /** Single RTO Fetch  */
+        $router->get("registered-training-organizations/{id}", ["as" => "service-to-service-call.registered-training-organizations", "uses" => "RegisteredTrainingOrganizationController@rtoDetails"]);
 
         /** Youth feed statistics course data fetch */
         $router->get('youth-feed-statistics/{youthId}', ["as" => "courses.youth-feed-statistics", "uses" => "CourseController@youthFeedStatistics"]);

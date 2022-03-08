@@ -17,13 +17,11 @@ class BranchesTableSeeder extends Seeder
     public function run()
     {
 
-
         Schema::disableForeignKeyConstraints();
 
         DB::table('branches')->truncate();
 
         Schema::enableForeignKeyConstraints();
-
 
     }
 }

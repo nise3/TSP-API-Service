@@ -1,10 +1,10 @@
 variables:
 
   # app version, changing version will auto deploy the app to current version
-  devBuildImageVersion: "2.2.11"
+  devBuildImageVersion: "2.2.18"
 
   # always add prefix k- before production image version
-  prodBuildImageVersion: "2.2.13"
+  prodBuildImageVersion: "2.2.18"
 
   #app buil image
   imageRepository: "registry.nise.gov.bd/nise3-institute-management-api-service"
