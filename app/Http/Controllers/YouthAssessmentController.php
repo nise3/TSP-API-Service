@@ -121,8 +121,10 @@ class YouthAssessmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int $id
+     * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -155,7 +157,7 @@ class YouthAssessmentController extends Controller
     {
         $youthAssessment = YouthAssessment::findOrFail($id);
 
-        $this->authorize('update', YouthAssessment::class);
+        $this->authorize('update', $youthAssessment);
 
         $validated = $this->youthAssessmentService->assignToBatchValidator($request, $id)->validate();
         $data = $this->youthAssessmentService->update($youthAssessment, $validated);
