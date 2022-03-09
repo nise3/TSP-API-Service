@@ -29,7 +29,7 @@ use PHPUnit\Util\Json;
  */
 class PaymentTransactionHistory extends BaseModel
 {
-    protected $guarded=BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
 
     /** Payment Status */
     public const PAYMENT_SUCCESS = 1;
@@ -42,13 +42,15 @@ class PaymentTransactionHistory extends BaseModel
     public const SSLCOMMERZ_LABEL = "ssl_commerz";
     public const DBBL_MOBILE_BANKING = "dbbl_mobile_banking";
     public const BKASH = "bkash";
+    public const NAGAD = "nagad";
     public const PORT_WALLET = "port_wallet";
 
     public const PAYMENT_GATEWAY_EK_PAY = 1;
     public const PAYMENT_GATEWAY_SSLCOMMERZ = 2;
     public const PAYMENT_GATEWAY_DBBL_MOBILE_BANKING = 3;
     public const PAYMENT_GATEWAY_BKASH = 4;
-    public const PAYMENT_GATEWAY_PORT_WALLET = 5;
+    public const PAYMENT_GATEWAY_NAGAD = 5;
+    public const PAYMENT_GATEWAY_PORT_WALLET = 6;
 
     public const PAYMENT_GATEWAYS = [
         self::EK_PAY_LABEL => self::PAYMENT_GATEWAY_EK_PAY,
