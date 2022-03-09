@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,6 +29,8 @@ class AssessmentQuestionService
     public function getAssessmentQuestionList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $assessmentId = $request['assessment_id'] ?? "";
         $rplLevelId = $request['rpl_level_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
         $title = $request['title'] ?? "";
@@ -123,12 +126,14 @@ class AssessmentQuestionService
      */
     public function store(array $data)
     {
-
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
-        foreach ($data['assessment_questions'] as $assessmentQuestion) {
-            AssessmentQuestion::insert($assessmentQuestion);
+        foreach ($data['assessment_questions'] as $assessmentQuestionData) {
+            unset($assessmentQuestionData['id'], $assessmentQuestionData['difficulty_level'], $assessmentQuestionData['deleted_at'],);
+            $assessmentQuestion = app(AssessmentQuestion::class);
+            $assessmentQuestion->fill($assessmentQuestionData);
+            $assessmentQuestion->save();
         }
 
 
@@ -187,46 +192,6 @@ class AssessmentQuestionService
                 'int',
                 'exists:subjects,id,deleted_at,NULL'
             ],
-            'assessment_questions.*.option_1' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_1_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_2' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_2_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_3' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_3_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
-            'assessment_questions.*.option_4' => [
-                'requiredIf:assessment_questions.*.type ,' . AssessmentQuestion::TYPE_MCQ,
-                'string',
-                'max:600'
-            ],
-            'assessment_questions.*.option_4_en' => [
-                'nullable',
-                'string',
-                'max:300'
-            ],
             'assessment_questions.*.answer' => [
                 'required',
                 'int',
@@ -238,6 +203,55 @@ class AssessmentQuestionService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
+
+        $index = 0;
+        foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            Log::info("Inside assessment_questions foreach");
+            if ($assessmentQuestion['type'] == AssessmentQuestion::TYPE_MCQ) {
+                Log::info("Inside TYPE_MCQ");
+                $rules['assessment_questions.' . $index . '.option_1'] = [
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_1_en'] = [
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_2'] = [
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_2_en'] = [
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_3'] = [
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_3_en'] = [
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_4'] = [
+                    'required',
+                    'string',
+                    'max:600'
+                ];
+                $rules['assessment_questions.' . $index . '.option_4_en'] = [
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+            }
+            ++$index;
+        }
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
 
@@ -261,6 +275,7 @@ class AssessmentQuestionService
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'assessment_id' => 'integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -291,6 +306,7 @@ class AssessmentQuestionService
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'assessment_id' => 'integer|gt:0',
             'rpl_level_id' => [
                 'int',
                 'required',

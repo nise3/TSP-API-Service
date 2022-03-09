@@ -19,6 +19,7 @@ class CreateAssessmentsTable extends Migration
             $table->string('title_en', 300)->nullable();
             $table->unsignedInteger('rpl_level_id');
             $table->unsignedInteger('rpl_occupation_id');
+            $table->unsignedInteger('passing_score')->comment('percentage passing score')->default('1');
             $table->softDeletes();
             $table->timestamps();
         });

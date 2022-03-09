@@ -38,6 +38,7 @@ class AssessmentService
             'assessments.title',
             'assessments.title_en',
             'assessments.assessment_fee',
+            'assessments.passing_score',
 
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -124,6 +125,7 @@ class AssessmentService
             'assessments.id',
             'assessments.title',
             'assessments.title_en',
+            'assessments.passing_score',
             'assessments.assessment_fee',
 
             'assessments.rpl_occupation_id',
@@ -233,6 +235,12 @@ class AssessmentService
                         return $query->where('assessments.rpl_occupation_id', $data['rpl_occupation_id']);
                     }),
                 'exists:rpl_levels,id,deleted_at,NULL',
+            ],
+            'passing_score' => [
+                'required',
+                'int',
+                'min:1',
+                'max:100',
             ],
             'assessment_fee' => [
                 'required',

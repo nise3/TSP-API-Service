@@ -46,7 +46,7 @@ class AssessmentQuestionController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBank::class);
+        $this->authorize('viewAny', AssessmentQuestion::class);
         $filter = $this->assessmentQuestionService->filterValidator($request)->validate();
 
         $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime);
@@ -77,16 +77,15 @@ class AssessmentQuestionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', QuestionBank::class);
+        $this->authorize('create', AssessmentQuestion::class);
         $validated = $this->assessmentQuestionService->validator($request)->validate();
         $this->assessmentQuestionService->store($validated);
 
         $response = [
-
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Question Bank added successfully",
+                "message" => "Assessment Question  added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];

@@ -39,6 +39,8 @@ class QuestionBankService
             'question_banks.title_en',
             'question_banks.type',
             'question_banks.subject_id',
+            'subjects.title as subject_title',
+            'subjects.title_en as subject_title_en',
             'question_banks.option_1',
             'question_banks.option_1_en',
             'question_banks.option_2',
@@ -60,6 +62,11 @@ class QuestionBankService
         }
 
         $questionBankBuilder->orderBy('question_banks.id', $order);
+
+        $questionBankBuilder->join('subjects', function ($join) {
+            $join->on('question_banks.subject_id', '=', 'subjects.id')
+                ->whereNull('subjects.deleted_at');
+        });
 
         if (!empty($titleEn)) {
             $questionBankBuilder->where('question_banks.title_en', 'like', '%' . $titleEn . '%');
@@ -108,6 +115,8 @@ class QuestionBankService
             'question_banks.title_en',
             'question_banks.type',
             'question_banks.subject_id',
+            'subjects.title as subject_title',
+            'subjects.title_en as subject_title_en',
             'question_banks.option_1',
             'question_banks.option_1_en',
             'question_banks.option_2',
@@ -123,10 +132,12 @@ class QuestionBankService
             'question_banks.updated_at',
             'question_banks.deleted_at',
         ]);
+        $questionBankBuilder->join('subjects', function ($join) {
+            $join->on('question_banks.subject_id', '=', 'subjects.id')
+                ->whereNull('subjects.deleted_at');
+        });
 
-        if (is_numeric($id)) {
-            $questionBankBuilder->where('question_banks.id', $id);
-        }
+        $questionBankBuilder->where('question_banks.id', $id);
 
         return $questionBankBuilder->firstOrFail();
     }
@@ -205,7 +216,7 @@ class QuestionBankService
             ],
             'option_2' => [
                 Rule::requiredIf(!empty($data['type'] && $data['type'] == QuestionBank::TYPE_MCQ)),
-                'required',
+                'nullable',
                 'string',
                 'max:600'
             ],

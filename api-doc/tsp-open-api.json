@@ -4778,7 +4778,9 @@
 
         "/rto-countries": {
             "get": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Get all Rto countries",
                 "description": "API endpoint to Get all Rto countries . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -4827,7 +4829,9 @@
                 }
             },
             "post": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Create  Rto countries",
                 "description": "API endpoint to Create Rto countries . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -4860,7 +4864,9 @@
         },
         "/public/rto-countries": {
             "get": {
-                "tags": ["Rto Countries"],
+                "tags": [
+                    "Rto Countries"
+                ],
                 "summary": "Get all public Rto countries",
                 "description": "API endpoint to Get all public Rto countries . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -4909,6 +4915,304 @@
                 }
             }
         },
+
+        "/rto-batches": {
+            "get": {
+                "tags": ["Rto Batch"],
+                "summary": "Get all Rto Batches",
+                "description": "API endpoint to Get all Rto Batches . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rto_batch_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "AugmentedReality",
+                                            "title_en": "AugmentedReality",
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_sector_id": 1,
+                                            "rpl_sector_title_en": "aaa",
+                                            "rpl_sector_title": "aaaa",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "created_at": "2022-03-07T03:52:37.000000Z",
+                                            "updated_at": "2022-03-07T03:52:37.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "title": "Slim shady",
+                                            "title_en": "Lumberjack",
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_sector_id": 1,
+                                            "rpl_sector_title_en": "aaa",
+                                            "rpl_sector_title": "aaaa",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "created_at": "2022-03-07T03:53:43.000000Z",
+                                            "updated_at": "2022-03-07T03:53:43.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Rto Batch"],
+                "summary": "Create  Rto Batch",
+                "description": "API endpoint to Create  Rto Batch . A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/rtoBatches"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "Slim shady",
+                                        "title_en": "Lumberjack",
+                                        "institute_id": 1,
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "assessor_id": "1",
+                                        "updated_at": "2022-03-07T03:53:43.000000Z",
+                                        "created_at": "2022-03-07T03:53:43.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "RTO batch added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rto-batches/{rtoBatchId}": {
+            "get": {
+                "tags": ["Rto Batch"],
+                "summary": "Get a Rto Batch",
+                "description": "API endpoint to Get a Rto Batches . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoBatchId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Slim shady",
+                                        "title_en": "Lumberjack",
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "created_at": "2022-03-07T03:53:43.000000Z",
+                                        "updated_at": "2022-03-07T03:53:43.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": ["Rto Batch"],
+                "summary": "Update an Rto Batch",
+                "description": "API endpoint to update an Rto Batches . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoBatchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/rtoBatches"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Slim shady",
+                                        "title_en": "Lumberjack",
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "created_at": "2022-03-07T03:53:43.000000Z",
+                                        "updated_at": "2022-03-07T03:53:43.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["Rto Batch"],
+                "summary": "Delete an Rto Batch",
+                "description": "API endpoint to delete an Rto Batches . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoBatchId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "RTO batch deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rto-batches/{rtoBatchId}/assign-assessor": {
+            "post": {
+                "tags": ["Rto Batch"],
+                "summary": "Assign an assessor",
+                "description": "API endpoint to Assign an assessor . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rtoBatchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assignAssessor"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "AugmentedReality",
+                                        "title_en": "AugmentedReality",
+                                        "institute_id": 1,
+                                        "rpl_level_id": 1,
+                                        "rpl_occupation_id": 1,
+                                        "assessor_id": "1",
+                                        "certification_status": 0,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-07T03:52:37.000000Z",
+                                        "updated_at": "2022-03-07T03:52:37.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Assessor assigned successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+
+
 
         "/rpl-sectors": {
             "post": {
@@ -5396,7 +5700,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 2,
                                         "rpl_sector_id": 1,
@@ -5599,7 +5903,6 @@
                 }
             }
         },
-
         "/rpl-occupations": {
             "get": {
                 "tags": [
@@ -5687,7 +5990,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "rpl_sector_id": "1",
                                         "title": "Uzumaki Barrage",
@@ -5916,7 +6219,6 @@
                 }
             }
         },
-
         "/subjects": {
             "get": {
                 "tags": [
@@ -5949,7 +6251,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
@@ -6139,10 +6441,11 @@
                 }
             }
         },
-
         "/registered-training-organizations": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6231,7 +6534,9 @@
                 }
             },
             "post": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -6248,7 +6553,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
@@ -6283,7 +6588,9 @@
         },
         "/public/registered-training-organizations": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get all public registered training organizations",
                 "description": "API endpoint to Get all public registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -7492,7 +7799,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "RPL Occupation added successfully",
+                                        "message": "Youth assessment added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -7533,23 +7840,41 @@
                         "content": {
                             "application/json": {
                                 "example":{
-                                    "data": {
-                                        "rpl_sector_id": "1",
-                                        "rpl_occupation_id": "1",
-                                        "rpl_level_id": "1",
-                                        "youth_id": "1",
-                                        "assessment_id": "2",
-                                        "target_country_id": "1",
-                                        "rto_country_id": "1",
-                                        "rto_id": "1",
-                                        "updated_at": "2022-03-03T11:43:20.000000Z",
-                                        "created_at": "2022-03-03T11:43:20.000000Z",
-                                        "id": 1
-                                    },
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "assessment_id": 2,
+                                            "rto_batch_id": 1,
+                                            "result": null,
+                                            "score": null,
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "rpl_sector_id": 1,
+                                            "rpl_sector_title_en": "aaa",
+                                            "rpl_sector_title": "aaaa",
+                                            "rto_country_id": 2,
+                                            "rto_country_title_en": "Åland Islands",
+                                            "rto_country_title": "Åland Islands",
+                                            "target_country_id": 1,
+                                            "target_country_title_en": "Afghanistan",
+                                            "target_country_title": "Afghanistan",
+                                            "rto_id": 1,
+                                            "rto_title_en": "BabyLolAmONTEZZ",
+                                            "rto_title": "BabyLolAmONTEZZ",
+                                            "created_at": "2022-03-03T11:43:20.000000Z",
+                                            "updated_at": "2022-03-07T04:32:21.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "RPL Occupation added successfully",
+                                        "code": 200,
                                         "query_time": 0
                                     }
                                 }
@@ -7663,7 +7988,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "RPL Occupation updated successfully.",
+                                        "message": "Youth assessment updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -7701,6 +8026,295 @@
                     }
                 }
             }
+        },
+        "/assessment-questions": {
+            "get": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Assessment Question List",
+                "description": "API endpoint to Get Assessment Question List. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "assessment_id": 1,
+                                            "assessment_title": "assessment1",
+                                            "assessment_title_en": "assessment1",
+                                            "question_id": 1,
+                                            "question_title": "abc",
+                                            "question_title_en": "abc",
+                                            "title": "question1",
+                                            "title_en": "question1",
+                                            "type": 1,
+                                            "subject_id": 1,
+                                            "option_1": "a",
+                                            "option_1_en": "a",
+                                            "option_2": "b",
+                                            "option_2_en": "b",
+                                            "option_3": "c",
+                                            "option_3_en": "c",
+                                            "option_4": "d",
+                                            "option_4_en": "d",
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-07T05:21:38.000000Z",
+                                            "updated_at": "2022-03-07T05:21:41.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Store Assessment Question ",
+                "description": "API endpoint to Store Assessment Question List. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssessmentQuestion"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "message":"Assessment Questions  added successfully",
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/assessment-questions": {
+            "get": {
+                "tags": [
+                    "Assessment Question"
+                ],
+                "summary": "Assessment Question Public List",
+                "description": "API endpoint to Get Assessment Question Public List. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    },{
+                        "$ref": "#/components/parameters/rpl_level_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/rpl_occupation_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "assessment_id": 1,
+                                            "assessment_title": "assessment1",
+                                            "assessment_title_en": "assessment1",
+                                            "question_id": 1,
+                                            "question_title": "abc",
+                                            "question_title_en": "abc",
+                                            "title": "question1",
+                                            "title_en": "question1",
+                                            "type": 1,
+                                            "subject_id": 1,
+                                            "option_1": "a",
+                                            "option_1_en": "a",
+                                            "option_2": "b",
+                                            "option_2_en": "b",
+                                            "option_3": "c",
+                                            "option_3_en": "c",
+                                            "option_4": "d",
+                                            "option_4_en": "d",
+                                            "answer": 1,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-07T05:21:38.000000Z",
+                                            "updated_at": "2022-03-07T05:21:41.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+        },
+        "/youth-assessment/{youthAssessmentId}/assign-to-batch": {
+            "post": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Assign to batch",
+                "description": "API endpoint to Assign to batch. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youthAssessmentId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assignToBatch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "rpl_sector_id": 1,
+                                        "rpl_occupation_id": 1,
+                                        "rpl_level_id": 1,
+                                        "youth_id": 1,
+                                        "assessment_id": 2,
+                                        "target_country_id": 1,
+                                        "rto_country_id": 2,
+                                        "rto_id": 1,
+                                        "rto_batch_id": "1",
+                                        "result": null,
+                                        "score": null,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-07T04:32:21.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Youth assessment assigned to batch successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/youth-assessment": {
+            "post": {
+                "tags": [
+                    "Youth Assessment"
+                ],
+                "summary": "Create a public youth assessment",
+                "description": "API endpoint to Create public a youth assessment. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth assessment added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -7712,6 +8326,59 @@
             }
         },
         "schemas": {
+            "assignAssessor": {
+                "type": "object",
+                "properties": {
+                    "assessor_id": {
+                        "type": "integer",
+                        "description": "Must exist in trainers table"
+                    }
+                },
+                "required": [
+                    "required"
+                ]
+            },
+            "assignToBatch": {
+                "type": "object",
+                "properties": {
+                    "rto_batch_id": {
+                        "type": "integer",
+                        "description": "Must exist in rto_batches table"
+                    }
+                }
+            },
+            "rtoBatches": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "rpl_occupation_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_occupations table"
+                    },
+                    "rpl_level_id": {
+                        "type": "integer",
+                        "description": "Must exist in rpl_levels table "
+                    },
+                    "assessor_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "title",
+                    "institute_id",
+                    "rpl_occupation_id",
+                    "rpl_level_id"
+                ]
+            },
             "YouthAssessment": {
                 "type": "object",
                 "properties": {
@@ -7829,11 +8496,14 @@
                         "type": "string"
                     },
                     "answer": {
-                       "type": "integer"
-                   },
+                        "type": "integer"
+                    },
                     "row_status": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "1=>Active 2=>Inactive"
                     }
                 },
@@ -7846,8 +8516,16 @@
                     "option_3",
                     "option_4",
                     "answer"
-
                 ]
+            },
+            "AssessmentQuestion": {
+                "type": "object",
+                "properties": {
+                    "assessment_questions": {
+                        "type": "object",
+                        "example": "[\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=2',\n            'subject_id=1',\n            'option_1=a',\n            'option_1_en=b',\n            'option_2=b',\n            'option_2_en=b',\n            'option_3=c',\n            'option_3_en=c',\n            'option_4=d',\n            'option_4_en=d',\n            'answer=1',\n            'row_status=1',\n\n\t],\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=1',\n            'answer=1',\n            'row_status=1',\n\t]\n\n]"
+                    }
+                }
             },
             "subject": {
                 "type": "object",
@@ -7860,10 +8538,12 @@
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "Required when updating. 1=>Active 2=>Inactive"
                     }
-
                 },
                 "required": [
                     "title"
@@ -7884,7 +8564,7 @@
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     }
                 },
                 "required": [
@@ -7906,17 +8586,16 @@
                     "title": {
                         "type": "string"
                     },
-                    "title_en":{
+                    "title_en": {
                         "type": "string"
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     },
                     "sequence_order": {
                         "type": "integer"
                     }
-
                 },
                 "required": [
                     "rpl_sector_id",
@@ -7936,7 +8615,7 @@
                     },
                     "translations": {
                         "type": "object",
-                        "example":"[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
+                        "example": "[\n\"0\"=>[\n    \"title\" => \"New Samoa\"\t  \t\n   ],\n\"1\"=>[\n    \"title\" => \"Old Samoa\"\t  \t\n   ]\n\n]"
                     }
                 },
                 "required": [
@@ -7949,6 +8628,18 @@
                     "permission_sub_group_id": {
                         "type": "integer",
                         "description": "Required if id = null"
+                    },
+                    "rto_occupation_exceptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "rto_sector_exceptions": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     },
                     "title": {
                         "type": "string"
@@ -8048,7 +8739,13 @@
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [0,1,2,3,4],
+                        "enum": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4
+                        ],
                         "description": "INACTIVE = 0;ACTIVE = 1;PENDING = 2;REJECTED = 3;FAILED = 4 . Required when id != null"
                     }
                 },
@@ -8084,14 +8781,23 @@
                 "properties": {
                     "payment_gateway_type": {
                         "type": "integer",
-                        "enum": [1,2,3,4,5],
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
                         "description": "1=Ek-Pay"
                     },
                     "course_enrollment_id": {
                         "type": "integer"
                     }
                 },
-                "required": ["payment_gateway_type","course_enrollment_id"]
+                "required": [
+                    "payment_gateway_type",
+                    "course_enrollment_id"
+                ]
             },
             "batchAssign": {
                 "type": "object",
@@ -9587,7 +10293,7 @@
                     "type": "integer"
                 }
             },
-            "rpl_occupation_id": {
+            "rpl_occupation_id_optional": {
                 "name": "rpl_occupation_id",
                 "in": "query",
                 "required": false,
@@ -9813,6 +10519,23 @@
                     "type": "string"
                 }
             },
+            "rpl_level_id": {
+                "in": "query",
+                "required": true,
+                "name": "rpl_level_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "rpl_occupation_id": {
+                "in": "query",
+                "required": true,
+                "name": "rpl_occupation_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -9987,7 +10710,7 @@
             "subjectId": {
                 "name": "subjectId",
                 "required": true,
-                "in": "query",
+                "in": "path",
                 "schema": {
                     "type": "integer"
                 }
@@ -10167,7 +10890,7 @@
                 }
             },
             "rplSectorId_q": {
-                "name": "rplSectorId",
+                "name": "rpl_sector_id",
                 "in": "query",
                 "description": "rplSectorId",
                 "required": false,
@@ -10183,6 +10906,22 @@
                 "schema": {
                     "type": "integer",
                     "example": "1"
+                }
+            },
+            "rto_batch_id": {
+                "name": "rto_batch_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "rtoBatchId": {
+                "name": "rtoBatchId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "rtoId": {

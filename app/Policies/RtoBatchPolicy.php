@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\RplSector;
+use App\Models\RtoBatch;
 use App\Models\User;
 
 class RtoBatchPolicy
@@ -22,10 +22,10 @@ class RtoBatchPolicy
      * Determine whether the user can view the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param RtoBatch $rtoBatch
      * @return mixed
      */
-    public function view(User $authUser, RplSector $rplSector): bool
+    public function view(User $authUser, RtoBatch $rtoBatch): bool
     {
         return $authUser->hasPermission('view_single_rto_batch');
     }
@@ -45,10 +45,10 @@ class RtoBatchPolicy
      * Determine whether the user can update the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param RtoBatch $rtoBatch
      * @return mixed
      */
-    public function update(User $authUser, RplSector $rplSector): bool
+    public function update(User $authUser, RtoBatch $rtoBatch): bool
     {
         return $authUser->hasPermission('update_rto_batch');
     }
@@ -57,10 +57,10 @@ class RtoBatchPolicy
      * Determine whether the user can delete the Rpl Sector.
      *
      * @param User $authUser
-     * @param RplSector $rplSector
+     * @param RtoBatch $rtoBatch
      * @return mixed
      */
-    public function delete(User $authUser, RplSector $rplSector): bool
+    public function delete(User $authUser, RtoBatch $rtoBatch): bool
     {
         return $authUser->hasPermission('delete_rto_batch');
     }

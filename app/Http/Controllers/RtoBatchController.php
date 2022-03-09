@@ -128,7 +128,7 @@ class RtoBatchController extends Controller
     {
         $rtoBatch = RtoBatch::findOrFail($id);
 
-        $this->authorize('update', RtoBatch::class);
+        $this->authorize('update', $rtoBatch);
 
         $validated = $this->rtoBatchService->validator($request, $id)->validate();
         $data = $this->rtoBatchService->update($rtoBatch, $validated);
@@ -181,7 +181,7 @@ class RtoBatchController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $rtoBatch = RplOccupation::findOrFail($id);
+        $rtoBatch = RtoBatch::findOrFail($id);
 
         $this->authorize('delete', $rtoBatch);
 
