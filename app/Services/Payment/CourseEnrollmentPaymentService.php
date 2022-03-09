@@ -118,7 +118,7 @@ class CourseEnrollmentPaymentService
             $to = array($courseEnroll->email);
             $from = BaseModel::NISE3_FROM_EMAIL;
             $subject = "Course Enrollment Information";
-            $message = "Congratulation, You are successfully enrolled in " . $courseEnroll->course->title . ". You are assigned in any batch later.";
+            $message = "Congratulation, You are successfully enrolled in " . $courseEnroll->course->title . ". You will be assigned in a batch later on.";
             $messageBody = MailService::templateView($message);
             $mailService = new MailService($to, $from, $subject, $messageBody);
             $mailService->sendMail();
