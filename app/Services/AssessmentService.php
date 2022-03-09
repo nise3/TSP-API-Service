@@ -90,20 +90,20 @@ class AssessmentService
             $assessmentBuilder->where('assessments.rpl_level_id', $rplLevelId);
         }
 
-        /** @var Collection $assessmentes */
+        /** @var Collection $assessments */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $assessmentes = $assessmentBuilder->paginate($pageSize);
-            $paginateData = (object)$assessmentes->toArray();
+            $assessments = $assessmentBuilder->paginate($pageSize);
+            $paginateData = (object)$assessments->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $assessmentes = $assessmentBuilder->get();
+            $assessments = $assessmentBuilder->get();
         }
         $response['order'] = $order;
-        $response['data'] = $assessmentes->toArray()['data'] ?? $assessmentes->toArray();
+        $response['data'] = $assessments->toArray()['data'] ?? $assessments->toArray();
 
         $response['_response_status'] = [
             "success" => true,
@@ -143,9 +143,7 @@ class AssessmentService
             'assessments.deleted_at',
         ]);
 
-        if (is_numeric($id)) {
-            $assessmentBuilder->where('assessments.id', $id);
-        }
+        $assessmentBuilder->where('assessments.id', $id);
 
         $assessmentBuilder->join('rpl_occupations', function ($join){
             $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
