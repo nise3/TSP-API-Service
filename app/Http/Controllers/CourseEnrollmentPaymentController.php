@@ -67,42 +67,6 @@ class CourseEnrollmentPaymentController extends Controller
         return Response::json($response, $statusCode);
     }
 
-    public function ekPayPaymentSuccess(Request $request): JsonResponse
-    {
-        $response = [
-            "_response_status" => [
-                "status" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Success"
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-    }
-
-    public function ekPayPaymentFail(Request $request): JsonResponse
-    {
-        $response = [
-            "_response_status" => [
-                "status" => false,
-                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Payment Failed"
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
-    public function ekPayPaymentCancel(Request $request): JsonResponse
-    {
-        $response = [
-            "_response_status" => [
-                "status" => false,
-                "code" => ResponseAlias::HTTP_UNPROCESSABLE_ENTITY,
-                "message" => "Payment Cancel"
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
-    }
-
     /**
      * @throws Throwable
      */
@@ -138,8 +102,6 @@ class CourseEnrollmentPaymentController extends Controller
 
                     if ($paymentStatus == PaymentTransactionHistory::PAYMENT_SUCCESS) {
                         $paymentHistoryPayload = $payment->toArray();
-                        $paymentHistoryPayload['payment_purpose_related_id'] = $courseEnroll->id;
-                        $paymentHistoryPayload['customer_identity_code'] = $courseEnroll->youth_code;
                         $paymentHistoryPayload['customer_name'] = $courseEnroll->first_name . " " . $courseEnroll->last_name;
                         $paymentHistoryPayload['customer_email'] = $courseEnroll->email;
                         $paymentHistoryPayload['customer_mobile'] = $courseEnroll->mobile;
@@ -149,9 +111,9 @@ class CourseEnrollmentPaymentController extends Controller
                         $paymentHistory->save();
                         $payment->payment_transaction_history_id = $paymentHistory->id;
                         $payment->save();
-                    }
 
-                    $this->courseEnrollmentPaymentService->confirmationMailAndSmsSend($courseEnroll);
+                        $this->courseEnrollmentPaymentService->confirmationMailAndSmsSend($courseEnroll);
+                    }
 
                     DB::commit();
                 }

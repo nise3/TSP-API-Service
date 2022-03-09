@@ -2,6 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Facade\ServiceToServiceCall;
 use App\Helpers\Classes\CustomRouter;
 
 $customRouter = function (string $as = '') use ($router) {
@@ -95,6 +96,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
         $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
+
         $router->post("youth-assessment", ["as" => "public.youth-assessment", "uses" => "YouthAssessmentController@store"]);
 
 
@@ -152,10 +154,15 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->group(["prefix" => "course-enrollment", "as" => "course-enrollment"], function () use ($router) {
         $router->post('payment-by-ek-pay/pay-now', ["as" => "payment-by-ek-pay.pay-now", "uses" => "CourseEnrollmentPaymentController@payNowByEkPay"]);
-        $router->get('payment-by-ek-pay/success', ["as" => "payment-by-ek-pay.success", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentSuccess"]);
-        $router->get('payment-by-ek-pay/failed', ["as" => "payment-by-ek-pay.fail", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentFail"]);
-        $router->get('payment-by-ek-pay/cancel', ["as" => "payment-by-ek-pay.cancel", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentCancel"]);
         $router->post('payment-by-ek-pay/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentIpnHandler"]);
     });
+
+    $router->group(["prefix" => "youth-assessment-certification/payment", "as" => "youth-assessment-certification.payment"], function () use ($router) {
+        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "YouthAssessmentCertificationPaymentController@paymentViaEkPay"]);
+        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "YouthAssessmentCertificationPaymentController@ipnHandler"]);
+    });
+
 });
+
+
 
