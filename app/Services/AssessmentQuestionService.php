@@ -41,6 +41,7 @@ class AssessmentQuestionService
             'assessments.title as assessment_title',
             'assessments.title_en as assessment_title_en',
             'assessment_questions.assessment_id',
+            'assessment_questions.assessment_question_set_id',
             'assessment_questions.question_id',
             'question_banks.title as question_title',
             'question_banks.title_en as question_title_en',
@@ -86,9 +87,9 @@ class AssessmentQuestionService
         if($isPublicApi){
             $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplLevelId);
             $assessmentQuestionBuilder->where('assessments.rpl_occupation_id',$rplOccupationId);
-            $assessmentIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_id')->toArray();
-            $randomAssessmentId = $assessmentIds[array_rand($assessmentIds)];
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_id',$randomAssessmentId);
+            $assessmentSetIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_question_set_id')->toArray();
+            $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id',$randomAssessmentSetId);
 
         }
 
@@ -155,6 +156,11 @@ class AssessmentQuestionService
                 'min:1',
             ],
             'assessment_questions.*.assessment_id' => [
+                'required',
+                'int',
+                'exists:assessments,id,deleted_at,NULL',
+            ],
+            'assessment_questions.*.assessment_question_set_id' => [
                 'required',
                 'int',
                 'exists:assessments,id,deleted_at,NULL',

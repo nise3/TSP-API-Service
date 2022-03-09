@@ -227,6 +227,11 @@ class AssessmentService
                 'required',
                 'int',
                 'min:1',
+                Rule::unique('assessments', 'rpl_level_id')
+                    ->ignore($id)
+                    ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
+                        return $query->where('assessments.rpl_occupation_id', $data['rpl_occupation_id']);
+                    }),
                 'exists:rpl_levels,id,deleted_at,NULL',
             ],
             'assessment_fee' => [
