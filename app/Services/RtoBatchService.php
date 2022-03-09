@@ -50,6 +50,10 @@ class RtoBatchService
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
+            'rto_batches.institute_id',
+            'institutes.title_en as institutes_title_en',
+            'institutes.title as institutes_title',
+
             'rto_batches.created_at',
             'rto_batches.updated_at',
             'rto_batches.deleted_at',
@@ -70,6 +74,11 @@ class RtoBatchService
         $rtoBatchBuilder->join('rpl_levels', function ($join){
             $join->on('rto_batches.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
+        });
+
+        $rtoBatchBuilder->join('institutes', function ($join){
+            $join->on('rto_batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
         });
 
         if (!empty($titleEn)) {
@@ -135,6 +144,10 @@ class RtoBatchService
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
+            'rto_batches.institute_id',
+            'institutes.title_en as institutes_title_en',
+            'institutes.title as institutes_title',
+
             'rto_batches.created_at',
             'rto_batches.updated_at',
             'rto_batches.deleted_at',
@@ -157,6 +170,11 @@ class RtoBatchService
         $rtoBatchBuilder->join('rpl_levels', function ($join){
             $join->on('rto_batches.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
+        });
+
+        $rtoBatchBuilder->join('institutes', function ($join){
+            $join->on('rto_batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
         });
 
         return $rtoBatchBuilder->firstOrFail();

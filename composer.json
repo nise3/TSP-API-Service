@@ -1,10 +1,10 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "nise/ssp-api-service",
+    "description": "SSP API Service",
     "keywords": [
-        "framework",
-        "laravel",
-        "lumen"
+        "nise",
+        "SSP",
+        "API"
     ],
     "license": "MIT",
     "type": "project",

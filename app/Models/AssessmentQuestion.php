@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AssessmentQuestion extends BaseModel
 {
     use ScopeRowStatusTrait;
-
     /**
      * @var string[]
      */
-    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $guarded = [];
     public const TYPE_MCQ =  1;
     public const TYPE_YES_NO =  2;
 

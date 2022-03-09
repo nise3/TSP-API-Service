@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Models\Assessment;
 use App\Models\AssessmentQuestion;
 use App\Models\BaseModel;
 use App\Models\YouthAssessment;
@@ -29,7 +30,11 @@ class YouthAssessmentService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
-        $rplSectorId = $request['rpl_occupation_id'] ?? "";
+        $assessmentId = $request['assessment_id'] ?? "";
+        $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $rplLevelId = $request['rpl_level_id'] ?? "";
+        $rplSectorId = $request['rpl_sector_id'] ?? "";
+        $rtoBatchId = $request['rto_batch_id'] ?? "";
 
         /** @var YouthAssessment|Builder $youthAssessmentBuilder */
         $youthAssessmentBuilder = YouthAssessment::select([
@@ -107,8 +112,20 @@ class YouthAssessmentService
         if (!empty($title)) {
             $youthAssessmentBuilder->where('youth_assessments.title', 'like', '%' . $title . '%');
         }
+        if (!empty($rplassessmentId)) {
+            $youthAssessmentBuilder->where('youth_assessments.assessment_id', $assessmentId);
+        }
+        if (!empty($rplOccupationId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rpl_occupation_id', $rplOccupationId);
+        }
+        if (!empty($rplLevelId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rpl_level_id', $rplLevelId);
+        }
         if (!empty($rplSectorId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rpl_occupation_id', $rplSectorId);
+            $youthAssessmentBuilder->where('youth_assessments.rpl_sector_id', $rplSectorId);
+        }
+        if (!empty($rtoBatchId)) {
+            $youthAssessmentBuilder->where('youth_assessments.rto_batch_id', $rtoBatchId);
         }
 
         /** @var Collection $youthAssessments */
@@ -228,19 +245,21 @@ class YouthAssessmentService
     }
 
     /**
+     * @param YouthAssessment $youthAssessment
      * @param array $data
      * @return YouthAssessment
      */
     public function updateResult(YouthAssessment $youthAssessment, array $data): YouthAssessment
     {
         $correct = 0;
-        $assessmentId = $data['$assessment_id'];
+        $assessmentId = $data['assessment_id'];
         $answers = $data['answers'];
         $columns = [
             'assessment_questions.assessment_id',
             'assessment_questions.question_id',
             'assessment_questions.answer',
         ];
+        $assessment = Assessment::select(['assessments.passing_score'])->where('id', $assessmentId)->first();
         $assessmentQs = AssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
         $questions = [];
         foreach ($assessmentQs as $ques) {
@@ -251,9 +270,10 @@ class YouthAssessmentService
             $answer = $ans['answer'];
             $correct += ($questions[$qid] == $answer) ? 1 : 0;
         }
+        $score = ($correct / count($assessmentQs)) * 100;
         $update = [
-            'result' => $correct == count($assessmentQs) ? 1 : 0,
-            'score' => $correct / count($assessmentQs),
+            'result' => $score >= $assessment->passing_score ? 1 : 0,
+            'score' => $score,
         ];
         $youthAssessment->fill($update);
         $youthAssessment->save();
@@ -404,6 +424,10 @@ class YouthAssessmentService
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'assessment_id' => 'nullable|int',
+            'rpl_occupation_id' => 'nullable|int',
+            'rpl_level_id' => 'nullable|int',
+            'rpl_sector_id' => 'nullable|int',
+            'rto_batch_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
