@@ -93,8 +93,13 @@ class AssessmentQuestionService
             $assessmentSetIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_question_set_id')->toArray();
             $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
             $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id',$randomAssessmentSetId);
-
+        if (is_numeric($assessmentId)) {
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
         }
+        if (is_numeric($rowStatus)) {
+            $assessmentQuestionBuilder->where('assessment_questions.row_status', $rowStatus);
+        }
+
 
         /** @var Collection $assessmentQuestions */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
