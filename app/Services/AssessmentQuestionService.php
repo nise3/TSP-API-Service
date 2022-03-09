@@ -29,6 +29,8 @@ class AssessmentQuestionService
     public function getAssessmentQuestionList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $assessmentId = $request['assessment_id'] ?? "";
         $rplLevelId = $request['rpl_level_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
         $title = $request['title'] ?? "";
@@ -83,6 +85,12 @@ class AssessmentQuestionService
         if (!empty($title)) {
             $assessmentQuestionBuilder->where('assessment_questions.title', 'like', '%' . $title . '%');
         }
+        if (is_numeric($assessmentId)) {
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
+        }
+        if (is_numeric($rowStatus)) {
+            $assessmentQuestionBuilder->where('assessment_questions.row_status', $rowStatus);
+        }
         if ($isPublicApi) {
             $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplLevelId);
             $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplOccupationId);
@@ -129,7 +137,7 @@ class AssessmentQuestionService
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
-            unset($assessmentQuestionData['id'],$assessmentQuestionData['difficulty_level'],$assessmentQuestionData['deleted_at'],);
+            unset($assessmentQuestionData['id'], $assessmentQuestionData['difficulty_level'], $assessmentQuestionData['deleted_at'],);
             $assessmentQuestion = app(AssessmentQuestion::class);
             $assessmentQuestion->fill($assessmentQuestionData);
             $assessmentQuestion->save();
@@ -269,6 +277,7 @@ class AssessmentQuestionService
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'assessment_id' => 'integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -299,6 +308,7 @@ class AssessmentQuestionService
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'assessment_id' => 'integer|gt:0',
             'rpl_level_id' => [
                 'int',
                 'required',
