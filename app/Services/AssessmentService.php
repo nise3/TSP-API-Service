@@ -37,6 +37,7 @@ class AssessmentService
             'assessments.id',
             'assessments.title',
             'assessments.title_en',
+            'assessments.assessment_fee',
 
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -49,6 +50,7 @@ class AssessmentService
             'assessments.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
+
 
             'assessments.created_at',
             'assessments.updated_at',
@@ -122,6 +124,7 @@ class AssessmentService
             'assessments.id',
             'assessments.title',
             'assessments.title_en',
+            'assessments.assessment_fee',
 
             'assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -227,6 +230,10 @@ class AssessmentService
                 'int',
                 'min:1',
                 'exists:rpl_levels,id,deleted_at,NULL',
+            ],
+            'assessment_fee' => [
+                'required',
+                'numeric'
             ],
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);

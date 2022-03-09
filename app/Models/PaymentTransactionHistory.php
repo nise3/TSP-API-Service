@@ -29,7 +29,7 @@ use PHPUnit\Util\Json;
  */
 class PaymentTransactionHistory extends BaseModel
 {
-    protected $guarded=BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
 
     /** Payment Status */
     public const PAYMENT_SUCCESS = 1;
@@ -59,11 +59,15 @@ class PaymentTransactionHistory extends BaseModel
     ];
 
     /** Payment purpose code */
-    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_CODE = 1;
-    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL = "Course Enrollment";
+    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT = "COURSE_ENROLLMENT_PAYMENT";
+    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL = "Course Enrollment Payment";
+
+    public const PAYMENT_PURPOSE_E_RPL_CERTIFICATION_FREE = "E_RPL_CERTIFICATION_FREE";
+    public const PAYMENT_PURPOSE_E_RPL_CERTIFICATION_FREE_LABEL = "eRPL Certification Fee";
 
     public const PAYMENT_PURPOSES = [
-        self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_CODE => self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL
+        self::PAYMENT_PURPOSE_COURSE_ENROLLMENT => self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL,
+        self::PAYMENT_PURPOSE_E_RPL_CERTIFICATION_FREE => self::PAYMENT_PURPOSE_E_RPL_CERTIFICATION_FREE_LABEL
     ];
 
     public const PAYMENT_TYPE_COURSE_ENROLLMENT = 1;

@@ -2,25 +2,16 @@
 
 namespace App\Services\Payment;
 
-
 use App\Models\BaseModel;
-use App\Models\Course;
-use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
-use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
-use Carbon\Carbon;
-use Faker\Provider\Uuid;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Validation\Rule;
-use Throwable;
 
-class CourseEnrollmentPaymentService
+class RplPaymentService
 {
-
     /**
      * @throws Throwable
      */
@@ -87,16 +78,11 @@ class CourseEnrollmentPaymentService
         return app(PaymentService::class)->paymentProcessing($ekPayPayload, PaymentTransactionHistory::PAYMENT_GATEWAY_EK_PAY);
     }
 
-    public function isNotSMSVerified(array $data): bool
-    {
-        return (bool)CourseEnrollment::where('id', $data['course_enrollment_id'])->whereNull('verification_code_verified_at')->count();
-    }
-
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return Validator
      */
-    public function ekPayPaymentValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function ekPayPaymentValidator(Request $request): Validator
     {
         $rules = [
             "payment_gateway_type" => [

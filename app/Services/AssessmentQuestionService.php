@@ -85,7 +85,7 @@ class AssessmentQuestionService
         }
         if($isPublicApi){
             $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplLevelId);
-            $assessmentQuestionBuilder->where('assessments.rpl_level_id',$rplOccupationId);
+            $assessmentQuestionBuilder->where('assessments.rpl_occupation_id',$rplOccupationId);
             $assessmentIds =  $assessmentQuestionBuilder->pluck('assessment_questions.assessment_id')->toArray();
             $randomAssessmentId = $assessmentIds[array_rand($assessmentIds)];
             $assessmentQuestionBuilder->where('assessment_questions.assessment_id',$randomAssessmentId);
