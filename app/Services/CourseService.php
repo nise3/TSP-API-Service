@@ -853,6 +853,126 @@ class CourseService
         return $response;
     }
 
+    /**
+     * @param array $data
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getYouthFeedCourses(array $data, Carbon $startTime): array
+    {
+        $curDate = Carbon::now()->format('Y-m-d');
+        $dayPrevious = Carbon::now()->subDays(30)->format('Y-m-d');
+        $youthId = $data['youth_id'] ?? "";
+
+        /** @var Course|Builder $coursesBuilder */
+        $coursesBuilder = Course::select(
+            [
+                'courses.id',
+                'courses.code',
+                'courses.title_en',
+                'courses.title',
+                'courses.institute_id',
+                'courses.industry_association_id',
+                'institutes.title as institute_title',
+                'institutes.title_en as institute_title_en',
+                'institutes.logo',
+                'courses.program_id',
+                'programs.title as program_title',
+                'programs.title_en as program_title_en',
+                'courses.course_fee',
+                'courses.duration',
+                'courses.overview',
+                'courses.overview_en',
+                'courses.target_group',
+                'courses.target_group_en',
+                'courses.prerequisite',
+                'courses.prerequisite_en',
+                'courses.eligibility',
+                'courses.eligibility_en',
+                'courses.cover_image',
+                'courses.row_status',
+                'courses.created_by',
+                'courses.updated_by',
+                'courses.created_at',
+                'courses.updated_at',
+                'courses.deleted_at',
+                'courses.created_at as feed_sort_date',
+                DB::raw('COUNT(distinct course_enrollments.id) as total_enroll')
+            ]
+        );
+
+        $coursesBuilder->leftJoin("institutes", function ($join) {
+            $join->on('courses.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
+        $coursesBuilder->leftJoin("programs", function ($join) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
+        });
+
+        $coursesBuilder->leftJoin("course_enrollments", "courses.id", "=", "course_enrollments.course_id");
+        $coursesBuilder->leftJoin("batches", "courses.id", "=", "batches.course_id");
+
+
+        $coursesBuilder->whereBetween('batches.registration_start_date', [$dayPrevious, $curDate]);
+        $coursesBuilder->whereDate('batches.registration_end_date', '>=', $curDate);
+        $coursesBuilder->whereNull('batches.deleted_at');
+
+        $coursesBuilder->selectRaw("1 as feed_item_type");
+
+        $coursesBuilder->groupBy("courses.id");
+        $coursesBuilder->orderByDesc('total_enroll');
+
+        /** @var Collection $courses */
+        $courses = $coursesBuilder->get();
+
+
+        /** Set course already enrolled OR not for youth. Also set payment_status & verified fields if youth enrolled in a course */
+        if (is_numeric($youthId)) {
+            $courseIds = $courses->pluck('id')->toArray();
+            if (count($courseIds) > 0) {
+                /** @var CourseEnrollment|Builder $youthEnrolledCourseIds */
+                $youthEnrolledCourses = CourseEnrollment::whereIn('course_id', $courseIds)
+                    ->where('youth_id', $youthId)
+                    ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
+                    ->withoutGlobalScope(SagaStatusGlobalScope::class)
+                    ->get();
+
+                $youthEnrolledCourseIds = $youthEnrolledCourses->pluck('course_id')->toArray();
+                $youthEnrolledCourseGroupByCourseIds = $youthEnrolledCourses->groupBy('course_id');
+
+                foreach ($courses as $course) {
+                    $course['enrolled'] = (bool)in_array($course->id, $youthEnrolledCourseIds);
+                    $course['payment_status'] = !empty($course['enrolled']) && (bool)$youthEnrolledCourseGroupByCourseIds[$course->id][0]['payment_status'];
+                    $course['verified'] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['verification_code_verified_at']);
+                    $course["enrollment_id"] = !empty($course['enrolled']) && !empty($youthEnrolledCourseGroupByCourseIds[$course->id][0]['id']) ? $youthEnrolledCourseGroupByCourseIds[$course->id][0]['id'] : null;
+                }
+            }
+        }
+
+        /** Set enrollable field in course */
+        /** @var $batchBuilder $batchBuilder */
+        $onGoingRegCourseIds = Batch::where(function ($builder) use ($curDate) {
+            $builder->whereDate('batches.registration_start_date', '<=', $curDate);
+            $builder->whereDate('batches.registration_end_date', '>=', $curDate);
+        })->pluck('course_id')->toArray();
+
+        foreach ($courses as $course) {
+            $course['enrollable'] = (bool)in_array($course->id, $onGoingRegCourseIds);
+        }
+
+
+        $response['data'] = $courses->toArray()['data'] ?? $courses->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
+
     private function assignSkills(Course $course, array $skills)
     {
         /** Assign skills to COURSE */
