@@ -21,7 +21,7 @@ class CreatePaymentTransactionHistoriesTable extends Migration
             $table->unsignedInteger('payment_purpose_related_id');
             $table->unsignedTinyInteger('payment_purpose_code');
             $table->unsignedTinyInteger('payment_gateway_type')
-                ->comment("1=Ek-Pay, 2=>SSLCOMMERZ, 2=> DBBL Mobile Banking, 3=>Bkash, 4=>PortWallet");
+                ->comment("1 => Ek-Pay, 2 => SSLCOMMERZ, 2 => DBBL Mobile Banking, 3 => Bkash, 4 => Nagad, 5 => PortWallet");
             $table->string('customer_identity_code');
             $table->string('customer_name', 500)->nullable();
             $table->string('customer_name_en', 250)->nullable();
