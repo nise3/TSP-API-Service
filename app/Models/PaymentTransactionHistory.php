@@ -57,6 +57,7 @@ class PaymentTransactionHistory extends BaseModel
         self::SSLCOMMERZ_LABEL => self::PAYMENT_GATEWAY_SSLCOMMERZ,
         self::DBBL_MOBILE_BANKING => self::PAYMENT_GATEWAY_DBBL_MOBILE_BANKING,
         self::BKASH => self::PAYMENT_GATEWAY_BKASH,
+        self::NAGAD => self::PAYMENT_GATEWAY_NAGAD,
         self::PORT_WALLET => self::PAYMENT_GATEWAY_PORT_WALLET
     ];
 
