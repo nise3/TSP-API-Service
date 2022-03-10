@@ -7798,7 +7798,7 @@
         "/assessment-question-sets": {
             "post": {
                 "tags": [
-                    "Assessment"
+                    "Assessment Question Set"
                 ],
                 "summary": "Create an assessment question set",
                 "description": "API endpoint to Create an assessment question set. A successful request response will show 200 HTTP status code",
@@ -7839,7 +7839,7 @@
             },
             "get": {
                 "tags": [
-                    "Assessment"
+                    "Assessment Question Set"
                 ],
                 "summary": "Get all assessment question sets",
                 "description": "API endpoint to Get all assessment question sets",
@@ -7912,7 +7912,7 @@
         "/assessment-question-sets/{assessmentQuestionSetId}": {
             "get": {
                 "tags": [
-                    "Assessment"
+                    "Assessment Question Set"
                 ],
                 "summary": "Get an assessment question sets",
                 "description": "API endpoint to Get an assessment question sets",
@@ -7954,7 +7954,7 @@
             },
             "put": {
                 "tags": [
-                    "Assessment"
+                    "Assessment Question Set"
                 ],
                 "summary": "Update an assessment question set",
                 "description": "API endpoint to Update an assessment question set",
@@ -8002,7 +8002,7 @@
             },
             "delete": {
                 "tags": [
-                    "Assessment"
+                    "Assessment Question Set"
                 ],
                 "summary": "Delete an assessment question set",
                 "description": "API endpoint to Delete an assessment question set",
