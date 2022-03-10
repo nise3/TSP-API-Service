@@ -37,9 +37,8 @@ class AssessmentQuestionSetService
             'assessment_question_sets.title_en',
             'assessment_question_sets.assessment_id',
 
-            'assessments.id',
-            'assessments.title as assessmentTitle',
-            'assessments.title_en as assessmentTitleEn',
+            'assessments.title as assessment_title',
+            'assessments.title_en as assessment_title_en',
             'assessments.assessment_fee',
             'assessments.passing_score',
 
@@ -103,8 +102,8 @@ class AssessmentQuestionSetService
             'assessment_question_sets.assessment_id',
 
             'assessments.id',
-            'assessments.title as assessmentTitle',
-            'assessments.title_en as assessmentTitleEn',
+            'assessments.title as assessment_title',
+            'assessments.title_en as assessment_title_en',
             'assessments.assessment_fee',
             'assessments.passing_score',
 
