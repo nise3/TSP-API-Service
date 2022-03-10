@@ -45,10 +45,9 @@ class RtoBatchPolicy
      * Determine whether the user can update the Rpl Sector.
      *
      * @param User $authUser
-     * @param RtoBatch $rtoBatch
      * @return mixed
      */
-    public function update(User $authUser, RtoBatch $rtoBatch): bool
+    public function update(User $authUser): bool
     {
         return $authUser->hasPermission('update_rto_batch');
     }
