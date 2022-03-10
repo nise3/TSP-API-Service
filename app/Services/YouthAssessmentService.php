@@ -500,6 +500,23 @@ class YouthAssessmentService
                 'string',
                 'nullable'
             ],
+//            'youth_details.education_info' => [
+//                'required',
+//                'array',
+//                'min:1'
+//            ],
+//            'youth_details.education_info.*' => [
+//                'nullable',
+//                'array',
+//            ],
+//            'youth_details.education_info.*.edu_board_id' => [
+//                'nullable',
+//                'array',
+//            ],
+//            'youth_details.education_info.*.edu_board_name' => [
+//                'nullable',
+//                'array',
+//            ],
             'rpl_sector_id' => [
                 'required',
                 'int',
