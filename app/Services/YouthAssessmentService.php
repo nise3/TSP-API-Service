@@ -195,9 +195,7 @@ class YouthAssessmentService
             'youth_assessments.deleted_at',
         ]);
 
-        if (is_numeric($id)) {
-            $youthAssessmentBuilder->where('youth_assessments.id', $id);
-        }
+        $youthAssessmentBuilder->where('youth_assessments.id', $id);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
             $join->on('youth_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
@@ -312,7 +310,7 @@ class YouthAssessmentService
 
         $rules = [
             'youth_details' => [
-                'required',
+                'nullable',
                 'array'
             ],
             'youth_details.registration_number' => [
@@ -320,33 +318,39 @@ class YouthAssessmentService
                 'string',
             ],
             'youth_details.first_name' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'string',
                 'max:300'
             ],
             'youth_details.last_name' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'string',
                 'max:300'
             ],
             'youth_details.first_name_en' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'string',
                 'max:150'
             ],
             'youth_details.last_name_en' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'string',
                 'max:150'
             ],
             "youth_details.date_of_birth" => [
-                "required",
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'date',
                 'date_format:Y-m-d',
                 'before:today'
             ],
             "youth_details.mobile" => [
-                "required",
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 "max:11",
                 BaseModel::MOBILE_REGEX,
             ],
@@ -370,23 +374,27 @@ class YouthAssessmentService
                 max:600"
             ],
             'youth_details.present_address' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'array',
             ],
             'youth_details.present_address.*.loc_division_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'integer',
             ],
             'youth_details.present_address.*.loc_district_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'integer',
             ],
             'youth_details.present_address.*.loc_upazila_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'integer',
             ],
             'youth_details.present_address.*.village_or_area' => [
-                'required',
+                'nullable',
                 'string',
                 'max:500',
                 'min:2'
@@ -410,30 +418,35 @@ class YouthAssessmentService
                 'min:2'
             ],
             'youth_details.present_address.*.zip_or_postal_code' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'string',
                 'max:5',
                 'min:4'
             ],
             'youth_details.permanent_address' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'array',
             ],
             'youth_details.permanent_address.*.loc_division_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'integer',
             ],
             'youth_details.permanent_address.*.loc_district_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'nullable',
                 'integer',
             ],
             'youth_details.permanent_address.*.loc_upazila_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
                 'integer',
             ],
             'youth_details.permanent_address .*. village_or_area' => [
-                'required',
+                'nullable',
                 'string',
                 'max:500',
                 'min:2'
@@ -483,7 +496,9 @@ class YouthAssessmentService
                 'string',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
-                })
+                }),
+                'nullable',
+
             ],
             'youth_details . job_responsibilities_en' => [
                 'string',
@@ -494,12 +509,31 @@ class YouthAssessmentService
                 'nullable',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
-                })
+                }),
+                'nullable',
+
             ],
             'youth_details . company_name_en' => [
                 'string',
                 'nullable'
             ],
+//            'youth_details.education_info' => [
+//                'required',
+//                'array',
+//                'min:1'
+//            ],
+//            'youth_details.education_info.*' => [
+//                'nullable',
+//                'array',
+//            ],
+//            'youth_details.education_info.*.edu_board_id' => [
+//                'nullable',
+//                'array',
+//            ],
+//            'youth_details.education_info.*.edu_board_name' => [
+//                'nullable',
+//                'array',
+//            ],
             'rpl_sector_id' => [
                 'required',
                 'int',
