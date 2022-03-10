@@ -4983,36 +4983,48 @@
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title": "AugmentedReality",
-                                            "title_en": "AugmentedReality",
-                                            "rpl_occupation_id": 1,
-                                            "rpl_occupation_title_en": "Newiee",
-                                            "rpl_occupation_title": "Newiee",
+                                            "title": "Dr Jones wake up now",
+                                            "title_en": "Lumberjack",
+                                            "rto_id": 1,
+                                            "rto_title": "Salamandar",
+                                            "rto_title_en": "Salamandar",
+                                            "assessment_date": "2020-09-09 00:00:00",
+                                            "rpl_occupation_title_en": "WhoRu",
+                                            "rpl_occupation_title": "WhoRu",
                                             "rpl_sector_id": 1,
-                                            "rpl_sector_title_en": "aaa",
-                                            "rpl_sector_title": "aaaa",
+                                            "rpl_sector_title_en": null,
+                                            "rpl_sector_title": "",
                                             "rpl_level_id": 1,
-                                            "rpl_level_title_en": "DoidoPunk",
-                                            "rpl_level_title": "Doido",
-                                            "created_at": "2022-03-07T03:52:37.000000Z",
-                                            "updated_at": "2022-03-07T03:52:37.000000Z",
+                                            "rpl_level_title_en": "ddd",
+                                            "rpl_level_title": "ddd",
+                                            "institute_id": 1,
+                                            "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                            "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                            "created_at": "2022-03-10T11:16:23.000000Z",
+                                            "updated_at": "2022-03-10T11:16:23.000000Z",
                                             "deleted_at": null
                                         },
                                         {
-                                            "id": 2,
-                                            "title": "Slim shady",
-                                            "title_en": "Lumberjack",
-                                            "rpl_occupation_id": 1,
-                                            "rpl_occupation_title_en": "Newiee",
-                                            "rpl_occupation_title": "Newiee",
+                                            "id": 3,
+                                            "title": "Picky Peckers",
+                                            "title_en": "Harmonia",
+                                            "rto_id": 1,
+                                            "rto_title": "Salamandar",
+                                            "rto_title_en": "Salamandar",
+                                            "assessment_date": "2020-09-09 00:00:00",
+                                            "rpl_occupation_title_en": "WhoRu",
+                                            "rpl_occupation_title": "WhoRu",
                                             "rpl_sector_id": 1,
-                                            "rpl_sector_title_en": "aaa",
-                                            "rpl_sector_title": "aaaa",
+                                            "rpl_sector_title_en": null,
+                                            "rpl_sector_title": "",
                                             "rpl_level_id": 1,
-                                            "rpl_level_title_en": "DoidoPunk",
-                                            "rpl_level_title": "Doido",
-                                            "created_at": "2022-03-07T03:53:43.000000Z",
-                                            "updated_at": "2022-03-07T03:53:43.000000Z",
+                                            "rpl_level_title_en": "ddd",
+                                            "rpl_level_title": "ddd",
+                                            "institute_id": 1,
+                                            "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                            "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                            "created_at": "2022-03-10T11:30:51.000000Z",
+                                            "updated_at": "2022-03-10T11:30:51.000000Z",
                                             "deleted_at": null
                                         }
                                     ],
@@ -5047,15 +5059,17 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
+                                        "title": "Picky Peckers",
+                                        "title_en": "Harmonia",
                                         "institute_id": 1,
                                         "rpl_occupation_id": "1",
                                         "rpl_level_id": "1",
                                         "assessor_id": "1",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "id": 2
+                                        "rto_id": "1",
+                                        "assessment_date": "2020-09-09",
+                                        "updated_at": "2022-03-10T11:30:51.000000Z",
+                                        "created_at": "2022-03-10T11:30:51.000000Z",
+                                        "id": 3
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -5087,20 +5101,27 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 2,
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
+                                        "id": 4,
+                                        "title": "FlatterMyKat",
+                                        "title_en": "Cry me a river",
+                                        "rto_id": 1,
+                                        "rto_title": "Salamandar",
+                                        "rto_title_en": "Salamandar",
+                                        "assessment_date": "2020-09-09 00:00:00",
                                         "rpl_occupation_id": 1,
-                                        "rpl_occupation_title_en": "Newiee",
-                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_occupation_title_en": "WhoRu",
+                                        "rpl_occupation_title": "WhoRu",
                                         "rpl_sector_id": 1,
-                                        "rpl_sector_title_en": "aaa",
-                                        "rpl_sector_title": "aaaa",
+                                        "rpl_sector_title_en": null,
+                                        "rpl_sector_title": "",
                                         "rpl_level_id": 1,
-                                        "rpl_level_title_en": "DoidoPunk",
-                                        "rpl_level_title": "Doido",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
+                                        "rpl_level_title_en": "ddd",
+                                        "rpl_level_title": "ddd",
+                                        "institute_id": 1,
+                                        "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                        "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                        "created_at": "2022-03-10T11:33:10.000000Z",
+                                        "updated_at": "2022-03-10T11:33:10.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -5139,25 +5160,24 @@
                             "application/json": {
                                 "example":{
                                     "data": {
-                                        "id": 2,
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
-                                        "rpl_occupation_id": 1,
-                                        "rpl_occupation_title_en": "Newiee",
-                                        "rpl_occupation_title": "Newiee",
-                                        "rpl_sector_id": 1,
-                                        "rpl_sector_title_en": "aaa",
-                                        "rpl_sector_title": "aaaa",
-                                        "rpl_level_id": 1,
-                                        "rpl_level_title_en": "DoidoPunk",
-                                        "rpl_level_title": "Doido",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
-                                        "deleted_at": null
+                                        "id": 4,
+                                        "title": "RunLolaRun",
+                                        "title_en": "WhisperInTheAir",
+                                        "institute_id": 1,
+                                        "rpl_level_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "assessor_id": "1",
+                                        "rto_id": "1",
+                                        "assessment_date": "2020-09-09",
+                                        "certification_status": 0,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-10T11:33:10.000000Z",
+                                        "updated_at": "2022-03-10T11:34:44.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
+                                        "message": "RTO batch updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8661,18 +8681,30 @@
                     },
                     "assessor_id": {
                         "type": "integer"
+                    },
+                    "rto_id": {
+                        "type": "integer",
+                        "description": "Must exist in registered_training_organization"
+                    },
+                    "assessment_date": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "title",
                     "institute_id",
                     "rpl_occupation_id",
-                    "rpl_level_id"
+                    "rpl_level_id",
+                    "rto_id"
                 ]
             },
             "YouthAssessment": {
                 "type": "object",
                 "properties": {
+                    "youth_details": {
+                        "type": "object",
+                        "example": "[\n\"registration_number\"=>\"123-AC/DC-123\"\n\"first_name\"=>\"Vito cORLEONE\"\n\"last_name\"=>\"jONAS gUETEREz\",\n\"first_name_en\"=>\"Don donaton\",\n\"last_name_en\"=>\"new messiah\",\n\"date_of_birth\"=>\"2020-09-09\",\n\"mobile\"=>\"01990090909\",\n\"identity_number_type\"=>2,\n\"identity_number\"=>3333,\n\"religion\"=>2,\n\"photo\"=>\"aasss\",\n\"present_address\"=>[\n\t\"loc_division_id\"=>1,\n\t\"loc_district_id\"=>2,\n\t\"loc_upazila_id\"=>2,\n\t\"village_or_area\"=>\"sting\",\n\t\"village_or_area_en\"=>\"kkk\",\n\t\"house_n_road\"=>\"yellow brick road\",\n\t\"house_n_road_en\"=>\"yellow brick road\",\n\t\"zip_or_postal_code\"=>\"1212\"\n\t],\n\"permanent_address\"=>[\n\t\"loc_division_id\"=>1,\n\t\"loc_district_id\"=>2,\n\t\"loc_upazila_id\"=>2,\n\t\"village_or_area\"=>\"sting\",\n\t\"village_or_area_en\"=>\"kkk\",\n\t\"house_n_road\"=>\"yellow brick road\",\n\t\"house_n_road_en\"=>\"yellow brick road\",\n\t\"zip_or_postal_code\"=>\"1212\"\n\t],\n\"guardian_name\"=>\"Bigg Daddy\",\n\"guardian_name_en\"=>\"Bigg Daddy\",\n\"is_youth_employed\"=>1,\n\"job_responsibilities\"=>\"No responsibility\",\n\"job_responsibilities_en\"=>\"No responsibility\",\n\"company_name\"=>\"HornTeK\",\n\"company_name_en\"=>\"Whistle\"\n]"
+                    },
                     "rpl_sector_id": {
                         "type": "integer",
                         "description": "Must exist in rpl_sectors table"
