@@ -56,6 +56,41 @@
                     "optional": true
                 }
             }
+        },
+        "/youth-assessment-certification/payment/payment-via-ek-pay/ipn-handler/{secretToken}": {
+            "post": {
+                "summary": "youth-assessment-certification",
+                "parameters": [
+                    {
+                        "name": "secretToken",
+                        "in": "path",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ],
+                "x-auth-type": "None",
+                "x-throttling-tier": null,
+                "x-wso2-disable-security": true,
+                "x-wso2-application-security": {
+                    "security-types": [
+                    ],
+                    "optional": true
+                }
+            }
         }
     },
     "components": {
