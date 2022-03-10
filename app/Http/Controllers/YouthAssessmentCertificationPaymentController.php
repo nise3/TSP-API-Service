@@ -84,7 +84,7 @@ class YouthAssessmentCertificationPaymentController extends Controller
                     $youthAssessment->save();
 
                     if ($paymentStatus == PaymentTransactionHistory::PAYMENT_SUCCESS) {
-                        $youth = ServiceToServiceCall::getYouthProfilesByIds([$youthAssessment->youth_id]);
+                        $youth = ServiceToServiceCall::getYouthProfilesByIds([$youthAssessment->youth_id])[0];
                         $paymentHistoryPayload = $payment->toArray();
                         $paymentHistoryPayload['customer_name'] = $youth['first_name'] . " " . $youth['last_name'];
                         $paymentHistoryPayload['customer_email'] = $youth['email'];
