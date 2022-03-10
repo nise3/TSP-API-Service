@@ -54,11 +54,11 @@ class AssessmentQuestionSetPolicy
 
     /**
      * @param User $authUser
-     * @param AssessmentQuestionSet $assessment
+     * @param AssessmentQuestionSet $assessmentQuestionSet
      * @return bool
      */
-    public function delete(User $authUser,  AssessmentQuestionSet $assessment): bool
+    public function delete(User $authUser,  AssessmentQuestionSet $assessmentQuestionSet): bool
     {
-        return $authUser->hasPermission('delete_assessment');
+        return $authUser->hasPermission('delete_assessment_question_set');
     }
 }
