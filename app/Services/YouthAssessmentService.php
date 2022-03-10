@@ -76,32 +76,32 @@ class YouthAssessmentService
 
         $youthAssessmentBuilder->orderBy('youth_assessments.id', $order);
 
-        $youthAssessmentBuilder->join('rpl_occupations', function ($join){
+        $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
             $join->on('youth_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('rpl_levels', function ($join){
+        $youthAssessmentBuilder->join('rpl_levels', function ($join) {
             $join->on('youth_assessments.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('rpl_sectors', function ($join){
+        $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
             $join->on('youth_assessments.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('countries as rto_countries', function ($join){
+        $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
             $join->on('youth_assessments.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('countries as target_countries', function ($join){
+        $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
             $join->on('youth_assessments.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('registered_training_organizations', function ($join){
+        $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
             $join->on('youth_assessments.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
@@ -199,32 +199,32 @@ class YouthAssessmentService
             $youthAssessmentBuilder->where('youth_assessments.id', $id);
         }
 
-        $youthAssessmentBuilder->join('rpl_occupations', function ($join){
+        $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
             $join->on('youth_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('rpl_levels', function ($join){
+        $youthAssessmentBuilder->join('rpl_levels', function ($join) {
             $join->on('youth_assessments.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('rpl_sectors', function ($join){
+        $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
             $join->on('youth_assessments.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('countries as rto_countries', function ($join){
+        $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
             $join->on('youth_assessments.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('countries as target_countries', function ($join){
+        $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
             $join->on('youth_assessments.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
-        $youthAssessmentBuilder->join('registered_training_organizations', function ($join){
+        $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
             $join->on('youth_assessments.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
@@ -311,6 +311,195 @@ class YouthAssessmentService
         $data = $request->all();
 
         $rules = [
+            'youth_details' => [
+                'required',
+                'array'
+            ],
+            'youth_details.registration_number' => [
+                'nullable',
+                'string',
+            ],
+            'youth_details.first_name' => [
+                'required',
+                'string',
+                'max:300'
+            ],
+            'youth_details.last_name' => [
+                'required',
+                'string',
+                'max:300'
+            ],
+            'youth_details.first_name_en' => [
+                'required',
+                'string',
+                'max:150'
+            ],
+            'youth_details.last_name_en' => [
+                'required',
+                'string',
+                'max:150'
+            ],
+            "youth_details.date_of_birth" => [
+                "required",
+                'date',
+                'date_format:Y-m-d',
+                'before:today'
+            ],
+            "youth_details.mobile" => [
+                "required",
+                "max:11",
+                BaseModel::MOBILE_REGEX,
+            ],
+            'youth_details.identity_number_type' => [
+                'int',
+                'nullable',
+                Rule::in(YouthAssessment::IDENTITY_TYPES)
+            ],
+            'youth_details.identity_number' => [
+                'string',
+                'nullable'
+            ],
+            'youth_details.religion' => [
+                'required',
+                'int',
+                Rule::in(YouthAssessment::RELIGIONS)
+            ],
+            "youth_details.photo" => [
+                "nullable,
+                string
+                max:600"
+            ],
+            'youth_details.present_address' => [
+                'required',
+                'array',
+            ],
+            'youth_details.present_address.*.loc_division_id' => [
+                'required',
+                'integer',
+            ],
+            'youth_details.present_address.*.loc_district_id' => [
+                'required',
+                'integer',
+            ],
+            'youth_details.present_address.*.loc_upazila_id' => [
+                'required',
+                'integer',
+            ],
+            'youth_details.present_address.*.village_or_area' => [
+                'required',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'youth_details.present_address.*.village_or_area_en' => [
+                'nullable',
+                'string',
+                'max:250',
+                'min:2'
+            ],
+            'youth_details.present_address.*.house_n_road' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'youth_details.present_address.*.house_n_road_en' => [
+                'nullable',
+                'string',
+                'max:250',
+                'min:2'
+            ],
+            'youth_details.present_address.*.zip_or_postal_code' => [
+                'required',
+                'string',
+                'max:5',
+                'min:4'
+            ],
+            'youth_details.permanent_address' => [
+                'required',
+                'array',
+            ],
+            'youth_details.permanent_address.*.loc_division_id' => [
+                'required',
+                'integer',
+            ],
+            'youth_details.permanent_address.*.loc_district_id' => [
+                'required',
+                'nullable',
+                'integer',
+            ],
+            'youth_details.permanent_address.*.loc_upazila_id' => [
+                'required',
+                'integer',
+            ],
+            'youth_details.permanent_address .*. village_or_area' => [
+                'required',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'youth_details . permanent_address .*. village_or_area_en' => [
+                'nullable',
+                'string',
+                'max:250',
+                'min:2'
+            ],
+            'youth_details . permanent_address .*.house_n_road' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'youth_details . permanent_address .*. house_n_road_en' => [
+                'nullable',
+                'string',
+                'max:250',
+                'min:2'
+            ],
+            'youth_details . permanent_address .*. zip_or_postal_code' => [
+                'nullable',
+                'string',
+                'max:5',
+                'min:4'
+            ],
+            'youth_details . guardian_name' => [
+                'nullable',
+                'string',
+                'max:500',
+                'min:2'
+            ],
+            'youth_details . guardian_name_en' => [
+                'nullable',
+                'string',
+                'max:300',
+                'min:2'
+            ],
+            'youth_details . is_youth_employed' => [
+                'nullable',
+                'integer',
+                Rule::in(YouthAssessment::IS_YOUTH_EMPLOYED)
+            ],
+            'youth_details . job_responsibilities' => [
+                'string',
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
+                })
+            ],
+            'youth_details . job_responsibilities_en' => [
+                'string',
+                'nullable'
+            ],
+            'youth_details . company_name' => [
+                'string',
+                'nullable',
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
+                })
+            ],
+            'youth_details . company_name_en' => [
+                'string',
+                'nullable'
+            ],
             'rpl_sector_id' => [
                 'required',
                 'int',
@@ -389,20 +578,20 @@ class YouthAssessmentService
                 'array',
                 'min:1'
             ],
-            'answers.*' => [
+            'answers .*' => [
                 Rule::requiredIf(!empty($data['answers'])),
                 'array',
                 'min:1'
             ],
-            'answers.*.question_id' => [
+            'answers .*.question_id' => [
                 Rule::requiredIf(!empty($data['answers'])),
                 'int',
                 'min:1'
             ],
-            'answers.*.answer' => [
+            'answers .*.answer' => [
                 Rule::requiredIf(!empty($data['answers'])),
                 'int',
-                Rule::in([1,2,3,4])
+                Rule::in([1, 2, 3, 4])
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
@@ -419,19 +608,19 @@ class YouthAssessmentService
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
         $customMessage = [
-            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'order . in' => 'Order must be either ASC or DESC . [30000]',
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'assessment_id' => 'nullable|int',
-            'rpl_occupation_id' => 'nullable|int',
-            'rpl_level_id' => 'nullable|int',
-            'rpl_sector_id' => 'nullable|int',
-            'rto_batch_id' => 'nullable|int',
-            'title_en' => 'nullable|min:2',
-            'title' => 'nullable|min:2',
-            'page_size' => 'int|gt:0',
-            'page' => 'integer|gt:0',
+            'assessment_id' => 'nullable | int',
+            'rpl_occupation_id' => 'nullable | int',
+            'rpl_level_id' => 'nullable | int',
+            'rpl_sector_id' => 'nullable | int',
+            'rto_batch_id' => 'nullable | int',
+            'title_en' => 'nullable | min:2',
+            'title' => 'nullable | min:2',
+            'page_size' => 'int | gt:0',
+            'page' => 'integer | gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
