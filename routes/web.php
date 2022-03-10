@@ -163,7 +163,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "YouthAssessmentCertificationPaymentController@ipnHandler"]);
     });
 
-    //youth-assessment-certification/payment/payment-via-ek-pay/ipn-handler/{secretToken}
+
+
 
 });
 
