@@ -29,6 +29,10 @@ class YouthAssessmentCertificationPaymentService
         /** @var YouthAssessment $youthAssessment */
         $youthAssessment = YouthAssessment::findOrFail($request['youth_assessment_id']);
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$youthAssessment->youth_id]);
+
+        throw_if(empty($youth[0]), new \Exception("Youth Information is empty"));
+        $youth = $youth[0];
+
         $rto = RegisteredTrainingOrganization::findOrFail($youthAssessment->rto_id);
         $assessment = Assessment::findOrFail($youthAssessment->assessment_id);
 
@@ -50,7 +54,6 @@ class YouthAssessmentCertificationPaymentService
         $orderId = $invoiceId;
         $customerId = $invoiceId;
         $orderDetail = "Youth assessment certification fee";
-
 
         /** Customer Information */
         $firstName = $youth['first_name_en'] ?? "";
@@ -97,7 +100,7 @@ class YouthAssessmentCertificationPaymentService
                 'ipn_email' => 'noreply@nise.gov.bd',
                 'ipn_uri' => $ipnUri,
             ],
-            'mac_addr' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.mac_addr') : config('ekpay.production.' . $paymentPurpose . '.mac_addr'),
+            'mac_addr' => config('ekpay.is_sand_box') ? config('ekpay.sand_box.' . $paymentPurpose . '.mac_addr') : config('ekpay.production.' . $paymentPurpose . '.mac_addr'),
         ];
 
         return app(PaymentService::class)->paymentProcessing($ekPayPayload, PaymentTransactionHistory::PAYMENT_GATEWAY_EK_PAY);

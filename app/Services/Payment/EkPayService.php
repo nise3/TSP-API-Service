@@ -3,7 +3,6 @@
 namespace App\Services\Payment;
 
 use App\Exceptions\HttpErrorException;
-use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -18,6 +17,7 @@ class EkPayService
      */
     public function ekPayInit(array $ekPayPayload): ?string
     {
+
         if (config('ekpay.debug')) {
             Log::channel('ek_pay')->info("Ekpay Request PayLoad: " . json_encode($ekPayPayload, JSON_PRETTY_PRINT));
         }
