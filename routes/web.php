@@ -41,6 +41,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
         $customRouter()->resourceRoute('question-banks', 'QuestionBankController')->render();
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
+        $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
 
         /** Institute Registration Approval */
