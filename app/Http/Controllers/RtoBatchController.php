@@ -128,7 +128,7 @@ class RtoBatchController extends Controller
     {
         $rtoBatch = RtoBatch::findOrFail($id);
 
-        $this->authorize('update', $rtoBatch);
+        $this->authorize('update', RtoBatch::class);
 
         $validated = $this->rtoBatchService->validator($request, $id)->validate();
         $data = $this->rtoBatchService->update($rtoBatch, $validated);
@@ -149,8 +149,10 @@ class RtoBatchController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int $id
+     * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function assignAssessor(Request $request, int $id): JsonResponse
     {
