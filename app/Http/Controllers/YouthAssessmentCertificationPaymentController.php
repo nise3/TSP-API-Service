@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLog;
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use App\Services\Payment\PaymentService;
 use App\Services\Payment\YouthAssessmentCertificationPaymentService;
 use Carbon\Carbon;
@@ -78,7 +78,7 @@ class YouthAssessmentCertificationPaymentController extends Controller
                     $payment->fill($data);
                     $payment->save();
 
-                    $youthAssessment = YouthAssessment::findOrFail($payment->payment_purpose_related_id);
+                    $youthAssessment = RplApplication::findOrFail($payment->payment_purpose_related_id);
                     $youthAssessment->payment_status = $paymentStatus;
                     $youthAssessment->payment_date = Carbon::now();
                     $youthAssessment->save();

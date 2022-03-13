@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use App\Models\User;
 
-class YouthAssessmentPolicy
+class RplApplicationPolicy
 {
     /**
      * Determine whether the user can view any Rpl Sector.
@@ -15,19 +15,19 @@ class YouthAssessmentPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_youth_assessment');
+        return $authUser->hasPermission('view_any_rpl_application');
     }
 
     /**
      * Determine whether the user can view the Rpl Sector.
      *
      * @param User $authUser
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @return mixed
      */
-    public function view(User $authUser, YouthAssessment $youthAssessment): bool
+    public function view(User $authUser, RplApplication $youthAssessment): bool
     {
-        return $authUser->hasPermission('view_single_youth_assessment');
+        return $authUser->hasPermission('view_single_rpl_application');
     }
 
     /**
@@ -38,30 +38,30 @@ class YouthAssessmentPolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_youth_assessment');
+        return $authUser->hasPermission('create_rpl_application');
     }
 
     /**
      * Determine whether the user can update the Rpl Sector.
      *
      * @param User $authUser
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @return mixed
      */
-    public function update(User $authUser, YouthAssessment $youthAssessment): bool
+    public function update(User $authUser, RplApplication $youthAssessment): bool
     {
-        return $authUser->hasPermission('update_youth_assessment');
+        return $authUser->hasPermission('update_rpl_application');
     }
 
     /**
      * Determine whether the user can delete the Rpl Sector.
      *
      * @param User $authUser
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @return mixed
      */
-    public function delete(User $authUser, YouthAssessment $youthAssessment): bool
+    public function delete(User $authUser, RplApplication $youthAssessment): bool
     {
-        return $authUser->hasPermission('delete_youth_assessment');
+        return $authUser->hasPermission('delete_rpl_application');
     }
 }
