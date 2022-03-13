@@ -5,11 +5,11 @@ namespace App\Models;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class YouthAssessment extends BaseModel
+class RplApplication extends BaseModel
 {
     use SoftDeletes, ScopeRowStatusTrait;
 
-    protected $table = "assessment_applications";
+    protected $table = "rpl_applications";
     protected $casts = [
         'youth_details' => 'array'
     ];

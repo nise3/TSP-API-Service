@@ -9,7 +9,7 @@ use App\Models\AssessmentQuestion;
 use App\Models\BaseModel;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentEducation;
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +18,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class YouthAssessmentService
+class RplApplicationService
 {
     /**
      * @param array $request
@@ -38,96 +38,96 @@ class YouthAssessmentService
         $rplSectorId = $request['rpl_sector_id'] ?? "";
         $rtoBatchId = $request['rto_batch_id'] ?? "";
 
-        /** @var YouthAssessment|Builder $youthAssessmentBuilder */
-        $youthAssessmentBuilder = YouthAssessment::select([
-            'assessment_applications.id',
-            'assessment_applications.youth_id',
-            'assessment_applications.assessment_id',
-            'assessment_applications.rto_batch_id',
-            'assessment_applications.result',
-            'assessment_applications.score',
+        /** @var RplApplication|Builder $youthAssessmentBuilder */
+        $youthAssessmentBuilder = RplApplication::select([
+            'rpl_applications.id',
+            'rpl_applications.youth_id',
+            'rpl_applications.assessment_id',
+            'rpl_applications.rto_batch_id',
+            'rpl_applications.result',
+            'rpl_applications.score',
 
-            'assessment_applications.rpl_occupation_id',
+            'rpl_applications.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
-            'assessment_applications.rpl_level_id',
+            'rpl_applications.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
-            'assessment_applications.rpl_sector_id',
+            'rpl_applications.rpl_sector_id',
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'assessment_applications.rto_country_id',
+            'rpl_applications.rto_country_id',
             'rto_countries.title_en as rto_country_title_en',
             'rto_countries.title as rto_country_title',
 
-            'assessment_applications.target_country_id',
+            'rpl_applications.target_country_id',
             'target_countries.title_en as target_country_title_en',
             'target_countries.title as target_country_title',
 
-            'assessment_applications.rto_id',
+            'rpl_applications.rto_id',
             'registered_training_organizations.title_en as rto_title_en',
             'registered_training_organizations.title as rto_title',
 
-            'assessment_applications.created_at',
-            'assessment_applications.updated_at',
-            'assessment_applications.deleted_at',
+            'rpl_applications.created_at',
+            'rpl_applications.updated_at',
+            'rpl_applications.deleted_at',
         ]);
 
-        $youthAssessmentBuilder->orderBy('assessment_applications.id', $order);
+        $youthAssessmentBuilder->orderBy('rpl_applications.id', $order);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
-            $join->on('assessment_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('rpl_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_levels', function ($join) {
-            $join->on('assessment_applications.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('rpl_applications.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
-            $join->on('assessment_applications.rpl_sector_id', '=', 'rpl_sectors.id')
+            $join->on('rpl_applications.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
-            $join->on('assessment_applications.rto_country_id', '=', 'rto_countries.id')
+            $join->on('rpl_applications.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
-            $join->on('assessment_applications.target_country_id', '=', 'target_countries.id')
+            $join->on('rpl_applications.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
-            $join->on('assessment_applications.rto_id', '=', 'registered_training_organizations.id')
+            $join->on('rpl_applications.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
 
         if (!empty($titleEn)) {
-            $youthAssessmentBuilder->where('assessment_applications.title_en', 'like', '%' . $titleEn . '%');
+            $youthAssessmentBuilder->where('rpl_applications.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $youthAssessmentBuilder->where('assessment_applications.title', 'like', '%' . $title . '%');
+            $youthAssessmentBuilder->where('rpl_applications.title', 'like', '%' . $title . '%');
         }
         if (!empty($rplassessmentId)) {
-            $youthAssessmentBuilder->where('assessment_applications.assessment_id', $assessmentId);
+            $youthAssessmentBuilder->where('rpl_applications.assessment_id', $assessmentId);
         }
         if (!empty($rplOccupationId)) {
-            $youthAssessmentBuilder->where('assessment_applications.rpl_occupation_id', $rplOccupationId);
+            $youthAssessmentBuilder->where('rpl_applications.rpl_occupation_id', $rplOccupationId);
         }
         if (!empty($rplLevelId)) {
-            $youthAssessmentBuilder->where('assessment_applications.rpl_level_id', $rplLevelId);
+            $youthAssessmentBuilder->where('rpl_applications.rpl_level_id', $rplLevelId);
         }
         if (!empty($rplSectorId)) {
-            $youthAssessmentBuilder->where('assessment_applications.rpl_sector_id', $rplSectorId);
+            $youthAssessmentBuilder->where('rpl_applications.rpl_sector_id', $rplSectorId);
         }
         if (!empty($rtoBatchId)) {
-            $youthAssessmentBuilder->where('assessment_applications.rto_batch_id', $rtoBatchId);
+            $youthAssessmentBuilder->where('rpl_applications.rto_batch_id', $rtoBatchId);
         }
 
         /** @var Collection $youthAssessments */
@@ -155,77 +155,77 @@ class YouthAssessmentService
 
     /**
      * @param int $id
-     * @return YouthAssessment
+     * @return RplApplication
      */
-    public function getOneYouthAssessment(int $id): YouthAssessment
+    public function getOneYouthAssessment(int $id): RplApplication
     {
-        /** @var YouthAssessment|Builder $youthAssessmentBuilder */
-        $youthAssessmentBuilder = YouthAssessment::select([
-            'assessment_applications.id',
-            'assessment_applications.youth_id',
-            'assessment_applications.assessment_id',
-            'assessment_applications.rto_batch_id',
-            'assessment_applications.result',
-            'assessment_applications.score',
+        /** @var RplApplication|Builder $youthAssessmentBuilder */
+        $youthAssessmentBuilder = RplApplication::select([
+            'rpl_applications.id',
+            'rpl_applications.youth_id',
+            'rpl_applications.assessment_id',
+            'rpl_applications.rto_batch_id',
+            'rpl_applications.result',
+            'rpl_applications.score',
 
-            'assessment_applications.rpl_occupation_id',
+            'rpl_applications.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
-            'assessment_applications.rpl_level_id',
+            'rpl_applications.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
-            'assessment_applications.rpl_sector_id',
+            'rpl_applications.rpl_sector_id',
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'assessment_applications.rto_country_id',
+            'rpl_applications.rto_country_id',
             'rto_countries.title_en as rto_country_title_en',
             'rto_countries.title as rto_country_title',
 
-            'assessment_applications.target_country_id',
+            'rpl_applications.target_country_id',
             'target_countries.title_en as target_country_title_en',
             'target_countries.title as target_country_title',
 
-            'assessment_applications.rto_id',
+            'rpl_applications.rto_id',
             'registered_training_organizations.title_en as rto_title_en',
             'registered_training_organizations.title as rto_title',
 
-            'assessment_applications.created_at',
-            'assessment_applications.updated_at',
-            'assessment_applications.deleted_at',
+            'rpl_applications.created_at',
+            'rpl_applications.updated_at',
+            'rpl_applications.deleted_at',
         ]);
 
-        $youthAssessmentBuilder->where('assessment_applications.id', $id);
+        $youthAssessmentBuilder->where('rpl_applications.id', $id);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
-            $join->on('assessment_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('rpl_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_levels', function ($join) {
-            $join->on('assessment_applications.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('rpl_applications.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
-            $join->on('assessment_applications.rpl_sector_id', '=', 'rpl_sectors.id')
+            $join->on('rpl_applications.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
-            $join->on('assessment_applications.rto_country_id', '=', 'rto_countries.id')
+            $join->on('rpl_applications.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
-            $join->on('assessment_applications.target_country_id', '=', 'target_countries.id')
+            $join->on('rpl_applications.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
-            $join->on('assessment_applications.rto_id', '=', 'registered_training_organizations.id')
+            $join->on('rpl_applications.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
 
@@ -233,11 +233,11 @@ class YouthAssessmentService
     }
 
     /**
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @param array $data
-     * @return YouthAssessment
+     * @return RplApplication
      */
-    public function store(YouthAssessment $youthAssessment, array $data): YouthAssessment
+    public function store(RplApplication $youthAssessment, array $data): RplApplication
     {
         $youthAssessment->fill($data);
         $youthAssessment->save();
@@ -245,11 +245,11 @@ class YouthAssessmentService
     }
 
     /**
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @param array $data
-     * @return YouthAssessment
+     * @return RplApplication
      */
-    public function updateResult(YouthAssessment $youthAssessment, array $data): YouthAssessment
+    public function updateResult(RplApplication $youthAssessment, array $data): RplApplication
     {
         $correct = 0;
         $assessmentId = $data['assessment_id'];
@@ -281,11 +281,11 @@ class YouthAssessmentService
     }
 
     /**
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @param array $data
-     * @return YouthAssessment
+     * @return RplApplication
      */
-    public function update(YouthAssessment $youthAssessment, array $data): YouthAssessment
+    public function update(RplApplication $youthAssessment, array $data): RplApplication
     {
         $youthAssessment->fill($data);
         $youthAssessment->save();
@@ -293,10 +293,10 @@ class YouthAssessmentService
     }
 
     /**
-     * @param YouthAssessment $youthAssessment
+     * @param RplApplication $youthAssessment
      * @return bool
      */
-    public function destroy(YouthAssessment $youthAssessment): bool
+    public function destroy(RplApplication $youthAssessment): bool
     {
         return $youthAssessment->delete();
     }
@@ -343,6 +343,29 @@ class YouthAssessmentService
                 'string',
                 'max:150'
             ],
+            'youth_details.father_name' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'youth_details.father_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+
+            'youth_details.mother_name' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'youth_details.mother_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
             "youth_details.date_of_birth" => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
@@ -358,8 +381,8 @@ class YouthAssessmentService
             ],
             'youth_details.identity_number_type' => [
                 'int',
-                'nullable',
-                Rule::in(YouthAssessment::IDENTITY_TYPES)
+                'required',
+                Rule::in(RplApplication::IDENTITY_TYPES)
             ],
             'youth_details.identity_number' => [
                 'string',
@@ -491,7 +514,7 @@ class YouthAssessmentService
             'youth_details . is_youth_employed' => [
                 'nullable',
                 'integer',
-                Rule::in(YouthAssessment::IS_YOUTH_EMPLOYED)
+                Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
             'youth_details . company_type' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
@@ -501,7 +524,7 @@ class YouthAssessmentService
             'youth_details . job_responsibilities' => [
                 'string',
                 Rule::requiredIf(function () use ($data) {
-                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
                 'nullable',
 
@@ -514,7 +537,7 @@ class YouthAssessmentService
                 'string',
                 'nullable',
                 Rule::requiredIf(function () use ($data) {
-                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == YouthAssessment::IS_YOUTH_EMPLOYED_TRUE;
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
                 'nullable',
 

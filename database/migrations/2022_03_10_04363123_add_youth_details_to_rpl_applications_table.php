@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddYouthDetailsToYouthAssessmentsTable extends Migration
+class AddYouthDetailsToRplApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddYouthDetailsToYouthAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('assessment_applications', function (Blueprint $table) {
+        Schema::table('rpl_applications', function (Blueprint $table) {
             $table->json('youth_details')->after('youth_id');
         });
     }
@@ -25,7 +25,7 @@ class AddYouthDetailsToYouthAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('assessment_applications', function (Blueprint $table) {
+        Schema::table('rpl_applications', function (Blueprint $table) {
             $table->dropColumn('youth_details');
         });
     }

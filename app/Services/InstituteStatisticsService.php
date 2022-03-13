@@ -5,6 +5,11 @@ namespace App\Services;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\Institute;
+use App\Models\RegisteredTrainingOrganization;
+use App\Models\RplOccupation;
+use App\Models\RplSector;
+use App\Models\RtoBatch;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use Illuminate\Database\Eloquent\Collection;
@@ -329,6 +334,52 @@ class InstituteStatisticsService
         }
 
         return $builder->limit(4)->get()->toArray();
+    }
+
+
+    #[ArrayShape(["total_rpl_batches" => "int", "total_certificates_provided" => "int", "total_rtos" => "int", "total_sectors" => "int", "total_occupations" => "int", "total_trainers" => "int"])]
+    public function getCertificationAuthorityStatistics(): array
+    {
+        return [
+            "total_rpl_batches" => $this->getTotalRPLBatches(),
+            "total_certificates_provided" => $this->getTotalCertificateProvidedByRPL(),
+            "total_rtos" => $this->getTotalRto(),
+            "total_sectors" => $this->geTotalSector(),
+            "total_occupations" => $this->geTotalOccupation(),
+            "total_trainers" => $this->geTotalRtoTrainer(),
+        ];
+    }
+
+    private function getTotalRPLBatches(): int
+    {
+        return RtoBatch::where('institute_id', request('institute_id'))->count('id');
+    }
+
+    private function getTotalCertificateProvidedByRPL(): int
+    {
+        return RtoBatch::where('institute_id', request('institute_id'))
+            ->where('certification_status', RtoBatch::CERTIFICATION_STATUS_CERTIFIED)
+            ->count('id');
+    }
+
+    private function getTotalRto(): int
+    {
+        return RegisteredTrainingOrganization::count('id');
+    }
+
+    private function geTotalSector(): int
+    {
+        return RplSector::count('id');
+    }
+
+    private function geTotalOccupation(): int
+    {
+        return RplOccupation::count('id');
+    }
+
+    private function geTotalRtoTrainer(): int
+    {
+        return DB::table('institute_trainers')->where('institute_id', request('institute_id'))->count('trainer_id');
     }
 
     public function getRtoDashboardStatistics(){

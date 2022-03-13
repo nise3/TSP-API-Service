@@ -9,6 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -101,6 +102,12 @@ class RtoBatchController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', RtoBatch::class);
+        $authUser = Auth::user();
+
+        if($authUser->isRtoUser()){
+            $request->offsetSet('rto_id', $request->input('registered_training_organization_id'));
+        }
+
         $validated = $this->rtoBatchService->validator($request)->validate();
         $rtoBatch = $this->rtoBatchService->store($validated);
 

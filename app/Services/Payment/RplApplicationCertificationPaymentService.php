@@ -8,7 +8,7 @@ use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
 use App\Models\RegisteredTrainingOrganization;
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -19,15 +19,15 @@ use Illuminate\Validation\Rule;
 use Throwable;
 
 
-class RplAssessmentCertificationPaymentService
+class RplApplicationCertificationPaymentService
 {
     /**
      * @throws Throwable
      */
     public function paymentProcessingViaEkPay(array $request)
     {
-        /** @var YouthAssessment $youthAssessment */
-        $youthAssessment = YouthAssessment::findOrFail($request['youth_assessment_id']);
+        /** @var RplApplication $youthAssessment */
+        $youthAssessment = RplApplication::findOrFail($request['youth_assessment_id']);
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$youthAssessment->youth_id]);
 
         throw_if(empty($youth[0]), new \Exception("Youth Information is empty"));
@@ -120,7 +120,7 @@ class RplAssessmentCertificationPaymentService
             "youth_assessment_id" => [
                 "required",
                 "integer",
-                'exists:assessment_applications,id,deleted_at,NULL'
+                'exists:rpl_applications,id,deleted_at,NULL'
             ],
             "feed_uri.success" => [
                 "required",

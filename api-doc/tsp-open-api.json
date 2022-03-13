@@ -4625,18 +4625,18 @@
                 }
             }
         },
-        "/rpl-assessment-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
+        "/rpl-application-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Payment for youth-assessment-certification",
-                "description": "An API endpoint to pay for a youth-assessment-certification",
+                "summary": "Payment for Rpl Application Certification",
+                "description": "An API endpoint to pay for a Payment for Rpl Application Certification",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/youthAssessmentPaymentSchema"
+                                "$ref": "#/components/schemas/rplApplicationPaymentSchema"
                             }
                         }
                     }
@@ -8051,13 +8051,13 @@
             }
         },
 
-        "/youth-assessment": {
+        "/rpl-applications": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
                 "summary": "Create a youth assessment",
-                "description": "API endpoint to Create a youth assessment. A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -8100,10 +8100,10 @@
             },
             "get": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
                 "summary": "Get all youth assessment",
-                "description": "API endpoint to Get all youth assessment. A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to Get all Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/title_optional"
@@ -8174,16 +8174,16 @@
                 }
             }
         },
-        "/youth-assessment/{youthAssessmentId}": {
+        "/rpl-applications/{rplApplicationId}": {
             "get": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Get a youth assessment",
-                "description": "API endpoint to Get a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Get a Rpl Application",
+                "description": "API endpoint to Get a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "responses": {
@@ -8234,13 +8234,13 @@
             },
             "put": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Update a youth assessment",
-                "description": "API endpoint to update a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Update a Rpl Application",
+                "description": "API endpoint to update a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "requestBody": {
@@ -8278,7 +8278,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth assessment updated successfully.",
+                                        "message": "Rpl Application updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8289,13 +8289,13 @@
             },
             "delete": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Delete a youth assessment",
-                "description": "API endpoint to delete a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Delete a Rpl Application",
+                "description": "API endpoint to delete a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "responses": {
@@ -8307,7 +8307,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth Assessment deleted successfully.",
+                                        "message": "Rpl Application deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8501,16 +8501,16 @@
                 }
             }
         },
-        "/youth-assessment/{youthAssessmentId}/assign-to-batch": {
+        "/rpl-applications/{rplApplicationId}/assign-to-batch": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
                 "summary": "Assign to batch",
                 "description": "API endpoint to Assign to batch. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "requestBody": {
@@ -8548,7 +8548,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth assessment assigned to batch successfully.",
+                                        "message": "Rpl Application assigned to batch successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8558,13 +8558,13 @@
                 }
             }
         },
-        "/public/youth-assessment": {
+        "/public/rpl-applications": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Create a public youth assessment",
-                "description": "API endpoint to Create public a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Create a public Rpl Application",
+                "description": "API endpoint to Create public a Rpl Application. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -9130,7 +9130,7 @@
                     "course_enrollment_id"
                 ]
             },
-            "youthAssessmentPaymentSchema": {
+            "rplApplicationPaymentSchema": {
                 "type": "object",
                 "properties": {
                     "payment_gateway_type": {
@@ -11312,10 +11312,10 @@
                     "type": "integer"
                 }
             },
-            "youthAssessmentId": {
-                "name": "youthAssessmentId",
+            "rplApplicationId": {
+                "name": "rplApplicationId",
                 "in": "path",
-                "description": "youthAssessmentId",
+                "description": "rplApplicationId",
                 "required": true,
                 "schema": {
                     "type": "integer"
