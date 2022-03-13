@@ -43,6 +43,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
+        /** rpl assessment */
+        $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
+
 
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
@@ -98,7 +101,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
 
-        $router->post("rpl-applications", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@store"]);
+//        $router->post("rpl-applications", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@store"]);
 
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
