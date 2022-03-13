@@ -106,7 +106,17 @@ class InstituteStatisticsController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function rtoDashboardStatistics(){
+    /**
+     * @return JsonResponse
+     */
+    public function rtoDashboardStatistics(): JsonResponse
+    {
         $response['data'] = $this->instituteStatisticsService->getRtoDashboardStatistics();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 }

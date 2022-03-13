@@ -383,18 +383,31 @@ class InstituteStatisticsService
         return DB::table('institute_trainers')->where('institute_id', request('institute_id'))->count('trainer_id');
     }
 
+    /**
+     * @return array
+     */
     public function getRtoDashboardStatistics(){
         $totalBatches = self::getTotalRtoBatches();
         $totalRplApplications = self::getTotalRplApplications();
+        $totalYouths = self::getTotalYouths();
+        return [
+            'total_batches' => $totalBatches,
+            'total_rpl_applications' => $totalRplApplications,
+            'total_youths' => $totalYouths
+        ];
     }
 
     private function getTotalRtoBatches(){
-        return RtoBatch::acl()->count();
+        return RtoBatch::acl()->count('id');
     }
 
     private function getTotalRplApplications(){
         return 0;
-//        RplApplication::where('application_status')->acl()->count();
+//        RplApplication::where('application_status', )->acl()->count('id);
+    }
+
+    private function getTotalYouths(){
+        return RplApplication::acl()->count('id')->unique();
     }
 
 }
