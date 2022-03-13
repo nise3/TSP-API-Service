@@ -19,7 +19,7 @@ use Illuminate\Validation\Rule;
 use Throwable;
 
 
-class YouthAssessmentCertificationPaymentService
+class RplAssessmentCertificationPaymentService
 {
     /**
      * @throws Throwable
