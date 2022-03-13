@@ -4625,18 +4625,18 @@
                 }
             }
         },
-        "/rpl-assessment-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
+        "/rpl-application-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Payment for youth-assessment-certification",
-                "description": "An API endpoint to pay for a youth-assessment-certification",
+                "summary": "Payment for Rpl Application Certification",
+                "description": "An API endpoint to pay for a Payment for Rpl Application Certification",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/youthAssessmentPaymentSchema"
+                                "$ref": "#/components/schemas/rplApplicationPaymentSchema"
                             }
                         }
                     }
@@ -9130,7 +9130,7 @@
                     "course_enrollment_id"
                 ]
             },
-            "youthAssessmentPaymentSchema": {
+            "rplApplicationPaymentSchema": {
                 "type": "object",
                 "properties": {
                     "payment_gateway_type": {
