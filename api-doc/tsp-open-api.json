@@ -3817,7 +3817,6 @@
                 }
             }
         },
-
         "/public/course-list/{type}": {
             "get": {
                 "summary": "Course List with type ",
@@ -4810,7 +4809,6 @@
                 }
             }
         },
-
         "/rto-countries": {
             "get": {
                 "tags": [
@@ -4950,10 +4948,11 @@
                 }
             }
         },
-
         "/rto-batches": {
             "get": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Get all Rto Batches",
                 "description": "API endpoint to Get all Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5040,7 +5039,9 @@
                 }
             },
             "post": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Create  Rto Batch",
                 "description": "API endpoint to Create  Rto Batch . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -5086,7 +5087,9 @@
         },
         "/rto-batches/{rtoBatchId}": {
             "get": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Get a Rto Batch",
                 "description": "API endpoint to Get a Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5136,7 +5139,9 @@
                 }
             },
             "put": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Update an Rto Batch",
                 "description": "API endpoint to update an Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5158,7 +5163,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 4,
                                         "title": "RunLolaRun",
@@ -5187,7 +5192,9 @@
                 }
             },
             "delete": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Delete an Rto Batch",
                 "description": "API endpoint to delete an Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5200,7 +5207,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -5216,7 +5223,9 @@
         },
         "/rto-batches/{rtoBatchId}/assign-assessor": {
             "post": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Assign an assessor",
                 "description": "API endpoint to Assign an assessor . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5265,10 +5274,6 @@
                 }
             }
         },
-
-
-
-
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5509,7 +5514,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -5599,9 +5604,7 @@
                     }
                 }
             }
-
         },
-
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -6736,7 +6739,9 @@
         },
         "/registered-training-organizations/{rtoId}": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get a Registerd training organization",
                 "description": "API endpoint to Get a Registerd training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6807,7 +6812,9 @@
                 }
             },
             "put": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Update a registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6882,7 +6889,9 @@
                 }
             },
             "delete": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Delete a Registered training organization",
                 "description": "API endpoint toDelete a Registered training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -7120,7 +7129,6 @@
                                                     }
                                                 ],
                                                 "youth_portfolios": [
-
                                                     {
                                                         "id": 4,
                                                         "youth_id": 1,
@@ -7273,7 +7281,6 @@
                 ],
                 "summary": "Get rto dashboard statistics",
                 "description": "API endpoint to Get rto dashboard statistics. A successful request response will show 200 HTTP status code",
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -7372,8 +7379,6 @@
                 ]
             }
         },
-
-
         "/question-banks": {
             "get": {
                 "tags": [
@@ -7630,8 +7635,6 @@
                 }
             }
         },
-
-
         "/assessment": {
             "get": {
                 "tags": [
@@ -7985,7 +7988,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 1,
                                         "title": "WholeLottAlOVE",
@@ -8089,7 +8092,6 @@
                 }
             }
         },
-
         "/rpl-applications": {
             "post": {
                 "tags": [
@@ -8168,7 +8170,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
@@ -8291,7 +8293,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
@@ -8353,7 +8355,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 1,
                                         "youth_id": 1,
@@ -8573,7 +8575,7 @@
                                 "example": {
                                     "_response_status": {
                                         "success": true,
-                                        "message":"Assessment Questions  added successfully",
+                                        "message": "Assessment Questions  added successfully",
                                         "code": 200,
                                         "query_time": 0
                                     }
@@ -8609,7 +8611,8 @@
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
-                    },{
+                    },
+                    {
                         "$ref": "#/components/parameters/rpl_level_id"
                     },
                     {
@@ -8655,10 +8658,8 @@
                                         "query_time": 0
                                     }
                                 }
-
                             }
                         }
-
                     }
                 }
             }
@@ -8720,13 +8721,75 @@
                 }
             }
         },
-        "/public/rpl-applications": {
-            "post": {
+        "/public/rpl-applications/{rplApplicationId}": {
+            "get": {
                 "tags": [
                     "Rpl Application"
                 ],
-                "summary": "Create a public Rpl Application",
-                "description": "API endpoint to Create public a Rpl Application. A successful request response will show 200 HTTP status code",
+                "summary": "Get a Rpl Application",
+                "description": "API endpoint to Get a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "youth_id": 1,
+                                        "assessment_id": 2,
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rto_country_id": 1,
+                                        "rto_country_title_en": "Afghanistan",
+                                        "rto_country_title": "Afghanistan",
+                                        "target_country_id": 1,
+                                        "target_country_title_en": "Afghanistan",
+                                        "target_country_title": "Afghanistan",
+                                        "rto_id": 1,
+                                        "rto_title_en": "BabyLolAmONTEZZ",
+                                        "rto_title": "BabyLolAmONTEZZ",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Update a Rpl Application",
+                "description": "API endpoint to update a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -8743,22 +8806,55 @@
                             "application/json": {
                                 "example": {
                                     "data": {
+                                        "id": 1,
                                         "rpl_sector_id": "1",
                                         "rpl_occupation_id": "1",
                                         "rpl_level_id": "1",
                                         "youth_id": "1",
                                         "assessment_id": "2",
                                         "target_country_id": "1",
-                                        "rto_country_id": "1",
+                                        "rto_country_id": "2",
                                         "rto_id": "1",
-                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "deleted_at": null,
                                         "created_at": "2022-03-03T11:43:20.000000Z",
-                                        "id": 1
+                                        "updated_at": "2022-03-03T11:57:51.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "Youth assessment added successfully",
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Delete a Rpl Application",
+                "description": "API endpoint to delete a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8782,15 +8878,18 @@
                 "type": "object",
                 "properties": {
                     "title": {
-                          "type": "string"
-                      },
+                        "type": "string"
+                    },
                     "assessment_id": {
-                          "type": "integer",
+                        "type": "integer",
                         "description": "Must exist in assessment table"
                     },
                     "row_status": {
                         "type": "integer",
-                        "enum": [1,0],
+                        "enum": [
+                            1,
+                            0
+                        ],
                         "description": "1=>Active , 0=>Inactive"
                     }
                 },
@@ -8957,7 +9056,10 @@
                     },
                     "type": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "1=>Yes 2=>No"
                     },
                     "subject_id": {
@@ -11051,7 +11153,6 @@
                     "type": "integer"
                 }
             },
-
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -11395,7 +11496,6 @@
                     "type": "integer"
                 }
             },
-
             "rplSectorId": {
                 "name": "rplSectorId",
                 "in": "path",

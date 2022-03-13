@@ -104,7 +104,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
 
-//        $router->post("rpl-applications", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@store"]);
+        $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
 
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
