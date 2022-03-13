@@ -95,4 +95,9 @@ class InstituteStatisticsController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    public function rtoDashboardStatistics(Request $request){
+        $data = $request->all();
+        $rtoId = $data['registered_training_organization_id'] ?? "";
+        $response['data'] = $this->instituteStatisticsService->getRtoDashboardStatistics();
+    }
 }

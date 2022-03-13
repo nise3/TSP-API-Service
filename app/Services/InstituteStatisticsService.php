@@ -331,4 +331,8 @@ class InstituteStatisticsService
         return $builder->limit(4)->get()->toArray();
     }
 
+    public function getRtoDashboardStatistics(){
+        $totalBatches = self::getTotalRtoBatches();
+    }
+
 }
