@@ -655,7 +655,7 @@ class RplApplicationService
                     'int',
                     'exists:exam_degrees,id,deleted_at,NULL,education_level_id,' . $eduLabelId
                 ];
-                $rules[['youth_details']['education_info'][$index]['exam_degree_name']] = [
+                $rules[$validationField . 'exam_degree_name'] = [
                     Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::EXAM_DEGREE_NAME, $eduLabelId);
                     }),
