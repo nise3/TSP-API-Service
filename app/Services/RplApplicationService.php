@@ -394,6 +394,12 @@ class RplApplicationService
                 "max:11",
                 BaseModel::MOBILE_REGEX,
             ],
+            "youth_details.nationality" => [
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
+                "max:11",
+                BaseModel::MOBILE_REGEX,
+            ],
             'youth_details.identity_number_type' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'int',
@@ -726,7 +732,7 @@ class RplApplicationService
                     "integer",
                     Rule::in(array_keys(config("nise3.exam_degree_results")))
                 ];
-                $rules['youth_details']['education_info'][$index]['marks_in_percentage'] = [
+                $rules['youth_details.education_info'.$index.'marks_in_percentage'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId);
@@ -734,7 +740,7 @@ class RplApplicationService
                     'nullable',
                     "numeric"
                 ];
-                $rules['youth_details']['education_info'][$index]['cgpa_scale'] = [
+                $rules['youth_details.education_info'.$index.'cgpa_scale'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId);
@@ -743,7 +749,7 @@ class RplApplicationService
                     "integer",
                     Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
                 ];
-                $rules['youth_details']['education_info'][$index]['cgpa'] = [
+                $rules['youth_details'.'education_info'.$index.'cgpa'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId);
@@ -752,7 +758,7 @@ class RplApplicationService
                     'numeric',
                     "max:5"
                 ];
-                $rules['youth_details']['education_info'][$index]['year_of_passing'] = [
+                $rules['youth_details'.'education_info'.$index.'year_of_passing'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId);

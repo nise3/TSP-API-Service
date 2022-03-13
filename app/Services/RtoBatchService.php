@@ -39,6 +39,7 @@ class RtoBatchService
             'rto_batches.title_en',
 
             'rto_batches.rto_id',
+            'rto_batches.certification_status',
             'registered_training_organizations.title as rto_title',
             'registered_training_organizations.title_en as rto_title_en',
             'rto_batches.assessment_date',
@@ -142,6 +143,8 @@ class RtoBatchService
             'rto_batches.title_en',
 
             'rto_batches.rto_id',
+            'rto_batches.certification_status',
+
             'registered_training_organizations.title as rto_title',
             'registered_training_organizations.title_en as rto_title_en',
             'rto_batches.assessment_date',
@@ -283,6 +286,11 @@ class RtoBatchService
             "assessment_date"=>[
                 'nullable',
                 'date'
+            ] ,
+            "certification_status"=>[
+                'nullable',
+                'integer',
+                Rule::in(array_keys(RtoBatch::CERTIFICATION_STATUSES))
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
