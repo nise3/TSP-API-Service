@@ -393,7 +393,8 @@ class InstituteStatisticsService
     }
 
     private function getTotalRplApplications(){
-        RplApplication::acl();
+        return 0;
+//        RplApplication::where('application_status')->acl()->count();
     }
 
 }
