@@ -40,94 +40,94 @@ class YouthAssessmentService
 
         /** @var YouthAssessment|Builder $youthAssessmentBuilder */
         $youthAssessmentBuilder = YouthAssessment::select([
-            'youth_assessments.id',
-            'youth_assessments.youth_id',
-            'youth_assessments.assessment_id',
-            'youth_assessments.rto_batch_id',
-            'youth_assessments.result',
-            'youth_assessments.score',
+            'assessment_applications.id',
+            'assessment_applications.youth_id',
+            'assessment_applications.assessment_id',
+            'assessment_applications.rto_batch_id',
+            'assessment_applications.result',
+            'assessment_applications.score',
 
-            'youth_assessments.rpl_occupation_id',
+            'assessment_applications.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
-            'youth_assessments.rpl_level_id',
+            'assessment_applications.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
-            'youth_assessments.rpl_sector_id',
+            'assessment_applications.rpl_sector_id',
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'youth_assessments.rto_country_id',
+            'assessment_applications.rto_country_id',
             'rto_countries.title_en as rto_country_title_en',
             'rto_countries.title as rto_country_title',
 
-            'youth_assessments.target_country_id',
+            'assessment_applications.target_country_id',
             'target_countries.title_en as target_country_title_en',
             'target_countries.title as target_country_title',
 
-            'youth_assessments.rto_id',
+            'assessment_applications.rto_id',
             'registered_training_organizations.title_en as rto_title_en',
             'registered_training_organizations.title as rto_title',
 
-            'youth_assessments.created_at',
-            'youth_assessments.updated_at',
-            'youth_assessments.deleted_at',
+            'assessment_applications.created_at',
+            'assessment_applications.updated_at',
+            'assessment_applications.deleted_at',
         ]);
 
-        $youthAssessmentBuilder->orderBy('youth_assessments.id', $order);
+        $youthAssessmentBuilder->orderBy('assessment_applications.id', $order);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
-            $join->on('youth_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('assessment_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_levels', function ($join) {
-            $join->on('youth_assessments.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('assessment_applications.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
-            $join->on('youth_assessments.rpl_sector_id', '=', 'rpl_sectors.id')
+            $join->on('assessment_applications.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
-            $join->on('youth_assessments.rto_country_id', '=', 'rto_countries.id')
+            $join->on('assessment_applications.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
-            $join->on('youth_assessments.target_country_id', '=', 'target_countries.id')
+            $join->on('assessment_applications.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
-            $join->on('youth_assessments.rto_id', '=', 'registered_training_organizations.id')
+            $join->on('assessment_applications.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
 
         if (!empty($titleEn)) {
-            $youthAssessmentBuilder->where('youth_assessments.title_en', 'like', '%' . $titleEn . '%');
+            $youthAssessmentBuilder->where('assessment_applications.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $youthAssessmentBuilder->where('youth_assessments.title', 'like', '%' . $title . '%');
+            $youthAssessmentBuilder->where('assessment_applications.title', 'like', '%' . $title . '%');
         }
         if (!empty($rplassessmentId)) {
-            $youthAssessmentBuilder->where('youth_assessments.assessment_id', $assessmentId);
+            $youthAssessmentBuilder->where('assessment_applications.assessment_id', $assessmentId);
         }
         if (!empty($rplOccupationId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rpl_occupation_id', $rplOccupationId);
+            $youthAssessmentBuilder->where('assessment_applications.rpl_occupation_id', $rplOccupationId);
         }
         if (!empty($rplLevelId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rpl_level_id', $rplLevelId);
+            $youthAssessmentBuilder->where('assessment_applications.rpl_level_id', $rplLevelId);
         }
         if (!empty($rplSectorId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rpl_sector_id', $rplSectorId);
+            $youthAssessmentBuilder->where('assessment_applications.rpl_sector_id', $rplSectorId);
         }
         if (!empty($rtoBatchId)) {
-            $youthAssessmentBuilder->where('youth_assessments.rto_batch_id', $rtoBatchId);
+            $youthAssessmentBuilder->where('assessment_applications.rto_batch_id', $rtoBatchId);
         }
 
         /** @var Collection $youthAssessments */
@@ -161,71 +161,71 @@ class YouthAssessmentService
     {
         /** @var YouthAssessment|Builder $youthAssessmentBuilder */
         $youthAssessmentBuilder = YouthAssessment::select([
-            'youth_assessments.id',
-            'youth_assessments.youth_id',
-            'youth_assessments.assessment_id',
-            'youth_assessments.rto_batch_id',
-            'youth_assessments.result',
-            'youth_assessments.score',
+            'assessment_applications.id',
+            'assessment_applications.youth_id',
+            'assessment_applications.assessment_id',
+            'assessment_applications.rto_batch_id',
+            'assessment_applications.result',
+            'assessment_applications.score',
 
-            'youth_assessments.rpl_occupation_id',
+            'assessment_applications.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
-            'youth_assessments.rpl_level_id',
+            'assessment_applications.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
-            'youth_assessments.rpl_sector_id',
+            'assessment_applications.rpl_sector_id',
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'youth_assessments.rto_country_id',
+            'assessment_applications.rto_country_id',
             'rto_countries.title_en as rto_country_title_en',
             'rto_countries.title as rto_country_title',
 
-            'youth_assessments.target_country_id',
+            'assessment_applications.target_country_id',
             'target_countries.title_en as target_country_title_en',
             'target_countries.title as target_country_title',
 
-            'youth_assessments.rto_id',
+            'assessment_applications.rto_id',
             'registered_training_organizations.title_en as rto_title_en',
             'registered_training_organizations.title as rto_title',
 
-            'youth_assessments.created_at',
-            'youth_assessments.updated_at',
-            'youth_assessments.deleted_at',
+            'assessment_applications.created_at',
+            'assessment_applications.updated_at',
+            'assessment_applications.deleted_at',
         ]);
 
-        $youthAssessmentBuilder->where('youth_assessments.id', $id);
+        $youthAssessmentBuilder->where('assessment_applications.id', $id);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
-            $join->on('youth_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('assessment_applications.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_levels', function ($join) {
-            $join->on('youth_assessments.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('assessment_applications.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
         $youthAssessmentBuilder->join('rpl_sectors', function ($join) {
-            $join->on('youth_assessments.rpl_sector_id', '=', 'rpl_sectors.id')
+            $join->on('assessment_applications.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as rto_countries', function ($join) {
-            $join->on('youth_assessments.rto_country_id', '=', 'rto_countries.id')
+            $join->on('assessment_applications.rto_country_id', '=', 'rto_countries.id')
                 ->whereNull('rto_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('countries as target_countries', function ($join) {
-            $join->on('youth_assessments.target_country_id', '=', 'target_countries.id')
+            $join->on('assessment_applications.target_country_id', '=', 'target_countries.id')
                 ->whereNull('target_countries.deleted_at');
         });
 
         $youthAssessmentBuilder->join('registered_training_organizations', function ($join) {
-            $join->on('youth_assessments.rto_id', '=', 'registered_training_organizations.id')
+            $join->on('assessment_applications.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
 

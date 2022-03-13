@@ -13,7 +13,7 @@ class AddYouthDetailsToYouthAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('youth_assessments', function (Blueprint $table) {
+        Schema::table('assessment_applications', function (Blueprint $table) {
             $table->json('youth_details')->after('youth_id');
         });
     }
@@ -25,7 +25,7 @@ class AddYouthDetailsToYouthAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('youth_assessments', function (Blueprint $table) {
+        Schema::table('assessment_applications', function (Blueprint $table) {
             $table->dropColumn('youth_details');
         });
     }

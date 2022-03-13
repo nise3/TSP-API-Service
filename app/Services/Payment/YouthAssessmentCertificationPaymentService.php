@@ -120,7 +120,7 @@ class YouthAssessmentCertificationPaymentService
             "youth_assessment_id" => [
                 "required",
                 "integer",
-                'exists:youth_assessments,id,deleted_at,NULL'
+                'exists:assessment_applications,id,deleted_at,NULL'
             ],
             "feed_uri.success" => [
                 "required",

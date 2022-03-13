@@ -13,7 +13,7 @@ class AddPaymentStatusPaymentDateToYouthAssessments extends Migration
      */
     public function up()
     {
-        Schema::table('youth_assessments', function (Blueprint $table) {
+        Schema::table('assessment_applications', function (Blueprint $table) {
             $table->unsignedTinyInteger('payment_status')->nullable()->default(2)->after('score')->comment("1=>Success, 2=>Pending, 3=>Fail, 5=>Cancel");
             $table->dateTime('payment_date')->nullable()->after('score');
         });
@@ -26,7 +26,7 @@ class AddPaymentStatusPaymentDateToYouthAssessments extends Migration
      */
     public function down()
     {
-        Schema::table('youth_assessments', function (Blueprint $table) {
+        Schema::table('assessment_applications', function (Blueprint $table) {
             $table->dropColumn('payment_status');
             $table->dropColumn('payment_date');
         });

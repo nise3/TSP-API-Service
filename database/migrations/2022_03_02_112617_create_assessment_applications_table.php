@@ -38,6 +38,6 @@ class CreateAssessmentApplicationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('youth_assessments');
+        Schema::dropIfExists('assessment_applications');
     }
 }
