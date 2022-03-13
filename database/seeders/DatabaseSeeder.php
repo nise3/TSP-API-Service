@@ -22,11 +22,11 @@ class DatabaseSeeder extends Seeder
             EduBoardSeeder::class,
             ExamDegreeSeeder::class,
             CountryTableSeeder::class,
-//            InstitutesTableSeeder::class,
-//            TrainingCentersTableSeeder::class,
             SspPessimisticLockingsTableSeeder::class,
 //            CoursesTableSeeder::class,
 //            BatchesTableSeeder::class,
+//            TrainingCentersTableSeeder::class,
+//            InstitutesTableSeeder::class,
 
         ]);
     }
