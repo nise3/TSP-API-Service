@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddDeafultValueAtCertificationStatusToRtoBatchesTable extends Migration
@@ -14,7 +15,8 @@ class AddDeafultValueAtCertificationStatusToRtoBatchesTable extends Migration
     public function up()
     {
         Schema::table('rto_batches', function (Blueprint $table) {
-            $table->unsignedTinyInteger('certification_status')->change()->default('1');
+            DB::statement('ALTER TABLE rto_batches ALTER certification_status SET DEFAULT 1');
+
         });
     }
 

@@ -397,8 +397,8 @@ class RplApplicationService
             "youth_details.nationality" => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
-                "max:11",
-                BaseModel::MOBILE_REGEX,
+                'int'
+
             ],
             'youth_details.identity_number_type' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
