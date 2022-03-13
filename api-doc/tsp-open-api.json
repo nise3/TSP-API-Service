@@ -8174,6 +8174,129 @@
                 }
             }
         },
+        "/rpl-assessment": {
+            "post": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Create a Rpl assessment",
+                "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth assessment added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Get all youth assessment",
+                "description": "API endpoint to Get all Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example":{
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "youth_id": 1,
+                                            "assessment_id": 2,
+                                            "rto_batch_id": 1,
+                                            "result": null,
+                                            "score": null,
+                                            "rpl_occupation_id": 1,
+                                            "rpl_occupation_title_en": "Newiee",
+                                            "rpl_occupation_title": "Newiee",
+                                            "rpl_level_id": 1,
+                                            "rpl_level_title_en": "DoidoPunk",
+                                            "rpl_level_title": "Doido",
+                                            "rpl_sector_id": 1,
+                                            "rpl_sector_title_en": "aaa",
+                                            "rpl_sector_title": "aaaa",
+                                            "rto_country_id": 2,
+                                            "rto_country_title_en": "Åland Islands",
+                                            "rto_country_title": "Åland Islands",
+                                            "target_country_id": 1,
+                                            "target_country_title_en": "Afghanistan",
+                                            "target_country_title": "Afghanistan",
+                                            "rto_id": 1,
+                                            "rto_title_en": "BabyLolAmONTEZZ",
+                                            "rto_title": "BabyLolAmONTEZZ",
+                                            "created_at": "2022-03-03T11:43:20.000000Z",
+                                            "updated_at": "2022-03-07T04:32:21.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/rpl-applications/{rplApplicationId}": {
             "get": {
                 "tags": [

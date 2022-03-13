@@ -25,7 +25,7 @@ class RplApplicationService
      * @param Carbon $startTime
      * @return array
      */
-    public function getYouthAssessmentList(array $request, Carbon $startTime): array
+    public function getRplApplicationList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -157,7 +157,7 @@ class RplApplicationService
      * @param int $id
      * @return RplApplication
      */
-    public function getOneYouthAssessment(int $id): RplApplication
+    public function getOneRplApplication(int $id): RplApplication
     {
         /** @var RplApplication|Builder $youthAssessmentBuilder */
         $youthAssessmentBuilder = RplApplication::select([
@@ -238,16 +238,25 @@ class RplApplicationService
      */
     public function store(array $data): RplApplication
     {
-        if (!empty($data['youth_details'])) {
-            $assessmentId = $data['assessment_id'];
-            $rplApplication = RplApplication::where('assessment_id', $assessmentId)->firstOrFail();
-        } else {
-            $rplApplication = app(RplApplication::class);
-        }
+        $rplApplication = app(RplApplication::class);
         $rplApplication->fill($data);
         $rplApplication->save();
 
         return $rplApplication;
+    }
+
+    /**
+     * @param RplApplication $rplApplication
+     * @param array $data
+     * @return RplApplication
+     */
+    public function storeApplication(RplApplication $rplApplication,array $data): RplApplication
+    {
+        $rplApplication->fill($data);
+        $rplApplication->save();
+
+        return $rplApplication;
+
     }
 
     /**
@@ -903,7 +912,12 @@ class RplApplicationService
         ], $customMessage);
     }
 
-    public function assignToBatchValidator(Request $request, int $id)
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return Validator
+     */
+    public function assignToBatchValidator(Request $request, int $id): Validator
     {
         $data = $request->all();
 
