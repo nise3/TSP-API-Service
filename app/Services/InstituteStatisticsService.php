@@ -384,10 +384,15 @@ class InstituteStatisticsService
 
     public function getRtoDashboardStatistics(){
         $totalBatches = self::getTotalRtoBatches();
+        $totalRplApplications = self::getTotalRplApplications();
     }
 
     private function getTotalRtoBatches(){
-        $batches = RtoBatch::where();
+        return RtoBatch::acl()->count();
+    }
+
+    private function getTotalRplApplications(){
+
     }
 
 }
