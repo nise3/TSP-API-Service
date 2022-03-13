@@ -19,7 +19,7 @@ use Illuminate\Validation\Rule;
 use Throwable;
 
 
-class RplAssessmentCertificationPaymentService
+class RplApplicationCertificationPaymentService
 {
     /**
      * @throws Throwable
