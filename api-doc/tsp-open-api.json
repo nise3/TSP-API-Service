@@ -7266,6 +7266,45 @@
                 ]
             }
         },
+        "/rto-dashboard-statistics": {
+            "get": {
+                "tags": [
+                    "Dashboard Statistics"
+                ],
+                "summary": "Get rto dashboard statistics",
+                "description": "API endpoint to Get rto dashboard statistics. A successful request response will show 200 HTTP status code",
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certification-authority-dashboard-statistics": {
+            "get": {
+                "tags": [
+                    "Dashboard Statistics"
+                ],
+                "summary": "Get certificate authority dashboard statistics",
+                "description": "API endpoint to Get certificate authority dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/demanded-courses/{instituteId}": {
             "get": {
                 "summary": "Get demanded courses",
