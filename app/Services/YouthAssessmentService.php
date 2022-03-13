@@ -366,9 +366,9 @@ class YouthAssessmentService
                 'nullable'
             ],
             'youth_details.religion' => [
-                'required',
+                Rule::requiredIf(!empty($data['youth_details'])),
                 'int',
-                Rule::in(YouthAssessment::RELIGIONS)
+                Rule::in(YouthAssessment::RELIGIONS)  // TODO: Change "YouthAssessment" to "RplApplication"
             ],
             "youth_details.photo" => [
                 "nullable,
