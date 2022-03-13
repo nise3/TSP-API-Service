@@ -72,11 +72,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('institute_trainee_youths', ['as' => 'institute.trainee.youths', 'uses' => 'CourseEnrollmentController@getInstituteTraineeYouths']);
 
         $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('certification-authority-dashboard-statistics', ["as" => "certification-authority-dashboard-statistics", "uses" => "InstituteStatisticsController@certificationAuthorityDashboardStatistics"]);
         $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
 
         $router->post('rpl-applications/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "RplApplicationController@assignToBatch"]);
         $router->post('rto-batches/{id}/assign-assessor', ["as" => "institute.rto-batches-assign-assessor", "uses" => "RtoBatchController@assignAssessor"]);
 
+        /** RTO dashboard statistics */
+        $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
     });
 
 
