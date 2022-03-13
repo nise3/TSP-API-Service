@@ -407,7 +407,7 @@ class InstituteStatisticsService
     }
 
     private function getTotalYouths(){
-        return RplApplication::acl()->count('id')->unique();
+        return RplApplication::acl()->count('id');
     }
 
 }
