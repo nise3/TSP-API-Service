@@ -4625,7 +4625,7 @@
                 }
             }
         },
-        "/youth-assessment-certification/payment/payment-via-ek-pay/pay-now": {
+        "/rpl-assessment-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
                     "Youth Assessment"

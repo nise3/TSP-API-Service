@@ -158,9 +158,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-by-ek-pay/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentIpnHandler"]);
     });
 
-    $router->group(["prefix" => "youth-assessment-certification/payment", "as" => "youth-assessment-certification.payment"], function () use ($router) {
-        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "YouthAssessmentCertificationPaymentController@paymentViaEkPay"]);
-        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "YouthAssessmentCertificationPaymentController@ipnHandler"]);
+    $router->group(["prefix" => "rpl-assessment-certification/payment", "as" => "rpl-assessment-certification.payment"], function () use ($router) {
+        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplAssessmentCertificationPaymentController@paymentViaEkPay"]);
+        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplAssessmentCertificationPaymentController@ipnHandler"]);
     });
 
 
