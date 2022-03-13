@@ -95,7 +95,7 @@ class InstituteStatisticsController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function certificationAuthorityStatistics(): JsonResponse
+    public function certificationAuthorityDashboardStatistics(): JsonResponse
     {
         $response['data'] = $this->instituteStatisticsService->getCertificationAuthorityStatistics();
         $response['_response_status'] = [
