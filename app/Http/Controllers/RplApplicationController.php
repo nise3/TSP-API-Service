@@ -146,7 +146,7 @@ class RplApplicationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        throw_if($request->input('rpl_application_id'), ValidationException::withMessages(
+        throw_if(!($request->has('rpl_application_id') && $request->input('rpl_application_id')), ValidationException::withMessages(
             ['rpl_application_id is required.[50000]']
         ));
 
