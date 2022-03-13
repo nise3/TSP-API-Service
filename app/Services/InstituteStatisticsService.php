@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Institute;
 use App\Models\RegisteredTrainingOrganization;
+use App\Models\RplApplication;
 use App\Models\RplOccupation;
 use App\Models\RplSector;
 use App\Models\RtoBatch;
@@ -392,7 +393,7 @@ class InstituteStatisticsService
     }
 
     private function getTotalRplApplications(){
-
+        RplApplication::acl();
     }
 
 }
