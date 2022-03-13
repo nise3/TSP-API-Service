@@ -101,8 +101,10 @@ class YouthAssessmentController extends Controller
     {
         // $this->authorize('create', YouthAssessment::class); // not needed for public
         $validated = $this->youthAssessmentService->validator($request)->validate();
+        $assessmentId = $validated['assessment_id'];
+        $youthAssessment = YouthAssessment::where('assessment_id',$assessmentId)->firstOrFail();
         $answers = $this->youthAssessmentService->answersValidator($request)->validate();
-        $youthAssessment = $this->youthAssessmentService->store($validated);
+        $youthAssessment = $this->youthAssessmentService->store($youthAssessment,$validated);
         $youthAssessment = $this->youthAssessmentService->updateResult($youthAssessment, $answers);
 
         $response = [

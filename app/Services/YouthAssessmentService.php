@@ -7,6 +7,8 @@ namespace App\Services;
 use App\Models\Assessment;
 use App\Models\AssessmentQuestion;
 use App\Models\BaseModel;
+use App\Models\EducationLevel;
+use App\Models\EnrollmentEducation;
 use App\Models\YouthAssessment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -231,12 +233,12 @@ class YouthAssessmentService
     }
 
     /**
+     * @param YouthAssessment $youthAssessment
      * @param array $data
      * @return YouthAssessment
      */
-    public function store(array $data): YouthAssessment
+    public function store(YouthAssessment $youthAssessment, array $data): YouthAssessment
     {
-        $youthAssessment = app()->make(YouthAssessment::class);
         $youthAssessment->fill($data);
         $youthAssessment->save();
         return $youthAssessment;
@@ -437,7 +439,6 @@ class YouthAssessmentService
             'youth_details.permanent_address.*.loc_district_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
-                'nullable',
                 'integer',
             ],
             'youth_details.permanent_address.*.loc_upazila_id' => [
@@ -492,6 +493,11 @@ class YouthAssessmentService
                 'integer',
                 Rule::in(YouthAssessment::IS_YOUTH_EMPLOYED)
             ],
+            'youth_details . company_type' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'nullable',
+                'string',
+            ],
             'youth_details . job_responsibilities' => [
                 'string',
                 Rule::requiredIf(function () use ($data) {
@@ -517,23 +523,43 @@ class YouthAssessmentService
                 'string',
                 'nullable'
             ],
-//            'youth_details.education_info' => [
-//                'required',
-//                'array',
-//                'min:1'
-//            ],
-//            'youth_details.education_info.*' => [
-//                'nullable',
-//                'array',
-//            ],
-//            'youth_details.education_info.*.edu_board_id' => [
-//                'nullable',
-//                'array',
-//            ],
-//            'youth_details.education_info.*.edu_board_name' => [
-//                'nullable',
-//                'array',
-//            ],
+
+            'youth_details . job_experiences' => [
+                'nullable',
+                'array'
+            ],
+            'youth_details . job_experiences.*' => [
+                'nullable',
+                'array'
+            ],
+            'youth_details.job_experiences.*.rto_country_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+                'nullable',
+                'int',
+                'min:1',
+                'exists:rto_countries,country_id',
+            ],
+            'youth_details.job_experiences.*.rpl_sector_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+                'nullable',
+                'int',
+                'min:1',
+                'exists:rpl_sectors,id,deleted_at,NULL',
+            ],
+            'youth_details.job_experiences.*.rpl_occupation_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+                'nullable',
+                'int',
+                'min:1',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
+            'youth_details.job_experiences.*.rpl_level_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+                'nullable',
+                'int',
+                'min:1',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
             'rpl_sector_id' => [
                 'required',
                 'int',
@@ -586,9 +612,193 @@ class YouthAssessmentService
                 'int',
                 'min:1',
                 'exists:rto_batches,id,deleted_at,NULL',
-            ]
+            ],
+            'youth_details.education_info' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
+                'min:1',
+                'array',
+            ],
         ];
+
+        if (!empty($data['youth_details']['education_info'])) {
+            foreach ($data['youth_details']['education_info'] as $eduLabelId => $fields) {
+                $validationField = 'education_info.' . $eduLabelId . '.';
+                $rules[$validationField . 'exam_degree_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $request) {
+                        return $this->getRequiredStatus(EnrollmentEducation::DEGREE, $eduLabelId);
+                    }),
+                    'nullable',
+                    'int',
+                    'exists:exam_degrees,id,deleted_at,NULL,education_level_id,' . $eduLabelId
+                ];
+                $rules[$validationField . 'exam_degree_name'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return $this->getRequiredStatus(EnrollmentEducation::EXAM_DEGREE_NAME, $eduLabelId);
+                    }),
+                    'nullable',
+                    "string"
+                ];
+                $rules[$validationField . 'exam_degree_name_en'] = [
+                    "nullable",
+                    "string"
+                ];
+                $rules[$validationField . 'major_or_concentration'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return $this->getRequiredStatus(EnrollmentEducation::MAJOR, $eduLabelId);
+                    }),
+                    'nullable',
+                    "string"
+                ];
+                $rules[$validationField . 'major_or_concentration_en'] = [
+                    "nullable",
+                    "string"
+                ];
+                $rules[$validationField . 'edu_group_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return $this->getRequiredStatus(EnrollmentEducation::EDU_GROUP, $eduLabelId);
+                    }),
+                    'nullable',
+                    'exists:edu_groups,id,deleted_at,NULL',
+                    "integer"
+                ];
+                $rules[$validationField . 'edu_board_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return $this->getRequiredStatus(EnrollmentEducation::BOARD, $eduLabelId);
+                    }),
+                    'nullable',
+                    'exists:edu_boards,id,deleted_at,NULL',
+                    "integer"
+                ];
+                $rules[$validationField . 'institute_name'] = [
+                    Rule::requiredIf(!empty($data['youth_details']['education_info'])),
+                    'string',
+                    'max:800',
+                ];
+                $rules[$validationField . 'institute_name_en'] = [
+                    'nullable',
+                    'string',
+                    'max:400',
+                ];
+                $rules[$validationField . 'result'] = [
+                    Rule::requiredIf(!empty($data['youth_details']['education_info'])),
+                    "integer",
+                    Rule::in(array_keys(config("nise3.exam_degree_results")))
+                ];
+                $rules[$validationField . 'marks_in_percentage'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId);
+                    }),
+                    'nullable',
+                    "numeric"
+                ];
+                $rules[$validationField . 'cgpa_scale'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId);
+                    }),
+                    'nullable',
+                    Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
+                    "integer"
+                ];
+                $rules[$validationField . 'cgpa'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId);
+                    }),
+                    'nullable',
+                    'numeric',
+                    "max:5"
+                ];
+                $rules[$validationField . 'year_of_passing'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId);
+                    }),
+                    'nullable',
+                    'string'
+                ];
+
+                $rules[$validationField . 'duration'] = [
+                    "nullable",
+                    "integer"
+                ];
+            }
+        }
+
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
+    }
+
+    /**
+     * @param string $modelName
+     * @param int $id
+     * @return string
+     */
+    public function getCodeById(string $modelName, int $id): string
+    {
+        if ($modelName == EnrollmentEducation::EDUCATION_LEVEL_TRIGGER) {
+            $educationLevel = EducationLevel::where('id', $id)->first();
+            $code = $educationLevel->code ?? "";
+        } else {
+            $code = config("nise3.exam_degree_results." . $id . ".code");
+        }
+        return $code ?? "";
+    }
+
+    /**
+     * @param string $key
+     * @param int $eduLabelId
+     * @return bool
+     */
+    private function getRequiredStatus(string $key, int $eduLabelId): bool
+    {
+        switch ($key) {
+
+            /** Validation Rule Based On YouthEducation Level */
+            case EnrollmentEducation::DEGREE:
+            {
+                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_PSC_5_PASS, EducationLevel::EDUCATION_LEVEL_JSC_JDC_8_PASS, EducationLevel::EDUCATION_LEVEL_SECONDARY, EducationLevel::EDUCATION_LEVEL_HIGHER_SECONDARY, EducationLevel::EDUCATION_LEVEL_DIPLOMA, EducationLevel::EDUCATION_LEVEL_BACHELOR, EducationLevel::EDUCATION_LEVEL_MASTERS]);
+            }
+            case EnrollmentEducation::BOARD:
+            {
+                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_PSC_5_PASS, EducationLevel::EDUCATION_LEVEL_JSC_JDC_8_PASS, EducationLevel::EDUCATION_LEVEL_SECONDARY, EducationLevel::EDUCATION_LEVEL_HIGHER_SECONDARY]);
+            }
+            case EnrollmentEducation::MAJOR:
+            {
+                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_DIPLOMA, EducationLevel::EDUCATION_LEVEL_BACHELOR, EducationLevel::EDUCATION_LEVEL_MASTERS, EducationLevel::EDUCATION_LEVEL_PHD]);
+            }
+            case EnrollmentEducation::EXAM_DEGREE_NAME:
+            {
+                return $this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId) == EducationLevel::EDUCATION_LEVEL_PHD;
+            }
+            case EnrollmentEducation::EDU_GROUP:
+            {
+                return in_array($this->getCodeById(EnrollmentEducation::EDUCATION_LEVEL_TRIGGER, $eduLabelId), [EducationLevel::EDUCATION_LEVEL_SECONDARY, EducationLevel::EDUCATION_LEVEL_HIGHER_SECONDARY]);
+            }
+            /** Validation Rule Based On Result Type */
+            case EnrollmentEducation::MARKS:
+            {
+                return in_array($this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId), [EducationLevel::RESULT_FIRST_DIVISION, EducationLevel::RESULT_SECOND_DIVISION, EducationLevel::RESULT_THIRD_DIVISION]);
+            }
+            case EnrollmentEducation::SCALE:
+            case EnrollmentEducation::CGPA:
+            {
+                return $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) == EducationLevel::RESULT_GRADE;
+            }
+            case EnrollmentEducation::YEAR_OF_PASS:
+            {
+                return $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) !== EducationLevel::RESULT_APPEARED;
+            }
+            case EnrollmentEducation::EXPECTED_YEAR_OF_PASS:
+            {
+                return $this->getCodeById(EnrollmentEducation::RESULT_TRIGGER, $eduLabelId) == EducationLevel::RESULT_APPEARED;
+            }
+            default:
+            {
+                return false;
+            }
+
+        }
     }
 
     /**
