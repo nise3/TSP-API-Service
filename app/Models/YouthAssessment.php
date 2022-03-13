@@ -9,6 +9,7 @@ class YouthAssessment extends BaseModel
 {
     use SoftDeletes, ScopeRowStatusTrait;
 
+    protected $table = "assessment_applications";
     protected $casts = [
         'youth_details' => 'array'
     ];
