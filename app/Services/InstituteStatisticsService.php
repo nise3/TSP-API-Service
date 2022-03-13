@@ -386,4 +386,8 @@ class InstituteStatisticsService
         $totalBatches = self::getTotalRtoBatches();
     }
 
+    private function getTotalRtoBatches(){
+        $batches = RtoBatch::where();
+    }
+
 }
