@@ -22,7 +22,7 @@ class SspPessimisticLockingsTableSeeder extends Seeder
 
         DB::table('ssp_pessimistic_lockings')->insert([
             [
-                'last_incremental_value' => 3,
+                'last_incremental_value' => 13,
             ]
         ]);
 
