@@ -380,8 +380,8 @@ class RplApplicationService
                 BaseModel::MOBILE_REGEX,
             ],
             'youth_details.identity_number_type' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
                 'int',
-                'required',
                 Rule::in(RplApplication::IDENTITY_TYPES)
             ],
             'youth_details.identity_number' => [
