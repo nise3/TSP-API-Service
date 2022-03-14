@@ -141,7 +141,7 @@ class AssessmentQuestionService
     {
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])
-                ->where('assessment_question_set_id', $data['assessment_question_set_id'])
+                ->where('assessment_question_set_id', $assessmentQuestion['assessment_question_set_id'])
                 ->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
