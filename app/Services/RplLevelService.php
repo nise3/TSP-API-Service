@@ -269,6 +269,7 @@ class RplLevelService
             'country_id' => 'nullable|int',
             'rpl_occupation_id' => 'nullable|int',
             'rpl_sector_id' => 'nullable|int',
+            'youth_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',
