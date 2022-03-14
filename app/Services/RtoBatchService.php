@@ -339,6 +339,10 @@ class RtoBatchService
                 'min:1',
                 'exists:trainers,id,deleted_at,NULL',
             ],
+            "assessment_date"=>[
+                'required',
+                'date'
+            ] ,
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
