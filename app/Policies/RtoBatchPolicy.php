@@ -15,7 +15,7 @@ class RtoBatchPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_rto_batch');
+        return $authUser->hasPermission('view_any_rto_batch') || $authUser->hasPermission('view_any_rpl_batch');
     }
 
     /**

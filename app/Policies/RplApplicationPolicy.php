@@ -15,7 +15,7 @@ class RplApplicationPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_rpl_application');
+        return $authUser->hasPermission('view_any_rpl_application') || $authUser->hasPermission('view_any_rpl_youth_application');
     }
 
     /**
