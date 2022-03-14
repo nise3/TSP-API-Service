@@ -44,6 +44,7 @@ class RtoBatchService
             'registered_training_organizations.title_en as rto_title_en',
             'rto_batches.assessment_date',
 
+            'rto_batches.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
