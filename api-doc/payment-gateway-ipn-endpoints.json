@@ -57,7 +57,7 @@
                 }
             }
         },
-        "/youth-assessment-certification/payment/payment-via-ek-pay/ipn-handler/{secretToken}": {
+        "/rpl-applications/payment/payment-via-ek-pay/ipn-handler/{secretToken}": {
             "post": {
                 "summary": "youth-assessment-certification",
                 "parameters": [
