@@ -60,13 +60,14 @@ class AssessmentQuestionService
             'assessment_questions.option_3_en',
             'assessment_questions.option_4',
             'assessment_questions.option_4_en',
-            'assessment_questions.answer',
             'assessment_questions.row_status',
             'assessment_questions.created_at',
             'assessment_questions.updated_at',
         ]);
 
         if (!$isPublicApi) {
+            /** Answer will not be shown in public api question list */
+            $assessmentQuestionBuilder->addSelect('assessment_questions.answer');
             $assessmentQuestionBuilder->acl();
         }
 
