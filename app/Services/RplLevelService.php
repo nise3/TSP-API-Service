@@ -83,7 +83,7 @@ class RplLevelService
         }
         if (is_numeric($youthId) && is_numeric($rplOccupationId)) {
             $rplLevelIds = RplApplication::where('youth_id', $youthId)
-                ->where('occupation_id', $rplOccupationId)
+                ->where('rpl_occupation_id', $rplOccupationId)
                 ->where('application_status', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED) //TODO change status on new status addition
                 ->pluck('rpl_level_id')->toArray();
 
