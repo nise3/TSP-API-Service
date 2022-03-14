@@ -197,6 +197,8 @@ class RplApplicationController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function assignToBatch(Request $request, int $id): JsonResponse
     {
