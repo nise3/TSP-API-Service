@@ -37,6 +37,13 @@ class RtoBatchService
             'rto_batches.id',
             'rto_batches.title',
             'rto_batches.title_en',
+            'rto_batches.assessor_id',
+
+            'rto_batches.rto_id',
+            'rto_batches.certification_status',
+            'registered_training_organizations.title as rto_title',
+            'registered_training_organizations.title_en as rto_title_en',
+            'rto_batches.assessment_date',
 
             'rto_batches.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -60,6 +67,11 @@ class RtoBatchService
         ]);
 
         $rtoBatchBuilder->orderBy('rto_batches.id', $order);
+
+        $rtoBatchBuilder->join('registered_training_organizations', function ($join){
+            $join->on('rto_batches.rto_id', '=', 'registered_training_organizations.id')
+                ->whereNull('registered_training_organizations.deleted_at');
+        });
 
         $rtoBatchBuilder->join('rpl_occupations', function ($join){
             $join->on('rto_batches.rpl_occupation_id', '=', 'rpl_occupations.id')
@@ -131,6 +143,15 @@ class RtoBatchService
             'rto_batches.id',
             'rto_batches.title',
             'rto_batches.title_en',
+            'rto_batches.assessor_id',
+
+
+            'rto_batches.rto_id',
+            'rto_batches.certification_status',
+
+            'registered_training_organizations.title as rto_title',
+            'registered_training_organizations.title_en as rto_title_en',
+            'rto_batches.assessment_date',
 
             'rto_batches.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
@@ -153,9 +174,12 @@ class RtoBatchService
             'rto_batches.deleted_at',
         ]);
 
-        if (is_numeric($id)) {
-            $rtoBatchBuilder->where('rto_batches.id', $id);
-        }
+        $rtoBatchBuilder->where('rto_batches.id', $id);
+
+        $rtoBatchBuilder->join('registered_training_organizations', function ($join){
+            $join->on('rto_batches.rto_id', '=', 'registered_training_organizations.id')
+                ->whereNull('registered_training_organizations.deleted_at');
+        });
 
         $rtoBatchBuilder->join('rpl_occupations', function ($join){
             $join->on('rto_batches.rpl_occupation_id', '=', 'rpl_occupations.id')
@@ -258,6 +282,20 @@ class RtoBatchService
                 'min:1',
                 // 'exists:youths,id,deleted_at,NULL',
             ],
+            "rto_id"=>[
+                'required',
+                'integer',
+                'exists:registered_training_organizations,id,deleted_at,NULL'
+            ],
+            "assessment_date"=>[
+                'nullable',
+                'date'
+            ] ,
+            "certification_status"=>[
+                'nullable',
+                'integer',
+                Rule::in(array_keys(RtoBatch::CERTIFICATION_STATUSES))
+            ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules);
     }
@@ -304,6 +342,10 @@ class RtoBatchService
                 'min:1',
                 'exists:trainers,id,deleted_at,NULL',
             ],
+            "assessment_date"=>[
+                'required',
+                'date'
+            ] ,
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules);

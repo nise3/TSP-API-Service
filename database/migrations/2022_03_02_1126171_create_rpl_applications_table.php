@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateYouthAssessmentsTable extends Migration
+class CreateRplApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateYouthAssessmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('youth_assessments', function (Blueprint $table) {
+        Schema::create('rpl_applications', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('rpl_sector_id')->index();
             $table->unsignedInteger('rpl_occupation_id')->index();
@@ -38,6 +38,6 @@ class CreateYouthAssessmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('youth_assessments');
+        Schema::dropIfExists('rpl_applications');
     }
 }

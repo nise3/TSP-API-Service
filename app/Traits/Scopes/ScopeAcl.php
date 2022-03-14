@@ -41,6 +41,8 @@ trait ScopeAcl
         } else if ($authUser && $authUser->isRtoUser()) {  // RTO User
             if (Schema::hasColumn($tableName, 'registered_training_organization_id')) {
                 $query = $query->where($tableName . '.registered_training_organization_id', $authUser->registered_training_organization_id);
+            } else if (Schema::hasColumn($tableName, 'rto_id')) {
+                $query = $query->where($tableName . '.rto_id', $authUser->registered_training_organization_id);
             }
         }
 

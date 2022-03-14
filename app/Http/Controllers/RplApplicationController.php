@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use App\Models\RplOccupation;
-use App\Services\YouthAssessmentService;
+use App\Services\RplApplicationService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,12 +15,12 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class YouthAssessmentController extends Controller
+class RplApplicationController extends Controller
 {
     /**
-     * @var YouthAssessmentService
+     * @var RplApplicationService
      */
-    public YouthAssessmentService $youthAssessmentService;
+    public RplApplicationService $rplApplicationService;
     /**
      * @var Carbon
      */
@@ -28,12 +28,12 @@ class YouthAssessmentController extends Controller
 
     /**
      * RplOccupationController constructor.
-     * @param YouthAssessmentService $youthAssessmentService
+     * @param RplApplicationService $rplApplicationService
      */
 
-    public function __construct(YouthAssessmentService $youthAssessmentService)
+    public function __construct(RplApplicationService $rplApplicationService)
     {
-        $this->youthAssessmentService = $youthAssessmentService;
+        $this->rplApplicationService = $rplApplicationService;
         $this->startTime = Carbon::now();
     }
 
@@ -46,10 +46,10 @@ class YouthAssessmentController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', YouthAssessment::class);
-        $filter = $this->youthAssessmentService->filterValidator($request)->validate();
+        $this->authorize('viewAny', RplApplication::class);
+        $filter = $this->rplApplicationService->filterValidator($request)->validate();
 
-        $response = $this->youthAssessmentService->getYouthAssessmentList($filter, $this->startTime);
+        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -60,9 +60,9 @@ class YouthAssessmentController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->youthAssessmentService->filterValidator($request)->validate();
+        $filter = $this->rplApplicationService->filterValidator($request)->validate();
 
-        $response = $this->youthAssessmentService->getYouthAssessmentList($filter, $this->startTime);
+        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -76,11 +76,11 @@ class YouthAssessmentController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $youthAssessment = $this->youthAssessmentService->getOneYouthAssessment($id);
-        $this->authorize('view', $youthAssessment);
+        $rplApplication = $this->rplApplicationService->getOneRplApplication($id);
+        $this->authorize('view', $rplApplication);
 
         $response = [
-            "data" => $youthAssessment,
+            "data" => $rplApplication,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -91,26 +91,71 @@ class YouthAssessmentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Show the form for creating a new resource.
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getRplApplicationDetails(Request $request, int $id): JsonResponse
+    {
+        $rplApplication = $this->rplApplicationService->getOneRplApplication($id);
+        $response = [
+            "data" => $rplApplication,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Store a Rpl Assessment
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(Request $request): JsonResponse
+    public function createRplAssessment(Request $request): JsonResponse
     {
-        // $this->authorize('create', YouthAssessment::class); // not needed for public
-        $validated = $this->youthAssessmentService->validator($request)->validate();
-        $answers = $this->youthAssessmentService->answersValidator($request)->validate();
-        $youthAssessment = $this->youthAssessmentService->store($validated);
-        $youthAssessment = $this->youthAssessmentService->updateResult($youthAssessment, $answers);
+        // $this->authorize('create', RplApplication::class); // not needed for public
+        $validated = $this->rplApplicationService->validator($request)->validate();
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_ASSESSMENT_COMPLETED;
+        $answers = $this->rplApplicationService->answersValidator($request)->validate();
+        $rplApplication = $this->rplApplicationService->store($validated);
+        $rplApplication = $this->rplApplicationService->updateResult($rplApplication, $answers);
 
         $response = [
-            'data' => $youthAssessment,
+            'data' => $rplApplication,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Youth assessment added successfully",
+                "message" => "Rpl assessment added successfully",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     * Create a Rpl Application
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $rplApplication = RplApplication::findOrFail($request->input('id'));
+        $validated = $this->rplApplicationService->validator($request)->validate();
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
+        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
+        $response = [
+            'data' => $rplApplication,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Rpl assessment  added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -128,12 +173,12 @@ class YouthAssessmentController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $youthAssessment = YouthAssessment::findOrFail($id);
+        $rplApplication = RplApplication::findOrFail($id);
 
-        $this->authorize('update', $youthAssessment);
+        $this->authorize('update', $rplApplication);
 
-        $validated = $this->youthAssessmentService->validator($request, $id)->validate();
-        $data = $this->youthAssessmentService->update($youthAssessment, $validated);
+        $validated = $this->rplApplicationService->validator($request, $id)->validate();
+        $data = $this->rplApplicationService->update($rplApplication, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
@@ -150,17 +195,19 @@ class YouthAssessmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  int $id
+     * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function assignToBatch(Request $request, int $id): JsonResponse
     {
-        $youthAssessment = YouthAssessment::findOrFail($id);
+        $rplApplication = RplApplication::findOrFail($id);
 
-        $this->authorize('update', $youthAssessment);
+        $this->authorize('update', $rplApplication);
 
-        $validated = $this->youthAssessmentService->assignToBatchValidator($request, $id)->validate();
-        $data = $this->youthAssessmentService->update($youthAssessment, $validated);
+        $validated = $this->rplApplicationService->assignToBatchValidator($request, $id)->validate();
+        $data = $this->rplApplicationService->update($rplApplication, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
@@ -182,13 +229,13 @@ class YouthAssessmentController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $youthAssessment = YouthAssessment::findOrFail($id);
+        $rplApplication = RplApplication::findOrFail($id);
 
-        $this->authorize('delete', $youthAssessment);
+        $this->authorize('delete', $rplApplication);
 
         DB::beginTransaction();
         try {
-            $this->youthAssessmentService->destroy($youthAssessment);
+            $this->rplApplicationService->destroy($rplApplication);
             DB::commit();
             $response = [
                 '_response_status' => [

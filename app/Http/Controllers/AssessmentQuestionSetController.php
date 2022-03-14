@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RplOccupation;
-use App\Models\RtoBatch;
-use App\Services\RtoBatchService;
+use App\Models\AssessmentQuestionSet;
+use App\Services\AssessmentQuestionSetService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class RtoBatchController extends Controller
+class AssessmentQuestionSetController extends Controller
 {
     /**
-     * @var RtoBatchService
+     * @var AssessmentQuestionSetService
      */
-    public RtoBatchService $rtoBatchService;
+    public AssessmentQuestionSetService $assessmentQuestionSetService;
     /**
      * @var Carbon
      */
@@ -29,27 +27,28 @@ class RtoBatchController extends Controller
 
     /**
      * RplOccupationController constructor.
-     * @param RtoBatchService $rtoBatchService
+     * @param AssessmentQuestionSetService $assessmentQuestionSetService
      */
 
-    public function __construct(RtoBatchService $rtoBatchService)
+    public function __construct(AssessmentQuestionSetService $assessmentQuestionSetService)
     {
-        $this->rtoBatchService = $rtoBatchService;
+        $this->assessmentQuestionSetService = $assessmentQuestionSetService;
         $this->startTime = Carbon::now();
     }
 
     /**
      * Display a listing of the resource.
+     *
      * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
+     * @throws AuthorizationException|ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', RtoBatch::class);
-        $filter = $this->rtoBatchService->filterValidator($request)->validate();
+        $this->authorize('viewAny', AssessmentQuestionSet::class);
+        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
 
-        $response = $this->rtoBatchService->getRtoBatchList($filter, $this->startTime);
+        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -60,9 +59,9 @@ class RtoBatchController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->rtoBatchService->filterValidator($request)->validate();
+        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
 
-        $response = $this->rtoBatchService->getRtoBatchList($filter, $this->startTime);
+        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -76,11 +75,11 @@ class RtoBatchController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $rtoBatch = $this->rtoBatchService->getOneRtoBatch($id);
-        $this->authorize('view', $rtoBatch);
+        $assessmentQuestionSet = $this->assessmentQuestionSetService->getOneAssessmentQuestionSet($id);
+        $this->authorize('view', $assessmentQuestionSet);
 
         $response = [
-            "data" => $rtoBatch,
+            "data" => $assessmentQuestionSet,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -100,25 +99,16 @@ class RtoBatchController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', RtoBatch::class);
-        $authUser = Auth::user();
-
-        if($authUser->isRtoUser()){
-            $request->offsetSet('rto_id', $request->input('registered_training_organization_id'));
-        }
-
-        $validated = $this->rtoBatchService->validator($request)->validate();
-        if(!empty($validated['institute_id'])){
-            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_SUBMITTED;
-        }
-        $rtoBatch = $this->rtoBatchService->store($validated);
+        $this->authorize('create', AssessmentQuestionSet::class);
+        $validated = $this->assessmentQuestionSetService->validator($request)->validate();
+        $assessmentQuestionSet = $this->assessmentQuestionSetService->store($validated);
 
         $response = [
-            'data' => $rtoBatch,
+            'data' => $assessmentQuestionSet,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RTO batch added successfully",
+                "message" => "AssessmentQuestionSet added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -135,51 +125,18 @@ class RtoBatchController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $rtoBatch = RtoBatch::findOrFail($id);
+        $assessmentQuestionSet = AssessmentQuestionSet::findOrFail($id);
 
-        $this->authorize('update', RtoBatch::class);
+        $this->authorize('update', $assessmentQuestionSet);
 
-        $validated = $this->rtoBatchService->validator($request, $id)->validate();
-        $data = $this->rtoBatchService->update($rtoBatch, $validated);
+        $validated = $this->assessmentQuestionSetService->validator($request, $id)->validate();
+        $data = $this->assessmentQuestionSetService->update($assessmentQuestionSet, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RTO batch updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws AuthorizationException
-     * @throws ValidationException
-     */
-    public function assignAssessor(Request $request, int $id): JsonResponse
-    {
-        $youthAssessment = RtoBatch::findOrFail($id);
-
-        $this->authorize('update', RtoBatch::class);
-
-        $validated = $this->rtoBatchService->assignAssessorValidator($request)->validate();
-        if(!empty($request['institute_id'])){
-            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_NOT_CERTIFIED;
-        }
-        $data = $this->rtoBatchService->update($youthAssessment, $validated);
-        $response = [
-            'data' => $data,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Assessor assigned successfully.",
+                "message" => "AssessmentQuestionSet updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -195,19 +152,19 @@ class RtoBatchController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $rtoBatch = RtoBatch::findOrFail($id);
+        $assessmentQuestionSet = AssessmentQuestionSet::findOrFail($id);
 
-        $this->authorize('delete', $rtoBatch);
+        $this->authorize('delete', $assessmentQuestionSet);
 
         DB::beginTransaction();
         try {
-            $this->rtoBatchService->destroy($rtoBatch);
+            $this->assessmentQuestionSetService->destroy($assessmentQuestionSet);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RTO batch deleted successfully.",
+                    "message" => "AssessmentQuestionSet deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

@@ -59,6 +59,7 @@ class Authenticate
                 $request->offsetSet('industry_association_id', $authUser->industry_association_id);
             } else if ($authUser->isRtoUser()) {
                 $request->offsetSet('registered_training_organization_id', $authUser->registered_training_organization_id);
+                $request->offsetSet('rto_id', $authUser->registered_training_organization_id); // TODO: remove this jora tali
             }
 
         }

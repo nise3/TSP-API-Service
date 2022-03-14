@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\PaymentTransactionHistory;
 use App\Models\PaymentTransactionLog;
-use App\Models\YouthAssessment;
+use App\Models\RplApplication;
 use App\Services\Payment\PaymentService;
-use App\Services\Payment\YouthAssessmentCertificationPaymentService;
+use App\Services\Payment\RplApplicationCertificationPaymentService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,17 +18,17 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class YouthAssessmentCertificationPaymentController extends Controller
+class RplApplicationCertificationPaymentController extends Controller
 {
-    public YouthAssessmentCertificationPaymentService $youthAssessmentCertificationPaymentService;
+    public RplApplicationCertificationPaymentService $rtoApplicationCertificationPaymentService;
     public Carbon $startTime;
 
     /**
-     * @param YouthAssessmentCertificationPaymentService $youthAssessmentCertificationPaymentService
+     * @param RplApplicationCertificationPaymentService $rtoApplicationCertificationPaymentService
      */
-    public function __construct(YouthAssessmentCertificationPaymentService $youthAssessmentCertificationPaymentService)
+    public function __construct(RplApplicationCertificationPaymentService $rtoApplicationCertificationPaymentService)
     {
-        $this->youthAssessmentCertificationPaymentService = $youthAssessmentCertificationPaymentService;
+        $this->rtoApplicationCertificationPaymentService = $rtoApplicationCertificationPaymentService;
         $this->startTime = Carbon::now();
     }
 
@@ -37,8 +37,8 @@ class YouthAssessmentCertificationPaymentController extends Controller
      */
     public function paymentViaEkPay(Request $request): JsonResponse
     {
-        $paymentValidationData = $this->youthAssessmentCertificationPaymentService->paymentValidator($request)->validate();
-        $response = $this->youthAssessmentCertificationPaymentService->paymentProcessingViaEkPay($paymentValidationData);
+        $paymentValidationData = $this->rtoApplicationCertificationPaymentService->paymentValidator($request)->validate();
+        $response = $this->rtoApplicationCertificationPaymentService->paymentProcessingViaEkPay($paymentValidationData);
         $statusCode = !empty($response) ? ResponseAlias::HTTP_OK : ResponseAlias::HTTP_UNPROCESSABLE_ENTITY;
         $response = [
             "redirect_url" => !empty($response) ? $response : null,
@@ -78,7 +78,7 @@ class YouthAssessmentCertificationPaymentController extends Controller
                     $payment->fill($data);
                     $payment->save();
 
-                    $youthAssessment = YouthAssessment::findOrFail($payment->payment_purpose_related_id);
+                    $youthAssessment = RplApplication::findOrFail($payment->payment_purpose_related_id);
                     $youthAssessment->payment_status = $paymentStatus;
                     $youthAssessment->payment_date = Carbon::now();
                     $youthAssessment->save();
@@ -96,7 +96,7 @@ class YouthAssessmentCertificationPaymentController extends Controller
                         $payment->payment_transaction_history_id = $paymentHistory->id;
                         $payment->save();
 
-                        $this->youthAssessmentCertificationPaymentService->confirmationMailAndSmsSend($paymentHistoryPayload);
+                        $this->rtoApplicationCertificationPaymentService->confirmationMailAndSmsSend($paymentHistoryPayload);
                     }
 
                     DB::commit();

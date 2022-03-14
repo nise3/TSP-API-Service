@@ -12,10 +12,15 @@ class RtoBatch extends BaseModel
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 
+    const CERTIFICATION_STATUS_NOT_SUBMITTED = 1;
+    const CERTIFICATION_STATUS_SUBMITTED = 2;
+    const CERTIFICATION_STATUS_CERTIFIED = 3;
+    const CERTIFICATION_STATUS_NOT_CERTIFIED = 4;
+
     public const CERTIFICATION_STATUSES = [
-        "Not submitted" => 1,
-        "Submitted" => 2,
-        "Certified" => 3,
-        "Not certified" => 4
+        self::CERTIFICATION_STATUS_NOT_SUBMITTED => "Not submitted",
+        self::CERTIFICATION_STATUS_SUBMITTED => "Submitted",
+        self::CERTIFICATION_STATUS_CERTIFIED => "Certified",
+        self::CERTIFICATION_STATUS_NOT_CERTIFIED => "Not certified",
     ];
 }

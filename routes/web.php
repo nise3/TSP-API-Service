@@ -37,11 +37,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
         $customRouter()->resourceRoute('subjects', 'SubjectController')->render();
         $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
-        $customRouter()->resourceRoute('youth-assessment', 'YouthAssessmentController')->render();
+        $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
         $customRouter()->resourceRoute('question-banks', 'QuestionBankController')->render();
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
+
+        /** rpl assessment */
+        $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
 
 
         /** Institute Registration Approval */
@@ -69,11 +72,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('institute_trainee_youths', ['as' => 'institute.trainee.youths', 'uses' => 'CourseEnrollmentController@getInstituteTraineeYouths']);
 
         $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('certification-authority-dashboard-statistics', ["as" => "certification-authority-dashboard-statistics", "uses" => "InstituteStatisticsController@certificationAuthorityDashboardStatistics"]);
         $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
 
-        $router->post('youth-assessment/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "YouthAssessmentController@assignToBatch"]);
+        $router->post('rpl-applications/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "RplApplicationController@assignToBatch"]);
         $router->post('rto-batches/{id}/assign-assessor', ["as" => "institute.rto-batches-assign-assessor", "uses" => "RtoBatchController@assignAssessor"]);
 
+        /** RTO dashboard statistics */
+        $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@rtoDashboardStatistics"]);
     });
 
 
@@ -98,7 +104,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
 
-        $router->post("youth-assessment", ["as" => "public.youth-assessment", "uses" => "YouthAssessmentController@store"]);
+        $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
 
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
@@ -158,13 +164,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-by-ek-pay/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentIpnHandler"]);
     });
 
-    $router->group(["prefix" => "youth-assessment-certification/payment", "as" => "youth-assessment-certification.payment"], function () use ($router) {
-        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "YouthAssessmentCertificationPaymentController@paymentViaEkPay"]);
-        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "YouthAssessmentCertificationPaymentController@ipnHandler"]);
+    $router->group(["prefix" => "rpl-applications/payment", "as" => "rpl-applications.payment"], function () use ($router) {
+        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
+        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
-
-
-
 
 });
 

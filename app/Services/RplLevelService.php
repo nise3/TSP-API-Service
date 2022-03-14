@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\RplApplication;
 use App\Models\RplLevel;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,10 +22,11 @@ class RplLevelService
      * @param bool $isPublicApi
      * @return array
      */
-    public function getRplLevelList(array $request, Carbon $startTime , bool $isPublicApi = false): array
+    public function getRplLevelList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $rplSectorId = $request['rpl_sector_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $youthId = $request['youth_id'] ?? "";
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -49,18 +51,18 @@ class RplLevelService
             'rpl_levels.deleted_at',
         ]);
 
-        if(!$isPublicApi){
+        if (!$isPublicApi) {
             $rplLevelBuilder->acl();
         }
 
         $rplLevelBuilder->orderBy('rpl_levels.id', $order);
 
-        $rplLevelBuilder->join('rpl_sectors', function ($join){
+        $rplLevelBuilder->join('rpl_sectors', function ($join) {
             $join->on('rpl_levels.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
-        $rplLevelBuilder->join('rpl_occupations', function ($join){
+        $rplLevelBuilder->join('rpl_occupations', function ($join) {
             $join->on('rpl_levels.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
@@ -72,13 +74,24 @@ class RplLevelService
             $rplLevelBuilder->where('rpl_levels.title', 'like', '%' . $title . '%');
         }
 
-        if (!empty($rplSectorId)) {
+        if (is_numeric($rplSectorId)) {
             $rplLevelBuilder->where('rpl_levels.rpl_sector_id', $rplSectorId);
         }
 
-        if (!empty($rplOccupationId)) {
+        if (is_numeric($rplOccupationId)) {
             $rplLevelBuilder->where('rpl_levels.rpl_occupation_id', $rplOccupationId);
         }
+        if (is_numeric($youthId) && is_numeric($rplOccupationId)) {
+            $rplLevelIds = RplApplication::where('youth_id', $youthId)
+                ->where('rpl_occupation_id', $rplOccupationId)
+                ->where('application_status', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED) //TODO change status on new status addition
+                ->pluck('rpl_level_id')->toArray();
+
+            if (!empty($rplLevelIds)) {
+                $rplLevelBuilder->whereNotIn('rpl_levels.id', $rplLevelIds);
+            }
+        }
+
 
         /** @var Collection $rplLevels */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -131,12 +144,12 @@ class RplLevelService
             $rplLevelBuilder->where('rpl_levels.id', $id);
         }
 
-        $rplLevelBuilder->join('rpl_sectors', function ($join){
+        $rplLevelBuilder->join('rpl_sectors', function ($join) {
             $join->on('rpl_levels.rpl_sector_id', '=', 'rpl_sectors.id')
                 ->whereNull('rpl_sectors.deleted_at');
         });
 
-        $rplLevelBuilder->join('rpl_occupations', function ($join){
+        $rplLevelBuilder->join('rpl_occupations', function ($join) {
             $join->on('rpl_levels.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
@@ -221,7 +234,7 @@ class RplLevelService
                 'min:1',
                 Rule::unique('rpl_levels', 'sequence_order')
                     ->ignore($id)
-                    ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
+                    ->where(function (\Illuminate\Database\Query\Builder $query) use ($data) {
                         return $query->where('rpl_occupation_id', $data['rpl_occupation_id'])->whereNull('deleted_at');
                     })
             ],
@@ -256,6 +269,7 @@ class RplLevelService
             'country_id' => 'nullable|int',
             'rpl_occupation_id' => 'nullable|int',
             'rpl_sector_id' => 'nullable|int',
+            'youth_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',

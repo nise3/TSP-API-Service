@@ -31,6 +31,7 @@ class AssessmentQuestionService
         $titleEn = $request['title_en'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $assessmentId = $request['assessment_id'] ?? "";
+        $assessmentQuestionId = $request['assessment_question_set_id'] ?? "";
         $rplLevelId = $request['rpl_level_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
         $title = $request['title'] ?? "";
@@ -60,13 +61,14 @@ class AssessmentQuestionService
             'assessment_questions.option_3_en',
             'assessment_questions.option_4',
             'assessment_questions.option_4_en',
-            'assessment_questions.answer',
             'assessment_questions.row_status',
             'assessment_questions.created_at',
             'assessment_questions.updated_at',
         ]);
 
         if (!$isPublicApi) {
+            /** Answer will not be shown in public api question list */
+            $assessmentQuestionBuilder->addSelect('assessment_questions.answer');
             $assessmentQuestionBuilder->acl();
         }
 
@@ -91,11 +93,17 @@ class AssessmentQuestionService
             $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplLevelId);
             $assessmentQuestionBuilder->where('assessments.rpl_occupation_id', $rplOccupationId);
             $assessmentSetIds = $assessmentQuestionBuilder->pluck('assessment_questions.assessment_question_set_id')->toArray();
-            $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
+            if(!empty($assessmentSetIds)){
+                $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
+                $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
+            }
+
         }
         if (is_numeric($assessmentId)) {
             $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
+        }
+        if (is_numeric($assessmentQuestionId)) {
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $assessmentQuestionId);
         }
         if (is_numeric($rowStatus)) {
             $assessmentQuestionBuilder->where('assessment_questions.row_status', $rowStatus);
@@ -169,6 +177,11 @@ class AssessmentQuestionService
                 'required',
                 'int',
                 'exists:assessments,id,deleted_at,NULL',
+            ],
+            'assessment_questions.*.assessment_question_set_id' => [
+                'required',
+                'int',
+                'exists:assessment_question_sets,id,deleted_at,NULL',
             ],
             'assessment_questions.*.question_id' => [
                 'required',
@@ -276,6 +289,7 @@ class AssessmentQuestionService
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'assessment_id' => 'integer|gt:0',
+            'assessment_question_set_id' => 'integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

@@ -3817,7 +3817,6 @@
                 }
             }
         },
-
         "/public/course-list/{type}": {
             "get": {
                 "summary": "Course List with type ",
@@ -4625,18 +4624,18 @@
                 }
             }
         },
-        "/youth-assessment-certification/payment/payment-via-ek-pay/pay-now": {
+        "/rpl-applications/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Payment for youth-assessment-certification",
-                "description": "An API endpoint to pay for a youth-assessment-certification",
+                "summary": "Payment for Rpl Application Certification",
+                "description": "An API endpoint to pay for a Payment for Rpl Application Certification",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/youthAssessmentPaymentSchema"
+                                "$ref": "#/components/schemas/rplApplicationPaymentSchema"
                             }
                         }
                     }
@@ -4810,7 +4809,6 @@
                 }
             }
         },
-
         "/rto-countries": {
             "get": {
                 "tags": [
@@ -4950,10 +4948,11 @@
                 }
             }
         },
-
         "/rto-batches": {
             "get": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Get all Rto Batches",
                 "description": "API endpoint to Get all Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -4983,36 +4982,48 @@
                                     "data": [
                                         {
                                             "id": 1,
-                                            "title": "AugmentedReality",
-                                            "title_en": "AugmentedReality",
-                                            "rpl_occupation_id": 1,
-                                            "rpl_occupation_title_en": "Newiee",
-                                            "rpl_occupation_title": "Newiee",
+                                            "title": "Dr Jones wake up now",
+                                            "title_en": "Lumberjack",
+                                            "rto_id": 1,
+                                            "rto_title": "Salamandar",
+                                            "rto_title_en": "Salamandar",
+                                            "assessment_date": "2020-09-09 00:00:00",
+                                            "rpl_occupation_title_en": "WhoRu",
+                                            "rpl_occupation_title": "WhoRu",
                                             "rpl_sector_id": 1,
-                                            "rpl_sector_title_en": "aaa",
-                                            "rpl_sector_title": "aaaa",
+                                            "rpl_sector_title_en": null,
+                                            "rpl_sector_title": "",
                                             "rpl_level_id": 1,
-                                            "rpl_level_title_en": "DoidoPunk",
-                                            "rpl_level_title": "Doido",
-                                            "created_at": "2022-03-07T03:52:37.000000Z",
-                                            "updated_at": "2022-03-07T03:52:37.000000Z",
+                                            "rpl_level_title_en": "ddd",
+                                            "rpl_level_title": "ddd",
+                                            "institute_id": 1,
+                                            "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                            "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                            "created_at": "2022-03-10T11:16:23.000000Z",
+                                            "updated_at": "2022-03-10T11:16:23.000000Z",
                                             "deleted_at": null
                                         },
                                         {
-                                            "id": 2,
-                                            "title": "Slim shady",
-                                            "title_en": "Lumberjack",
-                                            "rpl_occupation_id": 1,
-                                            "rpl_occupation_title_en": "Newiee",
-                                            "rpl_occupation_title": "Newiee",
+                                            "id": 3,
+                                            "title": "Picky Peckers",
+                                            "title_en": "Harmonia",
+                                            "rto_id": 1,
+                                            "rto_title": "Salamandar",
+                                            "rto_title_en": "Salamandar",
+                                            "assessment_date": "2020-09-09 00:00:00",
+                                            "rpl_occupation_title_en": "WhoRu",
+                                            "rpl_occupation_title": "WhoRu",
                                             "rpl_sector_id": 1,
-                                            "rpl_sector_title_en": "aaa",
-                                            "rpl_sector_title": "aaaa",
+                                            "rpl_sector_title_en": null,
+                                            "rpl_sector_title": "",
                                             "rpl_level_id": 1,
-                                            "rpl_level_title_en": "DoidoPunk",
-                                            "rpl_level_title": "Doido",
-                                            "created_at": "2022-03-07T03:53:43.000000Z",
-                                            "updated_at": "2022-03-07T03:53:43.000000Z",
+                                            "rpl_level_title_en": "ddd",
+                                            "rpl_level_title": "ddd",
+                                            "institute_id": 1,
+                                            "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                            "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                            "created_at": "2022-03-10T11:30:51.000000Z",
+                                            "updated_at": "2022-03-10T11:30:51.000000Z",
                                             "deleted_at": null
                                         }
                                     ],
@@ -5028,7 +5039,9 @@
                 }
             },
             "post": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Create  Rto Batch",
                 "description": "API endpoint to Create  Rto Batch . A successful request response will show 200 HTTP status code",
                 "requestBody": {
@@ -5047,15 +5060,17 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
+                                        "title": "Picky Peckers",
+                                        "title_en": "Harmonia",
                                         "institute_id": 1,
                                         "rpl_occupation_id": "1",
                                         "rpl_level_id": "1",
                                         "assessor_id": "1",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "id": 2
+                                        "rto_id": "1",
+                                        "assessment_date": "2020-09-09",
+                                        "updated_at": "2022-03-10T11:30:51.000000Z",
+                                        "created_at": "2022-03-10T11:30:51.000000Z",
+                                        "id": 3
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -5072,7 +5087,9 @@
         },
         "/rto-batches/{rtoBatchId}": {
             "get": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Get a Rto Batch",
                 "description": "API endpoint to Get a Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5087,20 +5104,27 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "id": 2,
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
+                                        "id": 4,
+                                        "title": "FlatterMyKat",
+                                        "title_en": "Cry me a river",
+                                        "rto_id": 1,
+                                        "rto_title": "Salamandar",
+                                        "rto_title_en": "Salamandar",
+                                        "assessment_date": "2020-09-09 00:00:00",
                                         "rpl_occupation_id": 1,
-                                        "rpl_occupation_title_en": "Newiee",
-                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_occupation_title_en": "WhoRu",
+                                        "rpl_occupation_title": "WhoRu",
                                         "rpl_sector_id": 1,
-                                        "rpl_sector_title_en": "aaa",
-                                        "rpl_sector_title": "aaaa",
+                                        "rpl_sector_title_en": null,
+                                        "rpl_sector_title": "",
                                         "rpl_level_id": 1,
-                                        "rpl_level_title_en": "DoidoPunk",
-                                        "rpl_level_title": "Doido",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
+                                        "rpl_level_title_en": "ddd",
+                                        "rpl_level_title": "ddd",
+                                        "institute_id": 1,
+                                        "institutes_title_en": "Department of Youth Development - Government of the People's Republic of Bangladesh",
+                                        "institutes_title": "যুব উন্নয়ন অধিদপ্তর - গণপ্রজাতন্ত্রী বাংলাদেশ সরকার",
+                                        "created_at": "2022-03-10T11:33:10.000000Z",
+                                        "updated_at": "2022-03-10T11:33:10.000000Z",
                                         "deleted_at": null
                                     },
                                     "_response_status": {
@@ -5115,7 +5139,9 @@
                 }
             },
             "put": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Update an Rto Batch",
                 "description": "API endpoint to update an Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5137,27 +5163,26 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
-                                        "id": 2,
-                                        "title": "Slim shady",
-                                        "title_en": "Lumberjack",
-                                        "rpl_occupation_id": 1,
-                                        "rpl_occupation_title_en": "Newiee",
-                                        "rpl_occupation_title": "Newiee",
-                                        "rpl_sector_id": 1,
-                                        "rpl_sector_title_en": "aaa",
-                                        "rpl_sector_title": "aaaa",
-                                        "rpl_level_id": 1,
-                                        "rpl_level_title_en": "DoidoPunk",
-                                        "rpl_level_title": "Doido",
-                                        "created_at": "2022-03-07T03:53:43.000000Z",
-                                        "updated_at": "2022-03-07T03:53:43.000000Z",
-                                        "deleted_at": null
+                                        "id": 4,
+                                        "title": "RunLolaRun",
+                                        "title_en": "WhisperInTheAir",
+                                        "institute_id": 1,
+                                        "rpl_level_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "assessor_id": "1",
+                                        "rto_id": "1",
+                                        "assessment_date": "2020-09-09",
+                                        "certification_status": 0,
+                                        "deleted_at": null,
+                                        "created_at": "2022-03-10T11:33:10.000000Z",
+                                        "updated_at": "2022-03-10T11:34:44.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
+                                        "message": "RTO batch updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -5167,7 +5192,9 @@
                 }
             },
             "delete": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Delete an Rto Batch",
                 "description": "API endpoint to delete an Rto Batches . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5180,7 +5207,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -5196,7 +5223,9 @@
         },
         "/rto-batches/{rtoBatchId}/assign-assessor": {
             "post": {
-                "tags": ["Rto Batch"],
+                "tags": [
+                    "Rto Batch"
+                ],
                 "summary": "Assign an assessor",
                 "description": "API endpoint to Assign an assessor . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -5245,10 +5274,6 @@
                 }
             }
         },
-
-
-
-
         "/rpl-sectors": {
             "post": {
                 "tags": [
@@ -5489,7 +5514,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -5579,9 +5604,7 @@
                     }
                 }
             }
-
         },
-
         "/rpl-levels": {
             "get": {
                 "tags": [
@@ -6716,7 +6739,9 @@
         },
         "/registered-training-organizations/{rtoId}": {
             "get": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Get a Registerd training organization",
                 "description": "API endpoint to Get a Registerd training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6787,7 +6812,9 @@
                 }
             },
             "put": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Update a registered training organizations",
                 "description": "API endpoint to Get all registered training organizations . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -6862,7 +6889,9 @@
                 }
             },
             "delete": {
-                "tags": ["Registerd training organization"],
+                "tags": [
+                    "Registerd training organization"
+                ],
                 "summary": "Delete a Registered training organization",
                 "description": "API endpoint toDelete a Registered training organization . A successful request response will show 200 HTTP status code",
                 "parameters": [
@@ -7100,7 +7129,6 @@
                                                     }
                                                 ],
                                                 "youth_portfolios": [
-
                                                     {
                                                         "id": 4,
                                                         "youth_id": 1,
@@ -7246,6 +7274,44 @@
                 ]
             }
         },
+        "/rto-dashboard-statistics": {
+            "get": {
+                "tags": [
+                    "Dashboard Statistics"
+                ],
+                "summary": "Get rto dashboard statistics",
+                "description": "API endpoint to Get rto dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certification-authority-dashboard-statistics": {
+            "get": {
+                "tags": [
+                    "Dashboard Statistics"
+                ],
+                "summary": "Get certificate authority dashboard statistics",
+                "description": "API endpoint to Get certificate authority dashboard statistics. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/demanded-courses/{instituteId}": {
             "get": {
                 "summary": "Get demanded courses",
@@ -7313,8 +7379,6 @@
                 ]
             }
         },
-
-
         "/question-banks": {
             "get": {
                 "tags": [
@@ -7571,8 +7635,6 @@
                 }
             }
         },
-
-
         "/assessment": {
             "get": {
                 "tags": [
@@ -7795,14 +7857,248 @@
                 }
             }
         },
-
-        "/youth-assessment": {
+        "/assessment-question-sets": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Assessment Question Set"
+                ],
+                "summary": "Create an assessment question set",
+                "description": "API endpoint to Create an assessment question set. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessmentQuestionSet"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "title": "Foxy Lady",
+                                        "assessment_id": "2",
+                                        "row_status": "1",
+                                        "updated_at": "2022-03-10T06:25:21.000000Z",
+                                        "created_at": "2022-03-10T06:25:21.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "AssessmentQuestionSet added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Assessment Question Set"
+                ],
+                "summary": "Get all assessment question sets",
+                "description": "API endpoint to Get all assessment question sets",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessment_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 7,
+                                            "title": "When the smoke is going down",
+                                            "title_en": null,
+                                            "assessment_id": 3,
+                                            "assessment_title": "Spice Girls",
+                                            "assessment_title_en": "Spice Girls",
+                                            "assessment_fee": 0,
+                                            "passing_score": 140,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-10T06:41:06.000000Z",
+                                            "updated_at": "2022-03-10T07:05:38.000000Z",
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "id": 9,
+                                            "title": "RockULikeAHuRRICANE",
+                                            "title_en": null,
+                                            "assessment_id": 3,
+                                            "assessment_title": "Spice Girls",
+                                            "assessment_title_en": "Spice Girls",
+                                            "assessment_fee": 0,
+                                            "passing_score": 140,
+                                            "row_status": 1,
+                                            "created_at": "2022-03-10T06:53:17.000000Z",
+                                            "updated_at": "2022-03-10T06:53:17.000000Z",
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/assessment-question-sets/{assessmentQuestionSetId}": {
+            "get": {
+                "tags": [
+                    "Assessment Question Set"
+                ],
+                "summary": "Get an assessment question sets",
+                "description": "API endpoint to Get an assessment question sets",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentQuestionSetId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "WholeLottAlOVE",
+                                        "title_en": null,
+                                        "assessment_id": 1,
+                                        "assessment_title": "Hooligan Cats",
+                                        "assessment_title_en": "Another Brick In the wall",
+                                        "assessment_fee": 40,
+                                        "passing_score": 20,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-10T06:41:06.000000Z",
+                                        "updated_at": "2022-03-10T06:41:06.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Assessment Question Set"
+                ],
+                "summary": "Update an assessment question set",
+                "description": "API endpoint to Update an assessment question set",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentQuestionSetId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/assessmentQuestionSet"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "succesful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 7,
+                                        "assessment_id": "3",
+                                        "title": "When the smoke is going down",
+                                        "title_en": null,
+                                        "row_status": "1",
+                                        "created_at": "2022-03-10T06:41:06.000000Z",
+                                        "updated_at": "2022-03-10T07:05:38.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "AssessmentQuestionSet updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Assessment Question Set"
+                ],
+                "summary": "Delete an assessment question set",
+                "description": "API endpoint to Delete an assessment question set",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/assessmentQuestionSetId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "AssessmentQuestionSet deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rpl-applications": {
+            "post": {
+                "tags": [
+                    "Rpl Application"
                 ],
                 "summary": "Create a youth assessment",
-                "description": "API endpoint to Create a youth assessment. A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -7845,10 +8141,10 @@
             },
             "get": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
                 "summary": "Get all youth assessment",
-                "description": "API endpoint to Get all youth assessment. A successful request response will show 200 HTTP status code",
+                "description": "API endpoint to Get all Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/title_optional"
@@ -7874,7 +8170,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "order": "ASC",
                                     "data": [
                                         {
@@ -7919,16 +8215,64 @@
                 }
             }
         },
-        "/youth-assessment/{youthAssessmentId}": {
+        "/rpl-assessment": {
+            "post": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Create a Rpl assessment",
+                "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth assessment added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rpl-applications/{rplApplicationId}": {
             "get": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Get a youth assessment",
-                "description": "API endpoint to Get a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Get a Rpl Application",
+                "description": "API endpoint to Get a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "responses": {
@@ -7936,7 +8280,7 @@
                         "description": "successful",
                         "content": {
                             "application/json": {
-                                "example":{
+                                "example": {
                                     "data": {
                                         "id": 1,
                                         "youth_id": 1,
@@ -7979,13 +8323,13 @@
             },
             "put": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Update a youth assessment",
-                "description": "API endpoint to update a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Update a Rpl Application",
+                "description": "API endpoint to update a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "requestBody": {
@@ -8023,7 +8367,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth assessment updated successfully.",
+                                        "message": "Rpl Application updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8034,13 +8378,13 @@
             },
             "delete": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Delete a youth assessment",
-                "description": "API endpoint to delete a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Delete a Rpl Application",
+                "description": "API endpoint to delete a Rpl Application. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "responses": {
@@ -8052,7 +8396,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth Assessment deleted successfully.",
+                                        "message": "Rpl Application deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8156,7 +8500,7 @@
                                 "example": {
                                     "_response_status": {
                                         "success": true,
-                                        "message":"Assessment Questions  added successfully",
+                                        "message": "Assessment Questions  added successfully",
                                         "code": 200,
                                         "query_time": 0
                                     }
@@ -8192,7 +8536,8 @@
                     },
                     {
                         "$ref": "#/components/parameters/row_status_optional"
-                    },{
+                    },
+                    {
                         "$ref": "#/components/parameters/rpl_level_id"
                     },
                     {
@@ -8238,24 +8583,22 @@
                                         "query_time": 0
                                     }
                                 }
-
                             }
                         }
-
                     }
                 }
             }
         },
-        "/youth-assessment/{youthAssessmentId}/assign-to-batch": {
+        "/rpl-applications/{rplApplicationId}/assign-to-batch": {
             "post": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
                 "summary": "Assign to batch",
                 "description": "API endpoint to Assign to batch. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/youthAssessmentId"
+                        "$ref": "#/components/parameters/rplApplicationId"
                     }
                 ],
                 "requestBody": {
@@ -8293,7 +8636,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "Youth assessment assigned to batch successfully.",
+                                        "message": "Rpl Application assigned to batch successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8303,13 +8646,75 @@
                 }
             }
         },
-        "/public/youth-assessment": {
-            "post": {
+        "/public/rpl-applications/{rplApplicationId}": {
+            "get": {
                 "tags": [
-                    "Youth Assessment"
+                    "Rpl Application"
                 ],
-                "summary": "Create a public youth assessment",
-                "description": "API endpoint to Create public a youth assessment. A successful request response will show 200 HTTP status code",
+                "summary": "Get a Rpl Application",
+                "description": "API endpoint to Get a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "youth_id": 1,
+                                        "assessment_id": 2,
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "rpl_occupation_id": 1,
+                                        "rpl_occupation_title_en": "Newiee",
+                                        "rpl_occupation_title": "Newiee",
+                                        "rpl_level_id": 1,
+                                        "rpl_level_title_en": "DoidoPunk",
+                                        "rpl_level_title": "Doido",
+                                        "rpl_sector_id": 1,
+                                        "rpl_sector_title_en": "aaa",
+                                        "rpl_sector_title": "aaaa",
+                                        "rto_country_id": 1,
+                                        "rto_country_title_en": "Afghanistan",
+                                        "rto_country_title": "Afghanistan",
+                                        "target_country_id": 1,
+                                        "target_country_title_en": "Afghanistan",
+                                        "target_country_title": "Afghanistan",
+                                        "rto_id": 1,
+                                        "rto_title_en": "BabyLolAmONTEZZ",
+                                        "rto_title": "BabyLolAmONTEZZ",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Update a Rpl Application",
+                "description": "API endpoint to update a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -8326,22 +8731,55 @@
                             "application/json": {
                                 "example": {
                                     "data": {
+                                        "id": 1,
                                         "rpl_sector_id": "1",
                                         "rpl_occupation_id": "1",
                                         "rpl_level_id": "1",
                                         "youth_id": "1",
                                         "assessment_id": "2",
                                         "target_country_id": "1",
-                                        "rto_country_id": "1",
+                                        "rto_country_id": "2",
                                         "rto_id": "1",
-                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "rto_batch_id": null,
+                                        "result": null,
+                                        "score": null,
+                                        "deleted_at": null,
                                         "created_at": "2022-03-03T11:43:20.000000Z",
-                                        "id": 1
+                                        "updated_at": "2022-03-03T11:57:51.000000Z"
                                     },
                                     "_response_status": {
                                         "success": true,
-                                        "code": 201,
-                                        "message": "Youth assessment added successfully",
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Delete a Rpl Application",
+                "description": "API endpoint to delete a Rpl Application. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/rplApplicationId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8361,6 +8799,30 @@
             }
         },
         "schemas": {
+            "assessmentQuestionSet": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "assessment_id": {
+                        "type": "integer",
+                        "description": "Must exist in assessment table"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ],
+                        "description": "1=>Active , 0=>Inactive"
+                    }
+                },
+                "required": [
+                    "title",
+                    "assessment_id"
+                ]
+            },
             "assignAssessor": {
                 "type": "object",
                 "properties": {
@@ -8405,18 +8867,30 @@
                     },
                     "assessor_id": {
                         "type": "integer"
+                    },
+                    "rto_id": {
+                        "type": "integer",
+                        "description": "Must exist in registered_training_organization"
+                    },
+                    "assessment_date": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "title",
                     "institute_id",
                     "rpl_occupation_id",
-                    "rpl_level_id"
+                    "rpl_level_id",
+                    "rto_id"
                 ]
             },
             "YouthAssessment": {
                 "type": "object",
                 "properties": {
+                    "youth_details": {
+                        "type": "object",
+                        "example": "[\n\"registration_number\"=>\"123-AC/DC-123\"\n\"first_name\"=>\"Vito cORLEONE\"\n\"last_name\"=>\"jONAS gUETEREz\",\n\"first_name_en\"=>\"Don donaton\",\n\"last_name_en\"=>\"new messiah\",\n\"date_of_birth\"=>\"2020-09-09\",\n\"mobile\"=>\"01990090909\",\n\"identity_number_type\"=>2,\n\"identity_number\"=>3333,\n\"religion\"=>2,\n\"photo\"=>\"aasss\",\n\"present_address\"=>[\n\t\"loc_division_id\"=>1,\n\t\"loc_district_id\"=>2,\n\t\"loc_upazila_id\"=>2,\n\t\"village_or_area\"=>\"sting\",\n\t\"village_or_area_en\"=>\"kkk\",\n\t\"house_n_road\"=>\"yellow brick road\",\n\t\"house_n_road_en\"=>\"yellow brick road\",\n\t\"zip_or_postal_code\"=>\"1212\"\n\t],\n\"permanent_address\"=>[\n\t\"loc_division_id\"=>1,\n\t\"loc_district_id\"=>2,\n\t\"loc_upazila_id\"=>2,\n\t\"village_or_area\"=>\"sting\",\n\t\"village_or_area_en\"=>\"kkk\",\n\t\"house_n_road\"=>\"yellow brick road\",\n\t\"house_n_road_en\"=>\"yellow brick road\",\n\t\"zip_or_postal_code\"=>\"1212\"\n\t],\n\"job_experiences\"=>[\n      [ \n  \t\"rto_country_id\"=>1,\n\t\"rpl_sector_id\"=>2,\n\t\"rpl_occupation_id\"=>2,\n        \"rpl_level_id\"=>2,\n      ],\n      [ \n  \t\"rto_country_id\"=>1,\n\t\"rpl_sector_id\"=>2,\n\t\"rpl_occupation_id\"=>2,\n        \"rpl_level_id\"=>2,\n      ],\n]\n\"education_info\"=>[\n      [ \n  \t\"exam_degree_id\"=>1,\n\t\"exam_degree_name\"=>2,\n\t\"exam_degree_name_en\"=>2,\n        \"major_or_concentration\"=>2,\n        \"major_or_concentration_en\"=>2,\n        \"edu_board_id\"=>2,\n        \"institute_name\"=>1,\n        \"institute_name_en\"=>1,\n        \"result(division =>1=first,2=second,3=third\"=>\n        \"marks_in_percentage\"=>80\n     \t\"cgpa\"=>4\n        \"year_of_passing\"=>2018\n        \"duration\"=>4\n      ],\n      [ \n  \t\"exam_degree_id\"=>1,\n\t\"exam_degree_name\"=>2,\n\t\"exam_degree_name_en\"=>2,\n        \"major_or_concentration\"=>2,\n        \"major_or_concentration_en\"=>2,\n        \"edu_board_id\"=>2,\n        \"institute_name\"=>1,\n        \"institute_name_en\"=>1,\n        \"result(division =>1=first,2=second,3=third\"=>\n        \"marks_in_percentage\"=>80\n     \t\"cgpa\"=>4\n        \"year_of_passing\"=>2018\n        \"duration\"=>4\n      ]\n\n]\n\n\"guardian_name\"=>\"Bigg Daddy\",\n\"guardian_name_en\"=>\"Bigg Daddy\",\n\"is_youth_employed\"=>1,\n\"job_responsibilities\"=>\"No responsibility\",\n\"job_responsibilities_en\"=>\"No responsibility\",\n\"company_name\"=>\"HornTeK\",\n\"company_name_en\"=>\"Whistle\"\n]"
+                    },
                     "rpl_sector_id": {
                         "type": "integer",
                         "description": "Must exist in rpl_sectors table"
@@ -8480,12 +8954,20 @@
                     "rpl_level_id": {
                         "type": "integer",
                         "description": "Must exist in rpl_levels table"
+                    },
+                    "passing_score": {
+                        "type": "integer"
+                    },
+                    "assessment_fee": {
+                        "type": "integer"
                     }
                 },
                 "required": [
                     "title",
                     "rpl_occupation_id",
-                    "rpl_level_id"
+                    "rpl_level_id",
+                    "passing_score",
+                    "assessment_fee"
                 ]
             },
             "questionBank": {
@@ -8499,7 +8981,10 @@
                     },
                     "type": {
                         "type": "integer",
-                        "enum": [1,2],
+                        "enum": [
+                            1,
+                            2
+                        ],
                         "description": "1=>Yes 2=>No"
                     },
                     "subject_id": {
@@ -8558,7 +9043,7 @@
                 "properties": {
                     "assessment_questions": {
                         "type": "object",
-                        "example": "[\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=2',\n            'subject_id=1',\n            'option_1=a',\n            'option_1_en=b',\n            'option_2=b',\n            'option_2_en=b',\n            'option_3=c',\n            'option_3_en=c',\n            'option_4=d',\n            'option_4_en=d',\n            'answer=1',\n            'row_status=1',\n\n\t],\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=1',\n            'answer=1',\n            'row_status=1',\n\t]\n\n]"
+                        "example": "[\n\t[\n            'assessment_id'=1,\n 'assessment_question_set_id' => 1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=2',\n            'subject_id=1',\n            'option_1=a',\n            'option_1_en=b',\n            'option_2=b',\n            'option_2_en=b',\n            'option_3=c',\n            'option_3_en=c',\n            'option_4=d',\n            'option_4_en=d',\n            'answer=1',\n            'row_status=1',\n\n\t],\n\t[\n            'assessment_id'=1,\n            'question_id=2',\n            'title=abc',\n            'title_en=abc',\n            'type=1',\n            'answer=1',\n            'row_status=1',\n\t]\n\n]"
                     }
                 }
             },
@@ -8834,7 +9319,7 @@
                     "course_enrollment_id"
                 ]
             },
-            "youthAssessmentPaymentSchema": {
+            "rplApplicationPaymentSchema": {
                 "type": "object",
                 "properties": {
                     "payment_gateway_type": {
@@ -10593,7 +11078,6 @@
                     "type": "integer"
                 }
             },
-
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -10937,7 +11421,6 @@
                     "type": "integer"
                 }
             },
-
             "rplSectorId": {
                 "name": "rplSectorId",
                 "in": "path",
@@ -10952,6 +11435,14 @@
                 "in": "query",
                 "description": "rplSectorId",
                 "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "assessmentQuestionSetId": {
+                "name": "assessmentQuestionSetId",
+                "in": "path",
+                "required": true,
                 "schema": {
                     "type": "integer"
                 }
@@ -11008,10 +11499,10 @@
                     "type": "integer"
                 }
             },
-            "youthAssessmentId": {
-                "name": "youthAssessmentId",
+            "rplApplicationId": {
+                "name": "rplApplicationId",
                 "in": "path",
-                "description": "youthAssessmentId",
+                "description": "rplApplicationId",
                 "required": true,
                 "schema": {
                     "type": "integer"
