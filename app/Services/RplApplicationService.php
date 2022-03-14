@@ -356,13 +356,11 @@ class RplApplicationService
                 'max:300'
             ],
             'youth_details.first_name_en' => [
-                Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'string',
                 'max:150'
             ],
             'youth_details.last_name_en' => [
-                Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'string',
                 'max:150'
