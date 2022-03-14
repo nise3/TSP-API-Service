@@ -69,7 +69,7 @@ class RegisteredTrainingOrganizationController extends Controller
     {
         $filter = $this->rtoService->filterValidator($request)->validate();
 
-        $response = $this->rtoService->getRtoList($filter, $this->startTime);
+        $response = $this->rtoService->getRtoList($filter, $this->startTime,true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

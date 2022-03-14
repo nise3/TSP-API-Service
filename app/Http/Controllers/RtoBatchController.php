@@ -62,7 +62,7 @@ class RtoBatchController extends Controller
     {
         $filter = $this->rtoBatchService->filterValidator($request)->validate();
 
-        $response = $this->rtoBatchService->getRtoBatchList($filter, $this->startTime);
+        $response = $this->rtoBatchService->getRtoBatchList($filter, $this->startTime, true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -103,13 +103,13 @@ class RtoBatchController extends Controller
         $this->authorize('create', RtoBatch::class);
         $authUser = Auth::user();
 
-        if($authUser->isRtoUser()){
+        if ($authUser->isRtoUser()) {
             $request->offsetSet('rto_id', $request->input('registered_training_organization_id'));
         }
 
         $validated = $this->rtoBatchService->validator($request)->validate();
-        if(!empty($validated['institute_id'])){
-            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_SUBMITTED;
+        if (!empty($validated['institute_id'])) {
+            $validated['certification_status'] = RtoBatch::CERTIFICATION_STATUS_SUBMITTED;
         }
         $rtoBatch = $this->rtoBatchService->store($validated);
 
@@ -170,8 +170,8 @@ class RtoBatchController extends Controller
         $this->authorize('update', RtoBatch::class);
 
         $validated = $this->rtoBatchService->assignAssessorValidator($request)->validate();
-        if(!empty($request['institute_id'])){
-            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_NOT_CERTIFIED;
+        if (!empty($request['institute_id'])) {
+            $validated['certification_status'] = RtoBatch::CERTIFICATION_STATUS_NOT_CERTIFIED;
         }
         $data = $this->rtoBatchService->update($youthAssessment, $validated);
         $response = [

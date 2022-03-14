@@ -23,9 +23,10 @@ class RplApplicationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplApplicationList(array $request, Carbon $startTime): array
+    public function getRplApplicationList(array $request, Carbon $startTime,bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -77,6 +78,9 @@ class RplApplicationService
             'rpl_applications.deleted_at',
         ]);
 
+        if (!$isPublicApi) {
+            $youthAssessmentBuilder->acl();
+        }
         $youthAssessmentBuilder->orderBy('rpl_applications.id', $order);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {

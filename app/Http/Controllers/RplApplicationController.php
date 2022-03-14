@@ -62,7 +62,7 @@ class RplApplicationController extends Controller
     {
         $filter = $this->rplApplicationService->filterValidator($request)->validate();
 
-        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime);
+        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime,true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
