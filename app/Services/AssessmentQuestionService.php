@@ -176,7 +176,7 @@ class AssessmentQuestionService
             'assessment_questions.*.assessment_question_set_id' => [
                 'required',
                 'int',
-                'exists:assessments,id,deleted_at,NULL',
+                'exists:assessment_question_sets,id,deleted_at,NULL',
             ],
             'assessment_questions.*.question_id' => [
                 'required',
