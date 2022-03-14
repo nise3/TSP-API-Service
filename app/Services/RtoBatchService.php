@@ -37,6 +37,7 @@ class RtoBatchService
             'rto_batches.id',
             'rto_batches.title',
             'rto_batches.title_en',
+            'rto_batches.assessor_id',
 
             'rto_batches.rto_id',
             'rto_batches.certification_status',
@@ -142,6 +143,8 @@ class RtoBatchService
             'rto_batches.id',
             'rto_batches.title',
             'rto_batches.title_en',
+            'rto_batches.assessor_id',
+
 
             'rto_batches.rto_id',
             'rto_batches.certification_status',
