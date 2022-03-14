@@ -91,8 +91,11 @@ class AssessmentQuestionService
             $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplLevelId);
             $assessmentQuestionBuilder->where('assessments.rpl_occupation_id', $rplOccupationId);
             $assessmentSetIds = $assessmentQuestionBuilder->pluck('assessment_questions.assessment_question_set_id')->toArray();
-            $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
+            if(!empty($assessmentSetIds)){
+                $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
+                $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
+            }
+
         }
         if (is_numeric($assessmentId)) {
             $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
