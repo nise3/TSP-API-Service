@@ -146,7 +146,7 @@ class RplApplicationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $rplApplication = RplApplication::findOrFail($request->input('rpl_application_id'));
+        $rplApplication = RplApplication::findOrFail($request->input('id'));
         $validated = $this->rplApplicationService->validator($request)->validate();
         $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
         $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
