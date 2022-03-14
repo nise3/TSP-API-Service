@@ -26,7 +26,7 @@ class AddApplicationStatusToRplApplicationsTable extends Migration
     public function down()
     {
         Schema::table('rpl_applications', function (Blueprint $table) {
-            //
+            $table->dropColumn('application_status');
         });
     }
 }
