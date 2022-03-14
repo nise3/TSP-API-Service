@@ -31,6 +31,7 @@ class AssessmentQuestionService
         $titleEn = $request['title_en'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $assessmentId = $request['assessment_id'] ?? "";
+        $assessmentQuestionId = $request['assessment_question_set_id'] ?? "";
         $rplLevelId = $request['rpl_level_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
         $title = $request['title'] ?? "";
@@ -100,6 +101,9 @@ class AssessmentQuestionService
         }
         if (is_numeric($assessmentId)) {
             $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
+        }
+        if (is_numeric($assessmentQuestionId)) {
+            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $assessmentQuestionId);
         }
         if (is_numeric($rowStatus)) {
             $assessmentQuestionBuilder->where('assessment_questions.row_status', $rowStatus);
@@ -285,6 +289,7 @@ class AssessmentQuestionService
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'assessment_id' => 'integer|gt:0',
+            'assessment_question_set_id' => 'integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
