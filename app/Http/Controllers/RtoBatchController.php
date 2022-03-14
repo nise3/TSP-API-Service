@@ -40,7 +40,6 @@ class RtoBatchController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      * @param Request $request
      * @return JsonResponse
      * @throws AuthorizationException
@@ -109,6 +108,9 @@ class RtoBatchController extends Controller
         }
 
         $validated = $this->rtoBatchService->validator($request)->validate();
+        if(!empty($validated['institute_id'])){
+            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_SUBMITTED;
+        }
         $rtoBatch = $this->rtoBatchService->store($validated);
 
         $response = [
@@ -168,6 +170,9 @@ class RtoBatchController extends Controller
         $this->authorize('update', RtoBatch::class);
 
         $validated = $this->rtoBatchService->assignAssessorValidator($request)->validate();
+        if(!empty($validated['institute_id']) && !empty($validated['assessor_id'])&& !empty($validated['assessment_date'])){
+            $validated['certification_status']= RtoBatch::CERTIFICATION_STATUS_NOT_CERTIFIED;
+        }
         $data = $this->rtoBatchService->update($youthAssessment, $validated);
         $response = [
             'data' => $data,

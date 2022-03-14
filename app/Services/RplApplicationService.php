@@ -42,6 +42,7 @@ class RplApplicationService
         $youthAssessmentBuilder = RplApplication::select([
             'rpl_applications.id',
             'rpl_applications.youth_id',
+            'rpl_applications.youth_details',
             'rpl_applications.assessment_id',
             'rpl_applications.rto_batch_id',
             'rpl_applications.result',
@@ -163,6 +164,7 @@ class RplApplicationService
         $youthAssessmentBuilder = RplApplication::select([
             'rpl_applications.id',
             'rpl_applications.youth_id',
+            'rpl_applications.youth_details',
             'rpl_applications.assessment_id',
             'rpl_applications.rto_batch_id',
             'rpl_applications.result',
