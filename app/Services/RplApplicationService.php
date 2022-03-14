@@ -400,14 +400,13 @@ class RplApplicationService
             "youth_details.mobile" => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
-                "max:11",
+                'max:11',
                 BaseModel::MOBILE_REGEX,
             ],
             "youth_details.nationality" => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'int'
-
             ],
             'youth_details.identity_number_type' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
@@ -424,55 +423,55 @@ class RplApplicationService
                 Rule::in(RplApplication::RELIGIONS)
             ],
             "youth_details.photo" => [
-                "nullable,
-                string
-                max:600"
+                'nullable',
+                'string',
+                'max:600'
             ],
             'youth_details.present_address' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'array',
             ],
-            'youth_details.present_address.*.loc_division_id' => [
+            'youth_details.present_address.loc_division_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.present_address.*.loc_district_id' => [
+            'youth_details.present_address.loc_district_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.present_address.*.loc_upazila_id' => [
+            'youth_details.present_address.loc_upazila_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.present_address.*.village_or_area' => [
+            'youth_details.present_address.village_or_area' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'youth_details.present_address.*.village_or_area_en' => [
+            'youth_details.present_address.village_or_area_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'youth_details.present_address.*.house_n_road' => [
+            'youth_details.present_address.house_n_road' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'youth_details.present_address.*.house_n_road_en' => [
+            'youth_details.present_address.house_n_road_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'youth_details.present_address.*.zip_or_postal_code' => [
+            'youth_details.present_address.zip_or_postal_code' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'string',
@@ -484,74 +483,74 @@ class RplApplicationService
                 'nullable',
                 'array',
             ],
-            'youth_details.permanent_address.*.loc_division_id' => [
+            'youth_details.permanent_address.loc_division_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.permanent_address.*.loc_district_id' => [
+            'youth_details.permanent_address.loc_district_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.permanent_address.*.loc_upazila_id' => [
+            'youth_details.permanent_address.loc_upazila_id' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'integer',
             ],
-            'youth_details.permanent_address .*. village_or_area' => [
+            'youth_details.permanent_address.village_or_area' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'youth_details . permanent_address .*. village_or_area_en' => [
+            'youth_details.permanent_address.village_or_area_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'youth_details . permanent_address .*.house_n_road' => [
+            'youth_details.permanent_address.house_n_road' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'youth_details . permanent_address .*. house_n_road_en' => [
+            'youth_details.permanent_address.house_n_road_en' => [
                 'nullable',
                 'string',
                 'max:250',
                 'min:2'
             ],
-            'youth_details . permanent_address .*. zip_or_postal_code' => [
+            'youth_details.permanent_address.zip_or_postal_code' => [
                 'nullable',
                 'string',
                 'max:5',
                 'min:4'
             ],
-            'youth_details . guardian_name' => [
+            'youth_details.guardian_name' => [
                 'nullable',
                 'string',
                 'max:500',
                 'min:2'
             ],
-            'youth_details . guardian_name_en' => [
+            'youth_details.guardian_name_en' => [
                 'nullable',
                 'string',
                 'max:300',
                 'min:2'
             ],
-            'youth_details . is_youth_employed' => [
+            'youth_details.is_youth_employed' => [
                 'nullable',
                 'integer',
                 Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
-            'youth_details . company_type' => [
+            'youth_details.company_type' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'nullable',
                 'string',
             ],
-            'youth_details . job_responsibilities' => [
+            'youth_details.job_responsibilities' => [
                 'string',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
@@ -559,11 +558,11 @@ class RplApplicationService
                 'nullable',
 
             ],
-            'youth_details . job_responsibilities_en' => [
+            'youth_details.job_responsibilities_en' => [
                 'string',
                 'nullable'
             ],
-            'youth_details . company_name' => [
+            'youth_details.company_name' => [
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
@@ -572,16 +571,16 @@ class RplApplicationService
 
 
             ],
-            'youth_details . company_name_en' => [
+            'youth_details.company_name_en' => [
                 'string',
                 'nullable'
             ],
 
-            'youth_details . job_experiences' => [
+            'youth_details.job_experiences' => [
                 'nullable',
                 'array'
             ],
-            'youth_details . job_experiences.*' => [
+            'youth_details.job_experiences.*' => [
                 'nullable',
                 'array'
             ],
@@ -706,11 +705,11 @@ class RplApplicationService
                     'nullable',
                     "string"
                 ];
-                $rules['youth_details.education_info' . $index . 'major_or_concentration_en'] = [
+                $rules['youth_details.education_info.' . $index . '.major_or_concentration_en'] = [
                     "nullable",
                     "string"
                 ];
-                $rules['youth_details.education_info' . $index . 'edu_group_id'] = [
+                $rules['youth_details.education_info.' . $index . '.edu_group_id'] = [
                     Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::EDU_GROUP, $eduLabelId);
                     }),
@@ -718,7 +717,7 @@ class RplApplicationService
                     'exists:edu_groups,id,deleted_at,NULL',
                     "integer"
                 ];
-                $rules['youth_details.education_info' . $index . 'edu_board_id'] = [
+                $rules['youth_details.education_info.' . $index . '.edu_board_id'] = [
                     Rule::requiredIf(function () use ($eduLabelId, $data) {
                         return $this->getRequiredStatus(EnrollmentEducation::BOARD, $eduLabelId);
                     }),
@@ -726,22 +725,22 @@ class RplApplicationService
                     'exists:edu_boards,id,deleted_at,NULL',
                     "integer"
                 ];
-                $rules['youth_details.education_info' . $index . 'institute_name'] = [
+                $rules['youth_details.education_info.' . $index . '.institute_name'] = [
                     Rule::requiredIf(!empty($data['youth_details']['education_info'])),
                     'string',
                     'max:800',
                 ];
-                $rules['youth_details.education_info' . $index . 'institute_name_en'] = [
+                $rules['youth_details.education_info.' . $index . '.institute_name_en'] = [
                     'nullable',
                     'string',
                     'max:400',
                 ];
-                $rules['youth_details.education_info' . $index . 'result'] = [
+                $rules['youth_details.education_info.' . $index . '.result'] = [
                     Rule::requiredIf(!empty($data['youth_details']['education_info'])),
                     "integer",
                     Rule::in(array_keys(config("nise3.exam_degree_results")))
                 ];
-                $rules['youth_details.education_info' . $index . 'marks_in_percentage'] = [
+                $rules['youth_details.education_info.' . $index . '.marks_in_percentage'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::MARKS, $resultId);
@@ -749,7 +748,7 @@ class RplApplicationService
                     'nullable',
                     "numeric"
                 ];
-                $rules['youth_details.education_info' . $index . 'cgpa_scale'] = [
+                $rules['youth_details.education_info.' . $index . '.cgpa_scale'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::SCALE, $resultId);
@@ -758,16 +757,16 @@ class RplApplicationService
                     "integer",
                     Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
                 ];
-                $rules['youth_details.education_info' . $index . 'cgpa'] = [
+                $rules['youth_details.education_info.' . $index . '.cgpa'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::CGPA, $resultId);
                     }),
                     'nullable',
                     'numeric',
-                    "max:5"
+                    'max:5'
                 ];
-                $rules['youth_details.education_info' . $index . 'year_of_passing'] = [
+                $rules['youth_details.education_info.' . $index . '.year_of_passing'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId);
@@ -775,7 +774,7 @@ class RplApplicationService
                     'nullable',
                     'string'
                 ];
-                $rules['youth_details . education_info' . $index . 'expected_year_of_passing'] = [
+                $rules['youth_details.education_info.' . $index . '.expected_year_of_passing'] = [
                     Rule::requiredIf(function () use ($educationInfo) {
                         $resultId = !empty($educationInfo['result']) ? $educationInfo['result'] : null;
                         return $resultId && $this->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $resultId);
@@ -783,7 +782,7 @@ class RplApplicationService
                     'nullable',
                     'string'
                 ];
-                $rules['youth_details . education_info' . $index . 'duration'] = [
+                $rules['youth_details.education_info.' . $index . '.duration'] = [
                     "nullable",
                     "integer"
                 ];
