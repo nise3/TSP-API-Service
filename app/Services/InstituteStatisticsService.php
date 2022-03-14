@@ -6,6 +6,7 @@ use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Institute;
+use Illuminate\Http\Request;
 use App\Models\RegisteredTrainingOrganization;
 use App\Models\RplApplication;
 use App\Models\RplOccupation;
@@ -365,7 +366,7 @@ class InstituteStatisticsService
 
     private function getTotalRto(): int
     {
-        return RegisteredTrainingOrganization::count('id');
+        return RegisteredTrainingOrganization::where('institute_id', request('institute_id'))->count('id');
     }
 
     private function geTotalSector(): int
@@ -386,7 +387,8 @@ class InstituteStatisticsService
     /**
      * @return array
      */
-    public function getRtoDashboardStatistics(){
+    public function getRtoDashboardStatistics()
+    {
         $totalBatches = self::getTotalRtoBatches();
         $totalRplApplications = self::getTotalRplApplications();
         $totalYouths = self::getTotalYouths();
@@ -397,16 +399,19 @@ class InstituteStatisticsService
         ];
     }
 
-    private function getTotalRtoBatches(){
+    private function getTotalRtoBatches()
+    {
         return RtoBatch::acl()->count('id');
     }
 
-    private function getTotalRplApplications(){
+    private function getTotalRplApplications()
+    {
         return 0;
 //        RplApplication::where('application_status', )->acl()->count('id);
     }
 
-    private function getTotalYouths(){
+    private function getTotalYouths()
+    {
         return RplApplication::acl()->count('id');
     }
 
