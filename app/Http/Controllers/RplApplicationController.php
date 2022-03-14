@@ -111,8 +111,7 @@ class RplApplicationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Store a Rpl Assessment
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
@@ -121,7 +120,7 @@ class RplApplicationController extends Controller
     {
         // $this->authorize('create', RplApplication::class); // not needed for public
         $validated = $this->rplApplicationService->validator($request)->validate();
-
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_ASSESSMENT_COMPLETED;
         $answers = $this->rplApplicationService->answersValidator($request)->validate();
         $rplApplication = $this->rplApplicationService->store($validated);
         $rplApplication = $this->rplApplicationService->updateResult($rplApplication, $answers);
@@ -139,6 +138,7 @@ class RplApplicationController extends Controller
     }
 
     /**
+     * Create a Rpl Application
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
@@ -146,13 +146,10 @@ class RplApplicationController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        throw_if(!($request->has('rpl_application_id') && $request->input('rpl_application_id')), ValidationException::withMessages(
-            ['rpl_application_id is required.[50000]']
-        ));
-
         $rplApplication = RplApplication::findOrFail($request->input('rpl_application_id'));
         $validated = $this->rplApplicationService->validator($request)->validate();
-        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication,$validated);
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
+        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
         $response = [
             'data' => $rplApplication,
             '_response_status' => [

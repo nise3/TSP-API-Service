@@ -54,4 +54,12 @@ class RplApplication extends BaseModel
         self::RELIGION_ETHNIC,
         self::RELIGION_AGNOSTIC_ATHEIST
     ];
+
+    public const APPLICATION_STATUS_ASSESSMENT_COMPLETED = 1;
+    public const APPLICATION_STATUS_APPLICATION_SUBMITTED = 2;
+
+    public const RPL_APPLICATION_STATUS = [
+        self::APPLICATION_STATUS_ASSESSMENT_COMPLETED,
+        self::APPLICATION_STATUS_APPLICATION_SUBMITTED,
+    ];
 }

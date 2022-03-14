@@ -326,6 +326,15 @@ class RplApplicationService
         $data = $request->all();
 
         $rules = [
+            'id' => [
+                'nullable',
+                'integer',
+                Rule::exists('rpl_applications', 'id')
+                    ->where(function ($query) use ($data) {
+                        $query->where('rpl_applications.youth_id', $data['youth_id']);
+                        $query->whereNull('rpl_applications.deleted_at');
+                    })
+            ],
             'youth_details' => [
                 'nullable',
                 'array'
