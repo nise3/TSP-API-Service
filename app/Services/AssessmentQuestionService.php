@@ -136,21 +136,19 @@ class AssessmentQuestionService
 
     /**
      * @param array $data
-     * @return void
      */
     public function store(array $data)
     {
-
+        foreach ($data['assessment_questions'] as $assessmentQuestion) {
+            AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])
+                ->where('assessment_question_set_id', $data['assessment_question_set_id'])
+                ->delete();
+        }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
             unset($assessmentQuestionData['id'], $assessmentQuestionData['difficulty_level'], $assessmentQuestionData['deleted_at']);
-            return AssessmentQuestion::updateOrCreate(
-                [
-                    'assessment_id' => $assessmentQuestionData['assessment_id'],
-                    'assessment_question_set_id' => $assessmentQuestionData['assessment_question_set_id'],
-                ],
-                $assessmentQuestionData
-            );
-
+            $assessmentQuestion = app(AssessmentQuestion::class);
+            $assessmentQuestion->fill($assessmentQuestionData);
+            $assessmentQuestion->save();
         }
 
 
