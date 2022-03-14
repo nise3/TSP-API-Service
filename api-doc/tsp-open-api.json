@@ -4624,7 +4624,7 @@
                 }
             }
         },
-        "/rpl-application-certification/payment-assessment-certification/payment/payment-via-ek-pay/pay-now": {
+        "/rpl-applications/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
                     "Rpl Application"
