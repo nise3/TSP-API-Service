@@ -42,7 +42,7 @@ class RtoBatchController extends Controller
      * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
+     * @throws AuthorizationException|ValidationException
      */
     public function getList(Request $request): JsonResponse
     {

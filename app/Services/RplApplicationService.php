@@ -541,12 +541,12 @@ class RplApplicationService
                 'min:2'
             ],
             'youth_details.is_youth_employed' => [
-                'nullable',
+                Rule::requiredIf(!empty($data['youth_details'])),
                 'integer',
                 Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
             'youth_details.company_type' => [
-                Rule::requiredIf(!empty($data['youth_details'])),
+                Rule::requiredIf($data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE),
                 'nullable',
                 'string',
             ],
