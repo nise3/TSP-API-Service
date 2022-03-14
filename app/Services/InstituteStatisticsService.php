@@ -406,13 +406,12 @@ class InstituteStatisticsService
 
     private function getTotalRplApplications()
     {
-        return 0;
-//        RplApplication::where('application_status', )->acl()->count('id);
+        return RplApplication::where('application_status', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED)->acl()->count('id');
     }
 
     private function getTotalYouths()
     {
-        return RplApplication::acl()->count('id');
+        return RplApplication::where('application_status', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED)->acl()->groupBy('id')->count('id');
     }
 
 }
