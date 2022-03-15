@@ -8215,12 +8215,12 @@
                 }
             }
         },
-        "/rpl-assessment": {
+        "/rpl-application": {
             "post": {
                 "tags": [
                     "Rpl Application"
                 ],
-                "summary": "Create a Rpl assessment",
+                "summary": "Create a RPL application",
                 "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
@@ -8397,6 +8397,54 @@
                                         "success": true,
                                         "code": 200,
                                         "message": "Rpl Application deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rpl-assessment": {
+            "post": {
+                "tags": [
+                    "Rpl Application"
+                ],
+                "summary": "Create a Rpl assessment",
+                "description": "API endpoint to Create a Rpl Application. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/YouthAssessment"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "rpl_sector_id": "1",
+                                        "rpl_occupation_id": "1",
+                                        "rpl_level_id": "1",
+                                        "youth_id": "1",
+                                        "assessment_id": "2",
+                                        "target_country_id": "1",
+                                        "rto_country_id": "1",
+                                        "rto_id": "1",
+                                        "updated_at": "2022-03-03T11:43:20.000000Z",
+                                        "created_at": "2022-03-03T11:43:20.000000Z",
+                                        "id": 1
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth assessment added successfully",
                                         "query_time": 0
                                     }
                                 }

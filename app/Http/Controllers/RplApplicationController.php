@@ -144,7 +144,33 @@ class RplApplicationController extends Controller
      * @throws ValidationException
      * @throws Throwable
      */
-    public function store(Request $request): JsonResponse
+    //TODO: This commented method is converted to createRplApplication() method bellow
+    /*public function store(Request $request): JsonResponse
+    {
+        $rplApplication = RplApplication::findOrFail($request->input('id'));
+        $validated = $this->rplApplicationService->validator($request)->validate();
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
+        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
+        $response = [
+            'data' => $rplApplication,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Rpl assessment  added successfully",
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }*/
+
+    /**
+     * Create a Rpl Application
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function createRplApplication(Request $request): JsonResponse
     {
         $rplApplication = RplApplication::findOrFail($request->input('id'));
         $validated = $this->rplApplicationService->validator($request)->validate();

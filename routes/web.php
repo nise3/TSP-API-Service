@@ -143,6 +143,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** rpl assessment */
     $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
 
+    /** rpl application */
+    $router->post("rpl-application", ["as" => "rpl-application", "uses" => "RplApplicationController@createRplApplication"]);
+
     /** Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
 
