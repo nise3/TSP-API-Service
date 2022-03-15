@@ -550,19 +550,18 @@ class RplApplicationService
                 Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
             'youth_details.company_type' => [
-                'nullable',
-                'string',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
+                'nullable',
+                'string'
             ],
             'youth_details.job_responsibilities' => [
-                'string',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
                 'nullable',
-
+                'string'
             ],
             'youth_details.job_responsibilities_en' => [
                 'string',
