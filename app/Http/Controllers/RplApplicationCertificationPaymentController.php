@@ -56,7 +56,7 @@ class RplApplicationCertificationPaymentController extends Controller
      */
     public function ipnHandler(Request $request, string $secretToken)
     {
-
+        Log::info("ipnHandler start to run");
         Log::channel('ek_pay')->info("IPN RESPONSE(Youth Assessment): " . json_encode($request->all()));
 
         if (PaymentService::checkSecretToken($secretToken)) {

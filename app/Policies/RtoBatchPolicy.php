@@ -49,7 +49,7 @@ class RtoBatchPolicy
      */
     public function update(User $authUser): bool
     {
-        return $authUser->hasPermission('update_rto_batch');
+        return $authUser->hasPermission('update_rto_batch') || $authUser->hasPermission('update_rpl_batch');
     }
 
     /**
