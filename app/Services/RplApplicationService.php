@@ -23,9 +23,10 @@ class RplApplicationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplApplicationList(array $request, Carbon $startTime): array
+    public function getRplApplicationList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -77,6 +78,9 @@ class RplApplicationService
             'rpl_applications.deleted_at',
         ]);
 
+        if (!$isPublicApi) {
+            $youthAssessmentBuilder->acl();
+        }
         $youthAssessmentBuilder->orderBy('rpl_applications.id', $order);
 
         $youthAssessmentBuilder->join('rpl_occupations', function ($join) {
@@ -546,17 +550,18 @@ class RplApplicationService
                 Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
             'youth_details.company_type' => [
-                Rule::requiredIf($data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE),
-                'nullable',
-                'string',
-            ],
-            'youth_details.job_responsibilities' => [
-                'string',
                 Rule::requiredIf(function () use ($data) {
                     return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
                 }),
                 'nullable',
-
+                'string'
+            ],
+            'youth_details.job_responsibilities' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
+                }),
+                'nullable',
+                'string'
             ],
             'youth_details.job_responsibilities_en' => [
                 'string',

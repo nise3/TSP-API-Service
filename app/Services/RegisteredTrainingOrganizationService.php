@@ -27,9 +27,10 @@ class RegisteredTrainingOrganizationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRtoList(array $request, Carbon $startTime): array
+    public function getRtoList(array $request, Carbon $startTime ,bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -89,6 +90,10 @@ class RegisteredTrainingOrganizationService
             'registered_training_organizations.updated_at',
             'registered_training_organizations.deleted_at',
         ]);
+
+        if (!$isPublicApi) {
+            $rtoBuilder->acl();
+        }
 
         $rtoBuilder->orderBy('registered_training_organizations.id', $order);
 
