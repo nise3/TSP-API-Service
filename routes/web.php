@@ -43,10 +43,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
-        /** rpl assessment */
-        $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
-
-
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
         /** Institute Registration Rejection */
@@ -143,6 +139,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
+
+    /** rpl assessment */
+    $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
 
     /** Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
