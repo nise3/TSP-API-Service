@@ -26,7 +26,7 @@ class RplApplicationService
      * @param bool $isPublicApi
      * @return array
      */
-    public function getRplApplicationList(array $request, Carbon $startTime,bool $isPublicApi = false): array
+    public function getRplApplicationList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -550,9 +550,11 @@ class RplApplicationService
                 Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
             ],
             'youth_details.company_type' => [
-                Rule::requiredIf($data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE),
                 'nullable',
                 'string',
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
+                }),
             ],
             'youth_details.job_responsibilities' => [
                 'string',
