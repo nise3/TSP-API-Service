@@ -35,7 +35,7 @@ class RegisteredTrainingOrganizationService
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
-        $countryId = $request['country_id'] ?? "";
+        $countryId = $request['rto_country_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -624,7 +624,7 @@ class RegisteredTrainingOrganizationService
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'institute_id' => 'nullable|min:1',
-            'country_id' => 'nullable|min:1',
+            'rto_country_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [
