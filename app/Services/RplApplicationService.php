@@ -43,7 +43,6 @@ class RplApplicationService
         $youthAssessmentBuilder = RplApplication::select([
             'rpl_applications.id',
             'rpl_applications.youth_id',
-            'rpl_applications.youth_details',
             'rpl_applications.assessment_id',
             'rpl_applications.rto_batch_id',
             'rpl_applications.result',
@@ -134,6 +133,10 @@ class RplApplicationService
         if (!empty($rtoBatchId)) {
             $youthAssessmentBuilder->where('rpl_applications.rto_batch_id', $rtoBatchId);
         }
+        $youthAssessmentBuilder->with('addresses');
+        $youthAssessmentBuilder->with('educations');
+        $youthAssessmentBuilder->with('professionalQualifications');
+
 
         /** @var Collection $youthAssessments */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -168,7 +171,6 @@ class RplApplicationService
         $youthAssessmentBuilder = RplApplication::select([
             'rpl_applications.id',
             'rpl_applications.youth_id',
-            'rpl_applications.youth_details',
             'rpl_applications.assessment_id',
             'rpl_applications.rto_batch_id',
             'rpl_applications.result',
