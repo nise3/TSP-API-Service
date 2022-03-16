@@ -660,7 +660,12 @@ class TrainerService
             ],
             'date_of_birth' => [
                 'required',
-                'date'
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(5))) {
+                        $failed('Age should be greater than 5 years.');
+                    }
+                }
             ],
             'about_me' => [
                 'nullable',
