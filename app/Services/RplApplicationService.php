@@ -10,6 +10,9 @@ use App\Models\BaseModel;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentEducation;
 use App\Models\RplApplication;
+use App\Models\RplApplicationAddress;
+use App\Models\RplApplicationEducation;
+use App\Models\RplApplicationProfessionalQualification;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -244,7 +247,7 @@ class RplApplicationService
      * @param array $data
      * @return RplApplication
      */
-    public function store(array $data): RplApplication
+    public function storeRplAssessment(array $data): RplApplication
     {
         $rplApplication = app(RplApplication::class);
         $rplApplication->fill($data);
@@ -258,13 +261,80 @@ class RplApplicationService
      * @param array $data
      * @return RplApplication
      */
-    public function storeApplication(RplApplication $rplApplication, array $data): RplApplication
+    public function storeRplApplication(RplApplication $rplApplication, array $data): RplApplication
     {
         $rplApplication->fill($data);
         $rplApplication->save();
 
         return $rplApplication;
 
+    }
+
+    /**
+     * @param array $data
+     */
+    public function storeRplApplicationAddress(array $data)
+    {
+        $rplApplicationId = $data['id'];
+
+        RplApplicationAddress::where('rpl_application_id', $rplApplicationId)->delete();
+
+        if (!empty($data['youth_details']['present_address'])) {
+            $presentAddressData = $data['youth_details']['present_address'];
+            $presentAddressData['rpl_application_id'] = $rplApplicationId;
+            $presentAddressData['address_type'] = RplApplicationAddress::ADDRESS_TYPE_PRESENT;
+            $presentAddress = app(RplApplicationAddress::class);
+
+
+            $presentAddress->fill($presentAddressData);
+            $presentAddress->save();
+        }
+        if (!empty($data['youth_details']['permanent_address'])) {
+            $permanentAddress = app(RplApplicationAddress::class);
+            $permanentAddressData = $data['youth_details']['permanent_address'];
+            $permanentAddressData['rpl_application_id'] = $rplApplicationId;
+            $permanentAddressData['address_type'] = RplApplicationAddress::ADDRESS_TYPE_PERMANENT;
+
+            $permanentAddress->fill($permanentAddressData);
+            $permanentAddress->save();
+        }
+    }
+
+    /**
+     * @param array $data
+     */
+    public function storeRplApplicationEducation(array $data)
+    {
+        $rplApplicationId = $data['id'];
+        RplApplicationEducation::where('rpl_application_id', $rplApplicationId)->delete();
+
+
+        if (!empty($data['youth_details']['education_info'])) {
+            foreach ($data['youth_details']['education_info'] as $educationInfo) {
+                $rplApplicationEducation = app(RplApplicationEducation::class);
+                $educationInfo['rpl_application_id'] = $rplApplicationId;
+                $rplApplicationEducation->fill($educationInfo);
+                $rplApplicationEducation->save();
+            }
+        }
+    }
+
+    /**
+     * @param array $data
+     */
+    public function storeRplApplicationProfessionalQualification(array $data)
+    {
+        $rplApplicationId = $data['id'];
+        RplApplicationProfessionalQualification::where('rpl_application_id', $rplApplicationId)->delete();
+
+        if (!empty($data['youth_details']['professional_qualifications'])) {
+            foreach ($data['youth_details']['professional_qualifications'] as $professionalQualificationInfo) {
+                $rplApplicationProfessionalQualification = app(RplApplicationProfessionalQualification::class);
+                $professionalQualificationInfo['rpl_application_id'] = $rplApplicationId;
+                $rplApplicationProfessionalQualification->fill($professionalQualificationInfo);
+                $rplApplicationProfessionalQualification->save();
+            }
+        }
     }
 
     /**
@@ -339,8 +409,8 @@ class RplApplicationService
                 'integer',
                 Rule::exists('rpl_applications', 'id')
                     ->where(function ($query) use ($data) {
-                        $query->where('rpl_applications.youth_id', $data['youth_id']);
-                        $query->whereNull('rpl_applications.deleted_at');
+                            $query->where('rpl_applications.youth_id', $data['youth_id']);
+                            $query->whereNull('rpl_applications.deleted_at');
                     })
             ],
             'youth_details' => [
@@ -420,6 +490,7 @@ class RplApplicationService
                 Rule::in(RplApplication::IDENTITY_TYPES)
             ],
             'youth_details.identity_number' => [
+                Rule::requiredIf(!empty($data['youth_details'])),
                 'string',
                 'nullable'
             ],
@@ -546,74 +617,72 @@ class RplApplicationService
                 'max:300',
                 'min:2'
             ],
-            'youth_details.is_youth_employed' => [
+            'youth_details.is_currently_working' => [
                 Rule::requiredIf(!empty($data['youth_details'])),
                 'integer',
-                Rule::in(RplApplication::IS_YOUTH_EMPLOYED)
+                Rule::in(RplApplication::IS_YOUTH_CURRENTLY_WORKING)
             ],
             'youth_details.company_type' => [
                 Rule::requiredIf(function () use ($data) {
-                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
+                    return !empty($data['youth_details']['is_currently_working']) && $data['youth_details']['is_currently_working'] == RplApplication::IS_YOUTH_CURRENTLY_WORKING_TRUE;
                 }),
                 'nullable',
                 'string'
             ],
-            'youth_details.job_responsibilities' => [
+            'youth_details.position' => [
                 Rule::requiredIf(function () use ($data) {
-                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
+                    return !empty($data['youth_details']['is_currently_working']) && $data['youth_details']['is_currently_working'] == RplApplication::IS_YOUTH_CURRENTLY_WORKING_TRUE;
                 }),
                 'nullable',
                 'string'
             ],
-            'youth_details.job_responsibilities_en' => [
+            'youth_details.position_en' => [
                 'string',
                 'nullable'
             ],
             'youth_details.company_name' => [
                 Rule::requiredIf(function () use ($data) {
-                    return !empty($data['youth_details']['is_youth_employed']) && $data['youth_details']['is_youth_employed'] == RplApplication::IS_YOUTH_EMPLOYED_TRUE;
+                    return !empty($data['youth_details']['is_currently_working']) && $data['youth_details']['is_currently_working'] == RplApplication::IS_YOUTH_CURRENTLY_WORKING;
                 }),
                 'nullable',
                 'string',
-
-
             ],
             'youth_details.company_name_en' => [
                 'string',
                 'nullable'
             ],
 
-            'youth_details.job_experiences' => [
+            'youth_details.professional_qualifications' => [
                 'nullable',
                 'array'
             ],
-            'youth_details.job_experiences.*' => [
+            'youth_details.professional_qualifications.*' => [
                 'nullable',
                 'array'
             ],
-            'youth_details.job_experiences.*.rto_country_id' => [
-                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+            'youth_details.professional_qualifications.*.rto_country_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['professional_qualifications'])),
                 'nullable',
                 'int',
                 'min:1',
                 'exists:rto_countries,country_id',
             ],
-            'youth_details.job_experiences.*.rpl_sector_id' => [
-                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+            'youth_details.professional_qualifications.*.rpl_sector_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['professional_qualifications'])),
                 'nullable',
                 'int',
                 'min:1',
                 'exists:rpl_sectors,id,deleted_at,NULL',
             ],
-            'youth_details.job_experiences.*.rpl_occupation_id' => [
-                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+            'youth_details.professional_qualifications.*.rpl_occupation_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['professional_qualifications'])),
                 'nullable',
                 'int',
                 'min:1',
                 'exists:rpl_occupations,id,deleted_at,NULL',
             ],
-            'youth_details.job_experiences.*.rpl_level_id' => [
-                Rule::requiredIf(!empty($data['youth_details']['job_experiences'])),
+            'youth_details.professional_qualifications.*.rpl_level_id' => [
+                Rule::requiredIf(!empty($data['youth_details']['professional_qualifications'])),
                 'nullable',
                 'int',
                 'min:1',

@@ -27,13 +27,13 @@ class RplApplication extends BaseModel
     ];
 
 
-    public const IS_YOUTH_EMPLOYED_TRUE = 1;
-    public const IS_YOUTH_EMPLOYED_FALSE = 0;
+    public const IS_YOUTH_CURRENTLY_WORKING_TRUE = 1;
+    public const IS_YOUTH_CURRENTLY_WORKING_FALSE = 0;
 
 
-    public const IS_YOUTH_EMPLOYED = [
-        self::IS_YOUTH_EMPLOYED_TRUE,
-        self::IS_YOUTH_EMPLOYED_FALSE
+    public const IS_YOUTH_CURRENTLY_WORKING = [
+        self::IS_YOUTH_CURRENTLY_WORKING_TRUE,
+        self::IS_YOUTH_CURRENTLY_WORKING_FALSE
     ];
 
 
@@ -69,6 +69,7 @@ class RplApplication extends BaseModel
         self::APPLICATION_STATUS_ASSIGNED_TO_BATCH,
         self::APPLICATION_STATUS_ASSESSMENT_COMPLETED,
     ];
+
 
     /**
      * @return HasMany
