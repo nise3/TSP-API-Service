@@ -93,7 +93,7 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
                 'exists:training_centers,id,deleted_at,NULL',
             ],
             'reporting_month' => [
-                'nullable',
+                'required',
                 'date',
             ],
             'number_of_trades_allowed' => [
@@ -169,7 +169,6 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
                 'nullable',
                 'string',
             ],
-            '' => ['',],
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
