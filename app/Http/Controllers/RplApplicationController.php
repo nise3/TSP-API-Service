@@ -120,7 +120,7 @@ class RplApplicationController extends Controller
     {
         // $this->authorize('create', RplApplication::class); // not needed for public
         $validated = $this->rplApplicationService->validator($request)->validate();
-        $validated['application_status'] = RplApplication::APPLICATION_STATUS_ASSESSMENT_COMPLETED;
+        $validated['application_status'] = RplApplication::APPLICATION_STATUS_ASSESSMENT_SUBMITTED;
         $answers = $this->rplApplicationService->answersValidator($request)->validate();
         $rplApplication = $this->rplApplicationService->store($validated);
         $rplApplication = $this->rplApplicationService->updateResult($rplApplication, $answers);
