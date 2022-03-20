@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Laravel\Lumen\Application;
 use Symfony\Component\HttpFoundation\Response;
 
 class TrainingCenterSkillDevelopmentReportService
@@ -101,6 +102,21 @@ class TrainingCenterSkillDevelopmentReportService
     }
 
     /**
+     * @param array $data
+     * @return TrainingCenterSkillDevelopmentReport
+     */
+    public function store(array $data): TrainingCenterSkillDevelopmentReport
+    {
+        $data['current_session_trainees_total'] = $data['current_session_trainees_women'] + $data['current_session_trainees_men'] + $data['current_session_trainees_disabled_and_others'];
+        $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
+        $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);
+        $trainingCenterSkillDevelopmentReport->fill($data);
+        $trainingCenterSkillDevelopmentReport->Save();
+
+        return $trainingCenterSkillDevelopmentReport;
+    }
+
+    /**
      * @param int $id
      * @return Model|Builder
      */
@@ -145,7 +161,6 @@ class TrainingCenterSkillDevelopmentReportService
         $trainingCenterSKillReportBuilder->where('training_center_skill_development_reports.id', '=', $id);
 
 
-        /** @var TrainingCenterSkillDevelopmentReport $trainingCenterSKillReportBuilder */
         return $trainingCenterSKillReportBuilder->firstOrFail();
     }
 
@@ -179,5 +194,113 @@ class TrainingCenterSkillDevelopmentReportService
         return Validator::make($request->all(), $rules, $customMessage);
 
     }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $request->offsetSet('deleted_at', null);
+        $data = $request->all();
+
+        $customMessage = [];
+
+        $rules = [
+            'institute_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:institutes,id,deleted_at,NULL',
+            ],
+            'training_center_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:training_centers,id,deleted_at,NULL',
+            ],
+            'reporting_month' => [
+                'required',
+                'date',
+            ],
+            'number_of_trades_allowed' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'number_of_ongoing_trades' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'number_of_computers' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'number_of_other_equipments' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'amount_of_total_fdr' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'current_session_trainees_women' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'current_session_trainees_men' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'current_session_trainees_disabled_and_others' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'total_trainees_women' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'total_trainees_men' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'total_trainees_disabled_and_others' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'bank_status_skill_development' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'bank_status_coordinating_council' => [
+                'nullable',
+                'int',
+                'min:0',
+            ],
+            'date_of_last_election_of_all_party_council' => [
+                'nullable',
+                'date',
+            ],
+            'comments' => [
+                'nullable',
+                'string',
+            ],
+        ];
+
+        return Validator::make($data, $rules, $customMessage);
+    }
+
 
 }
