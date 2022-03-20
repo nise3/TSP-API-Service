@@ -239,6 +239,9 @@ class RplApplicationService
             $join->on('rpl_applications.rto_id', '=', 'registered_training_organizations.id')
                 ->whereNull('registered_training_organizations.deleted_at');
         });
+        $youthAssessmentBuilder->with('addresses');
+        $youthAssessmentBuilder->with('educations');
+        $youthAssessmentBuilder->with('professionalQualifications');
 
         return $youthAssessmentBuilder->firstOrFail();
     }
