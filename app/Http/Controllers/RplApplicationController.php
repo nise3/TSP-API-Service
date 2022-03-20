@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RplApplication;
 use App\Models\RplOccupation;
 use App\Services\RplApplicationService;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -118,11 +119,10 @@ class RplApplicationController extends Controller
      */
     public function createRplAssessment(Request $request): JsonResponse
     {
-        // $this->authorize('create', RplApplication::class); // not needed for public
         $validated = $this->rplApplicationService->validator($request)->validate();
         $validated['application_status'] = RplApplication::APPLICATION_STATUS_ASSESSMENT_SUBMITTED;
         $answers = $this->rplApplicationService->answersValidator($request)->validate();
-        $rplApplication = $this->rplApplicationService->store($validated);
+        $rplApplication = $this->rplApplicationService->storeRplAssessment($validated);
         $rplApplication = $this->rplApplicationService->updateResult($rplApplication, $answers);
 
         $response = [
@@ -137,31 +137,6 @@ class RplApplicationController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
-    /**
-     * Create a Rpl Application
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
-     * @throws Throwable
-     */
-    //TODO: This commented method is converted to createRplApplication() method bellow
-    /*public function store(Request $request): JsonResponse
-    {
-        $rplApplication = RplApplication::findOrFail($request->input('id'));
-        $validated = $this->rplApplicationService->validator($request)->validate();
-        $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
-        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
-        $response = [
-            'data' => $rplApplication,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Rpl assessment  added successfully",
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
-    }*/
 
     /**
      * Create a Rpl Application
@@ -174,17 +149,29 @@ class RplApplicationController extends Controller
     {
         $rplApplication = RplApplication::findOrFail($request->input('id'));
         $validated = $this->rplApplicationService->validator($request)->validate();
-        $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
-        $rplApplication = $this->rplApplicationService->storeApplication($rplApplication, $validated);
-        $response = [
-            'data' => $rplApplication,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Rpl assessment  added successfully",
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try {
+            $validated['application_status'] = RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED;
+            $rplApplication = $this->rplApplicationService->storeRplApplication($rplApplication, $validated);
+            $this->rplApplicationService->storeRplApplicationAddress($validated);
+            $this->rplApplicationService->storeRplApplicationEducation($validated);
+            $this->rplApplicationService->storeRplApplicationProfessionalQualification($validated);
+
+            $response = [
+                'data' => $rplApplication,
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Rpl Application  stored successfully",
+                    "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        }catch (Exception $e){
+            DB::rollback();
+            throw $e;
+        }
+
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
@@ -210,7 +197,7 @@ class RplApplicationController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Youth assessment updated successfully.",
+                "message" => "Rpl Application updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -239,7 +226,7 @@ class RplApplicationController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Youth assessment assigned to batch successfully.",
+                "message" => "Rpl Application assigned to batch successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -267,7 +254,7 @@ class RplApplicationController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Youth Assessment deleted successfully.",
+                    "message" => "Rpl Application deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
