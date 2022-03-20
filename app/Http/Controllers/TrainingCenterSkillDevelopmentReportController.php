@@ -52,7 +52,6 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
     public function read(int $id): JsonResponse
     {
         $data = $this->trainingCenterSkillDevelopmentReportService->getOneTrainingCenterSkillDevelopmentReport($id);
-        $this->authorize('view', $data);
         $response = [
             "data" => $data ?: null,
             "_response_status" => [

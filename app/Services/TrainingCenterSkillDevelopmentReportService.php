@@ -144,6 +144,7 @@ class TrainingCenterSkillDevelopmentReportService
 
         $trainingCenterSKillReportBuilder->where('training_center_skill_development_reports.id', '=', $id);
 
+
         /** @var TrainingCenterSkillDevelopmentReport $trainingCenterSKillReportBuilder */
         return $trainingCenterSKillReportBuilder->firstOrFail();
     }
