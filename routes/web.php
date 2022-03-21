@@ -44,9 +44,24 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
         /** training center skill development reports */
-        $router->get("training-centers/reporting/skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);
-        $router->get("training-centers/reporting/skill-development/{id}", ["as" => "training-centers.skill-development-report-get", "uses" => "TrainingCenterSkillDevelopmentReportController@read"]);
-        $router->post("training-centers/reporting/skill-development", ["as" => "training-centers.skill-development-report-store", "uses" => "TrainingCenterSkillDevelopmentReportController@store"]);
+        $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
+            $router->get("skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);
+            $router->get("skill-development/{id}", ["as" => "training-centers.skill-development-report-get", "uses" => "TrainingCenterSkillDevelopmentReportController@read"]);
+            $router->post("skill-development", ["as" => "training-centers.skill-development-report-store", "uses" => "TrainingCenterSkillDevelopmentReportController@store"]);
+
+            $router->get("combined-progress", ["as" => "training-centers.combined-progress-reports", "uses" => "TrainingCenterCombinedProgressReportController@getList"]);
+            $router->get("combined-progress/{id}", ["as" => "training-centers.combined-progress-report-get", "uses" => "TrainingCenterCombinedProgressReportController@read"]);
+            $router->post("combined-progress", ["as" => "training-centers.combined-progress-report-store", "uses" => "TrainingCenterCombinedProgressReportController@store"]);
+
+            $router->get("progress", ["as" => "training-centers.progress-reports", "uses" => "TrainingCenterProgressReportController@getList"]);
+            $router->get("progress/{id}", ["as" => "training-centers.progress-report-get", "uses" => "TrainingCenterProgressReportController@read"]);
+            $router->post("progress", ["as" => "training-centers.progress-report-store", "uses" => "TrainingCenterProgressReportController@store"]);
+
+            $router->get("income-expenditure", ["as" => "training-centers.income-expenditure-reports", "uses" => "TrainingCenterIncomeExpenditureReportController@getList"]);
+            $router->get("income-expenditure/{id}", ["as" => "training-centers.income-expenditure-report-get", "uses" => "TrainingCenterIncomeExpenditureReportController@read"]);
+            $router->post("income-expenditure", ["as" => "training-centers.income-expenditure-report-store", "uses" => "TrainingCenterIncomeExpenditureReportController@store"]);
+
+        });
 
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
