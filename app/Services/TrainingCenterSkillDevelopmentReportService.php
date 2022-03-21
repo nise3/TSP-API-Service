@@ -39,8 +39,8 @@ class TrainingCenterSkillDevelopmentReportService
             'training_center_skill_development_reports.reporting_month',
             'training_center_skill_development_reports.number_of_trades_allowed',
             'training_center_skill_development_reports.number_of_ongoing_trades',
-            'training_center_skill_development_reports.number_of_computer',
-            'training_center_skill_development_reports.number_of_other_equipment',
+            'training_center_skill_development_reports.number_of_computers',
+            'training_center_skill_development_reports.number_of_other_equipments',
             'training_center_skill_development_reports.amount_of_total_fdr',
             'training_center_skill_development_reports.current_session_trainees_women',
             'training_center_skill_development_reports.current_session_trainees_men',
@@ -59,11 +59,11 @@ class TrainingCenterSkillDevelopmentReportService
         ])->acl();
 
         $trainingCenterSKillReportBuilder->join("institutes", function ($join) {
-            $join->on('training_centers.institute_id', '=', 'institutes.id')
+            $join->on('training_center_skill_development_reports.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
         $trainingCenterSKillReportBuilder->join("training_centers", function ($join) {
-            $join->on('training_centers.training_center_id', '=', 'training_centers.id')
+            $join->on('training_center_skill_development_reports.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
         });
 
