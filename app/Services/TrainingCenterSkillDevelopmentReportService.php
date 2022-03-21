@@ -111,7 +111,7 @@ class TrainingCenterSkillDevelopmentReportService
         $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
         $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);
         $trainingCenterSkillDevelopmentReport->fill($data);
-        $trainingCenterSkillDevelopmentReport->Save();
+        $trainingCenterSkillDevelopmentReport->save();
 
         return $trainingCenterSkillDevelopmentReport;
     }
@@ -180,10 +180,10 @@ class TrainingCenterSkillDevelopmentReportService
         ];
 
         $rules = [
-            'institute_id' => 'nullable|int|gt:0',
+            'institute_id' => 'int|gt:0',
+            'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'training_center_id' => 'nullable|int|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

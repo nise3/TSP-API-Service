@@ -18,11 +18,12 @@ class CreateTrainingCenterSkillDevelopmentReportsTable extends Migration
             $table->unsignedInteger('institute_id');
             $table->unsignedInteger('training_center_id');
             $table->dateTime('reporting_month');
+
             $table->unsignedInteger('number_of_trades_allowed')->default(0);
             $table->unsignedInteger('number_of_ongoing_trades')->default(0);
             $table->unsignedInteger('number_of_computers')->default(0);
             $table->unsignedInteger('number_of_other_equipments')->default(0);
-            $table->unsignedInteger('amount_of_total_fdr')->default(0);
+            $table->unsignedDecimal('amount_of_total_fdr')->default(0);
             $table->unsignedInteger('current_session_trainees_women')->default(0);
             $table->unsignedInteger('current_session_trainees_men')->default(0);
             $table->unsignedInteger('current_session_trainees_disabled_and_others')->default(0);
@@ -31,10 +32,11 @@ class CreateTrainingCenterSkillDevelopmentReportsTable extends Migration
             $table->unsignedInteger('total_trainees_men')->default(0);
             $table->unsignedInteger('total_trainees_disabled_and_others')->default(0);
             $table->unsignedInteger('total_trainees_total')->default(0);
-            $table->unsignedInteger('bank_status_skill_development')->default(0);
-            $table->unsignedInteger('bank_status_coordinating_council')->default(0);
+            $table->text('bank_status_skill_development')->nullable();
+            $table->text('bank_status_coordinating_council')->nullable();
             $table->dateTime('date_of_last_election_of_all_party_council')->nullable();
             $table->text('comments')->nullable();
+
             $table->timestamps();
         });
     }
