@@ -111,7 +111,7 @@ class TrainingCenterSkillDevelopmentReportService
         $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
         $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);
         $trainingCenterSkillDevelopmentReport->fill($data);
-        $trainingCenterSkillDevelopmentReport->Save();
+        $trainingCenterSkillDevelopmentReport->save();
 
         return $trainingCenterSkillDevelopmentReport;
     }
@@ -180,10 +180,10 @@ class TrainingCenterSkillDevelopmentReportService
         ];
 
         $rules = [
-            'institute_id' => 'nullable|int|gt:0',
+            'institute_id' => 'int|gt:0',
+            'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'training_center_id' => 'nullable|int|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -246,7 +246,7 @@ class TrainingCenterSkillDevelopmentReportService
             ],
             'amount_of_total_fdr' => [
                 'nullable',
-                'int',
+                'numeric',
                 'min:0',
             ],
             'current_session_trainees_women' => [
@@ -281,13 +281,11 @@ class TrainingCenterSkillDevelopmentReportService
             ],
             'bank_status_skill_development' => [
                 'nullable',
-                'int',
-                'min:0',
+                'string',
             ],
             'bank_status_coordinating_council' => [
                 'nullable',
-                'int',
-                'min:0',
+                'string',
             ],
             'date_of_last_election_of_all_party_council' => [
                 'nullable',
