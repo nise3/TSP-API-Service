@@ -43,6 +43,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
+        /** training center skill development reports */
+        $router->get("training-centers/reporting/skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);
+        $router->get("training-centers/reporting/skill-development/{id}", ["as" => "training-centers.skill-development-report-get", "uses" => "TrainingCenterSkillDevelopmentReportController@read"]);
+        $router->post("training-centers/reporting/skill-development", ["as" => "training-centers.skill-development-report-store", "uses" => "TrainingCenterSkillDevelopmentReportController@store"]);
+
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
         /** Institute Registration Rejection */
