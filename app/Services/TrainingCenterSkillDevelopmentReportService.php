@@ -107,6 +107,7 @@ class TrainingCenterSkillDevelopmentReportService
      */
     public function store(array $data): TrainingCenterSkillDevelopmentReport
     {
+
         $data['current_session_trainees_total'] = $data['current_session_trainees_women'] + $data['current_session_trainees_men'] + $data['current_session_trainees_disabled_and_others'];
         $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
         $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);

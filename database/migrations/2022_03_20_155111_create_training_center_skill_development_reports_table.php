@@ -18,7 +18,6 @@ class CreateTrainingCenterSkillDevelopmentReportsTable extends Migration
             $table->unsignedInteger('institute_id');
             $table->unsignedInteger('training_center_id');
             $table->dateTime('reporting_month');
-
             $table->unsignedInteger('number_of_trades_allowed')->default(0);
             $table->unsignedInteger('number_of_ongoing_trades')->default(0);
             $table->unsignedInteger('number_of_computers')->default(0);
@@ -36,7 +35,6 @@ class CreateTrainingCenterSkillDevelopmentReportsTable extends Migration
             $table->text('bank_status_coordinating_council')->nullable();
             $table->dateTime('date_of_last_election_of_all_party_council')->nullable();
             $table->text('comments')->nullable();
-
             $table->timestamps();
         });
     }
