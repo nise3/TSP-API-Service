@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
 class TrainingCenterIncomeExpenditureReportController extends Controller
@@ -44,7 +46,52 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
         $this->authorize('viewAny', TrainingCenterIncomeExpenditureReport::class);
         $filter = $this->trainingCenterIncomeExpenditureReportService->filterValidator($request)->validate();
 
-        $response = $this->trainingCenterService->getTrainingCenterList($filter, $this->startTime);
+        $response = $this->trainingCenterIncomeExpenditureReportService->TrainingCenterIncomeExpenditureReport($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
+    /**
+     *  Display the specified resource
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function read(int $id): JsonResponse
+    {
+        $data = $this->trainingCenterIncomeExpenditureReportService->getOneTrainingCenterIncomeExpenditureReport($id);
+        $response = [
+            "data" => $data ?: null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     *Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function store(Request $request): JsonResponse
+    {
+        $validatedData = $this->trainingCenterIncomeExpenditureReportService->validator($request)->validate();
+
+        $data = $this->trainingCenterIncomeExpenditureReportService->store($validatedData);
+        $response = [
+            'data' => $data ?: null,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Training center Income Expenditure Report added successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
 }
