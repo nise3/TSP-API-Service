@@ -59,14 +59,14 @@ class TrainingCenterIncomeExpenditureReportService
             '$training_center_income_expenditure_reports.number_of_allowed_seats',
             '$training_center_income_expenditure_reports.number_of_trainees',
             '$training_center_income_expenditure_reports.course_fee_per_trainee',
-            '$training_center_income_expenditure_reports.total_course_income_from_course_fee',
-            '$training_center_income_expenditure_reports.total_course_income_from_application_and_others',
-            '$training_center_income_expenditure_reports.total_course_income_from_total_income',
+            '$training_center_income_expenditure_reports.course_income_from_course_fee',
+            '$training_center_income_expenditure_reports.course_income_from_application_and_others',
+            '$training_center_income_expenditure_reports.course_income_total',
             '$training_center_income_expenditure_reports.reporting_month_income',
             '$training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other_expenses',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total_expenses',
-            '$training_center_income_expenditure_reports.reporting_month_total_income',
+            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other',
+            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total',
+            '$training_center_income_expenditure_reports.reporting_month_net_income',
             '$training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             '$training_center_income_expenditure_reports.bank_status_so_far',
             '$training_center_income_expenditure_reports.comments',
@@ -139,14 +139,14 @@ class TrainingCenterIncomeExpenditureReportService
             '$training_center_income_expenditure_reports.number_of_allowed_seats',
             '$training_center_income_expenditure_reports.number_of_trainees',
             '$training_center_income_expenditure_reports.course_fee_per_trainee',
-            '$training_center_income_expenditure_reports.total_course_income_from_course_fee',
-            '$training_center_income_expenditure_reports.total_course_income_from_application_and_others',
-            '$training_center_income_expenditure_reports.total_course_income_from_total_income',
+            '$training_center_income_expenditure_reports.course_income_from_course_fee',
+            '$training_center_income_expenditure_reports.course_income_from_application_and_others',
+            '$training_center_income_expenditure_reports.course_income_total',
             '$training_center_income_expenditure_reports.reporting_month_income',
             '$training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other_expenses',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total_expenses',
-            '$training_center_income_expenditure_reports.reporting_month_total_income',
+            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other',
+            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total',
+            '$training_center_income_expenditure_reports.reporting_month_net_income',
             '$training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             '$training_center_income_expenditure_reports.bank_status_so_far',
             '$training_center_income_expenditure_reports.comments',
@@ -168,6 +168,80 @@ class TrainingCenterIncomeExpenditureReportService
 
     }
 
+    /**
+     * @param array $data
+     * @return TrainingCenterIncomeExpenditureReport
+     */
+    public function store(array $data): TrainingCenterIncomeExpenditureReport
+    {
+        $data['course_income_total'] =
+            ($data['course_income_from_course_fee'] ?? 0) +
+            ($data['course_income_from_application_and_others'] ?? 0);
+
+        $data['reporting_month_training_expenses_total'] =
+            ($data['reporting_month_training_expenses_instructor_salaries'] ?? 0) +
+            ($data['reporting_month_training_expenses_other'] ?? 0);
+
+        $data['reporting_month_net_income'] =
+            ($data['reporting_month_income'] ?? 0) -
+            ($data['reporting_month_training_expenses_total'] ?? 0);
+
+        $trainingCenterIncomeExpenditureReport = app(TrainingCenterIncomeExpenditureReport::class);
+        $trainingCenterIncomeExpenditureReport->fill($data);
+        $trainingCenterIncomeExpenditureReport->save();
+
+        return $trainingCenterIncomeExpenditureReport;
+    }
+
+
+    public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $request->offsetSet('deleted_at', null);
+        $data = $request->all();
+
+        $customMessage = [];
+
+        $rules = [
+            'institute_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:institutes,id,deleted_at,NULL',
+            ],
+            'training_center_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:training_centers,id,deleted_at,NULL',
+            ],
+            'reporting_month' => [
+                'required',
+                'date',
+            ],
+
+            'trade_name' => 'nullable|string',
+            'number_of_labs_or_training_rooms' => 'nullable|int|min:0',
+            'number_of_allowed_seats' => 'nullable|int|min:0',
+            'number_of_trainees' => 'nullable|int|min:0',
+            'course_fee_per_trainee' => 'nullable|numeric|min:0',
+            'course_income_from_course_fee' => 'nullable|numeric|min:0',
+            'course_income_from_application_and_others' => 'nullable|numeric|min:0',
+            'course_income_total' => 'nullable|numeric|min:0',
+            'reporting_month_income' => 'nullable|numeric|min:0',
+            'reporting_month_training_expenses_instructor_salaries' => 'nullable|numeric|min:0',
+            'reporting_month_training_expenses_other' => 'nullable|numeric|min:0',
+            'reporting_month_training_expenses_total' => 'nullable|numeric|min:0',
+            'reporting_month_net_income' => 'nullable|numeric|min:0',
+            'bank_status_up_to_previous_month' => 'nullable|string',
+            'bank_status_so_far' => 'nullable|string',
+            'account_no_and_bank_branch_name' => 'nullable|string',
+            'comments' => 'nullable|string',
+
+        ];
+
+        return Validator::make($data, $rules, $customMessage);
+    }
+
 
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
@@ -181,9 +255,9 @@ class TrainingCenterIncomeExpenditureReportService
 
         $rules = [
             'institute_id' => 'required|int|gt:0',
+            'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'training_center_id' => 'nullable|int|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
