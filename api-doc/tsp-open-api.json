@@ -9134,12 +9134,12 @@
                 }
             }
         },
-        "/training-centers/reporting/skill-development/{institute_id_optional}": {
+        "/training-centers/reporting/skill-development/{instituteId}": {
             "get": {
                 "tags": [
-                    "Institute Center Report"
+                    "Training Center report"
                 ],
-                "summary": "Get a single report",
+                "summary": "Get a single report of Institute",
                 "description": "API endpoint to get a single report. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -9193,9 +9193,9 @@
         "/training-centers/reporting/skill-development": {
             "get": {
                 "tags": [
-                    "Institute Center Report"
+                    "Training Center report"
                 ],
-                "summary": "Get a list",
+                "summary": "Get a list of institute",
                 "description": "API endpoint to get a list of institute. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -9259,9 +9259,9 @@
             },
             "post": {
                 "tags": [
-                    "Institute Center Report"
+                    "Training Center report"
                 ],
-                "summary": "Insert a report",
+                "summary": "Insert a report of institute report",
                 "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
@@ -9320,7 +9320,7 @@
         "/training-centers/reporting/combined-progress/{CombineProgressId}": {
             "get": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
                 "summary": "Get a single Combine progress report",
                 "description": "API endpoint to get a single combined-progress report. A successful request response will show 200 HTTP status code",
@@ -9392,9 +9392,9 @@
         "/training-centers/reporting/combined-progress": {
             "get": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
-                "summary": "Get a list",
+                "summary": "Get a list of combined-progress",
                 "description": "API endpoint to get a list of combined-progress. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -9473,10 +9473,10 @@
             },
             "post": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
-                "summary": "Insert a report",
-                "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
+                "summary": "Insert a report a progress report",
+                "description": "API endpoint to store a progress report. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -9548,9 +9548,9 @@
         "/training-centers/reporting/progress/{progressId}": {
             "get": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
-                "summary": "Get a single report",
+                "summary": "Get a single report of a progress report",
                 "description": "API endpoint to get a single progress report. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -9624,9 +9624,9 @@
         "/training-centers/reporting/progress": {
             "get": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
-                "summary": "Get a list",
+                "summary": "Get a list of a progress report",
                 "description": "API endpoint to get a list of progress report. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -9710,10 +9710,10 @@
             },
             "post": {
                 "tags": [
-                    "Traing Center progress report"
+                    "Training Center report"
                 ],
-                "summary": "Insert a report",
-                "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
+                "summary": "Insert a training center progress report",
+                "description": "API endpoint to store a training center progress report. A successful request response will show 200 HTTP status code",
                 "requestBody": {
                     "content": {
                         "application/x-www-form-urlencoded": {
@@ -9831,378 +9831,307 @@
                 "type": "object",
                 "properties": {
                     "institute_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "training_center_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "reporting_month": {
                         "type": "string",
-                        "format": "date",
-                        "description": "Must exist in institutes table"
+                        "format": "date"
+
                     },
                     "number_of_trades_allowed": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "number_of_ongoing_trades": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "number_of_computers": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "number_of_other_equipments": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "amount_of_total_fdr": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "current_session_trainees_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "current_session_trainees_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "current_session_trainees_disabled_and_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "current_session_trainees_total": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "total_trainees_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     }
-                    ,
+                ,
                     "total_trainees_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "total_trainees_disabled_and_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "total_trainees_total": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "bank_status_skill_development": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "bank_status_coordinating_council": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
+
                     },
                     "date_of_last_election_of_all_party_council": {
                         "type": "string",
-                        "format": "date",
-                        "description": "Must exist in institutes table"
+                        "format": "date"
                     },
                     "comments": {
-                        "type": "null",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     }
-                }
-
+                },
+                "required": ["institute_id","training_center_id","reporting_month"]
             },
             "trainingCenterCombineProgressReport": {
                 "type": "object",
                 "properties": {
                     "institute_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "training_center_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "reporting_month": {
                         "type": "string",
-                        "format": "date",
-                        "description": "Must exist in institutes table"
+                        "format": "date"
                     },
                     "voluntary_organizations_registered_in_current_month": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "members_up_to_previous_month_general_members": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "members_up_to_previous_month_life_member": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "members_up_to_previous_month_patron_member": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "members_up_to_previous_month_total": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "member_enrollment_in_reporting_month_general_members": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "member_enrollment_in_reporting_month_life_member": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "member_enrollment_in_reporting_month_patron_member": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "member_enrollment_in_reporting_month_total": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "total_number_of_members": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     }
                 ,
                     "subscriptions_collected_so_far": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "subscriptions_collected_in_current_month_organization": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "subscriptions_collected_in_current_month_member": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "subscriptions_collected_in_current_month_total": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "grants_received_in_current_month_source": {
-                        "type": "string",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "grants_received_in_current_month_amount": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "grants_received_in_current_month_total": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "gross_income": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "income_in_skills_development_sector_trades": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "income_in_skills_development_sector_money": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "expenditure_in_skill_development_training": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "expenditure_in_other_sectors": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "expenditure_total": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "total_income_in_the_training_sector": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "bank_status_and_account_number": {
-                        "type": "stirng",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "bank_interest": {
-                        "type": "number",
-                        "description": "Must exist in institutes table"
+                        "type": "number"
                     },
                     "amount_of_fdr_and_bank_account_number": {
-                        "type": "string",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "number_of_meetings_held_during_current_financial_year": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "number_of_executive_council_meetings_in_current_month": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "names_and_numbers_of_other_meetings": {
-                        "type": "string",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "coordinating_council_meeting_total": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "other_activities_undertaken": {
-                        "type": "string",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "comments": {
-                        "type": "null",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     }
-                }
-
+                },
+                "required": ["institute_id","training_center_id","reporting_month"]
             },
             "trainingCenterProgressReport": {
                 "type": "object",
                 "properties": {
                     "institute_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "training_center_id": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "reporting_month": {
                         "type": "string",
-                        "format": "date",
-                        "description": "Must exist in institutes table"
+                        "format": "date"
                     },
                     "trade_name": {
-                        "type": "string",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     },
                     "number_of_trainers": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "number_of_labs_or_training_rooms": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "number_of_computers_or_training_equipments": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_disable": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_qawmi": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_transgender": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "admitted_trainee_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
-                    }
-                ,
+                        "type": "integer"
+                    },
                     "technical_board_registered_trainee_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "technical_board_registered_trainee_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "technical_board_registered_trainee_disabled": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "technical_board_registered_trainee_qawmi": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "technical_board_registered_trainee_transgender": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "technical_board_registered_trainee_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_disabled": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_qawmi": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_transgender": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_attended_trainee_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_men": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_women": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_disabled": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_qawmi": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_transgender": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "latest_test_passed_trainee_others": {
-                        "type": "integer",
-                        "description": "Must exist in institutes table"
+                        "type": "integer"
                     },
                     "comments": {
-                        "type": "null",
-                        "description": "Must exist in institutes table"
+                        "type": "string"
                     }
-                }
-
+                },
+                "required": ["institute_id","training_center_id","reporting_month"]
             },
             "assignToBatch": {
                 "type": "object",
