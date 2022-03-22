@@ -33,6 +33,10 @@ class TrainingCenterProgressReportService
             'training_center_progress_reports.id',
             'training_center_progress_reports.institute_id',
             'training_center_progress_reports.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title as training_center_title',
+            'institutes.title_en as institute_title_en',
+            'institutes.title as institute_title',
             'training_center_progress_reports.reporting_month',
             'training_center_progress_reports.trade_name',
             'training_center_progress_reports.number_of_trainers',
@@ -132,7 +136,12 @@ class TrainingCenterProgressReportService
         $trainingCenterProgressReportBuilder = TrainingCenterProgressReport::select([
             'training_center_progress_reports.id',
             'training_center_progress_reports.institute_id',
+            'institutes.title_en as institute_title_en',
+            'institutes.title as institute_title',
             'training_center_progress_reports.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title as training_center_title',
+
             'training_center_progress_reports.reporting_month',
             'training_center_progress_reports.trade_name',
             'training_center_progress_reports.number_of_trainers',
@@ -176,6 +185,16 @@ class TrainingCenterProgressReportService
             'training_center_progress_reports.updated_at',
 
         ]);
+
+        $trainingCenterProgressReportBuilder->join("institutes", function ($join) {
+            $join->on('training_center_progress_reports.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+        $trainingCenterProgressReportBuilder->join("training_centers", function ($join) {
+            $join->on('training_center_progress_reports.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+
 
         $trainingCenterProgressReportBuilder->where('training_center_progress_reports.id', $id);
 
