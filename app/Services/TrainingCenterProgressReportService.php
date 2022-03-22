@@ -209,10 +209,38 @@ class TrainingCenterProgressReportService
      */
     public function store(array $data): TrainingCenterProgressReport
     {
-        $data['admitted_trainee_total'] = $data['admitted_trainee_men'] + $data['admitted_trainee_women'] + $data['admitted_trainee_disabled'] + $data['admitted_trainee_qawmi'] + $data['admitted_trainee_transgender'] + $data['admitted_trainee_others'];
-        $data['technical_board_registered_trainee_total'] = $data['technical_board_registered_trainee_men'] + $data['technical_board_registered_trainee_women'] + $data['technical_board_registered_trainee_disabled'] + $data['technical_board_registered_trainee_qawmi'] + $data['technical_board_registered_trainee_transgender'] + $data['technical_board_registered_trainee_others'];
-        $data['latest_test_attended_trainee_total'] = $data['latest_test_attended_trainee_men'] + $data['latest_test_attended_trainee_women'] + $data['latest_test_attended_trainee_disabled'] + $data['latest_test_attended_trainee_qawmi'] + $data['latest_test_attended_trainee_transgender'] + $data['latest_test_attended_trainee_others'];
-        $data['latest_test_passed_trainee_total'] = $data['latest_test_passed_trainee_men'] + $data['latest_test_passed_trainee_women'] + $data['latest_test_passed_trainee_disabled'] + $data['latest_test_passed_trainee_qawmi'] + $data['latest_test_passed_trainee_transgender'] + $data['latest_test_passed_trainee_others'];
+        $data['admitted_trainee_total'] =
+            ($data['admitted_trainee_men'] ?? 0) +
+            ($data['admitted_trainee_women'] ?? 0) +
+            ($data['admitted_trainee_disabled'] ?? 0) +
+            ($data['admitted_trainee_qawmi'] ?? 0) +
+            ($data['admitted_trainee_transgender'] ?? 0) +
+            ($data['admitted_trainee_others'] ?? 0);
+
+        $data['technical_board_registered_trainee_total'] =
+            ($data['technical_board_registered_trainee_men'] ?? 0) +
+            ($data['technical_board_registered_trainee_women'] ?? 0) +
+            ($data['technical_board_registered_trainee_disabled'] ?? 0) +
+            ($data['technical_board_registered_trainee_qawmi'] ?? 0) +
+            ($data['technical_board_registered_trainee_transgender'] ?? 0) +
+            ($data['technical_board_registered_trainee_others'] ?? 0);
+
+        $data['latest_test_attended_trainee_total'] =
+            ($data['latest_test_attended_trainee_men'] ?? 0) +
+            ($data['latest_test_attended_trainee_women'] ?? 0) +
+            ($data['latest_test_attended_trainee_disabled'] ?? 0) +
+            ($data['latest_test_attended_trainee_qawmi'] ?? 0) +
+            ($data['latest_test_attended_trainee_transgender'] ?? 0) +
+            ($data['latest_test_attended_trainee_others'] ?? 0);
+
+        $data['latest_test_passed_trainee_total'] =
+            ($data['latest_test_passed_trainee_men'] ?? 0) +
+            ($data['latest_test_passed_trainee_women'] ?? 0) +
+            ($data['latest_test_passed_trainee_disabled'] ?? 0) +
+            ($data['latest_test_passed_trainee_qawmi'] ?? 0) +
+            ($data['latest_test_passed_trainee_transgender'] ?? 0) +
+            ($data['latest_test_passed_trainee_others'] ?? 0);
+
         $trainingCenterProgressReport = app(TrainingCenterProgressReport::class);
         $trainingCenterProgressReport->fill($data);
         $trainingCenterProgressReport->save();
@@ -227,6 +255,10 @@ class TrainingCenterProgressReportService
      */
     public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+        $data = $request->all();
+        $month = Carbon::parse($data['reporting_month'])->format('m');
+        $year = Carbon::parse($data['reporting_month'])->format('yy');
+
         $rules = [
             'institute_id' => [
                 'required',
