@@ -148,10 +148,6 @@ class TrainingCenterCombinedProgressReportService
             ($data['expenditure_in_skill_development_training'] ?? 0) +
             ($data['expenditure_in_other_sectors'] ?? 0);
 
-        $data['coordinating_council_meeting_total'] =
-            ($data['number_of_meetings_held_during_current_financial_year'] ?? 0) +
-            ($data['number_of_executive_council_meetings_in_current_month'] ?? 0) +
-            ($data['names_and_numbers_of_other_meetings'] ?? 0);
 
         $trainingCenterCombinedProgressReport = app(TrainingCenterCombinedProgressReport::class);
         $trainingCenterCombinedProgressReport->fill($data);

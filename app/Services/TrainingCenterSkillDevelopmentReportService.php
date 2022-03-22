@@ -39,8 +39,8 @@ class TrainingCenterSkillDevelopmentReportService
             'training_center_skill_development_reports.reporting_month',
             'training_center_skill_development_reports.number_of_trades_allowed',
             'training_center_skill_development_reports.number_of_ongoing_trades',
-            'training_center_skill_development_reports.number_of_computer',
-            'training_center_skill_development_reports.number_of_other_equipment',
+            'training_center_skill_development_reports.number_of_computers',
+            'training_center_skill_development_reports.number_of_other_equipments',
             'training_center_skill_development_reports.amount_of_total_fdr',
             'training_center_skill_development_reports.current_session_trainees_women',
             'training_center_skill_development_reports.current_session_trainees_men',
@@ -107,16 +107,8 @@ class TrainingCenterSkillDevelopmentReportService
      */
     public function store(array $data): TrainingCenterSkillDevelopmentReport
     {
-        $data['current_session_trainees_total'] =
-            ($data['current_session_trainees_women'] ?? 0) +
-            ($data['current_session_trainees_men'] ?? 0) +
-            ($data['current_session_trainees_disabled_and_others'] ?? 0);
-
-        $data['total_trainees_total'] =
-            ($data['total_trainees_women'] ?? 0) +
-            ($data['total_trainees_men'] ?? 0) +
-            ($data['total_trainees_disabled_and_others'] ?? 0);
-
+        $data['current_session_trainees_total'] = $data['current_session_trainees_women'] + $data['current_session_trainees_men'] + $data['current_session_trainees_disabled_and_others'];
+        $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
         $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);
         $trainingCenterSkillDevelopmentReport->fill($data);
         $trainingCenterSkillDevelopmentReport->save();
@@ -188,7 +180,7 @@ class TrainingCenterSkillDevelopmentReportService
         ];
 
         $rules = [
-            'institute_id' => 'required|int|gt:0',
+            'institute_id' => 'int|gt:0',
             'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',

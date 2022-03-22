@@ -12,18 +12,18 @@
     },
     "security": [
         {
-            "bearerAuth": []
+            "User-Token": []
         }
     ],
     "servers": [
+        {
+            "url": "http://localhost:8001/api/v1"
+        },
         {
             "url": "http://nise-tsp.softbd/api/v1"
         },
         {
             "url": "https://institute.bus-staging.softbdltd.com/api/v1"
-        },
-        {
-            "url": "http://localhost:8001/api/v1"
         },
         {
             "url": "http://localhost:8000/api/v1"
@@ -9133,14 +9133,661 @@
                     }
                 }
             }
+        },
+        "/training-centers/reporting/skill-development/{institute_id_optional}": {
+            "get": {
+                "tags": [
+                    "Institute Center Report"
+                ],
+                "summary": "Get a single report",
+                "description": "API endpoint to get a single report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/instituteId"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "reporting_month": "0000-00-00 00:00:00",
+                                        "number_of_trades_allowed": 1,
+                                        "number_of_ongoing_trades": 12,
+                                        "number_of_computers": 24,
+                                        "number_of_other_equipments": 25,
+                                        "amount_of_total_fdr": 67,
+                                        "current_session_trainees_women": 78,
+                                        "current_session_trainees_men": 98,
+                                        "current_session_trainees_disabled_and_others": 56,
+                                        "current_session_trainees_total": 23,
+                                        "total_trainees_women": 56,
+                                        "total_trainees_men": 89,
+                                        "total_trainees_disabled_and_others": 123,
+                                        "total_trainees_total": 123,
+                                        "bank_status_skill_development": 56,
+                                        "bank_status_coordinating_council": 78,
+                                        "date_of_last_election_of_all_party_council": "0000-00-00 00:00:00",
+                                        "created_at": "2022-03-21T09:01:52.000000Z",
+                                        "updated_at": "2022-03-21T09:01:58.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/reporting/skill-development": {
+            "get": {
+                "tags": [
+                    "Institute Center Report"
+                ],
+                "summary": "Get a list",
+                "description": "API endpoint to get a list of institute. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "reporting_month": "0000-00-00 00:00:00",
+                                        "number_of_trades_allowed": 1,
+                                        "number_of_ongoing_trades": 12,
+                                        "number_of_computers": 24,
+                                        "number_of_other_equipments": 25,
+                                        "amount_of_total_fdr": 67,
+                                        "current_session_trainees_women": 78,
+                                        "current_session_trainees_men": 98,
+                                        "current_session_trainees_disabled_and_others": 56,
+                                        "current_session_trainees_total": 23,
+                                        "total_trainees_women": 56,
+                                        "total_trainees_men": 89,
+                                        "total_trainees_disabled_and_others": 123,
+                                        "total_trainees_total": 123,
+                                        "bank_status_skill_development": 56,
+                                        "bank_status_coordinating_council": 78,
+                                        "date_of_last_election_of_all_party_council": "0000-00-00 00:00:00",
+                                        "created_at": "2022-03-21T09:01:52.000000Z",
+                                        "updated_at": "2022-03-21T09:01:58.000000Z"
+
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Institute Center Report"
+                ],
+                "summary": "Insert a report",
+                "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainingCenterSkillDevlopmentReport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "reporting_month": "2008-12-01",
+                                        "number_of_trades_allowed": "1",
+                                        "number_of_ongoing_trades": "4",
+                                        "number_of_computers": "3",
+                                        "number_of_other_equipments": "4",
+                                        "amount_of_total_fdr": "6",
+                                        "current_session_trainees_women": "8",
+                                        "current_session_trainees_men": "89",
+                                        "current_session_trainees_disabled_and_others": "34",
+                                        "total_trainees_women": "76",
+                                        "total_trainees_men": "34",
+                                        "total_trainees_disabled_and_others": "34",
+                                        "bank_status_skill_development": "34",
+                                        "bank_status_coordinating_council": "34",
+                                        "date_of_last_election_of_all_party_council": "2008-12-01",
+                                        "comments": "its us",
+                                        "current_session_trainees_total": 131,
+                                        "total_trainees_total": 144,
+                                        "updated_at": "2022-03-21T11:37:10.000000Z",
+                                        "created_at": "2022-03-21T11:37:10.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training center Skill development Report added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/training-centers/reporting/combined-progress/{CombineProgressId}": {
+            "get": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Get a single Combine progress report",
+                "description": "API endpoint to get a single combined-progress report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/CombineProgressId"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "reporting_month": "2022-03-22 12:08:24",
+                                        "voluntary_organizations_registered_in_current_month": 1,
+                                        "members_up_to_previous_month_general_members": 1,
+                                        "members_up_to_previous_month_life_member": 1,
+                                        "members_up_to_previous_month_patron_member": 1,
+                                        "members_up_to_previous_month_total": 1,
+                                        "member_enrollment_in_reporting_month_general_members": 1,
+                                        "member_enrollment_in_reporting_month_life_member": 1,
+                                        "member_enrollment_in_reporting_month_patron_member": 1,
+                                        "member_enrollment_in_reporting_month_total": 3,
+                                        "total_number_of_members": 3,
+                                        "subscriptions_collected_so_far": "34.00",
+                                        "subscriptions_collected_in_current_month_organization": "455.00",
+                                        "subscriptions_collected_in_current_month_member": "343.00",
+                                        "subscriptions_collected_in_current_month_total": "3423.00",
+                                        "grants_received_in_current_month_source": "hello",
+                                        "grants_received_in_current_month_amount": "3.00",
+                                        "grants_received_in_current_month_total": "45.00",
+                                        "gross_income": "56.00",
+                                        "income_in_skills_development_sector_trades": "89.00",
+                                        "income_in_skills_development_sector_money": "83.00",
+                                        "expenditure_in_skill_development_training": "123.00",
+                                        "expenditure_in_other_sectors": "34.00",
+                                        "expenditure_total": "67.00",
+                                        "total_income_in_the_training_sector": "78.00",
+                                        "bank_status_and_account_number": "45",
+                                        "bank_interest": "56.00",
+                                        "amount_of_fdr_and_bank_account_number": "45",
+                                        "number_of_meetings_held_during_current_financial_year": 32,
+                                        "number_of_executive_council_meetings_in_current_month": 12,
+                                        "names_and_numbers_of_other_meetings": "456",
+                                        "coordinating_council_meeting_total": 56,
+                                        "other_activities_undertaken": "34",
+                                        "created_at": "2022-03-22T06:10:54.000000Z",
+                                        "updated_at": "2022-03-22T06:11:00.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/reporting/combined-progress": {
+            "get": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Get a list",
+                "description": "API endpoint to get a list of combined-progress. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data":  {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "reporting_month": "2022-03-22 12:08:24",
+                                        "voluntary_organizations_registered_in_current_month": 1,
+                                        "members_up_to_previous_month_general_members": 1,
+                                        "members_up_to_previous_month_life_member": 1,
+                                        "members_up_to_previous_month_patron_member": 1,
+                                        "members_up_to_previous_month_total": 1,
+                                        "member_enrollment_in_reporting_month_general_members": 1,
+                                        "member_enrollment_in_reporting_month_life_member": 1,
+                                        "member_enrollment_in_reporting_month_patron_member": 1,
+                                        "member_enrollment_in_reporting_month_total": 3,
+                                        "total_number_of_members": 3,
+                                        "subscriptions_collected_so_far": "34.00",
+                                        "subscriptions_collected_in_current_month_organization": "455.00",
+                                        "subscriptions_collected_in_current_month_member": "343.00",
+                                        "subscriptions_collected_in_current_month_total": "3423.00",
+                                        "grants_received_in_current_month_source": "hello",
+                                        "grants_received_in_current_month_amount": "3.00",
+                                        "grants_received_in_current_month_total": "45.00",
+                                        "gross_income": "56.00",
+                                        "income_in_skills_development_sector_trades": "89.00",
+                                        "income_in_skills_development_sector_money": "83.00",
+                                        "expenditure_in_skill_development_training": "123.00",
+                                        "expenditure_in_other_sectors": "34.00",
+                                        "expenditure_total": "67.00",
+                                        "total_income_in_the_training_sector": "78.00",
+                                        "bank_status_and_account_number": "45",
+                                        "bank_interest": "56.00",
+                                        "amount_of_fdr_and_bank_account_number": "45",
+                                        "number_of_meetings_held_during_current_financial_year": 32,
+                                        "number_of_executive_council_meetings_in_current_month": 12,
+                                        "names_and_numbers_of_other_meetings": "456",
+                                        "coordinating_council_meeting_total": 56,
+                                        "other_activities_undertaken": "34",
+                                        "created_at": "2022-03-22T06:10:54.000000Z",
+                                        "updated_at": "2022-03-22T06:11:00.000000Z"
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Insert a report",
+                "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainingCenterCombineProgressReport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "reporting_month": "2000-01-02",
+                                        "voluntary_organizations_registered_in_current_month": "1",
+                                        "members_up_to_previous_month_general_members": "1",
+                                        "members_up_to_previous_month_life_member": "1",
+                                        "members_up_to_previous_month_patron_member": "1",
+                                        "members_up_to_previous_month_total": 3,
+                                        "member_enrollment_in_reporting_month_general_members": "1",
+                                        "member_enrollment_in_reporting_month_life_member": "1",
+                                        "member_enrollment_in_reporting_month_patron_member": "1",
+                                        "member_enrollment_in_reporting_month_total": 3,
+                                        "total_number_of_members": 6,
+                                        "subscriptions_collected_so_far": "1",
+                                        "subscriptions_collected_in_current_month_organization": "1",
+                                        "subscriptions_collected_in_current_month_member": "1",
+                                        "subscriptions_collected_in_current_month_total": 2,
+                                        "grants_received_in_current_month_source": "1",
+                                        "grants_received_in_current_month_amount": "1",
+                                        "grants_received_in_current_month_total": 2,
+                                        "gross_income": "1",
+                                        "income_in_skills_development_sector_trades": "1",
+                                        "income_in_skills_development_sector_money": "1",
+                                        "expenditure_in_skill_development_training": "1",
+                                        "expenditure_in_other_sectors": "1",
+                                        "expenditure_total": 2,
+                                        "total_income_in_the_training_sector": "1",
+                                        "bank_status_and_account_number": "hello",
+                                        "bank_interest": "1",
+                                        "amount_of_fdr_and_bank_account_number": "hi",
+                                        "number_of_meetings_held_during_current_financial_year": "1",
+                                        "number_of_executive_council_meetings_in_current_month": "1",
+                                        "names_and_numbers_of_other_meetings": "hello",
+                                        "coordinating_council_meeting_total": "1",
+                                        "other_activities_undertaken": "1",
+                                        "updated_at": "2022-03-22T08:39:31.000000Z",
+                                        "created_at": "2022-03-22T08:39:31.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training center Skill development Report added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/reporting/progress/{progressId}": {
+            "get": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Get a single report",
+                "description": "API endpoint to get a single progress report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/progressId"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "institute_title_en": "Nurul Huda",
+                                        "institute_title": "Nuruhuda",
+                                        "training_center_id": 1,
+                                        "training_center_title_en": "Anirban It",
+                                        "training_center_title": "Anirban IT",
+                                        "reporting_month": "0000-00-00 00:00:00",
+                                        "trade_name": "hello",
+                                        "number_of_trainers": 1,
+                                        "number_of_labs_or_training_rooms": 3,
+                                        "number_of_computers_or_training_equipments": 0,
+                                        "admitted_trainee_men": 0,
+                                        "admitted_trainee_women": 0,
+                                        "admitted_trainee_disabled": 0,
+                                        "admitted_trainee_qawmi": 0,
+                                        "admitted_trainee_transgender": 0,
+                                        "admitted_trainee_others": 0,
+                                        "admitted_trainee_total": 0,
+                                        "technical_board_registered_trainee_men": 0,
+                                        "technical_board_registered_trainee_women": 0,
+                                        "technical_board_registered_trainee_disabled": 0,
+                                        "technical_board_registered_trainee_qawmi": 0,
+                                        "technical_board_registered_trainee_transgender": 0,
+                                        "technical_board_registered_trainee_others": 0,
+                                        "technical_board_registered_trainee_total": 0,
+                                        "latest_test_attended_trainee_men": 0,
+                                        "latest_test_attended_trainee_women": 0,
+                                        "latest_test_attended_trainee_disabled": 0,
+                                        "latest_test_attended_trainee_qawmi": 0,
+                                        "latest_test_attended_trainee_transgender": 0,
+                                        "latest_test_attended_trainee_others": 0,
+                                        "latest_test_attended_trainee_total": 0,
+                                        "latest_test_passed_trainee_men": 0,
+                                        "latest_test_passed_trainee_women": 0,
+                                        "latest_test_passed_trainee_disabled": 0,
+                                        "latest_test_passed_trainee_qawmi": 0,
+                                        "latest_test_passed_trainee_transgender": 0,
+                                        "latest_test_passed_trainee_others": 0,
+                                        "latest_test_passed_trainee_total": 0,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/reporting/progress": {
+            "get": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Get a list",
+                "description": "API endpoint to get a list of progress report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "training_center_id": 1,
+                                        "training_center_title_en": "Anirban It",
+                                        "training_center_title": "Anirban IT",
+                                        "institute_title_en": "Nurul Huda",
+                                        "institute_title": "Nuruhuda",
+                                        "reporting_month": "0000-00-00 00:00:00",
+                                        "trade_name": "hello",
+                                        "number_of_trainers": 1,
+                                        "number_of_labs_or_training_rooms": 3,
+                                        "number_of_computers_or_training_equipments": 0,
+                                        "admitted_trainee_men": 0,
+                                        "admitted_trainee_women": 0,
+                                        "admitted_trainee_disabled": 0,
+                                        "admitted_trainee_qawmi": 0,
+                                        "admitted_trainee_transgender": 0,
+                                        "admitted_trainee_others": 0,
+                                        "admitted_trainee_total": 0,
+                                        "technical_board_registered_trainee_men": 0,
+                                        "technical_board_registered_trainee_women": 0,
+                                        "technical_board_registered_trainee_disabled": 0,
+                                        "technical_board_registered_trainee_qawmi": 0,
+                                        "technical_board_registered_trainee_transgender": 0,
+                                        "technical_board_registered_trainee_others": 0,
+                                        "technical_board_registered_trainee_total": 0,
+                                        "latest_test_attended_trainee_men": 0,
+                                        "latest_test_attended_trainee_women": 0,
+                                        "latest_test_attended_trainee_disabled": 0,
+                                        "latest_test_attended_trainee_qawmi": 0,
+                                        "latest_test_attended_trainee_transgender": 0,
+                                        "latest_test_attended_trainee_others": 0,
+                                        "latest_test_attended_trainee_total": 0,
+                                        "latest_test_passed_trainee_men": 0,
+                                        "latest_test_passed_trainee_women": 0,
+                                        "latest_test_passed_trainee_disabled": 0,
+                                        "latest_test_passed_trainee_qawmi": 0,
+                                        "latest_test_passed_trainee_transgender": 0,
+                                        "latest_test_passed_trainee_others": 0,
+                                        "latest_test_passed_trainee_total": 0,
+                                        "created_at": null,
+                                        "updated_at": null
+
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Traing Center progress report"
+                ],
+                "summary": "Insert a report",
+                "description": "API endpoint to store a institute report. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainingCenterProgressReport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "reporting_month": "2000-03-04",
+                                        "trade_name": "1",
+                                        "number_of_trainers": "1",
+                                        "number_of_labs_or_training_rooms": "1",
+                                        "number_of_computers_or_training_equipments": "1",
+                                        "admitted_trainee_men": "1",
+                                        "admitted_trainee_women": "1",
+                                        "admitted_trainee_qawmi": "1",
+                                        "admitted_trainee_transgender": "1",
+                                        "admitted_trainee_others": "1",
+                                        "technical_board_registered_trainee_men": "1",
+                                        "technical_board_registered_trainee_women": "1",
+                                        "technical_board_registered_trainee_disabled": "1",
+                                        "technical_board_registered_trainee_qawmi": "1",
+                                        "technical_board_registered_trainee_transgender": "1",
+                                        "technical_board_registered_trainee_others": "1",
+                                        "latest_test_attended_trainee_men": "1",
+                                        "latest_test_attended_trainee_women": "1",
+                                        "latest_test_attended_trainee_disabled": "1",
+                                        "latest_test_attended_trainee_qawmi": "1",
+                                        "latest_test_attended_trainee_transgender": "1",
+                                        "latest_test_attended_trainee_others": "1",
+                                        "latest_test_passed_trainee_men": "1",
+                                        "latest_test_passed_trainee_women": "1",
+                                        "latest_test_passed_trainee_disabled": "1",
+                                        "latest_test_passed_trainee_qawmi": "1",
+                                        "latest_test_passed_trainee_transgender": "1",
+                                        "latest_test_passed_trainee_others": "1",
+                                        "admitted_trainee_total": 5,
+                                        "technical_board_registered_trainee_total": 6,
+                                        "latest_test_attended_trainee_total": 6,
+                                        "latest_test_passed_trainee_total": 6,
+                                        "updated_at": "2022-03-22T07:54:06.000000Z",
+                                        "created_at": "2022-03-22T07:54:06.000000Z",
+                                        "id": 3
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training center progress report added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
+            "User-Token": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "User-Token"
             }
         },
         "schemas": {
@@ -9179,6 +9826,383 @@
                 "required": [
                     "required"
                 ]
+            },
+            "trainingCenterSkillDevlopmentReport": {
+                "type": "object",
+                "properties": {
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "training_center_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "reporting_month": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_trades_allowed": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_ongoing_trades": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_computers": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_other_equipments": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "amount_of_total_fdr": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "current_session_trainees_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "current_session_trainees_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "current_session_trainees_disabled_and_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "current_session_trainees_total": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "total_trainees_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    }
+                    ,
+                    "total_trainees_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "total_trainees_disabled_and_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "total_trainees_total": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "bank_status_skill_development": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "bank_status_coordinating_council": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "date_of_last_election_of_all_party_council": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Must exist in institutes table"
+                    },
+                    "comments": {
+                        "type": "null",
+                        "description": "Must exist in institutes table"
+                    }
+                }
+
+            },
+            "trainingCenterCombineProgressReport": {
+                "type": "object",
+                "properties": {
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "training_center_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "reporting_month": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Must exist in institutes table"
+                    },
+                    "voluntary_organizations_registered_in_current_month": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "members_up_to_previous_month_general_members": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "members_up_to_previous_month_life_member": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "members_up_to_previous_month_patron_member": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "members_up_to_previous_month_total": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "member_enrollment_in_reporting_month_general_members": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "member_enrollment_in_reporting_month_life_member": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "member_enrollment_in_reporting_month_patron_member": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "member_enrollment_in_reporting_month_total": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "total_number_of_members": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    }
+                ,
+                    "subscriptions_collected_so_far": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "subscriptions_collected_in_current_month_organization": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "subscriptions_collected_in_current_month_member": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "subscriptions_collected_in_current_month_total": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "grants_received_in_current_month_source": {
+                        "type": "string",
+                        "description": "Must exist in institutes table"
+                    },
+                    "grants_received_in_current_month_amount": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "grants_received_in_current_month_total": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "gross_income": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "income_in_skills_development_sector_trades": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "income_in_skills_development_sector_money": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "expenditure_in_skill_development_training": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "expenditure_in_other_sectors": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "expenditure_total": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "total_income_in_the_training_sector": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "bank_status_and_account_number": {
+                        "type": "stirng",
+                        "description": "Must exist in institutes table"
+                    },
+                    "bank_interest": {
+                        "type": "number",
+                        "description": "Must exist in institutes table"
+                    },
+                    "amount_of_fdr_and_bank_account_number": {
+                        "type": "string",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_meetings_held_during_current_financial_year": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_executive_council_meetings_in_current_month": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "names_and_numbers_of_other_meetings": {
+                        "type": "string",
+                        "description": "Must exist in institutes table"
+                    },
+                    "coordinating_council_meeting_total": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "other_activities_undertaken": {
+                        "type": "string",
+                        "description": "Must exist in institutes table"
+                    },
+                    "comments": {
+                        "type": "null",
+                        "description": "Must exist in institutes table"
+                    }
+                }
+
+            },
+            "trainingCenterProgressReport": {
+                "type": "object",
+                "properties": {
+                    "institute_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "training_center_id": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "reporting_month": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Must exist in institutes table"
+                    },
+                    "trade_name": {
+                        "type": "string",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_trainers": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_labs_or_training_rooms": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "number_of_computers_or_training_equipments": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_disable": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_qawmi": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_transgender": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "admitted_trainee_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    }
+                ,
+                    "technical_board_registered_trainee_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "technical_board_registered_trainee_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "technical_board_registered_trainee_disabled": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "technical_board_registered_trainee_qawmi": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "technical_board_registered_trainee_transgender": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "technical_board_registered_trainee_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_disabled": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_qawmi": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_transgender": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_attended_trainee_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_men": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_women": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_disabled": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_qawmi": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_transgender": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "latest_test_passed_trainee_others": {
+                        "type": "integer",
+                        "description": "Must exist in institutes table"
+                    },
+                    "comments": {
+                        "type": "null",
+                        "description": "Must exist in institutes table"
+                    }
+                }
+
             },
             "assignToBatch": {
                 "type": "object",
@@ -11355,14 +12379,7 @@
                     "example": "1"
                 }
             },
-            "institute_id_optional": {
-                "in": "query",
-                "required": false,
-                "name": "institute_id",
-                "schema": {
-                    "type": "integer"
-                }
-            },
+
             "order": {
                 "name": "order",
                 "in": "query",
@@ -11423,6 +12440,15 @@
                     "type": "integer"
                 }
             },
+            "institute_id_optional": {
+                "in": "query",
+                "required": false,
+                "name": "institute_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -11612,7 +12638,7 @@
             },
             "training_center_id": {
                 "name": "training_center_id",
-                "required": true,
+                "required": false,
                 "in": "query",
                 "schema": {
                     "type": "integer"
@@ -11848,6 +12874,33 @@
                 "name": "rplApplicationId",
                 "in": "path",
                 "description": "rplApplicationId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "instituteId": {
+                "name": "instituteId",
+                "in": "path",
+                "description": "instituteId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "progressId": {
+                "name": "progressId",
+                "in": "path",
+                "description": "instituteId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "CombineProgressId": {
+                "name": "CombineProgressId",
+                "in": "path",
+                "description": "CombineProgressId",
                 "required": true,
                 "schema": {
                     "type": "integer"
