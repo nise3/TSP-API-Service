@@ -123,35 +123,35 @@ class TrainingCenterCombinedProgressReportService
     public function store(array $data): TrainingCenterCombinedProgressReport
     {
         $data['members_up_to_previous_month_total'] =
-            $data['members_up_to_previous_month_general_members']+
-            $data['members_up_to_previous_month_life_member']+
-            $data['members_up_to_previous_month_patron_member'];
+            ($data['members_up_to_previous_month_general_members'] ?? 0) +
+            ($data['members_up_to_previous_month_life_member'] ?? 0) +
+            ($data['members_up_to_previous_month_patron_member'] ?? 0);
 
         $data['member_enrollment_in_reporting_month_total'] =
-            $data['member_enrollment_in_reporting_month_general_members']+
-            $data['member_enrollment_in_reporting_month_life_member']+
-            $data['member_enrollment_in_reporting_month_patron_member'];
+            ($data['member_enrollment_in_reporting_month_general_members'] ?? 0) +
+            ($data['member_enrollment_in_reporting_month_life_member'] ?? 0) +
+            ($data['member_enrollment_in_reporting_month_patron_member'] ?? 0);
 
         $data['total_number_of_members'] =
-            $data['members_up_to_previous_month_total']+
-            $data['member_enrollment_in_reporting_month_total'];
+            ($data['members_up_to_previous_month_total'] ?? 0) +
+            ($data['member_enrollment_in_reporting_month_total'] ?? 0);
 
         $data['subscriptions_collected_in_current_month_total'] =
-            $data['subscriptions_collected_in_current_month_organization']+
-            $data['subscriptions_collected_in_current_month_member'];
+            ($data['subscriptions_collected_in_current_month_organization'] ?? 0) +
+            ($data['subscriptions_collected_in_current_month_member'] ?? 0);
 
         $data['grants_received_in_current_month_total'] =
-            $data['grants_received_in_current_month_source']+
-            $data['grants_received_in_current_month_amount'];
+            ($data['grants_received_in_current_month_source'] ?? 0) +
+            ($data['grants_received_in_current_month_amount'] ?? 0);
 
         $data['expenditure_total'] =
-            $data['expenditure_in_skill_development_training']+
-            $data['expenditure_in_other_sectors'];
+            ($data['expenditure_in_skill_development_training'] ?? 0) +
+            ($data['expenditure_in_other_sectors'] ?? 0);
 
         $data['coordinating_council_meeting_total'] =
-            $data['number_of_meetings_held_during_current_financial_year']+
-            $data['number_of_executive_council_meetings_in_current_month']+
-            $data['names_and_numbers_of_other_meetings'];
+            ($data['number_of_meetings_held_during_current_financial_year'] ?? 0) +
+            ($data['number_of_executive_council_meetings_in_current_month'] ?? 0) +
+            ($data['names_and_numbers_of_other_meetings'] ?? 0);
 
         $trainingCenterCombinedProgressReport = app(TrainingCenterCombinedProgressReport::class);
         $trainingCenterCombinedProgressReport->fill($data);
@@ -239,7 +239,7 @@ class TrainingCenterCombinedProgressReportService
         ];
 
         $rules = [
-            'institute_id' => 'int|gt:0',
+            'institute_id' => 'required|int|gt:0',
             'training_center_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
