@@ -3,6 +3,7 @@
 namespace App\Listeners\RplApplication;
 
 use App\Models\BaseModel;
+use App\Models\RplApplication;
 use App\Services\RabbitMQService;
 use App\Traits\Scopes\SagaStatusGlobalScope;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,7 +11,7 @@ use Illuminate\Database\QueryException;
 use PDOException;
 use Throwable;
 
-class RplApplicationSuccessToInstituteListener implements ShouldQueue
+class RplApplicationSuccessYouthToInstituteListener implements ShouldQueue
 {
     private RabbitMQService $rabbitMQService;
 
@@ -42,10 +43,11 @@ class RplApplicationSuccessToInstituteListener implements ShouldQueue
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
 
             if (!$alreadyConsumed) {
-                /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
-                $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_COMMIT;
-                $courseEnrollment->save();
+
+                /** @var RplApplication $rplApplication */
+                $rplApplication = RplApplication::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['rpl_application_id']);
+                $rplApplication->saga_status = BaseModel::SAGA_STATUS_COMMIT;
+                $rplApplication->save();
             }
 
             /**

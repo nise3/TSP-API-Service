@@ -3,6 +3,7 @@
 namespace App\Listeners\RplApplication;
 
 use App\Models\BaseModel;
+use App\Models\RplApplication;
 use App\Services\RabbitMQService;
 use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
@@ -46,11 +47,11 @@ class RplApplicationRollbackToInstituteListener implements ShouldQueue
 
             $alreadyConsumed = $this->rabbitMQService->checkEventAlreadyConsumed();
             if (!$alreadyConsumed) {
-                /** @var CourseEnrollment $courseEnrollment */
-                $courseEnrollment = CourseEnrollment::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['enrollment_id']);
-                $courseEnrollment->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
-                $courseEnrollment->deleted_at = $this->currentTime;
-                $courseEnrollment->save();
+                /** @var RplApplication $rplApplication */
+                $rplApplication = RplApplication::withoutGlobalScope(SagaStatusGlobalScope::class)->findOrFail($data['rpl_application_id']);
+                $rplApplication->saga_status = BaseModel::SAGA_STATUS_ROLLBACK;
+                $rplApplication->deleted_at = $this->currentTime;
+                $rplApplication->save();
             }
 
             /**
