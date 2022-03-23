@@ -69,6 +69,7 @@ class TrainingCenterIncomeExpenditureReportService
             'training_center_income_expenditure_reports.reporting_month_net_income',
             'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.account_no_and_bank_branch_name',
             'training_center_income_expenditure_reports.comments',
             'training_center_income_expenditure_reports.created_at',
             'training_center_income_expenditure_reports.updated_at'
@@ -149,6 +150,7 @@ class TrainingCenterIncomeExpenditureReportService
             'training_center_income_expenditure_reports.reporting_month_net_income',
             'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.account_no_and_bank_branch_name',
             'training_center_income_expenditure_reports.comments',
             'training_center_income_expenditure_reports.created_at',
             'training_center_income_expenditure_reports.updated_at',
