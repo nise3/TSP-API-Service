@@ -9857,7 +9857,8 @@
                 }
             }
         },
-        "/training-centers/reporting/income-expenditure/{instituteId}": {
+
+        "/training-centers/reporting/income-expenditure": {
             "get": {
                 "tags": [
                     "Training Center report"
@@ -9865,9 +9866,6 @@
                 "summary": "Get a list of a income-expenditure report",
                 "description": "API endpoint to get a list of income-expenditure report. A successful request response will show 200 HTTP status code",
                 "parameters": [
-                    {
-                        "$ref": "#/components/parameters/institute_id_path"
-                    },
                     {
                         "$ref": "#/components/parameters/training_center_id"
                     },
@@ -9927,10 +9925,7 @@
                         }
                     }
                 }
-            }
-
-        },
-        "/training-centers/reporting/income-expenditure": {
+            },
             "post": {
                 "tags": [
                     "Training Center report"

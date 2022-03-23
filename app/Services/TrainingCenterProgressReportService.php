@@ -259,9 +259,21 @@ class TrainingCenterProgressReportService
         $month = Carbon::parse($data['reporting_month'])->format('m');
         $year = Carbon::parse($data['reporting_month'])->format('yy');
 
+//        $myDate = $data['reporting_month'];
+//        var_dump($myDate);
+//        $date = Carbon::createFromFormat('Y/m/d', $myDate);
+//
+//        $monthName = $date->format('F');
+
+        var_dump($month);
+
+//        $timestamp = strtotime($new->$data['reporting_month']);
+//        $date=$data['reporting_month'];
+
         $rules = [
             'institute_id' => [
                 'required',
+               'unique_with:training_center_progress_reports,reporting_month',
                 'int',
                 'exists:institutes,id,deleted_at,NULL',
             ],
