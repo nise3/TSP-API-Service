@@ -43,7 +43,7 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', TrainingCenterIncomeExpenditureReport::class);
+        //$this->authorize('viewAny', TrainingCenterIncomeExpenditureReport::class);
         $filter = $this->trainingCenterIncomeExpenditureReportService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterIncomeExpenditureReportService->TrainingCenterIncomeExpenditureReport($filter, $this->startTime);

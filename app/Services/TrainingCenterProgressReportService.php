@@ -256,12 +256,13 @@ class TrainingCenterProgressReportService
     public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
-        $month = Carbon::parse($data['reporting_month'])->format('m');
-        $year = Carbon::parse($data['reporting_month'])->format('yy');
+//        $month = Carbon::parse($data['reporting_month'])->format('m');
+//        $year = Carbon::parse($data['reporting_month'])->format('yy');
 
         $rules = [
             'institute_id' => [
                 'required',
+               'unique_with:training_center_progress_reports,reporting_month',
                 'int',
                 'exists:institutes,id,deleted_at,NULL',
             ],
@@ -275,38 +276,38 @@ class TrainingCenterProgressReportService
                 'date',
             ],
             'trade_name' => 'nullable|string',
-            'number_of_trainers' => 'nullable|int|min:1',
-            'number_of_labs_or_training_rooms' => 'nullable|int|min:1',
-            'number_of_computers_or_training_equipments' => 'nullable|int|min:1',
+            'number_of_trainers' => 'sometimes|required|int|min:0',
+            'number_of_labs_or_training_rooms' => 'sometimes|required|int|min:0',
+            'number_of_computers_or_training_equipments' => 'sometimes|required|int|min:0',
 
-            'admitted_trainee_men' => 'nullable|int|min:1',
-            'admitted_trainee_women' => 'nullable|int|min:1',
-            'admitted_trainee_disable' => 'nullable|int|min:1',
-            'admitted_trainee_qawmi' => 'nullable|int|min:1',
-            'admitted_trainee_transgender' => 'nullable|int|min:1',
-            'admitted_trainee_others' => 'nullable|int|min:1',
+            'admitted_trainee_men' => 'sometimes|required|int|min:0',
+            'admitted_trainee_women' => 'sometimes|required|int|min:0',
+            'admitted_trainee_disable' => 'sometimes|required|int|min:0',
+            'admitted_trainee_qawmi' => 'sometimes|required|int|min:0',
+            'admitted_trainee_transgender' => 'sometimes|required|int|min:0',
+            'admitted_trainee_others' => 'sometimes|required|int|min:0',
 
-            'technical_board_registered_trainee_men' => 'nullable|int|min:1',
-            'technical_board_registered_trainee_women' => 'nullable|int|min:1',
-            'technical_board_registered_trainee_disabled' => 'nullable|int|min:1',
-            'technical_board_registered_trainee_qawmi' => 'nullable|int|min:1',
-            'technical_board_registered_trainee_transgender' => 'nullable|int|min:1',
-            'technical_board_registered_trainee_others' => 'nullable|int|min:1',
+            'technical_board_registered_trainee_men' => 'sometimes|required|int|min:0',
+            'technical_board_registered_trainee_women' => 'sometimes|required|int|min:0',
+            'technical_board_registered_trainee_disabled' => 'sometimes|required|int|min:0',
+            'technical_board_registered_trainee_qawmi' => 'sometimes|required|int|min:0',
+            'technical_board_registered_trainee_transgender' => 'sometimes|required|int|min:0',
+            'technical_board_registered_trainee_others' => 'sometimes|required|int|min:0',
 
 
-            'latest_test_attended_trainee_men' => 'nullable|int|min:1',
-            'latest_test_attended_trainee_women' => 'nullable|int|min:1',
-            'latest_test_attended_trainee_disabled' => 'nullable|int|min:1',
-            'latest_test_attended_trainee_qawmi' => 'nullable|int|min:1',
-            'latest_test_attended_trainee_transgender' => 'nullable|int|min:1',
-            'latest_test_attended_trainee_others' => 'nullable|int|min:1',
+            'latest_test_attended_trainee_men' => 'sometimes|required|int|min:0',
+            'latest_test_attended_trainee_women' => 'sometimes|required|int|min:0',
+            'latest_test_attended_trainee_disabled' => 'sometimes|required|int|min:0',
+            'latest_test_attended_trainee_qawmi' => 'sometimes|required|int|min:0',
+            'latest_test_attended_trainee_transgender' => 'sometimes|required|int|min:0',
+            'latest_test_attended_trainee_others' => 'sometimes|required|int|min:0',
 
-            'latest_test_passed_trainee_men' => 'nullable|int|min:1',
-            'latest_test_passed_trainee_women' => 'nullable|int|min:1',
-            'latest_test_passed_trainee_disabled' => 'nullable|int|min:1',
-            'latest_test_passed_trainee_qawmi' => 'nullable|int|min:1',
-            'latest_test_passed_trainee_transgender' => 'nullable|int|min:1',
-            'latest_test_passed_trainee_others' => 'nullable|int|min:1',
+            'latest_test_passed_trainee_men' => 'sometimes|required|int|min:0',
+            'latest_test_passed_trainee_women' => 'sometimes|required|int|min:0',
+            'latest_test_passed_trainee_disabled' => 'sometimes|required|int|min:0',
+            'latest_test_passed_trainee_qawmi' => 'sometimes|required|int|min:0',
+            'latest_test_passed_trainee_transgender' => 'sometimes|required|int|min:0',
+            'latest_test_passed_trainee_others' => 'sometimes|required|int|min:0',
 
         ];
 
