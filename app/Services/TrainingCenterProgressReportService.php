@@ -275,7 +275,7 @@ class TrainingCenterProgressReportService
                 'required',
                 'date',
             ],
-            'trade_name' => 'nullable|required',
+            'trade_name' => 'nullable|string',
             'number_of_trainers' => 'sometimes|required|int|min:0',
             'number_of_labs_or_training_rooms' => 'sometimes|required|int|min:0',
             'number_of_computers_or_training_equipments' => 'sometimes|required|int|min:0',
