@@ -25,6 +25,7 @@ class CourseEnrollmentInstituteToYouthListener implements ShouldQueue
     {
         $this->connector = $connector;
         $this->rabbitmqService = $rabbitmqService;
+
         RabbitMQFacade::publishEvent(
             $this->connector,
             $this->rabbitmqService,
