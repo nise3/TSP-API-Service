@@ -46,50 +46,50 @@ class TrainingCenterIncomeExpenditureReportService
 
         /** @var TrainingCenter|Builder $trainingCenterIncomeExpenditureBuilder */
         $trainingCenterIncomeExpenditureBuilder = TrainingCenterIncomeExpenditureReport::select([
-            '$training_center_income_expenditure_reports.id',
-            '$training_center_income_expenditure_reports.institute_id',
+            'training_center_income_expenditure_reports.id',
+            'training_center_income_expenditure_reports.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
-            '$training_center_income_expenditure_reports.training_center_id',
+            'training_center_income_expenditure_reports.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title as training_center_title',
-            '$training_center_income_expenditure_reports.reporting_month',
-            '$training_center_income_expenditure_reports.trade_name',
-            '$training_center_income_expenditure_reports.number_of_labs_or_training_rooms',
-            '$training_center_income_expenditure_reports.number_of_allowed_seats',
-            '$training_center_income_expenditure_reports.number_of_trainees',
-            '$training_center_income_expenditure_reports.course_fee_per_trainee',
-            '$training_center_income_expenditure_reports.course_income_from_course_fee',
-            '$training_center_income_expenditure_reports.course_income_from_application_and_others',
-            '$training_center_income_expenditure_reports.course_income_total',
-            '$training_center_income_expenditure_reports.reporting_month_income',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total',
-            '$training_center_income_expenditure_reports.reporting_month_net_income',
-            '$training_center_income_expenditure_reports.bank_status_up_to_previous_month',
-            '$training_center_income_expenditure_reports.bank_status_so_far',
-            '$training_center_income_expenditure_reports.comments',
-            '$training_center_income_expenditure_reports.created_at',
-            '$training_center_income_expenditure_reports.updated_at',
+            'training_center_income_expenditure_reports.reporting_month',
+            'training_center_income_expenditure_reports.trade_name',
+            'training_center_income_expenditure_reports.number_of_labs_or_training_rooms',
+            'training_center_income_expenditure_reports.number_of_allowed_seats',
+            'training_center_income_expenditure_reports.number_of_trainees',
+            'training_center_income_expenditure_reports.course_fee_per_trainee',
+            'training_center_income_expenditure_reports.course_income_from_course_fee',
+            'training_center_income_expenditure_reports.course_income_from_application_and_others',
+            'training_center_income_expenditure_reports.course_income_total',
+            'training_center_income_expenditure_reports.reporting_month_income',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_other',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_total',
+            'training_center_income_expenditure_reports.reporting_month_net_income',
+            'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
+            'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.comments',
+            'training_center_income_expenditure_reports.created_at',
+            'training_center_income_expenditure_reports.updated_at'
         ])->acl();
 
         $trainingCenterIncomeExpenditureBuilder->join("institutes", function ($join) {
-            $join->on('$training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
+            $join->on('training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
         $trainingCenterIncomeExpenditureBuilder->join("branches", function ($join) {
-            $join->on('$training_center_income_expenditure_reports.branch_id', '=', 'branches.id')
+            $join->on('training_center_income_expenditure_reports.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
         });
 
-        $trainingCenterIncomeExpenditureBuilder->orderBy('$training_center_income_expenditure_reports.id', $order);
+        $trainingCenterIncomeExpenditureBuilder->orderBy('training_center_income_expenditure_reports.id', $order);
 
         if (is_numeric($instituteId)) {
-            $trainingCenterIncomeExpenditureBuilder->where('$training_center_income_expenditure_reports.institute_id', '=', $instituteId);
+            $trainingCenterIncomeExpenditureBuilder->where('training_center_income_expenditure_reports.institute_id', '=', $instituteId);
         }
         if (is_numeric($trainingCenterId)) {
-            $trainingCenterIncomeExpenditureBuilder->where('$training_center_income_expenditure_reports.training_center_id', '=', $trainingCenterId);
+            $trainingCenterIncomeExpenditureBuilder->where('training_center_income_expenditure_reports.training_center_id', '=', $trainingCenterId);
         }
 
         /** @var Collection $trainingCenterIncomeExpenditureBuilder */
@@ -126,43 +126,43 @@ class TrainingCenterIncomeExpenditureReportService
         /** @var TrainingCenter|Builder $trainingCenterIncomeExpenditureBuilder */
         $trainingCenterIncomeExpenditureBuilder = TrainingCenterIncomeExpenditureReport::select([
 
-            '$training_center_income_expenditure_reports.id',
-            '$training_center_income_expenditure_reports.institute_id',
+            'training_center_income_expenditure_reports.id',
+            'training_center_income_expenditure_reports.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
-            '$training_center_income_expenditure_reports.training_center_id',
+            'training_center_income_expenditure_reports.training_center_id',
             'training_centers.title_en as training_center_title_en',
             'training_centers.title as training_center_title',
-            '$training_center_income_expenditure_reports.reporting_month',
-            '$training_center_income_expenditure_reports.trade_name',
-            '$training_center_income_expenditure_reports.number_of_labs_or_training_rooms',
-            '$training_center_income_expenditure_reports.number_of_allowed_seats',
-            '$training_center_income_expenditure_reports.number_of_trainees',
-            '$training_center_income_expenditure_reports.course_fee_per_trainee',
-            '$training_center_income_expenditure_reports.course_income_from_course_fee',
-            '$training_center_income_expenditure_reports.course_income_from_application_and_others',
-            '$training_center_income_expenditure_reports.course_income_total',
-            '$training_center_income_expenditure_reports.reporting_month_income',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_other',
-            '$training_center_income_expenditure_reports.reporting_month_training_expenses_total',
-            '$training_center_income_expenditure_reports.reporting_month_net_income',
-            '$training_center_income_expenditure_reports.bank_status_up_to_previous_month',
-            '$training_center_income_expenditure_reports.bank_status_so_far',
-            '$training_center_income_expenditure_reports.comments',
-            '$training_center_income_expenditure_reports.created_at',
-            '$training_center_income_expenditure_reports.updated_at',
+            'training_center_income_expenditure_reports.reporting_month',
+            'training_center_income_expenditure_reports.trade_name',
+            'training_center_income_expenditure_reports.number_of_labs_or_training_rooms',
+            'training_center_income_expenditure_reports.number_of_allowed_seats',
+            'training_center_income_expenditure_reports.number_of_trainees',
+            'training_center_income_expenditure_reports.course_fee_per_trainee',
+            'training_center_income_expenditure_reports.course_income_from_course_fee',
+            'training_center_income_expenditure_reports.course_income_from_application_and_others',
+            'training_center_income_expenditure_reports.course_income_total',
+            'training_center_income_expenditure_reports.reporting_month_income',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_instructor_salaries',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_other',
+            'training_center_income_expenditure_reports.reporting_month_training_expenses_total',
+            'training_center_income_expenditure_reports.reporting_month_net_income',
+            'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
+            'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.comments',
+            'training_center_income_expenditure_reports.created_at',
+            'training_center_income_expenditure_reports.updated_at',
         ]);
 
         $trainingCenterIncomeExpenditureBuilder->join("institutes", function ($join) {
-            $join->on('$training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
+            $join->on('training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
         $trainingCenterIncomeExpenditureBuilder->leftJoin("training_centers", function ($join) {
-            $join->on('$training_center_income_expenditure_reports.training_center_id', '=', 'training_centers.id')
+            $join->on('training_center_income_expenditure_reports.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
         });
-        $trainingCenterIncomeExpenditureBuilder->where('$training_center_income_expenditure_reports.id', $id);
+        $trainingCenterIncomeExpenditureBuilder->where('training_center_income_expenditure_reports.id', $id);
 
         return $trainingCenterIncomeExpenditureBuilder->firstOrFail();
 
