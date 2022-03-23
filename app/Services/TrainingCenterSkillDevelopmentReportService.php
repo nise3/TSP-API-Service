@@ -290,13 +290,11 @@ class TrainingCenterSkillDevelopmentReportService
                 'min:0',
             ],
             'bank_status_skill_development' => [
-                'sometimes',
-                'required',
+                'nullable',
                 'string',
             ],
             'bank_status_coordinating_council' => [
-                'sometimes',
-                'required',
+                'nullable',
                 'string',
             ],
             'date_of_last_election_of_all_party_council' => [
@@ -305,8 +303,7 @@ class TrainingCenterSkillDevelopmentReportService
                 'date',
             ],
             'comments' => [
-                'sometimes',
-                'required',
+                'nullable',
                 'string',
             ],
         ];

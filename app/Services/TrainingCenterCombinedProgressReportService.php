@@ -294,7 +294,7 @@ class TrainingCenterCombinedProgressReportService
             'subscriptions_collected_in_current_month_organization' => 'sometimes|required|numeric|min:0',
             'subscriptions_collected_in_current_month_member' => 'sometimes|required|numeric|min:0',
             'subscriptions_collected_in_current_month_total' => 'sometimes|required|numeric|min:0',
-            'grants_received_in_current_month_source' => 'sometimes|required|string',
+            'grants_received_in_current_month_source' => 'nullable|string',
             'grants_received_in_current_month_amount' => 'sometimes|required|numeric|min:0',
             'grants_received_in_current_month_total' => 'sometimes|required|numeric|min:0',
             'gross_income' => 'sometimes|required|numeric|min:0',
@@ -305,14 +305,14 @@ class TrainingCenterCombinedProgressReportService
             'expenditure_in_other_sectors' => 'sometimes|required|numeric|min:0',
             'expenditure_total' => 'sometimes|required|numeric|min:0',
             'total_income_in_the_training_sector' => 'sometimes|required|numeric|min:0',
-            'bank_status_and_account_number' => 'sometimes|required|string',
+            'bank_status_and_account_number' => 'nullable|string',
             'bank_interest' => 'sometimes|required|numeric|min:0',
-            'amount_of_fdr_and_bank_account_number' => 'sometimes|required|string',
+            'amount_of_fdr_and_bank_account_number' => 'nullable|string',
             'number_of_meetings_held_during_current_financial_year' => 'sometimes|required|int|min:0',
             'number_of_executive_council_meetings_in_current_month' => 'sometimes|required|int|min:0',
-            'names_and_numbers_of_other_meetings' => 'sometimes|required|string',
+            'names_and_numbers_of_other_meetings' => 'nullable|string',
             'coordinating_council_meeting_total' => 'sometimes|required|int|min:0',
-            'other_activities_undertaken' => 'sometimes|required|string',
+            'other_activities_undertaken' => 'nullable|string',
 
         ];
 

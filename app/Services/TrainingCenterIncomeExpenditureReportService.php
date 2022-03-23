@@ -219,7 +219,7 @@ class TrainingCenterIncomeExpenditureReportService
                 'date',
             ],
 
-            'trade_name' => 'sometimes|required|string',
+            'trade_name' => 'nullable|string',
             'number_of_labs_or_training_rooms' => 'sometimes|required|int|min:0',
             'number_of_allowed_seats' => 'sometimes|required|int|min:0',
             'number_of_trainees' => 'sometimes|required|int|min:0',
@@ -232,10 +232,10 @@ class TrainingCenterIncomeExpenditureReportService
             'reporting_month_training_expenses_other' => 'sometimes|required|numeric|min:0',
             'reporting_month_training_expenses_total' => 'sometimes|required|numeric|min:0',
             'reporting_month_net_income' => 'sometimes|required|numeric|min:0',
-            'bank_status_up_to_previous_month' => 'sometimes|required|string',
-            'bank_status_so_far' => 'sometimes|required|string',
-            'account_no_and_bank_branch_name' => 'sometimes|required|string',
-            'comments' => 'sometimes|required|string',
+            'bank_status_up_to_previous_month' => 'nullable|string',
+            'bank_status_so_far' => 'nullable|string',
+            'account_no_and_bank_branch_name' => 'nullable|string',
+            'comments' => 'nullable|string',
 
         ];
 
