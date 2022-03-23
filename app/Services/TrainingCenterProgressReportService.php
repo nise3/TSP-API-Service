@@ -256,19 +256,8 @@ class TrainingCenterProgressReportService
     public function validator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
-        $month = Carbon::parse($data['reporting_month'])->format('m');
-        $year = Carbon::parse($data['reporting_month'])->format('yy');
-
-//        $myDate = $data['reporting_month'];
-//        var_dump($myDate);
-//        $date = Carbon::createFromFormat('Y/m/d', $myDate);
-//
-//        $monthName = $date->format('F');
-
-        var_dump($month);
-
-//        $timestamp = strtotime($new->$data['reporting_month']);
-//        $date=$data['reporting_month'];
+//        $month = Carbon::parse($data['reporting_month'])->format('m');
+//        $year = Carbon::parse($data['reporting_month'])->format('yy');
 
         $rules = [
             'institute_id' => [
