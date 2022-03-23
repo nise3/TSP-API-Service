@@ -9780,6 +9780,215 @@
                     }
                 }
             }
+        },
+        "/training-centers/reporting/income-expenditure/{IncomeExpenditureId}": {
+            "get": {
+                "tags": [
+                    "Training Center report"
+                ],
+                "summary": "Get a single report of a income-expenditure report",
+                "description": "API endpoint to get a single income-expenditure report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/IncomeExpenditureId"
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "institute_title_en": "Nurul Huda",
+                                        "institute_title": "Nuruhuda",
+                                        "training_center_id": 1,
+                                        "training_center_title_en": "Anirban It",
+                                        "training_center_title": "Anirban IT",
+                                        "reporting_month": "0000-00-00 00:00:00",
+                                        "trade_name": "hello",
+                                        "number_of_trainers": 1,
+                                        "number_of_labs_or_training_rooms": 3,
+                                        "number_of_computers_or_training_equipments": 0,
+                                        "admitted_trainee_men": 0,
+                                        "admitted_trainee_women": 0,
+                                        "admitted_trainee_disabled": 0,
+                                        "admitted_trainee_qawmi": 0,
+                                        "admitted_trainee_transgender": 0,
+                                        "admitted_trainee_others": 0,
+                                        "admitted_trainee_total": 0,
+                                        "technical_board_registered_trainee_men": 0,
+                                        "technical_board_registered_trainee_women": 0,
+                                        "technical_board_registered_trainee_disabled": 0,
+                                        "technical_board_registered_trainee_qawmi": 0,
+                                        "technical_board_registered_trainee_transgender": 0,
+                                        "technical_board_registered_trainee_others": 0,
+                                        "technical_board_registered_trainee_total": 0,
+                                        "latest_test_attended_trainee_men": 0,
+                                        "latest_test_attended_trainee_women": 0,
+                                        "latest_test_attended_trainee_disabled": 0,
+                                        "latest_test_attended_trainee_qawmi": 0,
+                                        "latest_test_attended_trainee_transgender": 0,
+                                        "latest_test_attended_trainee_others": 0,
+                                        "latest_test_attended_trainee_total": 0,
+                                        "latest_test_passed_trainee_men": 0,
+                                        "latest_test_passed_trainee_women": 0,
+                                        "latest_test_passed_trainee_disabled": 0,
+                                        "latest_test_passed_trainee_qawmi": 0,
+                                        "latest_test_passed_trainee_transgender": 0,
+                                        "latest_test_passed_trainee_others": 0,
+                                        "latest_test_passed_trainee_total": 0,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Rpl Application updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/training-centers/reporting/income-expenditure/{instituteId}": {
+            "get": {
+                "tags": [
+                    "Training Center report"
+                ],
+                "summary": "Get a list of a income-expenditure report",
+                "description": "API endpoint to get a list of income-expenditure report. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/institute_id_path"
+                    },
+                    {
+                        "$ref": "#/components/parameters/training_center_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "institute_id": 1,
+                                        "institute_title_en": "Nurul Huda",
+                                        "institute_title": "Nuruhuda",
+                                        "training_center_id": 1,
+                                        "training_center_title_en": "Anirban It",
+                                        "training_center_title": "Anirban IT",
+                                        "reporting_month": "2000-09-12 00:00:00",
+                                        "trade_name": "hello",
+                                        "number_of_labs_or_training_rooms": 1,
+                                        "number_of_allowed_seats": 1,
+                                        "number_of_trainees": 0,
+                                        "course_fee_per_trainee": "0.00",
+                                        "course_income_from_course_fee": "0.00",
+                                        "course_income_from_application_and_others": "0.00",
+                                        "course_income_total": "0.00",
+                                        "reporting_month_income": "0.00",
+                                        "reporting_month_training_expenses_instructor_salaries": "0.00",
+                                        "reporting_month_training_expenses_other": "0.00",
+                                        "reporting_month_training_expenses_total": "0.00",
+                                        "reporting_month_net_income": "0.00",
+                                        "bank_status_up_to_previous_month": null,
+                                        "bank_status_so_far": null,
+                                        "comments": null,
+                                        "created_at": null,
+                                        "updated_at": null
+
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
+        "/training-centers/reporting/income-expenditure": {
+            "post": {
+                "tags": [
+                    "Training Center report"
+                ],
+                "summary": "Insert a training center income-expenditure report",
+                "description": "API endpoint to store a training center income-expenditure report. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/trainingIncomeExpenditureReport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "institute_id": "1",
+                                        "training_center_id": "1",
+                                        "reporting_month": "2000-09-12",
+                                        "trade_name": "heloo",
+                                        "number_of_labs_or_training_rooms": "1",
+                                        "number_of_allowed_seats": "1",
+                                        "number_of_trainees": "1",
+                                        "course_fee_per_trainee": "1",
+                                        "course_income_from_course_fee": "1",
+                                        "course_income_from_application_and_others": "1",
+                                        "course_income_total": 2,
+                                        "reporting_month_income": "1",
+                                        "reporting_month_training_expenses_instructor_salaries": "1",
+                                        "reporting_month_training_expenses_other": "1",
+                                        "reporting_month_training_expenses_total": 2,
+                                        "reporting_month_net_income": -1,
+                                        "bank_status_up_to_previous_month": "1",
+                                        "bank_status_so_far": "1",
+                                        "account_no_and_bank_branch_name": "1",
+                                        "comments": "hello",
+                                        "updated_at": "2022-03-23T04:26:34.000000Z",
+                                        "created_at": "2022-03-23T04:26:34.000000Z",
+                                        "id": 2
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Training center progress report added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -10130,6 +10339,74 @@
                     "comments": {
                         "type": "string"
                     }
+                },
+                "required": ["institute_id","training_center_id","reporting_month"]
+            },
+            "trainingIncomeExpenditureReport": {
+                "type": "object",
+                "properties": {
+                    "institute_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "reporting_month": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "trade_name": {
+                        "type": "string"
+                    },
+                    "number_of_labs_or_training_rooms": {
+                        "type": "integer"
+                    },
+                    "number_of_allowed_seats": {
+                        "type": "integer"
+                    },
+                    "number_of_trainees": {
+                        "type": "integer"
+                    },
+                    "course_fee_per_trainee": {
+                        "type": "number"
+                    },
+                    "course_income_from_course_fee": {
+                        "type": "number"
+                    },
+                    "course_income_from_application_and_others": {
+                        "type": "number"
+                    },
+                    "course_income_total": {
+                        "type": "number"
+                    },
+                    "reporting_month_income": {
+                        "type": "number"
+                    },
+                    "reporting_month_training_expenses_instructor_salaries": {
+                        "type": "number"
+                    },
+                    "reporting_month_training_expenses_other": {
+                        "type": "number"
+                    },
+                    "reporting_month_training_expenses_total": {
+                        "type": "number"
+                    },
+                    "reporting_month_net_income": {
+                        "type": "number"
+                    },
+                    "bank_status_up_to_previous_month": {
+                        "type": "string"
+                    },
+                    "bank_status_so_far": {
+                        "type": "string"
+                    },
+                    "account_no_and_bank_branch_name": {
+                        "type": "string"
+                    },
+                    "comments": {
+                        "type": "string"
+                    }
+
                 },
                 "required": ["institute_id","training_center_id","reporting_month"]
             },
@@ -12821,6 +13098,15 @@
                 "name": "progressId",
                 "in": "path",
                 "description": "instituteId",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "IncomeExpenditureId": {
+                "name": "IncomeExpenditureId",
+                "in": "path",
+                "description": "IncomeExpenditureId",
                 "required": true,
                 "schema": {
                     "type": "integer"
