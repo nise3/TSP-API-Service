@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\RplApplication;
 use App\Services\RabbitMQService;
 use App\Traits\Scopes\SagaStatusGlobalScope;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\QueryException;
 use PDOException;
