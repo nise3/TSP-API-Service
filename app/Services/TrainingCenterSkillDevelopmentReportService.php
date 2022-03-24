@@ -107,8 +107,16 @@ class TrainingCenterSkillDevelopmentReportService
      */
     public function store(array $data): TrainingCenterSkillDevelopmentReport
     {
-        $data['current_session_trainees_total'] = $data['current_session_trainees_women'] + $data['current_session_trainees_men'] + $data['current_session_trainees_disabled_and_others'];
-        $data['total_trainees_total'] = $data['total_trainees_women'] + $data['total_trainees_men'] + $data['total_trainees_disabled_and_others'];
+        $data['current_session_trainees_total'] =
+            floatval($data['current_session_trainees_women'] ?? 0) +
+            floatval($data['current_session_trainees_men'] ?? 0) +
+            floatval($data['current_session_trainees_disabled_and_others'] ?? 0);
+
+        $data['total_trainees_total'] =
+            floatval($data['total_trainees_women'] ?? 0) +
+            floatval($data['total_trainees_men'] ?? 0) +
+            floatval($data['total_trainees_disabled_and_others'] ?? 0);
+
         $trainingCenterSkillDevelopmentReport = app(TrainingCenterSkillDevelopmentReport::class);
         $trainingCenterSkillDevelopmentReport->fill($data);
         $trainingCenterSkillDevelopmentReport->save();

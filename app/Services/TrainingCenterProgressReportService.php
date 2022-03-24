@@ -210,36 +210,36 @@ class TrainingCenterProgressReportService
     public function store(array $data): TrainingCenterProgressReport
     {
         $data['admitted_trainee_total'] =
-            ($data['admitted_trainee_men'] ?? 0) +
-            ($data['admitted_trainee_women'] ?? 0) +
-            ($data['admitted_trainee_disabled'] ?? 0) +
-            ($data['admitted_trainee_qawmi'] ?? 0) +
-            ($data['admitted_trainee_transgender'] ?? 0) +
-            ($data['admitted_trainee_others'] ?? 0);
+            floatval($data['admitted_trainee_men'] ?? 0) +
+            floatval($data['admitted_trainee_women'] ?? 0) +
+            floatval($data['admitted_trainee_disabled'] ?? 0) +
+            floatval($data['admitted_trainee_qawmi'] ?? 0) +
+            floatval($data['admitted_trainee_transgender'] ?? 0) +
+            floatval($data['admitted_trainee_others'] ?? 0);
 
         $data['technical_board_registered_trainee_total'] =
-            ($data['technical_board_registered_trainee_men'] ?? 0) +
-            ($data['technical_board_registered_trainee_women'] ?? 0) +
-            ($data['technical_board_registered_trainee_disabled'] ?? 0) +
-            ($data['technical_board_registered_trainee_qawmi'] ?? 0) +
-            ($data['technical_board_registered_trainee_transgender'] ?? 0) +
-            ($data['technical_board_registered_trainee_others'] ?? 0);
+            floatval($data['technical_board_registered_trainee_men'] ?? 0) +
+            floatval($data['technical_board_registered_trainee_women'] ?? 0) +
+            floatval($data['technical_board_registered_trainee_disabled'] ?? 0) +
+            floatval($data['technical_board_registered_trainee_qawmi'] ?? 0) +
+            floatval($data['technical_board_registered_trainee_transgender'] ?? 0) +
+            floatval($data['technical_board_registered_trainee_others'] ?? 0);
 
         $data['latest_test_attended_trainee_total'] =
-            ($data['latest_test_attended_trainee_men'] ?? 0) +
-            ($data['latest_test_attended_trainee_women'] ?? 0) +
-            ($data['latest_test_attended_trainee_disabled'] ?? 0) +
-            ($data['latest_test_attended_trainee_qawmi'] ?? 0) +
-            ($data['latest_test_attended_trainee_transgender'] ?? 0) +
-            ($data['latest_test_attended_trainee_others'] ?? 0);
+            floatval($data['latest_test_attended_trainee_men'] ?? 0) +
+            floatval($data['latest_test_attended_trainee_women'] ?? 0) +
+            floatval($data['latest_test_attended_trainee_disabled'] ?? 0) +
+            floatval($data['latest_test_attended_trainee_qawmi'] ?? 0) +
+            floatval($data['latest_test_attended_trainee_transgender'] ?? 0) +
+            floatval($data['latest_test_attended_trainee_others'] ?? 0);
 
         $data['latest_test_passed_trainee_total'] =
-            ($data['latest_test_passed_trainee_men'] ?? 0) +
-            ($data['latest_test_passed_trainee_women'] ?? 0) +
-            ($data['latest_test_passed_trainee_disabled'] ?? 0) +
-            ($data['latest_test_passed_trainee_qawmi'] ?? 0) +
-            ($data['latest_test_passed_trainee_transgender'] ?? 0) +
-            ($data['latest_test_passed_trainee_others'] ?? 0);
+            floatval($data['latest_test_passed_trainee_men'] ?? 0) +
+            floatval($data['latest_test_passed_trainee_women'] ?? 0) +
+            floatval($data['latest_test_passed_trainee_disabled'] ?? 0) +
+            floatval($data['latest_test_passed_trainee_qawmi'] ?? 0) +
+            floatval($data['latest_test_passed_trainee_transgender'] ?? 0) +
+            floatval($data['latest_test_passed_trainee_others'] ?? 0);
 
         $trainingCenterProgressReport = app(TrainingCenterProgressReport::class);
         $trainingCenterProgressReport->fill($data);
