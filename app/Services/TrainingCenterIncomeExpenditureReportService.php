@@ -69,6 +69,7 @@ class TrainingCenterIncomeExpenditureReportService
             'training_center_income_expenditure_reports.reporting_month_net_income',
             'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.account_no_and_bank_branch_name',
             'training_center_income_expenditure_reports.comments',
             'training_center_income_expenditure_reports.created_at',
             'training_center_income_expenditure_reports.updated_at'
@@ -78,9 +79,9 @@ class TrainingCenterIncomeExpenditureReportService
             $join->on('training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
-        $trainingCenterIncomeExpenditureBuilder->join("branches", function ($join) {
-            $join->on('training_center_income_expenditure_reports.branch_id', '=', 'branches.id')
-                ->whereNull('branches.deleted_at');
+        $trainingCenterIncomeExpenditureBuilder->join("training_centers", function ($join) {
+            $join->on('training_center_income_expenditure_reports.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
         });
 
         $trainingCenterIncomeExpenditureBuilder->orderBy('training_center_income_expenditure_reports.id', $order);
@@ -149,6 +150,7 @@ class TrainingCenterIncomeExpenditureReportService
             'training_center_income_expenditure_reports.reporting_month_net_income',
             'training_center_income_expenditure_reports.bank_status_up_to_previous_month',
             'training_center_income_expenditure_reports.bank_status_so_far',
+            'training_center_income_expenditure_reports.account_no_and_bank_branch_name',
             'training_center_income_expenditure_reports.comments',
             'training_center_income_expenditure_reports.created_at',
             'training_center_income_expenditure_reports.updated_at',
@@ -158,7 +160,7 @@ class TrainingCenterIncomeExpenditureReportService
             $join->on('training_center_income_expenditure_reports.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
-        $trainingCenterIncomeExpenditureBuilder->leftJoin("training_centers", function ($join) {
+        $trainingCenterIncomeExpenditureBuilder->join("training_centers", function ($join) {
             $join->on('training_center_income_expenditure_reports.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
         });

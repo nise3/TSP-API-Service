@@ -364,7 +364,7 @@ class TrainerService
 
             $trainer['role_id'] = $coreUser['role_id'] ?? "";
             $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "" ;
-            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['institute_id'] : "" ;
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "" ;
 
             DB::commit();
 
