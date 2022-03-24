@@ -177,16 +177,16 @@ class TrainingCenterIncomeExpenditureReportService
     public function store(array $data): TrainingCenterIncomeExpenditureReport
     {
         $data['course_income_total'] =
-            ($data['course_income_from_course_fee'] ?? 0) +
-            ($data['course_income_from_application_and_others'] ?? 0);
+            floatval($data['course_income_from_course_fee'] ?? 0) +
+            floatval($data['course_income_from_application_and_others'] ?? 0);
 
         $data['reporting_month_training_expenses_total'] =
-            ($data['reporting_month_training_expenses_instructor_salaries'] ?? 0) +
-            ($data['reporting_month_training_expenses_other'] ?? 0);
+            floatval($data['reporting_month_training_expenses_instructor_salaries'] ?? 0) +
+            floatval($data['reporting_month_training_expenses_other'] ?? 0);
 
         $data['reporting_month_net_income'] =
-            ($data['reporting_month_income'] ?? 0) -
-            ($data['reporting_month_training_expenses_total'] ?? 0);
+            floatval($data['reporting_month_income'] ?? 0) -
+            floatval($data['reporting_month_training_expenses_total'] ?? 0);
 
         $trainingCenterIncomeExpenditureReport = app(TrainingCenterIncomeExpenditureReport::class);
         $trainingCenterIncomeExpenditureReport->fill($data);
