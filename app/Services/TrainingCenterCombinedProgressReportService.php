@@ -123,30 +123,30 @@ class TrainingCenterCombinedProgressReportService
     public function store(array $data): TrainingCenterCombinedProgressReport
     {
         $data['members_up_to_previous_month_total'] =
-            ($data['members_up_to_previous_month_general_members'] ?? 0) +
-            ($data['members_up_to_previous_month_life_member'] ?? 0) +
-            ($data['members_up_to_previous_month_patron_member'] ?? 0);
+            floatval($data['members_up_to_previous_month_general_members'] ?? 0) +
+            floatval($data['members_up_to_previous_month_life_member'] ?? 0) +
+            floatval($data['members_up_to_previous_month_patron_member'] ?? 0);
 
         $data['member_enrollment_in_reporting_month_total'] =
-            ($data['member_enrollment_in_reporting_month_general_members'] ?? 0) +
-            ($data['member_enrollment_in_reporting_month_life_member'] ?? 0) +
-            ($data['member_enrollment_in_reporting_month_patron_member'] ?? 0);
+            floatval($data['member_enrollment_in_reporting_month_general_members'] ?? 0) +
+            floatval($data['member_enrollment_in_reporting_month_life_member'] ?? 0) +
+            floatval($data['member_enrollment_in_reporting_month_patron_member'] ?? 0);
 
         $data['total_number_of_members'] =
-            ($data['members_up_to_previous_month_total'] ?? 0) +
-            ($data['member_enrollment_in_reporting_month_total'] ?? 0);
+            floatval($data['members_up_to_previous_month_total'] ?? 0) +
+            floatval($data['member_enrollment_in_reporting_month_total'] ?? 0);
 
         $data['subscriptions_collected_in_current_month_total'] =
-            ($data['subscriptions_collected_in_current_month_organization'] ?? 0) +
-            ($data['subscriptions_collected_in_current_month_member'] ?? 0);
+            floatval($data['subscriptions_collected_in_current_month_organization'] ?? 0) +
+            floatval($data['subscriptions_collected_in_current_month_member'] ?? 0);
 
         $data['grants_received_in_current_month_total'] =
-            ($data['grants_received_in_current_month_source'] ?? 0) +
-            ($data['grants_received_in_current_month_amount'] ?? 0);
+            floatval($data['grants_received_in_current_month_source'] ?? 0) +
+            floatval($data['grants_received_in_current_month_amount'] ?? 0);
 
         $data['expenditure_total'] =
-            ($data['expenditure_in_skill_development_training'] ?? 0) +
-            ($data['expenditure_in_other_sectors'] ?? 0);
+            floatval($data['expenditure_in_skill_development_training'] ?? 0) +
+            floatval($data['expenditure_in_other_sectors'] ?? 0);
 
 
         $trainingCenterCombinedProgressReport = app(TrainingCenterCombinedProgressReport::class);
