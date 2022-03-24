@@ -204,7 +204,10 @@ class TrainingCenterSkillDevelopmentReportService
     {
         $request->offsetSet('deleted_at', null);
         $data = $request->all();
-
+        $month = Carbon::parse($data['reporting_month'])->format('m');
+        $year = Carbon::parse($data['reporting_month'])->format('Y');
+        $custom_date=$year.'-'.$month.'-'.'01';
+        $data['reporting_month']=$custom_date;
         $customMessage = [];
 
         $rules = [
@@ -222,6 +225,7 @@ class TrainingCenterSkillDevelopmentReportService
             ],
             'reporting_month' => [
                 'required',
+                'unique_with:training_center_skill_development_reports,training_center_id',
                 'date',
             ],
             'number_of_trades_allowed' => [

@@ -200,7 +200,10 @@ class TrainingCenterIncomeExpenditureReportService
     {
         $request->offsetSet('deleted_at', null);
         $data = $request->all();
-
+        $month = Carbon::parse($data['reporting_month'])->format('m');
+        $year = Carbon::parse($data['reporting_month'])->format('Y');
+        $custom_date=$year.'-'.$month.'-'.'01';
+        $data['reporting_month']=$custom_date;
         $customMessage = [];
 
         $rules = [
@@ -218,6 +221,7 @@ class TrainingCenterIncomeExpenditureReportService
             ],
             'reporting_month' => [
                 'required',
+                'unique_with:training_center_income_expenditure_reports,training_center_id',
                 'date',
             ],
 
