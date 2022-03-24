@@ -82,14 +82,35 @@ class RplLevelService
             $rplLevelBuilder->where('rpl_levels.rpl_occupation_id', $rplOccupationId);
         }
         if (is_numeric($youthId) && is_numeric($rplOccupationId)) {
-            $rplLevelIds = RplApplication::where('youth_id', $youthId)
+            $rplLevelValidIds = RplApplication::where('youth_id', $youthId)
                 ->where('rpl_occupation_id', $rplOccupationId)
-                ->where('application_status', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED) //TODO change status on new status addition
+                ->where('application_status', '<=', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED)
                 ->pluck('rpl_level_id')->toArray();
 
-            if (!empty($rplLevelIds)) {
-                $rplLevelBuilder->whereNotIn('rpl_levels.id', $rplLevelIds);
+            $rplCompletedLevelIds = RplApplication::where('youth_id', $youthId)
+                ->where('rpl_occupation_id', $rplOccupationId)
+                ->where('application_status', RplApplication::APPLICATION_STATUS_ASSESSMENT_COMPLETED)
+                ->pluck('rpl_level_id')->toArray();
+
+            $validSequenceOrderLevelId = count($rplCompletedLevelIds) > 0 ? $rplCompletedLevelIds[count($rplCompletedLevelIds)-1] : 0;
+
+            $rplLevelSeqIds = RplLevel::where('rpl_occupation_id', $rplOccupationId)
+                ->where('id', $validSequenceOrderLevelId)
+                ->pluck('sequence_order')->toArray();
+
+            $validSequenceOrder = count($rplLevelSeqIds) > 0 ? $rplLevelSeqIds[count($rplLevelSeqIds)-1] : 0;
+
+            $rplLevelInvalidIds = RplLevel::where('rpl_occupation_id', $rplOccupationId)
+                ->where('sequence_order', '>', $validSequenceOrder+1)->orwhere('sequence_order', '<=', $validSequenceOrder)->get()->toArray();
+
+            if (count($rplLevelInvalidIds) > 0) {
+                $rplLevelBuilder
+                    ->selectRaw("(CASE WHEN sequence_order>? OR sequence_order<=? THEN 0 ELSE 1 END) as eligible", [$validSequenceOrder+1,$validSequenceOrder]);
+            } else if (count($rplLevelValidIds) > 0) {
+                $rplLevelBuilder//->selectRaw('1 as eligible');
+                    ->selectRaw("(CASE WHEN rpl_levels.id = ? THEN 1 ELSE 0 END) as eligible", [$rplLevelValidIds[0]]);
             }
+
         }
 
 
