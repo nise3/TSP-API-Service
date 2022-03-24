@@ -159,10 +159,11 @@ class RplApplicationController extends Controller
             $this->rplApplicationService->storeRplApplicationProfessionalQualification($validated);
 
 
-            /** Trigger EVENT to Youth Service via RabbitMQ  */
+            unset($validated['id']);  // unset id from rpl application table
+            unset($validated['mobile']); // youth can't update mobile. So remove this from array
             $validated['rpl_application_id'] = $rplApplication->id;
+            /** Trigger EVENT to Youth Service via RabbitMQ  */
             event(new RplApplicationEvent($validated));
-
 
             $response = [
                 'data' => $rplApplication,
@@ -178,7 +179,6 @@ class RplApplicationController extends Controller
             DB::rollback();
             throw $e;
         }
-
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 

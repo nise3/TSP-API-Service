@@ -76,6 +76,20 @@ return [
                         'queueMode' => 'lazy'
                     ],
                 ],
+                'rplApplication' => [
+                    'name' => 'institute.rpl.application.q',
+                    'binding' => 'institute.rpl.application',
+                    'durable' => true,
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'institute.rpl.application.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
+                ],
                 'batchCalender' => [
                     'name' => 'institute.batch.calender.q',
                     'binding' => 'institute.batch.calender',

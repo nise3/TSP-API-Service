@@ -266,7 +266,8 @@ class RplApplicationService
      */
     public function storeRplApplication(RplApplication $rplApplication, array $data): RplApplication
     {
-        $rplApplication->fill($data);
+        $rplData = array_merge($data, $data['youth_details']);
+        $rplApplication->fill($rplData);
         $rplApplication->save();
 
         return $rplApplication;
@@ -412,8 +413,8 @@ class RplApplicationService
                 'integer',
                 Rule::exists('rpl_applications', 'id')
                     ->where(function ($query) use ($data) {
-                            $query->where('rpl_applications.youth_id', $data['youth_id']);
-                            $query->whereNull('rpl_applications.deleted_at');
+                        $query->where('rpl_applications.youth_id', $data['youth_id']);
+                        $query->whereNull('rpl_applications.deleted_at');
                     })
             ],
             'youth_details' => [
