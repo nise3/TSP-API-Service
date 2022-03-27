@@ -4,8 +4,8 @@
 namespace App\Services;
 
 
-use App\Models\Assessment;
-use App\Models\AssessmentQuestion;
+use App\Models\RplAssessment;
+use App\Models\RplAssessmentQuestion;
 use App\Models\BaseModel;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentEducation;
@@ -355,8 +355,8 @@ class RplApplicationService
             'assessment_questions.question_id',
             'assessment_questions.answer',
         ];
-        $assessment = Assessment::select(['assessments.passing_score'])->where('id', $assessmentId)->first();
-        $assessmentQs = AssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
+        $assessment = RplAssessment::select(['rpl_assessments.passing_score'])->where('id', $assessmentId)->first();
+        $assessmentQs = RplAssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
         $questions = [];
         foreach ($assessmentQs as $ques) {
             $questions[$ques['question_id']] = $ques['answer'];
@@ -715,7 +715,7 @@ class RplApplicationService
                 'required',
                 'int',
                 'min:1',
-                'exists:assessments,id,deleted_at,NULL',
+                'exists:rpl_assessments,id,deleted_at,NULL',
             ],
             'target_country_id' => [
                 'required',
@@ -955,7 +955,7 @@ class RplApplicationService
                 'required',
                 'int',
                 'min:1',
-                'exists:assessments,id,deleted_at,NULL',
+                'exists:rpl_assessments,id,deleted_at,NULL',
             ],
             'answers' => [
                 'required',

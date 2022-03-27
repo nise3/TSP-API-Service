@@ -113,7 +113,7 @@ class RplApplicationController extends Controller
     }
 
     /**
-     * Store a Rpl Assessment
+     * Store a Rpl RplAssessment
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException

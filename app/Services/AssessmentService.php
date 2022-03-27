@@ -5,7 +5,7 @@ namespace App\Services;
 
 
 use App\Models\BaseModel;
-use App\Models\Assessment;
+use App\Models\RplAssessment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -32,15 +32,15 @@ class AssessmentService
         $rplSectorId = $request['rpl_sector_id'] ?? "";
         $rplLevelId = $request['rpl_level_id'] ?? "";
 
-        /** @var Assessment|Builder $assessmentBuilder */
-        $assessmentBuilder = Assessment::select([
-            'assessments.id',
-            'assessments.title',
-            'assessments.title_en',
-            'assessments.assessment_fee',
-            'assessments.passing_score',
+        /** @var RplAssessment|Builder $assessmentBuilder */
+        $assessmentBuilder = RplAssessment::select([
+            'rpl_assessments.id',
+            'rpl_assessments.title',
+            'rpl_assessments.title_en',
+            'rpl_assessments.assessment_fee',
+            'rpl_assessments.passing_score',
 
-            'assessments.rpl_occupation_id',
+            'rpl_assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
@@ -48,20 +48,20 @@ class AssessmentService
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'assessments.rpl_level_id',
+            'rpl_assessments.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
 
-            'assessments.created_at',
-            'assessments.updated_at',
-            'assessments.deleted_at',
+            'rpl_assessments.created_at',
+            'rpl_assessments.updated_at',
+            'rpl_assessments.deleted_at',
         ]);
 
-        $assessmentBuilder->orderBy('assessments.id', $order);
+        $assessmentBuilder->orderBy('rpl_assessments.id', $order);
 
         $assessmentBuilder->join('rpl_occupations', function ($join){
-            $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('rpl_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
@@ -71,24 +71,24 @@ class AssessmentService
         });
 
         $assessmentBuilder->join('rpl_levels', function ($join){
-            $join->on('assessments.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('rpl_assessments.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
         if (!empty($titleEn)) {
-            $assessmentBuilder->where('assessments.title_en', 'like', '%' . $titleEn . '%');
+            $assessmentBuilder->where('rpl_assessments.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $assessmentBuilder->where('assessments.title', 'like', '%' . $title . '%');
+            $assessmentBuilder->where('rpl_assessments.title', 'like', '%' . $title . '%');
         }
         if (!empty($rplOccupationId)) {
-            $assessmentBuilder->where('assessments.rpl_occupation_id', $rplOccupationId);
+            $assessmentBuilder->where('rpl_assessments.rpl_occupation_id', $rplOccupationId);
         }
         if (!empty($rplSectorId)) {
             $assessmentBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
         }
         if (!empty($rplLevelId)) {
-            $assessmentBuilder->where('assessments.rpl_level_id', $rplLevelId);
+            $assessmentBuilder->where('rpl_assessments.rpl_level_id', $rplLevelId);
         }
 
         /** @var Collection $assessments */
@@ -116,19 +116,19 @@ class AssessmentService
 
     /**
      * @param int $id
-     * @return Assessment
+     * @return RplAssessment
      */
-    public function getOneAssessment(int $id): Assessment
+    public function getOneAssessment(int $id): RplAssessment
     {
-        /** @var Assessment|Builder $assessmentBuilder */
-        $assessmentBuilder = Assessment::select([
-            'assessments.id',
-            'assessments.title',
-            'assessments.title_en',
-            'assessments.passing_score',
-            'assessments.assessment_fee',
+        /** @var RplAssessment|Builder $assessmentBuilder */
+        $assessmentBuilder = RplAssessment::select([
+            'rpl_assessments.id',
+            'rpl_assessments.title',
+            'rpl_assessments.title_en',
+            'rpl_assessments.passing_score',
+            'rpl_assessments.assessment_fee',
 
-            'assessments.rpl_occupation_id',
+            'rpl_assessments.rpl_occupation_id',
             'rpl_occupations.title_en as rpl_occupation_title_en',
             'rpl_occupations.title as rpl_occupation_title',
 
@@ -136,19 +136,19 @@ class AssessmentService
             'rpl_sectors.title_en as rpl_sector_title_en',
             'rpl_sectors.title as rpl_sector_title',
 
-            'assessments.rpl_level_id',
+            'rpl_assessments.rpl_level_id',
             'rpl_levels.title_en as rpl_level_title_en',
             'rpl_levels.title as rpl_level_title',
 
-            'assessments.created_at',
-            'assessments.updated_at',
-            'assessments.deleted_at',
+            'rpl_assessments.created_at',
+            'rpl_assessments.updated_at',
+            'rpl_assessments.deleted_at',
         ]);
 
-        $assessmentBuilder->where('assessments.id', $id);
+        $assessmentBuilder->where('rpl_assessments.id', $id);
 
         $assessmentBuilder->join('rpl_occupations', function ($join){
-            $join->on('assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
+            $join->on('rpl_assessments.rpl_occupation_id', '=', 'rpl_occupations.id')
                 ->whereNull('rpl_occupations.deleted_at');
         });
 
@@ -158,7 +158,7 @@ class AssessmentService
         });
 
         $assessmentBuilder->join('rpl_levels', function ($join){
-            $join->on('assessments.rpl_level_id', '=', 'rpl_levels.id')
+            $join->on('rpl_assessments.rpl_level_id', '=', 'rpl_levels.id')
                 ->whereNull('rpl_levels.deleted_at');
         });
 
@@ -167,22 +167,22 @@ class AssessmentService
 
     /**
      * @param array $data
-     * @return Assessment
+     * @return RplAssessment
      */
-    public function store(array $data): Assessment
+    public function store(array $data): RplAssessment
     {
-        $assessment = app()->make(Assessment::class);
+        $assessment = app()->make(RplAssessment::class);
         $assessment->fill($data);
         $assessment->save();
         return $assessment;
     }
 
     /**
-     * @param Assessment $assessment
+     * @param RplAssessment $assessment
      * @param array $data
-     * @return Assessment
+     * @return RplAssessment
      */
-    public function update(Assessment $assessment, array $data): Assessment
+    public function update(RplAssessment $assessment, array $data): RplAssessment
     {
         $assessment->fill($data);
         $assessment->save();
@@ -190,10 +190,10 @@ class AssessmentService
     }
 
     /**
-     * @param Assessment $assessment
+     * @param RplAssessment $assessment
      * @return bool
      */
-    public function destroy(Assessment $assessment): bool
+    public function destroy(RplAssessment $assessment): bool
     {
         return $assessment->delete();
     }
@@ -229,10 +229,10 @@ class AssessmentService
                 'required',
                 'int',
                 'min:1',
-                Rule::unique('assessments', 'rpl_level_id')
+                Rule::unique('rpl_assessments', 'rpl_level_id')
                     ->ignore($id)
                     ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
-                        return $query->where('assessments.rpl_occupation_id', $data['rpl_occupation_id']);
+                        return $query->where('rpl_assessments.rpl_occupation_id', $data['rpl_occupation_id']);
                     }),
                 'exists:rpl_levels,id,deleted_at,NULL',
             ],

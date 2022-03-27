@@ -7635,7 +7635,7 @@
                 }
             }
         },
-        "/assessment": {
+        "/rpl-assessments": {
             "get": {
                 "tags": [
                     "Assessment"
@@ -7736,7 +7736,7 @@
                 }
             }
         },
-        "/assessment/{assessmentId}": {
+        "/rpl-assessments/{assessmentId}": {
             "get": {
                 "tags": [
                     "Assessment"
@@ -7857,7 +7857,7 @@
                 }
             }
         },
-        "/assessment_question_sets": {
+        "/rpl-assessment_question_sets": {
             "post": {
                 "tags": [
                     "Assessment Question Set"
@@ -7890,7 +7890,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 201,
-                                        "message": "AssessmentQuestionSet added successfully",
+                                        "message": "Rpl AssessmentQuestionSet added successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -7971,7 +7971,7 @@
                 }
             }
         },
-        "/assessment_question_sets/{assessmentQuestionSetId}": {
+        "/rpl-assessment_question_sets/{assessmentQuestionSetId}": {
             "get": {
                 "tags": [
                     "Assessment Question Set"
@@ -8053,7 +8053,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "AssessmentQuestionSet updated successfully.",
+                                        "message": "Rpl AssessmentQuestionSet updated successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8082,7 +8082,7 @@
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
-                                        "message": "AssessmentQuestionSet deleted successfully.",
+                                        "message": "Rpl AssessmentQuestionSet deleted successfully.",
                                         "query_time": 0
                                     }
                                 }
@@ -8604,7 +8604,7 @@
                 }
             }
         },
-        "/rpl-assessment": {
+        "/rpl-self-assessment": {
             "post": {
                 "tags": [
                     "Rpl Application"
@@ -8652,7 +8652,7 @@
                 }
             }
         },
-        "/assessment-questions": {
+        "/rpl-assessment-questions": {
             "get": {
                 "tags": [
                     "Assessment Question"
@@ -8757,7 +8757,7 @@
                 }
             }
         },
-        "/public/assessment-questions": {
+        "/public/rpl-assessment-questions": {
             "get": {
                 "tags": [
                     "Assessment Question"

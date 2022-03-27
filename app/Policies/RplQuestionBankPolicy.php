@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\RplQuestionBank;
 use App\Models\User;
 
-class QuestionBankPolicy
+class RplQuestionBankPolicy
 {
     /**
      * Determine whether the user can view any Question Bank.

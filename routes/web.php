@@ -36,12 +36,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
         $customRouter()->resourceRoute('rpl-subjects', 'SubjectController')->render();
-        $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
+        $customRouter()->resourceRoute('rpl-assessments', 'AssessmentController')->render();
         $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
         $customRouter()->resourceRoute('rpl-question-banks', 'QuestionBankController')->render();
-        $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
-        $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
+        $customRouter()->resourceRoute('rpl-assessment-questions', 'AssessmentQuestionController')->render();
+        $customRouter()->resourceRoute('rpl-assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
@@ -117,7 +117,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-sectors", ["as" => "public.rpl-sectors", "uses" => "RplSectorController@getPublicList"]);
         $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
-        $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
+        $router->get("rpl-assessment-questions", ["as" => "public.rpl-assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
 
 
         $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
@@ -161,7 +161,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
 
     /** rpl assessment */
-    $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
+    $router->post("rpl-self-assessment", ["as" => "rpl-self-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
 
     /** rpl application */
     $router->post("rpl-application", ["as" => "rpl-application", "uses" => "RplApplicationController@createRplApplication"]);

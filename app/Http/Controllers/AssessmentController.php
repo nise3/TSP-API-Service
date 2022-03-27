@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assessment;
+use App\Models\RplAssessment;
 use App\Models\RplOccupation;
 use App\Services\AssessmentService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -46,7 +46,7 @@ class AssessmentController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Assessment::class);
+        $this->authorize('viewAny', RplAssessment::class);
         $filter = $this->assessmentService->filterValidator($request)->validate();
 
         $response = $this->assessmentService->getAssessmentList($filter, $this->startTime);
@@ -100,7 +100,7 @@ class AssessmentController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Assessment::class);
+        $this->authorize('create', RplAssessment::class);
         $validated = $this->assessmentService->validator($request)->validate();
         $assessment = $this->assessmentService->store($validated);
 
@@ -109,7 +109,7 @@ class AssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Assessment added successfully",
+                "message" => "RplAssessment added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -126,7 +126,7 @@ class AssessmentController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $assessment = Assessment::findOrFail($id);
+        $assessment = RplAssessment::findOrFail($id);
 
         $this->authorize('update', $assessment);
 
@@ -137,7 +137,7 @@ class AssessmentController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Assessment updated successfully.",
+                "message" => "RplAssessment updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,7 +153,7 @@ class AssessmentController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $assessment = Assessment::findOrFail($id);
+        $assessment = RplAssessment::findOrFail($id);
 
         $this->authorize('delete', $assessment);
 
@@ -165,7 +165,7 @@ class AssessmentController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Assessment deleted successfully.",
+                    "message" => "RplAssessment deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

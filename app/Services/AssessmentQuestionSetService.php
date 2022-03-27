@@ -4,7 +4,7 @@
 namespace App\Services;
 
 
-use App\Models\AssessmentQuestionSet;
+use App\Models\RplAssessmentQuestionSet;
 use App\Models\BaseModel;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,39 +30,39 @@ class AssessmentQuestionSetService
         $order = $request['order'] ?? "ASC";
         $assessmentId = $request['assessment_id'] ?? "";
 
-        /** @var AssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
-        $assessmentQuestionSetBuilder = AssessmentQuestionSet::select([
-            'assessment_question_sets.id',
-            'assessment_question_sets.title',
-            'assessment_question_sets.title_en',
-            'assessment_question_sets.assessment_id',
+        /** @var RplAssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
+        $assessmentQuestionSetBuilder = RplAssessmentQuestionSet::select([
+            'rpl_assessment_question_sets.id',
+            'rpl_assessment_question_sets.title',
+            'rpl_assessment_question_sets.title_en',
+            'rpl_assessment_question_sets.assessment_id',
 
-            'assessments.title as assessment_title',
-            'assessments.title_en as assessment_title_en',
-            'assessments.assessment_fee',
-            'assessments.passing_score',
+            'rpl_assessments.title as assessment_title',
+            'rpl_assessments.title_en as assessment_title_en',
+            'rpl_assessments.assessment_fee',
+            'rpl_assessments.passing_score',
 
-            'assessment_question_sets.row_status',
-            'assessment_question_sets.created_at',
-            'assessment_question_sets.updated_at',
-            'assessment_question_sets.deleted_at'
+            'rpl_assessment_question_sets.row_status',
+            'rpl_assessment_question_sets.created_at',
+            'rpl_assessment_question_sets.updated_at',
+            'rpl_assessment_question_sets.deleted_at'
         ]);
 
-        $assessmentQuestionSetBuilder->orderBy('assessment_question_sets.id', $order);
+        $assessmentQuestionSetBuilder->orderBy('rpl_assessment_question_sets.id', $order);
 
-        $assessmentQuestionSetBuilder->join('assessments', function ($join) {
-            $join->on('assessments.id', '=', 'assessment_question_sets.assessment_id')
-                ->whereNull('assessments.deleted_at');
+        $assessmentQuestionSetBuilder->join('rpl_assessments', function ($join) {
+            $join->on('rpl_assessments.id', '=', 'rpl_assessment_question_sets.assessment_id')
+                ->whereNull('rpl_assessments.deleted_at');
         });
 
         if (!empty($titleEn)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.title_en', 'like', '%' . $titleEn . '%');
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.title', 'like', '%' . $title . '%');
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.title', 'like', '%' . $title . '%');
         }
         if (!empty($assessmentId)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.assessment_id', $assessmentId);
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.assessment_id', $assessmentId);
         }
 
         /** @var Collection $assessmentQuestionSets */
@@ -90,34 +90,34 @@ class AssessmentQuestionSetService
 
     /**
      * @param int $id
-     * @return AssessmentQuestionSet
+     * @return RplAssessmentQuestionSet
      */
-    public function getOneAssessmentQuestionSet(int $id): AssessmentQuestionSet
+    public function getOneAssessmentQuestionSet(int $id): RplAssessmentQuestionSet
     {
-        /** @var AssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
-        $assessmentQuestionSetBuilder = AssessmentQuestionSet::select([
-            'assessment_question_sets.id',
-            'assessment_question_sets.title',
-            'assessment_question_sets.title_en',
-            'assessment_question_sets.assessment_id',
+        /** @var RplAssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
+        $assessmentQuestionSetBuilder = RplAssessmentQuestionSet::select([
+            'rpl_assessment_question_sets.id',
+            'rpl_assessment_question_sets.title',
+            'rpl_assessment_question_sets.title_en',
+            'rpl_assessment_question_sets.assessment_id',
 
-            'assessments.id',
-            'assessments.title as assessment_title',
-            'assessments.title_en as assessment_title_en',
-            'assessments.assessment_fee',
-            'assessments.passing_score',
+            'rpl_assessments.id',
+            'rpl_assessments.title as assessment_title',
+            'rpl_assessments.title_en as assessment_title_en',
+            'rpl_assessments.assessment_fee',
+            'rpl_assessments.passing_score',
 
-            'assessment_question_sets.row_status',
-            'assessment_question_sets.created_at',
-            'assessment_question_sets.updated_at',
-            'assessment_question_sets.deleted_at'
+            'rpl_assessment_question_sets.row_status',
+            'rpl_assessment_question_sets.created_at',
+            'rpl_assessment_question_sets.updated_at',
+            'rpl_assessment_question_sets.deleted_at'
         ]);
 
-        $assessmentQuestionSetBuilder->where('assessment_question_sets.id', $id);
+        $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.id', $id);
 
-        $assessmentQuestionSetBuilder->join('assessments', function ($join) {
-            $join->on('assessments.id', '=', 'assessment_question_sets.assessment_id')
-                ->whereNull('assessments.deleted_at');
+        $assessmentQuestionSetBuilder->join('rpl_assessments', function ($join) {
+            $join->on('rpl_assessments.id', '=', 'rpl_assessment_question_sets.assessment_id')
+                ->whereNull('rpl_assessments.deleted_at');
         });
 
         return $assessmentQuestionSetBuilder->firstOrFail();
@@ -125,22 +125,22 @@ class AssessmentQuestionSetService
 
     /**
      * @param array $data
-     * @return AssessmentQuestionSet
+     * @return RplAssessmentQuestionSet
      */
-    public function store(array $data): AssessmentQuestionSet
+    public function store(array $data): RplAssessmentQuestionSet
     {
-        $assessmentQuestionSet = app()->make(AssessmentQuestionSet::class);
+        $assessmentQuestionSet = app()->make(RplAssessmentQuestionSet::class);
         $assessmentQuestionSet->fill($data);
         $assessmentQuestionSet->save();
         return $assessmentQuestionSet;
     }
 
     /**
-     * @param AssessmentQuestionSet $assessmentQuestionSet
+     * @param RplAssessmentQuestionSet $assessmentQuestionSet
      * @param array $data
-     * @return AssessmentQuestionSet
+     * @return RplAssessmentQuestionSet
      */
-    public function update(AssessmentQuestionSet $assessmentQuestionSet, array $data): AssessmentQuestionSet
+    public function update(RplAssessmentQuestionSet $assessmentQuestionSet, array $data): RplAssessmentQuestionSet
     {
         $assessmentQuestionSet->fill($data);
         $assessmentQuestionSet->save();
@@ -148,10 +148,10 @@ class AssessmentQuestionSetService
     }
 
     /**
-     * @param AssessmentQuestionSet $assessmentQuestionSet
+     * @param RplAssessmentQuestionSet $assessmentQuestionSet
      * @return bool
      */
-    public function destroy(AssessmentQuestionSet $assessmentQuestionSet): bool
+    public function destroy(RplAssessmentQuestionSet $assessmentQuestionSet): bool
     {
         return $assessmentQuestionSet->delete();
     }
@@ -181,7 +181,7 @@ class AssessmentQuestionSetService
                 'required',
                 'int',
                 'min:1',
-                'exists:assessments,id,deleted_at,NULL',
+                'exists:rpl_assessments,id,deleted_at,NULL',
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

@@ -5,7 +5,7 @@ namespace App\Policies;
 use App\Models\RplSubject;
 use App\Models\User;
 
-class SubjectPolicy
+class RplSubjectPolicy
 {
     /**
      * Determine whether the user can view any RplSubject.

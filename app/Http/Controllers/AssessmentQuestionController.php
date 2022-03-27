@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AssessmentQuestion;
+use App\Models\RplAssessmentQuestion;
 use App\Models\RplQuestionBank;
 use App\Services\AssessmentQuestionService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -46,7 +46,7 @@ class AssessmentQuestionController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', AssessmentQuestion::class);
+        $this->authorize('viewAny', RplAssessmentQuestion::class);
         $filter = $this->assessmentQuestionService->filterValidator($request)->validate();
 
         $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime);
@@ -77,7 +77,7 @@ class AssessmentQuestionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', AssessmentQuestion::class);
+        $this->authorize('create', RplAssessmentQuestion::class);
         $validated = $this->assessmentQuestionService->validator($request)->validate();
         $this->assessmentQuestionService->store($validated);
 
@@ -85,7 +85,7 @@ class AssessmentQuestionController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Assessment Question  added successfully",
+                "message" => "RplAssessment Question  added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
