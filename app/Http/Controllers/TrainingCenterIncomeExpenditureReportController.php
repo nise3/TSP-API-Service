@@ -58,6 +58,7 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function read(int $id): JsonResponse
     {
+        $this->authorize('view',TrainingCenterIncomeExpenditureReport::class);
         $data = $this->trainingCenterIncomeExpenditureReportService->getOneTrainingCenterIncomeExpenditureReport($id);
         $response = [
             "data" => $data ?: null,
@@ -79,6 +80,7 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create',TrainingCenterIncomeExpenditureReport::class);
         $validatedData = $this->trainingCenterIncomeExpenditureReportService->validator($request)->validate();
 
         $data = $this->trainingCenterIncomeExpenditureReportService->store($validatedData);
