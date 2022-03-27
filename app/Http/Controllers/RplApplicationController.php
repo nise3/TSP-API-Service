@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\RplApplication\RplApplicationEvent;
 use App\Models\RplApplication;
 use App\Models\RplOccupation;
 use App\Services\RplApplicationService;
@@ -63,7 +64,7 @@ class RplApplicationController extends Controller
     {
         $filter = $this->rplApplicationService->filterValidator($request)->validate();
 
-        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime,true);
+        $response = $this->rplApplicationService->getRplApplicationList($filter, $this->startTime, true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -157,6 +158,13 @@ class RplApplicationController extends Controller
             $this->rplApplicationService->storeRplApplicationEducation($validated);
             $this->rplApplicationService->storeRplApplicationProfessionalQualification($validated);
 
+
+            unset($validated['id']);  // unset id from rpl application table dont need to be sync in youth
+            unset($validated['mobile']); // youth can't update mobile. So remove this from array
+            $validated['rpl_application_id'] = $rplApplication->id;
+            /** Trigger EVENT to Youth Service via RabbitMQ  */
+            event(new RplApplicationEvent($validated));
+
             $response = [
                 'data' => $rplApplication,
                 '_response_status' => [
@@ -167,11 +175,10 @@ class RplApplicationController extends Controller
                 ]
             ];
             DB::commit();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
             throw $e;
         }
-
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
