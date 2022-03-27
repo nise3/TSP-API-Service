@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AssessmentQuestion;
-use App\Models\QuestionBank;
+use App\Models\RplQuestionBank;
 use App\Services\AssessmentQuestionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;

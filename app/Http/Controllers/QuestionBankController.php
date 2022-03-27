@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QuestionBank;
+use App\Models\RplQuestionBank;
 use App\Services\QuestionBankService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +45,7 @@ class QuestionBankController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBank::class);
+        $this->authorize('viewAny', RplQuestionBank::class);
 
         $filter = $this->questionBankService->filterValidator($request)->validate();
 
@@ -100,7 +100,7 @@ class QuestionBankController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', QuestionBank::class);
+        $this->authorize('create', RplQuestionBank::class);
 
         $validated = $this->questionBankService->validator($request)->validate();
         $questionBank = $this->questionBankService->store($validated);
@@ -127,7 +127,7 @@ class QuestionBankController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $questionBank = QuestionBank::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
         $this->authorize('update', $questionBank);
 
@@ -153,7 +153,7 @@ class QuestionBankController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $questionBank = QuestionBank::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
         $this->authorize('delete', $questionBank);
 

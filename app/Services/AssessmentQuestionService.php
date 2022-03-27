@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Models\Assessment;
 use App\Models\BaseModel;
 use App\Models\AssessmentQuestion;
-use App\Models\QuestionBank;
+use App\Models\RplQuestionBank;
 use App\Models\RplSector;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -47,8 +47,8 @@ class AssessmentQuestionService
             'assessment_questions.assessment_id',
             'assessment_questions.assessment_question_set_id',
             'assessment_questions.question_id',
-            'question_banks.title as question_title',
-            'question_banks.title_en as question_title_en',
+            'rpl_question_banks.title as question_title',
+            'rpl_question_banks.title_en as question_title_en',
             'assessment_questions.title',
             'assessment_questions.title_en',
             'assessment_questions.type',
@@ -79,8 +79,8 @@ class AssessmentQuestionService
                 ->whereNull('assessments.deleted_at');
         });
 
-        $assessmentQuestionBuilder->join("question_banks", function ($join) {
-            $join->on('assessment_questions.question_id', '=', 'question_banks.id')
+        $assessmentQuestionBuilder->join("rpl_question_banks", function ($join) {
+            $join->on('assessment_questions.question_id', '=', 'rpl_question_banks.id')
                 ->whereNull('assessments.deleted_at');
         });
         if (!empty($titleEn)) {
@@ -183,7 +183,7 @@ class AssessmentQuestionService
             'assessment_questions.*.assessment_question_set_id' => [
                 'required',
                 'int',
-                'exists:assessment_question_sets,id,deleted_at,NULL',
+                'exists:rpl_assessment_question_sets,id,deleted_at,NULL',
             ],
             'assessment_questions.*.question_id' => [
                 'required',
@@ -210,7 +210,7 @@ class AssessmentQuestionService
             'assessment_questions.*.answer' => [
                 'required',
                 'int',
-                Rule::in(QuestionBank::ANSWERS)
+                Rule::in(RplQuestionBank::ANSWERS)
             ],
             'assessment_questions.*.row_status' => [
                 'required_if:' . $id . ',!=,null',

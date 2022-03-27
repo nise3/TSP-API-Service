@@ -32,37 +32,37 @@ class AssessmentQuestionSetService
 
         /** @var AssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
         $assessmentQuestionSetBuilder = AssessmentQuestionSet::select([
-            'assessment_question_sets.id',
-            'assessment_question_sets.title',
-            'assessment_question_sets.title_en',
-            'assessment_question_sets.assessment_id',
+            'rpl_assessment_question_sets.id',
+            'rpl_assessment_question_sets.title',
+            'rpl_assessment_question_sets.title_en',
+            'rpl_assessment_question_sets.assessment_id',
 
             'assessments.title as assessment_title',
             'assessments.title_en as assessment_title_en',
             'assessments.assessment_fee',
             'assessments.passing_score',
 
-            'assessment_question_sets.row_status',
-            'assessment_question_sets.created_at',
-            'assessment_question_sets.updated_at',
-            'assessment_question_sets.deleted_at'
+            'rpl_assessment_question_sets.row_status',
+            'rpl_assessment_question_sets.created_at',
+            'rpl_assessment_question_sets.updated_at',
+            'rpl_assessment_question_sets.deleted_at'
         ]);
 
-        $assessmentQuestionSetBuilder->orderBy('assessment_question_sets.id', $order);
+        $assessmentQuestionSetBuilder->orderBy('rpl_assessment_question_sets.id', $order);
 
         $assessmentQuestionSetBuilder->join('assessments', function ($join) {
-            $join->on('assessments.id', '=', 'assessment_question_sets.assessment_id')
+            $join->on('assessments.id', '=', 'rpl_assessment_question_sets.assessment_id')
                 ->whereNull('assessments.deleted_at');
         });
 
         if (!empty($titleEn)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.title_en', 'like', '%' . $titleEn . '%');
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.title', 'like', '%' . $title . '%');
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.title', 'like', '%' . $title . '%');
         }
         if (!empty($assessmentId)) {
-            $assessmentQuestionSetBuilder->where('assessment_question_sets.assessment_id', $assessmentId);
+            $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.assessment_id', $assessmentId);
         }
 
         /** @var Collection $assessmentQuestionSets */
@@ -96,10 +96,10 @@ class AssessmentQuestionSetService
     {
         /** @var AssessmentQuestionSet|Builder $assessmentQuestionSetBuilder */
         $assessmentQuestionSetBuilder = AssessmentQuestionSet::select([
-            'assessment_question_sets.id',
-            'assessment_question_sets.title',
-            'assessment_question_sets.title_en',
-            'assessment_question_sets.assessment_id',
+            'rpl_assessment_question_sets.id',
+            'rpl_assessment_question_sets.title',
+            'rpl_assessment_question_sets.title_en',
+            'rpl_assessment_question_sets.assessment_id',
 
             'assessments.id',
             'assessments.title as assessment_title',
@@ -107,16 +107,16 @@ class AssessmentQuestionSetService
             'assessments.assessment_fee',
             'assessments.passing_score',
 
-            'assessment_question_sets.row_status',
-            'assessment_question_sets.created_at',
-            'assessment_question_sets.updated_at',
-            'assessment_question_sets.deleted_at'
+            'rpl_assessment_question_sets.row_status',
+            'rpl_assessment_question_sets.created_at',
+            'rpl_assessment_question_sets.updated_at',
+            'rpl_assessment_question_sets.deleted_at'
         ]);
 
-        $assessmentQuestionSetBuilder->where('assessment_question_sets.id', $id);
+        $assessmentQuestionSetBuilder->where('rpl_assessment_question_sets.id', $id);
 
         $assessmentQuestionSetBuilder->join('assessments', function ($join) {
-            $join->on('assessments.id', '=', 'assessment_question_sets.assessment_id')
+            $join->on('assessments.id', '=', 'rpl_assessment_question_sets.assessment_id')
                 ->whereNull('assessments.deleted_at');
         });
 
