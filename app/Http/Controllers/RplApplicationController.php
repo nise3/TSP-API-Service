@@ -159,7 +159,7 @@ class RplApplicationController extends Controller
             $this->rplApplicationService->storeRplApplicationProfessionalQualification($validated);
 
 
-            unset($validated['id']);  // unset id from rpl application table
+            unset($validated['id']);  // unset id from rpl application table dont need to be sync in youth
             unset($validated['mobile']); // youth can't update mobile. So remove this from array
             $validated['rpl_application_id'] = $rplApplication->id;
             /** Trigger EVENT to Youth Service via RabbitMQ  */
