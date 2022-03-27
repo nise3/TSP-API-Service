@@ -63,7 +63,7 @@ class RplOccupationController extends Controller
     {
         $filter = $this->rplOccupationService->filterValidator($request)->validate();
 
-        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime);
+        $response = $this->rplOccupationService->getRplOccupationList($filter, $this->startTime,true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

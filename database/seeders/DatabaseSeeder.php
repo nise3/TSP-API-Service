@@ -21,12 +21,13 @@ class DatabaseSeeder extends Seeder
             EduGroupSeeder::class,
             EduBoardSeeder::class,
             ExamDegreeSeeder::class,
-            InstitutesTableSeeder::class,
-            TrainingCentersTableSeeder::class,
+            CountryTableSeeder::class,
             SspPessimisticLockingsTableSeeder::class,
-            CoursesTableSeeder::class,
-            BatchesTableSeeder::class,
-            CountryTableSeeder::class
+//            CoursesTableSeeder::class,
+//            BatchesTableSeeder::class,
+//            TrainingCentersTableSeeder::class,
+//            InstitutesTableSeeder::class,
+
         ]);
     }
 }

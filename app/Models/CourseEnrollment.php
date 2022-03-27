@@ -82,6 +82,7 @@ class CourseEnrollment extends BaseModel
     public const RELIGION_SIKHISM = 6;
     public const RELIGION_ETHNIC = 7;
     public const RELIGION_AGNOSTIC_ATHEIST = 8;
+
     public const RELIGIONS = [
         self::RELIGION_ISLAM,
         self::RELIGION_HINDUISM,

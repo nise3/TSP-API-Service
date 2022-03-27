@@ -32,16 +32,15 @@ class PaymentService
     {
         $parts = explode('/', $payload['ipn_info']['ipn_uri']);
         $ipnUriSecretToken = end($parts);
-        $response = app(EkPayService::class)->paymentByEkPay($payload);
-
+        $response = app(EkPayService::class)->ekPayInit($payload);
         if (!empty($response)) {
             $data['invoice'] = $payload['invoice'];
-            $data['mer_trnx_id'] = $payload['payment']['trnx_id'];
+            $data['mer_trnx_id'] = $payload['trns_info']['trnx_id'];
             $data['payment_purpose_related_id'] = $payload['payment_purpose_related_id'];
-            $data['payment_purpose_code'] = $payload['payment_purpose_code'];
+            $data['payment_purpose'] = $payload['payment_purpose'];
             $data['payment_gateway_type'] = $paymentGatewayType;
-            $data['trnx_currency'] = $payload['payment']['trnx_currency'];
-            $data['amount'] = $payload['payment']['trnx_amt'];
+            $data['trnx_currency'] = $payload['trns_info']['trnx_currency'];
+            $data['amount'] = $payload['trns_info']['trnx_amt'];
             $data['ipn_uri_secret_token'] = $ipnUriSecretToken;
             $data['request_payload'] = $payload;
             $data['transaction_created_at'] = Carbon::now();

@@ -95,4 +95,28 @@ class InstituteStatisticsController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    public function certificationAuthorityDashboardStatistics(): JsonResponse
+    {
+        $response['data'] = $this->instituteStatisticsService->getCertificationAuthorityStatistics();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function rtoDashboardStatistics(): JsonResponse
+    {
+        $response['data'] = $this->instituteStatisticsService->getRtoDashboardStatistics();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
 }

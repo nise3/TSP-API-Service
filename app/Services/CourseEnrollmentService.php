@@ -678,6 +678,11 @@ class CourseEnrollmentService
             'date_of_birth' => [
                 'required',
                 'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(5))) {
+                        $failed('Age should be greater than 5 years.');
+                    }
+                }
             ],
             'email' => [
                 'required',
@@ -924,7 +929,12 @@ class CourseEnrollmentService
             ],
             'guardian_info.father_date_of_birth' => [
                 'nullable',
-                'date'
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(25))) {
+                        $failed('Age should be greater than 25 years.');
+                    }
+                }
             ],
             'guardian_info.mother_name' => [
                 Rule::requiredIf(!empty($data['guardian_info'])),
@@ -949,7 +959,12 @@ class CourseEnrollmentService
             ],
             'guardian_info.mother_date_of_birth' => [
                 'nullable',
-                'date'
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(25))) {
+                        $failed('Age should be greater than 25 years.');
+                    }
+                }
             ],
             "miscellaneous_info" => [
                 'nullable',

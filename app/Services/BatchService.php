@@ -9,6 +9,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Models\User;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

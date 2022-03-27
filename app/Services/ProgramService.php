@@ -142,7 +142,7 @@ class ProgramService
             'programs.updated_at',
             'programs.deleted_at',
         ]);
-        $programmeBuilder->join("institutes", function ($join) {
+        $programmeBuilder->leftJoin("institutes", function ($join) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });

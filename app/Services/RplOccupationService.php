@@ -20,9 +20,10 @@ class RplOccupationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplOccupationList(array $request, Carbon $startTime): array
+    public function getRplOccupationList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
@@ -37,13 +38,24 @@ class RplOccupationService
             'rpl_occupations.title',
             'rpl_occupations.title_en',
             'rpl_occupations.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_occupations.translations',
             'rpl_occupations.created_at',
             'rpl_occupations.updated_at',
             'rpl_occupations.deleted_at',
         ]);
 
+        if(!$isPublicApi){
+            $rplOccupationBuilder->acl();
+        }
+
         $rplOccupationBuilder->orderBy('rpl_occupations.id', $order);
+
+        $rplOccupationBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
 
         if (!empty($titleEn)) {
             $rplOccupationBuilder->where('rpl_occupations.title_en', 'like', '%' . $titleEn . '%');
@@ -51,6 +63,7 @@ class RplOccupationService
         if (!empty($title)) {
             $rplOccupationBuilder->where('rpl_occupations.title', 'like', '%' . $title . '%');
         }
+
         if (!empty($rplSectorId)) {
             $rplOccupationBuilder->where('rpl_occupations.rpl_sector_id', $rplSectorId);
         }
@@ -90,6 +103,8 @@ class RplOccupationService
             'rpl_occupations.title',
             'rpl_occupations.title_en',
             'rpl_occupations.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_occupations.translations',
             'rpl_occupations.created_at',
             'rpl_occupations.updated_at',
@@ -99,6 +114,11 @@ class RplOccupationService
         if (is_numeric($id)) {
             $rplOccupationBuilder->where('rpl_occupations.id', $id);
         }
+
+        $rplOccupationBuilder->join('rpl_sectors', function ($join){
+            $join->on('rpl_occupations.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
 
         return $rplOccupationBuilder->firstOrFail();
     }

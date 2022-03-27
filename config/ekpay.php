@@ -1,38 +1,48 @@
 <?php
+
+use App\Models\PaymentTransactionHistory;
+use Ramsey\Uuid\Uuid;
+
 return [
     "is_sand_box" => env('IS_SANDBOX', false),
-    "debug" =>  env('EK_PAY_DEBUG', false),
+    "debug" => env('EK_PAY_DEBUG', false),
     "trnx_currency" => 'BDT',
     "sand_box" => [
         "ekpay_base_uri" => 'https://sandbox.ekpay.gov.bd/ekpaypg/v1',
-        'mac_addr' => '1.1.1.1',
-        'mer_info' => [
-            'mer_reg_id' => 'nise_test',
-            'mer_pas_key' => 'NiSe@TsT11'
+        PaymentTransactionHistory::PAYMENT_PURPOSE_COURSE_ENROLLMENT => [
+            'mac_addr' => '1.1.1.1',
+            'mer_info' => [
+                'mer_reg_id' => 'nise_test',
+                'mer_pas_key' => 'NiSe@TsT11'
+            ],
+            'ipn' => "https://gateway-dev.nise3.xyz/payment-gateway-ipn-endpoint/course-enrollment/payment-by-ek-pay/ipn-handler/". Uuid::uuid4(),
         ],
-        'ipn_info' => [
-            'ipn_channel' => '1',
-            'ipn_email' => 'noreply@nise.gov.bd',
-            'ipn_uri' => 'http://localhost:8001/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}'
+        PaymentTransactionHistory::YOUTH_ASSESSMENT_CERTIFICATION_FREE => [
+            'mac_addr' => '1.1.1.1',
+            'mer_info' => [
+                'mer_reg_id' => 'nise_test',
+                'mer_pas_key' => 'NiSe@TsT11'
+            ],
+            'ipn' => 'https://gateway-dev.nise3.xyz/payment-gateway-ipn-endpoint/rpl-applications/payment/payment-via-ek-pay/ipn-handler/'. Uuid::uuid4(),
         ]
     ],
     "production" => [
         "ekpay_base_uri" => 'https://pg.ekpay.gov.bd/ekpaypg/v1',
-        'mac_addr' => '180.148.214.186',
-        'mer_info' => [
-            'mer_reg_id' => 'nise_mer',
-            'mer_pas_key' => 'NiscE@ekP02'
+        PaymentTransactionHistory::PAYMENT_PURPOSE_COURSE_ENROLLMENT => [
+            'mac_addr' => '180.148.214.186',
+            'mer_info' => [
+                'mer_reg_id' => 'nise_mer',
+                'mer_pas_key' => 'NiscE@ekP02'
+            ],
+            'ipn' => 'https://gateway-dev.nise3.xyz/payment-gateway-ipn-endpoint/course-enrollment/payment-by-ek-pay/ipn-handler/'. Uuid::uuid4(),
         ],
-        'ipn_info' => [
-            'ipn_channel' => '1',
-            'ipn_email' => 'noreply@nise.gov.bd',
-            'ipn_uri' => 'http://localhost:8001/api/v1/course-enrollment/payment-by-ek-pay/ipn-handler/{secretToken}'
+        PaymentTransactionHistory::YOUTH_ASSESSMENT_CERTIFICATION_FREE => [
+            'mac_addr' => '180.148.214.186',
+            'mer_info' => [
+                'mer_reg_id' => 'nise_mer',
+                'mer_pas_key' => 'NiscE@ekP02'
+            ],
+            'ipn' => 'https://gateway-dev.nise3.xyz/payment-gateway-ipn-endpoint/rpl-applications/payment/payment-via-ek-pay/ipn-handler/'. Uuid::uuid4(),
         ]
-    ],
-    'feed_uri' => [
-        'success_uri' => env('EKPAY_SUCCESS_FEED_URI', 'http://localhost:8001/api/v1/payment/success'),
-        'fail_uri' => env('EKPAY_FAIL_FEED_URI', 'http://localhost:8001/api/v1/payment/failed'),
-        'cancel_uri' => env('EKPAY_CANCEL_FEED_URI', 'http://localhost:8001/api/v1/payment/cancel'),
     ]
-
 ];

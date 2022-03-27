@@ -27,12 +27,15 @@ class RegisteredTrainingOrganizationService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRtoList(array $request, Carbon $startTime): array
+    public function getRtoList(array $request, Carbon $startTime ,bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
+        $instituteId = $request['institute_id'] ?? "";
+        $countryId = $request['rto_country_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
@@ -41,11 +44,14 @@ class RegisteredTrainingOrganizationService
         /** @var RegisteredTrainingOrganization|Builder $rtoBuilder */
         $rtoBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.code',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
             'registered_training_organizations.country_id',
+            'countries.title as country_title',
+            'countries.title_en as country_title_en',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'registered_training_organizations.loc_district_id',
@@ -85,6 +91,10 @@ class RegisteredTrainingOrganizationService
             'registered_training_organizations.deleted_at',
         ]);
 
+        if (!$isPublicApi) {
+            $rtoBuilder->acl();
+        }
+
         $rtoBuilder->orderBy('registered_training_organizations.id', $order);
 
         $rtoBuilder->leftJoin('loc_divisions', function ($join) {
@@ -102,6 +112,11 @@ class RegisteredTrainingOrganizationService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
+        $rtoBuilder->leftJoin('countries', function ($join) use ($rowStatus) {
+            $join->on('countries.id', '=', 'registered_training_organizations.country_id')
+                ->whereNull('countries.deleted_at');
+        });
+
         if (is_numeric($rowStatus)) {
             $rtoBuilder->where('registered_training_organizations.row_status', $rowStatus);
         }
@@ -111,6 +126,14 @@ class RegisteredTrainingOrganizationService
         }
         if (!empty($title)) {
             $rtoBuilder->where('registered_training_organizations.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($instituteId)) {
+            $rtoBuilder->where('registered_training_organizations.institute_id', $instituteId);
+        }
+
+        if (!empty($countryId)) {
+            $rtoBuilder->where('registered_training_organizations.country_id', $countryId);
         }
 
         /** @var Collection $rtos */
@@ -146,10 +169,13 @@ class RegisteredTrainingOrganizationService
         $registeredTrainingOrganizationBuilder = RegisteredTrainingOrganization::select([
             'registered_training_organizations.id',
             'registered_training_organizations.code',
+            'registered_training_organizations.institute_id',
             'registered_training_organizations.title',
             'registered_training_organizations.title_en',
             'registered_training_organizations.loc_division_id',
             'registered_training_organizations.country_id',
+            'countries.title as country_title',
+            'countries.title_en as country_title_en',
             'loc_divisions.title as division_title',
             'loc_divisions.title_en as division_title_en',
             'registered_training_organizations.loc_district_id',
@@ -204,9 +230,12 @@ class RegisteredTrainingOrganizationService
                 ->whereNull('loc_upazilas.deleted_at');
         });
 
-        if (is_numeric($id)) {
-            $registeredTrainingOrganizationBuilder->where('registered_training_organizations.id', $id);
-        }
+        $registeredTrainingOrganizationBuilder->leftJoin('countries', function ($join){
+            $join->on('countries.id', '=', 'registered_training_organizations.country_id')
+                ->whereNull('countries.deleted_at');
+        });
+
+        $registeredTrainingOrganizationBuilder->where('registered_training_organizations.id', $id);
 
         return $registeredTrainingOrganizationBuilder->firstOrFail();
     }
@@ -221,8 +250,18 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['google_map_src'])) {
             $data['google_map_src'] = $this->parseGoogleMapSrc($data['google_map_src']);
         }
+
+
         $rto->fill($data);
         $rto->save();
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
         return $rto;
     }
 
@@ -239,6 +278,16 @@ class RegisteredTrainingOrganizationService
 
         $rto->fill($data);
         $rto->save();
+
+
+        if (!empty($data['rto_sector_exceptions'])) {
+            $rto->sectorExceptions()->sync($data['rto_sector_exceptions']);
+        }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $rto->occupationExceptions()->sync($data['rto_occupation_exceptions']);
+        }
+
+
         return $rto;
     }
 
@@ -342,18 +391,51 @@ class RegisteredTrainingOrganizationService
         if (!empty($data['mobile_numbers'])) {
             $data["mobile_numbers"] = isset($data['mobile_numbers']) && is_array($data['mobile_numbers']) ? $data['mobile_numbers'] : explode(',', $data['mobile_numbers']);
         }
+        if (!empty($data['rto_occupation_exceptions'])) {
+            $data["rto_occupation_exceptions"] = isset($data['rto_occupation_exceptions']) && is_array($data['rto_occupation_exceptions']) ? $data['rto_occupation_exceptions'] : explode(',', $data['rto_occupation_exceptions']);
+        }
+        if (!empty($data['rto_sector_exceptions'])) {
+            $data["rto_sector_exceptions"] = isset($data['rto_sector_exceptions']) && is_array($data['rto_sector_exceptions']) ? $data['rto_sector_exceptions'] : explode(',', $data['rto_sector_exceptions']);
+        }
 
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
         $rules = [
+            'rto_sector_exceptions' => [
+                'nullable',
+                'array',
+            ],
+            'rto_sector_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_sector_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_sectors,id,deleted_at,NULL',
+            ],
+            'rto_occupation_exceptions' => [
+                'array',
+                'nullable',
+            ],
+            'rto_occupation_exceptions.*' => [
+                Rule::requiredIf(!empty($data['rto_occupation_exceptions'])),
+                'nullable',
+                'int',
+                'distinct',
+                'exists:rpl_occupations,id,deleted_at,NULL',
+            ],
             'permission_sub_group_id' => [
                 Rule::requiredIf(function () use ($id) {
                     return is_null($id);
                 }),
                 'nullable',
                 'int'
+            ],
+            'institute_id' => [
+                'required',
+                'int',
+                'exists:institutes,id,deleted_at,NULL'
             ],
             "code" => [
                 'string',
@@ -373,7 +455,7 @@ class RegisteredTrainingOrganizationService
             'country_id' => [
                 'required',
                 'integer',
-                'exists:countries,id,deleted_at,NULL'
+                'exists:rto_countries,country_id'
             ],
             'loc_division_id' => [
                 'required',
@@ -541,6 +623,8 @@ class RegisteredTrainingOrganizationService
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
+            'institute_id' => 'nullable|min:1',
+            'rto_country_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
             'order' => [

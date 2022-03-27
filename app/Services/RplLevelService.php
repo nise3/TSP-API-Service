@@ -4,6 +4,7 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\RplApplication;
 use App\Models\RplLevel;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,12 +19,14 @@ class RplLevelService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getRplLevelList(array $request, Carbon $startTime): array
+    public function getRplLevelList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $rplSectorId = $request['rpl_sector_id'] ?? "";
         $rplOccupationId = $request['rpl_occupation_id'] ?? "";
+        $youthId = $request['youth_id'] ?? "";
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -34,7 +37,11 @@ class RplLevelService
         $rplLevelBuilder = RplLevel::select([
             'rpl_levels.id',
             'rpl_levels.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_levels.rpl_occupation_id',
+            'rpl_occupations.title_en as rpl_occupation_title_en',
+            'rpl_occupations.title as rpl_occupation_title',
             'rpl_levels.title',
             'rpl_levels.title_en',
             'rpl_levels.translations',
@@ -44,7 +51,21 @@ class RplLevelService
             'rpl_levels.deleted_at',
         ]);
 
+        if (!$isPublicApi) {
+            $rplLevelBuilder->acl();
+        }
+
         $rplLevelBuilder->orderBy('rpl_levels.id', $order);
+
+        $rplLevelBuilder->join('rpl_sectors', function ($join) {
+            $join->on('rpl_levels.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
+        $rplLevelBuilder->join('rpl_occupations', function ($join) {
+            $join->on('rpl_levels.rpl_occupation_id', '=', 'rpl_occupations.id')
+                ->whereNull('rpl_occupations.deleted_at');
+        });
 
         if (!empty($titleEn)) {
             $rplLevelBuilder->where('rpl_levels.title_en', 'like', '%' . $titleEn . '%');
@@ -53,13 +74,45 @@ class RplLevelService
             $rplLevelBuilder->where('rpl_levels.title', 'like', '%' . $title . '%');
         }
 
-        if (!empty($rplSectorId)) {
+        if (is_numeric($rplSectorId)) {
             $rplLevelBuilder->where('rpl_levels.rpl_sector_id', $rplSectorId);
         }
 
-        if (!empty($rplOccupationId)) {
+        if (is_numeric($rplOccupationId)) {
             $rplLevelBuilder->where('rpl_levels.rpl_occupation_id', $rplOccupationId);
         }
+        if (is_numeric($youthId) && is_numeric($rplOccupationId)) {
+            $rplLevelValidIds = RplApplication::where('youth_id', $youthId)
+                ->where('rpl_occupation_id', $rplOccupationId)
+                ->where('application_status', '<=', RplApplication::APPLICATION_STATUS_APPLICATION_SUBMITTED)
+                ->pluck('rpl_level_id')->toArray();
+
+            $rplCompletedLevelIds = RplApplication::where('youth_id', $youthId)
+                ->where('rpl_occupation_id', $rplOccupationId)
+                ->where('application_status', RplApplication::APPLICATION_STATUS_ASSESSMENT_COMPLETED)
+                ->pluck('rpl_level_id')->toArray();
+
+            $validSequenceOrderLevelId = count($rplCompletedLevelIds) > 0 ? $rplCompletedLevelIds[count($rplCompletedLevelIds)-1] : 0;
+
+            $rplLevelSeqIds = RplLevel::where('rpl_occupation_id', $rplOccupationId)
+                ->where('id', $validSequenceOrderLevelId)
+                ->pluck('sequence_order')->toArray();
+
+            $validSequenceOrder = count($rplLevelSeqIds) > 0 ? $rplLevelSeqIds[count($rplLevelSeqIds)-1] : 0;
+
+            $rplLevelInvalidIds = RplLevel::where('rpl_occupation_id', $rplOccupationId)
+                ->where('sequence_order', '>', $validSequenceOrder+1)->orwhere('sequence_order', '<=', $validSequenceOrder)->get()->toArray();
+
+            if (count($rplLevelInvalidIds) > 0) {
+                $rplLevelBuilder
+                    ->selectRaw("(CASE WHEN sequence_order>? OR sequence_order<=? THEN 0 ELSE 1 END) as eligible", [$validSequenceOrder+1,$validSequenceOrder]);
+            } else if (count($rplLevelValidIds) > 0) {
+                $rplLevelBuilder//->selectRaw('1 as eligible');
+                    ->selectRaw("(CASE WHEN rpl_levels.id = ? THEN 1 ELSE 0 END) as eligible", [$rplLevelValidIds[0]]);
+            }
+
+        }
+
 
         /** @var Collection $rplLevels */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -94,7 +147,11 @@ class RplLevelService
         $rplLevelBuilder = RplLevel::select([
             'rpl_levels.id',
             'rpl_levels.rpl_sector_id',
+            'rpl_sectors.title_en as rpl_sector_title_en',
+            'rpl_sectors.title as rpl_sector_title',
             'rpl_levels.rpl_occupation_id',
+            'rpl_occupations.title_en as rpl_occupation_title_en',
+            'rpl_occupations.title as rpl_occupation_title',
             'rpl_levels.title',
             'rpl_levels.title_en',
             'rpl_levels.translations',
@@ -107,6 +164,16 @@ class RplLevelService
         if (is_numeric($id)) {
             $rplLevelBuilder->where('rpl_levels.id', $id);
         }
+
+        $rplLevelBuilder->join('rpl_sectors', function ($join) {
+            $join->on('rpl_levels.rpl_sector_id', '=', 'rpl_sectors.id')
+                ->whereNull('rpl_sectors.deleted_at');
+        });
+
+        $rplLevelBuilder->join('rpl_occupations', function ($join) {
+            $join->on('rpl_levels.rpl_occupation_id', '=', 'rpl_occupations.id')
+                ->whereNull('rpl_occupations.deleted_at');
+        });
 
         return $rplLevelBuilder->firstOrFail();
     }
@@ -188,8 +255,8 @@ class RplLevelService
                 'min:1',
                 Rule::unique('rpl_levels', 'sequence_order')
                     ->ignore($id)
-                    ->where(function (\Illuminate\Database\Query\Builder $query) use($data) {
-                        return $query->where('rpl_occupation_id', $data['rpl_occupation_id']);
+                    ->where(function (\Illuminate\Database\Query\Builder $query) use ($data) {
+                        return $query->where('rpl_occupation_id', $data['rpl_occupation_id'])->whereNull('deleted_at');
                     })
             ],
             'translations.*' => [
@@ -223,6 +290,7 @@ class RplLevelService
             'country_id' => 'nullable|int',
             'rpl_occupation_id' => 'nullable|int',
             'rpl_sector_id' => 'nullable|int',
+            'youth_id' => 'nullable|int',
             'title_en' => 'nullable|min:2',
             'title' => 'nullable|min:2',
             'page_size' => 'int|gt:0',

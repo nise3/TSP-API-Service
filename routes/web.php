@@ -2,6 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Facade\ServiceToServiceCall;
 use App\Helpers\Classes\CustomRouter;
 
 $customRouter = function (string $as = '') use ($router) {
@@ -34,7 +35,33 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
+        $customRouter()->resourceRoute('subjects', 'SubjectController')->render();
+        $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
+        $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
+        $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
+        $customRouter()->resourceRoute('question-banks', 'QuestionBankController')->render();
+        $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
+        $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
+        /** training center skill development reports */
+        $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
+            $router->get("skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);
+            $router->get("skill-development/{id}", ["as" => "training-centers.skill-development-report-get", "uses" => "TrainingCenterSkillDevelopmentReportController@read"]);
+            $router->post("skill-development", ["as" => "training-centers.skill-development-report-store", "uses" => "TrainingCenterSkillDevelopmentReportController@store"]);
+
+            $router->get("combined-progress", ["as" => "training-centers.combined-progress-reports", "uses" => "TrainingCenterCombinedProgressReportController@getList"]);
+            $router->get("combined-progress/{id}", ["as" => "training-centers.combined-progress-report-get", "uses" => "TrainingCenterCombinedProgressReportController@read"]);
+            $router->post("combined-progress", ["as" => "training-centers.combined-progress-report-store", "uses" => "TrainingCenterCombinedProgressReportController@store"]);
+
+            $router->get("progress", ["as" => "training-centers.progress-reports", "uses" => "TrainingCenterProgressReportController@getList"]);
+            $router->get("progress/{id}", ["as" => "training-centers.progress-report-get", "uses" => "TrainingCenterProgressReportController@read"]);
+            $router->post("progress", ["as" => "training-centers.progress-report-store", "uses" => "TrainingCenterProgressReportController@store"]);
+
+            $router->get("income-expenditure", ["as" => "training-centers.income-expenditure-reports", "uses" => "TrainingCenterIncomeExpenditureReportController@getList"]);
+            $router->get("income-expenditure/{id}", ["as" => "training-centers.income-expenditure-report-get", "uses" => "TrainingCenterIncomeExpenditureReportController@read"]);
+            $router->post("income-expenditure", ["as" => "training-centers.income-expenditure-report-store", "uses" => "TrainingCenterIncomeExpenditureReportController@store"]);
+
+        });
 
         /** Institute Registration Approval */
         $router->put("institute-registration-approval/{instituteId}", ["as" => "Institute.institutes-registration-approval", "uses" => "InstituteController@instituteRegistrationApproval"]);
@@ -61,7 +88,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('institute_trainee_youths', ['as' => 'institute.trainee.youths', 'uses' => 'CourseEnrollmentController@getInstituteTraineeYouths']);
 
         $router->get('institute-dashboard-statistics', ["as" => "institute.dashboard-statistics", "uses" => "InstituteStatisticsController@dashboardStatistics"]);
+        $router->get('certification-authority-dashboard-statistics', ["as" => "certification-authority-dashboard-statistics", "uses" => "InstituteStatisticsController@certificationAuthorityDashboardStatistics"]);
         $router->get('demanded-courses', ["as" => "institute.demanding-courses", "uses" => "InstituteStatisticsController@demandingCourses"]);
+
+        $router->post('rpl-applications/{id}/assign-to-batch', ["as" => "institute.youth-assessment-assign-to-batch", "uses" => "RplApplicationController@assignToBatch"]);
+        $router->post('rto-batches/{id}/assign-assessor', ["as" => "institute.rto-batches-assign-assessor", "uses" => "RtoBatchController@assignAssessor"]);
+
+        /** RTO dashboard statistics */
+        $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@rtoDashboardStatistics"]);
     });
 
 
@@ -78,6 +112,16 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** nise-statistics */
         $router->get('nise-statistics', ["as" => "nise-statistics", "uses" => "InstituteStatisticsController@niseStatistics"]);
+
+        $router->get("rto-countries", ["as" => "public.rto-countries", "uses" => "RtoCountryController@getPublicList"]);
+        $router->get("rpl-sectors", ["as" => "public.rpl-sectors", "uses" => "RplSectorController@getPublicList"]);
+        $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
+        $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
+        $router->get("assessment-questions", ["as" => "public.assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
+
+
+        $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
+
 
         $router->group(['middleware' => 'public-domain-handle'], function () use ($router) {
             $router->get('institute-dashboard-statistics', ["as" => "public.institute.dashboard-statistics", "uses" => "InstituteStatisticsController@publicDashboardStatistics"]);
@@ -116,6 +160,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
 
+    /** rpl assessment */
+    $router->post("rpl-assessment", ["as" => "rpl-assessment", "uses" => "RplApplicationController@createRplAssessment"]);
+
+    /** rpl application */
+    $router->post("rpl-application", ["as" => "rpl-application", "uses" => "RplApplicationController@createRplApplication"]);
+
     /** Course Enrollment */
     $router->post("course-enroll", ["as" => "course.enroll", "uses" => "CourseEnrollmentController@courseEnrollment"]);
 
@@ -133,10 +183,15 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->group(["prefix" => "course-enrollment", "as" => "course-enrollment"], function () use ($router) {
         $router->post('payment-by-ek-pay/pay-now', ["as" => "payment-by-ek-pay.pay-now", "uses" => "CourseEnrollmentPaymentController@payNowByEkPay"]);
-        $router->get('payment-by-ek-pay/success', ["as" => "payment-by-ek-pay.success", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentSuccess"]);
-        $router->get('payment-by-ek-pay/failed', ["as" => "payment-by-ek-pay.fail", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentFail"]);
-        $router->get('payment-by-ek-pay/cancel', ["as" => "payment-by-ek-pay.cancel", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentCancel"]);
         $router->post('payment-by-ek-pay/ipn-handler/{secretToken}', ["as" => "payment.ipn-handler", "uses" => "CourseEnrollmentPaymentController@ekPayPaymentIpnHandler"]);
     });
+
+    $router->group(["prefix" => "rpl-applications/payment", "as" => "rpl-applications.payment"], function () use ($router) {
+        $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
+        $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
+    });
+
 });
+
+
 

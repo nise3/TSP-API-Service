@@ -29,7 +29,7 @@ use PHPUnit\Util\Json;
  */
 class PaymentTransactionHistory extends BaseModel
 {
-    protected $guarded=BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
+    protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE;
 
     /** Payment Status */
     public const PAYMENT_SUCCESS = 1;
@@ -42,28 +42,35 @@ class PaymentTransactionHistory extends BaseModel
     public const SSLCOMMERZ_LABEL = "ssl_commerz";
     public const DBBL_MOBILE_BANKING = "dbbl_mobile_banking";
     public const BKASH = "bkash";
+    public const NAGAD = "nagad";
     public const PORT_WALLET = "port_wallet";
 
     public const PAYMENT_GATEWAY_EK_PAY = 1;
     public const PAYMENT_GATEWAY_SSLCOMMERZ = 2;
     public const PAYMENT_GATEWAY_DBBL_MOBILE_BANKING = 3;
     public const PAYMENT_GATEWAY_BKASH = 4;
-    public const PAYMENT_GATEWAY_PORT_WALLET = 5;
+    public const PAYMENT_GATEWAY_NAGAD = 5;
+    public const PAYMENT_GATEWAY_PORT_WALLET = 6;
 
     public const PAYMENT_GATEWAYS = [
         self::EK_PAY_LABEL => self::PAYMENT_GATEWAY_EK_PAY,
         self::SSLCOMMERZ_LABEL => self::PAYMENT_GATEWAY_SSLCOMMERZ,
         self::DBBL_MOBILE_BANKING => self::PAYMENT_GATEWAY_DBBL_MOBILE_BANKING,
         self::BKASH => self::PAYMENT_GATEWAY_BKASH,
+        self::NAGAD => self::PAYMENT_GATEWAY_NAGAD,
         self::PORT_WALLET => self::PAYMENT_GATEWAY_PORT_WALLET
     ];
 
     /** Payment purpose code */
-    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_CODE = 1;
-    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL = "Course Enrollment";
+    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT = "COURSE_ENROLLMENT_PAYMENT";
+    public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL = "Course Enrollment Payment";
+
+    public const YOUTH_ASSESSMENT_CERTIFICATION_FREE = "YOUTH_ASSESSMENT_CERTIFICATION_FREE";
+    public const YOUTH_ASSESSMENT_CERTIFICATION_FREE_LABEL = "Youth Assessment Certification Free";
 
     public const PAYMENT_PURPOSES = [
-        self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_CODE => self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL
+        self::PAYMENT_PURPOSE_COURSE_ENROLLMENT => self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL,
+        self::YOUTH_ASSESSMENT_CERTIFICATION_FREE => self::YOUTH_ASSESSMENT_CERTIFICATION_FREE_LABEL
     ];
 
     public const PAYMENT_TYPE_COURSE_ENROLLMENT = 1;
