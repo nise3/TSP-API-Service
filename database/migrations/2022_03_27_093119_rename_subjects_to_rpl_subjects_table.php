@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RenameAssessmentQuestionSetsToRplAssessmentQuestionSetsTable extends Migration
+class RenameSubjectsToRplSubjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class RenameAssessmentQuestionSetsToRplAssessmentQuestionSetsTable extends Migra
      */
     public function up()
     {
-        Schema::rename('assessment_question_sets', 'rpl_assessment_question_sets');
+        Schema::rename('subjects', 'rpl_subjects');
     }
 
     /**
@@ -23,7 +23,7 @@ class RenameAssessmentQuestionSetsToRplAssessmentQuestionSetsTable extends Migra
      */
     public function down()
     {
-        Schema::rename('rpl_assessment_question_sets', 'assessment_question_sets');
+        Schema::rename('rpl_subjects', 'subjects');
 
     }
 }

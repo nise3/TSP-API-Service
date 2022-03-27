@@ -2,13 +2,13 @@
 
 namespace App\Policies;
 
-use App\Models\Subject;
+use App\Models\RplSubject;
 use App\Models\User;
 
 class SubjectPolicy
 {
     /**
-     * Determine whether the user can view any Subject.
+     * Determine whether the user can view any RplSubject.
      *
      * @param User $authUser
      * @return mixed
@@ -19,19 +19,19 @@ class SubjectPolicy
     }
 
     /**
-     * Determine whether the user can view the Subject.
+     * Determine whether the user can view the RplSubject.
      *
      * @param User $authUser
-     * @param Subject $subject
+     * @param RplSubject $subject
      * @return mixed
      */
-    public function view(User $authUser, Subject $subject): bool
+    public function view(User $authUser, RplSubject $subject): bool
     {
         return $authUser->hasPermission('view_single_subject');
     }
 
     /**
-     * Determine whether the user can create Subject.
+     * Determine whether the user can create RplSubject.
      *
      * @param User $authUser
      * @return mixed
@@ -42,25 +42,25 @@ class SubjectPolicy
     }
 
     /**
-     * Determine whether the user can update the Subject.
+     * Determine whether the user can update the RplSubject.
      *
      * @param User $authUser
-     * @param Subject $subject
+     * @param RplSubject $subject
      * @return mixed
      */
-    public function update(User $authUser, Subject $subject): bool
+    public function update(User $authUser, RplSubject $subject): bool
     {
         return $authUser->hasPermission('update_subject');
     }
 
     /**
-     * Determine whether the user can delete the Subject.
+     * Determine whether the user can delete the RplSubject.
      *
      * @param User $authUser
-     * @param Subject $subject
+     * @param RplSubject $subject
      * @return mixed
      */
-    public function delete(User $authUser, Subject $subject): bool
+    public function delete(User $authUser, RplSubject $subject): bool
     {
         return $authUser->hasPermission('delete_subject');
     }

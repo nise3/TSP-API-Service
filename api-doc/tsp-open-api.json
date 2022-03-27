@@ -6277,12 +6277,12 @@
                 }
             }
         },
-        "/subjects": {
+        "/rpl-subjects": {
             "get": {
                 "tags": [
                     "Subjects"
                 ],
-                "summary": "Get all subjects",
+                "summary": "Get all Rpl Subjects",
                 "description": "API endpoint to get all subject. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
@@ -6384,7 +6384,7 @@
                 }
             }
         },
-        "/subjects/{subjectId}": {
+        "/rpl-subjects/{subjectId}": {
             "get": {
                 "tags": [
                     "Subjects"
@@ -7379,7 +7379,7 @@
                 ]
             }
         },
-        "/question-banks": {
+        "/rpl-question-banks": {
             "get": {
                 "tags": [
                     "Question Banks"
@@ -7496,7 +7496,7 @@
                 }
             }
         },
-        "/question-banks/{questionBankId}": {
+        "/rpl-question-banks/{questionBankId}": {
             "get": {
                 "tags": [
                     "Question Banks"
@@ -7857,7 +7857,7 @@
                 }
             }
         },
-        "/assessment-question-sets": {
+        "/assessment_question_sets": {
             "post": {
                 "tags": [
                     "Assessment Question Set"
@@ -7971,7 +7971,7 @@
                 }
             }
         },
-        "/assessment-question-sets/{assessmentQuestionSetId}": {
+        "/assessment_question_sets/{assessmentQuestionSetId}": {
             "get": {
                 "tags": [
                     "Assessment Question Set"

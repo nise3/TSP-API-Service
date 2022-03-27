@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
+use App\Models\RplSubject;
 use App\Services\SubjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +45,7 @@ class SubjectController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Subject::class);
+        $this->authorize('viewAny', RplSubject::class);
 
         $filter = $this->subjectService->filterValidator($request)->validate();
 
@@ -100,7 +100,7 @@ class SubjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Subject::class);
+        $this->authorize('create', RplSubject::class);
 
         $validated = $this->subjectService->validator($request)->validate();
         $subject = $this->subjectService->store($validated);
@@ -110,7 +110,7 @@ class SubjectController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Subject added successfully",
+                "message" => "RplSubject added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -127,7 +127,7 @@ class SubjectController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $subject = RplSubject::findOrFail($id);
 
         $this->authorize('update', $subject);
 
@@ -138,7 +138,7 @@ class SubjectController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Subject updated successfully.",
+                "message" => "RplSubject updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,7 +153,7 @@ class SubjectController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $subject = RplSubject::findOrFail($id);
 
         $this->authorize('delete', $subject);
 
@@ -165,7 +165,7 @@ class SubjectController extends Controller
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Subject deleted successfully.",
+                    "message" => "RplSubject deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

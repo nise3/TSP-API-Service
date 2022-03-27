@@ -39,8 +39,8 @@ class QuestionBankService
             'rpl_question_banks.title_en',
             'rpl_question_banks.type',
             'rpl_question_banks.subject_id',
-            'subjects.title as subject_title',
-            'subjects.title_en as subject_title_en',
+            'rpl_subjects.title as subject_title',
+            'rpl_subjects.title_en as subject_title_en',
             'rpl_question_banks.option_1',
             'rpl_question_banks.option_1_en',
             'rpl_question_banks.option_2',
@@ -63,9 +63,9 @@ class QuestionBankService
 
         $questionBankBuilder->orderBy('rpl_question_banks.id', $order);
 
-        $questionBankBuilder->join('subjects', function ($join) {
-            $join->on('rpl_question_banks.subject_id', '=', 'subjects.id')
-                ->whereNull('subjects.deleted_at');
+        $questionBankBuilder->join('rpl_subjects', function ($join) {
+            $join->on('rpl_question_banks.subject_id', '=', 'rpl_subjects.id')
+                ->whereNull('rpl_subjects.deleted_at');
         });
 
         if (!empty($titleEn)) {
@@ -115,8 +115,8 @@ class QuestionBankService
             'rpl_question_banks.title_en',
             'rpl_question_banks.type',
             'rpl_question_banks.subject_id',
-            'subjects.title as subject_title',
-            'subjects.title_en as subject_title_en',
+            'rpl_subjects.title as subject_title',
+            'rpl_subjects.title_en as subject_title_en',
             'rpl_question_banks.option_1',
             'rpl_question_banks.option_1_en',
             'rpl_question_banks.option_2',
@@ -132,9 +132,9 @@ class QuestionBankService
             'rpl_question_banks.updated_at',
             'rpl_question_banks.deleted_at',
         ]);
-        $questionBankBuilder->join('subjects', function ($join) {
-            $join->on('rpl_question_banks.subject_id', '=', 'subjects.id')
-                ->whereNull('subjects.deleted_at');
+        $questionBankBuilder->join('rpl_subjects', function ($join) {
+            $join->on('rpl_question_banks.subject_id', '=', 'rpl_subjects.id')
+                ->whereNull('rpl_subjects.deleted_at');
         });
 
         $questionBankBuilder->where('rpl_question_banks.id', $id);
@@ -201,7 +201,7 @@ class QuestionBankService
             'subject_id' => [
                 'required',
                 'int',
-                'exists:subjects,id,deleted_at,NULL'
+                'exists:rpl_subjects,id,deleted_at,NULL'
             ],
             'option_1' => [
                 Rule::requiredIf(!empty($data['type'] && $data['type'] == RplQuestionBank::TYPE_MCQ)),

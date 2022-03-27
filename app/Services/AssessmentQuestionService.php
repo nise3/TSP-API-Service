@@ -183,7 +183,7 @@ class AssessmentQuestionService
             'assessment_questions.*.assessment_question_set_id' => [
                 'required',
                 'int',
-                'exists:rpl_assessment_question_sets,id,deleted_at,NULL',
+                'exists:assessment_question_sets,id,deleted_at,NULL',
             ],
             'assessment_questions.*.question_id' => [
                 'required',
@@ -205,7 +205,7 @@ class AssessmentQuestionService
             'assessment_questions.*.subject_id' => [
                 'required',
                 'int',
-                'exists:subjects,id,deleted_at,NULL'
+                'exists:rpl_subjects,id,deleted_at,NULL'
             ],
             'assessment_questions.*.answer' => [
                 'required',

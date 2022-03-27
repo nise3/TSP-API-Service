@@ -35,11 +35,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
-        $customRouter()->resourceRoute('subjects', 'SubjectController')->render();
+        $customRouter()->resourceRoute('rpl-subjects', 'SubjectController')->render();
         $customRouter()->resourceRoute('assessment', 'AssessmentController')->render();
         $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
-        $customRouter()->resourceRoute('question-banks', 'QuestionBankController')->render();
+        $customRouter()->resourceRoute('rpl-question-banks', 'QuestionBankController')->render();
         $customRouter()->resourceRoute('assessment-questions', 'AssessmentQuestionController')->render();
         $customRouter()->resourceRoute('assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
