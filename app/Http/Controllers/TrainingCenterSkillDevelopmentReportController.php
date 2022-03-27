@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TrainingCenterSkillDevelopmentReport;
 use App\Services\TrainingCenterSkillDevelopmentReportService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Validator;
@@ -38,8 +39,8 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny',TrainingCenterSkillDevelopmentReport::class);
         $filter = $this->trainingCenterSkillDevelopmentReportService->filterValidator($request)->validate();
-
         $response = $this->trainingCenterSkillDevelopmentReportService->getTrainingCenterSkillDevelopmentReportList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -52,6 +53,7 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
      */
     public function read(int $id): JsonResponse
     {
+        $this->authorize('view',TrainingCenterSkillDevelopmentReport::class);
         $data = $this->trainingCenterSkillDevelopmentReportService->getOneTrainingCenterSkillDevelopmentReport($id);
         $response = [
             "data" => $data ?: null,
@@ -73,6 +75,7 @@ class TrainingCenterSkillDevelopmentReportController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create',TrainingCenterSkillDevelopmentReport::class);
         $validatedData = $this->trainingCenterSkillDevelopmentReportService->validator($request)->validate();
 
         $data = $this->trainingCenterSkillDevelopmentReportService->store($validatedData);
