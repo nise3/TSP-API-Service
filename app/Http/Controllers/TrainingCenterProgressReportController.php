@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TrainingCenterProgressReport;
 use App\Services\TrainingCenterProgressReportService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -38,6 +39,7 @@ class TrainingCenterProgressReportController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+        $this->authorize('viewAny',TrainingCenterProgressReport::class);
         $filter = $this->trainingCenterProgressReportService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterProgressReportService->getTrainingCenterProgressReportList($filter, $this->startTime);
@@ -52,6 +54,7 @@ class TrainingCenterProgressReportController extends Controller
      */
     public function read(int $id): JsonResponse
     {
+        $this->authorize('view',TrainingCenterProgressReport::class);
         $data = $this->trainingCenterProgressReportService->getOneTrainingCenterProgressReport($id);
         $response = [
             "data" => $data ?: null,
@@ -73,6 +76,7 @@ class TrainingCenterProgressReportController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create',TrainingCenterProgressReport::class);
         $validatedData = $this->trainingCenterProgressReportService->validator($request)->validate();
 
         $data = $this->trainingCenterProgressReportService->store($validatedData);
