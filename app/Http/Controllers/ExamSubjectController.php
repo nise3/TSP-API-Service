@@ -32,7 +32,11 @@ class ExamSubjectController extends Controller
         $this->startTime = Carbon::now();
     }
 
-
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
 
     public function getList(Request $request): JsonResponse
     {
@@ -42,8 +46,11 @@ class ExamSubjectController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-
-
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     */
 
     public function read(Request $request, int $id): JsonResponse
     {
@@ -60,7 +67,12 @@ class ExamSubjectController extends Controller
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Throwable
+     */
     public function store(Request $request): JsonResponse
     {
 
@@ -83,8 +95,8 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
-
 
     public function update(Request $request, int $id): JsonResponse
     {

@@ -59,8 +59,6 @@ class ExamSubjectService
         if (!empty($title)) {
             $ExamSubjectBuilder->where('trainers.title', 'like', '%' . $title . '%');
         }
-
-
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $trainers = $ExamSubjectBuilder->paginate($pageSize);
@@ -102,9 +100,7 @@ class ExamSubjectService
             'exam_subjects.updated_at',
             'exam_subjects.deleted_at',
         ]);
-
         $ExamSubjectBuilder->where('exam_subjects.id', $id);
-
         /** @var ExamSubject exam_subjects */
         return $ExamSubjectBuilder->firstOrFail();
     }
@@ -152,7 +148,6 @@ class ExamSubjectService
         return $exam_subject->forceDelete();
     }
 
-
     /**
      * @param Request $request
      * @param int|null $id
@@ -182,26 +177,24 @@ class ExamSubjectService
             ],
             'accessor_id' => [
                 'required',
-                'string',
+                'int',
                 'max:250'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
-            ],
-            'created_by' => [
-                'nullable',
-                'integer',
-            ],
-            'updated_by' => [
-                'nullable',
-                'integer',
-            ],
+            ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
+
+
+    /**
+     * @param Request $request
+     * @return Validator
+     */
 
     public function filterValidator(Request $request): Validator
     {
