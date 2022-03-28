@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class AssessmentQuestionService
+class RplAssessmentQuestionService
 {
     /**
      * @param array $request

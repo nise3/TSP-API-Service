@@ -36,11 +36,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
         $customRouter()->resourceRoute('rpl-subjects', 'SubjectController')->render();
-        $customRouter()->resourceRoute('rpl-assessments', 'AssessmentController')->render();
+        $customRouter()->resourceRoute('rpl-assessments', 'RplAssessmentController')->render();
         $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
         $customRouter()->resourceRoute('rpl-question-banks', 'QuestionBankController')->render();
-        $customRouter()->resourceRoute('rpl-assessment-questions', 'AssessmentQuestionController')->render();
+        $customRouter()->resourceRoute('rpl-assessment-questions', 'RplAssessmentQuestionController')->render();
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'AssessmentQuestionSetController')->render();
 
         /** training center skill development reports */
@@ -117,7 +117,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-sectors", ["as" => "public.rpl-sectors", "uses" => "RplSectorController@getPublicList"]);
         $router->get("rpl-occupations", ["as" => "public.rpl-occupations", "uses" => "RplOccupationController@getPublicList"]);
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
-        $router->get("rpl-assessment-questions", ["as" => "public.rpl-assessment-questions", "uses" => "AssessmentQuestionController@getPublicList"]);
+        $router->get("rpl-assessment-questions", ["as" => "public.rpl-assessment-questions", "uses" => "RplAssessmentQuestionController@getPublicList"]);
 
 
         $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
