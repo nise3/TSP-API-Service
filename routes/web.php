@@ -33,6 +33,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rto-countries', 'RtoCountryController')->render();
         $customRouter()->resourceRoute('registered-training-organizations', 'RegisteredTrainingOrganizationController')->render();
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
+        $customRouter()->resourceRoute('exam-question-banks', 'ExamQuestionBankController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
         $customRouter()->resourceRoute('rpl-subjects', 'RplSubjectController')->render();
