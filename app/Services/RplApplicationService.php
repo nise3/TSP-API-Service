@@ -351,9 +351,9 @@ class RplApplicationService
         $assessmentId = $data['assessment_id'];
         $answers = $data['answers'];
         $columns = [
-            'assessment_questions.assessment_id',
-            'assessment_questions.question_id',
-            'assessment_questions.answer',
+            'rpl_assessment_questions.assessment_id',
+            'rpl_assessment_questions.question_id',
+            'rpl_assessment_questions.answer',
         ];
         $assessment = RplAssessment::select(['rpl_assessments.passing_score'])->where('id', $assessmentId)->first();
         $assessmentQs = RplAssessmentQuestion::select($columns)->where('assessment_id', $assessmentId)->get()->toArray();
