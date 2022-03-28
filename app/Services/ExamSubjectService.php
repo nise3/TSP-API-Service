@@ -27,7 +27,7 @@ class ExamSubjectService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request['$title_en'] ?? "";
+        $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
@@ -173,12 +173,13 @@ class ExamSubjectService
             'accessor_type' => [
                 'required',
                 'string',
-                'max:250'
+                'max:250',
+                Rule::in(ExamSubject::EXAM_SUBJECT_ASSESSOR_TYPES)
             ],
             'accessor_id' => [
                 'required',
                 'int',
-                'max:250'
+                'min:1'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
