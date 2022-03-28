@@ -7857,7 +7857,7 @@
                 }
             }
         },
-        "/rpl-assessment_question_sets": {
+        "/rpl-assessment-question-sets": {
             "post": {
                 "tags": [
                     "Assessment Question Set"
@@ -7971,7 +7971,7 @@
                 }
             }
         },
-        "/rpl-assessment_question_sets/{assessmentQuestionSetId}": {
+        "/rpl-assessment-question-sets/{assessmentQuestionSetId}": {
             "get": {
                 "tags": [
                     "Assessment Question Set"
