@@ -54,9 +54,9 @@ class ExamSubjectController extends Controller
 
     public function read(Request $request, int $id): JsonResponse
     {
-        $exam_subject = $this->ExamSubjectService->getOneExamSubject($id);
+        $examSubject = $this->ExamSubjectService->getOneExamSubject($id);
         $response = [
-            "data" => $exam_subject,
+            "data" => $examSubject,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -100,18 +100,18 @@ class ExamSubjectController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $exam_subject = ExamSubject::findOrFail($id);
+        $examSubject = ExamSubject::findOrFail($id);
 
         $validated = $this->ExamSubjectService->validator($request, $id)->validate();
 
-        $data = $this->ExamSubjectService->update($exam_subject, $validated);
+        $data = $this->ExamSubjectService->update($examSubject, $validated);
 
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Trainer updated successfully.",
+                "message" => "Exam Subject updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -125,8 +125,8 @@ class ExamSubjectController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $exam_subject = ExamSubject::findOrFail($id);
-        $this->ExamSubjectService->destroy($exam_subject);
+        $examSubject = ExamSubject::findOrFail($id);
+        $this->ExamSubjectService->destroy($examSubject);
         $response = [
             '_response_status' => [
                 "success" => true,

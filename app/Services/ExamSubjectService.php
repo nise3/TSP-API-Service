@@ -27,7 +27,7 @@ class ExamSubjectService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request['$titleEn'] ?? "";
+        $titleEn = $request['$title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
@@ -35,12 +35,12 @@ class ExamSubjectService
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var ExamSubject|Builder $trainerBuilder */
+        /** @var ExamSubject|Builder $ExamSubjectBuilder */
         $ExamSubjectBuilder = ExamSubject::select([
-            'title',
-            'title_en',
-            'accessor_type',
-            'accessor_id',
+            'exam_subjects.title',
+            'exam_subjects.title_en',
+            'exam_subjects.accessor_type',
+            'exam_subjects.accessor_id',
             'exam_subjects.row_status',
             'exam_subjects.created_at',
             'exam_subjects.updated_at',
@@ -57,22 +57,22 @@ class ExamSubjectService
             $ExamSubjectBuilder->where('exam_subjects.titleEn', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $ExamSubjectBuilder->where('trainers.title', 'like', '%' . $title . '%');
+            $ExamSubjectBuilder->where('exam_subjects.title', 'like', '%' . $title . '%');
         }
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $trainers = $ExamSubjectBuilder->paginate($pageSize);
-            $paginateData = (object)$trainers->toArray();
+            $examSubject = $ExamSubjectBuilder->paginate($pageSize);
+            $paginateData = (object)$examSubject->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $ExamSubject = $ExamSubjectBuilder->get();
+            $examSubject = $ExamSubjectBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $ExamSubject->toArray()['data'] ?? $ExamSubject->toArray();
+        $response['data'] = $examSubject->toArray()['data'] ?? $examSubject->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -88,13 +88,13 @@ class ExamSubjectService
      */
     public function getOneExamSubject(int $id): ExamSubject
     {
-        /** @var ExamSubject|Builder $trainerBuilder */
+        /** @var ExamSubject|Builder $ExamSubjectBuilder */
         $ExamSubjectBuilder = ExamSubject::select([
             'exam_subjects.id',
-            'title',
-            'title_en',
-            'accessor_type',
-            'accessor_id',
+            'exam_subjects.title',
+            'exam_subjects.title_en',
+            'exam_subjects.accessor_type',
+            'exam_subjects.accessor_id',
             'exam_subjects.row_status',
             'exam_subjects.created_at',
             'exam_subjects.updated_at',
@@ -119,33 +119,33 @@ class ExamSubjectService
     }
 
     /**
-     * @param ExamSubject $trainer
+     * @param ExamSubject $examSubject
      * @param array $data
      * @return ExamSubject
      */
-    public function update(ExamSubject $trainer, array $data): ExamSubject
+    public function update(ExamSubject $examSubject, array $data): ExamSubject
     {
-        $trainer->fill($data);
-        $trainer->save();
-        return $trainer;
+        $examSubject->fill($data);
+        $examSubject->save();
+        return $examSubject;
     }
 
     /**
-     * @param ExamSubject $trainer
+     * @param ExamSubject $examSubject
      * @return bool
      */
-    public function destroy(ExamSubject $trainer): bool
+    public function destroy(ExamSubject $examSubject): bool
     {
-        return $trainer->delete();
+        return $examSubject->delete();
     }
 
     /**
-     * @param ExamSubject $exam_subject
+     * @param ExamSubject $examSubject
      * @return bool
      */
-    public function forceDelete(ExamSubject $exam_subject): bool
+    public function forceDelete(ExamSubject $examSubject): bool
     {
-        return $exam_subject->forceDelete();
+        return $examSubject->forceDelete();
     }
 
     /**
@@ -227,3 +227,4 @@ class ExamSubjectService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 }
+
