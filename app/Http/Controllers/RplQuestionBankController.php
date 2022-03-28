@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RplSubject;
-use App\Services\SubjectService;
+use App\Models\RplQuestionBank;
+use App\Services\RplQuestionBankService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,25 +14,25 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class SubjectController extends Controller
+class RplQuestionBankController extends Controller
 {
     /**
-     * @var SubjectService
+     * @var RplQuestionBankService
      */
-    public SubjectService $subjectService;
+    public RplQuestionBankService $rplQuestionBankService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * SubjectController constructor.
-     * @param SubjectService $subjectService
+     * RplQuestionBankController constructor.
+     * @param RplQuestionBankService $rplQuestionBankService
      */
 
-    public function __construct(SubjectService $subjectService)
+    public function __construct(RplQuestionBankService $rplQuestionBankService)
     {
-        $this->subjectService = $subjectService;
+        $this->rplQuestionBankService = $rplQuestionBankService;
         $this->startTime = Carbon::now();
     }
 
@@ -45,11 +45,11 @@ class SubjectController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', RplSubject::class);
+        $this->authorize('viewAny', RplQuestionBank::class);
 
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->rplQuestionBankService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime);
+        $response = $this->rplQuestionBankService->getQuestionBankList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -61,9 +61,9 @@ class SubjectController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->rplQuestionBankService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime,false);
+        $response = $this->rplQuestionBankService->getQuestionBankList($filter, $this->startTime,false);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,11 +77,11 @@ class SubjectController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $subject = $this->subjectService->getOneSubject($id);
-        $this->authorize('view', $subject);
+        $questionBank = $this->rplQuestionBankService->getOneQuestionBank($id);
+        $this->authorize('view', $questionBank);
 
         $response = [
-            "data" => $subject,
+            "data" => $questionBank,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -100,17 +100,17 @@ class SubjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', RplSubject::class);
+        $this->authorize('create', RplQuestionBank::class);
 
-        $validated = $this->subjectService->validator($request)->validate();
-        $subject = $this->subjectService->store($validated);
+        $validated = $this->rplQuestionBankService->validator($request)->validate();
+        $questionBank = $this->rplQuestionBankService->store($validated);
 
         $response = [
-            'data' => $subject,
+            'data' => $questionBank,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "RplSubject added successfully",
+                "message" => "Question Bank added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -127,18 +127,18 @@ class SubjectController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $subject = RplSubject::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
-        $this->authorize('update', $subject);
+        $this->authorize('update', $questionBank);
 
-        $validated = $this->subjectService->validator($request, $id)->validate();
-        $data = $this->subjectService->update($subject, $validated);
+        $validated = $this->rplQuestionBankService->validator($request, $id)->validate();
+        $data = $this->rplQuestionBankService->update($questionBank, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "RplSubject updated successfully.",
+                "message" => "Question Bank updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,19 +153,19 @@ class SubjectController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $subject = RplSubject::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
-        $this->authorize('delete', $subject);
+        $this->authorize('delete', $questionBank);
 
         DB::beginTransaction();
         try {
-            $this->subjectService->destroy($subject);
+            $this->rplQuestionBankService->destroy($questionBank);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "RplSubject deleted successfully.",
+                    "message" => "Question Bank deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

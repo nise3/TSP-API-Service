@@ -24,7 +24,7 @@ class RplAssessmentQuestionController extends Controller
     private Carbon $startTime;
 
     /**
-     * QuestionBankController constructor.
+     * RplQuestionBankController constructor.
      * @param RplAssessmentQuestionService $rplAssessmentQuestionService
      */
 

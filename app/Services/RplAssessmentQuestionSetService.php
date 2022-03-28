@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class AssessmentQuestionSetService
+class RplAssessmentQuestionSetService
 {
     /**
      * @param array $request

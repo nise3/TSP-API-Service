@@ -35,13 +35,13 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-sectors', 'RplSectorController')->render();
         $customRouter()->resourceRoute('rpl-occupations', 'RplOccupationController')->render();
         $customRouter()->resourceRoute('rpl-levels', 'RplLevelController')->render();
-        $customRouter()->resourceRoute('rpl-subjects', 'SubjectController')->render();
+        $customRouter()->resourceRoute('rpl-subjects', 'RplSubjectController')->render();
         $customRouter()->resourceRoute('rpl-assessments', 'RplAssessmentController')->render();
         $customRouter()->resourceRoute('rpl-applications', 'RplApplicationController')->render();
         $customRouter()->resourceRoute('rto-batches', 'RtoBatchController')->render();
-        $customRouter()->resourceRoute('rpl-question-banks', 'QuestionBankController')->render();
+        $customRouter()->resourceRoute('rpl-question-banks', 'RplQuestionBankController')->render();
         $customRouter()->resourceRoute('rpl-assessment-questions', 'RplAssessmentQuestionController')->render();
-        $customRouter()->resourceRoute('rpl-assessment-question-sets', 'AssessmentQuestionSetController')->render();
+        $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {

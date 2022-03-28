@@ -32,7 +32,6 @@ class RplApplicationController extends Controller
      * RplOccupationController constructor.
      * @param RplApplicationService $rplApplicationService
      */
-
     public function __construct(RplApplicationService $rplApplicationService)
     {
         $this->rplApplicationService = $rplApplicationService;

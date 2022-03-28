@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class QuestionBankService
+class RplQuestionBankService
 {
     /**
      * @param array $request

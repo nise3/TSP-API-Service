@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RplAssessmentQuestionSet;
-use App\Services\AssessmentQuestionSetService;
+use App\Services\RplAssessmentQuestionSetService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,12 +14,12 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class AssessmentQuestionSetController extends Controller
+class RplAssessmentQuestionSetController extends Controller
 {
     /**
-     * @var AssessmentQuestionSetService
+     * @var RplAssessmentQuestionSetService
      */
-    public AssessmentQuestionSetService $assessmentQuestionSetService;
+    public RplAssessmentQuestionSetService $rplAssessmentQuestionSetService;
     /**
      * @var Carbon
      */
@@ -27,12 +27,12 @@ class AssessmentQuestionSetController extends Controller
 
     /**
      * RplOccupationController constructor.
-     * @param AssessmentQuestionSetService $assessmentQuestionSetService
+     * @param RplAssessmentQuestionSetService $rplAssessmentQuestionSetService
      */
 
-    public function __construct(AssessmentQuestionSetService $assessmentQuestionSetService)
+    public function __construct(RplAssessmentQuestionSetService $rplAssessmentQuestionSetService)
     {
-        $this->assessmentQuestionSetService = $assessmentQuestionSetService;
+        $this->rplAssessmentQuestionSetService = $rplAssessmentQuestionSetService;
         $this->startTime = Carbon::now();
     }
 
@@ -46,9 +46,9 @@ class AssessmentQuestionSetController extends Controller
     public function getList(Request $request): JsonResponse
     {
         $this->authorize('viewAny', RplAssessmentQuestionSet::class);
-        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
+        $filter = $this->rplAssessmentQuestionSetService->filterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
+        $response = $this->rplAssessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -59,9 +59,9 @@ class AssessmentQuestionSetController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
+        $filter = $this->rplAssessmentQuestionSetService->filterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
+        $response = $this->rplAssessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -75,7 +75,7 @@ class AssessmentQuestionSetController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $assessmentQuestionSet = $this->assessmentQuestionSetService->getOneAssessmentQuestionSet($id);
+        $assessmentQuestionSet = $this->rplAssessmentQuestionSetService->getOneAssessmentQuestionSet($id);
         $this->authorize('view', $assessmentQuestionSet);
 
         $response = [
@@ -100,8 +100,8 @@ class AssessmentQuestionSetController extends Controller
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', RplAssessmentQuestionSet::class);
-        $validated = $this->assessmentQuestionSetService->validator($request)->validate();
-        $assessmentQuestionSet = $this->assessmentQuestionSetService->store($validated);
+        $validated = $this->rplAssessmentQuestionSetService->validator($request)->validate();
+        $assessmentQuestionSet = $this->rplAssessmentQuestionSetService->store($validated);
 
         $response = [
             'data' => $assessmentQuestionSet,
@@ -129,8 +129,8 @@ class AssessmentQuestionSetController extends Controller
 
         $this->authorize('update', $assessmentQuestionSet);
 
-        $validated = $this->assessmentQuestionSetService->validator($request, $id)->validate();
-        $data = $this->assessmentQuestionSetService->update($assessmentQuestionSet, $validated);
+        $validated = $this->rplAssessmentQuestionSetService->validator($request, $id)->validate();
+        $data = $this->rplAssessmentQuestionSetService->update($assessmentQuestionSet, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
@@ -158,7 +158,7 @@ class AssessmentQuestionSetController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->assessmentQuestionSetService->destroy($assessmentQuestionSet);
+            $this->rplAssessmentQuestionSetService->destroy($assessmentQuestionSet);
             DB::commit();
             $response = [
                 '_response_status' => [
