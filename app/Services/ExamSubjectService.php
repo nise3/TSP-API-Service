@@ -54,7 +54,7 @@ class ExamSubjectService
         }
 
         if (!empty($titleEn)) {
-            $ExamSubjectBuilder->where('exam_subjects.titleEn', 'like', '%' . $titleEn . '%');
+            $ExamSubjectBuilder->where('exam_subjects.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
             $ExamSubjectBuilder->where('exam_subjects.title', 'like', '%' . $title . '%');
