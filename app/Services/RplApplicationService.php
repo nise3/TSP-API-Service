@@ -686,7 +686,7 @@ class RplApplicationService
                 'nullable',
                 'int',
                 'min:1',
-                'exists:rpl_occupations,id,deleted_at,NULL',
+                'exists:rpl_levels,id,deleted_at,NULL',
             ],
             'rpl_sector_id' => [
                 'required',
