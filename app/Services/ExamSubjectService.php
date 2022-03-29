@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
@@ -46,6 +47,7 @@ class ExamSubjectService
             'exam_subjects.updated_at',
             'exam_subjects.deleted_at',
         ]);
+        $ExamSubjectBuilder->acl();
 
         $ExamSubjectBuilder->orderBy('exam_subjects.id', $order);
 

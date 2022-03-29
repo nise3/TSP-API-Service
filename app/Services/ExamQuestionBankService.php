@@ -179,7 +179,6 @@ class ExamQuestionBankService
             $data['answers'] = $match[1];
         }
 
-
         $rules = [
             'title' => [
                 'required',
