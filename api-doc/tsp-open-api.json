@@ -10236,14 +10236,54 @@
                                     "order": "ASC",
                                     "data": [
                                         {
-                                            "title": "Asm",
-                                            "title_en": "fgf",
-                                            "accessor_type": "gfhfghfg",
+                                            "id": 1,
+                                            "title": "abc",
+                                            "title_en": "bcd",
+                                            "accessor_type": "hgfh",
                                             "accessor_id": 1,
+                                            "subject_id": 1,
+                                            "exam_subject_title": "hello",
+                                            "exam_subject_title_en": "fgfdg",
+                                            "question_type": 0,
+                                            "option_1": "1",
+                                            "option_1_en": "fgfd",
+                                            "option_2": "gfhfg",
+                                            "option_2_en": "gfhgf",
+                                            "option_3": "gfh",
+                                            "option_3_en": "fgh",
+                                            "option_4": "fgh",
+                                            "option_4_en": "fgh",
+                                            "answers": {
+                                                "a": "fghfg"
+                                            },
                                             "row_status": 1,
-                                            "created_at": "2022-03-28T09:06:23.000000Z",
-                                            "updated_at": "2022-03-28T09:06:23.000000Z",
-                                            "deleted_at": null
+                                            "created_at": null,
+                                            "updated_at": null
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title": "HELLO[[]] THERE",
+                                            "title_en": null,
+                                            "accessor_type": "INSTITUTE",
+                                            "accessor_id": 1,
+                                            "subject_id": 1,
+                                            "exam_subject_title": "hello",
+                                            "exam_subject_title_en": "fgfdg",
+                                            "question_type": 2,
+                                            "option_1": null,
+                                            "option_1_en": null,
+                                            "option_2": null,
+                                            "option_2_en": null,
+                                            "option_3": null,
+                                            "option_3_en": null,
+                                            "option_4": null,
+                                            "option_4_en": null,
+                                            "answers": [
+                                                "B"
+                                            ],
+                                            "row_status": 1,
+                                            "created_at": "2022-03-29T07:44:54.000000Z",
+                                            "updated_at": "2022-03-29T07:45:48.000000Z"
                                         }
                                     ],
                                     "_response_status": {
@@ -10279,14 +10319,29 @@
                             "application/json": {
                                 "example": {
                                     "data": {
-                                        "title": "hello",
-                                        "title_en": "fgfdg",
-                                        "accessor_type": "fdgdfg",
-                                        "accessor_id": "1",
-                                        "row_status": "1",
-                                        "updated_at": "2022-03-28T09:47:27.000000Z",
-                                        "created_at": "2022-03-28T09:47:27.000000Z",
-                                        "id": 3
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
                                     },
                                     "_response_status": {
                                         "success": true,
