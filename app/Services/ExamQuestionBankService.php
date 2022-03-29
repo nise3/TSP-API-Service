@@ -159,7 +159,6 @@ class ExamQuestionBankService
      */
     public function update(ExamQuestionBank $examQuestionBank, array $data): ExamQuestionBank
     {
-        $examQuestionBank = app(ExamQuestionBank::class);
         $examQuestionBank->fill($data);
         $examQuestionBank->save();
 
@@ -174,9 +173,12 @@ class ExamQuestionBankService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
-        preg_match_all('/\[{2}(.*?)\]{2}/is', $data['title'], $match);
-        $data['title'] = preg_replace('/\[{2}(.*?)\]{2}/is', '[[]]', $data['title']);
-        $data['answers'] = $match[1];
+        if(!empty($data["question_type"]) && $data["question_type"]==ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS){
+            preg_match_all('/\[{2}(.*?)\]{2}/is', $data['title'], $match);
+            $data['title'] = preg_replace('/\[{2}(.*?)\]{2}/is', '[[]]', $data['title']);
+            $data['answers'] = $match[1];
+        }
+
 
         $rules = [
             'title' => [
@@ -286,8 +288,8 @@ class ExamQuestionBankService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'title_en' => 'nullable|min:2',
-            'title' => 'nullable|min:2',
+            'title_en' => 'nullable',
+            'title' => 'nullable',
             'subject_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
