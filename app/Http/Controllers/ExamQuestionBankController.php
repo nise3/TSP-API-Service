@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ExamQuestionBankController extends Controller
@@ -17,17 +18,23 @@ class ExamQuestionBankController extends Controller
 
     public ExamQuestionBankService $examQuestionBankService;
 
-    /**
-     * @var Carbon
-     */
     private Carbon $startTime;
 
+    /**
+     * @param ExamQuestionBankService $examQuestionBankService
+     */
     public function __construct(ExamQuestionBankService $examQuestionBankService)
     {
         $this->examQuestionBankService = $examQuestionBankService;
         $this->startTime = Carbon::now();
     }
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function getList(Request $request): JsonResponse
     {
 
@@ -38,13 +45,12 @@ class ExamQuestionBankController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return JsonResponse
      */
-    public function read(Request $request, int $id): JsonResponse
+    public function read(int $id): JsonResponse
     {
-        $questionBank = $this->examQuestionBankService->getOneQuestionBank($id);
+        $questionBank = $this->examQuestionBankService->getOneExamQuestionBank($id);
 
         $response = [
             "data" => $questionBank,
@@ -61,7 +67,7 @@ class ExamQuestionBankController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function store(Request $request): JsonResponse
     {
@@ -74,7 +80,7 @@ class ExamQuestionBankController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Question Bank added successfully",
+                "message" => "Exam Question Bank added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -86,13 +92,11 @@ class ExamQuestionBankController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws AuthorizationException
+     * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
         $examQuestionBank = ExamQuestionBank::findOrFail($id);
-
-        $this->authorize('update', $examQuestionBank);
         $validated = $this->examQuestionBankService->validator($request, $id)->validate();
         $data = $this->examQuestionBankService->update($examQuestionBank, $validated);
         $response = [
@@ -100,7 +104,7 @@ class ExamQuestionBankController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Question Bank updated successfully.",
+                "message" => "Exam Question Bank updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
