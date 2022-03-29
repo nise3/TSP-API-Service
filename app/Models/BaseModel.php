@@ -162,6 +162,15 @@ abstract class BaseModel extends Model
         self::USER_NAME_TYPE_MOBILE_NUMBER
     ];
 
+    /** @var string Exam Accessor types */
+    public const EXAM_ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
+    public const EXAM_ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
+
+    public const EXAM_ACCESSOR_TYPES = [
+        self::EXAM_ACCESSOR_TYPE_INSTITUTE,
+        self::EXAM_ACCESSOR_TYPE_ORGANIZATION,
+    ];
+
 
 
     public function getIndustryAssociationData(array &$originalData)

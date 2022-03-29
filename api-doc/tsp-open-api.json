@@ -10196,6 +10196,282 @@
                     }
                 }
             }
+        },
+        "/exam-question-banks": {
+            "get": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Get all Exam Question Bank",
+                "description": "API endpoint to get all Exam Question Bank. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subject_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "abc",
+                                            "title_en": "bcd",
+                                            "accessor_type": "hgfh",
+                                            "accessor_id": 1,
+                                            "subject_id": 1,
+                                            "exam_subject_title": "hello",
+                                            "exam_subject_title_en": "fgfdg",
+                                            "question_type": 0,
+                                            "option_1": "1",
+                                            "option_1_en": "fgfd",
+                                            "option_2": "gfhfg",
+                                            "option_2_en": "gfhgf",
+                                            "option_3": "gfh",
+                                            "option_3_en": "fgh",
+                                            "option_4": "fgh",
+                                            "option_4_en": "fgh",
+                                            "answers": {
+                                                "a": "fghfg"
+                                            },
+                                            "row_status": 1,
+                                            "created_at": null,
+                                            "updated_at": null
+                                        },
+                                        {
+                                            "id": 3,
+                                            "title": "HELLO[[]] THERE",
+                                            "title_en": null,
+                                            "accessor_type": "INSTITUTE",
+                                            "accessor_id": 1,
+                                            "subject_id": 1,
+                                            "exam_subject_title": "hello",
+                                            "exam_subject_title_en": "fgfdg",
+                                            "question_type": 2,
+                                            "option_1": null,
+                                            "option_1_en": null,
+                                            "option_2": null,
+                                            "option_2_en": null,
+                                            "option_3": null,
+                                            "option_3_en": null,
+                                            "option_4": null,
+                                            "option_4_en": null,
+                                            "answers": [
+                                                "B"
+                                            ],
+                                            "row_status": 1,
+                                            "created_at": "2022-03-29T07:44:54.000000Z",
+                                            "updated_at": "2022-03-29T07:45:48.000000Z"
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Create a Exam Question Bank",
+                "description": "API endpoint to Create Exam Question Bank. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exam_ques_bank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam-question-banks/{examQuestionBankId}": {
+            "get": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Get a Exam Question",
+                "description": "API endpoint to get a Exam Subjects. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examQuestionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Asm",
+                                        "title_en": "fgf",
+                                        "accessor_type": "gfhfghfg",
+                                        "accessor_id": 1,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-28T09:06:23.000000Z",
+                                        "updated_at": "2022-03-28T09:06:23.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Update a Exam Question Bank",
+                "description": "API endpoint to update a Exam Subjects. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examQuestionBankId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exam_ques_bank"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Goo Goo Dolls",
+                                        "title_en": "Miranda Kerr",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T05:27:39.000000Z",
+                                        "updated_at": "2022-03-03T05:57:29.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Subject updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Delete a Exam Question Bank",
+                "description": "API endpoint to delete a Exam Question Bank. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examQuestionBankId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Exam Subject deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -10877,6 +11153,68 @@
                 },
                 "required": [
                     "title","accessor_type","accessor_id"
+                ]
+            },
+            "exam_ques_bank": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "accessor_type": {
+                        "type": "string"
+                    },
+                    "accessor_id": {
+                        "type": "integer"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "subject_id": {
+                        "type": "string"
+                    },
+                    "question_type": {
+                        "type": "integer"
+                    },
+                    "option_1": {
+                        "type": "string"
+                    },
+                    "option_1_en": {
+                        "type": "string"
+                    },
+                    "option_2": {
+                        "type": "string"
+                    },
+                    "option_2_en": {
+                        "type": "string"
+                    },
+                    "option_3": {
+                        "type": "string"
+                    },
+                    "option_3_en": {
+                        "type": "string"
+                    },
+                    "option_4_en": {
+                        "type": "string"
+                    },
+                    "answers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "example": "[]"
+                        }
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "question_type", "subject_id","title","accessor_type","accessor_id"
                 ]
             },
             "rplOccupation": {
@@ -13061,8 +13399,24 @@
                     "type": "integer"
                 }
             },
+            "subject_id": {
+                "name": "subject_id",
+                "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "subjectId": {
                 "name": "subjectId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "examQuestionBankId": {
+                "name": "examQuestionBankId",
                 "required": true,
                 "in": "path",
                 "schema": {

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
@@ -46,6 +47,7 @@ class ExamSubjectService
             'exam_subjects.updated_at',
             'exam_subjects.deleted_at',
         ]);
+        $ExamSubjectBuilder->acl();
 
         $ExamSubjectBuilder->orderBy('exam_subjects.id', $order);
 
@@ -174,7 +176,7 @@ class ExamSubjectService
                 'required',
                 'string',
                 'max:250',
-                Rule::in(ExamSubject::EXAM_SUBJECT_ASSESSOR_TYPES)
+                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
             ],
             'accessor_id' => [
                 'required',
