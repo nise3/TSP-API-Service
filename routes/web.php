@@ -42,6 +42,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-question-banks', 'RplQuestionBankController')->render();
         $customRouter()->resourceRoute('rpl-assessment-questions', 'RplAssessmentQuestionController')->render();
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
+        $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
