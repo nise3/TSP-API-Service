@@ -18,7 +18,7 @@ class CreateExamQuestionBanksTable extends Migration
             $table->text('title');
             $table->text('title_en')->nullable();
             $table->string('accessor_type',100)->nullable();
-            $table->integer('accessor_id');
+            $table->unsignedInteger('accessor_id');
             $table->unsignedInteger('subject_id')->index('qb_fk_subject');
             $table->unsignedInteger('question_type')
                 ->comment("1=> MCQ , 2=>Fill in the Blanks, 3=>Yes/No,4=>Practical,5=>Field Work,6=>Presentation,7=>Descriptive");
