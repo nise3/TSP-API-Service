@@ -16,7 +16,7 @@ class RplAssessmentPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_assessment');
+        return $authUser->hasPermission('view_any_rpl_assessment');
     }
 
     /**
@@ -39,7 +39,7 @@ class RplAssessmentPolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_assessment');
+        return $authUser->hasPermission('create_rpl_assessment');
     }
 
 
@@ -51,17 +51,18 @@ class RplAssessmentPolicy
      */
     public function update(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('update_assessment');
+        return $authUser->hasPermission('update_rpl_assessment');
     }
 
     /**
      * Determine whether the user can delete the Rpl Sector.
      *
      * @param User $authUser
+     * @param RplAssessment $assessment
      * @return mixed
      */
     public function delete(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('delete_assessment');
+        return $authUser->hasPermission('delete_rpl_assessment');
     }
 }
