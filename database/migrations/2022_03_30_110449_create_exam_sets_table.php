@@ -4,25 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamsTable extends Migration
+class CreateExamSetsTable extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-
-
     public function up()
     {
-        Schema::create('exams', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('exam_type_id');
-            $table->date('exam_date');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
-            $table->text('venue')->nullable();
-            $table->unsignedDecimal('total_marks')->default(0);
+        Schema::create('exam_sets', function (Blueprint $table) {
+            $table->char('uuid', 50);
+            $table->string('title', 500);
+            $table->string('title_en', 250)->nullable();
+            $table->unsignedInteger('exam_id');
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->timestamps();
             $table->softDeletes();
@@ -36,6 +31,6 @@ class CreateExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exams');
+        Schema::dropIfExists('exam_sets');
     }
 }
