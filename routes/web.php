@@ -44,7 +44,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-assessment-questions', 'RplAssessmentQuestionController')->render();
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
-
+        $customRouter()->resourceRoute('exams', 'ExamController')->render();
+        $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
             $router->get("skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);

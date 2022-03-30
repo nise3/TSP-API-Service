@@ -10472,6 +10472,500 @@
                     }
                 }
             }
+        },
+        "/exams": {
+            "get": {
+                "tags": [
+                    "Exam Crud"
+                ],
+                "summary": "Get all Exam",
+                "description": "API endpoint to get all Exam . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/exam_type_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "exam_type_id": 1,
+                                            "exam_date": "2022-04-01",
+                                            "start_time": "12:11:34",
+                                            "end_time": "12:11:38",
+                                            "venue": "Dhaka",
+                                            "total_marks": "100.00",
+                                            "row_status": 0,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "exam_type_id": 2,
+                                            "exam_date": "2022-04-01",
+                                            "start_time": "12:11:34",
+                                            "end_time": "12:11:38",
+                                            "venue": "Dhaka",
+                                            "total_marks": "100.00",
+                                            "row_status": 0,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exam Crud"
+                ],
+                "summary": "Create a Exam",
+                "description": "API endpoint to Create Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exams/{examId}": {
+            "get": {
+                "tags": [
+                    "Exam Crud"
+                ],
+                "summary": "Get a Exam",
+                "description": "API endpoint to get a Exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Asm",
+                                        "title_en": "fgf",
+                                        "accessor_type": "gfhfghfg",
+                                        "accessor_id": 1,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-28T09:06:23.000000Z",
+                                        "updated_at": "2022-03-28T09:06:23.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Update a Exam Question Bank",
+                "description": "API endpoint to update a Exam Subjects. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Goo Goo Dolls",
+                                        "title_en": "Miranda Kerr",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T05:27:39.000000Z",
+                                        "updated_at": "2022-03-03T05:57:29.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Subject updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Exam Question Bank"
+                ],
+                "summary": "Delete a Exam Question Bank",
+                "description": "API endpoint to delete a Exam Question Bank. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Exam Subject deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam_types": {
+            "get": {
+                "tags": [
+                    "Exam Types"
+                ],
+                "summary": "Get all Exam",
+                "description": "API endpoint to get all Exam . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subject_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/exam_type_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "exam_type_id": 1,
+                                            "exam_date": "2022-04-01",
+                                            "start_time": "12:11:34",
+                                            "end_time": "12:11:38",
+                                            "venue": "Dhaka",
+                                            "total_marks": "100.00",
+                                            "row_status": 0,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        },
+                                        {
+                                            "exam_type_id": 2,
+                                            "exam_date": "2022-04-01",
+                                            "start_time": "12:11:34",
+                                            "end_time": "12:11:38",
+                                            "venue": "Dhaka",
+                                            "total_marks": "100.00",
+                                            "row_status": 0,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exam Types"
+                ],
+                "summary": "Create a Exam",
+                "description": "API endpoint to Create Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exam_type"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam_types/{examTypeId }": {
+            "get": {
+                "tags": [
+                    "Exam Types"
+                ],
+                "summary": "Get a Exam Types",
+                "description": "API endpoint to get a Exam Types. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Asm",
+                                        "title_en": "fgf",
+                                        "accessor_type": "gfhfghfg",
+                                        "accessor_id": 1,
+                                        "row_status": 1,
+                                        "created_at": "2022-03-28T09:06:23.000000Z",
+                                        "updated_at": "2022-03-28T09:06:23.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Exam Types"
+                ],
+                "summary": "Update a Exam Question Bank",
+                "description": "API endpoint to update a Exam Subjects. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "title": "Goo Goo Dolls",
+                                        "title_en": "Miranda Kerr",
+                                        "row_status": "1",
+                                        "created_at": "2022-03-03T05:27:39.000000Z",
+                                        "updated_at": "2022-03-03T05:57:29.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Subject updated successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Exam Types"
+                ],
+                "summary": "Delete a Exam Question Bank",
+                "description": "API endpoint to delete a Exam Question Bank. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Exam Subject deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -11215,6 +11709,83 @@
                 },
                 "required": [
                     "question_type", "subject_id","title","accessor_type","accessor_id"
+                ]
+            },
+            "exams": {
+                "type": "object",
+                "properties": {
+                    "exam_type_id": {
+                        "type" : "integer"
+                    },
+                    "exam_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "format": "HH:mm"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "format": "HH:mm"
+                    },
+                    "venue": {
+                        "type": "string"
+                    },
+                    "total_marks": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "exam_type_id","exam_date"
+                ]
+            },
+            "exam_type": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type" : "string"
+                    },
+                    "title": {
+                        "type" : "string"
+                    },
+                    "title_en": {
+                        "type" : "string"
+                    },
+                    "subject_id": {
+                        "type" : "integer"
+                    },
+                    "accessor_type": {
+                        "type" : "string"
+                    },
+                    "accessor_id": {
+                        "type" : "integer"
+                    },
+                    "purpose_name": {
+                        "type": "string"
+                    },
+                    "purpose_id": {
+                        "type" : "integer"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "title","type","subject_id","purpose_name","accessor_type","accessor_id"
                 ]
             },
             "rplOccupation": {
@@ -13108,6 +13679,14 @@
                     "example": "Co-ordinator"
                 }
             },
+            "exam_type_id": {
+                "name": "exam_type_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "page": {
                 "name": "page",
                 "in": "query",
@@ -13409,6 +13988,22 @@
             },
             "subjectId": {
                 "name": "subjectId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "examTypeId": {
+                "name": "examTypeId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "examId": {
+                "name": "examId",
                 "required": true,
                 "in": "path",
                 "schema": {

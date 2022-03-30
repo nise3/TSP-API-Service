@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Exam;
-use App\Services\ExamService;
+use App\Models\ExamType;
+use App\Services\ExamTypeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class ExamController extends Controller
+class ExamTypeController extends Controller
 {
     /**
-     * @var ExamService
+     * @var ExamTypeService
      */
-    public ExamService $ExamService;
+    public ExamTypeService $examTypeService;
 
     /**
      * @var Carbon
@@ -24,12 +24,12 @@ class ExamController extends Controller
     private Carbon $startTime;
 
     /**
-     * @param ExamService $ExamService
+     * @param ExamTypeService $examTypeService
      */
 
-    public function __construct(ExamService $ExamService)
+    public function __construct(ExamTypeService $examTypeService)
     {
-        $this->ExamService = $ExamService;
+        $this->ExamTypeService = $examTypeService;
         $this->startTime = Carbon::now();
     }
 
@@ -42,8 +42,8 @@ class ExamController extends Controller
     public function getList(Request $request): JsonResponse
     {
 
-        $filter = $this->ExamService->filterValidator($request)->validate();
-        $response = $this->ExamService->getList($filter, $this->startTime);
+        $filter = $this->ExamTypeService->filterValidator($request)->validate();
+        $response = $this->ExamTypeService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -55,9 +55,9 @@ class ExamController extends Controller
 
     public function read(Request $request, int $id): JsonResponse
     {
-        $exam = $this->ExamService->getOneexam($id);
+        $examType = $this->ExamTypeService->getOneExamType($id);
         $response = [
-            "data" => $exam,
+            "data" => $examType,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -77,8 +77,8 @@ class ExamController extends Controller
     public function store(Request $request): JsonResponse
     {
 
-        $validatedData = $this->ExamService->validator($request)->validate();
-        $data = $this->ExamService->store($validatedData);
+        $validatedData = $this->ExamTypeService->validator($request)->validate();
+        $data = $this->ExamTypeService->store($validatedData);
         $response = [
             'data' => $data ?: null,
             '_response_status' => [
@@ -101,11 +101,11 @@ class ExamController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
+        $examType = ExamType::findOrFail($id);
 
-        $validated = $this->ExamService->validator($request, $id)->validate();
+        $validated = $this->ExamTypeService->validator($request, $id)->validate();
 
-        $data = $this->ExamService->update($exam, $validated);
+        $data = $this->ExamTypeService->update($examType, $validated);
 
         $response = [
             'data' => $data,
@@ -126,8 +126,8 @@ class ExamController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
-        $this->ExamService->destroy($exam);
+        $examType = ExamType::findOrFail($id);
+        $this->ExamTypeService->destroy($examType);
         $response = [
             '_response_status' => [
                 "success" => true,
