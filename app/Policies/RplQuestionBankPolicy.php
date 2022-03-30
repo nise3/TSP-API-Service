@@ -15,7 +15,7 @@ class RplQuestionBankPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_question_bank');
+        return $authUser->hasPermission('view_any_rpl_question_bank');
     }
 
     /**
@@ -27,7 +27,7 @@ class RplQuestionBankPolicy
      */
     public function view(User $authUser, RplQuestionBank $questionBank): bool
     {
-        return $authUser->hasPermission('view_single_question_bank');
+        return $authUser->hasPermission('view_single_rpl_question_bank');
     }
 
     /**
@@ -38,7 +38,7 @@ class RplQuestionBankPolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_question_bank');
+        return $authUser->hasPermission('create_rpl_question_bank');
     }
 
     /**
@@ -50,7 +50,7 @@ class RplQuestionBankPolicy
      */
     public function update(User $authUser, RplQuestionBank $questionBank): bool
     {
-        return $authUser->hasPermission('update_question_bank');
+        return $authUser->hasPermission('update_rpl_question_bank');
     }
 
     /**
@@ -62,6 +62,6 @@ class RplQuestionBankPolicy
      */
     public function delete(User $authUser, RplQuestionBank $questionBank): bool
     {
-        return $authUser->hasPermission('delete_question_bank');
+        return $authUser->hasPermission('delete_rpl_question_bank');
     }
 }

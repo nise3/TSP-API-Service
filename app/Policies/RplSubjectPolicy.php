@@ -15,7 +15,7 @@ class RplSubjectPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_subject');
+        return $authUser->hasPermission('view_any_rpl_subject');
     }
 
     /**
@@ -27,7 +27,7 @@ class RplSubjectPolicy
      */
     public function view(User $authUser, RplSubject $subject): bool
     {
-        return $authUser->hasPermission('view_single_subject');
+        return $authUser->hasPermission('view_single_rpl_subject');
     }
 
     /**
@@ -38,7 +38,7 @@ class RplSubjectPolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_subject');
+        return $authUser->hasPermission('create_rpl_subject');
     }
 
     /**
@@ -50,7 +50,7 @@ class RplSubjectPolicy
      */
     public function update(User $authUser, RplSubject $subject): bool
     {
-        return $authUser->hasPermission('update_subject');
+        return $authUser->hasPermission('update_rpl_subject');
     }
 
     /**
@@ -62,6 +62,6 @@ class RplSubjectPolicy
      */
     public function delete(User $authUser, RplSubject $subject): bool
     {
-        return $authUser->hasPermission('delete_subject');
+        return $authUser->hasPermission('delete_rpl_subject');
     }
 }
