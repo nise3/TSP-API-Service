@@ -28,7 +28,7 @@ class RplAssessmentPolicy
      */
     public function view(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('view_single_assessment');
+        return $authUser->hasPermission('view_single_rpl_assessment');
     }
 
     /**
