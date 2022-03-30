@@ -3,7 +3,7 @@
 namespace App\Services\Payment;
 
 use App\Facade\ServiceToServiceCall;
-use App\Models\Assessment;
+use App\Models\RplAssessment;
 use App\Models\BaseModel;
 use App\Models\CourseEnrollment;
 use App\Models\PaymentTransactionHistory;
@@ -34,7 +34,7 @@ class RplApplicationCertificationPaymentService
         $youth = $youth[0];
 
         $rto = RegisteredTrainingOrganization::findOrFail($youthAssessment->rto_id);
-        $assessment = Assessment::findOrFail($youthAssessment->assessment_id);
+        $assessment = RplAssessment::findOrFail($youthAssessment->assessment_id);
 
 
         /** ASS+RTO+I=36 is an invoice id */

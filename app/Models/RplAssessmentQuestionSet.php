@@ -6,7 +6,7 @@ use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssessmentQuestionSet extends BaseModel
+class RplAssessmentQuestionSet extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes;
 

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assessment;
-use App\Models\RplOccupation;
-use App\Services\AssessmentService;
+use App\Models\RplQuestionBank;
+use App\Services\RplQuestionBankService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -15,60 +14,62 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class AssessmentController extends Controller
+class RplQuestionBankController extends Controller
 {
     /**
-     * @var AssessmentService
+     * @var RplQuestionBankService
      */
-    public AssessmentService $assessmentService;
+    public RplQuestionBankService $rplQuestionBankService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * RplOccupationController constructor.
-     * @param AssessmentService $assessmentService
+     * RplQuestionBankController constructor.
+     * @param RplQuestionBankService $rplQuestionBankService
      */
 
-    public function __construct(AssessmentService $assessmentService)
+    public function __construct(RplQuestionBankService $rplQuestionBankService)
     {
-        $this->assessmentService = $assessmentService;
+        $this->rplQuestionBankService = $rplQuestionBankService;
         $this->startTime = Carbon::now();
     }
 
     /**
-     * Display a listing of the resource.
-     *
+     * * Display a listing of the resource.
      * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException|ValidationException
+     * @throws Throwable
+     * @throws ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Assessment::class);
-        $filter = $this->assessmentService->filterValidator($request)->validate();
+        $this->authorize('viewAny', RplQuestionBank::class);
 
-        $response = $this->assessmentService->getAssessmentList($filter, $this->startTime);
+        $filter = $this->rplQuestionBankService->filterValidator($request)->validate();
+
+        $response = $this->rplQuestionBankService->getQuestionBankList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->assessmentService->filterValidator($request)->validate();
+        $filter = $this->rplQuestionBankService->filterValidator($request)->validate();
 
-        $response = $this->assessmentService->getAssessmentList($filter, $this->startTime);
+        $response = $this->rplQuestionBankService->getQuestionBankList($filter, $this->startTime,false);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+
     /**
-     * Show the form for creating a new resource.
-     *
+     * * Display the specified resource
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -76,11 +77,11 @@ class AssessmentController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $assessment = $this->assessmentService->getOneAssessment($id);
-        $this->authorize('view', $assessment);
+        $questionBank = $this->rplQuestionBankService->getOneQuestionBank($id);
+        $this->authorize('view', $questionBank);
 
         $response = [
-            "data" => $assessment,
+            "data" => $questionBank,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -92,24 +93,24 @@ class AssessmentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
      * @param Request $request
      * @return JsonResponse
+     * @throws Throwable
      * @throws ValidationException
-     * @throws AuthorizationException
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Assessment::class);
-        $validated = $this->assessmentService->validator($request)->validate();
-        $assessment = $this->assessmentService->store($validated);
+        $this->authorize('create', RplQuestionBank::class);
+
+        $validated = $this->rplQuestionBankService->validator($request)->validate();
+        $questionBank = $this->rplQuestionBankService->store($validated);
 
         $response = [
-            'data' => $assessment,
+            'data' => $questionBank,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Assessment added successfully",
+                "message" => "Question Bank added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -117,27 +118,27 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws AuthorizationException|ValidationException
+     * @throws Throwable
+     * @throws ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $assessment = Assessment::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
-        $this->authorize('update', $assessment);
+        $this->authorize('update', $questionBank);
 
-        $validated = $this->assessmentService->validator($request, $id)->validate();
-        $data = $this->assessmentService->update($assessment, $validated);
+        $validated = $this->rplQuestionBankService->validator($request, $id)->validate();
+        $data = $this->rplQuestionBankService->update($questionBank, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Assessment updated successfully.",
+                "message" => "Question Bank updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -145,27 +146,26 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     *Remove the specified resource from storage.
      * @param int $id
      * @return JsonResponse
      * @throws Throwable
      */
     public function destroy(int $id): JsonResponse
     {
-        $assessment = Assessment::findOrFail($id);
+        $questionBank = RplQuestionBank::findOrFail($id);
 
-        $this->authorize('delete', $assessment);
+        $this->authorize('delete', $questionBank);
 
         DB::beginTransaction();
         try {
-            $this->assessmentService->destroy($assessment);
+            $this->rplQuestionBankService->destroy($questionBank);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Assessment deleted successfully.",
+                    "message" => "Question Bank deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

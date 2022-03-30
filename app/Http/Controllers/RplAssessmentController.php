@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AssessmentQuestionSet;
-use App\Services\AssessmentQuestionSetService;
+use App\Models\RplAssessment;
+use App\Services\RplAssessmentService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,12 +14,12 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class AssessmentQuestionSetController extends Controller
+class RplAssessmentController extends Controller
 {
     /**
-     * @var AssessmentQuestionSetService
+     * @var RplAssessmentService
      */
-    public AssessmentQuestionSetService $assessmentQuestionSetService;
+    public RplAssessmentService $rplAssessmentService;
     /**
      * @var Carbon
      */
@@ -27,12 +27,12 @@ class AssessmentQuestionSetController extends Controller
 
     /**
      * RplOccupationController constructor.
-     * @param AssessmentQuestionSetService $assessmentQuestionSetService
+     * @param RplAssessmentService $rplAssessmentService
      */
 
-    public function __construct(AssessmentQuestionSetService $assessmentQuestionSetService)
+    public function __construct(RplAssessmentService $rplAssessmentService)
     {
-        $this->assessmentQuestionSetService = $assessmentQuestionSetService;
+        $this->rplAssessmentService = $rplAssessmentService;
         $this->startTime = Carbon::now();
     }
 
@@ -45,10 +45,10 @@ class AssessmentQuestionSetController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', AssessmentQuestionSet::class);
-        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
+        $this->authorize('viewAny', RplAssessment::class);
+        $filter = $this->rplAssessmentService->filterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
+        $response = $this->rplAssessmentService->getAssessmentList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -59,9 +59,9 @@ class AssessmentQuestionSetController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->assessmentQuestionSetService->filterValidator($request)->validate();
+        $filter = $this->rplAssessmentService->filterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
+        $response = $this->rplAssessmentService->getAssessmentList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -75,11 +75,11 @@ class AssessmentQuestionSetController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $assessmentQuestionSet = $this->assessmentQuestionSetService->getOneAssessmentQuestionSet($id);
-        $this->authorize('view', $assessmentQuestionSet);
+        $assessment = $this->rplAssessmentService->getOneAssessment($id);
+        $this->authorize('view', $assessment);
 
         $response = [
-            "data" => $assessmentQuestionSet,
+            "data" => $assessment,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -99,16 +99,16 @@ class AssessmentQuestionSetController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', AssessmentQuestionSet::class);
-        $validated = $this->assessmentQuestionSetService->validator($request)->validate();
-        $assessmentQuestionSet = $this->assessmentQuestionSetService->store($validated);
+        $this->authorize('create', RplAssessment::class);
+        $validated = $this->rplAssessmentService->validator($request)->validate();
+        $assessment = $this->rplAssessmentService->store($validated);
 
         $response = [
-            'data' => $assessmentQuestionSet,
+            'data' => $assessment,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "AssessmentQuestionSet added successfully",
+                "message" => "RplAssessment added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -125,18 +125,18 @@ class AssessmentQuestionSetController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $assessmentQuestionSet = AssessmentQuestionSet::findOrFail($id);
+        $assessment = RplAssessment::findOrFail($id);
 
-        $this->authorize('update', $assessmentQuestionSet);
+        $this->authorize('update', $assessment);
 
-        $validated = $this->assessmentQuestionSetService->validator($request, $id)->validate();
-        $data = $this->assessmentQuestionSetService->update($assessmentQuestionSet, $validated);
+        $validated = $this->rplAssessmentService->validator($request, $id)->validate();
+        $data = $this->rplAssessmentService->update($assessment, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "AssessmentQuestionSet updated successfully.",
+                "message" => "RplAssessment updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -152,19 +152,19 @@ class AssessmentQuestionSetController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $assessmentQuestionSet = AssessmentQuestionSet::findOrFail($id);
+        $assessment = RplAssessment::findOrFail($id);
 
-        $this->authorize('delete', $assessmentQuestionSet);
+        $this->authorize('delete', $assessment);
 
         DB::beginTransaction();
         try {
-            $this->assessmentQuestionSetService->destroy($assessmentQuestionSet);
+            $this->rplAssessmentService->destroy($assessment);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "AssessmentQuestionSet deleted successfully.",
+                    "message" => "RplAssessment deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

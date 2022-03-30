@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use App\Traits\Scopes\ScopeRowStatusTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @method static withoutGlobalScope(string $class)
+ */
 class RplApplication extends BaseModel
 {
     use SoftDeletes, ScopeRowStatusTrait;

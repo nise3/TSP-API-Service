@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\AssessmentQuestion;
+use App\Models\RplAssessmentQuestion;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AssessmentQuestionPolicy extends BasePolicy
+class RplAssessmentQuestionPolicy extends BasePolicy
 {
     use HandlesAuthorization;
     /**

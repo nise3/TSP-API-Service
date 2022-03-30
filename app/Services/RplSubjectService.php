@@ -4,7 +4,7 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
-use App\Models\Subject;
+use App\Models\RplSubject;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class SubjectService
+class RplSubjectService
 {
     /**
      * @param array $request
@@ -30,35 +30,35 @@ class SubjectService
         $order = $request['order'] ?? "ASC";
         $rowStatus = $request['row_status'] ?? "ASC";
 
-        /** @var Subject|Builder $subjectBuilder */
-        $subjectBuilder = Subject::select([
-            'subjects.id',
-            'subjects.title',
-            'subjects.title_en',
-            'subjects.row_status',
-            'subjects.created_at',
-            'subjects.updated_at',
-            'subjects.deleted_at',
+        /** @var RplSubject|Builder $subjectBuilder */
+        $subjectBuilder = RplSubject::select([
+            'rpl_subjects.id',
+            'rpl_subjects.title',
+            'rpl_subjects.title_en',
+            'rpl_subjects.row_status',
+            'rpl_subjects.created_at',
+            'rpl_subjects.updated_at',
+            'rpl_subjects.deleted_at',
         ]);
 
         if(!$isPublicApi){
             $subjectBuilder->acl();
         }
 
-        $subjectBuilder->orderBy('subjects.id', $order);
+        $subjectBuilder->orderBy('rpl_subjects.id', $order);
 
         if (!empty($titleEn)) {
-            $subjectBuilder->where('subjects.title_en', 'like', '%' . $titleEn . '%');
+            $subjectBuilder->where('rpl_subjects.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $subjectBuilder->where('subjects.title', 'like', '%' . $title . '%');
+            $subjectBuilder->where('rpl_subjects.title', 'like', '%' . $title . '%');
         }
 
         if (is_numeric($rowStatus)) {
-            $subjectBuilder->where('subjects.row_status', $rowStatus);
+            $subjectBuilder->where('rpl_subjects.row_status', $rowStatus);
         }
 
-        /** @var Collection $subjects */
+        /** @var Collection $rpl_subjects */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $subjects = $subjectBuilder->paginate($pageSize);
@@ -83,23 +83,23 @@ class SubjectService
 
     /**
      * @param int $id
-     * @return Subject
+     * @return RplSubject
      */
-    public function getOneSubject(int $id): Subject
+    public function getOneSubject(int $id): RplSubject
     {
-        /** @var Subject|Builder $subjectBuilder */
-        $subjectBuilder = Subject::select([
-            'subjects.id',
-            'subjects.title',
-            'subjects.title_en',
-            'subjects.row_status',
-            'subjects.created_at',
-            'subjects.updated_at',
-            'subjects.deleted_at',
+        /** @var RplSubject|Builder $subjectBuilder */
+        $subjectBuilder = RplSubject::select([
+            'rpl_subjects.id',
+            'rpl_subjects.title',
+            'rpl_subjects.title_en',
+            'rpl_subjects.row_status',
+            'rpl_subjects.created_at',
+            'rpl_subjects.updated_at',
+            'rpl_subjects.deleted_at',
         ]);
 
         if (is_numeric($id)) {
-            $subjectBuilder->where('subjects.id', $id);
+            $subjectBuilder->where('rpl_subjects.id', $id);
         }
 
         return $subjectBuilder->firstOrFail();
@@ -107,22 +107,22 @@ class SubjectService
 
     /**
      * @param array $data
-     * @return Subject
+     * @return RplSubject
      */
-    public function store(array $data): Subject
+    public function store(array $data): RplSubject
     {
-        $subject = app()->make(Subject::class);
+        $subject = app()->make(RplSubject::class);
         $subject->fill($data);
         $subject->save();
         return $subject;
     }
 
     /**
-     * @param Subject $subject
+     * @param RplSubject $subject
      * @param array $data
-     * @return Subject
+     * @return RplSubject
      */
-    public function update(Subject $subject, array $data): Subject
+    public function update(RplSubject $subject, array $data): RplSubject
     {
         $subject->fill($data);
         $subject->save();
@@ -130,10 +130,10 @@ class SubjectService
     }
 
     /**
-     * @param Subject $subject
+     * @param RplSubject $subject
      * @return bool
      */
-    public function destroy(Subject $subject): bool
+    public function destroy(RplSubject $subject): bool
     {
         return $subject->delete();
     }

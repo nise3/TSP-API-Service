@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Assessment;
+use App\Models\RplAssessment;
 use App\Models\RplSector;
 use App\Models\User;
 
-class AssessmentPolicy
+class RplAssessmentPolicy
 {
     /**
      * Determine whether the user can view any Rpl Sector.
@@ -16,18 +16,19 @@ class AssessmentPolicy
      */
     public function viewAny(User $authUser): bool
     {
-        return $authUser->hasPermission('view_any_assessment');
+        return $authUser->hasPermission('view_any_rpl_assessment');
     }
 
     /**
      * Determine whether the user can view the Rpl Sector.
      *
      * @param User $authUser
+     * @param RplAssessment $assessment
      * @return mixed
      */
-    public function view(User $authUser, Assessment $assessment): bool
+    public function view(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('view_single_assessment');
+        return $authUser->hasPermission('view_single_rpl_assessment');
     }
 
     /**
@@ -38,29 +39,30 @@ class AssessmentPolicy
      */
     public function create(User $authUser): bool
     {
-        return $authUser->hasPermission('create_assessment');
+        return $authUser->hasPermission('create_rpl_assessment');
     }
 
 
     /**
      *  Determine whether the user can update the Rpl Sector.
      * @param User $authUser
-     * @param Assessment $assessment
+     * @param RplAssessment $assessment
      * @return bool
      */
-    public function update(User $authUser, Assessment $assessment): bool
+    public function update(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('update_assessment');
+        return $authUser->hasPermission('update_rpl_assessment');
     }
 
     /**
      * Determine whether the user can delete the Rpl Sector.
      *
      * @param User $authUser
+     * @param RplAssessment $assessment
      * @return mixed
      */
-    public function delete(User $authUser,  Assessment $assessment): bool
+    public function delete(User $authUser, RplAssessment $assessment): bool
     {
-        return $authUser->hasPermission('delete_assessment');
+        return $authUser->hasPermission('delete_rpl_assessment');
     }
 }
