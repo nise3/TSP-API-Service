@@ -35,7 +35,7 @@ class CreateExamSectionQuestionsTable extends Migration
             $table->string('option_4', 600)->nullable();;
             $table->string('option_3_en', 300)->nullable();;
             $table->string('option_4_en', 300)->nullable();;
-            $table->json('answers');
+            $table->json('answers')->nullable();
             $table->unsignedTinyInteger('row_status')->default(1);
             $table->timestamps();
             $table->softDeletes();
