@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Exam;
+use App\Models\ExamType;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -151,6 +152,80 @@ class ExamService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
+
+            "sets" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            "sets.*.id" => [
+                "required",
+                'sting',
+                "distinct",
+                "min:1"
+            ],
+            "sets.*.title" => [
+                "required",
+                'sting',
+                "distinct",
+                "min:1"
+            ],
+            "exam_questions" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            "exam_questions.*.mcq" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
+            ],
+            'title' => [
+                'required',
+                'string',
+                'max:500'
+            ],
+            'title_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'type' => [
+                'required',
+                'string',
+                'max:500',
+                Rule::in(ExamType::EXAM_TYPES)
+            ],
+            'subject_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'purpose_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'purpose_name' => [
+                'required',
+                'string',
+                'max:500',
+                Rule::in(ExamType::EXAM_PURPOSES)
+            ],
+            'accessor_type' => [
+                'required',
+                'string',
+                'max:250',
+//                Rule::in(ExamType::EXAM_SUBJECT_ASSESSOR_TYPES)
+            ],
+            'accessor_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
             'exam_type_id'=>[
                 'required',
                 'int',
