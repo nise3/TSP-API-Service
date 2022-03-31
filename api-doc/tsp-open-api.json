@@ -11668,7 +11668,17 @@
                         "type": "string"
                     },
                     "question_type": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ],
+                        "description": "1=> MCQ , 2=>Fill in the Blanks, 3=>Yes/No,4=>Practical,5=>Field Work,6=>Presentation,7=>Descriptive"
                     },
                     "option_1": {
                         "type": "string"
@@ -11708,7 +11718,7 @@
                     }
                 },
                 "required": [
-                    "question_type", "subject_id","title","accessor_type","accessor_id"
+                    "question_type", "subject_id","title"
                 ]
             },
             "exams": {
