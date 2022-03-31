@@ -181,7 +181,7 @@ class ExamTypeService
                 'required',
                 'string',
                 'max:500',
-                Rule::in(ExamType::EXAM_TYPES)
+                Rule::in(Exam::EXAM_TYPES)
             ],
             'subject_id' => [
                 'required',
@@ -197,7 +197,7 @@ class ExamTypeService
                 'required',
                 'string',
                 'max:500',
-                Rule::in(ExamType::EXAM_PURPOSES)
+                Rule::in(Exam::EXAM_PURPOSES)
             ],
             'accessor_type' => [
                 'required',

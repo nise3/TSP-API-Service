@@ -37,6 +37,7 @@ class ExamSubjectService
 
         /** @var ExamSubject|Builder $ExamSubjectBuilder */
         $ExamSubjectBuilder = ExamSubject::select([
+            'exam_subjects.id',
             'exam_subjects.title',
             'exam_subjects.title_en',
             'exam_subjects.accessor_type',
