@@ -152,37 +152,52 @@ class ExamService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-
             "sets" => [
-                "required",
+                Rule::requiredIf(function () use ($data) {
+                    if ($data['type'] === Exam::EXAM_TYPE_OFFLINE) {
+                        return true;
+                    }
+                }),
+                "nullable",
                 "array",
-                "min:1",
-                "max:10"
+                "min:1"
             ],
             "sets.*.id" => [
                 "required",
-                'sting',
+                'string',
                 "distinct",
                 "min:1"
             ],
             "sets.*.title" => [
                 "required",
-                'sting',
+                'string',
                 "distinct",
                 "min:1"
             ],
-            "exam_questions" => [
+            "sets.*.title_en" => [
+                "required",
+                'string',
+                "min:1"
+            ],
+            "exam_question" => [
                 "required",
                 "array",
                 "min:1",
                 "max:10"
             ],
-            "exam_questions.*.mcq" => [
+            "exam_question.*" => [
                 "required",
                 "array",
                 "min:1",
                 "max:10"
             ],
+
+            "exam_question.*.mcq" => [
+                "required",
+                'array',
+                "min:1"
+            ],
+
             'title' => [
                 'required',
                 'string',
@@ -197,7 +212,7 @@ class ExamService
                 'required',
                 'string',
                 'max:500',
-                Rule::in(ExamType::EXAM_TYPES)
+                Rule::in(Exam::EXAM_TYPES)
             ],
             'subject_id' => [
                 'required',
@@ -259,6 +274,13 @@ class ExamService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ]
         ];
+
+        if($data['exam_question']){
+            foreach ($data['exam_question'] as $examQuestion ){
+
+            }
+        }
+
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
