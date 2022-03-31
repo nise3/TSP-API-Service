@@ -10850,7 +10850,7 @@
                 }
             }
         },
-        "/exam_types/{examTypeId }": {
+        "/exam_types/{examTypeId}": {
             "get": {
                 "tags": [
                     "Exam Types"
