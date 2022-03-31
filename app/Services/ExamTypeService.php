@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
+use App\Models\Exam;
 use App\Models\ExamType;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
@@ -197,7 +198,7 @@ class ExamTypeService
                 'required',
                 'string',
                 'max:500',
-                Rule::in(Exam::EXAM_PURPOSES)
+                Rule::in(ExamType::EXAM_PURPOSES)
             ],
             'accessor_type' => [
                 'required',
