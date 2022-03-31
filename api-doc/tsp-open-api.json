@@ -6280,7 +6280,7 @@
         "/rpl-subjects": {
             "get": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Get all Rpl Subjects",
                 "description": "API endpoint to get all subject. A successful request response will show 200 HTTP status code",
@@ -6344,7 +6344,7 @@
             },
             "post": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Create a subject",
                 "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
@@ -6387,7 +6387,7 @@
         "/rpl-subjects/{subjectId}": {
             "get": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Get a subject",
                 "description": "API endpoint to get a subject. A successful request response will show 200 HTTP status code",
@@ -6424,7 +6424,7 @@
             },
             "put": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Update a subject",
                 "description": "API endpoint to update a subject. A successful request response will show 200 HTTP status code",
@@ -6471,7 +6471,7 @@
             },
             "delete": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Delete a subject",
                 "description": "API endpoint to delete a subject. A successful request response will show 200 HTTP status code",
