@@ -56,6 +56,11 @@ class Authenticate
                 if(!empty($authUser->training_center_id)){
                     $request->offsetSet('training_center_id', $authUser->training_center_id);
                 }
+
+                /** Modularized accessor for Exam Module */
+                $request->offsetSet('accessor_type', BaseModel::ACCESSOR_TYPE_INSTITUTE);
+                $request->offsetSet('accessor_id', $authUser->institute_id);
+
             } else if ($authUser->isOrganizationUser()) {
                 $request->offsetSet('organization_id', $authUser->organization_id);
             } else if ($authUser->isIndustryAssociationUser()) {
