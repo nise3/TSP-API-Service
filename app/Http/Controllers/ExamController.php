@@ -77,6 +77,7 @@ class ExamController extends Controller
     public function store(Request $request): JsonResponse
     {
 
+        dd($request->all());
         $validatedData = $this->ExamService->validator($request)->validate();
         $data = $this->ExamService->store($validatedData);
         $response = [

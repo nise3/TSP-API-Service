@@ -11646,7 +11646,7 @@
                     }
                 },
                 "required": [
-                    "title","accessor_type","accessor_id"
+                    "title"
                 ]
             },
             "exam_ques_bank": {

@@ -19,7 +19,7 @@ class ExamType extends BaseModel
     ];
 
     public const EXAM_PURPOSE_COURSE = "COURSE";
-    public const EXAM_PURPOSE_COURSES =[
+    public const EXAM_PURPOSES =[
         self::EXAM_PURPOSE_COURSE
     ];
 }
