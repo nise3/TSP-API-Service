@@ -42,7 +42,7 @@ class ExamQuestionBank extends BaseModel
 
 
     public const QUESTION_SELECTION_TYPES = [
-        self::RANDOM_FROM_QUESTION_BANK,
+        self::FIXED,
         self::RANDOM_FROM_QUESTION_BANK,
         self::RANDOM_FROM_SELECTED_QUESTIONS,
     ];

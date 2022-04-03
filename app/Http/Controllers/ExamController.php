@@ -85,8 +85,13 @@ class ExamController extends Controller
 
         if (!empty($validatedData['sets'])) {
             $examSets = $this->ExamService->storeExamSets($validatedData);
+            $validatedData['exam_sets'] = $examSets;
+
         }
-    //TODO :complete exam creation flow
+        if (!empty($validatedData['exam_questions'])) {
+            $this->ExamService->storeExamSections($validatedData);
+        }
+        //TODO :complete exam creation flow
         $response = [
             '_response_status' => [
                 "success" => true,
