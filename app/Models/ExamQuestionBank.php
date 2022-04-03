@@ -35,4 +35,15 @@ class ExamQuestionBank extends BaseModel
         self::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS,
         self::EXAM_QUESTION_TYPE_YES_NO,
     ];
+
+    public const FIXED = 1;
+    public const RANDOM_FROM_QUESTION_BANK = 2;
+    public const RANDOM_FROM_SELECTED_QUESTIONS = 3;
+
+
+    public const QUESTION_SELECTION_TYPES = [
+        self::RANDOM_FROM_QUESTION_BANK,
+        self::RANDOM_FROM_QUESTION_BANK,
+        self::RANDOM_FROM_SELECTED_QUESTIONS,
+    ];
 }

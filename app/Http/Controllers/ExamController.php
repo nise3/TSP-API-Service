@@ -9,7 +9,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class ExamController extends Controller
 {
@@ -36,7 +38,7 @@ class ExamController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function getList(Request $request): JsonResponse
@@ -48,12 +50,11 @@ class ExamController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return JsonResponse
      */
 
-    public function read(Request $request, int $id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         $exam = $this->ExamService->getOneexam($id);
         $response = [
@@ -71,17 +72,22 @@ class ExamController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Throwable
+     * @throws ValidationException
+     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
-
-      dd($request->all());
         $validatedData = $this->ExamService->validator($request)->validate();
-        $data = $this->ExamService->store($validatedData);
+        $examType = $this->ExamService->storeExamType($validatedData);
+        $validatedData['exam_type_id'] = $examType->id;
+        $exam = $this->ExamService->storeExam($validatedData);
+        $validatedData['exam_id'] = $exam->id;
+
+        if (!empty($validatedData['sets'])) {
+            $examSets = $this->ExamService->storeExamSets($validatedData);
+        }
+    //TODO :complete exam creation flow
         $response = [
-            'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
@@ -97,7 +103,7 @@ class ExamController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function update(Request $request, int $id): JsonResponse
