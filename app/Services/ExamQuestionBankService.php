@@ -165,6 +165,17 @@ class ExamQuestionBankService
         return $examQuestionBank;
     }
 
+
+    /**
+     * @param ExamQuestionBank $examQuestionBank
+     * @return bool
+     */
+
+    public function destroy(ExamQuestionBank $examQuestionBank): bool
+    {
+        return $examQuestionBank->delete();
+    }
+
     /**
      * @param Request $request
      * @param int|null $id

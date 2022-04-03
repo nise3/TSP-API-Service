@@ -118,7 +118,7 @@ class ExamQuestionBankController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $questionBank = ExamQuestionBank::findOrFail($id);
-
+        $this->examQuestionBankService->destroy($questionBank);
         $response = [
             '_response_status' => [
                 "success" => true,
