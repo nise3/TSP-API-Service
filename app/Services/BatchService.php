@@ -663,7 +663,7 @@ class BatchService
                     $batchInfo = [
                         "id" => $batchIds[$i],
                         "title" => $batchTitles[$i],
-                        "title_en" => $batchTitlesEn[$i],
+                        "title_en" => $batchTitlesEn[$i] ?? "",
                         "number_of_seat" => $numberOfSeats[$i],
                         "registration_start_date" => $registrationStartDates[$i],
                         "registration_end_date" => $registrationEndDate[$i],
