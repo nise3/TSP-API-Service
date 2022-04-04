@@ -8,6 +8,7 @@ use App\Services\ExamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -81,22 +82,28 @@ class ExamController extends Controller
         $examType = $this->ExamService->storeExamType($validatedData);
         $validatedData['exam_type_id'] = $examType->id;
         $exam = $this->ExamService->storeExam($validatedData);
-        $validatedData['exam_id'] = $exam->id;
 
-        if (!empty($validatedData['sets'])) {
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            $validatedData['exam_ids'] = $exam;
+        } else {
+            $validatedData['exam_ids'] = $exam->id;
+        }
+
+        if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
             $examSets = $this->ExamService->storeExamSets($validatedData);
             $validatedData['exam_sets'] = $examSets;
-
         }
-        if (!empty($validatedData['exam_questions'])) {
+
+        if (!empty($validatedData['exam_questions']) || !empty($validatedData['online']['exam_questions']) || !empty($validatedData['online']['exam_questions'])) {
             $this->ExamService->storeExamSections($validatedData);
         }
+
         //TODO :complete exam creation flow
         $response = [
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Exam Subject added successfully.",
+                "message" => "Exam added successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];

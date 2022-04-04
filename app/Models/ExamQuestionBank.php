@@ -30,7 +30,7 @@ class ExamQuestionBank extends BaseModel
         self::EXAM_QUESTION_TYPE_DESCRIPTIVE,
     ];
 
-    public const ANSWER_REQUIRED_QUESTION_TYPE = [
+    public const ANSWER_REQUIRED_QUESTION_TYPES = [
         self::EXAM_QUESTION_TYPE_MCQ,
         self::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS,
         self::EXAM_QUESTION_TYPE_YES_NO,

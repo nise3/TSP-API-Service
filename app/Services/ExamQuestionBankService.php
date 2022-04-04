@@ -4,12 +4,12 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\ExamQuestionBank;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -179,9 +179,9 @@ class ExamQuestionBankService
     /**
      * @param Request $request
      * @param int|null $id
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request, int $id = null): Validator
+    public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
         if(!empty($data["question_type"]) && $data["question_type"]==ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS){
@@ -265,7 +265,7 @@ class ExamQuestionBankService
                 'max:300'
             ],
             'answers' => [
-                Rule::requiredIf(!empty($data['question_type']) && array_key_exists($data['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPE)),
+                Rule::requiredIf(!empty($data['question_type']) && array_key_exists($data['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                 'nullable',
                 'array',
             ],
@@ -279,14 +279,14 @@ class ExamQuestionBankService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
         ];
-        return \Illuminate\Support\Facades\Validator::make($data, $rules);
+        return Validator::make($data, $rules);
     }
 
     /**
      * @param Request $request
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function filterValidator(Request $request): Validator
+    public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
@@ -296,7 +296,7 @@ class ExamQuestionBankService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+        return Validator::make($request->all(), [
             'title_en' => 'nullable',
             'title' => 'nullable',
             'subject_id' => 'nullable|min:1',

@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
+use Laravel\Lumen\Application;
+use phpseclib3\Exception\NoSupportedAlgorithmsException;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -118,14 +120,38 @@ class ExamService
 
     /**
      * @param array $data
-     * @return Exam
+     * @return mixed
      */
-    public function storeExam(array $data): Exam
+    public function storeExam(array $data): mixed
     {
-        $exam = app(Exam::class);
-        $exam->fill($data);
-        $exam->save();
-        return $exam;
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            $examIds = [];
+            if (!empty($data['online'])) {
+                $exam = app(Exam::class);
+                $data['online']['type'] = Exam::EXAM_TYPE_ONLINE;
+                $exam->fill($data['online']);
+                $exam->save();
+                $examIds['online'] = $exam->id;
+
+            }
+            if (!empty($data['offline'])) {
+                $exam = app(Exam::class);
+                $data['offline']['type'] = Exam::EXAM_TYPE_OFFLINE;
+                $exam->fill($data['offline']);
+                $exam->save();
+                $examIds['offline'] = $exam->id;
+
+            }
+
+            return $examIds;
+
+        } else {
+            $exam = app(Exam::class);
+            $exam->fill($data);
+            $exam->save();
+            return $exam;
+        }
+
     }
 
     /**
@@ -135,14 +161,27 @@ class ExamService
     public function storeExamSets(array $data): array
     {
         $setMapping = [];
-        foreach ($data['sets'] as $examSetData) {
-            $examSetData['uuid'] = ExamSet::examSetId();
-            $examSetData['exam_id'] = $data['exam_id'];
-            $setMapping[$examSetData['id']] = $examSetData['uuid'];
-            $examSet = app(ExamSet::class);
-            $examSet->fill($examSetData);
-            $examSet->save();
+
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            foreach ($data['offline']['sets'] as $examSetData) {
+                $examSetData['uuid'] = ExamSet::examSetId();
+                $examSetData['exam_id'] = $data['exam_ids']['offline'];
+                $setMapping[$examSetData['id']] = $examSetData['uuid'];
+                $examSet = app(ExamSet::class);
+                $examSet->fill($examSetData);
+                $examSet->save();
+            }
+        } else {
+            foreach ($data['sets'] as $examSetData) {
+                $examSetData['uuid'] = ExamSet::examSetId();
+                $examSetData['exam_id'] = $data['exam_ids'];
+                $setMapping[$examSetData['id']] = $examSetData['uuid'];
+                $examSet = app(ExamSet::class);
+                $examSet->fill($examSetData);
+                $examSet->save();
+            }
         }
+
         return $setMapping;
 
     }
@@ -152,14 +191,82 @@ class ExamService
      */
     public function storeExamSections(array $data)
     {
-        foreach ($data['exam_questions'] as $examSectionData) {
-            $examSectionData['uuid'] = ExamSection::examSectionId();
-            $examSectionData['exam_id'] = $data['exam_id'];
-            $examSectionData['row_status'] = $data['row_status'];
-            $examSection = app(ExamSection::class);
-            $examSection->fill($examSectionData);
-            $examSection->save();
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            foreach ($data['online']['exam_questions'] as $examSectionData) {
+                $examSectionData['uuid'] = ExamSection::examSectionId();
+                $examSectionData['exam_id'] = $data['exam_ids']['online'];
+                if (!empty($data['row_status'])) {
+                    $examSectionData['row_status'] = $data['row_status'];
+                }
+                $examSection = app(ExamSection::class);
+                $examSection->fill($examSectionData);
+                $examSection->save();
+                $examSectionData['exam_section_uuid'] = $examSection->id;
+                if (!empty($examSectionData['questions'])) {
+                    $this->storeExamSectionQuestions($examSectionData);
+                }
+            }
+            foreach ($data['offline']['exam_questions'] as $examSectionData) {
+                $examSectionData['uuid'] = ExamSection::examSectionId();
+                $examSectionData['exam_id'] = $data['exam_ids']['offline'];
+                if (!empty($data['row_status'])) {
+                    $examSectionData['row_status'] = $data['row_status'];
+                }
+                $examSection = app(ExamSection::class);
+                $examSection->fill($examSectionData);
+                $examSection->save();
+
+                $examSectionData['exam_section_uuid'] = $examSection->id;
+                $examSectionData['exam_sets'] = $data['exam_sets'];
+
+                if (!empty($examSectionData['question_sets'])) {
+                    $this->storeExamSectionQuestions($examSectionData);
+                }
+
+            }
+        } else {
+            foreach ($data['exam_questions'] as $examSectionData) {
+                $examSectionData['uuid'] = ExamSection::examSectionId();
+                $examSectionData['exam_id'] = $data['exam_id'];
+                if (!empty($data['row_status'])) {
+                    $examSectionData['row_status'] = $data['row_status'];
+                }
+                $examSection = app(ExamSection::class);
+                $examSection->fill($examSectionData);
+                $examSection->save();
+
+                $examSectionQuestionData['exam_section_uuid'] = $examSection->id;
+                $examSectionQuestionData['exam_id'] = $data['exam_id'];
+
+                if (!empty($examSectionData['question_sets'])) {
+                    $this->storeExamSectionQuestions($examSectionQuestionData);
+                }
+
+            }
         }
+
+
+    }
+
+    /**
+     * @param array $data
+     */
+    public function storeExamSectionQuestions(array $data)
+    {
+        if (!empty($data['questions'])) {
+            foreach ($data['questions'] as $examSectionData) {
+                $examSectionData['uuid'] = ExamSection::examSectionId();
+                $examSectionData['exam_id'] = $data['exam_id'];
+                if (!empty($data['row_status'])) {
+                    $examSectionData['row_status'] = $data['row_status'];
+                }
+
+                $examSection = app(ExamSection::class);
+                $examSection->fill($examSectionData);
+                $examSection->save();
+            }
+        }
+
 
     }
 
@@ -169,7 +276,8 @@ class ExamService
      * @param array $data
      * @return Exam
      */
-    public function update(Exam $Exam, array $data): Exam
+    public
+    function update(Exam $Exam, array $data): Exam
     {
         $Exam->fill($data);
         $Exam->save();
@@ -180,7 +288,8 @@ class ExamService
      * @param Exam $Exam
      * @return bool
      */
-    public function destroy(Exam $Exam): bool
+    public
+    function destroy(Exam $Exam): bool
     {
         return $Exam->delete();
     }
@@ -190,7 +299,8 @@ class ExamService
      * @param int|null $id
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
+    public
+    function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
         $customMessage = [
@@ -228,59 +338,7 @@ class ExamService
                 'required',
                 'int',
             ],
-            "sets" => [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                "nullable",
-                "array",
-            ],
-            "sets.*.id" => [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                'nullable',
-                'string',
-                "distinct",
-            ],
-            "sets.*.title" => [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                'string',
-                'nullable',
-            ],
-            "sets.*.title_en" => [
-                "nullable",
-                'string',
-            ],
 
-            'exam_questions' => [
-                'array',
-                'required',
-            ],
-            'exam_questions.*' => [
-                'array',
-                'required',
-            ],
-            'exam_questions.*.question_type' => [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-            ],
-            'exam_questions.*.number_of_questions' => [
-                'integer',
-                'required',
-            ],
-            'exam_questions.*.total_marks' => [
-                'numeric',
-                'required',
-            ],
-            'exam_questions.*.question_selection_type' => [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
-            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
@@ -337,6 +395,165 @@ class ExamService
                 'required',
                 'numeric',
             ];
+            $rules["offline.sets"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
+                }),
+                "nullable",
+                "array",
+            ];
+            $rules["offline.sets.*.id"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
+                }),
+                'nullable',
+                'string',
+                "distinct",
+            ];
+            $rules["offline.sets.*.title"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
+                }),
+                'string',
+                'nullable',
+            ];
+            $rules["offline.sets.*.title_en"] = [
+                "nullable",
+                'string',
+            ];
+//TODO :vvalidate questions based on selectipon type
+            $rules['online.exam_questions'] = [
+                'array',
+                'required',
+            ];
+            $rules['online.exam_questions.*'] = [
+                'array',
+                'required',
+            ];
+            $rules['online.exam_questions.*.question_type'] = [
+                'integer',
+                'required',
+                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+            ];
+            $rules['online.exam_questions.*.number_of_questions'] = [
+                'integer',
+                'required',
+            ];
+            $rules['online.exam_questions.*.total_marks'] = [
+                'numeric',
+                'required',
+            ];
+            $rules['online.exam_questions.*.question_selection_type'] = [
+                'integer',
+                'required',
+                Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
+            ];
+            $rules['offline.exam_questions.*.question_sets'] = [
+                'required',
+                'array',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*'] = [
+                'required',
+                'array',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.id'] = [
+                'string',
+                'array',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions'] = [
+                'array',
+                'required',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*'] = [
+                'array',
+                'required',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.id'] = [
+                'required',
+                'integer',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.title_en'] = [
+                'nullable',
+                'string',
+            ];
+
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.accessor_type'] = [
+                'required',
+                'string',
+                'max:100',
+                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.accessor_id'] = [
+                'required',
+                'int',
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.subject_id'] = [
+                'required',
+                'int',
+                'exists:exam_subjects,id,deleted_at,NULL'
+            ];
+
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.question_type'] = [
+                'required',
+                'int',
+                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+            ];
+
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_1'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_1_en'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'string',
+                'max:300'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_2'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_2_en'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_3'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_3_en'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.answers'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                'nullable',
+                'array',
+                'min:1'
+            ];
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.answers.*'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                'nullable',
+                'string',
+            ];
 
         } else {
             $rules['exam_date'] = [
@@ -359,6 +576,58 @@ class ExamService
                 'required',
                 'numeric',
             ];
+            $rules["sets"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+                }),
+                "nullable",
+                "array",
+            ];
+            $rules["sets.*.id"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+                }),
+                'nullable',
+                'string',
+                "distinct",
+            ];
+            $rules["sets.*.title"] = [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+                }),
+                'string',
+                'nullable',
+            ];
+            $rules["sets.*.title_en"] = [
+                "nullable",
+                'string',
+            ];
+            $rules['exam_questions'] = [
+                'array',
+                'required',
+            ];
+            $rules['exam_questions.*'] = [
+                'array',
+                'required',
+            ];
+            $rules['exam_questions.*.question_type'] = [
+                'integer',
+                'required',
+                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+            ];
+            $rules['exam_questions.*.number_of_questions'] = [
+                'integer',
+                'required',
+            ];
+            $rules['exam_questions.*.total_marks'] = [
+                'numeric',
+                'required',
+            ];
+            $rules['exam_questions.*.question_selection_type'] = [
+                'integer',
+                'required',
+                Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
+            ];
         }
 
         if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
@@ -370,8 +639,16 @@ class ExamService
                 'array',
                 'required',
             ];
-            $rules['exam_questions.*.questions.*.title_en'] = [
+            $rules['exam_questions.*.questions.*.id'] = [
                 'required',
+                'integer',
+            ];
+            $rules['exam_questions.*.questions.*.title'] = [
+                'required',
+                'string',
+            ];
+            $rules['exam_questions.*.questions.*.title_en'] = [
+                'nullable',
                 'string',
             ];
             $rules['exam_questions.*.questions.*.accessor_type'] = [
@@ -387,6 +664,7 @@ class ExamService
             $rules['exam_questions.*.questions.*.subject_id'] = [
                 'required',
                 'int',
+                'exists:exam_subjects,id,deleted_at,NULL'
             ];
 
             $rules['exam_questions.*.questions.*.question_type'] = [
@@ -440,7 +718,7 @@ class ExamService
                 'max:300'
             ];
             $rules['exam_questions.*.questions.*.answers'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['questions']['question_type']) && array_key_exists($data['exam_questions']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPE)),
+                Rule::requiredIf(!empty($data['exam_questions']['questions']['question_type']) && array_key_exists($data['exam_questions']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                 'nullable',
                 'array',
             ];
@@ -451,10 +729,114 @@ class ExamService
 
         }
 
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE){
-            //TODO: questions for exam type offline
-        }
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $rules['exam_questions.*.question_sets'] = [
+                'required',
+                'array',
+            ];
+            $rules['exam_questions.*.question_sets.*'] = [
+                'required',
+                'array',
+            ];
+            $rules['exam_questions.*.question_sets.*.id'] = [
+                'string',
+                'array',
+            ];
+            $rules['exam_questions.*.question_sets.*.questions'] = [
+                'array',
+                'required',
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*'] = [
+                'array',
+                'required',
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.id'] = [
+                'required',
+                'integer',
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.title_en'] = [
+                'nullable',
+                'string',
+            ];
 
+            $rules['exam_questions.*.question_sets.*.questions.*.accessor_type'] = [
+                'required',
+                'string',
+                'max:100',
+                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.accessor_id'] = [
+                'required',
+                'int',
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.subject_id'] = [
+                'required',
+                'int',
+                'exists:exam_subjects,id,deleted_at,NULL'
+            ];
+
+            $rules['exam_questions.*.question_sets.*.questions.*.question_type'] = [
+                'required',
+                'int',
+                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+            ];
+
+            $rules['exam_questions.*.question_sets.*.questions.*.option_1'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_1_en'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'string',
+                'max:300'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_2'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_2_en'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_3'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_3_en'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_4'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                'nullable',
+                'string',
+                'max:600'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.option_4'] = [
+                'nullable',
+                'string',
+                'max:300'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.answers'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                'nullable',
+                'array',
+                'min:1'
+            ];
+            $rules['exam_questions.*.question_sets.*.questions.*.answers.*'] = [
+                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                'nullable',
+                'string',
+            ];
+        }
 
         return Validator::make($data, $rules, $customMessage);
     }
@@ -462,10 +844,11 @@ class ExamService
 
     /**
      * @param Request $request
-     * @return Validator
+     * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public function filterValidator(Request $request): Validator
+    public
+    function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
@@ -489,7 +872,7 @@ class ExamService
             ],
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+        return Validator::make($request->all(), $rules, $customMessage);
     }
 }
 
