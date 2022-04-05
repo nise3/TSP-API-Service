@@ -86,19 +86,15 @@ class ExamController extends Controller
         if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
             $validatedData['exam_ids'] = $exam;
         } else {
-            $validatedData['exam_ids'] = $exam->id;
+            $validatedData['exam_id'] = $exam->id;
         }
 
         if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
             $examSets = $this->ExamService->storeExamSets($validatedData);
-            $validatedData['exam_sets'] = $examSets;
+            $validatedData['exam_question_sets'] = $examSets;
         }
+        $this->ExamService->storeExamSections($validatedData);
 
-        if (!empty($validatedData['exam_questions']) || !empty($validatedData['online']['exam_questions']) || !empty($validatedData['online']['exam_questions'])) {
-            $this->ExamService->storeExamSections($validatedData);
-        }
-
-        //TODO :complete exam creation flow
         $response = [
             '_response_status' => [
                 "success" => true,

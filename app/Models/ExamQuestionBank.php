@@ -36,14 +36,14 @@ class ExamQuestionBank extends BaseModel
         self::EXAM_QUESTION_TYPE_YES_NO,
     ];
 
-    public const FIXED = 1;
-    public const RANDOM_FROM_QUESTION_BANK = 2;
-    public const RANDOM_FROM_SELECTED_QUESTIONS = 3;
+    public const QUESTION_SELECTION_FIXED = 1;
+    public const QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK = 2;
+    public const QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS = 3;
 
 
     public const QUESTION_SELECTION_TYPES = [
-        self::FIXED,
-        self::RANDOM_FROM_QUESTION_BANK,
-        self::RANDOM_FROM_SELECTED_QUESTIONS,
+        self::QUESTION_SELECTION_FIXED,
+        self::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK,
+        self::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS,
     ];
 }

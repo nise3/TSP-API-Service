@@ -8,7 +8,9 @@ class ExamType extends BaseModel
 {
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
     public const EXAM_PURPOSE_COURSE = "COURSE";
-    public const EXAM_PURPOSES =[
+    public const EXAM_PURPOSES = [
         self::EXAM_PURPOSE_COURSE
     ];
+
+    public const EXAM_PURPOSE_TABLE_COURSE = 'courses';
 }
