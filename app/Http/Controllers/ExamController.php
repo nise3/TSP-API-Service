@@ -91,8 +91,9 @@ class ExamController extends Controller
 
         if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
             $examSets = $this->ExamService->storeExamSets($validatedData);
-            $validatedData['exam_question_sets'] = $examSets;
+            $validatedData['sets'] = $examSets;
         }
+
         $this->ExamService->storeExamSections($validatedData);
 
         $response = [

@@ -46,4 +46,14 @@ class ExamQuestionBank extends BaseModel
         self::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK,
         self::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS,
     ];
+
+    public const EXAM_QUESTION_VALIDATION_MESSAGES = [
+        1 => "MCQ",
+        2 => "FIll in the blanks",
+        3 => "Yes/No Question",
+        4 => "Practical",
+        5 => "Filed Work",
+        6 => "Presentation",
+        7 => "Descriptive Question",
+    ];
 }
