@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Traits\Scopes\ScopeRowStatusTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Subject extends BaseModel
+class RplSubject extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes;
 

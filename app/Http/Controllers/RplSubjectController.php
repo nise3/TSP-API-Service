@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
-use App\Services\SubjectService;
+use App\Models\RplSubject;
+use App\Services\RplSubjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,25 +14,25 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class SubjectController extends Controller
+class RplSubjectController extends Controller
 {
     /**
-     * @var SubjectService
+     * @var RplSubjectService
      */
-    public SubjectService $subjectService;
+    public RplSubjectService $rplSubjectService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * SubjectController constructor.
-     * @param SubjectService $subjectService
+     * RplSubjectController constructor.
+     * @param RplSubjectService $rplSubjectService
      */
 
-    public function __construct(SubjectService $subjectService)
+    public function __construct(RplSubjectService $rplSubjectService)
     {
-        $this->subjectService = $subjectService;
+        $this->rplSubjectService = $rplSubjectService;
         $this->startTime = Carbon::now();
     }
 
@@ -45,11 +45,11 @@ class SubjectController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Subject::class);
+        $this->authorize('viewAny', RplSubject::class);
 
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->rplSubjectService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime);
+        $response = $this->rplSubjectService->getSubjectList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -61,9 +61,9 @@ class SubjectController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->subjectService->filterValidator($request)->validate();
+        $filter = $this->rplSubjectService->filterValidator($request)->validate();
 
-        $response = $this->subjectService->getSubjectList($filter, $this->startTime,false);
+        $response = $this->rplSubjectService->getSubjectList($filter, $this->startTime,false);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,7 +77,7 @@ class SubjectController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $subject = $this->subjectService->getOneSubject($id);
+        $subject = $this->rplSubjectService->getOneSubject($id);
         $this->authorize('view', $subject);
 
         $response = [
@@ -100,17 +100,17 @@ class SubjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Subject::class);
+        $this->authorize('create', RplSubject::class);
 
-        $validated = $this->subjectService->validator($request)->validate();
-        $subject = $this->subjectService->store($validated);
+        $validated = $this->rplSubjectService->validator($request)->validate();
+        $subject = $this->rplSubjectService->store($validated);
 
         $response = [
             'data' => $subject,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Subject added successfully",
+                "message" => "RplSubject added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -127,18 +127,18 @@ class SubjectController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $subject = RplSubject::findOrFail($id);
 
         $this->authorize('update', $subject);
 
-        $validated = $this->subjectService->validator($request, $id)->validate();
-        $data = $this->subjectService->update($subject, $validated);
+        $validated = $this->rplSubjectService->validator($request, $id)->validate();
+        $data = $this->rplSubjectService->update($subject, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Subject updated successfully.",
+                "message" => "RplSubject updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -153,19 +153,19 @@ class SubjectController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $subject = Subject::findOrFail($id);
+        $subject = RplSubject::findOrFail($id);
 
         $this->authorize('delete', $subject);
 
         DB::beginTransaction();
         try {
-            $this->subjectService->destroy($subject);
+            $this->rplSubjectService->destroy($subject);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Subject deleted successfully.",
+                    "message" => "RplSubject deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];

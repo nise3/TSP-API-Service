@@ -109,8 +109,9 @@ class RplLevelService
             } else if (count($rplLevelValidIds) > 0) {
                 $rplLevelBuilder//->selectRaw('1 as eligible');
                     ->selectRaw("(CASE WHEN rpl_levels.id = ? THEN 1 ELSE 0 END) as eligible", [$rplLevelValidIds[0]]);
+            } else {
+                $rplLevelBuilder->selectRaw("(CASE WHEN rpl_levels.sequence_order = 1 THEN 1 ELSE 0 END) as eligible");
             }
-
         }
 
 

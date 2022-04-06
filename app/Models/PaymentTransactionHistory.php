@@ -66,7 +66,7 @@ class PaymentTransactionHistory extends BaseModel
     public const PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL = "Course Enrollment Payment";
 
     public const YOUTH_ASSESSMENT_CERTIFICATION_FREE = "YOUTH_ASSESSMENT_CERTIFICATION_FREE";
-    public const YOUTH_ASSESSMENT_CERTIFICATION_FREE_LABEL = "Youth Assessment Certification Free";
+    public const YOUTH_ASSESSMENT_CERTIFICATION_FREE_LABEL = "Youth RplAssessment Certification Free";
 
     public const PAYMENT_PURPOSES = [
         self::PAYMENT_PURPOSE_COURSE_ENROLLMENT => self::PAYMENT_PURPOSE_COURSE_ENROLLMENT_LABEL,

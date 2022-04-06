@@ -2,38 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AssessmentQuestion;
-use App\Models\QuestionBank;
-use App\Services\AssessmentQuestionService;
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Models\RplAssessmentQuestion;
+use App\Services\RplAssessmentQuestionService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class AssessmentQuestionController extends Controller
+class RplAssessmentQuestionController extends Controller
 {
     /**
-     * @var AssessmentQuestionService
+     * @var RplAssessmentQuestionService
      */
-    public AssessmentQuestionService $assessmentQuestionService;
+    public RplAssessmentQuestionService $rplAssessmentQuestionService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * QuestionBankController constructor.
-     * @param AssessmentQuestionService $assessmentQuestionService
+     * RplQuestionBankController constructor.
+     * @param RplAssessmentQuestionService $rplAssessmentQuestionService
      */
 
-    public function __construct(AssessmentQuestionService $assessmentQuestionService)
+    public function __construct(RplAssessmentQuestionService $rplAssessmentQuestionService)
     {
-        $this->assessmentQuestionService = $assessmentQuestionService;
+        $this->rplAssessmentQuestionService = $rplAssessmentQuestionService;
         $this->startTime = Carbon::now();
     }
 
@@ -46,10 +43,10 @@ class AssessmentQuestionController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', AssessmentQuestion::class);
-        $filter = $this->assessmentQuestionService->filterValidator($request)->validate();
+        $this->authorize('viewAny', RplAssessmentQuestion::class);
+        $filter = $this->rplAssessmentQuestionService->filterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime);
+        $response = $this->rplAssessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -61,9 +58,9 @@ class AssessmentQuestionController extends Controller
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->assessmentQuestionService->publicFilterValidator($request)->validate();
+        $filter = $this->rplAssessmentQuestionService->publicFilterValidator($request)->validate();
 
-        $response = $this->assessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime, true);
+        $response = $this->rplAssessmentQuestionService->getAssessmentQuestionList($filter, $this->startTime, true);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -77,15 +74,15 @@ class AssessmentQuestionController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', AssessmentQuestion::class);
-        $validated = $this->assessmentQuestionService->validator($request)->validate();
-        $this->assessmentQuestionService->store($validated);
+        $this->authorize('create', RplAssessmentQuestion::class);
+        $validated = $this->rplAssessmentQuestionService->validator($request)->validate();
+        $this->rplAssessmentQuestionService->store($validated);
 
         $response = [
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Assessment Question  added successfully",
+                "message" => "RplAssessment Question  added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];

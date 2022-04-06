@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\RplApplication\RplApplicationEvent;
+use App\Listeners\RplApplication\RplApplicationInstituteToYouthListener;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         \App\Events\CourseEnrollment\CourseEnrollmentEvent::class => [
             \App\Listeners\CourseEnrollment\CourseEnrollmentInstituteToYouthListener::class,
+        ],
+        RplApplicationEvent::class => [
+            RplApplicationInstituteToYouthListener::class
         ],
         \App\Events\MailSendEvent::class => [
             \App\Listeners\MailSendListener::class

@@ -4,10 +4,10 @@
 namespace App\Services;
 
 
-use App\Models\Assessment;
+use App\Models\RplAssessment;
 use App\Models\BaseModel;
-use App\Models\AssessmentQuestion;
-use App\Models\QuestionBank;
+use App\Models\RplAssessmentQuestion;
+use App\Models\RplQuestionBank;
 use App\Models\RplSector;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
-class AssessmentQuestionService
+class RplAssessmentQuestionService
 {
     /**
      * @param array $request
@@ -39,74 +39,74 @@ class AssessmentQuestionService
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        /** @var AssessmentQuestion|Builder $assessmentQuestionBuilder */
-        $assessmentQuestionBuilder = AssessmentQuestion::select([
-            'assessment_questions.assessment_id',
-            'assessments.title as assessment_title',
-            'assessments.title_en as assessment_title_en',
-            'assessment_questions.assessment_id',
-            'assessment_questions.assessment_question_set_id',
-            'assessment_questions.question_id',
-            'question_banks.title as question_title',
-            'question_banks.title_en as question_title_en',
-            'assessment_questions.title',
-            'assessment_questions.title_en',
-            'assessment_questions.type',
-            'assessment_questions.subject_id',
-            'assessment_questions.option_1',
-            'assessment_questions.option_1_en',
-            'assessment_questions.option_2',
-            'assessment_questions.option_2_en',
-            'assessment_questions.option_3',
-            'assessment_questions.option_3_en',
-            'assessment_questions.option_4',
-            'assessment_questions.option_4_en',
-            'assessment_questions.row_status',
-            'assessment_questions.created_at',
-            'assessment_questions.updated_at',
+        /** @var RplAssessmentQuestion|Builder $assessmentQuestionBuilder */
+        $assessmentQuestionBuilder = RplAssessmentQuestion::select([
+            'rpl_assessment_questions.assessment_id',
+            'rpl_assessments.title as assessment_title',
+            'rpl_assessments.title_en as assessment_title_en',
+            'rpl_assessment_questions.assessment_id',
+            'rpl_assessment_questions.assessment_question_set_id',
+            'rpl_assessment_questions.question_id',
+            'rpl_question_banks.title as question_title',
+            'rpl_question_banks.title_en as question_title_en',
+            'rpl_assessment_questions.title',
+            'rpl_assessment_questions.title_en',
+            'rpl_assessment_questions.type',
+            'rpl_assessment_questions.subject_id',
+            'rpl_assessment_questions.option_1',
+            'rpl_assessment_questions.option_1_en',
+            'rpl_assessment_questions.option_2',
+            'rpl_assessment_questions.option_2_en',
+            'rpl_assessment_questions.option_3',
+            'rpl_assessment_questions.option_3_en',
+            'rpl_assessment_questions.option_4',
+            'rpl_assessment_questions.option_4_en',
+            'rpl_assessment_questions.row_status',
+            'rpl_assessment_questions.created_at',
+            'rpl_assessment_questions.updated_at',
         ]);
 
         if (!$isPublicApi) {
             /** Answer will not be shown in public api question list */
-            $assessmentQuestionBuilder->addSelect('assessment_questions.answer');
+            $assessmentQuestionBuilder->addSelect('rpl_assessment_questions.answer');
             $assessmentQuestionBuilder->acl();
         }
 
-        $assessmentQuestionBuilder->orderBy('assessment_questions.assessment_id', $order);
+        $assessmentQuestionBuilder->orderBy('rpl_assessment_questions.assessment_id', $order);
 
-        $assessmentQuestionBuilder->join("assessments", function ($join) {
-            $join->on('assessment_questions.assessment_id', '=', 'assessments.id')
-                ->whereNull('assessments.deleted_at');
+        $assessmentQuestionBuilder->join("rpl_assessments", function ($join) {
+            $join->on('rpl_assessment_questions.assessment_id', '=', 'rpl_assessments.id')
+                ->whereNull('rpl_assessments.deleted_at');
         });
 
-        $assessmentQuestionBuilder->join("question_banks", function ($join) {
-            $join->on('assessment_questions.question_id', '=', 'question_banks.id')
-                ->whereNull('assessments.deleted_at');
+        $assessmentQuestionBuilder->join("rpl_question_banks", function ($join) {
+            $join->on('rpl_assessment_questions.question_id', '=', 'rpl_question_banks.id')
+                ->whereNull('rpl_assessments.deleted_at');
         });
         if (!empty($titleEn)) {
-            $assessmentQuestionBuilder->where('assessment_questions.title_en', 'like', '%' . $titleEn . '%');
+            $assessmentQuestionBuilder->where('rpl_assessment_questions.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $assessmentQuestionBuilder->where('assessment_questions.title', 'like', '%' . $title . '%');
+            $assessmentQuestionBuilder->where('rpl_assessment_questions.title', 'like', '%' . $title . '%');
         }
         if ($isPublicApi) {
-            $assessmentQuestionBuilder->where('assessments.rpl_level_id', $rplLevelId);
-            $assessmentQuestionBuilder->where('assessments.rpl_occupation_id', $rplOccupationId);
-            $assessmentSetIds = $assessmentQuestionBuilder->pluck('assessment_questions.assessment_question_set_id')->toArray();
+            $assessmentQuestionBuilder->where('rpl_assessments.rpl_level_id', $rplLevelId);
+            $assessmentQuestionBuilder->where('rpl_assessments.rpl_occupation_id', $rplOccupationId);
+            $assessmentSetIds = $assessmentQuestionBuilder->pluck('rpl_assessment_questions.assessment_question_set_id')->toArray();
             if (!empty($assessmentSetIds)) {
                 $randomAssessmentSetId = $assessmentSetIds[array_rand($assessmentSetIds)];
-                $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
+                $assessmentQuestionBuilder->where('rpl_assessment_questions.assessment_question_set_id', $randomAssessmentSetId);
             }
 
         }
         if (is_numeric($assessmentId)) {
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_id', $assessmentId);
+            $assessmentQuestionBuilder->where('rpl_assessment_questions.assessment_id', $assessmentId);
         }
         if (is_numeric($assessmentQuestionId)) {
-            $assessmentQuestionBuilder->where('assessment_questions.assessment_question_set_id', $assessmentQuestionId);
+            $assessmentQuestionBuilder->where('rpl_assessment_questions.assessment_question_set_id', $assessmentQuestionId);
         }
         if (is_numeric($rowStatus)) {
-            $assessmentQuestionBuilder->where('assessment_questions.row_status', $rowStatus);
+            $assessmentQuestionBuilder->where('rpl_assessment_questions.row_status', $rowStatus);
         }
 
         /** @var Collection $assessmentQuestions */
@@ -140,13 +140,13 @@ class AssessmentQuestionService
     public function store(array $data)
     {
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
-            AssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])
+            RplAssessmentQuestion::where('assessment_id', $assessmentQuestion['assessment_id'])
                 ->where('assessment_question_set_id', $assessmentQuestion['assessment_question_set_id'])
                 ->delete();
         }
         foreach ($data['assessment_questions'] as $assessmentQuestionData) {
             unset($assessmentQuestionData['id'], $assessmentQuestionData['difficulty_level'], $assessmentQuestionData['deleted_at']);
-            $assessmentQuestion = app(AssessmentQuestion::class);
+            $assessmentQuestion = app(RplAssessmentQuestion::class);
             $assessmentQuestion->fill($assessmentQuestionData);
             $assessmentQuestion->save();
         }
@@ -178,12 +178,12 @@ class AssessmentQuestionService
             'assessment_questions.*.assessment_id' => [
                 'required',
                 'int',
-                'exists:assessments,id,deleted_at,NULL',
+                'exists:rpl_assessments,id,deleted_at,NULL',
             ],
             'assessment_questions.*.assessment_question_set_id' => [
                 'required',
                 'int',
-                'exists:assessment_question_sets,id,deleted_at,NULL',
+                'exists:rpl_assessment_question_sets,id,deleted_at,NULL',
             ],
             'assessment_questions.*.question_id' => [
                 'required',
@@ -200,17 +200,17 @@ class AssessmentQuestionService
             'assessment_questions.*.type' => [
                 'required',
                 'int',
-                Rule::in(AssessmentQuestion::TYPES)
+                Rule::in(RplAssessmentQuestion::TYPES)
             ],
             'assessment_questions.*.subject_id' => [
                 'required',
                 'int',
-                'exists:subjects,id,deleted_at,NULL'
+                'exists:rpl_subjects,id,deleted_at,NULL'
             ],
             'assessment_questions.*.answer' => [
                 'required',
                 'int',
-                Rule::in(QuestionBank::ANSWERS)
+                Rule::in(RplQuestionBank::ANSWERS)
             ],
             'assessment_questions.*.row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -222,7 +222,7 @@ class AssessmentQuestionService
         $index = 0;
         foreach ($data['assessment_questions'] as $assessmentQuestion) {
             Log::info("Inside assessment_questions foreach");
-            if ($assessmentQuestion['type'] == AssessmentQuestion::TYPE_MCQ) {
+            if ($assessmentQuestion['type'] == RplAssessmentQuestion::TYPE_MCQ) {
                 Log::info("Inside TYPE_MCQ");
                 $rules['assessment_questions.' . $index . '.option_1'] = [
                     'required',

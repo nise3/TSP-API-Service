@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TrainingCenterIncomeExpenditureReport;
+use App\Models\TrainingCenterProgressReport;
 use App\Services\TrainingCenterIncomeExpenditureReportService;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
@@ -43,7 +44,7 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        //$this->authorize('viewAny', TrainingCenterIncomeExpenditureReport::class);
+        $this->authorize('viewAny',TrainingCenterProgressReport::class);
         $filter = $this->trainingCenterIncomeExpenditureReportService->filterValidator($request)->validate();
 
         $response = $this->trainingCenterIncomeExpenditureReportService->TrainingCenterIncomeExpenditureReport($filter, $this->startTime);
@@ -58,7 +59,9 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function read(int $id): JsonResponse
     {
+        $this->authorize('view',TrainingCenterIncomeExpenditureReport::class);
         $data = $this->trainingCenterIncomeExpenditureReportService->getOneTrainingCenterIncomeExpenditureReport($id);
+        $this->authorize('viewAny',TrainingCenterProgressReport::class);
         $response = [
             "data" => $data ?: null,
             "_response_status" => [
@@ -79,9 +82,11 @@ class TrainingCenterIncomeExpenditureReportController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create',TrainingCenterIncomeExpenditureReport::class);
         $validatedData = $this->trainingCenterIncomeExpenditureReportService->validator($request)->validate();
 
         $data = $this->trainingCenterIncomeExpenditureReportService->store($validatedData);
+        $this->authorize('viewAny',TrainingCenterProgressReport::class);
         $response = [
             'data' => $data ?: null,
             '_response_status' => [

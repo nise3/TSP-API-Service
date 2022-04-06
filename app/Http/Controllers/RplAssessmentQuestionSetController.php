@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QuestionBank;
-use App\Services\QuestionBankService;
+use App\Models\RplAssessmentQuestionSet;
+use App\Services\RplAssessmentQuestionSetService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,62 +14,60 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 
-class QuestionBankController extends Controller
+class RplAssessmentQuestionSetController extends Controller
 {
     /**
-     * @var QuestionBankService
+     * @var RplAssessmentQuestionSetService
      */
-    public QuestionBankService $questionBankService;
+    public RplAssessmentQuestionSetService $rplAssessmentQuestionSetService;
     /**
      * @var Carbon
      */
     private Carbon $startTime;
 
     /**
-     * QuestionBankController constructor.
-     * @param QuestionBankService $questionBankService
+     * RplOccupationController constructor.
+     * @param RplAssessmentQuestionSetService $rplAssessmentQuestionSetService
      */
 
-    public function __construct(QuestionBankService $questionBankService)
+    public function __construct(RplAssessmentQuestionSetService $rplAssessmentQuestionSetService)
     {
-        $this->questionBankService = $questionBankService;
+        $this->rplAssessmentQuestionSetService = $rplAssessmentQuestionSetService;
         $this->startTime = Carbon::now();
     }
 
     /**
-     * * Display a listing of the resource.
+     * Display a listing of the resource.
+     *
      * @param Request $request
      * @return JsonResponse
-     * @throws Throwable
-     * @throws ValidationException
+     * @throws AuthorizationException|ValidationException
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', QuestionBank::class);
+        $this->authorize('viewAny', RplAssessmentQuestionSet::class);
+        $filter = $this->rplAssessmentQuestionSetService->filterValidator($request)->validate();
 
-        $filter = $this->questionBankService->filterValidator($request)->validate();
-
-        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime);
+        $response = $this->rplAssessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws Throwable
      * @throws ValidationException
      */
     public function getPublicList(Request $request): JsonResponse
     {
-        $filter = $this->questionBankService->filterValidator($request)->validate();
+        $filter = $this->rplAssessmentQuestionSetService->filterValidator($request)->validate();
 
-        $response = $this->questionBankService->getQuestionBankList($filter, $this->startTime,false);
+        $response = $this->rplAssessmentQuestionSetService->getAssessmentQuestionSetList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-
     /**
-     * * Display the specified resource
+     * Show the form for creating a new resource.
+     *
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -77,11 +75,11 @@ class QuestionBankController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $questionBank = $this->questionBankService->getOneQuestionBank($id);
-        $this->authorize('view', $questionBank);
+        $assessmentQuestionSet = $this->rplAssessmentQuestionSetService->getOneAssessmentQuestionSet($id);
+        $this->authorize('view', $assessmentQuestionSet);
 
         $response = [
-            "data" => $questionBank,
+            "data" => $assessmentQuestionSet,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -93,24 +91,24 @@ class QuestionBankController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
      * @param Request $request
      * @return JsonResponse
-     * @throws Throwable
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', QuestionBank::class);
-
-        $validated = $this->questionBankService->validator($request)->validate();
-        $questionBank = $this->questionBankService->store($validated);
+        $this->authorize('create', RplAssessmentQuestionSet::class);
+        $validated = $this->rplAssessmentQuestionSetService->validator($request)->validate();
+        $assessmentQuestionSet = $this->rplAssessmentQuestionSetService->store($validated);
 
         $response = [
-            'data' => $questionBank,
+            'data' => $assessmentQuestionSet,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Question Bank added successfully",
+                "message" => "RplAssessmentQuestionSet added successfully",
                 "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
             ]
         ];
@@ -118,27 +116,27 @@ class QuestionBankController extends Controller
     }
 
     /**
-     * * Update the specified resource in storage.
+     * Update the specified resource in storage.
+     *
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws Throwable
-     * @throws ValidationException
+     * @throws AuthorizationException|ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $questionBank = QuestionBank::findOrFail($id);
+        $assessmentQuestionSet = RplAssessmentQuestionSet::findOrFail($id);
 
-        $this->authorize('update', $questionBank);
+        $this->authorize('update', $assessmentQuestionSet);
 
-        $validated = $this->questionBankService->validator($request, $id)->validate();
-        $data = $this->questionBankService->update($questionBank, $validated);
+        $validated = $this->rplAssessmentQuestionSetService->validator($request, $id)->validate();
+        $data = $this->rplAssessmentQuestionSetService->update($assessmentQuestionSet, $validated);
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Question Bank updated successfully.",
+                "message" => "RplAssessmentQuestionSet updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -146,26 +144,27 @@ class QuestionBankController extends Controller
     }
 
     /**
-     *Remove the specified resource from storage.
+     * Remove the specified resource from storage.
+     *
      * @param int $id
      * @return JsonResponse
      * @throws Throwable
      */
     public function destroy(int $id): JsonResponse
     {
-        $questionBank = QuestionBank::findOrFail($id);
+        $assessmentQuestionSet = RplAssessmentQuestionSet::findOrFail($id);
 
-        $this->authorize('delete', $questionBank);
+        $this->authorize('delete', $assessmentQuestionSet);
 
         DB::beginTransaction();
         try {
-            $this->questionBankService->destroy($questionBank);
+            $this->rplAssessmentQuestionSetService->destroy($assessmentQuestionSet);
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Question Bank deleted successfully.",
+                    "message" => "RplAssessmentQuestionSet deleted successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
