@@ -184,12 +184,10 @@ class ExamQuestionBankService
     public function validator(Request $request, int $id = null): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
-        if(!empty($data["question_type"]) && $data["question_type"]==ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS){
+        if (!empty($data["question_type"]) && $data["question_type"] == ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS) {
             preg_match_all('/\[{2}(.*?)\]{2}/is', $data['title'], $match);
-            $data['title'] = preg_replace('/\[{2}(.*?)\]{2}/is', '[[]]', $data['title']);
             $data['answers'] = $match[1];
         }
-
         $rules = [
             'title' => [
                 'required',
