@@ -32,50 +32,73 @@ class ExamService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-        $examTypeId = $request['exam_type_id'] ?? "";
+
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
+        $subjectId = $request['subject_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var Exam|Builder $examBuilder */
-        $examBuilder = Exam::select([
-            'exams.id',
-            'exams.exam_type_id',
-            'exams.exam_date',
-            'exams.start_time',
-            'exams.end_time',
-            'exams.venue',
-            'exams.total_marks',
-            'exams.row_status',
-            'exams.created_at',
-            'exams.updated_at',
-            'exams.deleted_at',
+        /** @var ExamType|Builder $examTypeBuilder */
+        $examTypeBuilder = ExamType::select([
+            'exam_types.id',
+            'exam_types.subject_id',
+            'exam_subjects.title  as exam_subject_title',
+            'exam_subjects.title_en  as exam_subject_title_en',
+            'exam_types.type',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exam_types.row_status',
+            'exam_types.created_at',
+            'exam_types.updated_at',
+            'exam_types.deleted_at',
         ]);
 
-        $examBuilder->orderBy('exams.id', $order);
+        $examTypeBuilder->leftJoin("exams", function ($join) {
+            $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examTypeBuilder->leftJoin("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examTypeBuilder->orderBy('exam_types.id', $order);
+
 
         if (is_numeric($rowStatus)) {
-            $examBuilder->where('exams.row_status', $rowStatus);
+            $examTypeBuilder->where('exam_types.row_status', $rowStatus);
         }
-        if (!empty($examTypeId)) {
-            $examBuilder->where('exams.subjectId', 'like', '%' . $examTypeId . '%');
+
+        if (!empty($titleEn)) {
+            $examTypeBuilder->where('exam_types.title_en', 'like', '%' . $titleEn . '%');
         }
+        if (!empty($title)) {
+            $examTypeBuilder->where('exam_types.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($subjectId)) {
+            $examTypeBuilder->where('exam_types.subjectId', 'like', '%' . $subjectId . '%');
+        }
+
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $Exam = $examBuilder->paginate($pageSize);
-            $paginateData = (object)$Exam->toArray();
+            $ExamType = $examTypeBuilder->paginate($pageSize);
+            $paginateData = (object)$ExamType->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $Exam = $examBuilder->get();
+            $ExamType = $examTypeBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $Exam->toArray()['data'] ?? $Exam->toArray();
+        $response['data'] = $ExamType->toArray()['data'] ?? $ExamType->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -144,7 +167,6 @@ class ExamService
                 $exam->fill($data['offline']);
                 $exam->save();
                 $examIds['offline'] = $exam->id;
-
             }
 
             return $examIds;
