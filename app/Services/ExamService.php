@@ -614,7 +614,7 @@ class ExamService
                 'string',
                 'max:600'
             ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4'] = [
+            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4_en'] = [
                 'nullable',
                 'string',
                 'max:300'
