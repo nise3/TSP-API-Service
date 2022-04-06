@@ -9,6 +9,10 @@ class ExamSectionQuestion extends Model
 {
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
+    protected $casts = [
+        "answers" => 'array',
+    ];
+
     public static function examSectionQuestionId(): string
     {
         $id = Uuid::uuid4();
