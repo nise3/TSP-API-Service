@@ -144,9 +144,9 @@ class ExamController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $examType=ExamType::findOrFail($id);
+        $examType = ExamType::findOrFail($id);
         DB::beginTransaction();
-        try{
+        try {
             $this->ExamService->destroy($examType);
             $response = [
                 '_response_status' => [
@@ -157,11 +157,22 @@ class ExamController extends Controller
                 ]
             ];
             DB::commit();
-        }catch(Throwable $e) {
-        DB::rollBack();
-        throw $e;
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    public function getExamYouthList(int $id): JsonResponse
+    {
+        $exam = Exam::findOrFail($id);
+        try {
+            $response = $this->ExamService->getExamYouthList($exam);
+        } catch (Throwable $e) {
+            throw  $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

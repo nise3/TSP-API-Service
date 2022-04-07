@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
+use App\Models\ExamResult;
 use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
@@ -389,13 +391,25 @@ class ExamService
 
         $ExamTypeId = $ExamType->id;
         $ExamType->delete();
-        $examsIds =  Exam::where('exam_type_id', $ExamTypeId)->pluck('id')->toArray();
+        $examsIds = Exam::where('exam_type_id', $ExamTypeId)->pluck('id')->toArray();
         Exam::whereIn('id', $examsIds)->delete();
         ExamSection::whereIn('exam_id', $examsIds)->delete();
         ExamSet::whereIn('exam_id', $examsIds)->delete();
         ExamSectionQuestion::whereIn('exam_id', $examsIds)->delete();
 
 
+    }
+
+    public function getExamYouthList(Exam $Exam)
+    {
+        $ExamId = $Exam->id;
+
+        $youthIds = ExamResult::where('exam_id', $ExamId)->pluck('youth_id')->unique()->toArray();
+        $youthProfiles=null;
+        if ($youthIds) {
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+        }
+        return $youthProfiles->toArray();
     }
 
     /**
