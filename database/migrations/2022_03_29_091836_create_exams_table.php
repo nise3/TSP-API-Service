@@ -18,9 +18,8 @@ class CreateExamsTable extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('exam_type_id');
-            $table->date('exam_date');
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
+            $table->dateTime('exam_date');
+            $table->unsignedInteger('duration');
             $table->text('venue')->nullable();
             $table->unsignedDecimal('total_marks')->default(0);
             $table->unsignedTinyInteger('row_status')->default(1);
