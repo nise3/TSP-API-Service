@@ -20,6 +20,7 @@ class CreateExamSectionQuestionsTable extends Migration
             $table->string('question_selection_type')->comment('1=> Fixed, 2=> Random from Question Bank, 3=> Random from Selected Questions');
             $table->unsignedDecimal('individual_marks')->default(0);
             $table->unsignedInteger('question_id');
+            $table->unsignedInteger('exam_id');
             $table->text('title');
             $table->text('title_en')->nullable();
             $table->string('accessor_type', 100)->nullable();
