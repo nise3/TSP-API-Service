@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Exam;
+use App\Models\ExamType;
 use App\Services\ExamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -142,16 +144,24 @@ class ExamController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
-        $this->ExamService->destroy($exam);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam Subject deleted successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $examType=ExamType::findOrFail($id);
+        DB::beginTransaction();
+        try{
+            $this->ExamService->destroy($examType);
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam  deleted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        }catch(Throwable $e) {
+        DB::rollBack();
+        throw $e;
+    }
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

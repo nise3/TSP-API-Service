@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ExamType extends BaseModel
 {
+    use  SoftDeletes;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
     public const EXAM_PURPOSE_BATCH = "BATCH";
     public const EXAM_PURPOSES = [

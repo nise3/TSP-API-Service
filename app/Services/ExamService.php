@@ -127,7 +127,7 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        $examTypeBuilder->where( 'exam_types.id', $id);
+        $examTypeBuilder->where('exam_types.id', $id);
         $examTypeBuilder->with('exams');
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
@@ -382,12 +382,20 @@ class ExamService
     }
 
     /**
-     * @param Exam $Exam
-     * @return bool
+     * @param ExamType $ExamType
      */
-    public function destroy(Exam $Exam): bool
+    public function destroy(ExamType $ExamType)
     {
-        return $Exam->delete();
+
+        $ExamTypeId = $ExamType->id;
+        $ExamType->delete();
+        $examsIds =  Exam::where('exam_type_id', $ExamTypeId)->pluck('id')->toArray();
+        Exam::whereIn('id', $examsIds)->delete();
+        ExamSection::whereIn('exam_id', $examsIds)->delete();
+        ExamSet::whereIn('exam_id', $examsIds)->delete();
+        ExamSectionQuestion::whereIn('exam_id', $examsIds)->delete();
+
+
     }
 
     /**
