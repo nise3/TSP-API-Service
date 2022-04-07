@@ -11,17 +11,12 @@ use App\Models\ExamSet;
 use App\Models\ExamType;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\ValidationException;
-use Laravel\Lumen\Application;
-use phpseclib3\Exception\NoSupportedAlgorithmsException;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
-use function PHPUnit\Framework\throwException;
 
 
 class ExamService
@@ -127,7 +122,7 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        $examTypeBuilder->where( 'exam_types.id', $id);
+        $examTypeBuilder->where('exam_types.id', $id);
         $examTypeBuilder->with('exams');
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
@@ -326,7 +321,7 @@ class ExamService
                     throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
                         "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions must be at least " . $examSectionData['number_of_questions'] . "[42001]"
                     ]));
-
+                    $individualMarks = $examSectionData['total_marks'] / floatval($examSectionData['number_of_questions']);
                     foreach ($examSectionData['sets'] as $set) {
                         foreach ($questions as $question) {
                             $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
@@ -334,6 +329,7 @@ class ExamService
                             $question['exam_section_uuid'] = $examSectionData['uuid'];
                             $question['exam_set_uuid'] = $set;
                             $question['question_selection_type'] = $examSectionData['question_selection_type'];
+                            $question['individual_marks'] = $individualMarks;
                             $question['question_id'] = $question['id'];
                             if (!empty($data['row_status'])) {
                                 $question['row_status'] = $data['row_status'];
@@ -446,554 +442,439 @@ class ExamService
             ]
         ];
 
+
         if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            /**mixed type online part validation rules**/
             $rules['online'] = [
                 'array',
                 'required'
             ];
-            $rules['online.exam_date'] = [
-                'required',
-                'date_format:Y-m-d',
+            $examValidationRules = $this->examValidationRules('online.');
+            $rules = array_merge($rules, $examValidationRules);
+            $examSectionValidationRules = $this->examSectionValidationRules('online.');
+            $rules = array_merge($rules, $examSectionValidationRules);
+            if (!empty($data['online']['exam_questions'])) {
+                $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['online']['exam_questions']);
+                $rules = array_merge($rules, $onlineExamQuestionRules);
+            }
 
-            ];
-            $rules['online.duration'] = [
-                'required',
-                'int'
-            ];
 
-            $rules['online.venue'] = [
-                'nullable',
-                'string',
-            ];
-            $rules['online.total_marks'] = [
-                'nullable',
-                'numeric',
-            ];
-            $rules['online.exam_questions'] = [
-                'array',
-                'required',
-                'size:5',
-            ];
-            $rules['online.exam_questions.*'] = [
-                'array',
-                'required',
-            ];
-            $rules['online.exam_questions.*.question_type'] = [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-            ];
-            $rules['online.exam_questions.*.number_of_questions'] = [
-                'integer',
-                'required',
-            ];
-            $rules['online.exam_questions.*.total_marks'] = [
-                'numeric',
-                'required',
-            ];
-            $rules['online.exam_questions.*.question_selection_type'] = [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
-            ];
+            /**mixed type offline part validation rules**/
             $rules['offline'] = [
                 'array',
                 'required'
             ];
-            $rules['offline.exam_date'] = [
-                'required',
-                'date_format:Y-m-d',
-            ];
-            $rules['offline.duration'] = [
-                'required',
-                'int'
-            ];
-            $rules['offline.venue'] = [
-                'nullable',
-                'string',
-            ];
-            $rules['offline.total_marks'] = [
-                'required',
-                'numeric',
-            ];
-            $rules["offline.sets"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
-                }),
-                "nullable",
-                "array",
-            ];
-            $rules["offline.sets.*.id"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
-                }),
-                'nullable',
-                'string',
-                "distinct",
-            ];
-            $rules["offline.sets.*.title"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED;
-                }),
-                'string',
-                'nullable',
-            ];
-            $rules["offline.sets.*.title_en"] = [
-                "nullable",
-                'string',
-            ];
+            $examValidationRules = $this->examValidationRules('offline.');
+            $rules = array_merge($rules, $examValidationRules);
+            $examSectionValidationRules = $this->examSectionValidationRules('offline.');
+            $rules = array_merge($rules, $examSectionValidationRules);
+            $examSetValidationRules = $this->examSetValidationRules($data, "offline.");
+            $rules = array_merge($rules, $examSetValidationRules);
+            if (!empty($data['offline']['exam_questions'])) {
+                $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['offline']['exam_questions']);
+                $rules = array_merge($rules, $offlineExamQuestionRules);
+            }
 
-            $rules['offline.exam_questions.*.question_sets'] = [
-                'required',
-                'array',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*'] = [
-                'required',
-                'array',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.id'] = [
-                'string',
-                'required',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions'] = [
-                'array',
-                'required',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*'] = [
-                'array',
-                'required',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.id'] = [
-                'required',
-                'integer',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.title_en'] = [
-                'nullable',
-                'string',
-            ];
-
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.accessor_type'] = [
-                'required',
-                'string',
-                'max:100',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.accessor_id'] = [
-                'required',
-                'int',
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.subject_id'] = [
-                'required',
-                'int',
-                'exists:exam_subjects,id,deleted_at,NULL'
-            ];
-
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.question_type'] = [
-                'required',
-                'int',
-                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-            ];
-
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_1'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                'nullable',
-                'string',
-                'max:600'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_1_en'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                'string',
-                'max:300'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_2'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                'nullable',
-                'string',
-                'max:600'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_2_en'] = [
-                'nullable',
-                'string',
-                'max:300'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_3'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                'nullable',
-                'string',
-                'max:600'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_3_en'] = [
-                'nullable',
-                'string',
-                'max:300'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && $data['exam_questions']['question_sets']['questions']['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                'nullable',
-                'string',
-                'max:600'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.option_4_en'] = [
-                'nullable',
-                'string',
-                'max:300'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.answers'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
-                'nullable',
-                'array',
-                'min:1'
-            ];
-            $rules['offline.exam_questions.*.question_sets.*.questions.*.answers.*'] = [
-                Rule::requiredIf(!empty($data['exam_questions']['question_sets']['questions']['question_type']) && array_key_exists($data['exam_questions']['question_sets']['questions']['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
-                'nullable',
-                'string',
-            ];
 
         } else {
-            $rules['exam_date'] = [
-                'required',
-                'date_format:Y-m-d',
-            ];
-            $rules['duration'] = [
-                'required',
-                'int'
-            ];
-            $rules['end_time'] = [
-                'nullable',
-                'date_format:H:i:s'
-            ];
-            $rules['venue'] = [
-                'nullable',
-                'string',
-            ];
-            $rules['total_marks'] = [
-                'required',
-                'numeric',
-            ];
-            $rules["sets"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                "nullable",
-                "array",
-            ];
-            $rules["sets.*.id"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                'nullable',
-                'string',
-                "distinct",
-            ];
-            $rules["sets.*.title"] = [
-                Rule::requiredIf(function () use ($data) {
-                    return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
-                }),
-                'string',
-                'nullable',
-            ];
-            $rules["sets.*.title_en"] = [
-                "nullable",
-                'string',
-            ];
-            $rules['exam_questions'] = [
-                'array',
-                'required',
-            ];
-            $rules['exam_questions.*'] = [
-                'array',
-                'required',
-            ];
-            $rules['exam_questions.*.question_type'] = [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-            ];
-            $rules['exam_questions.*.number_of_questions'] = [
-                'integer',
-                'required',
-            ];
-            $rules['exam_questions.*.total_marks'] = [
-                'numeric',
-                'required',
-            ];
-            $rules['exam_questions.*.question_selection_type'] = [
-                'integer',
-                'required',
-                Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
-            ];
+            $examValidationRules = $this->examValidationRules();
+            $rules = array_merge($rules, $examValidationRules);
+            $examSectionValidationRules = $this->examSectionValidationRules();
+            $rules = array_merge($rules, $examSectionValidationRules);
         }
 
         if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
-            $index = 0;
-            foreach ($data['exam_questions'] as $examQuestion) {
-                if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
-                    $onlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-                } else if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $onlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
-                }
-                if ($examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $rules['exam_questions.' . $index . '.questions'] = [
-                        'array',
-                        'nullable',
-                        'size:' . $onlineExamQuestionNumbers
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'nullable',
-                        'array',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.id'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'integer',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.title'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'string',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.title_en'] = [
-                        'nullable',
-                        'string',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.accessor_type'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'string',
-                        'max:100',
-                        Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.accessor_id'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'int',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.subject_id'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'int',
-                        'exists:exam_subjects,id,deleted_at,NULL'
-                    ];
-
-                    $rules['exam_questions.' . $index . '.questions.*.question_type'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions'])),
-                        'int',
-                        Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-                    ];
-
-                    $rules['exam_questions.' . $index . '.questions.*.option_1'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                        'nullable',
-                        'string',
-                        'max:600'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_1_en'] = [
-                        'nullable',
-                        'string',
-                        'max:300'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_2'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                        'nullable',
-                        'string',
-                        'max:600'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_2_en'] = [
-                        'nullable',
-                        'string',
-                        'max:300'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_3'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                        'nullable',
-                        'string',
-                        'max:600'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_3_en'] = [
-                        'nullable',
-                        'string',
-                        'max:300'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_4'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                        'nullable',
-                        'string',
-                        'max:600'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.option_4'] = [
-                        'nullable',
-                        'string',
-                        'max:300'
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.answers'] = [
-                        Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                        'nullable',
-                        'array',
-                    ];
-                    $rules['exam_questions.' . $index . '.questions.*.answers'] = [
-                        'nullable',
-                        'string',
-                    ];
-
-
-                }
-
-                $index++;
+            if (!empty($data['exam_questions'])) {
+                $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['exam_questions']);
+                $rules = array_merge($rules, $onlineExamQuestionRules);
             }
         }
 
         if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
-            foreach ($data['exam_questions'] as $examQuestion) {
-                if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
-                    $offlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-                } else if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $offlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
-                } else {
-                    $offlineExamQuestionNumbers = 0;
-                }
-                if ($examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $rules['exam_questions.*.question_sets'] = [
-                        'required',
-                        'array',
-                    ];
-                    $rules['exam_questions.*.question_sets.*'] = [
-                        'required',
-                        'array',
+            if (!empty($data['exam_questions'])) {
+                $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['exam_questions']);
+                $rules = array_merge($rules, $offlineExamQuestionRules);
 
-                    ];
-                    if (!empty($examQuestion['question_sets'])) {
-                        $index = 0;
-                        foreach ($examQuestion['question_sets'] as $examQuestionSet) {
-
-                            $rules['exam_questions.*.question_sets.' . $index . '.id'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'string',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'array',
-                                'size:' . $offlineExamQuestionNumbers
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'array',
-
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.id'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'integer',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.title_en'] = [
-                                'nullable',
-                                'string',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.title'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'string',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.individual_marks'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'numeric',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.accessor_type'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'string',
-                                'max:100',
-                                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.accessor_id'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'int',
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.subject_id'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'int',
-                                'exists:exam_subjects,id,deleted_at,NULL'
-                            ];
-
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.question_type'] = [
-                                Rule::requiredIf(!empty($examQuestionSet)),
-                                'nullable',
-                                'int',
-                                Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
-                            ];
-
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_1'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                                'nullable',
-                                'string',
-                                'max:600'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_1_en'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                                'nullable',
-                                'string',
-                                'max:300'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_2'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                                'nullable',
-                                'string',
-                                'max:600'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_2_en'] = [
-                                'nullable',
-                                'string',
-                                'max:300'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_3'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                                'nullable',
-                                'string',
-                                'max:600'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_3_en'] = [
-                                'nullable',
-                                'string',
-                                'max:300'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_4'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
-                                'nullable',
-                                'string',
-                                'max:600'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.option_4'] = [
-                                'nullable',
-                                'string',
-                                'max:300'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.answers'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
-                                'nullable',
-                                'array',
-                                'min:1'
-                            ];
-                            $rules['exam_questions.*.question_sets.' . $index . '.questions.*.answers.*'] = [
-                                Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
-                                'nullable',
-                                'string',
-                            ];
-
-                            $index++;
-                        }
-
-                    }
-
-                }
             }
-
+            $examSetValidationRules = $this->examSetValidationRules($data);
+            $rules = array_merge($rules, $examSetValidationRules);
         }
 
         return Validator::make($data, $rules, $customMessage);
     }
 
+    public function offlineExamQuestionValidationRules(array $examQuestions, string $examType = ''): array
+    {
+        $rules = [];
+        foreach ($examQuestions as $examQuestion) {
+            if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+                $offlineExamQuestionNumbers = $examQuestion['number_of_questions'];
+            } else if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $offlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
+            } else {
+                $offlineExamQuestionNumbers = 0;
+            }
+            if ($examQuestion[$examType . 'question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $rules[$examType . 'exam_questions.*.question_sets'] = [
+                    'required',
+                    'array',
+                ];
+                $rules[$examType . 'exam_questions.*.question_sets.*'] = [
+                    'required',
+                    'array',
+
+                ];
+                if (!empty($examQuestion['question_sets'])) {
+                    $index = 0;
+                    foreach ($examQuestion['question_sets'] as $examQuestionSet) {
+
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.id'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'string',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'array',
+                            'size:' . $offlineExamQuestionNumbers
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'array',
+
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.id'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'integer',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.title_en'] = [
+                            'nullable',
+                            'string',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.title'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'string',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.individual_marks'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'numeric',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.accessor_type'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'string',
+                            'max:100',
+                            Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.accessor_id'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'int',
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.subject_id'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'int',
+                            'exists:exam_subjects,id,deleted_at,NULL'
+                        ];
+
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.question_type'] = [
+                            Rule::requiredIf(!empty($examQuestionSet)),
+                            'nullable',
+                            'int',
+                            Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+                        ];
+
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_1'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                            'nullable',
+                            'string',
+                            'max:600'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_1_en'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                            'nullable',
+                            'string',
+                            'max:300'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_2'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                            'nullable',
+                            'string',
+                            'max:600'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_2_en'] = [
+                            'nullable',
+                            'string',
+                            'max:300'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_3'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                            'nullable',
+                            'string',
+                            'max:600'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_3_en'] = [
+                            'nullable',
+                            'string',
+                            'max:300'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_4'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                            'nullable',
+                            'string',
+                            'max:600'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_4'] = [
+                            'nullable',
+                            'string',
+                            'max:300'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.answers'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                            'nullable',
+                            'array',
+                            'min:1'
+                        ];
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.answers.*'] = [
+                            Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                            'nullable',
+                            'string',
+                        ];
+                        $index++;
+                    }
+
+                }
+
+            }
+        }
+
+        return $rules;
+    }
+
+    public function examValidationRules($examType = ''): array
+    {
+        $rules = [];
+        $rules[$examType . 'exam_date'] = [
+            'required',
+            'date_format:Y-m-d',
+        ];
+        $rules[$examType . 'duration'] = [
+            'required',
+            'int'
+        ];
+        $rules[$examType . 'venue'] = [
+            'nullable',
+            'string',
+        ];
+        $rules[$examType . 'total_marks'] = [
+            'required',
+            'numeric',
+        ];
+        return $rules;
+    }
+
+    public function examSectionValidationRules($examType = ''): array
+    {
+        $rules = [];
+        $rules[$examType . 'exam_questions'] = [
+            'array',
+            'required',
+        ];
+        $rules[$examType . 'exam_questions.*'] = [
+            'array',
+            'required',
+        ];
+        $rules[$examType . 'exam_questions.*.question_type'] = [
+            'integer',
+            'required',
+            Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+        ];
+        $rules[$examType . 'exam_questions.*.number_of_questions'] = [
+            'integer',
+            'required',
+        ];
+        $rules[$examType . 'exam_questions.*.total_marks'] = [
+            'numeric',
+            'required',
+        ];
+        $rules[$examType . 'exam_questions.*.question_selection_type'] = [
+            'integer',
+            'required',
+            Rule::in(ExamQuestionBank::QUESTION_SELECTION_TYPES)
+        ];
+
+        return $rules;
+
+    }
+
+    /**
+     * @param array $data
+     * @param string $examType
+     * @return array
+     */
+    public function examSetValidationRules(array $data, string $examType = ""): array
+    {
+        $rules = [];
+        $rules[$examType . "sets"] = [
+            Rule::requiredIf(function () use ($data) {
+                return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+            }),
+            "nullable",
+            "array",
+        ];
+        $rules[$examType . "sets.*.id"] = [
+            Rule::requiredIf(function () use ($data) {
+                return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+            }),
+            'nullable',
+            'string',
+            "distinct",
+        ];
+        $rules[$examType . "sets.*.title"] = [
+            Rule::requiredIf(function () use ($data) {
+                return !empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE;
+            }),
+            'string',
+            'nullable',
+        ];
+        $rules[$examType . "sets.*.title_en"] = [
+            "nullable",
+            'string',
+        ];
+
+        return $rules;
+    }
+
+
+    /**
+     * @param array $examQuestions
+     * @param string $examType
+     * @return array
+     */
+    public function onlineExamQuestionValidationRules(array $examQuestions, string $examType = ''): array
+    {
+        $index = 0;
+        $rules = [];
+        foreach ($examQuestions as $examQuestion) {
+            if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+                $onlineExamQuestionNumbers = $examQuestion['number_of_questions'];
+            } else if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
+                $onlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
+            } else {
+                $onlineExamQuestionNumbers = 0;
+            }
+            if (!empty($examQuestion) && $examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $rules[$examType . 'exam_questions.' . $index . '.questions'] = [
+                    'required',
+                    'array',
+                    'size:' . $onlineExamQuestionNumbers
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*'] = [
+                    'required',
+                    'nullable',
+                    'array',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.id'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'integer',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.title'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'string',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.title_en'] = [
+                    'nullable',
+                    'string',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.accessor_type'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'string',
+                    'max:100',
+                    Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.accessor_id'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'int',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.subject_id'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'int',
+                    'exists:exam_subjects,id,deleted_at,NULL'
+                ];
+
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.question_type'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'int',
+                    Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
+                ];
+
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_1'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_1_en'] = [
+                    'nullable',
+                    'string',
+                    'max:300'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_2'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_2_en'] = [
+                    'nullable',
+                    'string',
+                    'max:300'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_3'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_3_en'] = [
+                    'nullable',
+                    'string',
+                    'max:300'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_4'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    'nullable',
+                    'string',
+                    'max:600'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.option_4'] = [
+                    'nullable',
+                    'string',
+                    'max:300'
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    'nullable',
+                    'array',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
+                    'nullable',
+                    'string',
+                ];
+                $index++;
+
+            }
+
+        }
+        return $rules;
+
+    }
 
     /**
      * @param Request $request
