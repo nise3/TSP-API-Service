@@ -57,7 +57,7 @@ class ExamController extends Controller
 
     public function read(int $id): JsonResponse
     {
-        $exam = $this->ExamService->getOneexam($id);
+        $exam = $this->ExamService->getOneExamType($id);
         $response = [
             "data" => $exam,
             "_response_status" => [

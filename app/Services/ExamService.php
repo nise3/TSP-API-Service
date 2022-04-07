@@ -58,12 +58,7 @@ class ExamService
             'exam_types.deleted_at',
         ]);
 
-        $examTypeBuilder->leftJoin("exams", function ($join) {
-            $join->on('exam_types.id', '=', 'exams.exam_type_id')
-                ->whereNull('exam_types.deleted_at');
-        });
-
-        $examTypeBuilder->leftJoin("exam_subjects", function ($join) {
+        $examTypeBuilder->join("exam_subjects", function ($join) {
             $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                 ->whereNull('exam_types.deleted_at');
         });
@@ -87,7 +82,7 @@ class ExamService
         }
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
-            $pageSize = $pageSize ?: 10;
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
             $ExamType = $examTypeBuilder->paginate($pageSize);
             $paginateData = (object)$ExamType->toArray();
             $response['current_page'] = $paginateData->current_page;
@@ -109,29 +104,33 @@ class ExamService
         return $response;
     }
 
-    /**
-     * @param int $id
-     * @return Exam
-     */
-    public function getOneExam(int $id): Exam
+
+    public function getOneExamType(int $id)
     {
-        /** @var Exam|Builder $examBuilder */
-        $examBuilder = Exam::select([
-            'exams.id',
-            'exams.exam_type_id',
-            'exams.exam_date',
-            'exams.start_time',
-            'exams.end_time',
-            'exams.venue',
-            'exams.total_marks',
-            'exams.row_status',
-            'exams.created_at',
-            'exams.updated_at',
-            'exams.deleted_at',
+        /** @var ExamType|Builder $examTypeBuilder */
+        $examTypeBuilder = ExamType::select([
+            'exam_types.id',
+            'exam_types.subject_id',
+            'exam_subjects.title  as exam_subject_title',
+            'exam_subjects.title_en  as exam_subject_title_en',
+            'exam_types.type',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exam_types.row_status',
+            'exam_types.created_at',
+            'exam_types.updated_at',
+            'exam_types.deleted_at',
         ]);
-        $examBuilder->where('exams.id', $id);
+
+        $examTypeBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examTypeBuilder->where( 'exam_types.id', $id);
+        $examTypeBuilder->with('exams');
         /** @var Exam exam */
-        return $examBuilder->firstOrFail();
+        return $examTypeBuilder->firstOrFail();
     }
 
     /**
