@@ -146,7 +146,7 @@ class ExamService
      */
     public function storeExam(array $data): mixed
     {
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+        if ( $data['type'] == Exam::EXAM_TYPE_MIXED) {
             $examIds = [];
             if (!empty($data['online'])) {
                 $exam = app(Exam::class);
@@ -183,8 +183,7 @@ class ExamService
     public function storeExamSets(array $data): array
     {
         $setMapping = [];
-
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+        if ( $data['type'] == Exam::EXAM_TYPE_MIXED) {
             foreach ($data['offline']['sets'] as $examSetData) {
                 $examSetData['uuid'] = ExamSet::examSetId();
                 $examSetData['exam_id'] = $data['exam_ids']['offline'];
@@ -214,7 +213,7 @@ class ExamService
      */
     public function storeExamSections(array $data)
     {
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
+        if ( $data['type'] == Exam::EXAM_TYPE_MIXED) {
             foreach ($data['online']['exam_questions'] as $examSectionData) {
                 $examSectionData['uuid'] = ExamSection::examSectionId();
                 $examSectionData['exam_id'] = $data['exam_ids']['online'];
@@ -443,8 +442,8 @@ class ExamService
         ];
 
 
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
-            /**mixed type online part validation rules**/
+        if ( $data['type'] == Exam::EXAM_TYPE_MIXED) {
+            /** exam type online part validation rules**/
             $rules['online'] = [
                 'array',
                 'required'
@@ -459,7 +458,7 @@ class ExamService
             }
 
 
-            /**mixed type offline part validation rules**/
+            /** exam type offline part validation rules**/
             $rules['offline'] = [
                 'array',
                 'required'
@@ -481,24 +480,26 @@ class ExamService
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules();
             $rules = array_merge($rules, $examSectionValidationRules);
-        }
 
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
-            if (!empty($data['exam_questions'])) {
-                $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['exam_questions']);
-                $rules = array_merge($rules, $onlineExamQuestionRules);
+            if ( $data['type'] == Exam::EXAM_TYPE_ONLINE) {
+                if (!empty($data['exam_questions'])) {
+                    $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['exam_questions']);
+                    $rules = array_merge($rules, $onlineExamQuestionRules);
+                }
+            }
+
+            if ( $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+                if (!empty($data['exam_questions'])) {
+                    $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['exam_questions']);
+                    $rules = array_merge($rules, $offlineExamQuestionRules);
+
+                }
+                $examSetValidationRules = $this->examSetValidationRules($data);
+                $rules = array_merge($rules, $examSetValidationRules);
             }
         }
 
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
-            if (!empty($data['exam_questions'])) {
-                $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['exam_questions']);
-                $rules = array_merge($rules, $offlineExamQuestionRules);
 
-            }
-            $examSetValidationRules = $this->examSetValidationRules($data);
-            $rules = array_merge($rules, $examSetValidationRules);
-        }
 
         return Validator::make($data, $rules, $customMessage);
     }

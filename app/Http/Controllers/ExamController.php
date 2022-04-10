@@ -8,6 +8,7 @@ use App\Services\ExamService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
@@ -79,31 +80,39 @@ class ExamController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->ExamService->validator($request)->validate();
-        $examType = $this->ExamService->storeExamType($validatedData);
-        $validatedData['exam_type_id'] = $examType->id;
-        $exam = $this->ExamService->storeExam($validatedData);
 
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
-            $validatedData['exam_ids'] = $exam;
-        } else {
-            $validatedData['exam_id'] = $exam->id;
+        DB::beginTransaction();
+        try {
+            $examType = $this->ExamService->storeExamType($validatedData);
+            $validatedData['exam_type_id'] = $examType->id;
+            $exam = $this->ExamService->storeExam($validatedData);
+
+            if ($validatedData['type'] == Exam::EXAM_TYPE_MIXED) {
+                $validatedData['exam_ids'] = $exam;
+            } else {
+                $validatedData['exam_id'] = $exam->id;
+            }
+
+            if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
+                $examSets = $this->ExamService->storeExamSets($validatedData);
+                $validatedData['sets'] = $examSets;
+            }
+            $this->ExamService->storeExamSections($validatedData);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Exam added successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
         }
 
-        if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
-            $examSets = $this->ExamService->storeExamSets($validatedData);
-            $validatedData['sets'] = $examSets;
-        }
-
-        $this->ExamService->storeExamSections($validatedData);
-
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Exam added successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
