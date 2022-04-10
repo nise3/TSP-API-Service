@@ -75,7 +75,7 @@ class ExamService
         }
 
         if (!empty($subjectId)) {
-            $examTypeBuilder->where('exam_types.subjectId', 'like', '%' . $subjectId . '%');
+            $examTypeBuilder->where('exam_types.subject_id', 'like', '%' . $subjectId . '%');
         }
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -395,12 +395,16 @@ class ExamService
 
     }
 
-    public function getExamYouthList(array $request,int $id): array|null
+    /**
+     * @param array $request
+     * @param int $id
+     * @return array
+     */
+    public function getExamYouthList(array $request,int $id):array
     {
-        $subjectId = $request['subject_id'] ?? "";
-        $pageSize = $request['page_size'] ?? "";
+        $youthId = $request['youth_id'] ?? "";
+        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE ;
         $paginate = $request['page'] ?? "";
-        $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $response = [];
 
@@ -415,10 +419,12 @@ class ExamService
 
         ]);
 
+        if (!empty($youthId)) {
+            $examResultBuilder->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
+        }
 
-        if (is_numeric($paginate) || is_numeric($limit)) {
-            $limit = $limit ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $candidates = $examResultBuilder->paginate($limit);
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $candidates = $examResultBuilder->paginate($pageSize);
             $paginateData = (object)$candidates->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
@@ -431,7 +437,9 @@ class ExamService
         $resultArray = $candidates->toArray();
 
         $youthIds = ExamResult::where('exam_id', $id)->pluck('youth_id')->unique()->toArray();
+
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
         $indexedYouths = [];
 
         foreach ($youthProfiles as $item) {
@@ -990,6 +998,7 @@ class ExamService
         $rules = [
 
             'page_size' => 'int|gt:0',
+            'youth_id' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [
                 'string',
