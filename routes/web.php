@@ -159,7 +159,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Fetch all recent courses for youth feed API */
         $router->get('youth-feed-courses', ["as" => "youth-feed-courses", "uses" => "CourseController@youthFeedCourses"]);
 
-        /** Fetch all youth  who are a  participant of a exam */
+        /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
     });
 

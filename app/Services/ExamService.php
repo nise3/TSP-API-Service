@@ -400,16 +400,63 @@ class ExamService
 
     }
 
-    public function getExamYouthList(Exam $Exam)
+    public function getExamYouthList(array $request,int $id): array|null
     {
-        $ExamId = $Exam->id;
+        $subjectId = $request['subject_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $response = [];
 
-        $youthIds = ExamResult::where('exam_id', $ExamId)->pluck('youth_id')->unique()->toArray();
-        $youthProfiles=null;
-        if ($youthIds) {
-            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+        $examResultBuilder = ExamResult::select([
+            "exam_results.id",
+            "exam_results.exam_id",
+            "exam_results.youth_id",
+            "exam_results.exam_section_question_id",
+            "exam_results.answer",
+            "exam_results.marks_achieved",
+            "exam_results.file_paths",
+
+        ]);
+
+
+        if (is_numeric($paginate) || is_numeric($limit)) {
+            $limit = $limit ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $candidates = $examResultBuilder->paginate($limit);
+            $paginateData = (object)$candidates->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $candidates = $examResultBuilder->get();
         }
-        return $youthProfiles->toArray();
+
+        $resultArray = $candidates->toArray();
+
+        $youthIds = ExamResult::where('exam_id', $id)->pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+        $indexedYouths = [];
+
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+
+        $resultData = $resultArray['data'] ?? $resultArray;
+
+        $response['order'] = $order;
+        $response['data'] = $resultData;
+
+        return $response;
     }
 
     /**
@@ -1045,6 +1092,28 @@ class ExamService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
+    }
+    function examYouthListFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+        ];
+        $rules = [
+
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ]
+
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);

@@ -165,15 +165,18 @@ class ExamController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getExamYouthList(int $id): JsonResponse
+    public function getExamYouthList(Request $request,int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
-        try {
-            $response = $this->ExamService->getExamYouthList($exam);
-        } catch (Throwable $e) {
-            throw  $e;
-        }
-        return Response::json($response, ResponseAlias::HTTP_OK);
+
+            $filter = $this->ExamService->examYouthListFilterValidator($request)->validate();
+            $response = $this->ExamService->getExamYouthList($filter , $id);
+            $response['_response_status'] = [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+            ];
+
+            return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 }
