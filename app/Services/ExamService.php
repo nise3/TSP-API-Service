@@ -959,8 +959,7 @@ class ExamService
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public
-    function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public  function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
