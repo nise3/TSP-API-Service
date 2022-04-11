@@ -10212,6 +10212,9 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
+                        "$ref": "#/components/parameters/question_type"
+                    },
+                    {
                         "$ref": "#/components/parameters/subject_id"
                     },
                     {
@@ -13774,6 +13777,14 @@
                 "required": false,
                 "schema": {
                     "type": "string"
+                }
+            },
+            "question_type": {
+                "in": "query",
+                "name": "question_type",
+                "required": false,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "address": {
