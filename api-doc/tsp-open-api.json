@@ -10557,9 +10557,8 @@
                                 "Online": {
                                     "summary": "An example of Exam for Online",
                                     "description": "An example of Exam, using `value` property",
-                                    "value":
-{
-    "type": "1",
+                                    "value": {
+                                        "type": "1",
     "title": "SEMISTER_FINAL",
     "title_en": "SEMISTER_FINAL",
     "subject_id": "1",
@@ -11007,6 +11006,53 @@
                 }
             }
         } } ,
+        "/exam-question-paper/{examId}":{
+            "get":{
+                "tags": [
+                    "Exam Crud"
+                ],
+                "summary": "Get a exam Question Paper",
+                "description": "API endpoint to get a exam Question Paper. A successful request response will show 200 HTTP status code",
+                "parameters": [
+
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    }
+
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "dfdg",
+                                            "title_en": "dfsd",
+                                            "subject_id": 1,
+                                            "subject_title": "math",
+                                            "subject_title_en": "math",
+                                            "exam_date": "2022-04-11 14:54:53",
+                                            "duration": 100,
+                                            "venue": "dhaka",
+                                            "total_marks": "100.00",
+                                            "exam_sections": []
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } } ,
         "/exam_types": {
             "get": {
                 "tags": [
