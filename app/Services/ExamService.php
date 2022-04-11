@@ -572,9 +572,6 @@ class ExamService
             }
 
             if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
-                if (!empty($data['sets'])) {
-                    $numberOfSets = count($data['sets']);
-                }
                 if (!empty($data['exam_questions'])) {
                     if (!empty($data['sets'])) {
                         $numberOfSets = count($data['sets']);
