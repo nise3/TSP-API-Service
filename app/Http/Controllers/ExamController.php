@@ -128,9 +128,7 @@ class ExamController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $exam = Exam::findOrFail($id);
-
         $validated = $this->ExamService->validator($request, $id)->validate();
-
         $data = $this->ExamService->update($exam, $validated);
 
         $response = [

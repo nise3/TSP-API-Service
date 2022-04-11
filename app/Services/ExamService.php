@@ -315,8 +315,8 @@ class ExamService
             {
                 if ($examSectionData['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                     $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
-                        ->where('question_type',$examSectionData['question_type'])
-                        ->where('subject_id',$examSectionData['subject_id'])
+                        ->where('question_type', $examSectionData['question_type'])
+                        ->where('subject_id', $examSectionData['subject_id'])
                         ->inRandomOrder()
                         ->limit($examSectionData['number_of_questions'])
                         ->get()
@@ -403,10 +403,10 @@ class ExamService
      * @param int $id
      * @return array
      */
-    public function getExamYouthList(array $request,int $id):array
+    public function getExamYouthList(array $request, int $id): array
     {
         $youthId = $request['youth_id'] ?? "";
-        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE ;
+        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
         $response = [];
@@ -532,7 +532,7 @@ class ExamService
             $examSectionValidationRules = $this->examSectionValidationRules('online.');
             $rules = array_merge($rules, $examSectionValidationRules);
             if (!empty($data['online']['exam_questions'])) {
-                $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['online']['exam_questions']);
+                $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['online']['exam_questions'], 'online.');
                 $rules = array_merge($rules, $onlineExamQuestionRules);
             }
 
@@ -548,8 +548,12 @@ class ExamService
             $rules = array_merge($rules, $examSectionValidationRules);
             $examSetValidationRules = $this->examSetValidationRules($data, "offline.");
             $rules = array_merge($rules, $examSetValidationRules);
+
             if (!empty($data['offline']['exam_questions'])) {
-                $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['offline']['exam_questions']);
+                if (!empty($data['offline']['sets'])) {
+                    $numberOfSets = count($data['offline']['sets']);
+                }
+                $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['offline']['exam_questions'], $numberOfSets, "offline.");
                 $rules = array_merge($rules, $offlineExamQuestionRules);
             }
 
@@ -568,8 +572,14 @@ class ExamService
             }
 
             if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+                if (!empty($data['sets'])) {
+                    $numberOfSets = count($data['sets']);
+                }
                 if (!empty($data['exam_questions'])) {
-                    $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['exam_questions']);
+                    if (!empty($data['sets'])) {
+                        $numberOfSets = count($data['sets']);
+                    }
+                    $offlineExamQuestionRules = $this->offlineExamQuestionValidationRules($data['exam_questions'], $numberOfSets);
                     $rules = array_merge($rules, $offlineExamQuestionRules);
 
                 }
@@ -582,7 +592,7 @@ class ExamService
         return Validator::make($data, $rules, $customMessage);
     }
 
-    public function offlineExamQuestionValidationRules(array $examQuestions, string $examType = ''): array
+    public function offlineExamQuestionValidationRules(array $examQuestions, int $numberOfSets = 0, string $examType = ''): array
     {
         $rules = [];
         foreach ($examQuestions as $examQuestion) {
@@ -597,6 +607,7 @@ class ExamService
                 $rules[$examType . 'exam_questions.*.question_sets'] = [
                     'required',
                     'array',
+                    'size:' . $numberOfSets
                 ];
                 $rules[$examType . 'exam_questions.*.question_sets.*'] = [
                     'required',
@@ -958,7 +969,7 @@ class ExamService
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public  function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
@@ -984,6 +995,7 @@ class ExamService
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
+
     function examYouthListFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
