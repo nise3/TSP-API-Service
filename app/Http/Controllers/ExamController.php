@@ -21,7 +21,7 @@ class ExamController extends Controller
     /**
      * @var ExamService
      */
-    public ExamService $ExamService;
+    public ExamService $examService;
 
     /**
      * @var Carbon
@@ -34,7 +34,7 @@ class ExamController extends Controller
 
     public function __construct(ExamService $ExamService)
     {
-        $this->ExamService = $ExamService;
+        $this->examService = $ExamService;
         $this->startTime = Carbon::now();
     }
 
@@ -47,8 +47,8 @@ class ExamController extends Controller
     public function getList(Request $request): JsonResponse
     {
 
-        $filter = $this->ExamService->filterValidator($request)->validate();
-        $response = $this->ExamService->getList($filter, $this->startTime);
+        $filter = $this->examService->filterValidator($request)->validate();
+        $response = $this->examService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -59,7 +59,7 @@ class ExamController extends Controller
 
     public function read(int $id): JsonResponse
     {
-        $exam = $this->ExamService->getOneExamType($id);
+        $exam = $this->examService->getOneExamType($id);
         $response = [
             "data" => $exam,
             "_response_status" => [
@@ -80,13 +80,13 @@ class ExamController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validatedData = $this->ExamService->validator($request)->validate();
+        $validatedData = $this->examService->validator($request)->validate();
 
         DB::beginTransaction();
         try {
-            $examType = $this->ExamService->storeExamType($validatedData);
+            $examType = $this->examService->storeExamType($validatedData);
             $validatedData['exam_type_id'] = $examType->id;
-            $exam = $this->ExamService->storeExam($validatedData);
+            $exam = $this->examService->storeExam($validatedData);
 
             if ($validatedData['type'] == Exam::EXAM_TYPE_MIXED) {
                 $validatedData['exam_ids'] = $exam;
@@ -95,10 +95,10 @@ class ExamController extends Controller
             }
 
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
-                $examSets = $this->ExamService->storeExamSets($validatedData);
+                $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
             }
-            $this->ExamService->storeExamSections($validatedData);
+            $this->examService->storeExamSections($validatedData);
             DB::commit();
             $response = [
                 '_response_status' => [
@@ -128,8 +128,8 @@ class ExamController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $exam = Exam::findOrFail($id);
-        $validated = $this->ExamService->validator($request, $id)->validate();
-        $data = $this->ExamService->update($exam, $validated);
+        $validated = $this->examService->validator($request, $id)->validate();
+        $data = $this->examService->update($exam, $validated);
 
         $response = [
             'data' => $data,
@@ -146,6 +146,7 @@ class ExamController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws Throwable
      */
 
     public function destroy(int $id): JsonResponse
@@ -153,7 +154,7 @@ class ExamController extends Controller
         $examType = ExamType::findOrFail($id);
         DB::beginTransaction();
         try {
-            $this->ExamService->destroy($examType);
+            $this->examService->destroy($examType);
             $response = [
                 '_response_status' => [
                     "success" => true,
@@ -171,18 +172,37 @@ class ExamController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
-    public function getExamYouthList(Request $request,int $id): JsonResponse
+    public function getExamYouthList(Request $request, int $id): JsonResponse
     {
 
-            $filter = $this->ExamService->examYouthListFilterValidator($request)->validate();
-            $response = $this->ExamService->getExamYouthList($filter , $id);
-            $response['_response_status'] = [
+        $filter = $this->examService->examYouthListFilterValidator($request)->validate();
+        $response = $this->examService->getExamYouthList($filter, $id);
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => ResponseAlias::HTTP_OK,
+            "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
+        ];
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function getExamQuestionPaper(int $id): JsonResponse
+    {
+        $examData = $this->examService->getExamQuestionPaper($id);
+        $response = [
+            "data" => $examData ?? null,
+            "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now()),
-            ];
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
 
-            return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 }
