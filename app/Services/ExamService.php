@@ -215,7 +215,7 @@ class ExamService
      */
     public function storeExamSections(array $data)
     {
-        if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
             foreach ($data['online']['exam_questions'] as $examSectionData) {
                 $examSectionData['uuid'] = ExamSection::examSectionId();
                 $examSectionData['exam_id'] = $data['exam_ids']['online'];
@@ -268,13 +268,13 @@ class ExamService
                 $examSectionData['exam_type'] = $data['type'];
                 $examSectionData['subject_id'] = $data['subject_id'];
 
-                if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+                if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
                     $examSectionQuestionData = $examSectionData['questions'];
                     if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                         $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
                     }
                 }
-                if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+                if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
                     $examSectionData['sets'] = $data['sets'];
                     if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                         $this->storeExamSectionQuestions($examSectionData);
@@ -521,7 +521,7 @@ class ExamService
         ];
 
 
-        if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
+        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
             /** exam type online part validation rules**/
             $rules['online'] = [
                 'array',
@@ -564,14 +564,17 @@ class ExamService
             $examSectionValidationRules = $this->examSectionValidationRules();
             $rules = array_merge($rules, $examSectionValidationRules);
 
-            if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
                 if (!empty($data['exam_questions'])) {
                     $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['exam_questions']);
                     $rules = array_merge($rules, $onlineExamQuestionRules);
                 }
             }
 
-            if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+                if (!empty($data['sets'])) {
+                    $numberOfSets = count($data['sets']);
+                }
                 if (!empty($data['exam_questions'])) {
                     if (!empty($data['sets'])) {
                         $numberOfSets = count($data['sets']);
@@ -600,7 +603,7 @@ class ExamService
             } else {
                 $offlineExamQuestionNumbers = 0;
             }
-            if ($examQuestion[$examType . 'question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            if (!empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $rules[$examType . 'exam_questions.*.question_sets'] = [
                     'required',
                     'array',
