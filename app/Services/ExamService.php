@@ -317,14 +317,13 @@ class ExamService
                     $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
                         ->where('question_type',$examSectionData['question_type'])
                         ->where('subject_id',$examSectionData['subject_id'])
-                        ->where('exam_id',$examSectionData['exam_id'])
                         ->inRandomOrder()
                         ->limit($examSectionData['number_of_questions'])
                         ->get()
                         ->toArray();
 
                     throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
-                        "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions must be at least " . $examSectionData['number_of_questions'] . "[42001]"
+                        "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
                     ]));
                     $individualMarks = $examSectionData['total_marks'] / floatval($examSectionData['number_of_questions']);
                     foreach ($examSectionData['sets'] as $set) {
@@ -709,7 +708,7 @@ class ExamService
                             'string',
                             'max:600'
                         ];
-                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_4'] = [
+                        $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_4_en'] = [
                             'nullable',
                             'string',
                             'max:300'
