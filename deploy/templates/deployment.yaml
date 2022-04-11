@@ -153,7 +153,7 @@ spec:
             {{end}}
           {{ if eq .Values.variables.APP_ENV "DEV" }}
       hostAliases:
-      - ip: "192.168.10.95"
+      - ip: "10.10.10.13"
         hostnames:
         - "apim-dev.nise3.xyz"
         - "identity-dev.nise3.xyz"
