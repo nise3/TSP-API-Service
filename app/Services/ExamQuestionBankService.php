@@ -29,6 +29,7 @@ class ExamQuestionBankService
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
         $subjectId = $request['subject_id'] ?? "";
+        $questionType = $request['question_type'] ?? "";
 
         /** @var ExamQuestionBank|Builder $examQuestionBankBuilder */
         $examQuestionBankBuilder = ExamQuestionBank::select([
@@ -71,8 +72,11 @@ class ExamQuestionBankService
             $examQuestionBankBuilder->where('exam_question_banks.title', 'like', '%' . $title . '%');
         }
 
-        if (!empty($subjectId)) {
+        if (is_numeric($subjectId)) {
             $examQuestionBankBuilder->where('exam_question_banks.subject_id', $subjectId);
+        }
+        if (is_numeric($questionType)) {
+            $examQuestionBankBuilder->where('exam_question_banks.question_type', $questionType);
         }
 
         /** @var Collection $questionBanks */
@@ -300,6 +304,7 @@ class ExamQuestionBankService
             'subject_id' => 'nullable|min:1',
             'page_size' => 'int|gt:0',
             'page' => 'integer|gt:0',
+            'question_type' => 'integer|gt:0',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

@@ -16,6 +16,7 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
+use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use App\Services\Payment\CourseEnrollmentPaymentService;
 use Carbon\Carbon;
@@ -507,23 +508,32 @@ class CourseEnrollmentService
      * @param string $code
      * @return bool
      * @throws Exception
+     * @throws Throwable
      */
     public function sendSmsVerificationCode(CourseEnrollment $courseEnrollment, string $code): bool
     {
         $mobile = $courseEnrollment->mobile;
+        $email = $courseEnrollment->email;
         $message = "Your Course Enrollment Verification code : " . $code;
         if ($mobile) {
             app(SmsService::class)->sendSms($mobile, $message);
             Log::info('Sms send after enrollment to number--->' . $mobile);
-            return true;
         }
-        return false;
+        if($email){
+            $subject = "Your Course Enrollment Verification code";
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService([$email], $from, $subject, $messageBody);
+            $mailService->sendMail();
+        }
+        return true;
     }
 
     /**
      * @param CourseEnrollment $courseEnrollment
      * @return bool
      * @throws Exception
+     * @throws Throwable
      */
     public function resendCode(CourseEnrollment $courseEnrollment): bool
     {
