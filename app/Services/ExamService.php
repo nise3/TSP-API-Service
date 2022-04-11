@@ -677,7 +677,6 @@ class ExamService
                             'max:600'
                         ];
                         $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.option_1_en'] = [
-                            Rule::requiredIf(!empty($examQuestionSet) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
                             'nullable',
                             'string',
                             'max:300'
