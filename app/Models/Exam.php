@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Exam extends BaseModel
@@ -19,4 +21,9 @@ class Exam extends BaseModel
         self::EXAM_TYPE_OFFLINE,
         self::EXAM_TYPE_MIXED,
     ];
+
+    public function examSections(): HasMany
+    {
+        return $this->hasMany(ExamSection::class, 'exam_id', 'id');
+    }
 }

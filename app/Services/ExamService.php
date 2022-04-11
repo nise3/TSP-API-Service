@@ -11,8 +11,10 @@ use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
 use App\Models\ExamType;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,7 +54,6 @@ class ExamService
             'exam_types.row_status',
             'exam_types.created_at',
             'exam_types.updated_at',
-            'exam_types.deleted_at',
         ]);
 
         $examTypeBuilder->join("exam_subjects", function ($join) {
@@ -102,7 +103,7 @@ class ExamService
     }
 
 
-    public function getOneExamType(int $id)
+    public function getOneExamType(int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -129,6 +130,81 @@ class ExamService
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
     }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function getExamQuestionPaper(int $id): array
+    {
+        /** @var Builder $examQuestionPaperBuilder */
+        $examQuestionPaperBuilder = Exam::select([
+            'exams.id',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exam_types.subject_id',
+            'exam_subjects.title as subject_title',
+            'exam_subjects.title_en as subject_title_en',
+            'exams.exam_date',
+            'exams.duration',
+            'exams.venue',
+            'exams.total_marks',
+        ]);
+
+        $examQuestionPaperBuilder->join("exam_types", function ($join) {
+            $join->on('exams.exam_type_id', '=', 'exam_types.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examQuestionPaperBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+
+        $examQuestionPaperBuilder->where('exams.id', $id);
+
+        $exam = $examQuestionPaperBuilder->firstOrFail()->toArray();
+        $exam['exam_sections'] = $this->getExamSectionByExam($id);
+
+
+        foreach ($exam['exam_sections'] as &$examSection) {
+            $examSection['subject_id'] = $exam['subject_id'];
+            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                Log::info($examSection['question_selection_type']);
+                $examSection['questions'] = $this->getRandomExamSectionQuestionBySection($examSection);
+            } else {
+                $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
+            }
+        }
+
+        return $exam;
+
+    }
+
+    private function getExamSectionByExam(int $id): array
+    {
+        return ExamSection::where('exam_id', $id)->get()->toArray();
+    }
+
+
+    private function getRandomExamSectionQuestionBySection($examSection)
+    {
+        return ExamQuestionBank::where('question_type', $examSection['question_type'])
+            ->where('subject_id', $examSection['subject_id'])
+            ->inRandomOrder()
+            ->limit($examSection['number_of_questions'])
+            ->get()
+            ->toArray();
+    }
+
+
+    private function getExamSectionQuestionBySection($examSection)
+    {
+
+        return ExamSectionQuestion::where('exam_section_uuid', $examSection['uuid'])->get()->toArray();
+    }
+
 
     /**
      * @param array $data
@@ -164,7 +240,6 @@ class ExamService
                 $exam->fill($data['offline']);
                 $exam->save();
                 $examIds['offline'] = $exam->id;
-
             }
 
             return $examIds;
@@ -633,7 +708,6 @@ class ExamService
                             Rule::requiredIf(!empty($examQuestionSet)),
                             'nullable',
                             'array',
-
                         ];
                         $rules[$examType . 'exam_questions.*.question_sets.' . $index . '.questions.*.id'] = [
                             Rule::requiredIf(!empty($examQuestionSet)),
@@ -1019,5 +1093,7 @@ class ExamService
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
+
+
 }
 
