@@ -10551,12 +10551,227 @@
                 "summary": "Create a Exam",
                 "description": "API endpoint to Create Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
                 "requestBody": {
+                    "description": "Exam object that needs to be added to the store",
+                    "required": true,
                     "content": {
-                        "application/x-www-form-urlencoded": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Online": {
+                                    "summary": "An example of Exam for Online",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value":
+{
+    "type": "1",
+    "title": "SEMISTER_FINAL",
+    "title_en": "SEMISTER_FINAL",
+    "subject_id": "1",
+    "purpose_name": "BATCH",
+    "purpose_id": "1",
+    "exam_date": "2008-09-09",
+    "duration": "120",
+    "total_marks": "100",
+    "sets": [
+        {
+            "id": "set1",
+            "title": "set1_title"
+        }
+    ],
+    "exam_questions": [
+        {
+            "exam_id": "1",
+            "question_type": "1",
+            "total_marks": "100",
+            "number_of_questions": "1",
+            "question_selection_type": "1",
+            "questions": [
+                {
+                    "id": "1",
+                    "title": "hh",
+                    "title_en": "hfgjhfg",
+                    "accessor_type": "INSTITUTE",
+                    "accessor_id": "1",
+                    "subject_id": "1",
+                    "option_1": "gfhgf",
+                    "option_1_en": null,
+                    "option_2": "ghfghfgh",
+                    "option_2_en": null,
+                    "option_3": "gfhgf",
+                    "option_3_en": null,
+                    "option_4": "fghgfh",
+                    "option_4_en": null,
+                    "answers": "ghfhfg",
+                    "question_type": "1"
+                }
+            ]
+        }
+    ]
+}
+
+                                },
+                                "Ofline": {
+                                    "summary": "An example of exam for Ofline",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "type": "2",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "sets": [
+                                            {
+                                                "id": "set1",
+                                                "title": "set1_title"
+                                            }
+                                        ],
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "2",
+                                                "question_selection_type": "1",
+                                                "question_sets": [
+                                                    {
+                                                        "id": "A",
+                                                        "questions": [
+                                                            {
+                                                                "id": "1",
+                                                                "title": "fg",
+                                                                "accessor_type": "INSTITUTE",
+                                                                "accessor_id": "123",
+                                                                "individual_marks": "123",
+                                                                "subject_id": "1",
+                                                                "question_type": "1",
+                                                                "option_1": "fghfgh",
+                                                                "option_1_en": "fghfghfg",
+                                                                "option_2": "fghfg",
+                                                                "answers": [
+                                                                    "fghfghfg"
+                                                                ],
+                                                                "option_3": "hgjhgjghj",
+                                                                "option_4": "fgjhfgjjhg"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Mixed": {
+                                    "summary": "An example of exam for Mixed Type",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "type": "3",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "offline":{
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+                                            "sets": [
+                                                {
+                                                    "id": "set1",
+                                                    "title": "set1_title"
+                                                }
+
+                                            ],
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "question_sets": [
+                                                        {
+                                                            "id": "A",
+                                                            "questions": [
+                                                                {
+                                                                    "id": "1",
+                                                                    "title": "fg",
+                                                                    "accessor_type": "INSTITUTE",
+                                                                    "accessor_id": "123",
+                                                                    "individual_marks": "123",
+                                                                    "subject_id": "1",
+                                                                    "question_type": "1",
+                                                                    "option_1": "fghfgh",
+                                                                    "option_1_en": "fghfghfg",
+                                                                    "option_2": "fghfg",
+                                                                    "answers": [
+                                                                        "fghfghfg"
+                                                                    ],
+                                                                    "option_3": "hgjhgjghj",
+                                                                    "option_4": "fgjhfgjjhg"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+
+                                        },
+                                        "online":{
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+
+                                            "sets": [
+                                                {
+                                                    "id": "set1",
+                                                    "title": "set1_title"
+                                                }
+                                            ],
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+
+                                    }
+
+                                }
                             }
                         }
+
                     }
                 },
                 "responses": {
