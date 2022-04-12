@@ -103,6 +103,10 @@ class ExamService
     }
 
 
+    /**
+     * @param int $id
+     * @return Model|Builder
+     */
     public function getOneExamType(int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
@@ -181,27 +185,87 @@ class ExamService
 
     }
 
+    /**
+     * @param int $id
+     * @return array
+     */
     private function getExamSectionByExam(int $id): array
     {
-        return ExamSection::where('exam_id', $id)->get()->toArray();
+        return ExamSection::select([
+            'exam_sections.uuid',
+            'exam_sections.question_type',
+            'exam_sections.total_marks',
+            'exam_sections.exam_id',
+            'exam_sections.question_selection_type',
+            'exam_sections.number_of_questions',
+        ])->where('exam_id', $id)->get()->toArray();
     }
 
 
-    private function getRandomExamSectionQuestionBySection($examSection)
+    /**
+     * @param $examSection
+     * @return mixed
+     */
+    private function getRandomExamSectionQuestionBySection($examSection): mixed
     {
-        return ExamQuestionBank::where('question_type', $examSection['question_type'])
-            ->where('subject_id', $examSection['subject_id'])
-            ->inRandomOrder()
-            ->limit($examSection['number_of_questions'])
-            ->get()
-            ->toArray();
+        /** @var Builder $examQuestionBuilder */
+        $examQuestionBuilder = ExamQuestionBank::select([
+            'exam_question_banks.id as question_id',
+            'exam_question_banks.title',
+            'exam_question_banks.title_en',
+            'exam_question_banks.subject_id',
+            'exam_question_banks.accessor_type',
+            'exam_question_banks.accessor_id',
+            'exam_question_banks.question_type',
+            'exam_question_banks.option_1',
+            'exam_question_banks.option_1_en',
+            'exam_question_banks.option_2',
+            'exam_question_banks.option_2_en',
+            'exam_question_banks.option_3',
+            'exam_question_banks.option_3_en',
+            'exam_question_banks.option_4',
+            'exam_question_banks.option_4_en',
+        ]);
+        $examQuestionBuilder->where('question_type', $examSection['question_type']);
+        $examQuestionBuilder->where('subject_id', $examSection['subject_id']);
+        $examQuestionBuilder->inRandomOrder();
+        $examQuestionBuilder->limit($examSection['number_of_questions']);
+
+        $examQuestions = $examQuestionBuilder->get()->toArray();
+
+        foreach ($examQuestions as &$examQuestion) {
+            $examQuestion['individual_marks']= $examSection['total_marks'] / floatval($examSection['number_of_questions']);
+        }
+
+        return $examQuestions;
     }
 
 
-    private function getExamSectionQuestionBySection($examSection)
+    private function getExamSectionQuestionBySection($examSection): array
     {
+        /** @var Builder $examSectionBuilder */
+        $examSectionBuilder = ExamSectionQuestion::select([
+            'exam_section_questions.question_id',
+            'exam_section_questions.individual_marks',
+            'exam_section_questions.exam_id',
+            'exam_section_questions.title',
+            'exam_section_questions.title_en',
+            'exam_section_questions.subject_id',
+            'exam_section_questions.question_type',
+            'exam_section_questions.accessor_type',
+            'exam_section_questions.accessor_id',
+            'exam_section_questions.option_1',
+            'exam_section_questions.option_1_en',
+            'exam_section_questions.option_2',
+            'exam_section_questions.option_2_en',
+            'exam_section_questions.option_3',
+            'exam_section_questions.option_3_en',
+            'exam_section_questions.option_4',
+            'exam_section_questions.option_4_en',
+        ]);
+        $examSectionBuilder->where('exam_section_uuid', $examSection['uuid']);
 
-        return ExamSectionQuestion::where('exam_section_uuid', $examSection['uuid'])->get()->toArray();
+        return $examSectionBuilder->get()->toArray();
     }
 
 

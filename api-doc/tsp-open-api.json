@@ -10479,13 +10479,13 @@
         "/exams": {
             "get": {
                 "tags": [
-                    "Exam Crud"
+                    "Exams"
                 ],
                 "summary": "Get all Exam",
                 "description": "API endpoint to get all Exam . A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/title"
+                        "$ref": "#/components/parameters/title_optional"
                     },
                     {
                         "$ref": "#/components/parameters/title_en_optional"
@@ -10541,7 +10541,7 @@
             },
             "post": {
                 "tags": [
-                    "Exam Crud"
+                    "Exams"
                 ],
                 "summary": "Create a Exam",
                 "description": "API endpoint to Create Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
@@ -10559,54 +10559,47 @@
                                     "description": "An example of Exam, using `value` property",
                                     "value": {
                                         "type": "1",
-    "title": "SEMISTER_FINAL",
-    "title_en": "SEMISTER_FINAL",
-    "subject_id": "1",
-    "purpose_name": "BATCH",
-    "purpose_id": "1",
-    "exam_date": "2008-09-09",
-    "duration": "120",
-    "total_marks": "100",
-    "sets": [
-        {
-            "id": "set1",
-            "title": "set1_title"
-        }
-    ],
-    "exam_questions": [
-        {
-            "exam_id": "1",
-            "question_type": "1",
-            "total_marks": "100",
-            "number_of_questions": "1",
-            "question_selection_type": "1",
-            "questions": [
-                {
-                    "id": "1",
-                    "title": "hh",
-                    "title_en": "hfgjhfg",
-                    "accessor_type": "INSTITUTE",
-                    "accessor_id": "1",
-                    "subject_id": "1",
-                    "option_1": "gfhgf",
-                    "option_1_en": null,
-                    "option_2": "ghfghfgh",
-                    "option_2_en": null,
-                    "option_3": "gfhgf",
-                    "option_3_en": null,
-                    "option_4": "fghgfh",
-                    "option_4_en": null,
-                    "answers": "ghfhfg",
-                    "question_type": "1"
-                }
-            ]
-        }
-    ]
-}
-
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "1",
+                                                "question_selection_type": "1",
+                                                "questions": [
+                                                    {
+                                                        "id": "1",
+                                                        "title": "hh",
+                                                        "title_en": "hfgjhfg",
+                                                        "accessor_type": "INSTITUTE",
+                                                        "accessor_id": "1",
+                                                        "subject_id": "1",
+                                                        "option_1": "gfhgf",
+                                                        "option_1_en": null,
+                                                        "option_2": "ghfghfgh",
+                                                        "option_2_en": null,
+                                                        "option_3": "gfhgf",
+                                                        "option_3_en": null,
+                                                        "option_4": "fghgfh",
+                                                        "option_4_en": null,
+                                                        "answers": "ghfhfg",
+                                                        "question_type": "1"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
                                 },
-                                "Ofline": {
-                                    "summary": "An example of exam for Ofline",
+                                "Offline": {
+                                    "summary": "An example of exam for Offline",
                                     "description": "An example of exam, using `value` property, which value is an Object",
                                     "value": {
                                         "type": "2",
@@ -10618,12 +10611,6 @@
                                         "exam_date": "2008-09-09",
                                         "duration": "120",
                                         "total_marks": "100",
-                                        "sets": [
-                                            {
-                                                "id": "set1",
-                                                "title": "set1_title"
-                                            }
-                                        ],
                                         "exam_questions": [
                                             {
                                                 "exam_id": "1",
@@ -10672,7 +10659,7 @@
                                         "exam_date": "2008-09-09",
                                         "duration": "120",
                                         "total_marks": "100",
-                                        "offline":{
+                                        "offline": {
                                             "exam_date": "2008-09-09",
                                             "duration": "120",
                                             "total_marks": "100",
@@ -10681,7 +10668,6 @@
                                                     "id": "set1",
                                                     "title": "set1_title"
                                                 }
-
                                             ],
                                             "exam_questions": [
                                                 {
@@ -10716,20 +10702,39 @@
                                                     ]
                                                 }
                                             ]
-
                                         },
-                                        "online":{
+                                        "online": {
                                             "exam_date": "2008-09-09",
                                             "duration": "120",
                                             "total_marks": "100",
-
-                                            "sets": [
-                                                {
-                                                    "id": "set1",
-                                                    "title": "set1_title"
-                                                }
-                                            ],
                                             "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                },
                                                 {
                                                     "exam_id": "1",
                                                     "question_type": "1",
@@ -10759,9 +10764,7 @@
                                                 }
                                             ]
                                         }
-
                                     }
-
                                 }
                             }
                         }
@@ -10812,16 +10815,16 @@
                 }
             }
         },
-        "/exams/{exam_type_id}": {
+        "/exams/{examTypeId}": {
             "get": {
                 "tags": [
-                    "Exam Crud"
+                    "Exams"
                 ],
                 "summary": "Get a Exam",
                 "description": "API endpoint to get a Exam. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/exam_type_id"
+                        "$ref": "#/components/parameters/examTypeId"
                     }
                 ],
                 "responses": {
@@ -10869,59 +10872,9 @@
                     }
                 }
             },
-            "put": {
-                "tags": [
-                    "Exam Crud"
-                ],
-                "summary": "Update a Exam",
-                "description": "API endpoint to update a Exam. A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/examId"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/exams"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 2,
-                                        "title": "Goo Goo Dolls",
-                                        "title_en": "Miranda Kerr",
-                                        "row_status": "1",
-                                        "created_at": "2022-03-03T05:27:39.000000Z",
-                                        "updated_at": "2022-03-03T05:57:29.000000Z",
-                                        "deleted_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Exam updated successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        },
-        "/exams/{examTypeId}": {
             "delete": {
             "tags": [
-                "Exam Crud"
+                "Exams"
             ],
             "summary": "Delete a Exam",
             "description": "API endpoint to delete a Exam. A successful request response will show 200 HTTP status code",
@@ -10947,11 +10900,12 @@
                     }
                 }
             }
-        }},
+        }
+        },
         "/exam-youth-list/{examId}":{
             "get":{
             "tags": [
-                "Exam Crud"
+                "Exams"
             ],
             "summary": "Get all Youth and results for a exam",
             "description": "API endpoint to get all Youth and results for a exam . A successful request response will show 200 HTTP status code",
@@ -11009,7 +10963,7 @@
         "/exam-question-paper/{examId}":{
             "get":{
                 "tags": [
-                    "Exam Crud"
+                    "Exams"
                 ],
                 "summary": "Get a exam Question Paper",
                 "description": "API endpoint to get a exam Question Paper. A successful request response will show 200 HTTP status code",
@@ -11052,257 +11006,8 @@
                         }
                     }
                 }
-            } } ,
-        "/exam_types": {
-            "get": {
-                "tags": [
-                    "Exam Types"
-                ],
-                "summary": "Get all Exam Types",
-                "description": "API endpoint to get all Exam Types . A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/title_optional"
-                    },
-                    {
-                        "$ref": "#/components/parameters/subject_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/exam_type_id"
-                    },
-                    {
-                        "$ref": "#/components/parameters/page"
-                    },
-                    {
-                        "$ref": "#/components/parameters/page_size"
-                    },
-                    {
-                        "$ref": "#/components/parameters/order"
-                    },
-                    {
-                        "$ref": "#/components/parameters/row_status_optional"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "order": "ASC",
-                                    "data": [
-                                        {
-                                            "exam_type_id": 1,
-                                            "exam_date": "2022-04-01",
-                                            "start_time": "12:11:34",
-                                            "end_time": "12:11:38",
-                                            "venue": "Dhaka",
-                                            "total_marks": "100.00",
-                                            "row_status": 0,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "deleted_at": null
-                                        },
-                                        {
-                                            "exam_type_id": 2,
-                                            "exam_date": "2022-04-01",
-                                            "start_time": "12:11:34",
-                                            "end_time": "12:11:38",
-                                            "venue": "Dhaka",
-                                            "total_marks": "100.00",
-                                            "row_status": 0,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "deleted_at": null
-                                        }
-                                    ],
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Exam Types"
-                ],
-                "summary": "Create a Exam Types",
-                "description": "API endpoint to Create Exam Types. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/exam_type"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 1,
-                                        "title": "abc",
-                                        "title_en": "bcd",
-                                        "accessor_type": "hgfh",
-                                        "accessor_id": 1,
-                                        "subject_id": 1,
-                                        "exam_subject_title": "hello",
-                                        "exam_subject_title_en": "fgfdg",
-                                        "question_type": 0,
-                                        "option_1": "1",
-                                        "option_1_en": "fgfd",
-                                        "option_2": "gfhfg",
-                                        "option_2_en": "gfhgf",
-                                        "option_3": "gfh",
-                                        "option_3_en": "fgh",
-                                        "option_4": "fgh",
-                                        "option_4_en": "fgh",
-                                        "answers": {
-                                            "a": "fghfg"
-                                        },
-                                        "row_status": 1,
-                                        "created_at": null,
-                                        "updated_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 201,
-                                        "message": "Exam Question Bank added successfully",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/exam_types/{examTypeId}": {
-            "get": {
-                "tags": [
-                    "Exam Types"
-                ],
-                "summary": "Get a Exam Types",
-                "description": "API endpoint to get a Exam Types. A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/examTypeId"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 2,
-                                        "title": "Asm",
-                                        "title_en": "fgf",
-                                        "accessor_type": "gfhfghfg",
-                                        "accessor_id": 1,
-                                        "row_status": 1,
-                                        "created_at": "2022-03-28T09:06:23.000000Z",
-                                        "updated_at": "2022-03-28T09:06:23.000000Z",
-                                        "deleted_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Exam Types"
-                ],
-                "summary": "Update a Exam Types",
-                "description": "API endpoint to update a Exam Types. A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/examTypeId"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/exams"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": {
-                                        "id": 2,
-                                        "title": "Goo Goo Dolls",
-                                        "title_en": "Miranda Kerr",
-                                        "row_status": "1",
-                                        "created_at": "2022-03-03T05:27:39.000000Z",
-                                        "updated_at": "2022-03-03T05:57:29.000000Z",
-                                        "deleted_at": null
-                                    },
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Subject updated successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Exam Types"
-                ],
-                "summary": "Delete a Exam Types",
-                "description": "API endpoint to delete a Exam Types. A successful request response will show 200 HTTP status code",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/examTypeId"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "Exam Subject deleted successfully.",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+            } }
+
     },
     "components": {
         "securitySchemes": {
