@@ -103,6 +103,30 @@ class ExamService
     }
 
 
+    public function submitExamQuestionPaper(array $data)
+    {
+        //TODO: save random questions in exam section questions table
+//        if(empty($data['exam_section_question_id']))
+//        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
+//        foreach ($examSections as $examSection) {
+//            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+//                $this->storeRandomQuestionsToExamSectionQuestions($examSection,$data);
+//            }
+//        }
+        foreach ($data['questions'] as $question) {
+            $question['youth_id'] = $data['youth_id'];
+            $question['exam_id'] = $data['exam_id'];
+            $examResult = app(ExamResult::class);
+            $examResult->fill($question);
+            $question->save();
+        }
+    }
+
+    private function storeRandomQuestionsToExamSectionQuestions(array $examSection, array $data)
+    {
+
+    }
+
     /**
      * @param int $id
      * @return Model|Builder
@@ -234,7 +258,7 @@ class ExamService
         $examQuestions = $examQuestionBuilder->get()->toArray();
 
         foreach ($examQuestions as &$examQuestion) {
-            $examQuestion['individual_marks']= $examSection['total_marks'] / floatval($examSection['number_of_questions']);
+            $examQuestion['individual_marks'] = $examSection['total_marks'] / floatval($examSection['number_of_questions']);
         }
 
         return $examQuestions;
@@ -1157,6 +1181,52 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'exam_id' => [
+                'required',
+                'int',
+                'exists:exams,id,deleted_at,NULL'
+            ],
+            'youth_id' => [
+                'int',
+                'required'
+            ],
+            'questions' => [
+                'required',
+                'array',
+            ],
+            'questions.*' => [
+                'required',
+                'array',
+            ],
+            'questions.*.exam_section_question_id' => [
+                'nullable',
+                'int',
+                'exists:exam_section_questions,id,deleted_at,NULL'
+            ],
+            'questions.*.question_id' => [
+                'required',
+                'int',
+                'exists:exam_question_banks,id,deleted_at,NULL'
+            ],
+            'questions.*.answers' => [
+                'nullable',
+                'string',
+            ],
+            'questions.*.file_path' => [
+                'nullable',
+                'string',
+            ],
+        ];
+        return Validator::make($request->all(), $rules);
+    }
 
 }
 

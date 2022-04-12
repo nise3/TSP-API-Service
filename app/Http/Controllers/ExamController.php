@@ -202,6 +202,25 @@ class ExamController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function submitExamQuestionPaper(Request $request): JsonResponse
+    {
+        $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
+        $examData = $this->examService->submitExamQuestionPaper($validatedData);
+        $response = [
+            "data" => $examData ?? null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
 
