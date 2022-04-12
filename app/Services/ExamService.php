@@ -1181,6 +1181,68 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    public  function  getPreviewYouthExam($examId,$youthId) : array
+    {
+
+        $examTypeBuilder = ExamType::select([
+            'exam_types.subject_id',
+            'exam_subjects.title',
+            'exam_subjects.title_en',
+            'exam_types.title',
+            'exam_types.title_en'
+        ]);
+
+        $examTypeBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examTypeBuilder->where('exam_types.id', $examId);
+        $examTypeBuilder=$examTypeBuilder->firstOrFail()->toArray();
+
+
+        $examBuilder = Exam::select([
+            'exams.duration',
+            'exams.exam_date',
+            'exams.total_marks'
+
+        ]);
+        $examBuilder->where('exams.id', $examId);
+        $examBuilder=$examBuilder->firstOrFail()->toArray();
+
+
+        $previewYouthExam = ExamResult::select([
+            "exam_results.answer"
+        ]);
+
+        if (!empty($youthId)) {
+            $previewYouthExam->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
+        }
+        $previewYouthExam=$previewYouthExam->firstOrFail()->toArray();
+
+        $youthIds=[];
+        array_push($youthIds,$youthId);
+
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $previewYouthExam['first_name']=$youthProfiles[0]['first_name'];
+        $previewYouthExam['first_name_en']=$youthProfiles[0]['first_name_en'];
+        $previewYouthExam['last_name']=$youthProfiles[0]['last_name'];
+        $previewYouthExam['last_name_en']=$youthProfiles[0]['last_name_en'];
+        $previewYouthExam['mobile']=$youthProfiles[0]['mobile'];
+        $previewYouthExam['email']=$youthProfiles[0]['email'];
+        $previewYouthExam=array_merge($examTypeBuilder,$examBuilder,$previewYouthExam);
+        $exam_sections=$this->getExamSectionByExam($examId);
+
+
+        foreach ($exam_sections as &$examSection) {
+            $examSection['subject_id'] = $examTypeBuilder['subject_id'];
+                $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
+
+        }
+        $previewYouthExam['exam_sections']=$exam_sections;
+        return $previewYouthExam;
+    }
 
     /**
      * @param Request $request
