@@ -297,7 +297,7 @@ class ExamService
         /** @var Builder $examSectionBuilder */
         $examSectionBuilder = ExamSectionQuestion::select([
             'exam_section_questions.question_id',
-           'exam_section_questions.exam_section_uuid',
+            'exam_section_questions.exam_section_uuid',
             'exam_section_questions.individual_marks',
             'exam_section_questions.exam_id',
             'exam_section_questions.title',
@@ -946,7 +946,7 @@ class ExamService
         $rules = [];
         $rules[$examType . 'exam_date'] = [
             'required',
-            'date_format:Y-m-d',
+            'date_format:Y-m-d H:i:s'
         ];
         $rules[$examType . 'duration'] = [
             'required',
@@ -1215,9 +1215,8 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public  function  getPreviewYouthExam($examId,$youthId) : array
+    public function getPreviewYouthExam($examId, $youthId): array
     {
-
 
 
         $examPreviewBuilder = Exam::select([
@@ -1243,29 +1242,29 @@ class ExamService
                 ->whereNull('exam_subjects.deleted_at');
         });
 
-        $examPreviewBuilder=$examPreviewBuilder->firstOrFail()->toArray();
+        $examPreviewBuilder = $examPreviewBuilder->firstOrFail()->toArray();
 
 
-        $youthIds=[];
-        array_push($youthIds,$youthId);
+        $youthIds = [];
+        array_push($youthIds, $youthId);
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
-        $examPreviewBuilder['first_name']=$youthProfiles[0]['first_name'];
-        $examPreviewBuilder['first_name_en']=$youthProfiles[0]['first_name_en'];
-        $examPreviewBuilder['last_name']=$youthProfiles[0]['last_name'];
-        $examPreviewBuilder['last_name_en']=$youthProfiles[0]['last_name_en'];
-        $examPreviewBuilder['mobile']=$youthProfiles[0]['mobile'];
-        $examPreviewBuilder['email']=$youthProfiles[0]['email'];
+        $examPreviewBuilder['first_name'] = $youthProfiles[0]['first_name'];
+        $examPreviewBuilder['first_name_en'] = $youthProfiles[0]['first_name_en'];
+        $examPreviewBuilder['last_name'] = $youthProfiles[0]['last_name'];
+        $examPreviewBuilder['last_name_en'] = $youthProfiles[0]['last_name_en'];
+        $examPreviewBuilder['mobile'] = $youthProfiles[0]['mobile'];
+        $examPreviewBuilder['email'] = $youthProfiles[0]['email'];
 
-        $exam_sections=$this->getExamSectionByExam($examId);
+        $exam_sections = $this->getExamSectionByExam($examId);
 
 
         foreach ($exam_sections as &$examSection) {
             $examSection['subject_id'] = $examPreviewBuilder['subject_id'];
-                $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
+            $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
         }
-        $examPreviewBuilder['exam_sections']=$exam_sections;
+        $examPreviewBuilder['exam_sections'] = $exam_sections;
         return $examPreviewBuilder;
     }
 
