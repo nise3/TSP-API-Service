@@ -205,8 +205,9 @@ class ExamController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException
      */
     public function submitExamQuestionPaper(Request $request): JsonResponse
     {

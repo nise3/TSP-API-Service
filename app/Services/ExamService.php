@@ -105,25 +105,30 @@ class ExamService
 
     public function submitExamQuestionPaper(array $data)
     {
-        //TODO: save random questions in exam section questions table
-//        if(empty($data['exam_section_question_id']))
-//        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
-//        foreach ($examSections as $examSection) {
-//            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-//                $this->storeRandomQuestionsToExamSectionQuestions($examSection,$data);
-//            }
-//        }
         foreach ($data['questions'] as $question) {
-            $question['youth_id'] = $data['youth_id'];
-            $question['exam_id'] = $data['exam_id'];
-            $examResult = app(ExamResult::class);
-            $examResult->fill($question);
-            $question->save();
+            if (empty($question['exam_section_question_id'])) {
+                $question = ExamQuestionBank::findOrFail($question['question_id'])->toArray();
+                $examSection = ExamSection::where('exam_id', $data['exam_id'])
+                    ->where('question_type', $question['question_type'])
+                    ->where()
+                    ->firstOrFail();
+                $question['exam_section_question_id'] = $examSection->uuid;
+                $this->storeRandomQuestionsToExamSectionQuestions($question);
+
+            }
         }
+        $question['youth_id'] = $data['youth_id'];
+        $question['exam_id'] = $data['exam_id'];
+        $examResult = app(ExamResult::class);
+        $examResult->fill($question);
+        $question->save();
     }
 
-    private function storeRandomQuestionsToExamSectionQuestions(array $examSection, array $data)
+    private function storeRandomQuestionsToExamSectionQuestions(array $question)
     {
+        $examSectionQuestion = app(ExamQuestionBank::class);
+        $examSectionQuestion->fill($question);
+        $examSectionQuestion->save();
 
     }
 
@@ -943,6 +948,7 @@ class ExamService
         $rules[$examType . 'exam_questions.*.question_type'] = [
             'integer',
             'required',
+            'distinct',
             Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
         ];
         $rules[$examType . 'exam_questions.*.number_of_questions'] = [
@@ -1181,7 +1187,7 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public  function  getPreviewYouthExam($examId,$youthId) : array
+    public function getPreviewYouthExam($examId, $youthId): array
     {
 
         $examTypeBuilder = ExamType::select([
@@ -1198,7 +1204,7 @@ class ExamService
         });
 
         $examTypeBuilder->where('exam_types.id', $examId);
-        $examTypeBuilder=$examTypeBuilder->firstOrFail()->toArray();
+        $examTypeBuilder = $examTypeBuilder->firstOrFail()->toArray();
 
 
         $examBuilder = Exam::select([
@@ -1208,7 +1214,7 @@ class ExamService
 
         ]);
         $examBuilder->where('exams.id', $examId);
-        $examBuilder=$examBuilder->firstOrFail()->toArray();
+        $examBuilder = $examBuilder->firstOrFail()->toArray();
 
 
         $previewYouthExam = ExamResult::select([
@@ -1218,29 +1224,29 @@ class ExamService
         if (!empty($youthId)) {
             $previewYouthExam->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
         }
-        $previewYouthExam=$previewYouthExam->firstOrFail()->toArray();
+        $previewYouthExam = $previewYouthExam->firstOrFail()->toArray();
 
-        $youthIds=[];
-        array_push($youthIds,$youthId);
+        $youthIds = [];
+        array_push($youthIds, $youthId);
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
-        $previewYouthExam['first_name']=$youthProfiles[0]['first_name'];
-        $previewYouthExam['first_name_en']=$youthProfiles[0]['first_name_en'];
-        $previewYouthExam['last_name']=$youthProfiles[0]['last_name'];
-        $previewYouthExam['last_name_en']=$youthProfiles[0]['last_name_en'];
-        $previewYouthExam['mobile']=$youthProfiles[0]['mobile'];
-        $previewYouthExam['email']=$youthProfiles[0]['email'];
-        $previewYouthExam=array_merge($examTypeBuilder,$examBuilder,$previewYouthExam);
-        $exam_sections=$this->getExamSectionByExam($examId);
+        $previewYouthExam['first_name'] = $youthProfiles[0]['first_name'];
+        $previewYouthExam['first_name_en'] = $youthProfiles[0]['first_name_en'];
+        $previewYouthExam['last_name'] = $youthProfiles[0]['last_name'];
+        $previewYouthExam['last_name_en'] = $youthProfiles[0]['last_name_en'];
+        $previewYouthExam['mobile'] = $youthProfiles[0]['mobile'];
+        $previewYouthExam['email'] = $youthProfiles[0]['email'];
+        $previewYouthExam = array_merge($examTypeBuilder, $examBuilder, $previewYouthExam);
+        $exam_sections = $this->getExamSectionByExam($examId);
 
 
         foreach ($exam_sections as &$examSection) {
             $examSection['subject_id'] = $examTypeBuilder['subject_id'];
-                $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
+            $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
 
         }
-        $previewYouthExam['exam_sections']=$exam_sections;
+        $previewYouthExam['exam_sections'] = $exam_sections;
         return $previewYouthExam;
     }
 
