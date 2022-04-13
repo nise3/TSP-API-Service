@@ -103,6 +103,30 @@ class ExamService
     }
 
 
+    public function submitExamQuestionPaper(array $data)
+    {
+        //TODO: save random questions in exam section questions table
+//        if(empty($data['exam_section_question_id']))
+//        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
+//        foreach ($examSections as $examSection) {
+//            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+//                $this->storeRandomQuestionsToExamSectionQuestions($examSection,$data);
+//            }
+//        }
+        foreach ($data['questions'] as $question) {
+            $question['youth_id'] = $data['youth_id'];
+            $question['exam_id'] = $data['exam_id'];
+            $examResult = app(ExamResult::class);
+            $examResult->fill($question);
+            $question->save();
+        }
+    }
+
+    private function storeRandomQuestionsToExamSectionQuestions(array $examSection, array $data)
+    {
+
+    }
+
     /**
      * @param int $id
      * @return Model|Builder
@@ -189,7 +213,7 @@ class ExamService
      * @param int $id
      * @return array
      */
-    private function getExamSectionByExam(int $id): array
+    private function getExamSectionByExam(int $examId): array
     {
         return ExamSection::select([
             'exam_sections.uuid',
@@ -198,7 +222,7 @@ class ExamService
             'exam_sections.exam_id',
             'exam_sections.question_selection_type',
             'exam_sections.number_of_questions',
-        ])->where('exam_id', $id)->get()->toArray();
+        ])->where('exam_sections.exam_id', $examId)->get()->toArray();
     }
 
 
@@ -234,7 +258,7 @@ class ExamService
         $examQuestions = $examQuestionBuilder->get()->toArray();
 
         foreach ($examQuestions as &$examQuestion) {
-            $examQuestion['individual_marks']= $examSection['total_marks'] / floatval($examSection['number_of_questions']);
+            $examQuestion['individual_marks'] = $examSection['total_marks'] / floatval($examSection['number_of_questions']);
         }
 
         return $examQuestions;
@@ -263,11 +287,45 @@ class ExamService
             'exam_section_questions.option_4',
             'exam_section_questions.option_4_en',
         ]);
-        $examSectionBuilder->where('exam_section_uuid', $examSection['uuid']);
+        $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
 
         return $examSectionBuilder->get()->toArray();
     }
 
+    private function getExamSectionQuestionWithAnswerBySection($examSection): array
+    {
+        /** @var Builder $examSectionBuilder */
+        $examSectionBuilder = ExamSectionQuestion::select([
+            'exam_section_questions.question_id',
+           'exam_section_questions.exam_section_uuid',
+            'exam_section_questions.individual_marks',
+            'exam_section_questions.exam_id',
+            'exam_section_questions.title',
+            'exam_section_questions.title_en',
+            'exam_section_questions.subject_id',
+            'exam_section_questions.question_type',
+            'exam_section_questions.accessor_type',
+            'exam_section_questions.accessor_id',
+            'exam_section_questions.option_1',
+            'exam_section_questions.option_1_en',
+            'exam_section_questions.option_2',
+            'exam_section_questions.option_2_en',
+            'exam_section_questions.option_3',
+            'exam_section_questions.option_3_en',
+            'exam_section_questions.option_4',
+            'exam_section_questions.option_4_en',
+            'exam_results.id as exam_result_id',
+            'exam_results.answer',
+            'exam_results.file_paths',
+        ]);
+
+        $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
+        $examSectionBuilder->join("exam_results", function ($join) {
+            $join->on('exam_results.exam_section_question_id', '=', 'exam_section_questions.uuid');
+        });
+
+        return $examSectionBuilder->get()->toArray();
+    }
 
     /**
      * @param array $data
@@ -1157,6 +1215,105 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    public  function  getPreviewYouthExam($examId,$youthId) : array
+    {
+
+
+
+        $examPreviewBuilder = Exam::select([
+            'exam_types.subject_id',
+            'exam_subjects.title as subject_title',
+            'exam_subjects.title_en as subject_title_en',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exams.duration',
+            'exams.exam_date',
+            'exams.total_marks'
+
+        ]);
+        $examPreviewBuilder->where('exams.id', $examId);
+
+        $examPreviewBuilder->join("exam_types", function ($join) {
+            $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $examPreviewBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_subjects.deleted_at');
+        });
+
+        $examPreviewBuilder=$examPreviewBuilder->firstOrFail()->toArray();
+
+
+        $youthIds=[];
+        array_push($youthIds,$youthId);
+
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $examPreviewBuilder['first_name']=$youthProfiles[0]['first_name'];
+        $examPreviewBuilder['first_name_en']=$youthProfiles[0]['first_name_en'];
+        $examPreviewBuilder['last_name']=$youthProfiles[0]['last_name'];
+        $examPreviewBuilder['last_name_en']=$youthProfiles[0]['last_name_en'];
+        $examPreviewBuilder['mobile']=$youthProfiles[0]['mobile'];
+        $examPreviewBuilder['email']=$youthProfiles[0]['email'];
+
+        $exam_sections=$this->getExamSectionByExam($examId);
+
+
+        foreach ($exam_sections as &$examSection) {
+            $examSection['subject_id'] = $examPreviewBuilder['subject_id'];
+                $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
+        }
+        $examPreviewBuilder['exam_sections']=$exam_sections;
+        return $examPreviewBuilder;
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'exam_id' => [
+                'required',
+                'int',
+                'exists:exams,id,deleted_at,NULL'
+            ],
+            'youth_id' => [
+                'int',
+                'required'
+            ],
+            'questions' => [
+                'required',
+                'array',
+            ],
+            'questions.*' => [
+                'required',
+                'array',
+            ],
+            'questions.*.exam_section_question_id' => [
+                'nullable',
+                'int',
+                'exists:exam_section_questions,id,deleted_at,NULL'
+            ],
+            'questions.*.question_id' => [
+                'required',
+                'int',
+                'exists:exam_question_banks,id,deleted_at,NULL'
+            ],
+            'questions.*.answers' => [
+                'nullable',
+                'string',
+            ],
+            'questions.*.file_path' => [
+                'nullable',
+                'string',
+            ],
+        ];
+        return Validator::make($request->all(), $rules);
+    }
 
 }
 
