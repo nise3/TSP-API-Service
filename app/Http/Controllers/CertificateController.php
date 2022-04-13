@@ -2,47 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExamSubject;
+use App\Models\Certificate;
 use App\Services\CertificateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class ExamSubjectController extends Controller
+class CertificateController extends Controller
 {
     /**
      * @var CertificateService
      */
-    public CertificateService $ExamSubjectService;
+    public CertificateService $certificateService;
+    /**
+     * @var \Carbon\Carbon|Carbon
+     */
+    private \Carbon\Carbon|Carbon $startTime;
 
     /**
-     * @var Carbon
+     * CertificateController constructor.
+     * @param CertificateService $certificateService
      */
-    private Carbon $startTime;
-
-    /**
-     * @param CertificateService $ExamSubjectService
-     */
-
-    public function __construct(CertificateService $examSubjectService)
+    public function __construct(CertificateService $certificateService)
     {
-        $this->ExamSubjectService = $examSubjectService;
+        $this->certificateService = $certificateService;
         $this->startTime = Carbon::now();
     }
 
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
-
     public function getList(Request $request): JsonResponse
     {
+        //$this->authorize('viewAny', Certificate::class);
 
-        $filter = $this->ExamSubjectService->filterValidator($request)->validate();
-        $response = $this->ExamSubjectService->getList($filter, $this->startTime);
+        $filter = $this->certificateService->filterValidator($request)->validate();
+
+        $response = $this->certificateService->getList($filter, $this->startTime);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -54,9 +56,9 @@ class ExamSubjectController extends Controller
 
     public function read(Request $request, int $id): JsonResponse
     {
-        $examSubject = $this->ExamSubjectService->getOneExamSubject($id);
+        $certificate = $this->certificateService->getOneExamSubject($id);
         $response = [
-            "data" => $examSubject,
+            "data" => $certificate,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -76,14 +78,14 @@ class ExamSubjectController extends Controller
     public function store(Request $request): JsonResponse
     {
 
-        $validatedData = $this->ExamSubjectService->validator($request)->validate();
-        $data = $this->ExamSubjectService->store($validatedData);
+        $validatedData = $this->certificateService->validator($request)->validate();
+        $data = $this->certificateService->store($validatedData);
         $response = [
             'data' => $data ?: null,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Exam Subject added successfully.",
+                "message" => "Certificate template added successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -100,18 +102,18 @@ class ExamSubjectController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $examSubject = ExamSubject::findOrFail($id);
+        $examSubject = Certificate::findOrFail($id);
 
-        $validated = $this->ExamSubjectService->validator($request, $id)->validate();
+        $validated = $this->certificateService->validator($request, $id)->validate();
 
-        $data = $this->ExamSubjectService->update($examSubject, $validated);
+        $data = $this->certificateService->update($examSubject, $validated);
 
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam Subject updated successfully.",
+                "message" => "Certificate template updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -125,17 +127,16 @@ class ExamSubjectController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $examSubject = ExamSubject::findOrFail($id);
-        $this->ExamSubjectService->destroy($examSubject);
+        $certificate = Certificate::findOrFail($id);
+        $this->certificateService->destroy($certificate);
         $response = [
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam Subject deleted successfully.",
+                "message" => "Certificate template deleted successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
-
 }
