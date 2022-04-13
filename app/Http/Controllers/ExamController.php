@@ -237,4 +237,19 @@ class ExamController extends Controller
 
     }
 
+    public function  youthExamMarkUpdate(Request $request):JsonResponse{
+
+        $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
+        $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
+        $response = [
+            "data" => $youthExamMarkUpdateData ?? null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 }
