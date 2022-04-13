@@ -10912,6 +10912,9 @@
             "parameters": [
 
                 {
+                    "$ref": "#/components/parameters/youthId"
+                },
+                {
                     "$ref": "#/components/parameters/examId"
                 },
                 {
@@ -10937,16 +10940,107 @@
                                 "data": [
                                     {
                                         "id": 1,
-                                        "subject_id": 1,
-                                        "exam_subject_title": "math",
-                                        "exam_subject_title_en": "math",
-                                        "type": 1,
-                                        "title": "dfdg",
-                                        "title_en": "dfsd",
-                                        "row_status": 1,
-                                        "created_at": null,
-                                        "updated_at": null,
-                                        "deleted_at": null
+                                        "exam_id": 1,
+                                        "youth_id": 5,
+                                        "exam_section_question_id": "9fa93177-a2c8-46ca-8525-0e3ccb0f4d78",
+                                        "answer": "pagla",
+                                        "marks_achieved": "0.00",
+                                        "file_paths": "[\"a\", \"b\"]",
+                                        "youth_profile": {
+                                            "id": 5,
+                                            "idp_user_id": "cfbf2df7-838c-4e45-89f5-ac26a45695d3",
+                                            "username": "01634433444",
+                                            "user_name_type": 2,
+                                            "first_name": "Piyal",
+                                            "first_name_en": null,
+                                            "last_name": "Rahman",
+                                            "last_name_en": null,
+                                            "expected_salary": null,
+                                            "job_level": null,
+                                            "loc_division_id": 3,
+                                            "code": "Y0000000000000012",
+                                            "division_title": "ঢাকা",
+                                            "division_title_en": "Dhaka",
+                                            "loc_district_id": 18,
+                                            "district_title": "ঢাকা ",
+                                            "district_title_en": "DHAKA",
+                                            "loc_upazila_id": 112,
+                                            "upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                            "upazila_title_en": "TEJGAON UNNAYAN CIRCLE",
+                                            "gender": 1,
+                                            "religion": null,
+                                            "is_freelance_profile": 0,
+                                            "marital_status": null,
+                                            "nationality": 1,
+                                            "email": "joxiga7719h@chinamkm.com",
+                                            "mobile": "01634433444",
+                                            "identity_number_type": null,
+                                            "identity_number": null,
+                                            "date_of_birth": "1996-02-07T18:00:00.000000Z",
+                                            "age": 26,
+                                            "freedom_fighter_status": 1,
+                                            "physical_disability_status": 0,
+                                            "does_belong_to_ethnic_group": 0,
+                                            "bio": null,
+                                            "bio_en": null,
+                                            "photo": null,
+                                            "cv_path": null,
+                                            "signature_image_path": null,
+                                            "default_cv_template": null,
+                                            "admin_access_type": null,
+                                            "row_status": 1,
+                                            "created_at": "2022-02-09T16:07:08.000000Z",
+                                            "updated_at": "2022-02-09T16:08:06.000000Z",
+                                            "profile_completed": 33,
+                                            "total_job_experience": {
+                                                "year": 0,
+                                                "month": 0
+                                            },
+                                            "physical_disabilities": [],
+                                            "youth_languages_proficiencies": [],
+                                            "skills": [
+                                                {
+                                                    "id": 2,
+                                                    "title": "প্রজেক্ট ম্যানেজমেন্ট",
+                                                    "title_en": "Project Management",
+                                                    "deleted_at": null
+                                                },
+                                                {
+                                                    "id": 3,
+                                                    "title": "কম্পিউটার প্রোগ্রামিং",
+                                                    "title_en": "Computer Programming",
+                                                    "deleted_at": null
+                                                }
+                                            ],
+                                            "youth_educations": [],
+                                            "youth_job_experiences": [],
+                                            "youth_certifications": [],
+                                            "youth_portfolios": [],
+                                            "youth_addresses": [
+                                                {
+                                                    "id": 5,
+                                                    "youth_id": 5,
+                                                    "address_type": 1,
+                                                    "loc_division_id": 3,
+                                                    "loc_district_id": 18,
+                                                    "loc_upazila_id": 112,
+                                                    "village_or_area": null,
+                                                    "village_or_area_en": null,
+                                                    "house_n_road": null,
+                                                    "house_n_road_en": null,
+                                                    "zip_or_postal_code": null,
+                                                    "created_at": "2022-02-09T16:07:08.000000Z",
+                                                    "updated_at": "2022-02-09T16:07:08.000000Z",
+                                                    "deleted_at": null,
+                                                    "loc_division_title": "ঢাকা",
+                                                    "loc_division_title_en": "Dhaka",
+                                                    "loc_district_title": "ঢাকা ",
+                                                    "loc_district_title_en": "DHAKA",
+                                                    "loc_upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                                    "loc_upazila_tile_en": "TEJGAON UNNAYAN CIRCLE"
+                                                }
+                                            ]
+                                        }
                                     }
                                 ],
                                 "_response_status": {
@@ -10981,21 +11075,107 @@
                             "application/json": {
                                 "example": {
                                     "order": "ASC",
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "title": "dfdg",
-                                            "title_en": "dfsd",
-                                            "subject_id": 1,
-                                            "subject_title": "math",
-                                            "subject_title_en": "math",
-                                            "exam_date": "2022-04-11 14:54:53",
-                                            "duration": 100,
-                                            "venue": "dhaka",
-                                            "total_marks": "100.00",
-                                            "exam_sections": []
-                                        }
-                                    ],
+                                    "data": {
+                                        "id": 1,
+                                        "title": "dfdg",
+                                        "title_en": "dfsd",
+                                        "subject_id": 1,
+                                        "subject_title": "math",
+                                        "subject_title_en": "math",
+                                        "exam_date": "2022-04-11 14:54:53",
+                                        "duration": 100,
+                                        "venue": "dhaka",
+                                        "total_marks": "100.00",
+                                        "exam_sections": [
+                                            {
+                                                "uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "f38f87a6-8b77-40b6-87b8-7bf80ccfbf64",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "e5312dd2-4af2-4cce-b2e1-d2c702f6b0b0",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -14056,6 +14236,14 @@
             "examTypeId": {
                 "name": "examTypeId",
                 "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youthId": {
+                "name": "youthId",
+                "required": false,
                 "in": "path",
                 "schema": {
                     "type": "integer"
