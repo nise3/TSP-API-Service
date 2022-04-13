@@ -4,6 +4,10 @@
 
 use App\Facade\ServiceToServiceCall;
 use App\Helpers\Classes\CustomRouter;
+use App\Helpers\Classes\ExcelExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -194,6 +198,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
 
+});
+
+
+$router->get("excel", function () {
+    return app(\App\Services\CourseEnrollmentBulkEntryService::class)->buildImportExcel(50);
 });
 
 

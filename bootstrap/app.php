@@ -66,8 +66,7 @@ $app->configure('httpclientendpoint');
 $app->configure('queue');
 $app->configure('nise3RabbitMq');
 $app->configure('database');
-$app->configure('ekpay');
-$app->configure('sms');
+$app->configure('excel');
 $app->configure('elasticSearchLogConfig');
 $app->configure('lumenDefaultLogConfig');
 
@@ -116,6 +115,7 @@ $app->register(App\Providers\RabbitMQServiceProvider::class);
 $app->register(VladimirYuldashev\LaravelQueueRabbitMQ\LaravelQueueRabbitMQServiceProvider::class);
 $app->register(Khbd\LaravelSmsBD\SMSServiceProvider::class);
 $app->register(Ixudra\Curl\CurlServiceProvider::class);
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 
 /* $app->register(App\Providers\EventServiceProvider::class); */
 

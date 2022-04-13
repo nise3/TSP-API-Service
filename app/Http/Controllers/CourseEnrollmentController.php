@@ -153,6 +153,10 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
+    public function courseEnrollmentExcelFormat(array $request){
+
+    }
+
     /**
      * @throws Exception
      */
