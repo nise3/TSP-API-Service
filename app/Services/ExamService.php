@@ -584,6 +584,22 @@ class ExamService
 
     /**
      * @param ExamType $ExamType
+     * @param array $data
+     * @return ExamType
+     */
+
+    public function youthExamMarkUpdate(array $request)
+    {
+        $youthId=$request['youth_id'];
+        $examId=$request['exam_id'];
+        $examResultId=$request['marks'][0]['exam_result_id'];
+        $marksAchieved=$request['marks'][0]['marks_achieved'];
+       $exam=ExamResult::where('youth_id', $youthId)->where('exam_id', $examId)->update(['marks_achieved' => $marksAchieved]);
+       return $exam;
+    }
+
+    /**
+     * @param ExamType $ExamType
      */
     public function destroy(ExamType $ExamType)
     {
@@ -1319,6 +1335,44 @@ class ExamService
         ];
         return Validator::make($request->all(), $rules);
     }
+    public function youthExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+        $customMessage = [
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
+        ];
+        $rules = [
 
+            'exam_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'youth_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'marks'=>[
+                'array',
+                'required',
+            ],
+            'marks.*'=>[
+                'array',
+                'required',
+            ],
+            'marks.*.exam_result_id'=>[
+                'integer',
+                'required',
+            ],
+            'marks.*.marks_achieved'=>[
+                'numeric',
+                'required',
+            ]
+
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
 }
 
