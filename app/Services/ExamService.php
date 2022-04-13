@@ -218,7 +218,7 @@ class ExamService
      * @param int $id
      * @return array
      */
-    private function getExamSectionByExam(int $id): array
+    private function getExamSectionByExam(int $examId): array
     {
         return ExamSection::select([
             'exam_sections.uuid',
@@ -227,7 +227,7 @@ class ExamService
             'exam_sections.exam_id',
             'exam_sections.question_selection_type',
             'exam_sections.number_of_questions',
-        ])->where('exam_id', $id)->get()->toArray();
+        ])->where('exam_sections.exam_id', $examId)->get()->toArray();
     }
 
 
@@ -292,11 +292,45 @@ class ExamService
             'exam_section_questions.option_4',
             'exam_section_questions.option_4_en',
         ]);
-        $examSectionBuilder->where('exam_section_uuid', $examSection['uuid']);
+        $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
 
         return $examSectionBuilder->get()->toArray();
     }
 
+    private function getExamSectionQuestionWithAnswerBySection($examSection): array
+    {
+        /** @var Builder $examSectionBuilder */
+        $examSectionBuilder = ExamSectionQuestion::select([
+            'exam_section_questions.question_id',
+            'exam_section_questions.exam_section_uuid',
+            'exam_section_questions.individual_marks',
+            'exam_section_questions.exam_id',
+            'exam_section_questions.title',
+            'exam_section_questions.title_en',
+            'exam_section_questions.subject_id',
+            'exam_section_questions.question_type',
+            'exam_section_questions.accessor_type',
+            'exam_section_questions.accessor_id',
+            'exam_section_questions.option_1',
+            'exam_section_questions.option_1_en',
+            'exam_section_questions.option_2',
+            'exam_section_questions.option_2_en',
+            'exam_section_questions.option_3',
+            'exam_section_questions.option_3_en',
+            'exam_section_questions.option_4',
+            'exam_section_questions.option_4_en',
+            'exam_results.id as exam_result_id',
+            'exam_results.answer',
+            'exam_results.file_paths',
+        ]);
+
+        $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
+        $examSectionBuilder->join("exam_results", function ($join) {
+            $join->on('exam_results.exam_section_question_id', '=', 'exam_section_questions.uuid');
+        });
+
+        return $examSectionBuilder->get()->toArray();
+    }
 
     /**
      * @param array $data
@@ -917,7 +951,7 @@ class ExamService
         $rules = [];
         $rules[$examType . 'exam_date'] = [
             'required',
-            'date_format:Y-m-d',
+            'date_format:Y-m-d H:i:s'
         ];
         $rules[$examType . 'duration'] = [
             'required',
@@ -1190,64 +1224,54 @@ class ExamService
     public function getPreviewYouthExam($examId, $youthId): array
     {
 
-        $examTypeBuilder = ExamType::select([
+
+        $examPreviewBuilder = Exam::select([
             'exam_types.subject_id',
-            'exam_subjects.title',
-            'exam_subjects.title_en',
+            'exam_subjects.title as subject_title',
+            'exam_subjects.title_en as subject_title_en',
             'exam_types.title',
-            'exam_types.title_en'
-        ]);
-
-        $examTypeBuilder->join("exam_subjects", function ($join) {
-            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
-                ->whereNull('exam_types.deleted_at');
-        });
-
-        $examTypeBuilder->where('exam_types.id', $examId);
-        $examTypeBuilder = $examTypeBuilder->firstOrFail()->toArray();
-
-
-        $examBuilder = Exam::select([
+            'exam_types.title_en',
             'exams.duration',
             'exams.exam_date',
             'exams.total_marks'
 
         ]);
-        $examBuilder->where('exams.id', $examId);
-        $examBuilder = $examBuilder->firstOrFail()->toArray();
+        $examPreviewBuilder->where('exams.id', $examId);
 
+        $examPreviewBuilder->join("exam_types", function ($join) {
+            $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                ->whereNull('exam_types.deleted_at');
+        });
 
-        $previewYouthExam = ExamResult::select([
-            "exam_results.answer"
-        ]);
+        $examPreviewBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_subjects.deleted_at');
+        });
 
-        if (!empty($youthId)) {
-            $previewYouthExam->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
-        }
-        $previewYouthExam = $previewYouthExam->firstOrFail()->toArray();
+        $examPreviewBuilder = $examPreviewBuilder->firstOrFail()->toArray();
+
 
         $youthIds = [];
         array_push($youthIds, $youthId);
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
-        $previewYouthExam['first_name'] = $youthProfiles[0]['first_name'];
-        $previewYouthExam['first_name_en'] = $youthProfiles[0]['first_name_en'];
-        $previewYouthExam['last_name'] = $youthProfiles[0]['last_name'];
-        $previewYouthExam['last_name_en'] = $youthProfiles[0]['last_name_en'];
-        $previewYouthExam['mobile'] = $youthProfiles[0]['mobile'];
-        $previewYouthExam['email'] = $youthProfiles[0]['email'];
-        $previewYouthExam = array_merge($examTypeBuilder, $examBuilder, $previewYouthExam);
+        $examPreviewBuilder['first_name'] = $youthProfiles[0]['first_name'];
+        $examPreviewBuilder['first_name_en'] = $youthProfiles[0]['first_name_en'];
+        $examPreviewBuilder['last_name'] = $youthProfiles[0]['last_name'];
+        $examPreviewBuilder['last_name_en'] = $youthProfiles[0]['last_name_en'];
+        $examPreviewBuilder['mobile'] = $youthProfiles[0]['mobile'];
+        $examPreviewBuilder['email'] = $youthProfiles[0]['email'];
+
         $exam_sections = $this->getExamSectionByExam($examId);
 
 
         foreach ($exam_sections as &$examSection) {
-            $examSection['subject_id'] = $examTypeBuilder['subject_id'];
-            $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
-
+            $examSection['subject_id'] = $examPreviewBuilder['subject_id'];
+            $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
         }
-        $previewYouthExam['exam_sections'] = $exam_sections;
-        return $previewYouthExam;
+        $examPreviewBuilder['exam_sections'] = $exam_sections;
+        return $examPreviewBuilder;
     }
 
     /**
