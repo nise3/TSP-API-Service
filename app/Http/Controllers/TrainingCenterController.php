@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CommonServices\CodeGeneratorService;
 use Illuminate\Http\Request;
 use App\Models\TrainingCenter;
 use Carbon\Carbon;
@@ -82,11 +83,15 @@ class TrainingCenterController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
         $this->authorize('create', TrainingCenter::class);
         $validatedData = $this->trainingCenterService->validator($request)->validate();
+
+        $validatedData['code'] = CodeGeneratorService::getTrainingCenterCode();
+
         $data = $this->trainingCenterService->store($validatedData);
         $response = [
             'data' => $data ?: null,
@@ -207,6 +212,7 @@ class TrainingCenterController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
+    //TODO: getTrainingCentersWithFilters config for industry association
     public function getTrainingCentersWithFilters(Request $request): JsonResponse
     {
         $filter = $this->trainingCenterService->filterValidator($request)->validate();

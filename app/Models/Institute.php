@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null config
  * @property string contact_person_name
  * @property string contact_person_mobile
+ * @property string contact_person_email
  */
 class Institute extends BaseModel
 {
@@ -31,6 +32,9 @@ class Institute extends BaseModel
         self::ROW_STATUS_PENDING,
         self::ROW_STATUS_REJECTED
     ];
+
+    public const INSTITUTE_CODE_PREFIX = "SSP";
+    public const INSTITUTE_CODE_LENGTH = 11;
 
     use ScopeRowStatusTrait, SoftDeletes;
 
@@ -51,7 +55,6 @@ class Institute extends BaseModel
         'phone_numbers' => 'array',
         'mobile_numbers' => 'array',
     ];
-    private mixed $contact_person_name;
 
     /**
      * @return string|null

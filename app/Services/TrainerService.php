@@ -2,15 +2,22 @@
 
 namespace App\Services;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Trainer;
+use App\Services\CommonServices\MailService;
+use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Class TrainerService
@@ -32,6 +39,7 @@ class TrainerService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
 
@@ -39,7 +47,7 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.institute_id',
+            'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
             'trainers.branch_id',
@@ -58,8 +66,6 @@ class TrainerService
             'trainers.about_me_en',
             'trainers.educational_qualification',
             'trainers.educational_qualification_en',
-            'trainers.skills',
-            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -96,28 +102,23 @@ class TrainerService
             'trainers.created_at',
             'trainers.updated_at',
             'trainers.deleted_at',
-        ])->acl();
+        ]);
 
-        $trainerBuilder->join("institutes", function ($join) use ($rowStatus) {
-            $join->on('trainers.institute_id', '=', 'institutes.id')
-                ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
+        $trainerBuilder->leftJoin("institute_trainers", function ($join) use ($rowStatus) {
+            $join->on('institute_trainers.trainer_id', '=', 'trainers.id');
         });
+        $trainerBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
+            $join->on('institute_trainers.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+
         $trainerBuilder->leftJoin("training_centers", function ($join) use ($rowStatus) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('training_centers.row_status', $rowStatus);
-            }*/
         });
         $trainerBuilder->leftJoin("branches", function ($join) use ($rowStatus) {
             $join->on('trainers.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
-            }*/
         });
 
         $trainerBuilder->leftJoin('loc_divisions as loc_divisions_present', function ($join) {
@@ -164,7 +165,11 @@ class TrainerService
         }
 
         if (is_numeric($instituteId)) {
-            $trainerBuilder->where('trainers.institute_id', '=', $instituteId);
+            $trainerBuilder->where('institute_trainers.institute_id', '=', $instituteId);
+        }
+
+        if (is_numeric($industryAssociationId)) {
+            $trainerBuilder->where('trainers.industry_association_id', '=', $industryAssociationId);
         }
 
         if (is_numeric($branchId)) {
@@ -174,6 +179,8 @@ class TrainerService
         if (is_numeric($trainingCenterId)) {
             $trainerBuilder->where('trainers.training_center_id', '=', $trainingCenterId);
         }
+
+        $trainerBuilder->with('skills');
 
         /** @var Collection $trainers */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -208,9 +215,7 @@ class TrainerService
         /** @var Trainer|Builder $trainerBuilder */
         $trainerBuilder = Trainer::select([
             'trainers.id',
-            'trainers.institute_id',
-            'institutes.title_en as institutes_title_en',
-            'institutes.title as institutes_title',
+            'trainers.industry_association_id',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
@@ -227,8 +232,6 @@ class TrainerService
             'trainers.about_me_en',
             'trainers.educational_qualification',
             'trainers.educational_qualification_en',
-            'trainers.skills',
-            'trainers.skills_en',
             'trainers.gender',
             'trainers.marital_status',
             'trainers.religion',
@@ -267,10 +270,6 @@ class TrainerService
             'trainers.deleted_at',
         ]);
 
-        $trainerBuilder->join("institutes", function ($join) {
-            $join->on('trainers.institute_id', '=', 'institutes.id')
-                ->whereNull('institutes.deleted_at');
-        });
         $trainerBuilder->leftJoin("training_centers", function ($join) {
             $join->on('trainers.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
@@ -312,6 +311,9 @@ class TrainerService
 
         $trainerBuilder->where('trainers.id', $id);
 
+        $trainerBuilder->with('institutes');
+        $trainerBuilder->with('skills');
+
         /** @var Trainer $trainer */
         return $trainerBuilder->firstOrFail();
     }
@@ -319,12 +321,76 @@ class TrainerService
     /**
      * @param array $data
      * @return Trainer
+     * @throws Throwable
      */
     public function store(array $data): Trainer
     {
         $trainer = app(Trainer::class);
-        $trainer->fill($data);
-        $trainer->Save();
+        $youth = null;
+
+        DB::beginTransaction();
+        try {
+            /** Youth service call */
+            $youth = ServiceToServiceCall::createTrainerYouthUser($data);
+
+            /** Save trainer with youth_id */
+            $data['youth_id'] = $youth['id'];
+            $trainer->fill($data);
+            $trainer->save();
+
+            /** Sync in institute_trainer pivot table */
+            $pivotTableData = [];
+            if(!empty($data['institute_id'])){
+                $pivotTableData[] = [
+                    "institute_id" => $data['institute_id'],
+                    "industry_association_id" => null
+                ];
+            }
+            if(!empty($data['industry_association_id'])){
+                $pivotTableData[] = [
+                    "institute_id" => null,
+                    "industry_association_id" => $data['industry_association_id']
+                ];
+            }
+            $trainer->institutes()->sync($pivotTableData);
+
+            /** Sync in institute_skill pivot table */
+            $trainer->skills()->sync($data['skills']);
+
+            /** Core service call */
+            $trainerData = $trainer->toArray();
+            $trainerData['role_id'] = $data['role_id'];
+            $coreUser = ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
+
+            $trainer['role_id'] = $coreUser['role_id'] ?? "";
+            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "" ;
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "" ;
+
+            DB::commit();
+
+            /** Mail send after user registration */
+            $to = array($youth['email']);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Registration Information";
+            $message = "Congratulation, You are successfully registered as a Trainer user. Username: " . $youth['username'] . " & Password: " . BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** SMS send after user registration */
+            $recipient = $youth['mobile'];
+            $smsMessage = "Congratulation, You are successfully registered as a Trainer user.";
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            if(!empty($youth)){
+                ServiceToServiceCall::rollbackTrainerYouthUser($youth);
+            }
+            throw $e;
+        }
+
         return $trainer;
     }
 
@@ -361,6 +427,7 @@ class TrainerService
         $trainerBuilder = Trainer::onlyTrashed()->select([
             'trainers.id',
             'trainers.institute_id',
+            'trainers.industry_association_id',
             'institutes.title_en as institutes_title_en',
             'institutes.title as institutes_title',
             'trainers.branch_id',
@@ -419,7 +486,7 @@ class TrainerService
             'trainers.deleted_at',
         ]);
 
-        $trainerBuilder->join("institutes", function ($join) {
+        $trainerBuilder->leftJoin("institutes", function ($join) {
             $join->on('trainers.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -512,15 +579,47 @@ class TrainerService
      */
     public function validator(Request $request, int $id = null): Validator
     {
+        $data = $request->all();
+
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
+        if (!empty($data["skills"])) {
+            $data["skills"] = isset($data['skills']) && is_array($data['skills']) ? $data['skills'] : explode(',', $data['skills']);
+        }
+
+        $authUser = Auth::user();
+
         $rules = [
             'institute_id' => [
+                Rule::requiredIf(function () use ($authUser, $data) {
+                    if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($data['industry_association_id'])) {
+                        return true;
+                    }
+                    return false;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser, $data) {
+                    if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($data['institute_id'])) {
+                        return true;
+                    }
+                    return false;
+                }),
+                "nullable",
+                "int"
+            ],
+            'role_id' => [
                 'required',
-                'exists:institutes,id,deleted_at,NULL',
-                'int',
+                'int'
             ],
             'branch_id' => [
                 'nullable',
@@ -561,7 +660,12 @@ class TrainerService
             ],
             'date_of_birth' => [
                 'required',
-                'date'
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(5))) {
+                        $failed('Age should be greater than 5 years.');
+                    }
+                }
             ],
             'about_me' => [
                 'nullable',
@@ -606,21 +710,25 @@ class TrainerService
                 'nullable',
                 'string'
             ],
-            'skills' => [
-                'nullable',
-                'string'
+            "skills" => [
+                "required",
+                "array",
+                "min:1",
+                "max:10"
             ],
-            'skills_en' => [
-                'nullable',
-                'string'
+            "skills.*" => [
+                "required",
+                'integer',
+                "distinct",
+                "min:1"
             ],
             'present_address_division_id' => [
-                'nullable',
+                'required',
                 'integer',
                 'exists:loc_divisions,id,deleted_at,NULL',
             ],
             'present_address_district_id' => [
-                'nullable',
+                'required',
                 'integer',
                 'exists:loc_districts,id,deleted_at,NULL',
             ],
@@ -682,7 +790,8 @@ class TrainerService
                 'integer',
             ],
         ];
-        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
     public function filterValidator(Request $request): Validator
@@ -694,13 +803,13 @@ class TrainerService
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
-
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'trainer_name_en' => 'nullable|max:250|min:2',
             'trainer_name' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|int',
             'branch_id' => 'nullable|exists:branches,id,deleted_at,NULL|int',
             'training_center_id' => 'nullable|exists:training_centers,id,deleted_at,NULL|int',
             'order' => [
@@ -712,6 +821,8 @@ class TrainerService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 }

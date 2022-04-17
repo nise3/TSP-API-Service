@@ -4,12 +4,14 @@
 namespace App\Services;
 
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
+use App\Models\User;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +42,7 @@ class BatchService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $branchId = $request['branch_id'] ?? "";
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
@@ -57,6 +60,7 @@ class BatchService
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
+            'batches.industry_association_id',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
@@ -81,43 +85,28 @@ class BatchService
             'batches.deleted_at',
         ])->acl();
 
-        $batchBuilder->join("courses", function ($join) use ($rowStatus) {
+        $batchBuilder->leftJoin("courses", function ($join) use ($rowStatus) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('courses.row_status', $rowStatus);
-            }*/
         });
         $batchBuilder->leftjoin("institutes", function ($join) use ($rowStatus) {
             $join->on('batches.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('institutes.row_status', $rowStatus);
-            }*/
         });
 
         $batchBuilder->leftjoin("programs", function ($join) use ($rowStatus) {
             $join->on('courses.program_id', '=', 'programs.id')
                 ->whereNull('programs.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('programs.row_status', $rowStatus);
-            }*/
         });
 
         $batchBuilder->leftjoin("branches", function ($join) use ($rowStatus) {
             $join->on('batches.branch_id', '=', 'branches.id')
                 ->whereNull('branches.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('branches.row_status', $rowStatus);
-            }*/
         });
 
         $batchBuilder->join("training_centers", function ($join) use ($rowStatus) {
             $join->on('batches.training_center_id', '=', 'training_centers.id')
                 ->whereNull('training_centers.deleted_at');
-            /*if (is_numeric($rowStatus)) {
-                $join->where('training_centers.row_status', $rowStatus);
-            }*/
         });
 
         $batchBuilder->orderBy('batches.id', $order);
@@ -129,7 +118,9 @@ class BatchService
         if (is_numeric($instituteId)) {
             $batchBuilder->where('batches.institute_id', $instituteId);
         }
-
+        if (is_numeric($industryAssociationId)) {
+            $batchBuilder->where('batches.industry_association_id', $industryAssociationId);
+        }
         if (is_numeric($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
         }
@@ -188,6 +179,7 @@ class BatchService
             'batches.institute_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
+            'batches.industry_association_id',
             'batches.branch_id',
             'branches.title_en as branch_title_en',
             'branches.title as branch_title',
@@ -212,7 +204,7 @@ class BatchService
             'batches.deleted_at',
         ]);
 
-        $batchBuilder->join("courses", function ($join) {
+        $batchBuilder->leftJoin("courses", function ($join) {
             $join->on('batches.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
@@ -288,13 +280,14 @@ class BatchService
         $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'delete-calender-event-by-batch-id/' . $batchId;
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->delete($url)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -409,7 +402,35 @@ class BatchService
         $customMessage = [
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
+        /** @var User $authUser */
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser, $request) {
+                    if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('industry_association_id'))) {
+                        return true;
+                    }
+                    return false;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser, $request) {
+                    if ($authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
+                        return true;
+                    } elseif ($authUser && $authUser->user_type == BaseModel::SYSTEM_USER_TYPE && empty($request->get('institute_id'))) {
+                        return true;
+                    }
+                    return false;
+                }),
+                "nullable",
+                "int"
+            ],
             'title' => [
                 'required',
                 'string',
@@ -419,11 +440,6 @@ class BatchService
                 'nullable',
                 'string',
                 'max:250'
-            ],
-            'institute_id' => [
-                'exists:institutes,id,deleted_at,NULL',
-                'required',
-                'int',
             ],
             'branch_id' => [
                 'exists:branches,id,deleted_at,NULL',
@@ -483,6 +499,8 @@ class BatchService
                 'max:10'
             ],
         ];
+
+
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -501,10 +519,11 @@ class BatchService
             'row_status.in' => 'Row status must be within 1 or 0. [30000]'
         ];
 
-        return Validator::make($request->all(), [
+        $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
@@ -518,7 +537,9 @@ class BatchService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
     }
 
 
@@ -549,18 +570,13 @@ class BatchService
      * @param $currentTime
      * @return array
      */
-    public function batchesWithTrainingCenters(Request $request, $id, $currentTime): array
+    public function batchesWithTrainingCenters(Request $request, $id, $currentTime, bool $isPublicApi = false): array
     {
         $active = $request->get('active') === "true";
         $upcoming = $request->get('upcoming') === "true";
 
-        /** @var Course $course */
-        $course = Course::findOrFail($id);
-
-        $instituteId = $course->institute_id;
-
-        /** @var Course|Builder $courseBuilder */
-        $courseBuilder = TrainingCenter::select([
+        /** @var TrainingCenter|Builder $trainingCenterBuilder */
+        $trainingCenterBuilder = TrainingCenter::select([
             'training_centers.id',
             'training_centers.title',
             'training_centers.title_en',
@@ -598,30 +614,28 @@ class BatchService
             DB::raw('GROUP_CONCAT(batches.row_status) as batch_row_statuses')
         ]);
 
-        $courseBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
+        $trainingCenterBuilder->join('batches', function ($join) use ($currentTime, $active, $upcoming) {
             $join->on('batches.training_center_id', '=', 'training_centers.id');
             if ($active && !$upcoming) {
                 $join->whereDate('batches.registration_start_date', '<=', $currentTime);
                 $join->whereDate('batches.registration_end_date', '>=', $currentTime);
             } else if (!$active && $upcoming) {
                 $join->whereDate('batches.registration_start_date', '>', $currentTime);
-            } else {
-                $join->whereDate('batches.registration_end_date', '>=', $currentTime);
             }
         })
             ->leftJoin('loc_divisions', 'loc_divisions.id', '=', 'training_centers.loc_division_id')
             ->leftJoin('loc_districts', 'loc_districts.id', '=', 'training_centers.loc_district_id')
             ->leftJoin('loc_upazilas', 'loc_upazilas.id', '=', 'training_centers.loc_upazila_id')
-            ->where([
-                ['training_centers.institute_id', '=', $instituteId],
-                ['batches.course_id', '=', $id],
-                ['batches.institute_id', '=', $instituteId]
-            ])
+            ->where('batches.course_id', '=', $id)
             ->groupBy('training_centers.id')
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
 
-        $result = $courseBuilder->get();
+            if(!$isPublicApi){
+                $trainingCenterBuilder->acl();
+            }
+
+        $result = $trainingCenterBuilder->get();
 
         $trainingCenterWiseBatches = $result->toArray()['data'] ?? $result->toArray();
 
@@ -649,7 +663,7 @@ class BatchService
                     $batchInfo = [
                         "id" => $batchIds[$i],
                         "title" => $batchTitles[$i],
-                        "title_en" => $batchTitlesEn[$i],
+                        "title_en" => $batchTitlesEn[$i] ?? "",
                         "number_of_seat" => $numberOfSeats[$i],
                         "registration_start_date" => $registrationStartDates[$i],
                         "registration_end_date" => $registrationEndDate[$i],
@@ -714,7 +728,7 @@ class BatchService
     public function updateCalenderEventOnBatchUpdate(array $data)
     {
         $batchId = $data['id'];
-        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'update-calender-event-after-batch-update/'.$batchId;
+        $url = clientUrl(BaseModel::CMS_CLIENT_URL_TYPE) . 'update-calender-event-after-batch-update/' . $batchId;
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug'),

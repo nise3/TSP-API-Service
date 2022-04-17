@@ -2,25 +2,22 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Institute;
-use App\Models\TrainingCenter;
-use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\In;
-use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 
 /**
@@ -29,8 +26,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InstituteService
 {
-    public TrainingCenterService $trainingCenterService;
-
     /**
      * @param array $request
      * @param Carbon $startTime
@@ -42,6 +37,7 @@ class InstituteService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
+        $serviceType = $request['service_type'] ?? BaseModel::ONLY_TRAINING;
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -49,6 +45,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -94,6 +91,9 @@ class InstituteService
             'institutes.deleted_at',
         ]);
 
+        if (!empty($serviceType)){
+            $instituteBuilder->where('institutes.service_type',$serviceType);
+        }
         $instituteBuilder->orderBy('institutes.id', $order);
 
         $instituteBuilder->leftJoin('loc_divisions', function ($join) {
@@ -155,6 +155,7 @@ class InstituteService
         $instituteBuilder = Institute::select([
             'institutes.id',
             "institutes.institute_type_id",
+            "institutes.service_type",
             'institutes.code',
             'institutes.title',
             'institutes.title_en',
@@ -304,12 +305,14 @@ class InstituteService
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->delete($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -337,27 +340,34 @@ class InstituteService
     }
 
     /**
+     * @param Request $request
      * @param Institute $institute
      * @return mixed
      * @throws RequestException
      */
-    public function instituteUserApproval(Institute $institute): mixed
+    public function instituteUserApproval(Request $request, Institute $institute): mixed
     {
         $url = clientUrl(BaseModel::CORE_CLIENT_URL_TYPE) . 'user-approval';
         $userPostField = [
+            'permission_sub_group_id' => $request->input('permission_sub_group_id') ?? "",
             'user_type' => BaseModel::INSTITUTE_USER_TYPE,
             'institute_id' => $institute->id,
+            'name_en' => $institute->contact_person_name ?? "",
+            'name' => $institute->contact_person_name ?? "",
+            'row_status' => $institute->row_status,
         ];
 
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->put($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -379,12 +389,14 @@ class InstituteService
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->put($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -411,13 +423,14 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -442,43 +455,22 @@ class InstituteService
 
         return Http::withOptions([
             'verify' => config("nise3.should_ssl_verify"),
-            'debug' => config('nise3.http_debug'),
-            'timeout' => config("nise3.http_timeout")
+            'debug' => config('nise3.http_debug')
         ])
+            ->timeout(5)
             ->post($url, $userPostField)
-            ->throw(function ($response, $e) use ($url) {
-                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . json_encode($response));
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
 
-
-
-    public function userInfoSendByMail(array $mailPayload)
-    {
-        $mailService = new MailService();
-        $mailService->setTo([
-            $mailPayload['contact_person_email']
-        ]);
-        $from = $mailPayload['from'] ?? BaseModel::NISE3_FROM_EMAIL;
-        $subject = $mailPayload['subject'] ?? "Institute Registration";
-
-        $mailService->setForm($from);
-        $mailService->setSubject($subject);
-        $mailService->setMessageBody([
-            "user_name" => $mailPayload['contact_person_mobile'],
-            "password" => $mailPayload['password']
-        ]);
-        $instituteRegistrationTemplate = $mailPayload['template'] ?? 'mail.institute-create-default-template';
-        $mailService->setTemplate($instituteRegistrationTemplate);
-        $mailService->sendMail();
-    }
-
     public function userInfoSendBySMS(string $recipient, string $message)
     {
-        $sms = new SmsService($recipient, $message);
-        $sms->sendSms();
+        $sms = new SmsService();
+        $sms->sendSms($recipient, $message);
     }
 
     public function getInstituteTrashList(Request $request, Carbon $startTime): array
@@ -494,6 +486,7 @@ class InstituteService
             'institutes.id as id',
             'institutes.title_en',
             'institutes.title',
+            'institutes.service_type',
             'institutes.code',
             'institutes.logo',
             'institutes.primary_phone',
@@ -574,7 +567,9 @@ class InstituteService
 
         $rules = [
             'permission_sub_group_id' => [
-                'required_if:' . $id . ',==,null',
+                Rule::requiredIf(function () use ($id) {
+                    return is_null($id);
+                }),
                 'nullable',
                 'int'
             ],
@@ -582,11 +577,10 @@ class InstituteService
                 "required",
                 "int"
             ],
-            'code' => [
+            'service_type' => [
                 'required',
-                'string',
-                'max:150',
-                'unique:institutes,code,' . $id,
+                'int',
+                Rule::in(BaseModel::SERVICE_TYPES)
             ],
             'title' => [
                 'required',
@@ -755,7 +749,7 @@ class InstituteService
     }
 
 
-    public function instituteProfileValidator(Request $request, int $id = null): Validator
+    public function instituteProfileUpdateValidator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
 
@@ -881,7 +875,8 @@ class InstituteService
             ],
             'institute_type_id' => [
                 'required',
-                'int'
+                'int',
+                Rule::in(BaseModel::INSTITUTE_TYPES)
             ],
             "name_of_the_office_head" => [
                 "required",
@@ -994,6 +989,10 @@ class InstituteService
             "institute_type_id" => [
                 "nullable",
                 "int"
+            ],
+            'service_type' => [
+                'nullable',
+                'int'
             ],
             'order' => [
                 'string',

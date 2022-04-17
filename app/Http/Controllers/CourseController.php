@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\CourseEnrollmentService;
 use App\Services\CourseService;
 use Carbon\Carbon;
@@ -90,6 +91,7 @@ class CourseController extends Controller
         $this->authorize('create', Course::class);
 
         $validated = $this->courseService->validator($request)->validate();
+        $validated['code'] = CodeGeneratorService::getCourseCode();
         $course = $this->courseService->store($validated);
 
         $response = [
@@ -231,11 +233,23 @@ class CourseController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
+
     public function getFilterCourseList(Request $request, string $type = null): JsonResponse
     {
         $filter = $this->courseService->filterValidator($request, $type)->validate();
 
         $response = $this->courseService->getFilterCourses($filter, $this->startTime, $type);
+        return Response::json($response);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function youthFeedCourses(Request $request): JsonResponse
+    {
+        $data = $request->all();
+        $response = $this->courseService->getYouthFeedCourses($data, $this->startTime);
         return Response::json($response);
     }
 

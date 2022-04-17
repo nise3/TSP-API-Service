@@ -3,11 +3,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Branch;
 use App\Models\TrainingCenter;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -29,6 +31,7 @@ class BranchService
      */
     public function getBranchList(array $request, Carbon $startTime): array
     {
+        $address = $request['address'] ?? "";
         $titleEn = $request['title_en'] ?? "";
         $titleBn = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -100,6 +103,18 @@ class BranchService
         }
         if (!empty($titleBn)) {
             $branchBuilder->where('branches.title', 'like', '%' . $titleBn . '%');
+        }
+        if (!empty($address)) {
+            $branchBuilder->where(function ($builder) use($address){
+                $builder->orWhere('branches.address', 'like', '%' . $address . '%');
+                $builder->orWhere('branches.address_en', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_divisions.title', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_divisions.title_en', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_districts.title', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_districts.title_en', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_upazilas.title', 'like', '%' . $address . '%');
+                $builder->orWhere('loc_upazilas.title_en', 'like', '%' . $address . '%');
+            });
         }
 
         if (is_numeric($instituteId)) {
@@ -250,12 +265,14 @@ class BranchService
         return Http::withOptions(
             [
                 'verify' => config('nise3.should_ssl_verify'),
-                'debug' => config('nise3.http_debug'),
-                'timeout' => config('nise3.http_timeout'),
+                'debug' => config('nise3.http_debug')
             ])
+            ->timeout(5)
             ->delete($url, $userPostField)
-            ->throw(function ($response, $e) {
-                return $e;
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
             })
             ->json();
     }
@@ -407,10 +424,15 @@ class BranchService
             'title' => 'nullable|max:600|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'nullable|int|exists:institutes,id,deleted_at,NULL',
+            'institute_id' => 'nullable|int',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'address' => [
+                'nullable',
+                'string',
+
             ],
             'row_status' => [
                 "nullable",

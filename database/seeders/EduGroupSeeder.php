@@ -19,23 +19,9 @@ class EduGroupSeeder extends Seeder
 
         EduGroup::query()->truncate();
         $groups = [
-            [
-                "title_en" => "Science",
-                'code' => 'Science',
-                "title" => "বিজ্ঞান"
-
-            ],
-            [
-                "title_en" => "Arts and Humanities",
-                'code' => 'Humanities',
-                "title" => "মানবিক"
-
-            ],
-            [
-                "title_en" => "Commerce or Business Studies",
-                'code' => 'Commerce',
-                "title" => "ব্যবসায় শিক্ষা"
-            ]
+            array('id' => '1','title_en' => 'Science','title' => 'বিজ্ঞান','code' => 'Science','deleted_at' => NULL),
+            array('id' => '2','title_en' => 'Arts and Humanities','title' => 'মানবিক','code' => 'Humanities','deleted_at' => NULL),
+            array('id' => '3','title_en' => 'Commerce or Business Studies','title' => 'ব্যবসায় শিক্ষা','code' => 'Commerce','deleted_at' => NULL)
         ];
 
         EduGroup::insert($groups);

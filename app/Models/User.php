@@ -29,6 +29,8 @@ use Laravel\Lumen\Auth\Authorizable;
  * @property int loc_upazila_id
  * @property int branch_id
  * @property int training_center_id
+ * @property int industry_association_id
+ * @property int registered_training_organization_id
  * @property int $row_status
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -85,6 +87,16 @@ class User extends BaseModel implements
         return $this->user_type == BaseModel::INSTITUTE_USER_TYPE && $this->institute_id;
     }
 
+    public function isIndustryAssociationUser(): bool
+    {
+        return $this->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $this->industry_association_id;
+    }
+
+    public function isRtoUser(): bool
+    {
+        return $this->user_type == BaseModel::REGISTERED_TRAINING_ORGANIZATION_USER_TYPE && $this->registered_training_organization_id;
+    }
+
     public function isTrainingCenterUser(): bool
     {
         return $this->isInstituteUser() && $this->training_center_id;
@@ -94,7 +106,6 @@ class User extends BaseModel implements
     {
         return $this->isInstituteUser() && $this->branch_id && $this->training_center_id == null;
     }
-
 
 
 }

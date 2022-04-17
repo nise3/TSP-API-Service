@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 /**
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\File;
  * @property string code
  * @property int id
  * @property int institute_id
+ * @property int industry_association_id
  * @property int program_id
  * @property double course_fee
  * @property string duration
@@ -59,6 +61,9 @@ class Course extends BaseModel
     protected $casts = [
         'application_form_settings' => 'array'
     ];
+
+    public const COURSE_CODE_PREFIX = "C";
+    public const COURSE_CODE_SIZE = 19;
 
     const COURSE_LEVEL_BEGINNER = 1;
     const COURSE_LEVEL_INTERMEDIATE = 2;
@@ -107,7 +112,6 @@ class Course extends BaseModel
         self::COURSE_FILTER_COURSE_TYPE_PAID,
         self::COURSE_FILTER_COURSE_TYPE_FREE
     ];
-
 
     /**
      * @return BelongsTo

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class Institute
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int id
  * @property int course_id
  * @property int youth_id
+ * @property string youth_code
  * @property int institute_id
  * @property int program_id
  * @property int|null training_center_id
@@ -26,15 +28,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null last_name_en
  * @property string email
  * @property string mobile
+ * @property int payment_status
  * @property string | null verification_code
  * @property Carbon | null verification_code_sent_at
+ * @property Carbon | null verification_code_verified_at
+ * @property int saga_status
  * @property HasOne course
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ * @property Carbon deleted_at
+ * @method static withoutGlobalScope(string $class)
  */
 class CourseEnrollment extends BaseModel
 {
     use ScopeRowStatusTrait, SoftDeletes;
 
     public const PAYMENT_STATUS_PAID = 1;
+    public const INVOICE_PREFIX = "EN";
+    public const INVOICE_SIZE = 36;
+    const MERCHANT_ID_SIZE = 36;
+    const MERCHANT_PREFIX = "EN";
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
@@ -69,6 +82,7 @@ class CourseEnrollment extends BaseModel
     public const RELIGION_SIKHISM = 6;
     public const RELIGION_ETHNIC = 7;
     public const RELIGION_AGNOSTIC_ATHEIST = 8;
+
     public const RELIGIONS = [
         self::RELIGION_ISLAM,
         self::RELIGION_HINDUISM,
@@ -110,6 +124,19 @@ class CourseEnrollment extends BaseModel
         parent::boot();
         static::addGlobalScope(new SagaStatusGlobalScope);
     }
+
+    // TODO: This method should be checked . It gives error.
+    /*public function toArray(): array
+    {
+        $originalData = parent::toArray();
+        $authUser = Auth::user();
+
+        if ($authUser && Auth::user()->isIndustryAssociationUser() || !empty($originalData['industry_association_id'])) {
+            $this->getIndustryAssociationData($originalData);
+        }
+
+        return $originalData;
+    }*/
 
     /**
      * @return BelongsToMany
@@ -173,6 +200,16 @@ class CourseEnrollment extends BaseModel
     public function miscellaneous(): HasOne
     {
         return $this->hasOne(EnrollmentMiscellaneous::class, 'course_enrollment_id');
+    }
+
+    public function course(): HasOne
+    {
+        return $this->hasOne(Course::class,'id','course_id');
+    }
+
+    public function batch(): HasOne
+    {
+        return $this->hasOne(Batch::class,'id','batch_id');
     }
 
 }

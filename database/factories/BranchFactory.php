@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Branch;
+use App\Models\Institute;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\LocationSeederHelper;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +22,6 @@ class BranchFactory extends Factory
         $len = count(LocationSeederHelper::$data);
         $index = random_int(0, $len - 1);
         $location = LocationSeederHelper::$data[$index];
-
         return [
             'title' => $this->faker->name,
             'title_en' => $this->faker->name,

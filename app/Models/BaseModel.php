@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facade\ServiceToServiceCall;
 use App\Traits\Scopes\ScopeAcl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,7 @@ abstract class BaseModel extends Model
     public const ROW_STATUS_ACTIVE = 1;
     public const ROW_STATUS_PENDING = 2;
     public const ROW_STATUS_REJECTED = 3;
+    public const ROW_STATUS_FAILED = 4;
 
 
     public const ROW_ORDER_ASC = 'ASC';
@@ -33,7 +35,23 @@ abstract class BaseModel extends Model
 
     public const INSTITUTE_TYPE_GOVT = 1;
     public const INSTITUTE_TYPE_NON_GOVT = 2;
-    public const INSTITUTE_TYPE_OTHERS_ = 3;
+    public const INSTITUTE_TYPE_OTHERS = 3;
+
+    public const BOTH_CERTIFICATE_AND_TRAINING = 1;
+    public const ONLY_CERTIFICATE = 2;
+    public const ONLY_TRAINING = 3;
+
+    public const INSTITUTE_TYPES = [
+        self::INSTITUTE_TYPE_GOVT,
+        self::INSTITUTE_TYPE_NON_GOVT,
+        self::INSTITUTE_TYPE_OTHERS,
+    ];
+
+    public const SERVICE_TYPES = [
+        self::BOTH_CERTIFICATE_AND_TRAINING,
+        self::ONLY_CERTIFICATE,
+        self::ONLY_TRAINING,
+    ];
 
 
     public const TRUE = 1;
@@ -86,6 +104,7 @@ abstract class BaseModel extends Model
     public const INSTITUTE_USER_TYPE = 3;
     public const YOUTH_USER_TYPE = 4;
     public const INDUSTRY_ASSOCIATION_USER_TYPE = 5;
+    public const REGISTERED_TRAINING_ORGANIZATION_USER_TYPE = 6;
 
 
     public const DEFAULT_PAGE_SIZE = 10;
@@ -100,7 +119,6 @@ abstract class BaseModel extends Model
     public const IDP_SERVER_CLIENT_BASE_URL_TYPE = "IDP_SERVER";
 
 
-
     public const MOBILE_REGEX = 'regex: /^(01[3-9]\d{8})$/';
     const INSTITUTE_USER_REGISTRATION_ENDPOINT_LOCAL = '';
 
@@ -110,9 +128,8 @@ abstract class BaseModel extends Model
     public const PASSWORD_REGEX = 'regex: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/';
     public const PASSWORD_VALIDATION_MESSAGE = 'The password must contain at least one uppercase, lowercase letter and at least one number.[66000]';
 
-    public const INSTITUTE_REMOTE_BASE_URL = 'https://institute.bus-staging.softbdltd.com/';
     const INSTITUTE_LOCAL_BASE_URL = "http://localhost:8001/";
-    public const NISE3_FROM_EMAIL = "info@nise3.com";
+    public const NISE3_FROM_EMAIL = "noreply@nise.gov.bd";
     public const SELF_EXCHANGE = 'institute';
 
     /** Service to service internal calling header type */
@@ -136,4 +153,35 @@ abstract class BaseModel extends Model
     public const SAGA_MAIL_SMS_SERVICE = 'mail_sms_service';
 
     public const DATABASE_CONNECTION_ERROR_CODE = 2002;
+
+    /** UserName Type */
+    public const USER_NAME_TYPE_EMAIL = 1;
+    public const USER_NAME_TYPE_MOBILE_NUMBER = 2;
+    public const USER_NAME_TYPES = [
+        self::USER_NAME_TYPE_EMAIL,
+        self::USER_NAME_TYPE_MOBILE_NUMBER
+    ];
+
+    /** @var string Exam Accessor types */
+    public const ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
+    public const ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
+
+    public const EXAM_ACCESSOR_TYPES = [
+        self::ACCESSOR_TYPE_INSTITUTE,
+        self::ACCESSOR_TYPE_ORGANIZATION,
+    ];
+
+
+
+    public function getIndustryAssociationData(array &$originalData)
+    {
+        if (!empty($originalData['industry_association_id'])) {
+            $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
+            $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
+            $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
+        }
+
+    }
+
+
 }

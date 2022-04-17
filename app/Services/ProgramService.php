@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Models\BaseModel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Program;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,15 +24,17 @@ class ProgramService
     /**
      * @param array $request
      * @param Carbon $startTime
+     * @param bool $isPublicApi
      * @return array
      */
-    public function getProgramList(array $request, Carbon $startTime): array
+    public function getProgramList(array $request, Carbon $startTime, bool $isPublicApi = false): array
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
+        $industryAssociationId = $request['industry_association_id'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -40,6 +44,7 @@ class ProgramService
             'programs.title_en',
             'programs.title',
             'programs.institute_id',
+            'programs.industry_association_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
             'programs.code',
@@ -53,9 +58,13 @@ class ProgramService
             'programs.updated_at',
             'programs.deleted_at',
 
-        ])->acl();
+        ]);
 
-        $programsBuilder->join("institutes", function ($join) use ($rowStatus) {
+        if (!$isPublicApi) {
+            $programsBuilder->acl();
+        }
+
+        $programsBuilder->leftJoin("institutes", function ($join) use ($rowStatus) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -76,6 +85,10 @@ class ProgramService
 
         if (is_numeric($instituteId)) {
             $programsBuilder->where('programs.institute_id', '=', $instituteId);
+        }
+
+        if (is_numeric($industryAssociationId)) {
+            $programsBuilder->where('programs.industry_association_id', '=', $industryAssociationId);
         }
 
 
@@ -115,6 +128,7 @@ class ProgramService
             'programs.title_en',
             'programs.title',
             'programs.institute_id',
+            'programs.industry_association_id',
             'institutes.title_en as institute_title_en',
             'institutes.title as institute_title',
             'programs.code',
@@ -128,7 +142,7 @@ class ProgramService
             'programs.updated_at',
             'programs.deleted_at',
         ]);
-        $programmeBuilder->join("institutes", function ($join) {
+        $programmeBuilder->leftJoin("institutes", function ($join) {
             $join->on('programs.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
@@ -183,7 +197,25 @@ class ProgramService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
 
+        /** @var User $authUser */
+        $authUser = Auth::user();
+
         $rules = [
+            'institute_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id;
+                }),
+                "nullable",
+                "exists:institutes,id,deleted_at,NULL",
+                "int"
+            ],
+            'industry_association_id' => [
+                Rule::requiredIf(function () use ($authUser) {
+                    return $authUser && $authUser->user_type == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE && $authUser->industry_association_id;
+                }),
+                "nullable",
+                "int"
+            ],
             'title_en' => [
                 'nullable',
                 'string',
@@ -196,16 +228,19 @@ class ProgramService
                 'max:1000',
                 'min:2'
             ],
-            'institute_id' => [
-                'required',
-                'exists:institutes,id,deleted_at,NULL',
-                'int',
-            ],
             'code' => [
                 'nullable',
-                'unique:programs,code,' . $id,
                 'string',
                 'max:100',
+                Rule::unique('programs')->where(function ($query) use ($request) {
+                    $validationQuery = $query;
+                    if ($request->has('institute_id') && $request->get('institute_id')) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('institute_id', $request->get('institute_id'));
+                    } elseif ($request->has('industry_association_id') && $request->get('industry_association_id')) {
+                        $validationQuery = $query->where('code', $request->get('code'))->where('industry_association_id', $request->get('industry_association_id'));
+                    }
+                    return $validationQuery;
+                })->ignore($id)
             ],
             'description' => [
                 'nullable',
@@ -227,6 +262,7 @@ class ProgramService
             'created_by' => ['nullable', 'integer', 'max:10'],
             'updated_by' => ['nullable', 'integer', 'max:10'],
         ];
+
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
@@ -244,6 +280,7 @@ class ProgramService
             'programs.id as id',
             'programs.title_en',
             'programs.title',
+            'programs.industry_association_id',
             'institutes.title_en as institute_title_en',
             'institutes.id as institute_id',
             'programs.code as program_code',
@@ -253,7 +290,7 @@ class ProgramService
             'programs.created_at',
             'programs.updated_at',
         ]);
-        $programsBuilder->join('institutes', 'programs.institute_id', '=', 'institutes.id');
+        $programsBuilder->leftJoin('institutes', 'programs.institute_id', '=', 'institutes.id');
         $programsBuilder->orderBy('programs.id', $order);
 
         if (!empty($titleEn)) {
@@ -310,13 +347,13 @@ class ProgramService
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
-
-        return \Illuminate\Support\Facades\Validator::make($request->all(), [
+        $rules = [
+            'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
+            'industry_association_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:500|min:2',
             'title' => 'nullable|max:1000|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
-            'institute_id' => 'exists:institutes,id,deleted_at,NULL|integer',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -326,7 +363,9 @@ class ProgramService
                 "int",
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
-        ], $customMessage);
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
     }
 
     /**
@@ -342,7 +381,7 @@ class ProgramService
             'title_en'
         ]);
 
-        if($request->filled('program_ids') && is_array($request->input('program_ids'))){
+        if ($request->filled('program_ids') && is_array($request->input('program_ids'))) {
             $programBuilder->whereIn("id", $request->input('program_ids'));
         }
 

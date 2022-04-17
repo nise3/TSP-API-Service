@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Institute;
+use App\Services\CommonServices\CodeGeneratorService;
 use App\Services\LocationSeederHelper;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 
-class InstituteFactory extends Factory
+class  InstituteFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
@@ -41,7 +42,7 @@ class InstituteFactory extends Factory
             'loc_upazila_id' => $location['loc_upazila_id'],
             'location_latitude' => $location['location_longitude'],
             'location_longitude' => $location['location_longitude'],
-            'code' => $this->faker->word(),
+            'code' => CodeGeneratorService::getSSPCode(),
             'domain' => 'https://' . $this->faker->domainName,
             'address' => $address,
             'address_en' => $address,

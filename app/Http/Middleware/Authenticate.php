@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\BaseModel;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -32,11 +33,11 @@ class Authenticate
      * Handle an incoming request.
      *
      * @param Request $request
-     * @param \Closure $next
+     * @param Closure $next
      * @param string|null $guard
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, string $guard = null)
+    public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
         if (!Auth::id()) {
             return response()->json([
@@ -46,11 +47,29 @@ class Authenticate
                     "message" => "Unauthenticated action"
                 ]
             ], ResponseAlias::HTTP_UNAUTHORIZED);
-        } else { // if auth user institute then set institute id for all private request
+        } else {
+            /** if auth user institute then set institute id for all private request */
+            /** @var User $authUser */
             $authUser = Auth::user();
-            if ($authUser && $authUser->user_type == BaseModel::INSTITUTE_USER_TYPE && $authUser->institute_id) {
+            if ($authUser->isInstituteUser()) {
                 $request->offsetSet('institute_id', $authUser->institute_id);
+                if(!empty($authUser->training_center_id)){
+                    $request->offsetSet('training_center_id', $authUser->training_center_id);
+                }
+
+                /** Modularized accessor for Exam Module */
+                $request->offsetSet('accessor_type', BaseModel::ACCESSOR_TYPE_INSTITUTE);
+                $request->offsetSet('accessor_id', $authUser->institute_id);
+
+            } else if ($authUser->isOrganizationUser()) {
+                $request->offsetSet('organization_id', $authUser->organization_id);
+            } else if ($authUser->isIndustryAssociationUser()) {
+                $request->offsetSet('industry_association_id', $authUser->industry_association_id);
+            } else if ($authUser->isRtoUser()) {
+                $request->offsetSet('registered_training_organization_id', $authUser->registered_training_organization_id);
+                $request->offsetSet('rto_id', $authUser->registered_training_organization_id); // TODO: remove this jora tali
             }
+
         }
 
         return $next($request);

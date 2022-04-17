@@ -76,6 +76,20 @@ return [
                         'queueMode' => 'lazy'
                     ],
                 ],
+                'rplApplication' => [
+                    'name' => 'institute.rpl.application.q',
+                    'binding' => 'institute.rpl.application',
+                    'durable' => true,
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'institute.rpl.application.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
+                ],
                 'batchCalender' => [
                     'name' => 'institute.batch.calender.q',
                     'binding' => 'institute.batch.calender',
@@ -160,6 +174,20 @@ return [
                     'queueMode' => 'lazy',
                     'dlq' => [
                         'name' => 'youth.course.enrollment.dlq',
+                        'x_message_ttl' => 50000,
+                        'durable' => true,
+                        'autoDelete' => false,
+                        'queueMode' => 'lazy'
+                    ],
+                ] ,
+                'rplApplication' => [
+                    'name' => 'youth.rpl.application.q',
+                    'binding' => 'youth.rpl.application',
+                    'durable' => true,
+                    'autoDelete' => false,
+                    'queueMode' => 'lazy',
+                    'dlq' => [
+                        'name' => 'youth.rpl.application.dlq',
                         'x_message_ttl' => 50000,
                         'durable' => true,
                         'autoDelete' => false,
@@ -259,5 +287,5 @@ return [
             ],
         ],
     ],
-    'consume' => ''
+    'consume' => 'institute.course.enrollment.q,institute.batch.calender.q'
 ];
