@@ -172,6 +172,12 @@ class ExamController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function getExamYouthList(Request $request, int $id): JsonResponse
     {
 
@@ -207,22 +213,27 @@ class ExamController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|Throwable
      */
-    public function submitExamQuestionPaper(Request $request): JsonResponse
+    public function submitExamPaper(Request $request): JsonResponse
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
-        $examData = $this->examService->submitExamQuestionPaper($validatedData);
-        $response = [
-            "data" => $examData ?? null,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        try {
+            $this->examService->submitExamQuestionPaper($validatedData);
+            $response = [
+                "_response_status" => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam paper submitted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_OK);
-
     }
 
     /**
@@ -230,7 +241,7 @@ class ExamController extends Controller
      * @param int $youthId
      * @return JsonResponse
      */
-    public function  previewYouthExam(int $examId,int $youthId):JsonResponse{
+    public function previewYouthExam(int $examId,int $youthId):JsonResponse{
         $youthExamPreview = $this->examService->getPreviewYouthExam($examId,$youthId);
         $response = [
             "data" => $youthExamPreview ?? null,
@@ -244,8 +255,12 @@ class ExamController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function  youthExamMarkUpdate(Request $request):JsonResponse{
-
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
         $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
         $response = [

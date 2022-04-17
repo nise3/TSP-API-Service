@@ -108,33 +108,48 @@ class ExamService
      */
     public function submitExamQuestionPaper(array $data)
     {
-        foreach ($data['questions'] as $question) {
-            if (empty($question['exam_section_question_id'])) {
-                $question = ExamQuestionBank::findOrFail($question['question_id'])->toArray();
-                $examSection = ExamSection::where('exam_id', $data['exam_id'])
-                    ->where('question_type', $question['question_type'])
-                    ->where()
-                    ->firstOrFail();
-                $question['exam_section_question_id'] = $examSection->uuid;
-                $this->storeRandomQuestionsToExamSectionQuestions($question);
+        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
 
-            }
+        $examSectionIdsByQuestionType = [];
+
+        foreach ($examSections as $examSection) {
+            $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
         }
-        $question['youth_id'] = $data['youth_id'];
-        $question['exam_id'] = $data['exam_id'];
-        $examResult = app(ExamResult::class);
-        $examResult->fill($question);
-        $question->save();
+        foreach ($data['questions'] as $questionData) {
+            if (empty($question['exam_section_question_id'])) {
+                $question = ExamQuestionBank::findOrFail($questionData['question_id'])->toArray();
+
+                $question['exam_section_uuid'] = $examSectionIdsByQuestionType[$question['question_type']];
+                $question['question_id'] = $question['id'];
+                /** question  id is assigned to question_id **/
+                unset($question['id']);
+                $question['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK;
+                $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+                $question['individual_marks'] =$questionData['individual_marks'];
+
+                $examSectionQuestion = $this->storeRandomQuestionsToExamSectionQuestions($question);
+            }
+            $question['youth_id'] = $data['youth_id'];
+            $question['exam_id'] = $data['exam_id'];
+            $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $data['exam_section_question_id'];
+            $examResult = app(ExamResult::class);
+            $examResult->fill($question);
+            $examResult->save();
+        }
+
     }
 
     /**
      * @param array $question
+     * @return ExamSectionQuestion
      */
-    private function storeRandomQuestionsToExamSectionQuestions(array $question)
+    private function storeRandomQuestionsToExamSectionQuestions(array $question): ExamSectionQuestion
     {
-        $examSectionQuestion = app(ExamQuestionBank::class);
+        $examSectionQuestion = app(ExamSectionQuestion::class);
         $examSectionQuestion->fill($question);
         $examSectionQuestion->save();
+
+        return $examSectionQuestion;
 
     }
 
@@ -597,19 +612,17 @@ class ExamService
     }
 
     /**
-     * @param ExamType $ExamType
-     * @param array $data
+     * @param array $request
      * @return ExamType
      */
 
-    public function youthExamMarkUpdate(array $request)
+    public function youthExamMarkUpdate(array $request): ExamType
     {
-        $youthId=$request['youth_id'];
-        $examId=$request['exam_id'];
-        $examResultId=$request['marks'][0]['exam_result_id'];
-        $marksAchieved=$request['marks'][0]['marks_achieved'];
-       $exam=ExamResult::where('youth_id', $youthId)->where('exam_id', $examId)->update(['marks_achieved' => $marksAchieved]);
-       return $exam;
+        $youthId = $request['youth_id'];
+        $examId = $request['exam_id'];
+        $examResultId = $request['marks'][0]['exam_result_id'];
+        $marksAchieved = $request['marks'][0]['marks_achieved'];
+        return ExamResult::where('youth_id', $youthId)->where('exam_id', $examId)->update(['marks_achieved' => $marksAchieved]);
     }
 
     /**
@@ -1361,6 +1374,10 @@ class ExamService
                 'int',
                 'exists:exam_question_banks,id,deleted_at,NULL'
             ],
+            'questions.*.individual_marks' => [
+                'required',
+                'int',
+            ],
             'questions.*.answers' => [
                 'nullable',
                 'string',
@@ -1395,19 +1412,19 @@ class ExamService
                 'int',
                 'min:1'
             ],
-            'marks'=>[
+            'marks' => [
                 'array',
                 'required',
             ],
-            'marks.*'=>[
+            'marks.*' => [
                 'array',
                 'required',
             ],
-            'marks.*.exam_result_id'=>[
+            'marks.*.exam_result_id' => [
                 'integer',
                 'required',
             ],
-            'marks.*.marks_achieved'=>[
+            'marks.*.marks_achieved' => [
                 'numeric',
                 'required',
             ]
