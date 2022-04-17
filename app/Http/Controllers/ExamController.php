@@ -136,7 +136,7 @@ class ExamController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam Subject updated successfully.",
+                "message" => "Exam  updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
