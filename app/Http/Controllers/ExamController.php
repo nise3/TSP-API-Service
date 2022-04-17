@@ -224,6 +224,12 @@ class ExamController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
 
     }
+
+    /**
+     * @param int $examId
+     * @param int $youthId
+     * @return JsonResponse
+     */
     public function  previewYouthExam(int $examId,int $youthId):JsonResponse{
         $youthExamPreview = $this->examService->getPreviewYouthExam($examId,$youthId);
         $response = [

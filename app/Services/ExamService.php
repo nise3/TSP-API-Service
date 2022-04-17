@@ -103,6 +103,9 @@ class ExamService
     }
 
 
+    /**
+     * @param array $data
+     */
     public function submitExamQuestionPaper(array $data)
     {
         foreach ($data['questions'] as $question) {
@@ -124,6 +127,9 @@ class ExamService
         $question->save();
     }
 
+    /**
+     * @param array $question
+     */
     private function storeRandomQuestionsToExamSectionQuestions(array $question)
     {
         $examSectionQuestion = app(ExamQuestionBank::class);
@@ -270,6 +276,10 @@ class ExamService
     }
 
 
+    /**
+     * @param $examSection
+     * @return array
+     */
     private function getExamSectionQuestionBySection($examSection): array
     {
         /** @var Builder $examSectionBuilder */
@@ -297,6 +307,10 @@ class ExamService
         return $examSectionBuilder->get()->toArray();
     }
 
+    /**
+     * @param $examSection
+     * @return array
+     */
     private function getExamSectionQuestionWithAnswerBySection($examSection): array
     {
         /** @var Builder $examSectionBuilder */
@@ -809,6 +823,12 @@ class ExamService
         return Validator::make($data, $rules, $customMessage);
     }
 
+    /**
+     * @param array $examQuestions
+     * @param int $numberOfSets
+     * @param string $examType
+     * @return array
+     */
     public function offlineExamQuestionValidationRules(array $examQuestions, int $numberOfSets = 0, string $examType = ''): array
     {
         $rules = [];
@@ -962,6 +982,10 @@ class ExamService
         return $rules;
     }
 
+    /**
+     * @param string $examType
+     * @return array
+     */
     public function examValidationRules($examType = ''): array
     {
         $rules = [];
@@ -984,6 +1008,10 @@ class ExamService
         return $rules;
     }
 
+    /**
+     * @param string $examType
+     * @return array
+     */
     public function examSectionValidationRules($examType = ''): array
     {
         $rules = [];
@@ -1213,6 +1241,10 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     function examYouthListFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
@@ -1237,6 +1269,11 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    /**
+     * @param $examId
+     * @param $youthId
+     * @return array
+     */
     public function getPreviewYouthExam($examId, $youthId): array
     {
 
@@ -1335,6 +1372,11 @@ class ExamService
         ];
         return Validator::make($request->all(), $rules);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     public function youthExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
