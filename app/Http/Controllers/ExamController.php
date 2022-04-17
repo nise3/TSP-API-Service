@@ -255,11 +255,6 @@ class ExamController extends Controller
 
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws ValidationException
-     */
     public function  youthExamMarkUpdate(Request $request):JsonResponse{
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
         $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
