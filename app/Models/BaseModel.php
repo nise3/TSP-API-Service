@@ -163,12 +163,12 @@ abstract class BaseModel extends Model
     ];
 
     /** @var string Exam Accessor types */
-    public const EXAM_ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
-    public const EXAM_ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
+    public const ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
+    public const ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
 
     public const EXAM_ACCESSOR_TYPES = [
-        self::EXAM_ACCESSOR_TYPE_INSTITUTE,
-        self::EXAM_ACCESSOR_TYPE_ORGANIZATION,
+        self::ACCESSOR_TYPE_INSTITUTE,
+        self::ACCESSOR_TYPE_ORGANIZATION,
     ];
 
 

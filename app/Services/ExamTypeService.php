@@ -3,7 +3,8 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
-use App\Models\ExamSubject;
+use App\Models\Exam;
+use App\Models\ExamType;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class ExamSubjectService
+class ExamTypeService
 {
     /**
      * @param array $request
@@ -27,53 +28,64 @@ class ExamSubjectService
      */
     public function getList(array $request, Carbon $startTime): array
     {
+
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
+        $subjectId = $request['subject_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var ExamSubject|Builder $ExamSubjectBuilder */
-        $ExamSubjectBuilder = ExamSubject::select([
-            'exam_subjects.id',
-            'exam_subjects.title',
-            'exam_subjects.title_en',
-            'exam_subjects.accessor_type',
-            'exam_subjects.accessor_id',
-            'exam_subjects.row_status',
-            'exam_subjects.created_at',
-            'exam_subjects.updated_at',
-            'exam_subjects.deleted_at',
+        /** @var ExamType|Builder $examTypeBuilder */
+        $examTypeBuilder = ExamType::select([
+            'exam_types.id',
+            'exam_types.type',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exam_types.subject_id',
+            'exam_types.accessor_type',
+            'exam_types.accessor_id',
+            'exam_types.purpose_name',
+            'exam_types.purpose_id',
+            'exam_types.row_status',
+            'exam_types.created_at',
+            'exam_types.updated_at',
+            'exam_types.deleted_at',
         ]);
 
-        $ExamSubjectBuilder->orderBy('exam_subjects.id', $order);
+        $examTypeBuilder->orderBy('exam_types.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $ExamSubjectBuilder->where('exam_subjects.row_status', $rowStatus);
+            $examTypeBuilder->where('exam_types.row_status', $rowStatus);
         }
 
         if (!empty($titleEn)) {
-            $ExamSubjectBuilder->where('exam_subjects.title_en', 'like', '%' . $titleEn . '%');
+            $examTypeBuilder->where('exam_types.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $ExamSubjectBuilder->where('exam_subjects.title', 'like', '%' . $title . '%');
+            $examTypeBuilder->where('exam_types.title', 'like', '%' . $title . '%');
         }
+
+        if (!empty($subjectId)) {
+            $examTypeBuilder->where('exam_types.subjectId', 'like', '%' . $subjectId . '%');
+        }
+
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $examSubject = $ExamSubjectBuilder->paginate($pageSize);
-            $paginateData = (object)$examSubject->toArray();
+            $ExamType = $examTypeBuilder->paginate($pageSize);
+            $paginateData = (object)$ExamType->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $examSubject = $ExamSubjectBuilder->get();
+            $ExamType = $examTypeBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $examSubject->toArray()['data'] ?? $examSubject->toArray();
+        $response['data'] = $ExamType->toArray()['data'] ?? $ExamType->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -85,68 +97,63 @@ class ExamSubjectService
 
     /**
      * @param int $id
-     * @return ExamSubject
+     * @return ExamType
      */
-    public function getOneExamSubject(int $id): ExamSubject
+    public function getOneExamType(int $id): ExamType
     {
-        /** @var ExamSubject|Builder $ExamSubjectBuilder */
-        $ExamSubjectBuilder = ExamSubject::select([
-            'exam_subjects.id',
-            'exam_subjects.title',
-            'exam_subjects.title_en',
-            'exam_subjects.accessor_type',
-            'exam_subjects.accessor_id',
-            'exam_subjects.row_status',
-            'exam_subjects.created_at',
-            'exam_subjects.updated_at',
-            'exam_subjects.deleted_at',
+        /** @var ExamType|Builder $examTypeBuilder */
+        $examTypeBuilder = ExamType::select([
+            "exam_types.id",
+            'exam_types.type',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exam_types.subject_id',
+            'exam_types.accessor_type',
+            'exam_types.accessor_id',
+            'exam_types.purpose_name',
+            'exam_types.purpose_id',
+            'exam_types.row_status',
+            'exam_types.created_at',
+            'exam_types.updated_at',
+            'exam_types.deleted_at',
         ]);
-        $ExamSubjectBuilder->where('exam_subjects.id', $id);
-        /** @var ExamSubject exam_subjects */
-        return $ExamSubjectBuilder->firstOrFail();
+        $examTypeBuilder->where('exam_types.id', $id);
+        /** @var ExamType exam */
+        return $examTypeBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return ExamSubject
+     * @return ExamType
      * @throws Throwable
      */
-    public function store(array $data): ExamSubject
+    public function store(array $data): ExamType
     {
-        $subject = app()->make(ExamSubject::class);
-        $subject->fill($data);
-        $subject->save();
-        return $subject;
+        $exam = app()->make(ExamType::class);
+        $exam->fill($data);
+        $exam->save();
+        return $exam;
     }
 
     /**
-     * @param ExamSubject $examSubject
+     * @param ExamType $ExamType
      * @param array $data
-     * @return ExamSubject
+     * @return ExamType
      */
-    public function update(ExamSubject $examSubject, array $data): ExamSubject
+    public function update(ExamType $ExamType, array $data): ExamType
     {
-        $examSubject->fill($data);
-        $examSubject->save();
-        return $examSubject;
+        $ExamType->fill($data);
+        $ExamType->save();
+        return $ExamType;
     }
 
     /**
-     * @param ExamSubject $examSubject
+     * @param ExamType $ExamType
      * @return bool
      */
-    public function destroy(ExamSubject $examSubject): bool
+    public function destroy(ExamType $ExamType): bool
     {
-        return $examSubject->delete();
-    }
-
-    /**
-     * @param ExamSubject $examSubject
-     * @return bool
-     */
-    public function forceDelete(ExamSubject $examSubject): bool
-    {
-        return $examSubject->forceDelete();
+        return $ExamType->delete();
     }
 
     /**
@@ -171,11 +178,33 @@ class ExamSubjectService
                 'string',
                 'max:250'
             ],
+            'type' => [
+                'required',
+                'string',
+                'max:500',
+                Rule::in(Exam::EXAM_TYPES)
+            ],
+            'subject_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'purpose_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'purpose_name' => [
+                'required',
+                'string',
+                'max:500',
+                Rule::in(ExamType::EXAM_PURPOSES)
+            ],
             'accessor_type' => [
                 'required',
                 'string',
                 'max:250',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+//                Rule::in(ExamType::EXAM_SUBJECT_ASSESSOR_TYPES)
             ],
             'accessor_id' => [
                 'required',
@@ -209,9 +238,8 @@ class ExamSubjectService
         ];
         $rules = [
 
-            'accessor_id' => 'nullable|int|gt:0',
-            'title_en' => 'nullable|max:250|min:2',
-            'accessor_type' => 'nullable|max:250|min:2',
+            'subject_id' => 'nullable|int|gt:0',
+            'title_en' => 'nullable|max:250',
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',

@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ExamQuestionBank;
 use App\Services\ExamQuestionBankService;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -118,7 +116,7 @@ class ExamQuestionBankController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $questionBank = ExamQuestionBank::findOrFail($id);
-
+        $this->examQuestionBankService->destroy($questionBank);
         $response = [
             '_response_status' => [
                 "success" => true,
