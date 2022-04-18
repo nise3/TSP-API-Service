@@ -1429,7 +1429,7 @@ class ExamService
                 'string',
             ],
         ];
-        return Validator::make($request->all(), $rules);
+        return Validator::make($data, $rules);
     }
 
     /**
