@@ -1324,12 +1324,13 @@ class CourseEnrollmentService
         foreach ($courseEnrollments as &$courseEnrollment){
 
             $examsBuilder=ExamType::select([
-                'batches.id',
+                'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
                 'batches.id as batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
+                'exams.id as exam_id',
                 'exams.exam_date',
                 'exams.duration',
                 'exam_subjects.title as subject_title',
