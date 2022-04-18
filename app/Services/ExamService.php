@@ -415,7 +415,7 @@ class ExamService
     {
         $exam = app(Exam::class);
         $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_ONLINE;
-        $exam->fill($data['online']);
+        $exam->fill($data);
         $exam->save();
 
         return $exam;
@@ -429,7 +429,7 @@ class ExamService
     {
         $exam = app(Exam::class);
         $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_OFFLINE;
-        $exam->fill($data['offline']);
+        $exam->fill($data);
         $exam->save();
 
         return $exam;
