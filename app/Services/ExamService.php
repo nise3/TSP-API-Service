@@ -635,34 +635,56 @@ class ExamService
     }
 
     /**
-     * @param Exam $Exam
+     * @param ExamType $examType
      * @param array $data
-     * @return Exam
+     * @return ExamType
      */
-    public function update(Exam $Exam, array $data): Exam
+    public function updateExamType(ExamType $examType, array $data): ExamType
     {
-        $Exam->fill($data);
-        $Exam->save();
-        return $Exam;
+        $examType->fill($data);
+        $examType->save();
+        return $examType;
+    }
+    /**
+     * @param ExamType $examType
+     * @param array $data
+     * @return ExamType
+     */
+    public function updateExam(ExamType $examType, array $data): ExamType
+    {
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $onlineExam = $this->storeOnlineExam($data);
+            $examIds['online'] = $onlineExam->id;
+
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $offlineExam = $this->storeOfflineExam($data);
+            $examIds['offline'] = $offlineExam->id;
+
+        } else {
+            $onlineExam = $this->storeOnlineExam($data['online']);
+            $offlineExam = $this->storeOfflineExam($data['offline']);
+
+            $examIds['online'] = $onlineExam->id;
+            $examIds['offline'] = $offlineExam->id;
+        }
     }
 
     /**
      * @param array $data
-     * @param array $request
-     * @return ExamType
+     * @return void
      */
 
-    public function youthExamMarkUpdate(array $data):void
+    public function youthExamMarkUpdate(array $data): void
     {
-        $youthId=$data['youth_id'];
-        $examId=$data['exam_id'];
+        $youthId = $data['youth_id'];
+        $examId = $data['exam_id'];
 
-        foreach ($data['marks'] as $mark){
-            $examResultId=$mark['exam_result_id'];
-            $examResult=ExamResult::findOrFail($examResultId);
-            $examResult->marks_achieved=$mark['marks_achieved'];
-            $examResult->youth_id=$youthId;
-            $examResult->exam_id=$examId;
+        foreach ($data['marks'] as $mark) {
+            $examResultId = $mark['exam_result_id'];
+            $examResult = ExamResult::findOrFail($examResultId);
+            $examResult->marks_achieved = $mark['marks_achieved'];
+            $examResult->youth_id = $youthId;
+            $examResult->exam_id = $examId;
             $examResult->save();
 
         }
@@ -815,7 +837,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('online.');
+            $examValidationRules = $this->examValidationRules('online.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('online.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -830,7 +852,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('offline.');
+            $examValidationRules = $this->examValidationRules('offline.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('offline.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -847,7 +869,7 @@ class ExamService
 
 
         } else {
-            $examValidationRules = $this->examValidationRules();
+            $examValidationRules = $this->examValidationRules('', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules();
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -1041,11 +1063,18 @@ class ExamService
 
     /**
      * @param string $examType
+     * @param int|null $id
      * @return array
      */
-    public function examValidationRules(string $examType = ''): array
+    public function examValidationRules(string $examType = '', int $id = null): array
     {
         $rules = [];
+        $rules[$examType . 'exam_id'] = [
+            Rule::requiredIf($id != null),
+            'nullable',
+            'int',
+            'exists:exams,id,deleted_at,NULL'
+        ];
         $rules[$examType . 'exam_date'] = [
             'required',
             'date_format:Y-m-d H:i:s'
