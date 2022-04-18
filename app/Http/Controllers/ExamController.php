@@ -86,13 +86,9 @@ class ExamController extends Controller
         try {
             $examType = $this->examService->storeExamType($validatedData);
             $validatedData['exam_type_id'] = $examType->id;
-            $exam = $this->examService->storeExam($validatedData);
+            $examIds = $this->examService->storeExam($validatedData);
 
-            if ($validatedData['type'] == Exam::EXAM_TYPE_MIXED) {
-                $validatedData['exam_ids'] = $exam;
-            } else {
-                $validatedData['exam_id'] = $exam->id;
-            }
+            $validatedData['exam_ids'] = $examIds;
 
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
@@ -241,8 +237,9 @@ class ExamController extends Controller
      * @param int $youthId
      * @return JsonResponse
      */
-    public function previewYouthExam(int $examId,int $youthId):JsonResponse{
-        $youthExamPreview = $this->examService->getPreviewYouthExam($examId,$youthId);
+    public function previewYouthExam(int $examId, int $youthId): JsonResponse
+    {
+        $youthExamPreview = $this->examService->getPreviewYouthExam($examId, $youthId);
         $response = [
             "data" => $youthExamPreview ?? null,
             "_response_status" => [
@@ -255,7 +252,8 @@ class ExamController extends Controller
 
     }
 
-    public function  youthExamMarkUpdate(Request $request):JsonResponse{
+    public function youthExamMarkUpdate(Request $request): JsonResponse
+    {
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
         $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
         $response = [
