@@ -1034,7 +1034,7 @@ class ExamService
      * @param string $examType
      * @return array
      */
-    public function examValidationRules($examType = ''): array
+    public function examValidationRules(string $examType = ''): array
     {
         $rules = [];
         $rules[$examType . 'exam_date'] = [
@@ -1060,7 +1060,7 @@ class ExamService
      * @param string $examType
      * @return array
      */
-    public function examSectionValidationRules($examType = ''): array
+    public function examSectionValidationRules(string $examType = ''): array
     {
         $rules = [];
         $rules[$examType . 'exam_questions'] = [
@@ -1244,7 +1244,7 @@ class ExamService
                     'nullable',
                     'array',
                 ];
-                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers.*'] = [
                     'nullable',
                     'string',
                 ];
