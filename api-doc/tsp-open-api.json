@@ -11302,8 +11302,121 @@
                         }
                     }
                 }
-            } }
+            } },
+        "/submit-exam-paper": {
+            "post": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Submit exam paper",
+                "description": "API endpoint to submit exam paper. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "description": "Exam paper object that needs to be added to the store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Random Questions": {
+                                    "summary": "An example of Exam  Submit Paper for Random Questions",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "youth_id": "4",
+                                        "questions": [
+                                            {
+                                                "question_id": 1,
+                                                "individual_marks":10,
+                                                "Answers": ["dfg","fdhgfh"],
+                                                "file_path": ""
+                                            },
+                                            {
+                                                "question_id": 2,
+                                                "individual_marks":10,
+                                                "answers": [],
+                                                "file_path": ""
+                                            }
+                                        ]
+                                    }
 
+                                },
+                                "From Selected Questions": {
+                                    "summary": "An example of Exam  Submit Paper for Selected Questions",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "youth_id": "4",
+                                        "questions": [
+                                            {
+                                                "exam_section_question_id" : "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "question_id": 1,
+                                                "individual_marks":10,
+                                                "Answers": ["dfg","fdhgfh"],
+                                                "file_path": ""
+                                            },
+                                            {
+                                                "exam_section_question_id" : "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "question_id": 2,
+                                                "individual_marks":10,
+                                                "answers": [],
+                                                "file_path": ""
+                                            }
+                                        ]
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     },
     "components": {
         "securitySchemes": {

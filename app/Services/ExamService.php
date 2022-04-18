@@ -1413,8 +1413,8 @@ class ExamService
             ],
             'questions.*.exam_section_question_id' => [
                 'nullable',
-                'int',
-                'exists:exam_section_questions,id,deleted_at,NULL'
+                'string',
+                'exists:exam_section_questions,uuid,deleted_at,NULL'
             ],
             'questions.*.question_id' => [
                 'required',
