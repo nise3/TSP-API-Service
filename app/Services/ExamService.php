@@ -188,7 +188,7 @@ class ExamService
         });
 
         $examTypeBuilder->where('exam_types.id', $id);
-        $examTypeBuilder->with('exams');
+        $examTypeBuilder->with('exams.examSections');
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
     }
