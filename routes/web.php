@@ -49,8 +49,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
         $router->get('preview-youth-exam/{examId}/{youthId}', ["as" => "preview-youth-exam", "uses" => "ExamController@previewYouthExam"]);
-        $router->get('exam-question-paper/{id}', ["as" => "exam-question-papers", "uses" => "ExamController@getExamQuestionPaper"]);
-        $router->get('submit-question-paper', ["as" => "submit exam-question-paper", "uses" => "ExamController@submitExamQuestionPaper"]);
+        $router->post('youth-exam-mark-update', ["as" => "youth-exam-mark-update", "uses" => "ExamController@youthExamMarkUpdate"]);
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
@@ -166,6 +165,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('youth-feed-courses', ["as" => "youth-feed-courses", "uses" => "CourseController@youthFeedCourses"]);
 
     });
+
+    /** Exam management */
+    $router->get('exam-question-paper/{id}', ["as" => "exam-question-papers", "uses" => "ExamController@getExamQuestionPaper"]);
+    $router->post('submit-exam-paper', ["as" => "submit exam-paper", "uses" => "ExamController@submitExamPaper"]);
 
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
