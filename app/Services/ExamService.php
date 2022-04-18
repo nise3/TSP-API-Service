@@ -166,6 +166,9 @@ class ExamService
             'exam_subjects.title  as exam_subject_title',
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
+            'exam_types.purpose_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -177,6 +180,11 @@ class ExamService
         $examTypeBuilder->join("exam_subjects", function ($join) {
             $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                 ->whereNull('exam_types.deleted_at');
+        });
+
+        $examTypeBuilder->join("batches", function ($join) {
+            $join->on('exam_types.purpose_id', '=', 'batches.id')
+                ->whereNull('batches.deleted_at');
         });
 
         $examTypeBuilder->where('exam_types.id', $id);
