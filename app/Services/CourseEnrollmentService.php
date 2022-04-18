@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
@@ -1300,13 +1301,6 @@ class CourseEnrollmentService
             $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
         }
 
-        if (!empty($firstName)) {
-            $coursesEnrollmentBuilder->where('course_enrollments.first_name', 'like', '%' . $firstName . '%');
-        }
-        if (!empty($firstNameEn)) {
-            $coursesEnrollmentBuilder->where('course_enrollments.first_name_en', 'like', '%' . $firstNameEn . '%');
-        }
-
         if (is_numeric($courseId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.course_id', '=', $courseId);
         }
@@ -1323,8 +1317,50 @@ class CourseEnrollmentService
         } else {
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
+
+        $resultArray= $courseEnrollments->toArray() ?? [];
+
+        foreach ($resultArray as &$courses){
+
+            $getExamsBuilder=ExamType::select([
+                'exam_types.title',
+                'exam_types.title_en',
+                'batches.id as batch_id',
+                'batches.title as batch_title',
+                'batches.title_en as batch_title_en',
+                'exams.exam_date',
+                'exams.duration',
+                'exam_subjects.title as subject_title',
+                'exam_subjects.title_en as subject_title_en'
+            ]);
+
+            $getExamsBuilder->join("batches", function ($join) {
+                $join->on('exam_types.purpose_id', '=', 'batches.id')
+                    ->whereNull('batches.deleted_at');
+            });
+
+            $getExamsBuilder->join("exam_subjects", function ($join) {
+                $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                    ->whereNull('exam_subjects.deleted_at');
+            });
+
+            $getExamsBuilder->join("exams", function ($join) {
+                $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                    ->whereNull('exams.deleted_at');
+            });
+
+            if (is_numeric($courseId)) {
+                $getExamsBuilder->where('course_enrollments.course_id', '=', $courses['course_id']);
+            }
+            $getExamsBuilder=$getExamsBuilder->get();
+            $exams=$getExamsBuilder->toArray() ?? [];
+            $courses['exams']=$exams;
+            Log::info($exams);
+        }
+
+        $resultData = $resultArray['data'] ?? $resultArray;
         $response['order'] = $order;
-        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['data'] =$resultData;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
