@@ -1322,7 +1322,7 @@ class CourseEnrollmentService
 
         foreach ($resultArray as &$courses){
 
-            $getExamsBuilder=ExamType::select([
+            $examsBuilder=ExamType::select([
                 'exam_types.title',
                 'exam_types.title_en',
                 'batches.id as batch_id',
@@ -1334,28 +1334,27 @@ class CourseEnrollmentService
                 'exam_subjects.title_en as subject_title_en'
             ]);
 
-            $getExamsBuilder->join("batches", function ($join) {
+            $examsBuilder->join("batches", function ($join) {
                 $join->on('exam_types.purpose_id', '=', 'batches.id')
                     ->whereNull('batches.deleted_at');
             });
 
-            $getExamsBuilder->join("exam_subjects", function ($join) {
+            $examsBuilder->join("exam_subjects", function ($join) {
                 $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                     ->whereNull('exam_subjects.deleted_at');
             });
 
-            $getExamsBuilder->join("exams", function ($join) {
+            $examsBuilder->join("exams", function ($join) {
                 $join->on('exam_types.id', '=', 'exams.exam_type_id')
                     ->whereNull('exams.deleted_at');
             });
 
-            if (is_numeric($courseId)) {
-                $getExamsBuilder->where('course_enrollments.course_id', '=', $courses['course_id']);
+            if (is_numeric($courses['course_id'])) {
+                $examsBuilder->where('course_enrollments.course_id', '=', $courses['course_id']);
             }
-            $getExamsBuilder=$getExamsBuilder->get();
-            $exams=$getExamsBuilder->toArray() ?? [];
+            $examsBuilder=$examsBuilder->get();
+            $exams=$examsBuilder->toArray() ?? [];
             $courses['exams']=$exams;
-            Log::info($exams);
         }
 
         $resultData = $resultArray['data'] ?? $resultArray;
