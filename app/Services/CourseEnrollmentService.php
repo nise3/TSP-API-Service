@@ -1263,6 +1263,7 @@ class CourseEnrollmentService
             [
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
+                'course_enrollments.batch_id',
                 'courses.id as course_id',
                 'courses.cover_image',
                 'courses.code as course_code',
@@ -1318,11 +1319,12 @@ class CourseEnrollmentService
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
 
-        $resultArray= $courseEnrollments->toArray() ?? [];
+        $courseEnrollments= $courseEnrollments->toArray() ?? [];
 
-        foreach ($resultArray as &$courses){
+        foreach ($courseEnrollments as &$courseEnrollment){
 
             $examsBuilder=ExamType::select([
+                'batches.id',
                 'exam_types.title',
                 'exam_types.title_en',
                 'batches.id as batch_id',
@@ -1349,17 +1351,18 @@ class CourseEnrollmentService
                     ->whereNull('exams.deleted_at');
             });
 
-            if (is_numeric($courses['course_id'])) {
-                $examsBuilder->where('course_enrollments.course_id', '=', $courses['course_id']);
-            }
+
+            $examsBuilder->where( 'exam_types.purpose_id' ,'=', $courseEnrollment['batch_id']);
+
             $examsBuilder=$examsBuilder->get();
             $exams=$examsBuilder->toArray() ?? [];
-            $courses['exams']=$exams;
+
+            $courseEnrollment['exams']=$exams;
         }
 
-        $resultData = $resultArray['data'] ?? $resultArray;
+        $courseEnrollments = $courseEnrollments['data'] ?? $courseEnrollments;
         $response['order'] = $order;
-        $response['data'] =$resultData;
+        $response['data'] =$courseEnrollments;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
