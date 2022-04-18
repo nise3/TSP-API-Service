@@ -497,10 +497,9 @@ class ExamService
             $examSection->fill($examSectionData);
             $examSection->save();
 
-            $examSectionQuestionData = $examSectionData['questions'];
-            $examSectionData['exam_type'] = $data['type'];
-
             if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $examSectionQuestionData = $examSectionData['questions'];
+                $examSectionData['exam_type'] = $data['type'];
                 $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
         }
@@ -575,7 +574,7 @@ class ExamService
                 $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
                 $question['exam_id'] = $examSectionData['exam_id'];
                 $question['exam_section_uuid'] = $examSectionData['uuid'];
-                $question['exam_set_uuid'] = $set;
+                $question['exam_set_uuid'] = $set->uuid;
                 $question['question_selection_type'] = $examSectionData['question_selection_type'];
                 $question['individual_marks'] = $individualMarks;
                 $question['question_id'] = $question['id'];
