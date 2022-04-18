@@ -357,7 +357,7 @@ class ExamService
             'exam_section_questions.option_4',
             'exam_section_questions.option_4_en',
             'exam_results.id as exam_result_id',
-            'exam_results.answer',
+            'exam_results.answers',
             'exam_results.file_paths',
         ]);
 
@@ -383,37 +383,56 @@ class ExamService
 
     /**
      * @param array $data
-     * @return mixed
+     * @return array
      */
-    public function storeExam(array $data): mixed
+    public function storeExam(array $data): array
     {
-        if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
-            $examIds = [];
-            if (!empty($data['online'])) {
-                $exam = app(Exam::class);
-                $data['online']['type'] = Exam::EXAM_TYPE_ONLINE;
-                $exam->fill($data['online']);
-                $exam->save();
-                $examIds['online'] = $exam->id;
+        $examIds = [];
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $onlineExam = $this->storeOnlineExam($data);
+            $examIds['online'] = $onlineExam->id;
 
-            }
-            if (!empty($data['offline'])) {
-                $exam = app(Exam::class);
-                $data['offline']['type'] = Exam::EXAM_TYPE_OFFLINE;
-                $exam->fill($data['offline']);
-                $exam->save();
-                $examIds['offline'] = $exam->id;
-            }
-
-            return $examIds;
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $offlineExam = $this->storeOfflineExam($data);
+            $examIds['offline'] = $offlineExam->id;
 
         } else {
-            $exam = app(Exam::class);
-            $exam->fill($data);
-            $exam->save();
-            return $exam;
+            $onlineExam = $this->storeOnlineExam($data['online']);
+            $offlineExam = $this->storeOfflineExam($data['offline']);
+
+            $examIds['online'] = $onlineExam->id;
+            $examIds['offline'] = $offlineExam->id;
         }
 
+        return $examIds;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function storeOnlineExam($data): Exam
+    {
+        $exam = app(Exam::class);
+        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_ONLINE;
+        $exam->fill($data['online']);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function storeOfflineExam($data): Exam
+    {
+        $exam = app(Exam::class);
+        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_OFFLINE;
+        $exam->fill($data['offline']);
+        $exam->save();
+
+        return $exam;
     }
 
     /**
@@ -435,7 +454,7 @@ class ExamService
         } else {
             foreach ($data['sets'] as $examSetData) {
                 $examSetData['uuid'] = ExamSet::examSetId();
-                $examSetData['exam_id'] = $data['exam_id'];
+                $examSetData['exam_id'] = $data['exam_ids']['offline'];
                 $setMapping[$examSetData['id']] = $examSetData['uuid'];
                 $examSet = app(ExamSet::class);
                 $examSet->fill($examSetData);
@@ -685,7 +704,7 @@ class ExamService
             "exam_results.exam_id",
             "exam_results.youth_id",
             "exam_results.exam_section_question_id",
-            "exam_results.answer",
+            "exam_results.answers",
             "exam_results.marks_achieved",
             "exam_results.file_paths",
 
@@ -1315,7 +1334,6 @@ class ExamService
     public function getPreviewYouthExam($examId, $youthId): array
     {
 
-
         $examPreviewBuilder = Exam::select([
             'exam_types.subject_id',
             'exam_subjects.title as subject_title',
@@ -1371,6 +1389,10 @@ class ExamService
      */
     public function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+        $data = $request->all();
+        if (!empty($data["answers"])) {
+            $data["answers"] = isset($data['answers']) && is_array($data['answers']) ? $data['answers'] : explode(',', $data['answers']);
+        }
         $rules = [
             'exam_id' => [
                 'required',
@@ -1404,6 +1426,10 @@ class ExamService
                 'int',
             ],
             'questions.*.answers' => [
+                'nullable',
+                'array',
+            ],
+            'questions.*.answers.*' => [
                 'nullable',
                 'string',
             ],
