@@ -651,17 +651,17 @@ class ExamService
      * @return ExamType
      */
 
-    public function youthExamMarkUpdate(array $data):void
+    public function youthExamMarkUpdate(array $data): void
     {
-        $youthId=$data['youth_id'];
-        $examId=$data['exam_id'];
+        $youthId = $data['youth_id'];
+        $examId = $data['exam_id'];
 
-        foreach ($data['marks'] as $mark){
-            $examResultId=$mark['exam_result_id'];
-            $examResult=ExamResult::findOrFail($examResultId);
-            $examResult->marks_achieved=$mark['marks_achieved'];
-            $examResult->youth_id=$youthId;
-            $examResult->exam_id=$examId;
+        foreach ($data['marks'] as $mark) {
+            $examResultId = $mark['exam_result_id'];
+            $examResult = ExamResult::findOrFail($examResultId);
+            $examResult->marks_achieved = $mark['marks_achieved'];
+            $examResult->youth_id = $youthId;
+            $examResult->exam_id = $examId;
             $examResult->save();
 
         }
@@ -889,9 +889,9 @@ class ExamService
     {
         $rules = [];
         foreach ($examQuestions as $examQuestion) {
-            if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+            if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-            } else if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
             } else {
                 $offlineExamQuestionNumbers = 0;
@@ -1152,9 +1152,9 @@ class ExamService
         $index = 0;
         $rules = [];
         foreach ($examQuestions as $examQuestion) {
-            if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+            if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
                 $onlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-            } else if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
+            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
                 $onlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
             } else {
                 $onlineExamQuestionNumbers = 0;
