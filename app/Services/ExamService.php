@@ -597,19 +597,24 @@ class ExamService
     }
 
     /**
-     * @param ExamType $ExamType
      * @param array $data
-     * @return ExamType
      */
 
-    public function youthExamMarkUpdate(array $request)
+    public function youthExamMarkUpdate(array $data):void
     {
-        $youthId=$request['youth_id'];
-        $examId=$request['exam_id'];
-        $examResultId=$request['marks'][0]['exam_result_id'];
-        $marksAchieved=$request['marks'][0]['marks_achieved'];
-       $exam=ExamResult::where('youth_id', $youthId)->where('exam_id', $examId)->update(['marks_achieved' => $marksAchieved]);
-       return $exam;
+        $youthId=$data['youth_id'];
+        $examId=$data['exam_id'];
+
+        foreach ($data['marks'] as $mark){
+            $examResultId=$mark['exam_result_id'];
+            $examResult=ExamResult::findOrFail($examResultId);
+            $examResult->marks_achieved=$mark['marks_achieved'];
+            $examResult->youth_id=$youthId;
+            $examResult->exam_id=$examId;
+            $examResult->save();
+
+        }
+
     }
 
     /**
