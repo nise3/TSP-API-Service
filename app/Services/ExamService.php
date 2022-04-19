@@ -157,7 +157,7 @@ class ExamService
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(int $id): Model|Builder
+    public function getOneExamType(array $request, int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -167,8 +167,6 @@ class ExamService
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
             'exam_types.purpose_id',
-            'batches.title as batch_title',
-            'batches.title_en as batch_title_en',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -182,10 +180,29 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        $examTypeBuilder->join("batches", function ($join) {
-            $join->on('exam_types.purpose_id', '=', 'batches.id')
-                ->whereNull('batches.deleted_at');
-        });
+        if ($request['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
+            $examTypeBuilder->join("batches", function ($join) {
+                $join->on('exam_types.purpose_id', '=', 'batches.id')
+                    ->whereNull('batches.deleted_at');
+            });
+            $examTypeBuilder->join("training_centers", function ($join) {
+                $join->on('batches.training_center_id', '=', 'training_centers.id')
+                    ->whereNull('training_centers.deleted_at');
+            });
+            $examTypeBuilder->join("courses", function ($join) {
+                $join->on('batches.course_id', '=', 'courses.id')
+                    ->whereNull('courses.deleted_at');
+            });
+            $examTypeBuilder->addSelect('batches.title')
+                ->addSelect('batches.title_en')
+                ->addSelect('training_center_id')
+                ->addSelect('training_centers.title as training_center_title')
+                ->addSelect('training_centers.title_en as training_center_title_en')
+                ->addSelect('course_id')
+                ->addSelect('courses.title as course_title')
+                ->addSelect('courses.title_en as course_title_en');
+        }
+
 
         $examTypeBuilder->where('exam_types.id', $id);
         $examTypeBuilder->with('exams.examSections');
@@ -425,6 +442,32 @@ class ExamService
      * @param $data
      * @return Exam
      */
+    private function updateOnlineExam($data): Exam
+    {
+        $exam = Exam::findOrFail($data['exam_id']);
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function updateOfflineExam($data): Exam
+    {
+        $exam = Exam::findOrFail($data['exam_id']);
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
     private function storeOfflineExam($data): Exam
     {
         $exam = app(Exam::class);
@@ -634,21 +677,57 @@ class ExamService
     }
 
     /**
-     * @param Exam $Exam
      * @param array $data
-     * @return Exam
+     * @return array
      */
-    public function update(Exam $Exam, array $data): Exam
+    public function updateExamType(ExamType $examType, array $data): ExamType
     {
-        $Exam->fill($data);
-        $Exam->save();
-        return $Exam;
+        $examType->fill($data);
+        $examType->save();
+        return $examType;
+    }
+
+    /**
+     * @param ExamType $examType
+     * @param array $data
+     * @return ExamType
+     */
+    public function updateExam(array $data): array
+    {
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $onlineExam = $this->updateOnlineExam($data);
+            $examIds['online'] = $onlineExam->id;
+
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $offlineExam = $this->updateOfflineExam($data);
+            $examIds['offline'] = $offlineExam->id;
+
+        } else {
+            $onlineExam = $this->updateOnlineExam($data['online']);
+            $offlineExam = $this->updateOfflineExam($data['offline']);
+
+            $examIds['online'] = $onlineExam->id;
+            $examIds['offline'] = $offlineExam->id;
+        }
+        return $examIds;
+    }
+
+    public function deleteExamRelatedDataForUpdate(array $examIds)
+    {
+        if (!empty($examIds['online'])) {
+            ExamSection::where('exam_id', $examIds['online'])->delete();
+            ExamSectionQuestion::where('exam_id', $examIds['online'])->delete();
+        }
+        if (!empty($examIds['offline'])) {
+            ExamSection::where('exam_id', $examIds['offline'])->delete();
+            ExamSet::where('exam_id', $examIds['offline'])->delete();
+            ExamSectionQuestion::where('exam_id', $examIds['offline'])->delete();
+        }
     }
 
     /**
      * @param array $data
-     * @param array $request
-     * @return ExamType
+     * @return void
      */
 
     public function youthExamMarkUpdate(array $data): void
@@ -814,7 +893,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('online.');
+            $examValidationRules = $this->examValidationRules('online.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('online.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -829,7 +908,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('offline.');
+            $examValidationRules = $this->examValidationRules('offline.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('offline.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -846,7 +925,7 @@ class ExamService
 
 
         } else {
-            $examValidationRules = $this->examValidationRules();
+            $examValidationRules = $this->examValidationRules('', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules();
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -1040,11 +1119,18 @@ class ExamService
 
     /**
      * @param string $examType
+     * @param int|null $id
      * @return array
      */
-    public function examValidationRules(string $examType = ''): array
+    public function examValidationRules(string $examType = '', int $id = null): array
     {
         $rules = [];
+        $rules[$examType . 'exam_id'] = [
+            Rule::requiredIf($id != null),
+            'nullable',
+            'int',
+            'exists:exams,id,deleted_at,NULL'
+        ];
         $rules[$examType . 'exam_date'] = [
             'required',
             'date_format:Y-m-d H:i:s'
@@ -1297,6 +1383,21 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+
+        $rules = [
+            'purpose_name' => [
+                'required',
+                'string',
+                Rule::in(ExamType::EXAM_PURPOSES)
+
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
@@ -1455,7 +1556,8 @@ class ExamService
             'exam_id' => [
                 'required',
                 'int',
-                'min:1'
+                'min:1',
+                'exists:exams,id,deleted_at,NULL'
             ],
             'youth_id' => [
                 'required',
@@ -1473,6 +1575,7 @@ class ExamService
             'marks.*.exam_result_id' => [
                 'integer',
                 'required',
+                'exists:exam_results,id'
             ],
             'marks.*.marks_achieved' => [
                 'numeric',

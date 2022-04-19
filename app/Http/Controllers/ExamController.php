@@ -57,9 +57,10 @@ class ExamController extends Controller
      * @return JsonResponse
      */
 
-    public function read(int $id): JsonResponse
+    public function read(Request $request ,int $id): JsonResponse
     {
-        $exam = $this->examService->getOneExamType($id);
+        $filter = $this->examService->getExamFilterValidator($request)->validate();
+        $exam = $this->examService->getOneExamType($filter,$id);
         $response = [
             "data" => $exam,
             "_response_status" => [
@@ -87,9 +88,7 @@ class ExamController extends Controller
             $examType = $this->examService->storeExamType($validatedData);
             $validatedData['exam_type_id'] = $examType->id;
             $examIds = $this->examService->storeExam($validatedData);
-
             $validatedData['exam_ids'] = $examIds;
-
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
@@ -119,24 +118,39 @@ class ExamController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Throwable
      */
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
+        $examType = Exam::findOrFail($id);
         $validated = $this->examService->validator($request, $id)->validate();
-        $data = $this->examService->update($exam, $validated);
 
-        $response = [
-            'data' => $data,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam  updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+        DB::beginTransaction();
+        try {
+            $this->examService->updateExamType($examType, $validated);
+            $examIds = $this->examService->updateExam($validated);
+            $validatedData['exam_ids'] = $examIds;
+            $this->examService->deleteExamRelatedDataForUpdate($examIds);
+            if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
+                $examSets = $this->examService->storeExamSets($validatedData);
+                $validatedData['sets'] = $examSets;
+            }
+            $this->examService->storeExamSections($validatedData);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam  updated successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -164,7 +178,6 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -229,7 +242,7 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -249,13 +262,18 @@ class ExamController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
-
     }
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function youthExamMarkUpdate(Request $request): JsonResponse
     {
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
+        $this->examService->youthExamMarkUpdate($validatedData);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
