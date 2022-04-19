@@ -150,7 +150,7 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -178,7 +178,6 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -243,7 +242,7 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_OK);
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -263,7 +262,6 @@ class ExamController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
-
     }
 
 

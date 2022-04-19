@@ -157,7 +157,7 @@ class ExamService
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(array $request,int $id): Model|Builder
+    public function getOneExamType(array $request, int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -180,7 +180,7 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        if($request['purpose_name']==ExamType::EXAM_PURPOSE_BATCH){
+        if ($request['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
             $examTypeBuilder->join("batches", function ($join) {
                 $join->on('exam_types.purpose_id', '=', 'batches.id')
                     ->whereNull('batches.deleted_at');
@@ -1382,11 +1382,12 @@ class ExamService
 
         return Validator::make($request->all(), $rules, $customMessage);
     }
+
     public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
 
         $rules = [
-            'purpose_name' =>[
+            'purpose_name' => [
                 'required',
                 'string',
                 Rule::in(ExamType::EXAM_PURPOSES)
@@ -1555,7 +1556,8 @@ class ExamService
             'exam_id' => [
                 'required',
                 'int',
-                'min:1'
+                'min:1',
+                'exists:exams,id,deleted_at,NULL'
             ],
             'youth_id' => [
                 'required',
@@ -1573,6 +1575,7 @@ class ExamService
             'marks.*.exam_result_id' => [
                 'integer',
                 'required',
+                'exists:exam_results,id'
             ],
             'marks.*.marks_achieved' => [
                 'numeric',
