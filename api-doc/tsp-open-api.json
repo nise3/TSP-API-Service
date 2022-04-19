@@ -10885,6 +10885,11 @@
                 ],
                 "summary": "Update a Exam",
                 "description": "API endpoint to Update Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
                 "requestBody": {
                     "description": "Exam object that needs to be Update to the store",
                     "required": true,
