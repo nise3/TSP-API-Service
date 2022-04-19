@@ -118,23 +118,38 @@ class ExamController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Throwable
      */
 
     public function update(Request $request, int $id): JsonResponse
     {
         $examType = Exam::findOrFail($id);
         $validated = $this->examService->validator($request, $id)->validate();
-        $this->examService->updateExamType($examType, $validated);
-        $this->examService->updateExam($examType, $validated);
 
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam  updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        DB::beginTransaction();
+        try {
+            $this->examService->updateExamType($examType, $validated);
+            $examIds = $this->examService->updateExam($validated);
+            $validatedData['exam_ids'] = $examIds;
+            $this->examService->deleteExamRelatedDataForUpdate($examIds);
+            if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
+                $examSets = $this->examService->storeExamSets($validatedData);
+                $validatedData['sets'] = $examSets;
+            }
+            $this->examService->storeExamSections($validatedData);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam  updated successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
@@ -251,10 +266,16 @@ class ExamController extends Controller
 
     }
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function youthExamMarkUpdate(Request $request): JsonResponse
     {
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $youthExamMarkUpdateData = $this->examService->youthExamMarkUpdate($validatedData);
+        $this->examService->youthExamMarkUpdate($validatedData);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
