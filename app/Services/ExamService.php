@@ -254,6 +254,13 @@ class ExamService
             } else {
                 $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
             }
+            /** remove answer from tittle in fill in the blanks questions */
+            foreach ($examSection['questions'] as &$question) {
+                if ($examSection["question_type"] == ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS) {
+                    preg_match_all('/\[{2}(.*?)\]{2}/is', $question['title'], $match);
+                    $question['title'] = preg_replace('/\[{2}(.*?)\]{2}/is', '[[]]', $question['title']);
+                }
+            }
         }
 
         return $exam;
