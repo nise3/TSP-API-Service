@@ -87,9 +87,7 @@ class ExamController extends Controller
             $examType = $this->examService->storeExamType($validatedData);
             $validatedData['exam_type_id'] = $examType->id;
             $examIds = $this->examService->storeExam($validatedData);
-
             $validatedData['exam_ids'] = $examIds;
-
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
@@ -123,12 +121,12 @@ class ExamController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
+        $examType = Exam::findOrFail($id);
         $validated = $this->examService->validator($request, $id)->validate();
-        $data = $this->examService->update($exam, $validated);
+        $this->examService->updateExamType($examType, $validated);
+        $this->examService->updateExam($examType, $validated);
 
         $response = [
-            'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
