@@ -157,7 +157,7 @@ class ExamService
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(int $id): Model|Builder
+    public function getOneExamType(array $request,int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -167,8 +167,6 @@ class ExamService
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
             'exam_types.purpose_id',
-            'batches.title as batch_title',
-            'batches.title_en as batch_title_en',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -182,10 +180,29 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        $examTypeBuilder->join("batches", function ($join) {
-            $join->on('exam_types.purpose_id', '=', 'batches.id')
-                ->whereNull('batches.deleted_at');
-        });
+        if($request['purpose_name']==ExamType::EXAM_PURPOSE_BATCH){
+            $examTypeBuilder->join("batches", function ($join) {
+                $join->on('exam_types.purpose_id', '=', 'batches.id')
+                    ->whereNull('batches.deleted_at');
+            });
+            $examTypeBuilder->join("training_centers", function ($join) {
+                $join->on('batches.training_center_id', '=', 'training_centers.id')
+                    ->whereNull('training_centers.deleted_at');
+            });
+            $examTypeBuilder->join("courses", function ($join) {
+                $join->on('batches.course_id', '=', 'courses.id')
+                    ->whereNull('courses.deleted_at');
+            });
+            $examTypeBuilder->addSelect('batches.title')
+                ->addSelect('batches.title_en')
+                ->addSelect('training_center_id')
+                ->addSelect('training_centers.title as training_center_title')
+                ->addSelect('training_centers.title_en as training_center_title_en')
+                ->addSelect('course_id')
+                ->addSelect('courses.title as course_title')
+                ->addSelect('courses.title_en as course_title_en');
+        }
+
 
         $examTypeBuilder->where('exam_types.id', $id);
         $examTypeBuilder->with('exams.examSections');
@@ -1324,6 +1341,20 @@ class ExamService
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);
+    }
+    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+
+        $rules = [
+            'purpose_name' =>[
+                'required',
+                'string',
+                Rule::in(ExamType::EXAM_PURPOSES)
+
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
     }
 
     /**
