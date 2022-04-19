@@ -10825,6 +10825,9 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/examTypeId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/purpose_name"
                     }
                 ],
                 "responses": {
@@ -10840,6 +10843,10 @@
                                         "exam_subject_title_en": "math",
                                         "type": 1,
                                         "title": "dfdg",
+                                        "training_center_title": "যুব প্রশিক্ষণ কেন্দ্র,  যুব উন্নয়ন অধিদপ্তর, উত্তম, রংপুর",
+                                        "training_center_title_en": "Youth Training Center, Department of Youth Development, Uttom, Rangpur",
+                                        "course_title": "গবাদিপশু, হাঁস-মুরগী পালন, প্রাথমিক চিকিৎসা, মৎস্য চাষ ও কৃষি” বিষয়ক প্রশিক্ষণ",
+                                        "course_title_en": null,
                                         "title_en": "dfsd",
                                         "row_status": 1,
                                         "created_at": null,
@@ -14828,6 +14835,14 @@
                 "in": "path",
                 "schema": {
                     "type": "integer"
+                }
+            },
+            "purpose_name": {
+                "name": "purpose_name",
+                "required": true,
+                "in": "query",
+                "schema": {
+                    "type": "string"
                 }
             },
             "youth_id": {
