@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Exam extends Model
+class Exam extends BaseModel
 {
     use  SoftDeletes;
 
