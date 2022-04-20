@@ -1282,7 +1282,7 @@ class ExamService
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.individual_marks'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
                     'nullable',
-                    'string',
+                    'numeric',
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.accessor_type'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
