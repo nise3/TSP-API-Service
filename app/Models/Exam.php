@@ -26,4 +26,9 @@ class Exam extends BaseModel
     {
         return $this->hasMany(ExamSection::class, 'exam_id', 'id');
     }
+
+    public function examSets(): HasMany
+    {
+        return $this->hasMany(ExamSet::class, 'exam_id', 'id');
+    }
 }
