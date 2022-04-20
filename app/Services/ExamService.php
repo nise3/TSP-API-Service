@@ -620,12 +620,12 @@ class ExamService
             "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
         ]));
         $individualMarks = $examSectionData['total_marks'] / floatval($examSectionData['number_of_questions']);
-        foreach ($examSectionData['sets'] as $set) {
+        foreach ($examSectionData['sets'] as $set => $value) {
             foreach ($questions as $question) {
                 $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
                 $question['exam_id'] = $examSectionData['exam_id'];
                 $question['exam_section_uuid'] = $examSectionData['uuid'];
-                $question['exam_set_uuid'] = $set->uuid;
+                $question['exam_set_uuid'] = $value;
                 $question['question_selection_type'] = $examSectionData['question_selection_type'];
                 $question['individual_marks'] = $individualMarks;
                 $question['question_id'] = $question['id'];
