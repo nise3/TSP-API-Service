@@ -103,35 +103,62 @@ class ExamService
     }
 
 
+    /**
+     * @param array $data
+     */
     public function submitExamQuestionPaper(array $data)
     {
-        //TODO: save random questions in exam section questions table
-//        if(empty($data['exam_section_question_id']))
-//        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
-//        foreach ($examSections as $examSection) {
-//            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-//                $this->storeRandomQuestionsToExamSectionQuestions($examSection,$data);
-//            }
-//        }
-        foreach ($data['questions'] as $question) {
+        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
+
+        $examSectionIdsByQuestionType = [];
+
+        foreach ($examSections as $examSection) {
+            $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
+        }
+        foreach ($data['questions'] as $questionData) {
+            if (empty($question['exam_section_question_id'])) {
+                $question = ExamQuestionBank::findOrFail($questionData['question_id'])->toArray();
+
+                $question['exam_section_uuid'] = $examSectionIdsByQuestionType[$question['question_type']];
+                $question['question_id'] = $question['id'];
+                /** question  id is assigned to question_id **/
+                unset($question['id']);
+                $question['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK;
+                $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+                $question['individual_marks'] = $questionData['individual_marks'];
+
+                $examSectionQuestion = $this->storeRandomQuestionsToExamSectionQuestions($question);
+            }
             $question['youth_id'] = $data['youth_id'];
             $question['exam_id'] = $data['exam_id'];
+            $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $data['exam_section_question_id'];
             $examResult = app(ExamResult::class);
             $examResult->fill($question);
-            $question->save();
+            $examResult->save();
         }
-    }
-
-    private function storeRandomQuestionsToExamSectionQuestions(array $examSection, array $data)
-    {
 
     }
 
     /**
+     * @param array $question
+     * @return ExamSectionQuestion
+     */
+    private function storeRandomQuestionsToExamSectionQuestions(array $question): ExamSectionQuestion
+    {
+        $examSectionQuestion = app(ExamSectionQuestion::class);
+        $examSectionQuestion->fill($question);
+        $examSectionQuestion->save();
+
+        return $examSectionQuestion;
+
+    }
+
+    /**
+     * @param array $request
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(int $id): Model|Builder
+    public function getOneExamType(array $request, int $id): Model|Builder
     {
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -140,6 +167,7 @@ class ExamService
             'exam_subjects.title  as exam_subject_title',
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
+            'exam_types.purpose_id',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -153,8 +181,32 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
+        if ($request['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
+            $examTypeBuilder->join("batches", function ($join) {
+                $join->on('exam_types.purpose_id', '=', 'batches.id')
+                    ->whereNull('batches.deleted_at');
+            });
+            $examTypeBuilder->join("training_centers", function ($join) {
+                $join->on('batches.training_center_id', '=', 'training_centers.id')
+                    ->whereNull('training_centers.deleted_at');
+            });
+            $examTypeBuilder->join("courses", function ($join) {
+                $join->on('batches.course_id', '=', 'courses.id')
+                    ->whereNull('courses.deleted_at');
+            });
+            $examTypeBuilder->addSelect('batches.title')
+                ->addSelect('batches.title_en')
+                ->addSelect('training_center_id')
+                ->addSelect('training_centers.title as training_center_title')
+                ->addSelect('training_centers.title_en as training_center_title_en')
+                ->addSelect('course_id')
+                ->addSelect('courses.title as course_title')
+                ->addSelect('courses.title_en as course_title_en');
+        }
+
+
         $examTypeBuilder->where('exam_types.id', $id);
-        $examTypeBuilder->with('exams');
+        $examTypeBuilder->with('exams.examSections');
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
     }
@@ -202,6 +254,13 @@ class ExamService
                 $examSection['questions'] = $this->getRandomExamSectionQuestionBySection($examSection);
             } else {
                 $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
+            }
+            /** remove answer from tittle in fill in the blanks questions */
+            foreach ($examSection['questions'] as &$question) {
+                if ($examSection["question_type"] == ExamQuestionBank::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS) {
+                    preg_match_all('/\[{2}(.*?)\]{2}/is', $question['title'], $match);
+                    $question['title'] = preg_replace('/\[{2}(.*?)\]{2}/is', '[[]]', $question['title']);
+                }
             }
         }
 
@@ -265,6 +324,10 @@ class ExamService
     }
 
 
+    /**
+     * @param $examSection
+     * @return array
+     */
     private function getExamSectionQuestionBySection($examSection): array
     {
         /** @var Builder $examSectionBuilder */
@@ -292,6 +355,10 @@ class ExamService
         return $examSectionBuilder->get()->toArray();
     }
 
+    /**
+     * @param $examSection
+     * @return array
+     */
     private function getExamSectionQuestionWithAnswerBySection($examSection): array
     {
         /** @var Builder $examSectionBuilder */
@@ -315,7 +382,7 @@ class ExamService
             'exam_section_questions.option_4',
             'exam_section_questions.option_4_en',
             'exam_results.id as exam_result_id',
-            'exam_results.answer',
+            'exam_results.answers',
             'exam_results.file_paths',
         ]);
 
@@ -341,37 +408,82 @@ class ExamService
 
     /**
      * @param array $data
-     * @return mixed
+     * @return array
      */
-    public function storeExam(array $data): mixed
+    public function storeExam(array $data): array
     {
-        if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
-            $examIds = [];
-            if (!empty($data['online'])) {
-                $exam = app(Exam::class);
-                $data['online']['type'] = Exam::EXAM_TYPE_ONLINE;
-                $exam->fill($data['online']);
-                $exam->save();
-                $examIds['online'] = $exam->id;
+        $examIds = [];
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $onlineExam = $this->storeOnlineExam($data);
+            $examIds['online'] = $onlineExam->id;
 
-            }
-            if (!empty($data['offline'])) {
-                $exam = app(Exam::class);
-                $data['offline']['type'] = Exam::EXAM_TYPE_OFFLINE;
-                $exam->fill($data['offline']);
-                $exam->save();
-                $examIds['offline'] = $exam->id;
-            }
-
-            return $examIds;
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $offlineExam = $this->storeOfflineExam($data);
+            $examIds['offline'] = $offlineExam->id;
 
         } else {
-            $exam = app(Exam::class);
-            $exam->fill($data);
-            $exam->save();
-            return $exam;
+            $onlineExam = $this->storeOnlineExam($data['online']);
+            $offlineExam = $this->storeOfflineExam($data['offline']);
+
+            $examIds['online'] = $onlineExam->id;
+            $examIds['offline'] = $offlineExam->id;
         }
 
+        return $examIds;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function storeOnlineExam($data): Exam
+    {
+        $exam = app(Exam::class);
+        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_ONLINE;
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function updateOnlineExam($data): Exam
+    {
+        $exam = Exam::findOrFail($data['exam_id']);
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function updateOfflineExam($data): Exam
+    {
+        $exam = Exam::findOrFail($data['exam_id']);
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
+    }
+
+    /**
+     * @param $data
+     * @return Exam
+     */
+    private function storeOfflineExam($data): Exam
+    {
+        $exam = app(Exam::class);
+        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_OFFLINE;
+        $exam->fill($data);
+        $exam->save();
+
+        return $exam;
     }
 
     /**
@@ -393,7 +505,7 @@ class ExamService
         } else {
             foreach ($data['sets'] as $examSetData) {
                 $examSetData['uuid'] = ExamSet::examSetId();
-                $examSetData['exam_id'] = $data['exam_id'];
+                $examSetData['exam_id'] = $data['exam_ids']['offline'];
                 $setMapping[$examSetData['id']] = $examSetData['uuid'];
                 $examSet = app(ExamSet::class);
                 $examSet->fill($examSetData);
@@ -411,75 +523,142 @@ class ExamService
      */
     public function storeExamSections(array $data)
     {
-        if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_MIXED) {
-            foreach ($data['online']['exam_questions'] as $examSectionData) {
-                $examSectionData['uuid'] = ExamSection::examSectionId();
-                $examSectionData['exam_id'] = $data['exam_ids']['online'];
-                if (!empty($data['row_status'])) {
-                    $examSectionData['row_status'] = $data['row_status'];
-                }
-                $examSection = app(ExamSection::class);
-                $examSection->fill($examSectionData);
-                $examSection->save();
+        if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
+            $this->storeOnlineExamSections($data['online']['exam_questions'], $data);
+            $this->storeOfflineExamSections($data['offline']['exam_questions'], $data);
+        } else if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $this->storeOnlineExamSections($data['exam_questions'], $data);
+        } else {
+            $this->storeOfflineExamSections($data['exam_questions'], $data);
+        }
+    }
 
+    /**
+     * @throws Throwable
+     */
+    private function storeOnlineExamSections($examQuestions, $data)
+    {
+        foreach ($examQuestions as $examSectionData) {
+            $examSectionData['uuid'] = ExamSection::examSectionId();
+            $examSectionData['exam_id'] = $data['exam_ids']['online'];
+            if (!empty($data['row_status'])) {
+                $examSectionData['row_status'] = $data['row_status'];
+            }
+            $examSection = app(ExamSection::class);
+            $examSection->fill($examSectionData);
+            $examSection->save();
+
+            if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $examSectionQuestionData = $examSectionData['questions'];
                 $examSectionData['exam_type'] = $data['type'];
-
-                if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
-                }
+                $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
-            foreach ($data['offline']['exam_questions'] as $examSectionData) {
-                $examSectionData['uuid'] = ExamSection::examSectionId();
-                $examSectionData['exam_id'] = $data['exam_ids']['offline'];
-                if (!empty($data['row_status'])) {
-                    $examSectionData['row_status'] = $data['row_status'];
-                }
-                $examSection = app(ExamSection::class);
-                $examSection->fill($examSectionData);
-                $examSection->save();
-                $examSectionData['exam_type'] = $data['type'];
-                $examSectionData['subject_id'] = $data['subject_id'];
+        }
 
-                if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $this->storeExamSectionQuestions($examSectionData);
-                } else {
-                    $examSectionQuestionData = $examSectionData['question_sets'];
-                    $examSectionData['sets'] = $data['sets'];
-                    $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
-                }
+    }
 
+    /**
+     * @throws Throwable
+     */
+    private function storeOfflineExamSections(array $examQuestions, array $data)
+    {
+        foreach ($examQuestions as $examSectionData) {
+            $examSectionData['uuid'] = ExamSection::examSectionId();
+            $examSectionData['exam_id'] = $data['exam_ids']['offline'];
+            if (!empty($data['row_status'])) {
+                $examSectionData['row_status'] = $data['row_status'];
             }
-        } else {
-            foreach ($data['exam_questions'] as $examSectionData) {
-                $examSectionData['uuid'] = ExamSection::examSectionId();
-                $examSectionData['exam_id'] = $data['exam_id'];
-                if (!empty($data['row_status'])) {
-                    $examSectionData['row_status'] = $data['row_status'];
-                }
-                $examSection = app(ExamSection::class);
-                $examSection->fill($examSectionData);
-                $examSection->save();
+            $examSection = app(ExamSection::class);
+            $examSection->fill($examSectionData);
+            $examSection->save();
+            $examSectionData['exam_type'] = $data['type'];
+            $examSectionData['subject_id'] = $data['subject_id'];
 
-                $examSectionData['exam_type'] = $data['type'];
-                $examSectionData['subject_id'] = $data['subject_id'];
-
-                if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
-                    $examSectionQuestionData = $examSectionData['questions'];
-                    if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                        $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
-                    }
-                }
-                if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_OFFLINE) {
-                    $examSectionData['sets'] = $data['sets'];
-                    if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                        $this->storeExamSectionQuestions($examSectionData);
-                    } else {
-                        $examSectionQuestionData = $examSectionData['question_sets'];
-                        $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
-                    }
-                }
+            if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $this->storeExamSectionQuestions($examSectionData);
+            } else {
+                $examSectionQuestionData = $examSectionData['question_sets'];
+                $examSectionData['sets'] = $data['sets'];
+                $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
+
+        }
+
+    }
+
+    private function storeOnlineExamSectionQuestions($examSectionData, $examSectionQuestionData)
+    {
+        foreach ($examSectionQuestionData as $examSectionQuestion) {
+            $examSectionQuestion['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+            $examSectionQuestion['exam_id'] = $examSectionData['exam_id'];
+            $examSectionQuestion['exam_section_uuid'] = $examSectionData['uuid'];
+            $examSectionQuestion['question_selection_type'] = $examSectionData['question_selection_type'];
+            $examSectionQuestion['question_id'] = $examSectionQuestion['id'];
+            if (!empty($data['$examSectionData'])) {
+                $examSectionQuestion['row_status'] = $examSectionData['row_status'];
+            }
+            $examQuestionSection = app(ExamSectionQuestion::class);
+            $examQuestionSection->fill($examSectionQuestion);
+            $examQuestionSection->save();
+        }
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function storeOfflineRandomExamSectionQuestions($examSectionData)
+    {
+        $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
+            ->where('question_type', $examSectionData['question_type'])
+            ->where('subject_id', $examSectionData['subject_id'])
+            ->inRandomOrder()
+            ->limit($examSectionData['number_of_questions'])
+            ->get()
+            ->toArray();
+
+        throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
+            "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
+        ]));
+        $individualMarks = $examSectionData['total_marks'] / floatval($examSectionData['number_of_questions']);
+        foreach ($examSectionData['sets'] as $set) {
+            foreach ($questions as $question) {
+                $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+                $question['exam_id'] = $examSectionData['exam_id'];
+                $question['exam_section_uuid'] = $examSectionData['uuid'];
+                $question['exam_set_uuid'] = $set->uuid;
+                $question['question_selection_type'] = $examSectionData['question_selection_type'];
+                $question['individual_marks'] = $individualMarks;
+                $question['question_id'] = $question['id'];
+                if (!empty($examSectionData['row_status'])) {
+                    $question['row_status'] = $examSectionData['row_status'];
+                }
+                $examQuestionSection = app(ExamSectionQuestion::class);
+                $examQuestionSection->fill($question);
+                $examQuestionSection->save();
+            }
+        }
+
+
+    }
+
+    private function storeOfflineExamSectionQuestions($examSectionData, $examSectionQuestionData)
+    {
+        foreach ($examSectionQuestionData as $examSectionQuestionSet) {
+            foreach ($examSectionQuestionSet['questions'] as $examSectionQuestion) {
+                $examSectionQuestion['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+                $examSectionQuestion['exam_id'] = $examSectionData['exam_id'];
+                $examSectionQuestion['exam_section_uuid'] = $examSectionData['uuid'];
+                $examSectionQuestion['exam_set_uuid'] = $examSectionData['set'][$examSectionQuestionSet['id']];
+                $examSectionQuestion['question_selection_type'] = $examSectionData['question_selection_type'];
+                $examSectionQuestion['question_id'] = $examSectionQuestion['id'];
+                if (!empty($examSectionData['row_status'])) {
+                    $examSectionQuestion['row_status'] = $examSectionData['row_status'];
+                }
+                $examQuestionSection = app(ExamSectionQuestion::class);
+                $examQuestionSection->fill($examSectionQuestion);
+                $examQuestionSection->save();
+            }
+
         }
 
 
@@ -493,88 +672,87 @@ class ExamService
     public function storeExamSectionQuestions(array $examSectionData, array $examSectionQuestionData = null)
     {
         if ($examSectionData['exam_type'] == Exam::EXAM_TYPE_ONLINE) {
-            foreach ($examSectionQuestionData as $examSectionQuestion) {
-                $examSectionQuestion['uuid'] = ExamSectionQuestion::examSectionQuestionId();
-                $examSectionQuestion['exam_id'] = $examSectionData['exam_id'];
-                $examSectionQuestion['exam_section_uuid'] = $examSectionData['uuid'];
-                $examSectionQuestion['question_selection_type'] = $examSectionData['question_selection_type'];
-                $examSectionQuestion['question_id'] = $examSectionQuestion['id'];
-                if (!empty($data['row_status'])) {
-                    $examSectionQuestion['row_status'] = $data['row_status'];
-                }
-                $examQuestionSection = app(ExamSectionQuestion::class);
-                $examQuestionSection->fill($examSectionQuestion);
-                $examQuestionSection->save();
-            }
+            $this->storeOnlineExamSectionQuestions($examSectionData, $examSectionQuestionData);
         }
         if ($examSectionData['exam_type'] == Exam::EXAM_TYPE_OFFLINE) {
-            {
-                if ($examSectionData['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                    $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
-                        ->where('question_type', $examSectionData['question_type'])
-                        ->where('subject_id', $examSectionData['subject_id'])
-                        ->inRandomOrder()
-                        ->limit($examSectionData['number_of_questions'])
-                        ->get()
-                        ->toArray();
+            if ($examSectionData['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+                $this->storeOfflineRandomExamSectionQuestions($examSectionData);
 
-                    throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
-                        "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
-                    ]));
-                    $individualMarks = $examSectionData['total_marks'] / floatval($examSectionData['number_of_questions']);
-                    foreach ($examSectionData['sets'] as $set) {
-                        foreach ($questions as $question) {
-                            $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
-                            $question['exam_id'] = $examSectionData['exam_id'];
-                            $question['exam_section_uuid'] = $examSectionData['uuid'];
-                            $question['exam_set_uuid'] = $set;
-                            $question['question_selection_type'] = $examSectionData['question_selection_type'];
-                            $question['individual_marks'] = $individualMarks;
-                            $question['question_id'] = $question['id'];
-                            if (!empty($data['row_status'])) {
-                                $question['row_status'] = $data['row_status'];
-                            }
-                            $examQuestionSection = app(ExamSectionQuestion::class);
-                            $examQuestionSection->fill($question);
-                            $examQuestionSection->save();
-                        }
-                    }
-
-                } else {
-                    foreach ($examSectionQuestionData as $examSectionQuestionSet) {
-                        foreach ($examSectionQuestionSet['questions'] as $examSectionQuestion) {
-                            $examSectionQuestion['uuid'] = ExamSectionQuestion::examSectionQuestionId();
-                            $examSectionQuestion['exam_id'] = $examSectionData['exam_id'];
-                            $examSectionQuestion['exam_section_uuid'] = $examSectionData['uuid'];
-                            $examSectionQuestion['exam_set_uuid'] = $examSectionData['set'][$examSectionQuestionSet['id']];
-                            $examSectionQuestion['question_selection_type'] = $examSectionData['question_selection_type'];
-                            $examSectionQuestion['question_id'] = $examSectionQuestion['id'];
-                            if (!empty($data['row_status'])) {
-                                $examSectionQuestion['row_status'] = $data['row_status'];
-                            }
-                            $examQuestionSection = app(ExamSectionQuestion::class);
-                            $examQuestionSection->fill($examSectionQuestion);
-                            $examQuestionSection->save();
-                        }
-
-                    }
-                }
-
+            } else {
+                $this->storeOfflineExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
-
         }
     }
 
     /**
-     * @param Exam $Exam
      * @param array $data
-     * @return Exam
+     * @return array
      */
-    public function update(Exam $Exam, array $data): Exam
+    public function updateExamType(ExamType $examType, array $data): ExamType
     {
-        $Exam->fill($data);
-        $Exam->save();
-        return $Exam;
+        $examType->fill($data);
+        $examType->save();
+        return $examType;
+    }
+
+    /**
+     * @param ExamType $examType
+     * @param array $data
+     * @return ExamType
+     */
+    public function updateExam(array $data): array
+    {
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $onlineExam = $this->updateOnlineExam($data);
+            $examIds['online'] = $onlineExam->id;
+
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $offlineExam = $this->updateOfflineExam($data);
+            $examIds['offline'] = $offlineExam->id;
+
+        } else {
+            $onlineExam = $this->updateOnlineExam($data['online']);
+            $offlineExam = $this->updateOfflineExam($data['offline']);
+
+            $examIds['online'] = $onlineExam->id;
+            $examIds['offline'] = $offlineExam->id;
+        }
+        return $examIds;
+    }
+
+    public function deleteExamRelatedDataForUpdate(array $examIds)
+    {
+        if (!empty($examIds['online'])) {
+            ExamSection::where('exam_id', $examIds['online'])->delete();
+            ExamSectionQuestion::where('exam_id', $examIds['online'])->delete();
+        }
+        if (!empty($examIds['offline'])) {
+            ExamSection::where('exam_id', $examIds['offline'])->delete();
+            ExamSet::where('exam_id', $examIds['offline'])->delete();
+            ExamSectionQuestion::where('exam_id', $examIds['offline'])->delete();
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     */
+
+    public function youthExamMarkUpdate(array $data): void
+    {
+        $youthId = $data['youth_id'];
+        $examId = $data['exam_id'];
+
+        foreach ($data['marks'] as $mark) {
+            $examResultId = $mark['exam_result_id'];
+            $examResult = ExamResult::findOrFail($examResultId);
+            $examResult->marks_achieved = $mark['marks_achieved'];
+            $examResult->youth_id = $youthId;
+            $examResult->exam_id = $examId;
+            $examResult->save();
+
+        }
+
     }
 
     /**
@@ -612,7 +790,7 @@ class ExamService
             "exam_results.exam_id",
             "exam_results.youth_id",
             "exam_results.exam_section_question_id",
-            "exam_results.answer",
+            "exam_results.answers",
             "exam_results.marks_achieved",
             "exam_results.file_paths",
 
@@ -723,7 +901,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('online.');
+            $examValidationRules = $this->examValidationRules('online.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('online.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -738,7 +916,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('offline.');
+            $examValidationRules = $this->examValidationRules('offline.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('offline.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -755,7 +933,7 @@ class ExamService
 
 
         } else {
-            $examValidationRules = $this->examValidationRules();
+            $examValidationRules = $this->examValidationRules('', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules();
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -788,13 +966,19 @@ class ExamService
         return Validator::make($data, $rules, $customMessage);
     }
 
+    /**
+     * @param array $examQuestions
+     * @param int $numberOfSets
+     * @param string $examType
+     * @return array
+     */
     public function offlineExamQuestionValidationRules(array $examQuestions, int $numberOfSets = 0, string $examType = ''): array
     {
         $rules = [];
         foreach ($examQuestions as $examQuestion) {
-            if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+            if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-            } else if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
             } else {
                 $offlineExamQuestionNumbers = 0;
@@ -941,9 +1125,20 @@ class ExamService
         return $rules;
     }
 
-    public function examValidationRules($examType = ''): array
+    /**
+     * @param string $examType
+     * @param int|null $id
+     * @return array
+     */
+    public function examValidationRules(string $examType = '', int $id = null): array
     {
         $rules = [];
+        $rules[$examType . 'exam_id'] = [
+            Rule::requiredIf($id != null),
+            'nullable',
+            'int',
+            'exists:exams,id,deleted_at,NULL'
+        ];
         $rules[$examType . 'exam_date'] = [
             'required',
             'date_format:Y-m-d H:i:s'
@@ -963,7 +1158,11 @@ class ExamService
         return $rules;
     }
 
-    public function examSectionValidationRules($examType = ''): array
+    /**
+     * @param string $examType
+     * @return array
+     */
+    public function examSectionValidationRules(string $examType = ''): array
     {
         $rules = [];
         $rules[$examType . 'exam_questions'] = [
@@ -977,6 +1176,7 @@ class ExamService
         $rules[$examType . 'exam_questions.*.question_type'] = [
             'integer',
             'required',
+            'distinct',
             Rule::in(ExamQuestionBank::EXAM_QUESTION_TYPES)
         ];
         $rules[$examType . 'exam_questions.*.number_of_questions'] = [
@@ -1046,9 +1246,9 @@ class ExamService
         $index = 0;
         $rules = [];
         foreach ($examQuestions as $examQuestion) {
-            if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
+            if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
                 $onlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-            } else if (!empty($examQuestion) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
+            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
                 $onlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
             } else {
                 $onlineExamQuestionNumbers = 0;
@@ -1146,7 +1346,7 @@ class ExamService
                     'nullable',
                     'array',
                 ];
-                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers.*'] = [
                     'nullable',
                     'string',
                 ];
@@ -1191,6 +1391,23 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'purpose_name' => [
+                'required',
+                'string',
+                Rule::in(ExamType::EXAM_PURPOSES)
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
     function examYouthListFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
@@ -1215,9 +1432,13 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
+    /**
+     * @param $examId
+     * @param $youthId
+     * @return array
+     */
     public function getPreviewYouthExam($examId, $youthId): array
     {
-
 
         $examPreviewBuilder = Exam::select([
             'exam_types.subject_id',
@@ -1274,6 +1495,10 @@ class ExamService
      */
     public function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+        $data = $request->all();
+        if (!empty($data["answers"])) {
+            $data["answers"] = isset($data['answers']) && is_array($data['answers']) ? $data['answers'] : explode(',', $data['answers']);
+        }
         $rules = [
             'exam_id' => [
                 'required',
@@ -1294,15 +1519,23 @@ class ExamService
             ],
             'questions.*.exam_section_question_id' => [
                 'nullable',
-                'int',
-                'exists:exam_section_questions,id,deleted_at,NULL'
+                'string',
+                'exists:exam_section_questions,uuid,deleted_at,NULL'
             ],
             'questions.*.question_id' => [
                 'required',
                 'int',
                 'exists:exam_question_banks,id,deleted_at,NULL'
             ],
+            'questions.*.individual_marks' => [
+                'required',
+                'int',
+            ],
             'questions.*.answers' => [
+                'nullable',
+                'array',
+            ],
+            'questions.*.answers.*' => [
                 'nullable',
                 'string',
             ],
@@ -1311,8 +1544,55 @@ class ExamService
                 'string',
             ],
         ];
-        return Validator::make($request->all(), $rules);
+        return Validator::make($data, $rules);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function youthExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+        $customMessage = [
+            'row_status.in' => 'Order must be either ASC or DESC. [30000]',
+        ];
+        $rules = [
+
+            'exam_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:exams,id,deleted_at,NULL'
+            ],
+            'youth_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
+            'marks' => [
+                'array',
+                'required',
+            ],
+            'marks.*' => [
+                'array',
+                'required',
+            ],
+            'marks.*.exam_result_id' => [
+                'integer',
+                'required',
+                'exists:exam_results,id'
+            ],
+            'marks.*.marks_achieved' => [
+                'numeric',
+                'required',
+            ]
+
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
 
 }
 

@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -43,7 +42,6 @@ class ExamController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-
     public function getList(Request $request): JsonResponse
     {
 
@@ -53,13 +51,15 @@ class ExamController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws ValidationException
      */
-
-    public function read(int $id): JsonResponse
+    public function read(Request $request ,int $id): JsonResponse
     {
-        $exam = $this->examService->getOneExamType($id);
+        $filter = $this->examService->getExamFilterValidator($request)->validate();
+        $exam = $this->examService->getOneExamType($filter,$id);
         $response = [
             "data" => $exam,
             "_response_status" => [
@@ -86,14 +86,8 @@ class ExamController extends Controller
         try {
             $examType = $this->examService->storeExamType($validatedData);
             $validatedData['exam_type_id'] = $examType->id;
-            $exam = $this->examService->storeExam($validatedData);
-
-            if ($validatedData['type'] == Exam::EXAM_TYPE_MIXED) {
-                $validatedData['exam_ids'] = $exam;
-            } else {
-                $validatedData['exam_id'] = $exam->id;
-            }
-
+            $examIds = $this->examService->storeExam($validatedData);
+            $validatedData['exam_ids'] = $examIds;
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
@@ -123,24 +117,38 @@ class ExamController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws Throwable
      */
-
     public function update(Request $request, int $id): JsonResponse
     {
-        $exam = Exam::findOrFail($id);
+        $examType = Exam::findOrFail($id);
         $validated = $this->examService->validator($request, $id)->validate();
-        $data = $this->examService->update($exam, $validated);
 
-        $response = [
-            'data' => $data,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Exam Subject updated successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
+        DB::beginTransaction();
+        try {
+            $this->examService->updateExamType($examType, $validated);
+            $examIds = $this->examService->updateExam($validated);
+            $validatedData['exam_ids'] = $examIds;
+            $this->examService->deleteExamRelatedDataForUpdate($examIds);
+            if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
+                $examSets = $this->examService->storeExamSets($validatedData);
+                $validatedData['sets'] = $examSets;
+            }
+            $this->examService->storeExamSections($validatedData);
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam  updated successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -148,7 +156,6 @@ class ExamController extends Controller
      * @return JsonResponse
      * @throws Throwable
      */
-
     public function destroy(int $id): JsonResponse
     {
         $examType = ExamType::findOrFail($id);
@@ -168,10 +175,15 @@ class ExamController extends Controller
             DB::rollBack();
             throw $e;
         }
-
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
     public function getExamYouthList(Request $request, int $id): JsonResponse
     {
 
@@ -205,26 +217,39 @@ class ExamController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param Request $request
      * @return JsonResponse
+     * @throws ValidationException|Throwable
      */
-    public function submitExamQuestionPaper(Request $request): JsonResponse
+    public function submitExamPaper(Request $request): JsonResponse
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
-        $examData = $this->examService->submitExamQuestionPaper($validatedData);
-        $response = [
-            "data" => $examData ?? null,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
-        return Response::json($response, ResponseAlias::HTTP_OK);
-
+        try {
+            $this->examService->submitExamQuestionPaper($validatedData);
+            $response = [
+                "_response_status" => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_OK,
+                    "message" => "Exam paper submitted successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
-    public function  previewYouthExam(int $examId,int $youthId):JsonResponse{
-        $youthExamPreview = $this->examService->getPreviewYouthExam($examId,$youthId);
+
+    /**
+     * @param int $examId
+     * @param int $youthId
+     * @return JsonResponse
+     */
+    public function previewYouthExam(int $examId, int $youthId): JsonResponse
+    {
+        $youthExamPreview = $this->examService->getPreviewYouthExam($examId, $youthId);
         $response = [
             "data" => $youthExamPreview ?? null,
             "_response_status" => [
@@ -234,7 +259,27 @@ class ExamController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function youthExamMarkUpdate(Request $request): JsonResponse
+    {
+        $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
+        $this->examService->youthExamMarkUpdate($validatedData);
+        $response = [
+            "data" => $youthExamMarkUpdateData ?? null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 }

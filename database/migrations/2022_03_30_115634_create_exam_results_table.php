@@ -18,7 +18,7 @@ class CreateExamResultsTable extends Migration
             $table->unsignedInteger('exam_id');
             $table->unsignedInteger('youth_id');
             $table->char('exam_section_question_id', 50);
-            $table->text('answer')->nullable();
+            $table->json('answers')->nullable();
             $table->unsignedDecimal('marks_achieved')->default(0);
             $table->json('file_paths')->nullable();
             $table->timestamps();
