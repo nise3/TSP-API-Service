@@ -171,7 +171,9 @@ abstract class BaseModel extends Model
         self::ACCESSOR_TYPE_ORGANIZATION,
     ];
 
-
+    /** @var string Certificate types */
+    public const CERTIFICATE_TYPE_A = "A";
+    public const CERTIFICATE_TYPE_B = "B";
 
     public function getIndustryAssociationData(array &$originalData)
     {
