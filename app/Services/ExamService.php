@@ -160,6 +160,7 @@ class ExamService
      */
     public function getOneExamType(array $request, int $id): Model|Builder
     {
+        $purposeName = $request['purpose_name'] ?? '';
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
             'exam_types.id',
@@ -181,7 +182,7 @@ class ExamService
                 ->whereNull('exam_types.deleted_at');
         });
 
-        if ($request['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
+        if ($purposeName == ExamType::EXAM_PURPOSE_BATCH) {
             $examTypeBuilder->join("batches", function ($join) {
                 $join->on('exam_types.purpose_id', '=', 'batches.id')
                     ->whereNull('batches.deleted_at');
@@ -194,8 +195,8 @@ class ExamService
                 $join->on('batches.course_id', '=', 'courses.id')
                     ->whereNull('courses.deleted_at');
             });
-            $examTypeBuilder->addSelect('batches.title')
-                ->addSelect('batches.title_en')
+            $examTypeBuilder->addSelect('batches.title as batch_title')
+                ->addSelect('batches.title_en as batch_title_en')
                 ->addSelect('training_center_id')
                 ->addSelect('training_centers.title as training_center_title')
                 ->addSelect('training_centers.title_en as training_center_title_en')
@@ -206,7 +207,7 @@ class ExamService
 
 
         $examTypeBuilder->where('exam_types.id', $id);
-        $examTypeBuilder->with('exams.examSections');
+        $examTypeBuilder->with('exams.examSections.questions');
         /** @var Exam exam */
         return $examTypeBuilder->firstOrFail();
     }
