@@ -1271,7 +1271,16 @@ class ExamService
                     Rule::requiredIf(!empty($examQuestion['questions'])),
                     'string',
                 ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.title'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
+                    'string',
+                ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.title_en'] = [
+                    'nullable',
+                    'string',
+                ];
+                $rules[$examType . 'exam_questions.' . $index . '.questions.*.individual_marks'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions'])),
                     'nullable',
                     'string',
                 ];
