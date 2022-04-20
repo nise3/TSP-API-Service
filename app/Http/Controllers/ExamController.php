@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -43,7 +42,6 @@ class ExamController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-
     public function getList(Request $request): JsonResponse
     {
 
@@ -53,10 +51,11 @@ class ExamController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws ValidationException
      */
-
     public function read(Request $request ,int $id): JsonResponse
     {
         $filter = $this->examService->getExamFilterValidator($request)->validate();
@@ -120,7 +119,6 @@ class ExamController extends Controller
      * @throws ValidationException
      * @throws Throwable
      */
-
     public function update(Request $request, int $id): JsonResponse
     {
         $examType = Exam::findOrFail($id);
@@ -158,7 +156,6 @@ class ExamController extends Controller
      * @return JsonResponse
      * @throws Throwable
      */
-
     public function destroy(int $id): JsonResponse
     {
         $examType = ExamType::findOrFail($id);

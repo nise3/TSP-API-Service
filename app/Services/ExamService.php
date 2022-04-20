@@ -154,6 +154,7 @@ class ExamService
     }
 
     /**
+     * @param array $request
      * @param int $id
      * @return Model|Builder
      */
@@ -1392,13 +1393,11 @@ class ExamService
 
     public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
-
         $rules = [
             'purpose_name' => [
                 'required',
                 'string',
                 Rule::in(ExamType::EXAM_PURPOSES)
-
             ],
         ];
 
