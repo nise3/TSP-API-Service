@@ -1258,7 +1258,7 @@ class ExamService
             } else {
                 $onlineExamQuestionNumbers = 0;
             }
-            if (!empty($examQuestion) && $examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            if (!empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $rules[$examType . 'exam_questions.' . $index . '.questions'] = [
                     'required',
                     'array',
