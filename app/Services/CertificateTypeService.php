@@ -68,10 +68,7 @@ class CertificateTypeService
 
         $response['order'] = $order;
 //        $response['data'] = $certificate->toArray()['data'] ?? $certificate->toArray();
-        $response['data'] = [
-            BaseModel::CERTIFICATE_TYPE_A,
-            BaseModel::CERTIFICATE_TYPE_B
-        ];
+        $response['data'] = BaseModel::CERTIFICATE_TYPE;
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,

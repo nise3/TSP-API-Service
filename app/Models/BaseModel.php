@@ -172,8 +172,21 @@ abstract class BaseModel extends Model
     ];
 
     /** @var string Certificate types */
-    public const CERTIFICATE_TYPE_A = "A";
-    public const CERTIFICATE_TYPE_B = "B";
+
+    public const CERTIFICATE_COMPETENT = 'COMPETENT';
+    public const CERTIFICATE_NOT_COMPETENT = 'NOT_COMPETENT';
+    public const CERTIFICATE_GRADING = 'GRADING';
+    public const CERTIFICATE_MARKS = 'MARKS';
+    public const CERTIFICATE_PARTICIPATION = 'PARTICIPATION';
+
+    public const CERTIFICATE_TYPE = [
+        self::CERTIFICATE_COMPETENT,
+        self::CERTIFICATE_NOT_COMPETENT,
+        self::CERTIFICATE_GRADING,
+        self::CERTIFICATE_MARKS,
+        self::CERTIFICATE_PARTICIPATION,
+    ];
+
 
     public function getIndustryAssociationData(array &$originalData)
     {
