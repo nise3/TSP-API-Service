@@ -40,6 +40,8 @@ class BatchService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $industryAssociationId = $request['industry_association_id'] ?? "";
@@ -136,6 +138,13 @@ class BatchService
         if (is_numeric($trainingCenterId)) {
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
+        if (!empty($titleEn)) {
+            $batchBuilder->where('batches.title_en', 'like', '%' . $titleEn . '%');
+        }
+        if (!empty($title)) {
+            $batchBuilder->where('batches.title', 'like', '%' . $title . '%');
+        }
+
 
         /** @var Collection $batches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -520,6 +529,8 @@ class BatchService
         ];
 
         $rules = [
+            'title_en' => 'nullable|string',
+            'title' => 'nullable|string',
             'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
             'industry_association_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
