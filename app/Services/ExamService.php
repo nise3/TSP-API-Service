@@ -383,6 +383,7 @@ class ExamService
             'exam_section_questions.option_3_en',
             'exam_section_questions.option_4',
             'exam_section_questions.option_4_en',
+            'exam_section_questions.answers as correct_answers',
             'exam_results.id as exam_result_id',
             'exam_results.answers',
             'exam_results.file_paths',
