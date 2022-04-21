@@ -798,6 +798,8 @@ class ExamService
 
         ]);
 
+        $examResultBuilder->where('exam_results.id', $id);
+
         if (!empty($youthId)) {
             $examResultBuilder->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
         }
