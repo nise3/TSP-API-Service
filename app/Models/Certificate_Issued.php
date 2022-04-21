@@ -10,7 +10,7 @@ namespace App\Models;
  * @property string batch_id
  * @property string row_status
  */
-class Certificate_Issued extends BaseModel
+class certificateIssued extends BaseModel
 {
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SOFT_DELETE;
 }
