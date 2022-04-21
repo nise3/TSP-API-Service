@@ -1364,9 +1364,9 @@ class ExamService
                     'nullable',
                     'string',
                 ];
-                $index++;
 
             }
+            $index++;
 
         }
         return $rules;
