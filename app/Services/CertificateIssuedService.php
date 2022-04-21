@@ -4,7 +4,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Certificate;
-use App\Models\certificateIssued;
+use App\Models\CertificateIssued;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -36,15 +36,15 @@ class CertificateIssuedService
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var Certificate|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = Certificate::select([
+        /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
+        $CertificateIssuedBuilder =  CertificateIssued::select([
             'certificate_issued.certificate_id',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
             'certificate_issued.row_status'
         ]);
 
-        $CertificateIssuedBuilder->orderBy('certificates.id', $order);
+        $CertificateIssuedBuilder->orderBy('certificate_issued.id', $order);
 
         if (is_numeric($rowStatus)) {
             $CertificateIssuedBuilder->where('certificates.row_status', $rowStatus);
@@ -83,42 +83,42 @@ class CertificateIssuedService
      * @param int $id
      * @return Certificate
      */
-    public function getOneExamSubject(int $id): Certificate
+    public function getOneIssuedCertificate(int $id): CertificateIssued
     {
         /** @var Certificate|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = Certificate::select([
-            'certificates.id',
+        $CertificateIssuedBuilder = CertificateIssued::select([
+            'certificate_issued.id',
             'certificate_issued.certificate_id',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
             'certificate_issued.row_status',
-            'certificates.created_at',
-            'certificates.updated_at'
+            'certificate_issued.created_at',
+            'certificate_issued.updated_at'
         ]);
-        $CertificateIssuedBuilder->where('certificates.id', $id);
+        $CertificateIssuedBuilder->where('certificate_issued.id', $id);
         /** @var Certificate exam_subjects */
         return $CertificateIssuedBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return Certificate
+     * @return CertificateIssued
      * @throws Throwable
      */
-    public function store(array $data): Certificate
+    public function store(array $data): CertificateIssued
     {
-        $certificateIssued = app()->make(Certificate::class);
+        $certificateIssued = app()->make(CertificateIssued::class);
         $certificateIssued->fill($data);
         $certificateIssued->save();
         return $certificateIssued;
     }
 
     /**
-     * @param certificateIssued $certificateIssued
+     * @param CertificateIssued $certificateIssued
      * @param array $data
-     * @return certificateIssued
+     * @return CertificateIssued
      */
-    public function update(certificateIssued $certificateIssued, array $data): Certificate
+    public function update(CertificateIssued $certificateIssued, array $data): Certificate
     {
         $certificateIssued->fill($data);
         $certificateIssued->save();
@@ -126,19 +126,19 @@ class CertificateIssuedService
     }
 
     /**
-     * @param certificateIssued $certificateIssued
+     * @param CertificateIssued $certificateIssued
      * @return bool
      */
-    public function destroy(certificateIssued $certificateIssued): bool
+    public function destroy(CertificateIssued $certificateIssued): bool
     {
         return $certificateIssued->delete();
     }
 
     /**
-     * @param certificateIssued $certificateIssued
+     * @param CertificateIssued $certificateIssued
      * @return bool
      */
-    public function forceDelete(certificateIssued $certificateIssued): bool
+    public function forceDelete(CertificateIssued $certificateIssued): bool
     {
         return $certificateIssued->forceDelete();
     }
