@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Events\BatchCalender\BatchCalenderYouthBatchAssignEvent;
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\CourseEnrollment;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
+use App\Services\CourseEnrollmentBulkEntryService;
 use App\Services\CourseEnrollmentService;
 use App\Traits\Scopes\SagaStatusGlobalScope;
 use Carbon\Carbon;
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 use App\Events\CourseEnrollment\CourseEnrollmentEvent;
@@ -29,6 +32,7 @@ class CourseEnrollmentController extends Controller
      * @var CourseEnrollmentService
      */
     public CourseEnrollmentService $courseEnrollService;
+    public CourseEnrollmentBulkEntryService $courseEnrollmentBulkEntryService;
     /**
      * @var Carbon
      */
@@ -38,9 +42,10 @@ class CourseEnrollmentController extends Controller
      * CourseEnrollmentController constructor.
      * @param CourseEnrollmentService $courseEnrollService
      */
-    public function __construct(CourseEnrollmentService $courseEnrollService)
+    public function __construct(CourseEnrollmentService $courseEnrollService, CourseEnrollmentBulkEntryService $courseEnrollmentBulkEntryService)
     {
         $this->courseEnrollService = $courseEnrollService;
+        $this->courseEnrollmentBulkEntryService = $courseEnrollmentBulkEntryService;
         $this->startTime = Carbon::now();
     }
 
@@ -153,8 +158,64 @@ class CourseEnrollmentController extends Controller
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
-    public function courseEnrollmentExcelFormat(array $request){
+    /**
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
+    public function courseEnrollmentExcelFormat(Request $request)
+    {
+        $validated = $this->courseEnrollmentBulkEntryService->buildExcelValidation($request)->validate();
+        $this->courseEnrollmentBulkEntryService->buildImportExcel($validated['course_id'], $validated['batch_id']);
+    }
 
+    /**
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function courseEnrollmentBulkImport(Request $request): JsonResponse
+    {
+        $excelFileFormatValidation = $this->courseEnrollmentBulkEntryService->excelFileFormatValidation($request)->validate();
+        $youthId = null;
+        $file = $request->file('course_enrollment_excel_file');
+        $excelData = Excel::toCollection(new \App\Models\CourseEnrollmentBulkImport(), $file)->toArray();
+        unset($excelFileFormatValidation['course_enrollment_excel_file']);
+        $payload = $this->courseEnrollmentBulkEntryService->purseExcelAndInsert($excelData[0], $excelFileFormatValidation);
+        DB::beginTransaction();
+        try {
+            foreach ($payload as $validatedData) {
+                $validatedData['skills'] = $this->courseEnrollmentBulkEntryService->getSkills($validatedData['course_id']);
+                $validatedData = array_merge($validatedData, $validatedData['address_info']['present_address']);
+                $responseMessage = ServiceToServiceCall::updateOrCreateYouthUser($validatedData);
+                if ($responseMessage->status() == ResponseAlias::HTTP_OK && $responseMessage->json("data")) {
+                    $responseMessage = $responseMessage->json("data");
+                    $validatedData['youth_id'] = $responseMessage['id'];
+                    $validatedData['youth_code'] = $responseMessage['code'];
+                    $courseEnroll = $this->courseEnrollService->enrollCourse($validatedData);
+                    $this->courseEnrollService->storeEnrollmentAddresses($validatedData, $courseEnroll);
+                    $this->courseEnrollService->storeEnrollmentEducations($validatedData, $courseEnroll);
+                    $this->courseEnrollService->storeEnrollmentProfessionalInfo($validatedData, $courseEnroll);
+                    $this->courseEnrollService->storeEnrollmentGuardianInfo($validatedData, $courseEnroll);
+                    $this->courseEnrollService->storeEnrollmentMiscellaneousInfo($validatedData, $courseEnroll);
+                    $this->courseEnrollService->storeEnrollmentPhysicalDisabilities($validatedData, $courseEnroll);
+                }
+
+            }
+            DB::commit();
+            $response = [
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Course enroll bulk import is successfully done",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $exception) {
+            if (!empty($payload)) {
+                $this->courseEnrollService->rollbackYouth($payload);
+            }
+            DB::rollBack();
+            throw $exception;
+        }
+        return Response::json($response, $response["_response_status"]["code"]);
     }
 
     /**

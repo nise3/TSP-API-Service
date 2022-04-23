@@ -2,25 +2,33 @@
 
 namespace App\Services;
 
-use App\Helpers\Classes\ExcelExport;
 use App\Models\BaseModel;
+use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\EduBoard;
 use App\Models\EducationLevel;
 use App\Models\EduGroup;
+use App\Models\EnrollmentEducation;
+use App\Models\EnrollmentGuardian;
+use App\Models\EnrollmentProfessionalInfo;
 use App\Models\ExamDegree;
-use App\Models\ExamType;
 use App\Models\LocDistrict;
 use App\Models\LocDivision;
 use App\Models\LocUpazila;
+use App\Models\PaymentTransactionHistory;
 use App\Models\PhysicalDisability;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\NoReturn;
-use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CourseEnrollmentBulkEntryService
@@ -49,6 +57,8 @@ class CourseEnrollmentBulkEntryService
     const EDU_GROUP_COLUMN = "edu_group_id";
     const EDU_INFO = "EDU_INFO";
     const OCCUPATION_INFO = "occupation_info";
+    const IS_CURRENTLY_EMPLOYEE = 'is_currently_employed';
+    const YOUTH_SKILLS = 'skills';
 
     const YOUTH_PROFILE_BASIC_FIELDS = [
         1 => [
@@ -97,8 +107,8 @@ class CourseEnrollmentBulkEntryService
             'column' => self::NATIONALITY
         ],
         11 => [
-            'attribute' => 'freedom_fighter',
-            'label' => 'Freedom Fighter',
+            'attribute' => 'freedom_fighter_status',
+            'label' => 'Freedom Fighter Status',
             'column' => self::FREEDOM_FIGHTER
         ],
         12 => [
@@ -175,13 +185,13 @@ class CourseEnrollmentBulkEntryService
             'column' => ''
         ],
         [
-            "attribute" => 'is_currently_employed',
+            "attribute" => self::IS_CURRENTLY_EMPLOYEE,
             "label" => "Is Currently Employed",
             'column' => ''
         ],
         [
             "attribute" => 'years_of_experiences',
-            "label" => "Year Of Experiences",
+            "label" => "Years Of Experiences",
             'column' => ''
         ],
         [
@@ -257,7 +267,7 @@ class CourseEnrollmentBulkEntryService
         ],
         [
             "attribute" => self::RESULT,
-            "label" => "Result Type",
+            "label" => "Result",
             "column" => ""
         ],
         [
@@ -315,7 +325,7 @@ class CourseEnrollmentBulkEntryService
         ],
         [
             "attribute" => self::RESULT,
-            "label" => "Result Type",
+            "label" => "Result",
             "column" => ""
         ],
         [
@@ -368,7 +378,7 @@ class CourseEnrollmentBulkEntryService
         ],
         [
             "attribute" => self::RESULT,
-            "label" => "Result Type",
+            "label" => "Result",
             "column" => ""
         ],
         [
@@ -417,7 +427,7 @@ class CourseEnrollmentBulkEntryService
         ],
         [
             "attribute" => self::RESULT,
-            "label" => "Result Type",
+            "label" => "Result",
             "column" => ""
         ],
         [
@@ -464,7 +474,7 @@ class CourseEnrollmentBulkEntryService
         ],
         [
             "attribute" => self::RESULT,
-            "label" => "Result Type",
+            "label" => "Result",
             "column" => ""
         ],
         [
@@ -508,15 +518,129 @@ class CourseEnrollmentBulkEntryService
     const EXAM_TYPE_MASTERS = "masters";
     const EXAM_TYPE_PHD = "phd";
 
+    const EXAM_LEVEL_EXAM_TYPE_WISE = [
+        self::EXAM_TYPE_PSC => EducationLevel::EDUCATION_LEVEL_PSC_5_PASS,
+        self::EXAM_TYPE_JSC => EducationLevel::EDUCATION_LEVEL_JSC_JDC_8_PASS,
+        self::EXAM_TYPE_SSC => EducationLevel::EDUCATION_LEVEL_SECONDARY,
+        self::EXAM_TYPE_HSC => EducationLevel::EDUCATION_LEVEL_HIGHER_SECONDARY,
+        self::EXAM_TYPE_DIPLOMA => EducationLevel::EDUCATION_LEVEL_DIPLOMA,
+        self::EXAM_TYPE_HONOURS => EducationLevel::EDUCATION_LEVEL_BACHELOR,
+        self::EXAM_TYPE_MASTERS => EducationLevel::EDUCATION_LEVEL_MASTERS,
+        self::EXAM_TYPE_PHD => EducationLevel::EDUCATION_LEVEL_PHD,
+    ];
+
+
+    public function purseExcelAndInsert(array $data, array $extraData): array
+    {
+        $this->explodeData($data);
+        $validatedData = [];
+        foreach ($data as $key => $datum) {
+            $payload = [];
+            $professionalInfo = $this->parseProfessionalInfo($datum);
+            $guardianInfo = $this->parseGuardianInfo($datum);
+            [$educationInfo, $examTypePrefix] = $this->parseEducationInfo($datum);
+            $addressInfo = $this->parseAddressInfoInfo($datum);
+            $payload = array_merge($this->parseCourseEnrollmentInfo($datum), $addressInfo['present_address']);
+
+            $payload['physical_disabilities'] = $datum['physical_disabilities'];
+            $payload['address_info'] = $addressInfo;
+            $payload['address_info']['is_permanent_address'] = BaseModel::FALSE;
+            $payload['professional_info'] = $professionalInfo;
+            $payload['guardian_info'] = $guardianInfo;
+            $payload['education_info'] = $educationInfo;
+            $payload = array_merge($extraData, $payload);
+            $validatedData[$key] = $this->courseEnrollmentBulkDataValidator($payload, $key + 2)->validate();
+        }
+        return $validatedData;
+    }
+
+    private function parseCourseEnrollmentInfo(array $data): array
+    {
+        $courseEnrollmentInfo = new CourseEnrollment();
+        $courseEnrollmentInfo->fill($data);
+        return $courseEnrollmentInfo->attributesToArray();
+    }
+
+    private function parseAddressInfoInfo(array $data): array
+    {
+        $addressInfo['present_address']['loc_division_id'] = $data['loc_division_id'];
+        $addressInfo['present_address']['loc_district_id'] = $data['loc_district_id'];
+        $addressInfo['present_address']['loc_upazila_id'] = $data['loc_upazila_id'];
+        $addressInfo['present_address']['village_or_area'] = $data['village_or_area'];
+        $addressInfo['present_address']['house_n_road'] = $data['house_n_road'];
+        $addressInfo['present_address']['zip_or_postal_code'] = $data['zip_or_postal_code'];
+        return $addressInfo;
+    }
+
+    private function parseEducationInfo(array $data): array
+    {
+        $educationInfo = [];
+        $educationLevelId = 0;
+        $prefixHeader = [];
+        foreach ($data as $key => $value) {
+            $explode = explode("_", $key);
+            if (sizeof($explode) > 0 && in_array($explode[0], array_keys(self::EXAM_LEVEL_EXAM_TYPE_WISE))) {
+                $replacePrefix = $explode[0] . "_";
+                $attribute = str_replace($replacePrefix, "", $key);
+                $educationLevelId = $this->getEducationLevelId($explode[0]);
+                $prefixHeader[$key] = $replacePrefix;
+                $educationInfo[$educationLevelId][$attribute] = $value;
+                $educationInfo[$educationLevelId]['is_foreign_institute'] = BaseModel::FALSE;
+            }
+        }
+
+        $this->getFilterValueResultWise($educationInfo);
+        return [
+            $educationInfo,
+            $prefixHeader
+        ];
+    }
+
+    private function parseGuardianInfo(array $data): array
+    {
+        $guardianInfo = new EnrollmentGuardian();
+        $guardianInfo->fill($data);
+        return $guardianInfo->attributesToArray();
+    }
+
+    private function parseProfessionalInfo(array $data): array
+    {
+        $professionalInfo = new EnrollmentProfessionalInfo();
+        $professionalInfo->fill($data);
+        return $professionalInfo->attributesToArray();
+    }
+
+    private function explodeData(array &$data): void
+    {
+        foreach ($data as $mainKey => $value) {
+            foreach ($value as $subKey => $subValue) {
+                $explode = explode('|', $subValue);
+                if (sizeof($explode) == 2 && !empty($explode[0])) {
+                    $explodedValue = trim($explode[0]);
+                    if (is_numeric($explodedValue)) {
+                        $explodedValue = (int)$explodedValue;
+                    }
+                    $data[$mainKey][$subKey] = $explodedValue;
+                }
+            }
+
+        }
+    }
+
+
     /**
      * @throws Exception
      */
-    public function buildImportExcel(int $courseId)
+    public function buildImportExcel(int $courseId, int $batchId): void
     {
         $objPHPExcel = new Spreadsheet();
         foreach (self::YOUTH_PROFILE_BASIC_FIELDS as $key => $value) {
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($value['column'], $value['label']);
-            $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($value['column'], "", -1))->setWidth(strlen($value['label']) + 10);
+            $columnLabel = ucfirst($this->getColumnLabel($value['attribute']));
+            $column = $value['column'];
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $columnLabel);
+            $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($columnLabel) + 10);
+            $objPHPExcel->getActiveSheet()->getStyle($column)->getNumberFormat()->setFormatCode('@');
+            $objPHPExcel->getActiveSheet()->freezePane($column);
         }
 
         $gender = "";
@@ -539,18 +663,9 @@ class CourseEnrollmentBulkEntryService
         foreach (config('nise3.nationalities') as $key => $value) {
             $nationality .= $key . " | " . $value['bn'] . ",";
         }
-        $trueFalse = [
-            BaseModel::FALSE => "True",
-            BaseModel::TRUE => "False"
-        ];
-        $trueFalseDropDown = "";
-        foreach ($trueFalse as $key => $value) {
-            $trueFalseDropDown .= $key . " | " . $value;
-        }
-
         $physicalDisabilityDropDown = "";
         foreach (PhysicalDisability::all() as $value) {
-            $physicalDisabilityDropDown .= $value->id . " | " . $value->title;
+            $physicalDisabilityDropDown .= $value->id . " | " . $value->title . ",";
         }
         $identityNumberTypeDropdown = "";
         foreach (BaseModel::IDENTITY_TYPES as $key => $type) {
@@ -591,9 +706,9 @@ class CourseEnrollmentBulkEntryService
         $this->dropDownColumnBuilder($objPHPExcel, self::RELIGION_COLUMN, $religion);
         $this->dropDownColumnBuilder($objPHPExcel, self::NATIONALITY, $nationality);
         $this->dropDownColumnBuilder($objPHPExcel, self::FREEDOM_FIGHTER, $freedomFighter);
-        $this->dropDownColumnBuilder($objPHPExcel, self::PHYSICAL_DISABILITY_STATUS_COLUMN, $trueFalseDropDown);
+        $this->dropDownColumnBuilder($objPHPExcel, self::PHYSICAL_DISABILITY_STATUS_COLUMN, $this->getTrueFalse());
         $this->dropDownColumnBuilder($objPHPExcel, self::PHYSICAL_DISABILITIES, $physicalDisabilityDropDown);
-        $this->dropDownColumnBuilder($objPHPExcel, self::ETHNIC_GROUP_COLUMN, $trueFalseDropDown);
+        $this->dropDownColumnBuilder($objPHPExcel, self::ETHNIC_GROUP_COLUMN, $this->getTrueFalse());
         $this->dropDownColumnBuilder($objPHPExcel, self::IDENTITY_NUMBER_TYPE_COLUMN, $identityNumberTypeDropdown);
 
 
@@ -602,7 +717,7 @@ class CourseEnrollmentBulkEntryService
         $this->dropDownColumnBuilderWorkSheetBased($objPHPExcel, self::UPAZILA_COLUMN, '$C:$C', 3);
 
 
-        $fileName = 'course-enrollment.xlsx';
+        $fileName = $this->getFilePath($courseId, $batchId);
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header("Content-Disposition: attachment;filename=$fileName");
         header('Cache-Control: max-age=0');
@@ -613,7 +728,12 @@ class CourseEnrollmentBulkEntryService
         header('Pragma: public');
         $writer = new Xlsx($objPHPExcel);
         $writer->save('php://output');
-
+//        $writer->save($filePath);
+//        $filePath = $this->getFilePath($courseId, $batchId);
+//        if (!Storage::disk('public')->exists($filePath)) {
+//            $writer->save($filePath);
+//        }
+//        return Storage::disk('public')->response($filePath);
     }
 
     /**
@@ -694,11 +814,15 @@ class CourseEnrollmentBulkEntryService
         foreach ($info as $value) {
             if (!empty(self::DYNAMIC_COLUMN_LABEL[$index])) {
                 $column = self::DYNAMIC_COLUMN_LABEL[$index];
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, ucfirst($columnPrefix) . " " . $value['label']);
-                $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($value['label']) + 10);
+
+                $columnLabel = ucfirst($columnPrefix . " " . $this->getColumnLabel($value['attribute']));
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $columnLabel);
+                $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($columnLabel) + 10);
+
                 $this->dropdownFormula($objPHPExcel, $value, $column, $columnPrefix);
+
                 $value['attribute'] = strtolower($columnPrefix) . "_" . $value['attribute'];
-                $value['label'] = ucfirst($columnPrefix) . " " . $value['label'];
+                $value['label'] = ucfirst($columnPrefix) . " " . $this->getColumnLabel($value['attribute']);
                 $value['column'] = $column;
                 $lastIndexKeyOfDynamicField = array_key_last($dynamicField) + 1;
                 $dynamicField[$lastIndexKeyOfDynamicField] = $value;
@@ -718,8 +842,11 @@ class CourseEnrollmentBulkEntryService
             foreach (self::FATHER_MOTHER_INFO as $value) {
                 if (!empty(self::DYNAMIC_COLUMN_LABEL[$index])) {
                     $column = self::DYNAMIC_COLUMN_LABEL[$index];
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $value['label']);
-                    $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($value['label']) + 10);
+
+                    $columnLabel = ucfirst($this->getColumnLabel($value['attribute']));
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $columnLabel);
+                    $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($columnLabel) + 10);
+
                     $value['column'] = $column;
                     $lastIndexKeyOfDynamicField = array_key_last($dynamicField) + 1;
                     $dynamicField[$lastIndexKeyOfDynamicField] = $value;
@@ -739,8 +866,13 @@ class CourseEnrollmentBulkEntryService
             foreach (self::PROFESSIONAL_INFO as $value) {
                 if (!empty(self::DYNAMIC_COLUMN_LABEL[$index])) {
                     $column = self::DYNAMIC_COLUMN_LABEL[$index];
-                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $value['label']);
-                    $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($value['label']) + 10);
+
+                    $columnLabel = ucfirst($this->getColumnLabel($value['attribute']));
+                    $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $columnLabel);
+                    $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($columnLabel) + 10);
+
+                    $this->dropdownFormula($objPHPExcel, $value, $column);
+
                     $value['column'] = $column;
                     $lastIndexKeyOfDynamicField = array_key_last($dynamicField) + 1;
                     $dynamicField[$lastIndexKeyOfDynamicField] = $value;
@@ -809,6 +941,19 @@ class CourseEnrollmentBulkEntryService
         }
     }
 
+    private function getTrueFalse(): string
+    {
+        $trueFalse = [
+            BaseModel::TRUE => "True",
+            BaseModel::FALSE => "False"
+        ];
+        $trueFalseDropDown = "";
+        foreach ($trueFalse as $key => $value) {
+            $trueFalseDropDown .= $key . " | " . $value . ",";
+        }
+        return $trueFalseDropDown;
+    }
+
     /**
      * @throws Exception
      */
@@ -820,18 +965,22 @@ class CourseEnrollmentBulkEntryService
         $dropDownValues[self::EDU_BOARD_COLUMN] = $this->getEducationBoard();
         $dropDownValues[self::YEAR_OF_PASSING] = $this->getPassingYear();
         $dropDownValues[self::PASSING_YEAR] = $this->getPassingYear();
+        $dropDownValues[self::IS_CURRENTLY_EMPLOYEE] = $this->getTrueFalse();
+        Log::info(json_encode($value));
         $attribute = $value['attribute'];
         if ($value['attribute'] == self::EXAM_DEGREE_ID) {
             $attribute = $columnPrefix . "_" . $value['attribute'];
         }
         if (!empty($dropDownValues[$attribute])) {
+
             $dropDownData = $dropDownValues[$attribute];
             $this->dropDownColumnBuilder($objPHPExcel, $column, $dropDownData);
         }
 
     }
 
-    private function getEducationBoard(): string
+    private
+    function getEducationBoard(): string
     {
         $eduBoard = "";
         foreach (EduBoard::all() as $value) {
@@ -840,7 +989,8 @@ class CourseEnrollmentBulkEntryService
         return $eduBoard;
     }
 
-    private function getEduGroup(): string
+    private
+    function getEduGroup(): string
     {
         $eduGroup = "";
         foreach (EduGroup::all() as $value) {
@@ -849,7 +999,8 @@ class CourseEnrollmentBulkEntryService
         return $eduGroup;
     }
 
-    private function getResultType(): string
+    private
+    function getResultType(): string
     {
         $eduGroup = "";
         foreach (config("nise3.exam_degree_results") as $value) {
@@ -858,7 +1009,8 @@ class CourseEnrollmentBulkEntryService
         return $eduGroup;
     }
 
-    private function getPassingYear(): string
+    private
+    function getPassingYear(): string
     {
         $passingYear = "";
         $startingYear = 1972;
@@ -869,7 +1021,8 @@ class CourseEnrollmentBulkEntryService
         return $passingYear;
     }
 
-    #[ArrayShape(["psc_exam_degree_id" => "string", "jsc_exam_degree_id" => "string", "ssc_exam_degree_id" => "string", "hsc_exam_degree_id" => "string", "diploma_exam_degree_id" => "string", "honours_exam_degree_id" => "string", "masters_exam_degree_id" => "string"])]
+    #[
+        ArrayShape(["psc_exam_degree_id" => "string", "jsc_exam_degree_id" => "string", "ssc_exam_degree_id" => "string", "hsc_exam_degree_id" => "string", "diploma_exam_degree_id" => "string", "honours_exam_degree_id" => "string", "masters_exam_degree_id" => "string"])]
     private function getExamDegrees(): array
     {
 
@@ -920,9 +1073,658 @@ class CourseEnrollmentBulkEntryService
             "ssc_exam_degree_id" => $educationDegreeSSC,
             "hsc_exam_degree_id" => $educationDegreeHSC,
             "diploma_exam_degree_id" => $educationDegreeDiploma,
-            "honours_exam_degree_id" => $educationDegreeGraduate,
+            "honors_exam_degree_id" => $educationDegreeGraduate,
             "masters_exam_degree_id" => $educationDegreeMasters
         ];
+    }
+
+    private function getFilePath(int $courseId, int $batchId): string
+    {
+        $courseTitle = Course::findOrFail($courseId)->title;
+        $batchTitle = Batch::findOrFail($batchId)->title;
+        $filePath = Storage::disk('public')->path('');
+        $filePath = $filePath . "/" . $batchTitle . " " . $courseTitle . " bulk import.xlsx";
+        return preg_replace('/\s+/', '-', $filePath);
+    }
+
+    private function getEducationLevelId(string $examType)
+    {
+        $code = self::EXAM_LEVEL_EXAM_TYPE_WISE[$examType];
+        return EducationLevel::where("code", $code)->firstOrFail()->id;
+    }
+
+    /**
+     * @param array $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function courseEnrollmentBulkDataValidator(array $data, int $rowNumber): \Illuminate\Contracts\Validation\Validator
+    {
+        $data['deleted_at'] = null;
+        if (!empty($data["physical_disabilities"])) {
+            $data["physical_disabilities"] = isset($data['physical_disabilities']) && is_array($data['physical_disabilities']) ? $data['physical_disabilities'] : explode(',', $data['physical_disabilities']);
+        }
+
+        $customMessage = [
+            "course_id.unique_with" => "Course Already Enrolled",
+            "required" => "The :attribute in row " . $rowNumber . " is required.[50000]",
+            "string" => "The :attribute in row " . $rowNumber . " must be a string.[60000]",
+            "integer" => "The :attribute in row " . $rowNumber . " must be a integer.[32000]",
+            "int" => "The :attribute in row " . $rowNumber . " must be a integer.[32000]",
+            "number" => "The :attribute in row " . $rowNumber . " must be a number.[46000]",
+            "in" => "The selected :attribute in row " . $rowNumber . " is invalid.[30000]",
+            "date" => "The selected :attribute in row " . $rowNumber . " is invalid date.[14000]"
+        ];
+
+        $rules = [
+            'first_name' => [
+                'required',
+                'string',
+                'max:300'
+            ],
+            'first_name_en' => [
+                'nullable',
+                'string',
+                'max:150'
+            ],
+            'last_name' => [
+                'required',
+                'string',
+                'max:300'
+            ],
+            'last_name_en' => [
+                'nullable',
+                'string',
+                'max:150'
+            ],
+            'program_id' => [
+                'nullable',
+                'exists:programs,id,deleted_at,NULL',
+                'int'
+            ],
+            'course_id' => [
+                'required',
+                'exists:courses,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ],
+            'training_center_id' => [
+                'nullable',
+                'exists:training_centers,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ],
+            'batch_id' => [
+                'nullable',
+                'exists:batches,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ],
+            'gender' => [
+                'required',
+                Rule::in(BaseModel::GENDERS),
+                'int',
+            ],
+            'date_of_birth' => [
+                'required',
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(5))) {
+                        $failed('Age should be greater than 5 years.');
+                    }
+                }
+            ],
+            'email' => [
+                'required',
+                'email',
+            ],
+            "mobile" => [
+                "required",
+                "max:11",
+                BaseModel::MOBILE_REGEX
+            ],
+            'marital_status' => [
+                'required',
+                'int',
+                Rule::in(CourseEnrollment::MARITAL_STATUSES)
+            ],
+            'religion' => [
+                'required',
+                'int',
+                Rule::in(CourseEnrollment::RELIGIONS)
+            ],
+            'nationality' => [
+                'int',
+                'required'
+            ],
+            'does_belong_to_ethnic_group' => [
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+            'identity_number_type' => [
+                'int',
+                'nullable',
+                Rule::in(CourseEnrollment::IDENTITY_TYPES)
+            ],
+            'identity_number' => [
+                'nullable'
+            ],
+            'freedom_fighter_status' => [
+                'int',
+                'nullable',
+                Rule::in(CourseEnrollment::FREEDOM_FIGHTER_STATUSES)
+            ],
+            'passport_photo_path' => [
+                'string',
+                'nullable',
+            ],
+            'signature_image_path' => [
+                'string',
+                'nullable',
+            ],
+            "physical_disability_status" => [
+                "nullable",
+                "int",
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+            'address_info' => [
+                'nullable',
+                'array',
+                'min:1'
+            ],
+            'address_info.present_address' => [
+                Rule::requiredIf(!empty($data['address_info'])),
+                'nullable',
+                'array',
+            ],
+            'address_info.present_address.loc_division_id' => [
+                Rule::requiredIf(!empty($data['address_info']['present_address'])),
+                'nullable',
+                'integer',
+            ],
+            'address_info.present_address.loc_district_id' => [
+                Rule::requiredIf(!empty($data['address_info']['present_address'])),
+                'nullable',
+                'integer',
+            ],
+            'address_info.present_address.loc_upazila_id' => [
+                'nullable',
+                'integer',
+            ],
+            'address_info.present_address.village_or_area' => [
+                'nullable',
+                'max:500',
+                'min:2'
+            ],
+            'address_info.present_address.village_or_area_en' => [
+                'nullable',
+                'max:250',
+                'min:2'
+            ],
+            'address_info.present_address.house_n_road' => [
+                'nullable',
+                'max:500',
+                'min:2'
+            ],
+            'address_info.present_address.house_n_road_en' => [
+                'nullable',
+                'max:250',
+                'min:2'
+            ],
+            'address_info.present_address.zip_or_postal_code' => [
+                'nullable',
+                'max:5',
+                'min:4'
+            ],
+
+            'address_info.is_permanent_address' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']);
+                }),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+
+            'address_info.permanent_address' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                'array',
+                'min:1'
+            ],
+            'address_info.permanent_address.loc_division_id' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                'integer',
+            ],
+            'address_info.permanent_address.loc_district_id' => [
+                Rule::requiredIf(function () use ($data) {
+                    return !empty($data['address_info']['is_permanent_address']) && $data['address_info']['is_permanent_address'] == BaseModel::TRUE && !empty($data['address_info']['permanent_address']);
+                }),
+                'nullable',
+                'integer',
+            ],
+            'address_info.permanent_address.loc_upazila_id' => [
+                'nullable',
+                'integer',
+            ],
+            'address_info.permanent_address.village_or_area' => [
+                'nullable',
+                'max:500',
+                'min:2'
+            ],
+            'address_info.permanent_address.village_or_area_en' => [
+                'nullable',
+                'max:250',
+                'min:2'
+            ],
+            'address_info.permanent_address.house_n_road' => [
+                'nullable',
+                'max:500',
+                'min:2'
+            ],
+            'address_info.permanent_address.house_n_road_en' => [
+                'nullable',
+                'max:250',
+                'min:2'
+            ],
+            'address_info.permanent_address.zip_or_postal_code' => [
+                'nullable',
+                'max:5',
+                'min:4'
+            ],
+            "professional_info" => [
+                'nullable',
+                'array',
+                'min:1'
+            ],
+            'professional_info.main_profession' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'professional_info.main_profession_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'professional_info.other_profession' => [
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'professional_info.other_profession_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'professional_info.monthly_income' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
+                'numeric'
+            ],
+            'professional_info.is_currently_employed' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::FALSE, BaseModel::TRUE])
+            ],
+            'professional_info.years_of_experiences' => [
+                Rule::requiredIf(!empty($data['professional_info'])),
+                'nullable',
+                'int'
+            ],
+            "guardian_info" => [
+                'nullable',
+                'array',
+                'min:1'
+            ],
+            'guardian_info.father_name' => [
+                Rule::requiredIf(!empty($data['guardian_info'])),
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'guardian_info.father_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'guardian_info.father_nid' => [
+                'nullable',
+                'max:30'
+            ],
+            'guardian_info.father_mobile' => [
+                'nullable',
+                'max:11',
+                BaseModel::MOBILE_REGEX
+            ],
+            'guardian_info.father_date_of_birth' => [
+                'nullable',
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(25))) {
+                        $failed('Age should be greater than 25 years.');
+                    }
+                }
+            ],
+            'guardian_info.mother_name' => [
+                Rule::requiredIf(!empty($data['guardian_info'])),
+                'nullable',
+                'string',
+                'max:500'
+            ],
+            'guardian_info.mother_name_en' => [
+                'nullable',
+                'string',
+                'max:250'
+            ],
+            'guardian_info.mother_nid' => [
+                'nullable',
+                'max:30'
+            ],
+            'guardian_info.mother_mobile' => [
+                'nullable',
+                'max:11',
+                BaseModel::MOBILE_REGEX
+            ],
+            'guardian_info.mother_date_of_birth' => [
+                'nullable',
+                'date',
+                function ($attr, $value, $failed) {
+                    if (Carbon::parse($value)->greaterThan(Carbon::now()->subYear(25))) {
+                        $failed('Age should be greater than 25 years.');
+                    }
+                }
+            ],
+            "miscellaneous_info" => [
+                'nullable',
+                'array',
+                'min:1'
+            ],
+            'miscellaneous_info.has_own_family_home' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+            'miscellaneous_info.has_own_family_land' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+            'miscellaneous_info.number_of_siblings' => [
+                'nullable',
+                'int',
+            ],
+            'miscellaneous_info.recommended_by_any_organization' => [
+                Rule::requiredIf(!empty($data['miscellaneous_info'])),
+                'nullable',
+                'int',
+                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+            ],
+            'education_info' => [
+                'nullable',
+                'array',
+            ],
+        ];
+        if (!empty($data['education_info'])) {
+            foreach ($data['education_info'] as $eduLabelId => $fields) {
+                $validationField = 'education_info.' . $eduLabelId . '.';
+                $rules[$validationField . 'exam_degree_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::DEGREE, $eduLabelId);
+                    }),
+                    'nullable',
+                    'int',
+                    'exists:exam_degrees,id,deleted_at,NULL,education_level_id,' . $eduLabelId
+                ];
+                $rules[$validationField . 'exam_degree_name'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::EXAM_DEGREE_NAME, $eduLabelId);
+                    }),
+                    'nullable',
+                    "string"
+                ];
+                $rules[$validationField . 'exam_degree_name_en'] = [
+                    "nullable",
+                    "string"
+                ];
+                $rules[$validationField . 'major_or_concentration'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::MAJOR, $eduLabelId);
+                    }),
+                    'nullable',
+                    "string"
+                ];
+                $rules[$validationField . 'major_or_concentration_en'] = [
+                    "nullable",
+                    "string"
+                ];
+                $rules[$validationField . 'edu_group_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::EDU_GROUP, $eduLabelId);
+                    }),
+                    'nullable',
+                    'exists:edu_groups,id,deleted_at,NULL',
+                    "integer"
+                ];
+                $rules[$validationField . 'edu_board_id'] = [
+                    Rule::requiredIf(function () use ($eduLabelId, $data) {
+                        return app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::BOARD, $eduLabelId);
+                    }),
+                    'nullable',
+                    'exists:edu_boards,id,deleted_at,NULL',
+                    "integer"
+                ];
+                $rules[$validationField . 'institute_name'] = [
+                    'required',
+                    'string',
+                    'max:800',
+                ];
+                $rules[$validationField . 'institute_name_en'] = [
+                    'nullable',
+                    'string',
+                    'max:400',
+                ];
+                $rules[$validationField . 'is_foreign_institute'] = [
+                    'required',
+                    'integer',
+                    Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+                ];
+                $rules[$validationField . 'foreign_institute_country_id'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        return BaseModel::TRUE == !empty($fields['is_foreign_institute']) ? $fields['is_foreign_institute'] : BaseModel::FALSE;
+                    }),
+                    'nullable',
+                    "integer"
+                ];
+                $rules[$validationField . 'result'] = [
+                    "required",
+                    "integer",
+                    Rule::in(array_keys(config("nise3.exam_degree_results")))
+                ];
+                $rules[$validationField . 'marks_in_percentage'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::MARKS, $resultId);
+                    }),
+                    'nullable',
+                    "numeric"
+                ];
+                $rules[$validationField . 'cgpa_scale'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::SCALE, $resultId);
+                    }),
+                    'nullable',
+                    Rule::in([EnrollmentEducation::GPA_OUT_OF_FOUR, EnrollmentEducation::GPA_OUT_OF_FIVE]),
+                    "integer"
+                ];
+                $rules[$validationField . 'cgpa'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::CGPA, $resultId);
+                    }),
+                    'nullable',
+                    "max:5"
+                ];
+                $rules[$validationField . 'year_of_passing'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $resultId);
+                    }),
+                    'nullable'
+                ];
+                $rules[$validationField . 'expected_year_of_passing'] = [
+                    Rule::requiredIf(function () use ($fields, $data) {
+                        $resultId = !empty($fields['result']) ? $fields['result'] : null;
+                        return $resultId && app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $resultId);
+                    }),
+                    'nullable',
+                    'string'
+                ];
+                $rules[$validationField . 'duration'] = [
+                    "nullable",
+                    "integer"
+                ];
+                $rules[$validationField . 'achievements'] = [
+                    "nullable",
+                    "string"
+                ];
+                $rules[$validationField . 'achievements_en'] = [
+                    "nullable",
+                    "string"
+                ];
+            }
+        }
+        if (!empty($data['physical_disability_status'])) {
+            $rules['physical_disabilities'] = [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['physical_disability_status'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                "array",
+                "min:1"
+            ];
+            $rules['physical_disabilities.*'] = [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['physical_disability_status'] == BaseModel::TRUE;
+                }),
+                'nullable',
+                "int",
+                "distinct",
+                "min:1",
+                "exists:physical_disabilities,id,deleted_at,NULL",
+            ];
+        }
+
+        if (!empty($data['payment_info'])) {
+            $rules['payment_gateway_type'] = [
+                'required',
+                Rule::in(array_values(PaymentTransactionHistory::PAYMENT_GATEWAYS))
+            ];
+        }
+        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+    }
+
+    public function buildExcelValidation(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            "course_id" => [
+                'required',
+                'exists:courses,id,deleted_at,NULL',
+                'int',
+                'min:1',
+            ],
+            "batch_id" => [
+                'required',
+                'exists:batches,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ]
+        ];
+        return Validator::make($request->all(), $rules);
+    }
+
+    public function excelFileFormatValidation(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+        $rules = [
+            'program_id' => [
+                'nullable',
+                'exists:programs,id,deleted_at,NULL',
+                'int'
+            ],
+            'course_id' => [
+                'required',
+                'exists:courses,id,deleted_at,NULL',
+                'int',
+                'min:1',
+//                function ($attr, $value, $failed) use ($data) {
+//                    $courseEnrollments = CourseEnrollment::where('youth_id', $data['youth_id'])->where('course_id', $value)->get();
+//                    foreach ($courseEnrollments as $courseEnrollment) {
+//                        if ($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_CREATE_PENDING ||
+//                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_UPDATE_PENDING ||
+//                            $courseEnrollment->saga_status == BaseModel::SAGA_STATUS_DESTROY_PENDING) {
+//                            $failed("You already enrolled in this course but enrollment process is in Pending status");
+//                        } else if ($courseEnrollment->saga_status == BaseModel::SAGA_STATUS_COMMIT) {
+//                            $failed("You already enrolled in this course!");
+//                        }
+//                    }
+//                }
+            ],
+            'training_center_id' => [
+                'nullable',
+                'exists:training_centers,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ],
+            'batch_id' => [
+                'nullable',
+                'exists:batches,id,deleted_at,NULL',
+                'int',
+                'min:1'
+            ],
+            "course_enrollment_excel_file" => [
+                "required",
+                "mimes:xlsx"
+            ]
+        ];
+        return Validator::make($data, $rules);
+    }
+
+    private function getFilterValueResultWise(array &$educationInfo): void
+    {
+        foreach ($educationInfo as $educationLevelId => $value) {
+            if (!empty($value[self::RESULT]) && !app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::MARKS, $value[self::RESULT])) {
+                unset($educationInfo[$educationLevelId]['marks_in_percentage']);
+            } elseif (!empty($value[self::RESULT]) && !app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::SCALE, $value[self::RESULT])) {
+                unset($educationInfo[$educationLevelId]['cgpa_scale']);
+            } elseif (!empty($value[self::RESULT]) && !app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::CGPA, $value[self::RESULT])) {
+                unset($educationInfo[$educationLevelId]['cgpa']);
+            } elseif (!empty($value[self::RESULT]) && !app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::YEAR_OF_PASS, $value[self::RESULT])) {
+                unset($educationInfo[$educationLevelId]['year_of_passing']);
+            } elseif (!empty($value[self::RESULT]) && !app(CourseEnrollmentService::class)->getRequiredStatus(EnrollmentEducation::EXPECTED_YEAR_OF_PASS, $value[self::RESULT])) {
+                unset($educationInfo[$educationLevelId]['expected_year_of_passing']);
+            }
+        }
+    }
+
+    private function getColumnLabel(string $attribute): string
+    {
+        return ucfirst(str_replace('_', ' ', $attribute));
+    }
+
+    public function getSkills(int $courseId): array
+    {
+        return Course::findOrFail($courseId)->skills()->pluck("id")->toArray();
     }
 
 }

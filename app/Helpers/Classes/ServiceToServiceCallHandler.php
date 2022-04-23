@@ -4,10 +4,12 @@ namespace App\Helpers\Classes;
 
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
+use Exception;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ServiceToServiceCallHandler
 {
@@ -213,9 +215,9 @@ class ServiceToServiceCallHandler
         ];
 
         /** Set the id who is creating this TRAINER */
-        if($authUser['user_type'] == BaseModel::INSTITUTE_USER_TYPE){
+        if ($authUser['user_type'] == BaseModel::INSTITUTE_USER_TYPE) {
             $trainerInfo['institute_id'] = $authUser['id'];
-        } else if($authUser['user_type'] == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE){
+        } else if ($authUser['user_type'] == BaseModel::INDUSTRY_ASSOCIATION_USER_TYPE) {
             $trainerInfo['industry_association_id'] = $authUser['id'];
         }
 
@@ -270,6 +272,49 @@ class ServiceToServiceCallHandler
 
         Log::info("Youth Data:" . json_encode($youthData));
 
+        return $youthData;
+    }
+
+    public function rollbackYouthUserById(string $mobile): mixed
+    {
+        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'service-to-service-call/rollback-youth-user-by-id';
+
+        $postField = [
+            "username" => $mobile
+        ];
+
+        $youthData = Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug')
+        ])
+            ->timeout(5)
+            ->post($url, $postField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                CustomExceptionHandler::customHttpResponseMessage($httpResponse->body());
+            });
+
+        Log::info("Youth Data:" . json_encode($youthData->json('data')));
+        return $youthData->json("data");
+    }
+
+    public function updateOrCreateYouthUser(array $payload): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    {
+        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'service-to-service-call/youth-create-or-update-for-course-enrollment';
+        $youthData = Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug')
+        ])
+            ->timeout(5)
+            ->post($url, $payload)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                CustomExceptionHandler::customHttpResponseMessage($httpResponse->body());
+            });
+
+        Log::info("Youth Data:" . json_encode($youthData->json('data')));
         return $youthData;
     }
 }
