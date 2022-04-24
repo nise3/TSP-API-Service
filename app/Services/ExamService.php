@@ -1150,7 +1150,6 @@ class ExamService
                             Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                             'nullable',
                             'array',
-                            'min:1'
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.answers.*'] = [
                             Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
@@ -1398,11 +1397,12 @@ class ExamService
                     'max:300'
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
-                    Rule::requiredIf(!empty($examQuestion['questions']) && $examQuestion['question_type'] == ExamQuestionBank::EXAM_QUESTION_TYPE_MCQ),
+                    Rule::requiredIf(!empty($examQuestion['questions']) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                     'nullable',
                     'array',
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers.*'] = [
+                    Rule::requiredIf(!empty($examQuestion['questions']) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                     'nullable',
                     'string',
                 ];
