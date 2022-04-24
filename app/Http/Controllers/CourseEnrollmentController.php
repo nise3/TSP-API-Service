@@ -174,7 +174,6 @@ class CourseEnrollmentController extends Controller
     public function courseEnrollmentBulkImport(Request $request): JsonResponse
     {
         $excelFileFormatValidation = $this->courseEnrollmentBulkEntryService->excelFileFormatValidation($request)->validate();
-        $youthId = null;
         $file = $request->file('course_enrollment_excel_file');
         $excelData = Excel::toCollection(new \App\Models\CourseEnrollmentBulkImport(), $file)->toArray();
         unset($excelFileFormatValidation['course_enrollment_excel_file']);
@@ -209,9 +208,6 @@ class CourseEnrollmentController extends Controller
                 ]
             ];
         } catch (Throwable $exception) {
-            if (!empty($payload)) {
-                $this->courseEnrollService->rollbackYouth($payload);
-            }
             DB::rollBack();
             throw $exception;
         }
