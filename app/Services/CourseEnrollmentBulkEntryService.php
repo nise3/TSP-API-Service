@@ -632,7 +632,7 @@ class CourseEnrollmentBulkEntryService
     /**
      * @throws Exception
      */
-    public function buildImportExcel(int $courseId, int $batchId): void
+    public function buildImportExcel(int $courseId, int $batchId): string
     {
         $objPHPExcel = new Spreadsheet();
         foreach (self::YOUTH_PROFILE_BASIC_FIELDS as $key => $value) {
@@ -719,22 +719,20 @@ class CourseEnrollmentBulkEntryService
 
 
         $fileName = $this->getFilePath($courseId, $batchId);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment;filename=$fileName");
-        header('Cache-Control: max-age=0');
-        header('Cache-Control: max-age=1');
-        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-        header('Cache-Control: cache, must-revalidate');
-        header('Pragma: public');
+//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//        header("Content-Disposition: attachment;filename=$fileName");
+//        header('Cache-Control: max-age=0');
+//        header('Cache-Control: max-age=1');
+//        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+//        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+//        header('Cache-Control: cache, must-revalidate');
+//        header('Pragma: public');
         $writer = new Xlsx($objPHPExcel);
+        ob_start();
         $writer->save('php://output');
-//        $writer->save($filePath);
-//        $filePath = $this->getFilePath($courseId, $batchId);
-//        if (!Storage::disk('public')->exists($filePath)) {
-//            $writer->save($filePath);
-//        }
-//        return Storage::disk('public')->response($filePath);
+        $excelData = ob_get_contents();
+        ob_end_clean();
+        return "data:application/vnd.ms-excel;base64,".base64_encode($excelData);
     }
 
     /**
@@ -1106,7 +1104,7 @@ class CourseEnrollmentBulkEntryService
         }
 
         $customMessage = [
-            "course_id.unique_with" => "Course Already Enrolled",
+            "course_id.unique" => "Course is already enrolled.[62000]",
             "required" => "The :attribute in row " . $rowNumber . " is required.[50000]",
             "string" => "The :attribute in row " . $rowNumber . " must be a string.[60000]",
             "integer" => "The :attribute in row " . $rowNumber . " must be a integer.[32000]",

@@ -159,12 +159,22 @@ class CourseEnrollmentController extends Controller
     }
 
     /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Exception|ValidationException
      */
-    public function courseEnrollmentExcelFormat(Request $request)
+    public function courseEnrollmentExcelFormat(Request $request): JsonResponse
     {
         $validated = $this->courseEnrollmentBulkEntryService->buildExcelValidation($request)->validate();
-        $this->courseEnrollmentBulkEntryService->buildImportExcel($validated['course_id'], $validated['batch_id']);
+        $data = $this->courseEnrollmentBulkEntryService->buildImportExcel($validated['course_id'], $validated['batch_id']);
+        $response["data"] = $data;
+        $response = [
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Course enroll bulk import is successfully done",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, $response['_response_status']['code']);
     }
 
     /**
