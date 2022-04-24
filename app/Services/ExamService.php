@@ -290,7 +290,7 @@ class ExamService
         $exam = $examQuestionPaperBuilder->firstOrFail()->toArray();
         $exam['exam_sections'] = $this->getExamSectionByExam($id);
 
-        if($exam['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH){
+        if ($exam['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
             /** @var Batch $batch */
             $batch = Batch::findOrFail($exam['purpose_id']);
             $exam['course_id'] = $batch->course_id;
@@ -485,10 +485,10 @@ class ExamService
      * @param array $data
      * @return Exam
      */
-    private function storeOnlineExam( array $data): Exam
+    private function storeOnlineExam(array $data): Exam
     {
         $exam = app(Exam::class);
-        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_ONLINE;
+        $data['type'] = $data['type'] ?? Exam::EXAM_TYPE_ONLINE;
         $exam->fill($data);
         $exam->save();
 
@@ -525,10 +525,10 @@ class ExamService
      * @param array $data
      * @return Exam
      */
-    private function storeOfflineExam( array $data): Exam
+    private function storeOfflineExam(array $data): Exam
     {
         $exam = app(Exam::class);
-        $data['type'] =  Exam::EXAM_TYPE_OFFLINE;
+        $data['type'] = $data['type'] ?? Exam::EXAM_TYPE_OFFLINE;
         $exam->fill($data);
         $exam->save();
 
