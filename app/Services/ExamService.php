@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
+use App\Models\Batch;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamResult;
@@ -263,6 +264,8 @@ class ExamService
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.subject_id',
+            'exam_types.purpose_name',
+            'exam_types.purpose_id',
             'exam_subjects.title as subject_title',
             'exam_subjects.title_en as subject_title_en',
             'exams.exam_date',
@@ -287,7 +290,11 @@ class ExamService
         $exam = $examQuestionPaperBuilder->firstOrFail()->toArray();
         $exam['exam_sections'] = $this->getExamSectionByExam($id);
 
-
+        if($exam['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH){
+            /** @var Batch $batch */
+            $batch = Batch::findOrFail($exam['purpose_id']);
+            $exam['course_id'] = $batch->course_id;
+        }
         foreach ($exam['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $exam['subject_id'];
             if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
