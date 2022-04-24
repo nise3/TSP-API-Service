@@ -688,8 +688,9 @@ class ExamService
     }
 
     /**
+     * @param ExamType $examType
      * @param array $data
-     * @return array
+     * @return ExamType
      */
     public function updateExamType(ExamType $examType, array $data): ExamType
     {
@@ -699,9 +700,8 @@ class ExamService
     }
 
     /**
-     * @param ExamType $examType
      * @param array $data
-     * @return ExamType
+     * @return array
      */
     public function updateExam(array $data): array
     {
