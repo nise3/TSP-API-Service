@@ -309,7 +309,7 @@ class ExamService
     }
 
     /**
-     * @param int $id
+     * @param int $examId
      * @return array
      */
     private function getExamSectionByExam(int $examId): array
@@ -1494,8 +1494,7 @@ class ExamService
      * @param $youthId
      * @return array
      */
-    public
-    function getPreviewYouthExam($examId, $youthId): array
+    public function getPreviewYouthExam($examId, $youthId): array
     {
 
         $examPreviewBuilder = Exam::select([
@@ -1521,7 +1520,7 @@ class ExamService
                 ->whereNull('exam_subjects.deleted_at');
         });
 
-        $examPreviewBuilder = $examPreviewBuilder->firstOrFail()->toArray();
+        $examPreview = $examPreviewBuilder->firstOrFail()->toArray();
 
 
         $youthIds = [];
@@ -1529,22 +1528,21 @@ class ExamService
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
-        $examPreviewBuilder['first_name'] = $youthProfiles[0]['first_name'];
-        $examPreviewBuilder['first_name_en'] = $youthProfiles[0]['first_name_en'];
-        $examPreviewBuilder['last_name'] = $youthProfiles[0]['last_name'];
-        $examPreviewBuilder['last_name_en'] = $youthProfiles[0]['last_name_en'];
-        $examPreviewBuilder['mobile'] = $youthProfiles[0]['mobile'];
-        $examPreviewBuilder['email'] = $youthProfiles[0]['email'];
+        $examPreview['first_name'] = $youthProfiles[0]['first_name'];
+        $examPreview['first_name_en'] = $youthProfiles[0]['first_name_en'];
+        $examPreview['last_name'] = $youthProfiles[0]['last_name'];
+        $examPreview['last_name_en'] = $youthProfiles[0]['last_name_en'];
+        $examPreview['mobile'] = $youthProfiles[0]['mobile'];
+        $examPreview['email'] = $youthProfiles[0]['email'];
 
-        $exam_sections = $this->getExamSectionByExam($examId);
+        $examPreview['exam_sections'] = $this->getExamSectionByExam($examId);
 
 
-        foreach ($exam_sections as &$examSection) {
-            $examSection['subject_id'] = $examPreviewBuilder['subject_id'];
+        foreach ($examPreview['exam_sections'] as &$examSection) {
+            $examSection['subject_id'] = $examPreview['subject_id'];
             $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
         }
-        $examPreviewBuilder['exam_sections'] = $exam_sections;
-        return $examPreviewBuilder;
+        return $examPreview;
     }
 
     /**
