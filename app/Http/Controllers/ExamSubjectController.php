@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class ExamSubjectController extends Controller
@@ -35,7 +36,7 @@ class ExamSubjectController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function getList(Request $request): JsonResponse
@@ -70,7 +71,7 @@ class ExamSubjectController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      * @throws \Throwable
      */
     public function store(Request $request): JsonResponse
@@ -95,7 +96,7 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function update(Request $request, int $id): JsonResponse
