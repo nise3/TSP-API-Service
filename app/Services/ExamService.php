@@ -482,10 +482,10 @@ class ExamService
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return Exam
      */
-    private function storeOnlineExam($data): Exam
+    private function storeOnlineExam( array $data): Exam
     {
         $exam = app(Exam::class);
         $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_ONLINE;
@@ -522,13 +522,13 @@ class ExamService
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return Exam
      */
-    private function storeOfflineExam($data): Exam
+    private function storeOfflineExam( array $data): Exam
     {
         $exam = app(Exam::class);
-        $data['type'] = $data['type'] ?: Exam::EXAM_TYPE_OFFLINE;
+        $data['type'] =  Exam::EXAM_TYPE_OFFLINE;
         $exam->fill($data);
         $exam->save();
 
