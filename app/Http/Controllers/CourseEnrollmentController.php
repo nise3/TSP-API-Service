@@ -165,8 +165,8 @@ class CourseEnrollmentController extends Controller
     {
         $validated = $this->courseEnrollmentBulkEntryService->buildExcelValidation($request)->validate();
         $data = $this->courseEnrollmentBulkEntryService->buildImportExcel($validated['course_id'], $validated['batch_id']);
-        $response["data"] = $data;
         $response = [
+            "data"=>$data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
