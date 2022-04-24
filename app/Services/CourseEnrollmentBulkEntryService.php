@@ -19,6 +19,7 @@ use App\Models\LocUpazila;
 use App\Models\PaymentTransactionHistory;
 use App\Models\PhysicalDisability;
 use Carbon\Carbon;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -1145,7 +1146,12 @@ class CourseEnrollmentBulkEntryService
                 'required',
                 'exists:courses,id,deleted_at,NULL',
                 'int',
-                'min:1'
+                'min:1',
+                Rule::unique("course_enrollments", "course_id")
+                    ->where(function (Builder $query) use ($data) {
+                        return $query->where("batch_id", $data['batch_id'])
+                            ->where('mobile', $data['mobile']);
+                    })
             ],
             'training_center_id' => [
                 'nullable',
