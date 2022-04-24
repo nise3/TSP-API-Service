@@ -71,6 +71,11 @@ abstract class BaseModel extends Model
     public const IDENTITY_TYPE_NID = 1;
     public const IDENTITY_TYPE_BCERT = 2;
     public const IDENTITY_TYPE_PASSPORT = 3;
+    public const IDENTITY_TYPES = [
+        self::IDENTITY_TYPE_NID => "NID NO",
+        self::IDENTITY_TYPE_BCERT => "Birth Certificate No",
+        self::IDENTITY_TYPE_PASSPORT => "Passport No",
+    ];
 
     /** Marital Statuses */
     public const MARITAL_STATUS_SINGLE = 1;
@@ -86,6 +91,12 @@ abstract class BaseModel extends Model
         self::MALE,
         self::FEMALE,
         self::OTHERS
+    ];
+
+    public const GENDER_LABEL = [
+        self::MALE => "Male",
+        self::FEMALE => "Female",
+        self::OTHERS => "Others"
     ];
 
     public const ETHNIC_GROUP_INFO = 'ethnic_group_info';
@@ -170,7 +181,6 @@ abstract class BaseModel extends Model
         self::ACCESSOR_TYPE_INSTITUTE,
         self::ACCESSOR_TYPE_ORGANIZATION,
     ];
-
 
 
     public function getIndustryAssociationData(array &$originalData)
