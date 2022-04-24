@@ -116,7 +116,7 @@ class ExamService
             $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
         }
         foreach ($data['questions'] as $questionData) {
-            if (empty($question['exam_section_question_id'])) {
+            if (empty($questionData['exam_section_question_id'])) {
                 $question = ExamQuestionBank::findOrFail($questionData['question_id'])->toArray();
 
                 $question['exam_section_uuid'] = $examSectionIdsByQuestionType[$question['question_type']];
@@ -131,13 +131,51 @@ class ExamService
             }
             $question['youth_id'] = $data['youth_id'];
             $question['exam_id'] = $data['exam_id'];
-            $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $data['exam_section_question_id'];
+            $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $questionData['exam_section_question_id'];
+
+            $examSectionQuestionInfo = ExamSectionQuestion::where('uuid', $question['exam_section_question_id'])->first()->toArray();
+            if (in_array($examSectionQuestionInfo['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)) {
+                $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
+                $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
+            }
             $examResult = app(ExamResult::class);
             $examResult->fill($question);
             $examResult->save();
         }
 
     }
+
+
+    /**
+     * @param array $examSectionQuestion
+     * @param array $questionData
+     * @return bool
+     */
+    private function getAutoCalculatedAchievedMarks(array $examSectionQuestion, array $questionData): bool
+    {
+        $answerStatus = false;
+        $givenAnswer = $questionData['answers'];
+        $correctAnswer = $examSectionQuestion['answers'];
+
+        for ($i = 0; $i < count($correctAnswer); $i++) {
+
+            if (!is_numeric($correctAnswer[$i])) {
+                $correctAnswer[$i] = strtolower($correctAnswer[$i]);
+                $givenAnswer[$i] = strtolower($givenAnswer[$i]);
+            }
+            if ($correctAnswer[$i] == $givenAnswer[$i]) {
+                $answerStatus = true;
+            } else {
+                $answerStatus = false;
+                break;
+            }
+        }
+
+        return $answerStatus;
+
+
+    }
+
 
     /**
      * @param array $question
@@ -800,7 +838,7 @@ class ExamService
 
         ]);
 
-        $examResultBuilder->where('exam_results.id', $id);
+        $examResultBuilder->where('exam_results.exam_id', $id);
 
         if (!empty($youthId)) {
             $examResultBuilder->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
@@ -1208,7 +1246,8 @@ class ExamService
      * @param string $examType
      * @return array
      */
-    public function examSetValidationRules(array $data, string $examType = ""): array
+    public
+    function examSetValidationRules(array $data, string $examType = ""): array
     {
         $rules = [];
         $rules[$examType . "sets"] = [
@@ -1247,7 +1286,8 @@ class ExamService
      * @param string $examType
      * @return array
      */
-    public function onlineExamQuestionValidationRules(array $examQuestions, string $examType = ''): array
+    public
+    function onlineExamQuestionValidationRules(array $examQuestions, string $examType = ''): array
     {
         $index = 0;
         $rules = [];
@@ -1379,7 +1419,8 @@ class ExamService
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public
+    function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
@@ -1406,7 +1447,8 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public
+    function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $rules = [
             'purpose_name' => [
@@ -1452,7 +1494,8 @@ class ExamService
      * @param $youthId
      * @return array
      */
-    public function getPreviewYouthExam($examId, $youthId): array
+    public
+    function getPreviewYouthExam($examId, $youthId): array
     {
 
         $examPreviewBuilder = Exam::select([
@@ -1508,7 +1551,8 @@ class ExamService
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public
+    function examPaperSubmitValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
         if (!empty($data["answers"])) {
@@ -1566,7 +1610,8 @@ class ExamService
      * @param Request $request
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function youthExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public
+    function youthExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         $data = $request->all();
         $customMessage = [

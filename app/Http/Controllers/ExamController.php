@@ -56,10 +56,10 @@ class ExamController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function read(Request $request ,int $id): JsonResponse
+    public function read(Request $request, int $id): JsonResponse
     {
         $filter = $this->examService->getExamFilterValidator($request)->validate();
-        $exam = $this->examService->getOneExamType($filter,$id);
+        $exam = $this->examService->getOneExamType($filter, $id);
         $response = [
             "data" => $exam,
             "_response_status" => [
