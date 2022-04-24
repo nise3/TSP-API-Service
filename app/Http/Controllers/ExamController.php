@@ -122,12 +122,12 @@ class ExamController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $examType = ExamType::findOrFail($id);
-        $validated = $this->examService->validator($request, $id)->validate();
+        $validatedData = $this->examService->validator($request, $id)->validate();
 
         DB::beginTransaction();
         try {
-            $this->examService->updateExamType($examType, $validated);
-            $examIds = $this->examService->updateExam($validated);
+            $this->examService->updateExamType($examType, $validatedData);
+            $examIds = $this->examService->updateExam($validatedData);
             $validatedData['exam_ids'] = $examIds;
             $this->examService->deleteExamRelatedDataForUpdate($examIds);
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
