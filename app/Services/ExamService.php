@@ -386,6 +386,7 @@ class ExamService
             'exam_section_questions.answers as correct_answers',
             'exam_results.id as exam_result_id',
             'exam_results.answers',
+            'exam_results.marks_achieved',
             'exam_results.file_paths',
         ]);
 
