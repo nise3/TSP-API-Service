@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
 use App\Services\CertificateIssuedService;
@@ -90,10 +91,10 @@ class CertificateIssuedController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
-        if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']){
+        $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
+        if (isset($data['_response_status']['success']) && $data['_response_status']['success']){
             /** Mail send after user registration */
-//            $to = array($validatedData['contact_person_email']);
-            $to = 'grmunnabd@gmail.com';
+            $to = array($youth['email']);
             $from = BaseModel::NISE3_FROM_EMAIL;
             $subject = "User Registration Information";
             $message = "Congratulation, A certificate is issued for you. Your can download from here : ";
@@ -140,7 +141,7 @@ class CertificateIssuedController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $certificate = CertificateIssuedService::findOrFail($id);
+        $certificate = CertificateIssued::findOrFail($id);
         $this->certificateIssuedService->destroy($certificate);
         $response = [
             '_response_status' => [

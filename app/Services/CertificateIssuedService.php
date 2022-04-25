@@ -38,6 +38,7 @@ class CertificateIssuedService
 
         /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
         $CertificateIssuedBuilder =  CertificateIssued::select([
+            'certificate_issued.id',
             'certificate_issued.certificate_id',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
