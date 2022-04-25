@@ -1335,6 +1335,7 @@ class CourseEnrollmentService
                 'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
+                'exams.type',
                 'batches.id as batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
