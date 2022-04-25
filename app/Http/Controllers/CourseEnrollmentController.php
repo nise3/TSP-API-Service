@@ -166,7 +166,7 @@ class CourseEnrollmentController extends Controller
         $validated = $this->courseEnrollmentBulkEntryService->buildExcelValidation($request)->validate();
         $data = $this->courseEnrollmentBulkEntryService->buildImportExcel($validated['course_id'], $validated['batch_id']);
         $response = [
-            "data"=>$data,
+            "data" => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
@@ -198,7 +198,7 @@ class CourseEnrollmentController extends Controller
                     $responseMessage = $responseMessage->json("data");
                     $validatedData['youth_id'] = $responseMessage['id'];
                     $validatedData['youth_code'] = $responseMessage['code'];
-                    $courseEnroll = $this->courseEnrollService->enrollCourse($validatedData);
+                    $courseEnroll = $this->courseEnrollService->enrollCourse($validatedData, true);
                     $this->courseEnrollService->storeEnrollmentAddresses($validatedData, $courseEnroll);
                     $this->courseEnrollService->storeEnrollmentEducations($validatedData, $courseEnroll);
                     $this->courseEnrollService->storeEnrollmentProfessionalInfo($validatedData, $courseEnroll);

@@ -715,16 +715,6 @@ class CourseEnrollmentBulkEntryService
         $this->dropDownColumnBuilderWorkSheetBased($objPHPExcel, self::DISTRICT_COLUMN, '$B:$B', 2);
         $this->dropDownColumnBuilderWorkSheetBased($objPHPExcel, self::UPAZILA_COLUMN, '$C:$C', 3);
 
-
-        $fileName = $this->getFilePath($courseId, $batchId);
-//        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-//        header("Content-Disposition: attachment;filename=$fileName");
-//        header('Cache-Control: max-age=0');
-//        header('Cache-Control: max-age=1');
-//        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-//        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-//        header('Cache-Control: cache, must-revalidate');
-//        header('Pragma: public');
         $writer = new Xlsx($objPHPExcel);
         ob_start();
         $writer->save('php://output');
@@ -976,8 +966,7 @@ class CourseEnrollmentBulkEntryService
 
     }
 
-    private
-    function getEducationBoard(): string
+    private function getEducationBoard(): string
     {
         $eduBoard = "";
         foreach (EduBoard::all() as $value) {
@@ -986,8 +975,7 @@ class CourseEnrollmentBulkEntryService
         return $eduBoard;
     }
 
-    private
-    function getEduGroup(): string
+    private function getEduGroup(): string
     {
         $eduGroup = "";
         foreach (EduGroup::all() as $value) {
@@ -996,8 +984,7 @@ class CourseEnrollmentBulkEntryService
         return $eduGroup;
     }
 
-    private
-    function getResultType(): string
+    private function getResultType(): string
     {
         $eduGroup = "";
         foreach (config("nise3.exam_degree_results") as $value) {
@@ -1006,8 +993,7 @@ class CourseEnrollmentBulkEntryService
         return $eduGroup;
     }
 
-    private
-    function getPassingYear(): string
+    private function getPassingYear(): string
     {
         $passingYear = "";
         $startingYear = 1972;
@@ -1018,8 +1004,7 @@ class CourseEnrollmentBulkEntryService
         return $passingYear;
     }
 
-    #[
-        ArrayShape(["psc_exam_degree_id" => "string", "jsc_exam_degree_id" => "string", "ssc_exam_degree_id" => "string", "hsc_exam_degree_id" => "string", "diploma_exam_degree_id" => "string", "honours_exam_degree_id" => "string", "masters_exam_degree_id" => "string"])]
+    #[ArrayShape(["psc_exam_degree_id" => "string", "jsc_exam_degree_id" => "string", "ssc_exam_degree_id" => "string", "hsc_exam_degree_id" => "string", "diploma_exam_degree_id" => "string", "honours_exam_degree_id" => "string", "masters_exam_degree_id" => "string"])]
     private function getExamDegrees(): array
     {
 
