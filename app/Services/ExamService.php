@@ -602,7 +602,7 @@ class ExamService
 
             if ($examSectionData['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $examSectionQuestionData = $examSectionData['questions'];
-                $examSectionData['exam_type'] = $data['type'];
+                $examSectionData['exam_type'] = Exam::EXAM_TYPE_ONLINE;
                 $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
         }
@@ -623,14 +623,14 @@ class ExamService
             $examSection = app(ExamSection::class);
             $examSection->fill($examSectionData);
             $examSection->save();
-            $examSectionData['exam_type'] = $data['type'];
+            $examSectionData['exam_type'] = Exam::EXAM_TYPE_OFFLINE;
             $examSectionData['subject_id'] = $data['subject_id'];
+            $examSectionData['sets'] = $data['sets'];
 
             if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $this->storeExamSectionQuestions($examSectionData);
             } else {
                 $examSectionQuestionData = $examSectionData['question_sets'];
-                $examSectionData['sets'] = $data['sets'];
                 $this->storeExamSectionQuestions($examSectionData, $examSectionQuestionData);
             }
 
@@ -726,7 +726,7 @@ class ExamService
             $this->storeOnlineExamSectionQuestions($examSectionData, $examSectionQuestionData);
         }
         if ($examSectionData['exam_type'] == Exam::EXAM_TYPE_OFFLINE) {
-            if ($examSectionData['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            if ($examSectionData['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $this->storeOfflineRandomExamSectionQuestions($examSectionData);
 
             } else {
