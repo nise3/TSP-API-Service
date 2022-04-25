@@ -267,7 +267,7 @@ class ExamQuestionBankService
                 'max:300'
             ],
             'answers' => [
-                Rule::requiredIf(!empty($data['question_type']) && array_key_exists($data['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                Rule::requiredIf(!empty($data['question_type']) && in_array($data['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                 'nullable',
                 'array',
             ],
