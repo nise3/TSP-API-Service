@@ -640,8 +640,6 @@ class CourseEnrollmentBulkEntryService
             $column = $value['column'];
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue($column, $columnLabel);
             $objPHPExcel->getActiveSheet()->getColumnDimension(substr_replace($column, "", -1))->setWidth(strlen($columnLabel) + 10);
-            $objPHPExcel->getActiveSheet()->getStyle($column)->getNumberFormat()->setFormatCode('@');
-           // $objPHPExcel->getActiveSheet()->freezePane($column);
         }
 
         $gender = "";
