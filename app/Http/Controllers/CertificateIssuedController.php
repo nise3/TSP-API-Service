@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BaseModel;
+use App\Models\CertificateIssued;
 use App\Services\CertificateIssuedService;
+use App\Services\CommonServices\MailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -76,7 +79,6 @@ class CertificateIssuedController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-
         $validatedData = $this->certificateIssuedService->validator($request)->validate();
         $data = $this->certificateIssuedService->store($validatedData);
         $response = [
@@ -88,6 +90,18 @@ class CertificateIssuedController extends Controller
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
+        if (isset($createdUser['_response_status']['success']) && $createdUser['_response_status']['success']){
+            /** Mail send after user registration */
+//            $to = array($validatedData['contact_person_email']);
+            $to = 'grmunnabd@gmail.com';
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Registration Information";
+            $message = "Congratulation, A certificate is issued for you. Your can download from here : ";
+            $messageBody = MailService::templateView($message);
+
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+        }
         return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
@@ -101,11 +115,11 @@ class CertificateIssuedController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $examSubject = CertificateIssuedService::findOrFail($id);
+        $certificateIssuedOne = CertificateIssued::findOrFail($id);
 
         $validated = $this->certificateIssuedService->validator($request, $id)->validate();
 
-        $data = $this->certificateIssuedService->update($examSubject, $validated);
+        $data = $this->certificateIssuedService->update($certificateIssuedOne, $validated);
 
         $response = [
             'data' => $data,

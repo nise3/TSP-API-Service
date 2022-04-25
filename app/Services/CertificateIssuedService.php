@@ -118,7 +118,7 @@ class CertificateIssuedService
      * @param array $data
      * @return CertificateIssued
      */
-    public function update(CertificateIssued $certificateIssued, array $data): Certificate
+    public function update(CertificateIssued $certificateIssued, array $data): CertificateIssued
     {
         $certificateIssued->fill($data);
         $certificateIssued->save();
@@ -155,24 +155,21 @@ class CertificateIssuedService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-            'title' => [
-//                'required',
+            'youth_id' => [
+                'required',
                 'string',
-                'max:500'
+//                'max:500'
             ],
-            'title_en' => [
-                'nullable',
+            'batch_id' => [
+                'required',
                 'string',
-                'max:250'
+//                'max:250'
             ],
-            'template' => [
-                'string'
-            ],
-            'accessor_type' => [
-//                'required',
+            'certificate_id' => [
+                'required',
                 'string',
-                'max:250',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+//                'max:250',
+//                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
             ],
             'accessor_id' => [
 //                'required',
