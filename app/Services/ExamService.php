@@ -297,7 +297,7 @@ class ExamService
         }
         foreach ($exam['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $exam['subject_id'];
-            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            if ($examSection['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $examSection['questions'] = $this->getRandomExamSectionQuestionBySection($examSection);
             } else {
                 $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
