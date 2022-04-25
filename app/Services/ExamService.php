@@ -699,7 +699,7 @@ class ExamService
                 $examSectionQuestion['uuid'] = ExamSectionQuestion::examSectionQuestionId();
                 $examSectionQuestion['exam_id'] = $examSectionData['exam_id'];
                 $examSectionQuestion['exam_section_uuid'] = $examSectionData['uuid'];
-                $examSectionQuestion['exam_set_uuid'] = $examSectionData['set'][$examSectionQuestionSet['id']];
+                $examSectionQuestion['exam_set_uuid'] = $examSectionData['sets'][$examSectionQuestionSet['id']];
                 $examSectionQuestion['question_selection_type'] = $examSectionData['question_selection_type'];
                 $examSectionQuestion['question_id'] = $examSectionQuestion['id'];
                 if (!empty($examSectionData['row_status'])) {
