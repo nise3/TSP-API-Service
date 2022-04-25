@@ -297,7 +297,7 @@ class ExamService
         }
         foreach ($exam['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $exam['subject_id'];
-            if ($examSection['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            if ($examSection['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
                 $examSection['questions'] = $this->getRandomExamSectionQuestionBySection($examSection);
             } else {
                 $examSection['questions'] = $this->getExamSectionQuestionBySection($examSection);
@@ -1043,7 +1043,6 @@ class ExamService
                 $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.*'] = [
                     'required',
                     'array',
-
                 ];
                 if (!empty($examQuestion['question_sets'])) {
                     $index = 0;
@@ -1068,6 +1067,8 @@ class ExamService
                             Rule::requiredIf(!empty($examQuestionSet)),
                             'nullable',
                             'integer',
+                            'distinct',
+                            'exists:exam_question_banks,id,deleted_at,NULL',
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.title_en'] = [
                             'nullable',
@@ -1154,12 +1155,12 @@ class ExamService
                             'max:300'
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.answers'] = [
-                            Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                            Rule::requiredIf(!empty($examQuestionSet) && in_array($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                             'nullable',
                             'array',
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.answers.*'] = [
-                            Rule::requiredIf(!empty($examQuestionSet) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                            Rule::requiredIf(!empty($examQuestionSet) && in_array($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                             'nullable',
                             'string',
                         ];
@@ -1317,8 +1318,8 @@ class ExamService
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.id'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
                     'integer',
+                    'distinct',
                     'exists:exam_question_banks,id,deleted_at,NULL',
-
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.title'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
@@ -1404,12 +1405,12 @@ class ExamService
                     'max:300'
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers'] = [
-                    Rule::requiredIf(!empty($examQuestion['questions']) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                    Rule::requiredIf(!empty($examQuestion['questions']) && in_array($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                     'nullable',
                     'array',
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.answers.*'] = [
-                    Rule::requiredIf(!empty($examQuestion['questions']) && array_key_exists($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
+                    Rule::requiredIf(!empty($examQuestion['questions']) && in_array($examQuestion['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)),
                     'nullable',
                     'string',
                 ];
