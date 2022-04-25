@@ -1043,7 +1043,6 @@ class ExamService
                 $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.*'] = [
                     'required',
                     'array',
-
                 ];
                 if (!empty($examQuestion['question_sets'])) {
                     $index = 0;
@@ -1068,6 +1067,8 @@ class ExamService
                             Rule::requiredIf(!empty($examQuestionSet)),
                             'nullable',
                             'integer',
+                            'distinct',
+                            'exists:exam_question_banks,id,deleted_at,NULL',
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.title_en'] = [
                             'nullable',
@@ -1317,8 +1318,8 @@ class ExamService
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.id'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
                     'integer',
+                    'distinct',
                     'exists:exam_question_banks,id,deleted_at,NULL',
-
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.title'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),
