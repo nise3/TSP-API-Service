@@ -471,6 +471,9 @@ class ExamService
             $examIds['offline'] = $offlineExam->id;
 
         } else {
+            $data['online']['exam_type_id'] = $data['exam_type_id'];
+            $data['offline']['exam_type_id'] = $data['exam_type_id'];
+
             $onlineExam = $this->storeOnlineExam($data['online']);
             $offlineExam = $this->storeOfflineExam($data['offline']);
 
