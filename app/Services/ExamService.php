@@ -1597,7 +1597,7 @@ class ExamService
             ],
             'questions.*.individual_marks' => [
                 'required',
-                'int',
+                'numeric',
             ],
             'questions.*.answers' => [
                 'nullable',
