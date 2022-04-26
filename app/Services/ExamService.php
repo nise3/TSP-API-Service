@@ -405,9 +405,10 @@ class ExamService
 
     /**
      * @param $examSection
+     * @param int $youthId
      * @return array
      */
-    private function getExamSectionQuestionWithAnswerBySection($examSection): array
+    private function getExamSectionQuestionWithAnswerBySection($examSection, int $youthId): array
     {
         /** @var Builder $examSectionBuilder */
         $examSectionBuilder = ExamSectionQuestion::select([
@@ -440,6 +441,8 @@ class ExamService
         $examSectionBuilder->join("exam_results", function ($join) {
             $join->on('exam_results.exam_section_question_id', '=', 'exam_section_questions.uuid');
         });
+        $examSectionBuilder->where('exam_results.youth_id', $youthId);
+        $examSectionBuilder->selectRaw('sum(exam_results.marks_achieved) as total_marks_achieved');
 
         return $examSectionBuilder->get()->toArray();
     }
@@ -1552,7 +1555,7 @@ class ExamService
 
         foreach ($examPreview['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $examPreview['subject_id'];
-            $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection);
+            $examSection['questions'] = $this->getExamSectionQuestionWithAnswerBySection($examSection, $youthId);
         }
         return $examPreview;
     }
