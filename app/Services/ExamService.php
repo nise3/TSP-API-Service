@@ -399,6 +399,8 @@ class ExamService
             'exam_section_questions.option_4_en',
         ]);
         $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
+        $examSectionBuilder->inRandomOrder();
+        $examSectionBuilder->limit($examSection['number_of_questions']);
 
         return $examSectionBuilder->get()->toArray();
     }
