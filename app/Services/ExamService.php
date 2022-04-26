@@ -379,6 +379,7 @@ class ExamService
     {
         /** @var Builder $examSectionBuilder */
         $examSectionBuilder = ExamSectionQuestion::select([
+            'exam_section_questions.uuid as exam_section_question_id',
             'exam_section_questions.question_id',
             'exam_section_questions.individual_marks',
             'exam_section_questions.exam_id',
