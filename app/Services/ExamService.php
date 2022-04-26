@@ -1034,7 +1034,7 @@ class ExamService
         foreach ($examQuestions as $examQuestion) {
             if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_FIXED) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'];
-            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
+            } else if (!empty($examQuestion) && !empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
                 $offlineExamQuestionNumbers = $examQuestion['number_of_questions'] + 1;
             } else {
                 $offlineExamQuestionNumbers = 0;
