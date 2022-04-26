@@ -43,6 +43,8 @@ spec:
             {{ if eq .Values.APP_ENV "STAGING" }}
           image: "{{ .Values.variables.imageRepository }}:{{ .Values.variables.stagingBuildImageVersion  | default .Chart.AppVersion }}"
             {{ end }}
+          resources: 
+{{ toYaml .Values.resources | indent 12 }}
           args:
             - service apache2 start && php /app/artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q
           command:
@@ -135,3 +137,37 @@ spec:
           {{end}}
       imagePullSecrets:
         - name: regcred
+---
+{{ if (.Values.autoScaling.enabled) }}
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Chart.Name }}
+  minReplicas: {{ .Values.autoScaling.minReplicas }}
+  maxReplicas: {{ .Values.autoScaling.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoScaling.targetMemoryUtilizationPercentage }}
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoScaling.targetCPUUtilizationPercentage }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: {{ .Values.autoScaling.stabilizationWindowSecondsForScaleDown }}
+      policies:
+      - type: Pods
+        value: 1
+        periodSeconds: 120
+{{end}}

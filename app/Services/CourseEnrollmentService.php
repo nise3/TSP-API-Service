@@ -275,9 +275,10 @@ class CourseEnrollmentService
 
     /**
      * @param array $data
+     * @param bool $isBulkImport
      * @return CourseEnrollment
      */
-    public function enrollCourse(array $data): CourseEnrollment
+    public function enrollCourse(array $data, bool $isBulkImport = false): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
 
@@ -288,8 +289,8 @@ class CourseEnrollmentService
         } elseif (!empty($course->industry_association_id)) {
             $data['industry_association_id'] = $course->industry_association_id;
         }
-
-        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+        $data['row_status'] = $isBulkImport ? BaseModel::ROW_STATUS_ACTIVE : BaseModel::ROW_STATUS_PENDING;
+        $data['saga_status'] = $isBulkImport ? BaseModel::SAGA_STATUS_COMMIT : BaseModel::SAGA_STATUS_CREATE_PENDING;
 
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
@@ -438,6 +439,14 @@ class CourseEnrollmentService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
 
+    public function rollbackYouth(array $payload)
+    {
+        foreach ($payload as $value) {
+            ServiceToServiceCall::rollbackYouthUserById($value['mobile']);
+        }
+
+    }
+
 
     /**
      * @param CourseEnrollment $courseEnrollment
@@ -520,7 +529,7 @@ class CourseEnrollmentService
             app(SmsService::class)->sendSms($mobile, $message);
             Log::info('Sms send after enrollment to number--->' . $mobile);
         }
-        if($email){
+        if ($email) {
             $subject = "Your Course Enrollment Verification code";
             $from = BaseModel::NISE3_FROM_EMAIL;
             $messageBody = MailService::templateView($message);
@@ -1177,10 +1186,9 @@ class CourseEnrollmentService
      * @param int $eduLabelId
      * @return bool
      */
-    private function getRequiredStatus(string $key, int $eduLabelId): bool
+    public function getRequiredStatus(string $key, int $eduLabelId): bool
     {
         switch ($key) {
-
             /** Validation Rule Based On YouthEducation Level */
             case EnrollmentEducation::DEGREE:
             {
@@ -1327,6 +1335,7 @@ class CourseEnrollmentService
                 'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
+                'exams.type',
                 'batches.id as batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
@@ -1442,8 +1451,8 @@ class CourseEnrollmentService
             foreach ($courseEnrollments as $courseEnrollment) {
                 //TODO: this line should be checked. If not need then remove it
                 //$courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
-                $name = $indexedYouths[$courseEnrollment['youth_id']]['first_name'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name'] ?? "";
-                $nameEn = $indexedYouths[$courseEnrollment['youth_id']]['first_name_en'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name_en'] ?? "";
+                $name = $indexedYouths[$courseEnrollment['youth_id']]['first_name'] ?? "" . ' ' . $indexedYouths[$courseEnrollment['youth_id']]['last_name'] ?? "";
+                $nameEn = $indexedYouths[$courseEnrollment['youth_id']]['first_name_en'] ?? "" . ' ' . $indexedYouths[$courseEnrollment['youth_id']]['last_name_en'] ?? "";
                 $courseEnrollment['youth_name'] = $name;
                 $courseEnrollment['youth_name_en'] = $nameEn;
             }

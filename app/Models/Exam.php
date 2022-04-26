@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Exam extends Model
+class Exam extends BaseModel
 {
     use  SoftDeletes;
 
@@ -25,5 +25,10 @@ class Exam extends Model
     public function examSections(): HasMany
     {
         return $this->hasMany(ExamSection::class, 'exam_id', 'id');
+    }
+
+    public function examSets(): HasMany
+    {
+        return $this->hasMany(ExamSet::class, 'exam_id', 'id');
     }
 }

@@ -85,7 +85,7 @@ return [
             'id' => 9,
             'code' => EducationLevel::RESULT_PASS,
             'title_en' => 'Pass',
-            'title_bn' => 'Pass'
+            'title' => 'Pass'
         ],
 
     ]

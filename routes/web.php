@@ -2,8 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Facade\ServiceToServiceCall;
 use App\Helpers\Classes\CustomRouter;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -104,6 +105,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** RTO dashboard statistics */
         $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@rtoDashboardStatistics"]);
+
+        $router->post("course-enrollment-bulk-import", ["as" => "course-enrollment-bulk-import", "uses" => "CourseEnrollmentController@courseEnrollmentBulkImport"]);
     });
 
 
@@ -147,6 +150,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             /** Course Filter */
             $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
+        $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 
     });
 
@@ -203,8 +207,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
-
+//    $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 });
+
 
 
 

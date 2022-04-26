@@ -13,6 +13,7 @@ class ExamSectionQuestion extends Model
 
     protected $casts = [
         "answers" => 'array',
+        'correct_answers'=>'array',
     ];
 
     public static function examSectionQuestionId(): string
