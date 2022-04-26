@@ -164,7 +164,7 @@ class ExamService
                 $correctAnswer[$i] = strtolower($correctAnswer[$i]);
                 $givenAnswer[$i] = strtolower($givenAnswer[$i]);
             }
-            if ($correctAnswer[$i] == $givenAnswer[$i]) {
+            if (isset($correctAnswer[$i]) && isset($givenAnswer[$i]) && $correctAnswer[$i] == $givenAnswer[$i]) {
                 $answerStatus = true;
             } else {
                 $answerStatus = false;
