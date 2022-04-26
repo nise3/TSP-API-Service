@@ -836,17 +836,18 @@ class ExamService
         $order = $request['order'] ?? "ASC";
         $response = [];
 
+        /** @var ExamResult|Builder $examResultBuilder */
         $examResultBuilder = ExamResult::select([
             "exam_results.id",
             "exam_results.exam_id",
             "exam_results.youth_id",
             "exam_results.exam_section_question_id",
             "exam_results.answers",
-            "exam_results.marks_achieved",
             "exam_results.file_paths",
-
         ]);
 
+        $examResultBuilder->groupBy("exam_results.youth_id");
+        $examResultBuilder->selectRaw('sum(exam_results.marks_achieved) as marks_achieved');
         $examResultBuilder->where('exam_results.exam_id', $id);
 
         if (!empty($youthId)) {
