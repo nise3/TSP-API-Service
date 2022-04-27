@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\ExamResult;
 use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
 use App\Models\EducationLevel;
@@ -1291,21 +1292,21 @@ class CourseEnrollmentService
             ]
         );
 
+
         if (is_numeric($youthId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
-
         $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
+
         $coursesEnrollmentBuilder->join("institutes", function ($join) {
             $join->on('course_enrollments.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
-
         if (is_numeric($rowStatus)) {
             $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
         }
@@ -1327,11 +1328,13 @@ class CourseEnrollmentService
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
 
-        $courseEnrollments= $courseEnrollments->toArray() ?? [];
+        $courseEnrollments = $courseEnrollments->toArray() ?? [];
 
-        foreach ($courseEnrollments as &$courseEnrollment){
 
-            $examsBuilder=ExamType::select([
+        foreach ($courseEnrollments as &$courseEnrollment) {
+
+            /** @var Builder $examsBuilder */
+            $examsBuilder = ExamType::select([
                 'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
@@ -1343,8 +1346,9 @@ class CourseEnrollmentService
                 'exams.exam_date',
                 'exams.duration',
                 'exam_subjects.title as subject_title',
-                'exam_subjects.title_en as subject_title_en'
+                'exam_subjects.title_en as subject_title_en',
             ]);
+
 
             $examsBuilder->join("batches", function ($join) {
                 $join->on('exam_types.purpose_id', '=', 'batches.id')
@@ -1356,23 +1360,30 @@ class CourseEnrollmentService
                     ->whereNull('exam_subjects.deleted_at');
             });
 
+
             $examsBuilder->join("exams", function ($join) {
                 $join->on('exam_types.id', '=', 'exams.exam_type_id')
                     ->whereNull('exams.deleted_at');
             });
 
+            $examsBuilder->leftjoin("exam_results", function ($join) use ($courseEnrollment){
+                $join->on('exams.id', '=', 'exam_results.exam_id')
+                    ->where('exam_results.youth_id',$courseEnrollment['youth_id']);
+            });
+            $examsBuilder->addSelect(DB::raw('(CASE WHEN COUNT(exam_results.id)> 0 THEN 1 ELSE 0 END) AS participated'));
 
-            $examsBuilder->where( 'exam_types.purpose_id' ,'=', $courseEnrollment['batch_id']);
+            $examsBuilder->where('exam_types.purpose_id', '=', $courseEnrollment['batch_id']);
 
-            $examsBuilder=$examsBuilder->get();
-            $exams=$examsBuilder->toArray() ?? [];
 
-            $courseEnrollment['exams']=$exams;
+            $examsBuilder = $examsBuilder->get();
+            $exams = $examsBuilder->toArray() ?? [];
+
+            $courseEnrollment['exams'] = $exams;
         }
 
         $courseEnrollments = $courseEnrollments['data'] ?? $courseEnrollments;
         $response['order'] = $order;
-        $response['data'] =$courseEnrollments;
+        $response['data'] = $courseEnrollments;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
