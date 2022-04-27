@@ -1358,17 +1358,29 @@ class CourseEnrollmentService
                     ->whereNull('exams.deleted_at');
             });
 
-            $examsBuilder->leftjoin("exam_results", function ($join) use ($courseEnrollment){
-                $join->on('exams.id', '=', 'exam_results.exam_id')
-                    ->where('exam_results.youth_id',$courseEnrollment['youth_id']);
-            });
-            $examsBuilder->addSelect(DB::raw('(CASE WHEN COUNT(exam_results.id)> 0 THEN 1 ELSE 0 END) AS participated'));
+              //TODO:Need To Implement This
+
+//            SELECT * from exams left join exam_results on exams.id = exam_results.exam_id group by exam_results.id
+//             DB::raw("IF(COUNT(exam_results.id) > 0, 'true', 'false') AS participated")
 
             $examsBuilder->where('exam_types.purpose_id', '=', $courseEnrollment['batch_id']);
 
 
             $examsBuilder = $examsBuilder->get();
             $exams = $examsBuilder->toArray() ?? [];
+
+            //TODO:Remove Loop And Implement Query
+
+            foreach ($exams as &$exam) {
+                $examParticipation = ExamResult::where('exam_results.exam_id', $exam['exam_id'])
+                    ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->count('exam_results.id');
+                if ($examParticipation > 0) {
+                    $exam['participated'] = true;
+                } else {
+                    $exam['participated'] = false;
+                }
+            }
+
 
             $courseEnrollment['exams'] = $exams;
         }
