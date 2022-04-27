@@ -9,11 +9,13 @@ use Ramsey\Uuid\Uuid;
 class ExamSectionQuestion extends Model
 {
     use  SoftDeletes;
+
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
     protected $casts = [
         "answers" => 'array',
-        'correct_answers'=>'array',
+        'correct_answers' => 'array',
+        'file_paths' => 'array',
     ];
 
     public static function examSectionQuestionId(): string
