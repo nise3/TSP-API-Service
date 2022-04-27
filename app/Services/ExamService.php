@@ -141,7 +141,7 @@ class ExamService
             }
             $question['question_id'] = $questionData['question_id'];
             if (isset($questionData['file_path'])) {
-                $question['file_paths'] = json_encode($questionData['file_path']);
+                $question['file_paths'] = $questionData['file_path'];
             }
 
             $examSectionQuestionInfo = ExamSectionQuestion::where('uuid', $question['exam_section_question_id'])->first()->toArray();
