@@ -117,6 +117,8 @@ class ExamService
             $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
         }
         foreach ($data['questions'] as $questionData) {
+            $question = [];
+            $examSectionQuestion = null;
             if (empty($questionData['exam_section_question_id'])) {
                 $question = ExamQuestionBank::findOrFail($questionData['question_id'])->toArray();
 
@@ -133,12 +135,20 @@ class ExamService
             $question['youth_id'] = $data['youth_id'];
             $question['exam_id'] = $data['exam_id'];
             $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $questionData['exam_section_question_id'];
+            if (isset($questionData['answers'])) {
+                $question['answers'] = $questionData['answers'];
+            }
+            $question['question_id'] = $questionData['question_id'];
+            if (isset($questionData['file_path'])) {
+                $question['file_paths'] = json_encode($questionData['file_path']);
+            }
 
             $examSectionQuestionInfo = ExamSectionQuestion::where('uuid', $question['exam_section_question_id'])->first()->toArray();
             if (in_array($examSectionQuestionInfo['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)) {
                 $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
                 $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
             }
+            Log::info($question);
             $examResult = app(ExamResult::class);
             $examResult->fill($question);
             $examResult->save();
@@ -159,7 +169,7 @@ class ExamService
         $givenAnswer = array_map('strtolower', $questionData['answers']);
 
         for ($i = 0; $i < count($correctAnswer); $i++) {
-            if (in_array(strtolower($correctAnswer[$i]), $givenAnswer)) {
+            if (in_array($correctAnswer[$i], $givenAnswer)) {
                 $answerStatus = true;
             } else {
                 $answerStatus = false;
@@ -1606,6 +1616,10 @@ class ExamService
                 'string',
             ],
             'questions.*.file_path' => [
+                'nullable',
+                'array',
+            ],
+            'questions.*.file_path.*' => [
                 'nullable',
                 'string',
             ],
