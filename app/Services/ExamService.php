@@ -448,7 +448,7 @@ class ExamService
             $join->on('exam_results.exam_section_question_id', '=', 'exam_section_questions.uuid');
         });
         $examSectionBuilder->where('exam_results.youth_id', $youthId);
-
+        $examSectionBuilder->addSelect(DB::raw('SUM(exam_results.marks_achieved) as total_marks_achieved'));
         return $examSectionBuilder->get()->toArray();
     }
 
