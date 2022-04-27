@@ -15,6 +15,7 @@ use App\Models\ExamType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -447,7 +448,6 @@ class ExamService
             $join->on('exam_results.exam_section_question_id', '=', 'exam_section_questions.uuid');
         });
         $examSectionBuilder->where('exam_results.youth_id', $youthId);
-        $examSectionBuilder->selectRaw('sum(exam_results.marks_achieved) as total_marks_achieved');
 
         return $examSectionBuilder->get()->toArray();
     }
