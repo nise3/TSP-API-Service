@@ -155,25 +155,18 @@ class ExamService
     private function getAutoCalculatedAchievedMarks(array $examSectionQuestion, array $questionData): bool
     {
         $answerStatus = false;
-        $givenAnswer = $questionData['answers'];
-        $correctAnswer = $examSectionQuestion['answers'];
+        $correctAnswer = array_map('strtolower', $examSectionQuestion['answers']);
+        $givenAnswer = array_map('strtolower', $questionData['answers']);
 
         for ($i = 0; $i < count($correctAnswer); $i++) {
-
-            if (!is_numeric($correctAnswer[$i])) {
-                $correctAnswer[$i] = strtolower($correctAnswer[$i]);
-                $givenAnswer[$i] = strtolower($givenAnswer[$i]);
-            }
-            if (isset($correctAnswer[$i]) && isset($givenAnswer[$i]) && $correctAnswer[$i] == $givenAnswer[$i]) {
+            if (in_array(strtolower($correctAnswer[$i]), $givenAnswer)) {
                 $answerStatus = true;
             } else {
                 $answerStatus = false;
                 break;
             }
         }
-
         return $answerStatus;
-
 
     }
 
