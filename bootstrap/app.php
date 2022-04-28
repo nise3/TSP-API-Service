@@ -69,6 +69,7 @@ $app->configure('database');
 $app->configure('excel');
 $app->configure('elasticSearchLogConfig');
 $app->configure('lumenDefaultLogConfig');
+$app->configure('ekpay');
 
 /*
 |--------------------------------------------------------------------------
