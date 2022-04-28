@@ -44,7 +44,7 @@ class ExamSubjectController extends Controller
 
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('view',ExamSubject::class);
+        $this->authorize('viewAny',ExamSubject::class);
         $filter = $this->ExamSubjectService->filterValidator($request)->validate();
         $response = $this->ExamSubjectService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
