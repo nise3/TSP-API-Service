@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\ExamSubject;
 use App\Services\ExamSubjectService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class ExamSubjectController extends Controller
 {
@@ -24,7 +26,7 @@ class ExamSubjectController extends Controller
     private Carbon $startTime;
 
     /**
-     * @param ExamSubjectService $ExamSubjectService
+     * @param ExamSubjectService $examSubjectService
      */
 
     public function __construct(ExamSubjectService $examSubjectService)
@@ -37,11 +39,12 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthorizationException
      */
 
     public function getList(Request $request): JsonResponse
     {
-
+        $this->authorize('viewAny',ExamSubject::class);
         $filter = $this->ExamSubjectService->filterValidator($request)->validate();
         $response = $this->ExamSubjectService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -51,11 +54,14 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
 
     public function read(Request $request, int $id): JsonResponse
     {
         $examSubject = $this->ExamSubjectService->getOneExamSubject($id);
+        $this->authorize('view',$examSubject);
+
         $response = [
             "data" => $examSubject,
             "_response_status" => [
@@ -72,11 +78,11 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
-
+        $this->authorize('create',ExamSubject::class);
         $validatedData = $this->ExamSubjectService->validator($request)->validate();
         $data = $this->ExamSubjectService->store($validatedData);
         $response = [
@@ -96,16 +102,19 @@ class ExamSubjectController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $examSubject = ExamSubject::findOrFail($id);
 
+        $examSubject = ExamSubject::findOrFail($id);
+        $this->authorize('update',$examSubject);
         $validated = $this->ExamSubjectService->validator($request, $id)->validate();
 
         $data = $this->ExamSubjectService->update($examSubject, $validated);
+
+
 
         $response = [
             'data' => $data,
@@ -122,11 +131,13 @@ class ExamSubjectController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
 
     public function destroy(int $id): JsonResponse
     {
         $examSubject = ExamSubject::findOrFail($id);
+        $this->authorize('delete',$examSubject);
         $this->ExamSubjectService->destroy($examSubject);
         $response = [
             '_response_status' => [

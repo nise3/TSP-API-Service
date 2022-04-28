@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use App\Models\ExamType;
 use App\Services\ExamService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -40,11 +41,11 @@ class ExamController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
     public function getList(Request $request): JsonResponse
     {
-
+        $this->authorize('viewAny', Exam::class);
         $filter = $this->examService->filterValidator($request)->validate();
         $response = $this->examService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -55,9 +56,11 @@ class ExamController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function read(Request $request, int $id): JsonResponse
     {
+        $this->authorize('view', Exam::class);
         $filter = $this->examService->getExamFilterValidator($request)->validate();
         $exam = $this->examService->getOneExamType($filter, $id);
         $response = [
@@ -80,6 +83,7 @@ class ExamController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $this->authorize('create', Exam::class);
         $validatedData = $this->examService->validator($request)->validate();
 
         DB::beginTransaction();
@@ -121,6 +125,8 @@ class ExamController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
+        $this->authorize('update', Exam::class);
+
         $examType = ExamType::findOrFail($id);
         $validatedData = $this->examService->validator($request, $id)->validate();
 
@@ -158,6 +164,8 @@ class ExamController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
+        $this->authorize('delete', Exam::class);
+
         $examType = ExamType::findOrFail($id);
         DB::beginTransaction();
         try {
@@ -182,10 +190,11 @@ class ExamController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
     public function getExamYouthList(Request $request, int $id): JsonResponse
     {
+        $this->authorize('viewAnyYouthExam', Exam::class);
 
         $filter = $this->examService->examYouthListFilterValidator($request)->validate();
         $response = $this->examService->getExamYouthList($filter, $id);
@@ -201,10 +210,17 @@ class ExamController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws Throwable
      */
     public function getExamQuestionPaper(int $id): JsonResponse
     {
         $examData = $this->examService->getExamQuestionPaper($id);
+        $exam = Exam::findOrFail($examData['exam_id']);
+        $examStartTime = Carbon::parse($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+
         $response = [
             "data" => $examData ?? null,
             "_response_status" => [
@@ -224,6 +240,13 @@ class ExamController extends Controller
     public function submitExamPaper(Request $request): JsonResponse
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
+
+        $exam = Exam::findOrFail($validatedData['exam_id']);
+        $examStartTime = Carbon::parse($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
             $response = [
@@ -246,9 +269,12 @@ class ExamController extends Controller
      * @param int $examId
      * @param int $youthId
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function previewYouthExam(int $examId, int $youthId): JsonResponse
     {
+        $this->authorize('viewYouthExam', Exam::class);
+
         $youthExamPreview = $this->examService->getPreviewYouthExam($examId, $youthId);
         $response = [
             "data" => $youthExamPreview ?? null,
@@ -265,10 +291,11 @@ class ExamController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
     public function youthExamMarkUpdate(Request $request): JsonResponse
     {
+        $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
         $this->examService->youthExamMarkUpdate($validatedData);
         $response = [
