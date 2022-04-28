@@ -17,3 +17,4 @@ RELEASE = 'php artisan list'
 php artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q,institute.db.sync.q
 ```
 
+

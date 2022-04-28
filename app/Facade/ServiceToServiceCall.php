@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static array|mixed createTrainerYouthUser(array $trainer)
  * @method static array|mixed createTrainerCoreUser(array $trainer, array $youth)
  * @method static array|mixed rollbackTrainerYouthUser(array $youth)
+ * @method static array|mixed updateOrCreateYouthUser(array $payload)
+ * @method static array|mixed rollbackYouthUserById(int $id)
  *
  * @see \App\Helpers\Classes\ServiceToServiceCallHandler
  */

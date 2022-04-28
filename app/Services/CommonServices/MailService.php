@@ -10,7 +10,6 @@ class MailService
 {
     public const RECIPIENT_NAME = 'Nise';
 
-
     /** FILE_EXTENSION_ALLOWABLE KEY */
     public const ALLOWABLE_PDF = "pdf";
     public const ALLOWABLE_DOC = "doc";

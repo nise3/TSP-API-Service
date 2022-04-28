@@ -41,9 +41,9 @@ class CertificateController extends Controller
     {
         //$this->authorize('viewAny', Certificate::class);
         $filter = $this->certificateService->filterValidator($request)->validate();
-//        dd($filter);
-        $response = $this->certificateService->getList($filter, $this->startTime);
 
+
+        $response = $this->certificateService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

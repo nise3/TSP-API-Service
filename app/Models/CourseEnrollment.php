@@ -72,6 +72,13 @@ class CourseEnrollment extends BaseModel
         self::MARITAL_STATUS_DIVORCED
     ];
 
+    public const MARITAL_STATUS_LABEL = [
+        self::MARITAL_STATUS_SINGLE => "Single",
+        self::MARITAL_STATUS_MARRIED => "Married",
+        self::MARITAL_STATUS_WIDOWED => "Widowed",
+        self::MARITAL_STATUS_DIVORCED => "Divorced"
+    ];
+
 
     /** Religions Mapping  */
     public const RELIGION_ISLAM = 1;
@@ -94,6 +101,18 @@ class CourseEnrollment extends BaseModel
         self::RELIGION_AGNOSTIC_ATHEIST
     ];
 
+
+    public const RELIGION_LABEL= [
+        self::RELIGION_ISLAM=>"Islam",
+        self::RELIGION_HINDUISM=>"Hinduism",
+        self::RELIGION_CHRISTIANITY=>"Christianity",
+        self::RELIGION_BUDDHISM=>"Buddhism",
+        self::RELIGION_JUDAISM=>"Judaism",
+        self::RELIGION_SIKHISM=>"Sikhism",
+        self::RELIGION_ETHNIC=>"Ethnic",
+        self::RELIGION_AGNOSTIC_ATHEIST=>"Agnostic Atheist"
+    ];
+
     /**  Identity Number Type  */
     public const NID = 1;
     public const BIRTH_CARD = 2;
@@ -102,6 +121,12 @@ class CourseEnrollment extends BaseModel
         self::NID,
         self::BIRTH_CARD,
         self::PASSPORT
+    ];
+
+    public const IDENTITY_TYPE_LABEL = [
+        self::NID=>"NID Card",
+        self::BIRTH_CARD=>"Birth Certificate",
+        self::PASSPORT=>"Passport"
     ];
 
     /** Freedom fighter statuses */
@@ -115,6 +140,14 @@ class CourseEnrollment extends BaseModel
         self::CHILD_OF_FREEDOM_FIGHTER,
         self::GRAND_CHILD_OF_FREEDOM_FIGHTER
     ];
+
+    public const FREEDOM_FIGHTER_STATUS_LABEL= [
+        self::NON_FREEDOM_FIGHTER=>"Non Freedom Fighter",
+        self::FREEDOM_FIGHTER=>"Freedom Fighter",
+        self::CHILD_OF_FREEDOM_FIGHTER=>"Child of Freedom Fighter",
+        self::GRAND_CHILD_OF_FREEDOM_FIGHTER=>"Grand Child of Freedom Fighter"
+    ];
+
 
     /**
      * Add @method SagaStatusGlobalScope() as a Global Scope to fetch only saga_status committed data
@@ -204,12 +237,12 @@ class CourseEnrollment extends BaseModel
 
     public function course(): HasOne
     {
-        return $this->hasOne(Course::class,'id','course_id');
+        return $this->hasOne(Course::class, 'id', 'course_id');
     }
 
     public function batch(): HasOne
     {
-        return $this->hasOne(Batch::class,'id','batch_id');
+        return $this->hasOne(Batch::class, 'id', 'batch_id');
     }
 
 }

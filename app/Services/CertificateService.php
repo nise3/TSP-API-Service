@@ -208,6 +208,7 @@ class CertificateService
 
     public function filterValidator(Request $request): Validator
     {
+//        dd($request);
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
