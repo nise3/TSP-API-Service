@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
@@ -38,6 +37,7 @@ class ExamSubjectService
 
         /** @var ExamSubject|Builder $ExamSubjectBuilder */
         $ExamSubjectBuilder = ExamSubject::select([
+            'exam_subjects.id',
             'exam_subjects.title',
             'exam_subjects.title_en',
             'exam_subjects.accessor_type',
@@ -47,7 +47,6 @@ class ExamSubjectService
             'exam_subjects.updated_at',
             'exam_subjects.deleted_at',
         ]);
-        $ExamSubjectBuilder->acl();
 
         $ExamSubjectBuilder->orderBy('exam_subjects.id', $order);
 

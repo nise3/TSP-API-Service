@@ -8,7 +8,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -34,10 +33,12 @@ class ExamQuestionBankController extends Controller
      * @param Request $request
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function getList(Request $request): JsonResponse
     {
 
+        $this->authorize('viewAny',ExamQuestionBank::class);
         $filter = $this->examQuestionBankService->filterValidator($request)->validate();
 
         $response = $this->examQuestionBankService->getQuestionBankList($filter, $this->startTime);
@@ -47,11 +48,12 @@ class ExamQuestionBankController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function read(int $id): JsonResponse
     {
         $questionBank = $this->examQuestionBankService->getOneExamQuestionBank($id);
-
+        $this->authorize('view',$questionBank);
         $response = [
             "data" => $questionBank,
             "_response_status" => [
@@ -67,11 +69,11 @@ class ExamQuestionBankController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
     public function store(Request $request): JsonResponse
     {
-
+        $this->authorize('create',ExamQuestionBank::class);
         $validated = $this->examQuestionBankService->validator($request)->validate();
         $questionBank = $this->examQuestionBankService->store($validated);
 
@@ -93,10 +95,13 @@ class ExamQuestionBankController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
+
         $examQuestionBank = ExamQuestionBank::findOrFail($id);
+        $this->authorize('update',$examQuestionBank);
         $validated = $this->examQuestionBankService->validator($request, $id)->validate();
         $data = $this->examQuestionBankService->update($examQuestionBank, $validated);
         $response = [
@@ -114,11 +119,13 @@ class ExamQuestionBankController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(int $id): JsonResponse
     {
         $questionBank = ExamQuestionBank::findOrFail($id);
-
+        $this->authorize('delete',$questionBank);
+        $this->examQuestionBankService->destroy($questionBank);
         $response = [
             '_response_status' => [
                 "success" => true,

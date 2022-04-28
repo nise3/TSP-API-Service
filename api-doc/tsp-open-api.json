@@ -4624,6 +4624,63 @@
                 }
             }
         },
+        "/public/course-enrollment-bulk-import-file-format": {
+            "get": {
+                "tags": [
+                    "course-enrollment-bulk-import"
+                ],
+                "summary": "course-enrollment-bulk-import-file-format",
+                "description": "course-enrollment-bulk-import-file-format",
+                "parameters": [
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "Course Id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "batch_id",
+                        "in": "query",
+                        "description": "Course Id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully done"
+                    }
+                }
+            }
+        },
+        "/course-enrollment-bulk-import": {
+            "post": {
+                "tags": [
+                    "course-enrollment-bulk-import"
+                ],
+                "summary": "course-enrollment-bulk-import-file-format",
+                "description": "course-enrollment-bulk-import-file-format",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courseEnrollmentBulkImport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully done"
+                    }
+                }
+            }
+        },
         "/rpl-applications/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
@@ -6280,7 +6337,7 @@
         "/rpl-subjects": {
             "get": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Get all Rpl Subjects",
                 "description": "API endpoint to get all subject. A successful request response will show 200 HTTP status code",
@@ -6344,7 +6401,7 @@
             },
             "post": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Create a subject",
                 "description": "API endpoint to Create a subject. A successful request response will show 200 HTTP status code",
@@ -6387,7 +6444,7 @@
         "/rpl-subjects/{subjectId}": {
             "get": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Get a subject",
                 "description": "API endpoint to get a subject. A successful request response will show 200 HTTP status code",
@@ -6424,7 +6481,7 @@
             },
             "put": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Update a subject",
                 "description": "API endpoint to update a subject. A successful request response will show 200 HTTP status code",
@@ -6471,7 +6528,7 @@
             },
             "delete": {
                 "tags": [
-                    "Subjects"
+                    "Rpl Subjects"
                 ],
                 "summary": "Delete a subject",
                 "description": "API endpoint to delete a subject. A successful request response will show 200 HTTP status code",
@@ -9146,7 +9203,6 @@
                         "$ref": "#/components/parameters/instituteId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9213,7 +9269,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9244,7 +9299,6 @@
                                         "date_of_last_election_of_all_party_council": "0000-00-00 00:00:00",
                                         "created_at": "2022-03-21T09:01:52.000000Z",
                                         "updated_at": "2022-03-21T09:01:58.000000Z"
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -9316,7 +9370,6 @@
                 }
             }
         },
-
         "/training-centers/reporting/combined-progress/{CombineProgressId}": {
             "get": {
                 "tags": [
@@ -9329,7 +9382,6 @@
                         "$ref": "#/components/parameters/CombineProgressId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9412,7 +9464,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9420,7 +9471,7 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data":  {
+                                    "data": {
                                         "id": 1,
                                         "institute_id": 1,
                                         "training_center_id": 1,
@@ -9557,7 +9608,6 @@
                         "$ref": "#/components/parameters/progressId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9644,7 +9694,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9695,7 +9744,6 @@
                                         "latest_test_passed_trainee_total": 0,
                                         "created_at": null,
                                         "updated_at": null
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -9793,7 +9841,6 @@
                         "$ref": "#/components/parameters/IncomeExpenditureId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9857,7 +9904,6 @@
                 }
             }
         },
-
         "/training-centers/reporting/income-expenditure": {
             "get": {
                 "tags": [
@@ -9878,7 +9924,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9913,7 +9958,6 @@
                                         "comments": null,
                                         "created_at": null,
                                         "updated_at": null
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -10212,6 +10256,9 @@
                         "$ref": "#/components/parameters/title_en_optional"
                     },
                     {
+                        "$ref": "#/components/parameters/question_type"
+                    },
+                    {
                         "$ref": "#/components/parameters/subject_id"
                     },
                     {
@@ -10472,6 +10519,1321 @@
                     }
                 }
             }
+        },
+        "/exams": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get all Exam",
+                "description": "API endpoint to get all Exam . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/subject_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "subject_id": 1,
+                                            "exam_subject_title": "math",
+                                            "exam_subject_title_en": "math",
+                                            "type": 1,
+                                            "title": "dfdg",
+                                            "title_en": "dfsd",
+                                            "row_status": 1,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "deleted_at": null
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Create a Exam",
+                "description": "API endpoint to Create Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "description": "Exam object that needs to be added to the store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Online": {
+                                    "summary": "An example of Exam for Online",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "type": "1",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "1",
+                                                "question_selection_type": "1",
+                                                "questions": [
+                                                    {
+                                                        "id": "1",
+                                                        "title": "hh",
+                                                        "title_en": "hfgjhfg",
+                                                        "accessor_type": "INSTITUTE",
+                                                        "accessor_id": "1",
+                                                        "subject_id": "1",
+                                                        "option_1": "gfhgf",
+                                                        "option_1_en": null,
+                                                        "option_2": "ghfghfgh",
+                                                        "option_2_en": null,
+                                                        "option_3": "gfhgf",
+                                                        "option_3_en": null,
+                                                        "option_4": "fghgfh",
+                                                        "option_4_en": null,
+                                                        "answers": "ghfhfg",
+                                                        "question_type": "1"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Offline": {
+                                    "summary": "An example of exam for Offline",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "type": "2",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "2",
+                                                "question_selection_type": "1",
+                                                "question_sets": [
+                                                    {
+                                                        "id": "A",
+                                                        "questions": [
+                                                            {
+                                                                "id": "1",
+                                                                "title": "fg",
+                                                                "accessor_type": "INSTITUTE",
+                                                                "accessor_id": "123",
+                                                                "individual_marks": "123",
+                                                                "subject_id": "1",
+                                                                "question_type": "1",
+                                                                "option_1": "fghfgh",
+                                                                "option_1_en": "fghfghfg",
+                                                                "option_2": "fghfg",
+                                                                "answers": [
+                                                                    "fghfghfg"
+                                                                ],
+                                                                "option_3": "hgjhgjghj",
+                                                                "option_4": "fgjhfgjjhg"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Mixed": {
+                                    "summary": "An example of exam for Mixed Type",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "type": "3",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "offline": {
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+                                            "sets": [
+                                                {
+                                                    "id": "set1",
+                                                    "title": "set1_title"
+                                                }
+                                            ],
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "question_sets": [
+                                                        {
+                                                            "id": "A",
+                                                            "questions": [
+                                                                {
+                                                                    "id": "1",
+                                                                    "title": "fg",
+                                                                    "accessor_type": "INSTITUTE",
+                                                                    "accessor_id": "123",
+                                                                    "individual_marks": "123",
+                                                                    "subject_id": "1",
+                                                                    "question_type": "1",
+                                                                    "option_1": "fghfgh",
+                                                                    "option_1_en": "fghfghfg",
+                                                                    "option_2": "fghfg",
+                                                                    "answers": [
+                                                                        "fghfghfg"
+                                                                    ],
+                                                                    "option_3": "hgjhgjghj",
+                                                                    "option_4": "fgjhfgjjhg"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "online": {
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exams/{examTypeId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get a Exam",
+                "description": "API endpoint to get a Exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/purpose_name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "math",
+                                        "exam_subject_title_en": "math",
+                                        "type": 1,
+                                        "title": "dfdg",
+                                        "training_center_title": "যুব প্রশিক্ষণ কেন্দ্র,  যুব উন্নয়ন অধিদপ্তর, উত্তম, রংপুর",
+                                        "training_center_title_en": "Youth Training Center, Department of Youth Development, Uttom, Rangpur",
+                                        "course_title": "গবাদিপশু, হাঁস-মুরগী পালন, প্রাথমিক চিকিৎসা, মৎস্য চাষ ও কৃষি” বিষয়ক প্রশিক্ষণ",
+                                        "course_title_en": null,
+                                        "title_en": "dfsd",
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null,
+                                        "deleted_at": null,
+                                        "exams": [
+                                            {
+                                                "id": 1,
+                                                "type": 1,
+                                                "exam_type_id": 1,
+                                                "exam_date": "2022-04-11 14:54:53",
+                                                "duration": 100,
+                                                "venue": "dhaka",
+                                                "total_marks": "100.00",
+                                                "row_status": 1,
+                                                "created_at": null,
+                                                "updated_at": null,
+                                                "deleted_at": null
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Update a Exam",
+                "description": "API endpoint to Update Exam. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Exam object that needs to be Update to the store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Online": {
+                                    "summary": "An example of Exam for Online",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "type": "1",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "1",
+                                                "question_selection_type": "1",
+                                                "questions": [
+                                                    {
+                                                        "id": "1",
+                                                        "title": "hh",
+                                                        "title_en": "hfgjhfg",
+                                                        "accessor_type": "INSTITUTE",
+                                                        "accessor_id": "1",
+                                                        "subject_id": "1",
+                                                        "option_1": "gfhgf",
+                                                        "option_1_en": null,
+                                                        "option_2": "ghfghfgh",
+                                                        "option_2_en": null,
+                                                        "option_3": "gfhgf",
+                                                        "option_3_en": null,
+                                                        "option_4": "fghgfh",
+                                                        "option_4_en": null,
+                                                        "answers": "ghfhfg",
+                                                        "question_type": "1"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Offline": {
+                                    "summary": "An example of exam for Offline",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "type": "2",
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "exam_questions": [
+                                            {
+                                                "exam_id": "1",
+                                                "question_type": "1",
+                                                "total_marks": "100",
+                                                "number_of_questions": "2",
+                                                "question_selection_type": "1",
+                                                "question_sets": [
+                                                    {
+                                                        "id": "A",
+                                                        "questions": [
+                                                            {
+                                                                "id": "1",
+                                                                "title": "fg",
+                                                                "accessor_type": "INSTITUTE",
+                                                                "accessor_id": "123",
+                                                                "individual_marks": "123",
+                                                                "subject_id": "1",
+                                                                "question_type": "1",
+                                                                "option_1": "fghfgh",
+                                                                "option_1_en": "fghfghfg",
+                                                                "option_2": "fghfg",
+                                                                "answers": [
+                                                                    "fghfghfg"
+                                                                ],
+                                                                "option_3": "hgjhgjghj",
+                                                                "option_4": "fgjhfgjjhg"
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "Mixed": {
+                                    "summary": "An example of exam for Mixed Type",
+                                    "description": "An example of exam, using `value` property, which value is an Object",
+                                    "value": {
+                                        "type": 3,
+                                        "title": "SEMISTER_FINAL",
+                                        "title_en": "SEMISTER_FINAL",
+                                        "subject_id": "1",
+                                        "purpose_name": "BATCH",
+                                        "purpose_id": "1",
+                                        "exam_date": "2008-09-09",
+                                        "duration": "120",
+                                        "total_marks": "100",
+                                        "offline": {
+                                            "exam_id": 1,
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+                                            "sets": [
+                                                {
+                                                    "id": "set1",
+                                                    "title": "set1_title"
+                                                }
+                                            ],
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "question_sets": [
+                                                        {
+                                                            "id": "A",
+                                                            "questions": [
+                                                                {
+                                                                    "id": "1",
+                                                                    "title": "fg",
+                                                                    "accessor_type": "INSTITUTE",
+                                                                    "accessor_id": "123",
+                                                                    "individual_marks": "123",
+                                                                    "subject_id": "1",
+                                                                    "question_type": "1",
+                                                                    "option_1": "fghfgh",
+                                                                    "option_1_en": "fghfghfg",
+                                                                    "option_2": "fghfg",
+                                                                    "answers": [
+                                                                        "fghfghfg"
+                                                                    ],
+                                                                    "option_3": "hgjhgjghj",
+                                                                    "option_4": "fgjhfgjjhg"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "online": {
+                                            "exam_id": 1,
+                                            "exam_date": "2008-09-09",
+                                            "duration": "120",
+                                            "total_marks": "100",
+                                            "exam_questions": [
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "exam_id": "1",
+                                                    "question_type": "1",
+                                                    "total_marks": "100",
+                                                    "number_of_questions": "1",
+                                                    "question_selection_type": "1",
+                                                    "questions": [
+                                                        {
+                                                            "id": "1",
+                                                            "title": "hh",
+                                                            "title_en": "hfgjhfg",
+                                                            "accessor_type": "INSTITUTE",
+                                                            "accessor_id": "1",
+                                                            "subject_id": "1",
+                                                            "option_1": "gfhgf",
+                                                            "option_1_en": null,
+                                                            "option_2": "ghfghfgh",
+                                                            "option_2_en": null,
+                                                            "option_3": "gfhgf",
+                                                            "option_3_en": null,
+                                                            "option_4": "fghgfh",
+                                                            "option_4_en": null,
+                                                            "answers": "ghfhfg",
+                                                            "question_type": "1"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Delete a Exam",
+                "description": "API endpoint to delete a Exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Exam Subject deleted successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam-youth-list/{examId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get all Youth and results for a exam",
+                "description": "API endpoint to get all Youth and results for a exam . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "exam_id": 1,
+                                            "youth_id": 5,
+                                            "exam_section_question_id": "9fa93177-a2c8-46ca-8525-0e3ccb0f4d78",
+                                            "answers": [
+                                                "pagla"
+                                            ],
+                                            "marks_achieved": "0.00",
+                                            "file_paths": "[\"a\", \"b\"]",
+                                            "youth_profile": {
+                                                "id": 5,
+                                                "idp_user_id": "cfbf2df7-838c-4e45-89f5-ac26a45695d3",
+                                                "username": "01634433444",
+                                                "user_name_type": 2,
+                                                "first_name": "Piyal",
+                                                "first_name_en": null,
+                                                "last_name": "Rahman",
+                                                "last_name_en": null,
+                                                "expected_salary": null,
+                                                "job_level": null,
+                                                "loc_division_id": 3,
+                                                "code": "Y0000000000000012",
+                                                "division_title": "ঢাকা",
+                                                "division_title_en": "Dhaka",
+                                                "loc_district_id": 18,
+                                                "district_title": "ঢাকা ",
+                                                "district_title_en": "DHAKA",
+                                                "loc_upazila_id": 112,
+                                                "upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                                "upazila_title_en": "TEJGAON UNNAYAN CIRCLE",
+                                                "gender": 1,
+                                                "religion": null,
+                                                "is_freelance_profile": 0,
+                                                "marital_status": null,
+                                                "nationality": 1,
+                                                "email": "joxiga7719h@chinamkm.com",
+                                                "mobile": "01634433444",
+                                                "identity_number_type": null,
+                                                "identity_number": null,
+                                                "date_of_birth": "1996-02-07T18:00:00.000000Z",
+                                                "age": 26,
+                                                "freedom_fighter_status": 1,
+                                                "physical_disability_status": 0,
+                                                "does_belong_to_ethnic_group": 0,
+                                                "bio": null,
+                                                "bio_en": null,
+                                                "photo": null,
+                                                "cv_path": null,
+                                                "signature_image_path": null,
+                                                "default_cv_template": null,
+                                                "admin_access_type": null,
+                                                "row_status": 1,
+                                                "created_at": "2022-02-09T16:07:08.000000Z",
+                                                "updated_at": "2022-02-09T16:08:06.000000Z",
+                                                "profile_completed": 33,
+                                                "total_job_experience": {
+                                                    "year": 0,
+                                                    "month": 0
+                                                },
+                                                "physical_disabilities": [],
+                                                "youth_languages_proficiencies": [],
+                                                "skills": [
+                                                    {
+                                                        "id": 2,
+                                                        "title": "প্রজেক্ট ম্যানেজমেন্ট",
+                                                        "title_en": "Project Management",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 3,
+                                                        "title": "কম্পিউটার প্রোগ্রামিং",
+                                                        "title_en": "Computer Programming",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_educations": [],
+                                                "youth_job_experiences": [],
+                                                "youth_certifications": [],
+                                                "youth_portfolios": [],
+                                                "youth_addresses": [
+                                                    {
+                                                        "id": 5,
+                                                        "youth_id": 5,
+                                                        "address_type": 1,
+                                                        "loc_division_id": 3,
+                                                        "loc_district_id": 18,
+                                                        "loc_upazila_id": 112,
+                                                        "village_or_area": null,
+                                                        "village_or_area_en": null,
+                                                        "house_n_road": null,
+                                                        "house_n_road_en": null,
+                                                        "zip_or_postal_code": null,
+                                                        "created_at": "2022-02-09T16:07:08.000000Z",
+                                                        "updated_at": "2022-02-09T16:07:08.000000Z",
+                                                        "deleted_at": null,
+                                                        "loc_division_title": "ঢাকা",
+                                                        "loc_division_title_en": "Dhaka",
+                                                        "loc_district_title": "ঢাকা ",
+                                                        "loc_district_title_en": "DHAKA",
+                                                        "loc_upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                                        "loc_upazila_tile_en": "TEJGAON UNNAYAN CIRCLE"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/preview-youth-exam/{examId}/{youthId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get a youth exam preview for a exam",
+                "description": "API endpoint to get a youth exam preview for a exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youthId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": {
+                                        "subject_id": 1,
+                                        "subject_title": "math",
+                                        "subject_title_en": "math",
+                                        "title": "dfdg",
+                                        "title_en": "dfsd",
+                                        "duration": 100,
+                                        "exam_date": "2022-04-11 14:54:53",
+                                        "total_marks": "100.00",
+                                        "first_name": "Piyal",
+                                        "first_name_en": null,
+                                        "last_name": "Rahman",
+                                        "last_name_en": null,
+                                        "mobile": "01634433444",
+                                        "email": "joxiga7719h@chinamkm.com",
+                                        "exam_sections": [
+                                            {
+                                                "uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "exam_section_uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                        "individual_marks": "0.00",
+                                                        "exam_id": 2,
+                                                        "title": "hh",
+                                                        "title_en": "hfgjhfg",
+                                                        "subject_id": 1,
+                                                        "question_type": 1,
+                                                        "accessor_type": "INSTITUTE",
+                                                        "accessor_id": 1,
+                                                        "option_1": "gfhgf",
+                                                        "option_1_en": null,
+                                                        "option_2": "ghfghfgh",
+                                                        "option_2_en": null,
+                                                        "option_3": "gfhgf",
+                                                        "option_3_en": null,
+                                                        "option_4": "fghgfh",
+                                                        "option_4_en": null,
+                                                        "exam_result_id": 1,
+                                                        "answers": [
+                                                            "pagla"
+                                                        ],
+                                                        "file_paths": "[\"a\", \"b\"]"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "f38f87a6-8b77-40b6-87b8-7bf80ccfbf64",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": []
+                                            },
+                                            {
+                                                "uuid": "e5312dd2-4af2-4cce-b2e1-d2c702f6b0b0",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": []
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam-question-paper/{examId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get a exam Question Paper",
+                "description": "API endpoint to get a exam Question Paper. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": {
+                                        "id": 1,
+                                        "title": "dfdg",
+                                        "title_en": "dfsd",
+                                        "subject_id": 1,
+                                        "subject_title": "math",
+                                        "subject_title_en": "math",
+                                        "exam_date": "2022-04-11 14:54:53",
+                                        "duration": 100,
+                                        "venue": "dhaka",
+                                        "total_marks": "100.00",
+                                        "exam_sections": [
+                                            {
+                                                "uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "f38f87a6-8b77-40b6-87b8-7bf80ccfbf64",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "e5312dd2-4af2-4cce-b2e1-d2c702f6b0b0",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": 2,
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "title": "",
+                                                        "title_en": null,
+                                                        "subject_id": 1,
+                                                        "accessor_type": null,
+                                                        "accessor_id": 0,
+                                                        "question_type": 1,
+                                                        "option_1": null,
+                                                        "option_1_en": null,
+                                                        "option_2": null,
+                                                        "option_2_en": null,
+                                                        "option_3": null,
+                                                        "option_3_en": null,
+                                                        "option_4": null,
+                                                        "option_4_en": null,
+                                                        "individual_marks": 100
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/submit-exam-paper": {
+            "post": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Submit exam paper",
+                "description": "API endpoint to submit exam paper. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "description": "Exam paper object that needs to be added to the store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Random Questions": {
+                                    "summary": "An example of Exam  Submit Paper for Random Questions",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "youth_id": "4",
+                                        "questions": [
+                                            {
+                                                "question_id": 1,
+                                                "individual_marks": 10,
+                                                "Answers": [
+                                                    "dfg",
+                                                    "fdhgfh"
+                                                ],
+                                                "file_path": ""
+                                            },
+                                            {
+                                                "question_id": 2,
+                                                "individual_marks": 10,
+                                                "answers": [],
+                                                "file_path": ""
+                                            }
+                                        ]
+                                    }
+                                },
+                                "From Selected Questions": {
+                                    "summary": "An example of Exam  Submit Paper for Selected Questions",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "youth_id": "4",
+                                        "questions": [
+                                            {
+                                                "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "question_id": 1,
+                                                "individual_marks": 10,
+                                                "Answers": [
+                                                    "dfg",
+                                                    "fdhgfh"
+                                                ],
+                                                "file_path": ""
+                                            },
+                                            {
+                                                "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "question_id": 2,
+                                                "individual_marks": 10,
+                                                "answers": [],
+                                                "file_path": ""
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/youth-exam-mark-update": {
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Submit exam paper",
+                "description": "API endpoint to submit exam paper. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "description": "Exam paper object that needs to be added to the store",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/exams"
+                            },
+                            "examples": {
+                                "Update mark": {
+                                    "summary": "An example of Exam  Submit Paper for Random Questions",
+                                    "description": "An example of Exam, using `value` property",
+                                    "value": {
+                                        "exam_id": 1,
+                                        "youth_id": 4,
+                                        "marks": [
+                                            {
+                                                "exam_result_id": 2,
+                                                "marks_achieved": 2
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "title": "abc",
+                                        "title_en": "bcd",
+                                        "accessor_type": "hgfh",
+                                        "accessor_id": 1,
+                                        "subject_id": 1,
+                                        "exam_subject_title": "hello",
+                                        "exam_subject_title_en": "fgfdg",
+                                        "question_type": 0,
+                                        "option_1": "1",
+                                        "option_1_en": "fgfd",
+                                        "option_2": "gfhfg",
+                                        "option_2_en": "gfhgf",
+                                        "option_3": "gfh",
+                                        "option_3_en": "fgh",
+                                        "option_4": "fgh",
+                                        "option_4_en": "fgh",
+                                        "answers": {
+                                            "a": "fghfg"
+                                        },
+                                        "row_status": 1,
+                                        "created_at": null,
+                                        "updated_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -10524,77 +11886,58 @@
                 "properties": {
                     "institute_id": {
                         "type": "integer"
-
                     },
                     "training_center_id": {
                         "type": "integer"
-
                     },
                     "reporting_month": {
                         "type": "string",
                         "format": "date"
-
                     },
                     "number_of_trades_allowed": {
                         "type": "integer"
-
                     },
                     "number_of_ongoing_trades": {
                         "type": "integer"
-
                     },
                     "number_of_computers": {
                         "type": "integer"
-
                     },
                     "number_of_other_equipments": {
                         "type": "integer"
-
                     },
                     "amount_of_total_fdr": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_women": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_men": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_disabled_and_others": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_total": {
                         "type": "integer"
-
                     },
                     "total_trainees_women": {
                         "type": "integer"
-
-                    }
-                ,
+                    },
                     "total_trainees_men": {
                         "type": "integer"
-
                     },
                     "total_trainees_disabled_and_others": {
                         "type": "integer"
-
                     },
                     "total_trainees_total": {
                         "type": "integer"
-
                     },
                     "bank_status_skill_development": {
                         "type": "integer"
-
                     },
                     "bank_status_coordinating_council": {
                         "type": "integer"
-
                     },
                     "date_of_last_election_of_all_party_council": {
                         "type": "string",
@@ -10604,7 +11947,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingCenterCombineProgressReport": {
                 "type": "object",
@@ -10648,8 +11995,7 @@
                     },
                     "total_number_of_members": {
                         "type": "integer"
-                    }
-                ,
+                    },
                     "subscriptions_collected_so_far": {
                         "type": "number"
                     },
@@ -10720,7 +12066,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingCenterProgressReport": {
                 "type": "object",
@@ -10823,7 +12173,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingIncomeExpenditureReport": {
                 "type": "object",
@@ -10889,9 +12243,12 @@
                     "comments": {
                         "type": "string"
                     }
-
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "assignToBatch": {
                 "type": "object",
@@ -11152,7 +12509,7 @@
                     }
                 },
                 "required": [
-                    "title","accessor_type","accessor_id"
+                    "title"
                 ]
             },
             "exam_ques_bank": {
@@ -11174,7 +12531,17 @@
                         "type": "string"
                     },
                     "question_type": {
-                        "type": "integer"
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                        ],
+                        "description": "1=> MCQ , 2=>Fill in the Blanks, 3=>Yes/No,4=>Practical,5=>Field Work,6=>Presentation,7=>Descriptive"
                     },
                     "option_1": {
                         "type": "string"
@@ -11214,7 +12581,92 @@
                     }
                 },
                 "required": [
-                    "question_type", "subject_id","title","accessor_type","accessor_id"
+                    "question_type",
+                    "subject_id",
+                    "title"
+                ]
+            },
+            "exams": {
+                "type": "object",
+                "properties": {
+                    "exam_type_id": {
+                        "type": "integer"
+                    },
+                    "exam_date": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "format": "HH:mm"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "format": "HH:mm"
+                    },
+                    "venue": {
+                        "type": "string"
+                    },
+                    "total_marks": {
+                        "type": "string"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "exam_type_id",
+                    "exam_date"
+                ]
+            },
+            "exam_type": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "subject_id": {
+                        "type": "integer"
+                    },
+                    "accessor_type": {
+                        "type": "string"
+                    },
+                    "accessor_id": {
+                        "type": "integer"
+                    },
+                    "purpose_name": {
+                        "type": "string"
+                    },
+                    "purpose_id": {
+                        "type": "integer"
+                    },
+                    "row_status": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2
+                        ],
+                        "description": "Required when updating. 1=>Active 2=>Inactive"
+                    }
+                },
+                "required": [
+                    "title",
+                    "type",
+                    "subject_id",
+                    "purpose_name",
+                    "accessor_type",
+                    "accessor_id"
                 ]
             },
             "rplOccupation": {
@@ -11488,6 +12940,32 @@
                 "required": [
                     "payment_gateway_type",
                     "youth_assessment_id"
+                ]
+            },
+            "courseEnrollmentBulkImport": {
+                "type": "object",
+                "properties": {
+                    "course_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "course_enrollment_excel_file": {
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "required": [
+                    "course_id",
+                    "batch_id",
+                    "course_enrollment_excel_file"
                 ]
             },
             "batchAssign": {
@@ -13108,6 +14586,14 @@
                     "example": "Co-ordinator"
                 }
             },
+            "exam_type_id": {
+                "name": "exam_type_id",
+                "in": "query",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "page": {
                 "name": "page",
                 "in": "query",
@@ -13158,7 +14644,6 @@
                     "example": "1"
                 }
             },
-
             "order": {
                 "name": "order",
                 "in": "query",
@@ -13185,6 +14670,14 @@
                 "required": false,
                 "schema": {
                     "type": "string"
+                }
+            },
+            "question_type": {
+                "in": "query",
+                "name": "question_type",
+                "required": false,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "address": {
@@ -13227,7 +14720,6 @@
                     "type": "integer"
                 }
             },
-
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -13409,6 +14901,46 @@
             },
             "subjectId": {
                 "name": "subjectId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "examTypeId": {
+                "name": "examTypeId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "purpose_name": {
+                "name": "purpose_name",
+                "required": true,
+                "in": "query",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "youth_id": {
+                "name": "youthId",
+                "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youthId": {
+                "name": "youthId",
+                "required": true,
+                "in": "path",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "examId": {
+                "name": "examId",
                 "required": true,
                 "in": "path",
                 "schema": {

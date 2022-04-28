@@ -48,7 +48,7 @@ class CourseService
     public function getCourseList(array $request, Carbon $startTime): array
     {
         $titleEn = $request['title_en'] ?? "";
-        $titleBn = $request['title'] ?? "";
+        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -128,8 +128,8 @@ class CourseService
         if (!empty($titleEn)) {
             $coursesBuilder->where('courses.title_en', 'like', '%' . $titleEn . '%');
         }
-        if (!empty($titleBn)) {
-            $coursesBuilder->where('courses.title', 'like', '%' . $titleBn . '%');
+        if (!empty($title)) {
+            $coursesBuilder->where('courses.title', 'like', '%' . $title . '%');
         }
 
         if (is_numeric($instituteId)) {
@@ -1227,6 +1227,8 @@ class CourseService
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ],
             'program_id' => 'nullable|int|gt:0',
+            'title_en' => 'nullable|string',
+            'title' => 'nullable|string',
             'course_name' => 'nullable|string',
             'search_text' => 'nullable|string|min:2',
             'loc_district_id' => 'nullable|int|gt:0',

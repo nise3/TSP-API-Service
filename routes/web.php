@@ -2,8 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Facade\ServiceToServiceCall;
 use App\Helpers\Classes\CustomRouter;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 $customRouter = function (string $as = '') use ($router) {
     $custom = new CustomRouter($router);
@@ -44,6 +45,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-assessment-questions', 'RplAssessmentQuestionController')->render();
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
+        $customRouter()->resourceRoute('exams', 'ExamController')->render();
+
+        /** Fetch all youth  who are a  participant of an exam */
+        $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
+        $router->get('preview-youth-exam/{examId}/{youthId}', ["as" => "preview-youth-exam", "uses" => "ExamController@previewYouthExam"]);
+        $router->put('youth-exam-mark-update', ["as" => "youth-exam-mark-update", "uses" => "ExamController@youthExamMarkUpdate"]);
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
@@ -98,6 +105,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** RTO dashboard statistics */
         $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@rtoDashboardStatistics"]);
+
+        $router->post("course-enrollment-bulk-import", ["as" => "course-enrollment-bulk-import", "uses" => "CourseEnrollmentController@courseEnrollmentBulkImport"]);
     });
 
 
@@ -141,6 +150,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             /** Course Filter */
             $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
+        $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 
     });
 
@@ -157,7 +167,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Fetch all recent courses for youth feed API */
         $router->get('youth-feed-courses', ["as" => "youth-feed-courses", "uses" => "CourseController@youthFeedCourses"]);
+
     });
+
+    /** Exam management */
+    $router->get('exam-question-paper/{id}', ["as" => "exam-question-papers", "uses" => "ExamController@getExamQuestionPaper"]);
+    $router->post('submit-exam-paper', ["as" => "submit exam-paper", "uses" => "ExamController@submitExamPaper"]);
 
     /** institute registration */
     $router->post("institute-open-registration", ["as" => "register.organization", "uses" => "InstituteController@instituteRegistration"]);
@@ -192,8 +207,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
-
+//    $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 });
+
 
 
 

@@ -8,6 +8,8 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\ExamResult;
+use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
 use App\Models\EducationLevel;
 use App\Models\EnrollmentAddress;
@@ -274,9 +276,10 @@ class CourseEnrollmentService
 
     /**
      * @param array $data
+     * @param bool $isBulkImport
      * @return CourseEnrollment
      */
-    public function enrollCourse(array $data): CourseEnrollment
+    public function enrollCourse(array $data, bool $isBulkImport = false): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
 
@@ -287,8 +290,8 @@ class CourseEnrollmentService
         } elseif (!empty($course->industry_association_id)) {
             $data['industry_association_id'] = $course->industry_association_id;
         }
-
-        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+        $data['row_status'] = $isBulkImport ? BaseModel::ROW_STATUS_ACTIVE : BaseModel::ROW_STATUS_PENDING;
+        $data['saga_status'] = $isBulkImport ? BaseModel::SAGA_STATUS_COMMIT : BaseModel::SAGA_STATUS_CREATE_PENDING;
 
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
@@ -437,6 +440,14 @@ class CourseEnrollmentService
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
     }
 
+    public function rollbackYouth(array $payload)
+    {
+        foreach ($payload as $value) {
+            ServiceToServiceCall::rollbackYouthUserById($value['mobile']);
+        }
+
+    }
+
 
     /**
      * @param CourseEnrollment $courseEnrollment
@@ -519,7 +530,7 @@ class CourseEnrollmentService
             app(SmsService::class)->sendSms($mobile, $message);
             Log::info('Sms send after enrollment to number--->' . $mobile);
         }
-        if($email){
+        if ($email) {
             $subject = "Your Course Enrollment Verification code";
             $from = BaseModel::NISE3_FROM_EMAIL;
             $messageBody = MailService::templateView($message);
@@ -1176,10 +1187,9 @@ class CourseEnrollmentService
      * @param int $eduLabelId
      * @return bool
      */
-    private function getRequiredStatus(string $key, int $eduLabelId): bool
+    public function getRequiredStatus(string $key, int $eduLabelId): bool
     {
         switch ($key) {
-
             /** Validation Rule Based On YouthEducation Level */
             case EnrollmentEducation::DEGREE:
             {
@@ -1262,6 +1272,7 @@ class CourseEnrollmentService
             [
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
+                'course_enrollments.batch_id',
                 'courses.id as course_id',
                 'courses.cover_image',
                 'courses.code as course_code',
@@ -1281,30 +1292,23 @@ class CourseEnrollmentService
             ]
         );
 
+
         if (is_numeric($youthId)) {
             $coursesEnrollmentBuilder->where('course_enrollments.youth_id', $youthId);
         }
-
         $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
         });
+
         $coursesEnrollmentBuilder->join("institutes", function ($join) {
             $join->on('course_enrollments.institute_id', '=', 'institutes.id')
                 ->whereNull('institutes.deleted_at');
         });
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
-
         if (is_numeric($rowStatus)) {
             $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
-        }
-
-        if (!empty($firstName)) {
-            $coursesEnrollmentBuilder->where('course_enrollments.first_name', 'like', '%' . $firstName . '%');
-        }
-        if (!empty($firstNameEn)) {
-            $coursesEnrollmentBuilder->where('course_enrollments.first_name_en', 'like', '%' . $firstNameEn . '%');
         }
 
         if (is_numeric($courseId)) {
@@ -1323,8 +1327,75 @@ class CourseEnrollmentService
         } else {
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
+
+        $courseEnrollments = $courseEnrollments->toArray() ?? [];
+
+
+        foreach ($courseEnrollments as &$courseEnrollment) {
+
+            /** @var Builder $examsBuilder */
+            $examsBuilder = ExamType::select([
+                'batches.id as batch_id',
+                'exam_types.title',
+                'exam_types.title_en',
+                'exams.type',
+                'batches.id as batch_id',
+                'batches.title as batch_title',
+                'batches.title_en as batch_title_en',
+                'exams.id as exam_id',
+                'exams.exam_date',
+                'exams.duration',
+                'exam_subjects.title as subject_title',
+                'exam_subjects.title_en as subject_title_en',
+            ]);
+
+
+            $examsBuilder->join("batches", function ($join) {
+                $join->on('exam_types.purpose_id', '=', 'batches.id')
+                    ->whereNull('batches.deleted_at');
+            });
+
+            $examsBuilder->join("exam_subjects", function ($join) {
+                $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                    ->whereNull('exam_subjects.deleted_at');
+            });
+
+
+            $examsBuilder->join("exams", function ($join) {
+                $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                    ->whereNull('exams.deleted_at');
+            });
+
+              //TODO:Need To Implement This
+
+//            SELECT * from exams left join exam_results on exams.id = exam_results.exam_id group by exam_results.id
+//             DB::raw("IF(COUNT(exam_results.id) > 0, 'true', 'false') AS participated")
+
+            $examsBuilder->where('exam_types.purpose_id', '=', $courseEnrollment['batch_id']);
+
+
+            $examsBuilder = $examsBuilder->get();
+            $exams = $examsBuilder->toArray() ?? [];
+
+            //TODO:Remove Loop And Implement Query
+
+            foreach ($exams as &$exam) {
+                $examParticipation = ExamResult::where('exam_results.exam_id', $exam['exam_id'])
+                    ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->count('exam_results.id');
+                if ($examParticipation > 0) {
+                    $exam['participated'] = true;
+                } else {
+                    $exam['participated'] = false;
+                }
+            }
+
+
+            $courseEnrollment['exams'] = $exams;
+        }
+
+        $courseEnrollments = $courseEnrollments['data'] ?? $courseEnrollments;
         $response['order'] = $order;
-        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['data'] = $courseEnrollments;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
@@ -1403,8 +1474,8 @@ class CourseEnrollmentService
             foreach ($courseEnrollments as $courseEnrollment) {
                 //TODO: this line should be checked. If not need then remove it
                 //$courseEnrollment['youth_details'] = $indexedYouths[$courseEnrollment['youth_id']] ?? "";
-                $name = $indexedYouths[$courseEnrollment['youth_id']]['first_name'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name'] ?? "";
-                $nameEn = $indexedYouths[$courseEnrollment['youth_id']]['first_name_en'] ?? "" .' '.$indexedYouths[$courseEnrollment['youth_id']]['last_name_en'] ?? "";
+                $name = $indexedYouths[$courseEnrollment['youth_id']]['first_name'] ?? "" . ' ' . $indexedYouths[$courseEnrollment['youth_id']]['last_name'] ?? "";
+                $nameEn = $indexedYouths[$courseEnrollment['youth_id']]['first_name_en'] ?? "" . ' ' . $indexedYouths[$courseEnrollment['youth_id']]['last_name_en'] ?? "";
                 $courseEnrollment['youth_name'] = $name;
                 $courseEnrollment['youth_name_en'] = $nameEn;
             }

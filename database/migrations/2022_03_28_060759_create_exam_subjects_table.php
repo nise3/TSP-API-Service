@@ -17,8 +17,8 @@ class CreateExamSubjectsTable extends Migration
             $table->id();
             $table->string('title', 600);
             $table->string('title_en', 300)->nullable();
-            $table->string('accessor_type', 100)->nullable();
-            $table->integer('accessor_id')->nullable();
+            $table->string('accessor_type', 100);
+            $table->unsignedInteger('accessor_id');
             $table->unsignedTinyInteger('row_status')
                 ->default(1)
                 ->comment('0 => Inactive, 1 => Approved, 2 => Pending, 3 => Rejected');
