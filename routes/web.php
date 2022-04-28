@@ -46,6 +46,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
+        $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
+        $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
+        $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
 
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
