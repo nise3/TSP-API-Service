@@ -31,6 +31,7 @@ class CertificateService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
+        $resultType = $request['result_type'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
@@ -41,6 +42,7 @@ class CertificateService
             'certificates.title',
             'certificates.title_en',
             'certificates.template',
+            'certificates.result_type',
             'certificates.accessor_type',
             'certificates.accessor_id',
             'certificates.row_status',
@@ -54,6 +56,9 @@ class CertificateService
             $CertificateBuilder->where('certificates.row_status', $rowStatus);
         }
 
+        if(!empty($resultType)) {
+            $CertificateBuilder->where('certificates.result_type', $resultType);
+        }
         if (!empty($titleEn)) {
             $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
         }
@@ -95,6 +100,7 @@ class CertificateService
             'certificates.title',
             'certificates.title_en',
             'certificates.template',
+            'certificates.result_type',
             'certificates.accessor_type',
             'certificates.accessor_id',
             'certificates.row_status',
@@ -213,6 +219,7 @@ class CertificateService
 
             'accessor_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:250|min:2',
+            'result_type' => 'nullable',
             'accessor_type' => 'nullable|max:250|min:2',
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',

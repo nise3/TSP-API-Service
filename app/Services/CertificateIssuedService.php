@@ -158,19 +158,15 @@ class CertificateIssuedService
         $rules = [
             'youth_id' => [
                 'required',
-                'string',
-//                'max:500'
+                'int'
             ],
             'batch_id' => [
                 'required',
-                'string',
-//                'max:250'
+                'int'
             ],
             'certificate_id' => [
                 'required',
-                'string',
-//                'max:250',
-//                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                'int'
             ],
             'accessor_id' => [
 //                'required',
