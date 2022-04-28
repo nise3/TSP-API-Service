@@ -4,7 +4,11 @@ variables:
   devBuildImageVersion: "2.3.17"
 
   # always add prefix k- before production image version
+<<<<<<< HEAD
   prodBuildImageVersion: "prod-2.3.2"
+=======
+  stagingBuildImageVersion: "prod-2.3.4"
+>>>>>>> staging
 
   #app buil image
   imageRepository: "registry.nise.gov.bd/nise3-institute-management-api-service"
