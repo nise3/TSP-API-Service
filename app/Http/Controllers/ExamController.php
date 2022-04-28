@@ -210,10 +210,17 @@ class ExamController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws Throwable
      */
     public function getExamQuestionPaper(int $id): JsonResponse
     {
         $examData = $this->examService->getExamQuestionPaper($id);
+        $exam = Exam::findOrFail($examData['exam_id']);
+        $examStartTime = Carbon::parse($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+
         $response = [
             "data" => $examData ?? null,
             "_response_status" => [
@@ -233,6 +240,13 @@ class ExamController extends Controller
     public function submitExamPaper(Request $request): JsonResponse
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
+
+        $exam = Exam::findOrFail($validatedData['exam_id']);
+        $examStartTime = Carbon::parse($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
             $response = [
