@@ -45,7 +45,7 @@ class ExamController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-        $this->authorize('view_any_exam', Exam::class);
+        $this->authorize('viewAny', Exam::class);
         $filter = $this->examService->filterValidator($request)->validate();
         $response = $this->examService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -60,7 +60,7 @@ class ExamController extends Controller
      */
     public function read(Request $request, int $id): JsonResponse
     {
-        $this->authorize('view_single_exam', Exam::class);
+        $this->authorize('view', Exam::class);
         $filter = $this->examService->getExamFilterValidator($request)->validate();
         $exam = $this->examService->getOneExamType($filter, $id);
         $response = [
@@ -83,7 +83,7 @@ class ExamController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create_exam', Exam::class);
+        $this->authorize('create', Exam::class);
         $validatedData = $this->examService->validator($request)->validate();
 
         DB::beginTransaction();
@@ -125,7 +125,7 @@ class ExamController extends Controller
      */
     public function update(Request $request, int $id): JsonResponse
     {
-        $this->authorize('update_exam', Exam::class);
+        $this->authorize('update', Exam::class);
 
         $examType = ExamType::findOrFail($id);
         $validatedData = $this->examService->validator($request, $id)->validate();
@@ -164,7 +164,7 @@ class ExamController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $this->authorize('delete_exam', Exam::class);
+        $this->authorize('delete', Exam::class);
 
         $examType = ExamType::findOrFail($id);
         DB::beginTransaction();
