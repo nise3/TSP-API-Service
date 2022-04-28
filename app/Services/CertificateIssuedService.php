@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Certificate;
+use App\Models\CertificateIssued;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class CertificateService
+class CertificateIssuedService
 {
     /**
      * @param array $request
@@ -27,58 +28,49 @@ class CertificateService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-        $titleEn = $request['title_en'] ?? "";
-        $title = $request['title'] ?? "";
+//        $titleEn = $request['title_en'] ?? "";
+//        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
-        $resultType = $request['result_type'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var Certificate|Builder $CertificateBuilder */
-        $CertificateBuilder = Certificate::select([
-            'certificates.id',
-            'certificates.title',
-            'certificates.title_en',
-            'certificates.template',
-            'certificates.result_type',
-            'certificates.accessor_type',
-            'certificates.accessor_id',
-            'certificates.row_status',
-            'certificates.created_at',
-            'certificates.updated_at',
+        /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
+        $CertificateIssuedBuilder =  CertificateIssued::select([
+            'certificate_issued.id',
+            'certificate_issued.certificate_id',
+            'certificate_issued.youth_id',
+            'certificate_issued.batch_id',
+            'certificate_issued.row_status'
         ]);
 
-        $CertificateBuilder->orderBy('certificates.id', $order);
+        $CertificateIssuedBuilder->orderBy('certificate_issued.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $CertificateBuilder->where('certificates.row_status', $rowStatus);
+            $CertificateIssuedBuilder->where('certificates.row_status', $rowStatus);
         }
 
-        if(!empty($resultType)) {
-            $CertificateBuilder->where('certificates.result_type', $resultType);
-        }
-        if (!empty($titleEn)) {
-            $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
-        }
-        if (!empty($title)) {
-            $CertificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
-        }
+//        if (!empty($titleEn)) {
+//            $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
+//        }
+//        if (!empty($title)) {
+//            $CertificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
+//        }
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $certificate = $CertificateBuilder->paginate($pageSize);
-            $paginateData = (object)$certificate->toArray();
+            $certificateIssued = $CertificateIssuedBuilder->paginate($pageSize);
+            $paginateData = (object)$certificateIssued->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $certificate = $CertificateBuilder->get();
+            $certificateIssued = $CertificateIssuedBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $certificate->toArray()['data'] ?? $certificate->toArray();
+        $response['data'] = $certificateIssued->toArray()['data'] ?? $certificateIssued->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -92,67 +84,64 @@ class CertificateService
      * @param int $id
      * @return Certificate
      */
-    public function getOneExamSubject(int $id): Certificate
+    public function getOneIssuedCertificate(int $id): CertificateIssued
     {
-        /** @var Certificate|Builder $CertificateBuilder */
-        $CertificateBuilder = Certificate::select([
-            'certificates.id',
-            'certificates.title',
-            'certificates.title_en',
-            'certificates.template',
-            'certificates.result_type',
-            'certificates.accessor_type',
-            'certificates.accessor_id',
-            'certificates.row_status',
-            'certificates.created_at',
-            'certificates.updated_at',
+        /** @var Certificate|Builder $CertificateIssuedBuilder */
+        $CertificateIssuedBuilder = CertificateIssued::select([
+            'certificate_issued.id',
+            'certificate_issued.certificate_id',
+            'certificate_issued.youth_id',
+            'certificate_issued.batch_id',
+            'certificate_issued.row_status',
+            'certificate_issued.created_at',
+            'certificate_issued.updated_at'
         ]);
-        $CertificateBuilder->where('certificates.id', $id);
+        $CertificateIssuedBuilder->where('certificate_issued.id', $id);
         /** @var Certificate exam_subjects */
-        return $CertificateBuilder->firstOrFail();
+        return $CertificateIssuedBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return Certificate
+     * @return CertificateIssued
      * @throws Throwable
      */
-    public function store(array $data): Certificate
+    public function store(array $data): CertificateIssued
     {
-        $certificateTemplate = app()->make(Certificate::class);
-        $certificateTemplate->fill($data);
-        $certificateTemplate->save();
-        return $certificateTemplate;
+        $certificateIssued = app()->make(CertificateIssued::class);
+        $certificateIssued->fill($data);
+        $certificateIssued->save();
+        return $certificateIssued;
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateIssued $certificateIssued
      * @param array $data
-     * @return Certificate
+     * @return CertificateIssued
      */
-    public function update(Certificate $certificate, array $data): Certificate
+    public function update(CertificateIssued $certificateIssued, array $data): CertificateIssued
     {
-        $certificate->fill($data);
-        $certificate->save();
-        return $certificate;
+        $certificateIssued->fill($data);
+        $certificateIssued->save();
+        return $certificateIssued;
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateIssued $certificateIssued
      * @return bool
      */
-    public function destroy(Certificate $certificate): bool
+    public function destroy(CertificateIssued $certificateIssued): bool
     {
-        return $certificate->delete();
+        return $certificateIssued->delete();
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateIssued $certificateIssued
      * @return bool
      */
-    public function forceDelete(Certificate $certificate): bool
+    public function forceDelete(CertificateIssued $certificateIssued): bool
     {
-        return $certificate->forceDelete();
+        return $certificateIssued->forceDelete();
     }
 
     /**
@@ -167,24 +156,17 @@ class CertificateService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-            'title' => [
-//                'required',
-                'string',
-                'max:500'
+            'youth_id' => [
+                'required',
+                'int'
             ],
-            'title_en' => [
-                'nullable',
-                'string',
-                'max:250'
+            'batch_id' => [
+                'required',
+                'int'
             ],
-            'template' => [
-                'string'
-            ],
-            'accessor_type' => [
-//                'required',
-                'string',
-                'max:250',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+            'certificate_id' => [
+                'required',
+                'int'
             ],
             'accessor_id' => [
 //                'required',
@@ -216,10 +198,8 @@ class CertificateService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
         $rules = [
-
             'accessor_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:250|min:2',
-            'result_type' => 'nullable',
             'accessor_type' => 'nullable|max:250|min:2',
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',

@@ -18,9 +18,5 @@ namespace App\Models;
  */
 class Certificate extends BaseModel
 {
-
-//    protected $casts = [
-//        "template" => 'array',
-//    ];
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 }

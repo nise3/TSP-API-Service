@@ -47,6 +47,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
+        $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {

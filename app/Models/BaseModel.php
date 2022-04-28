@@ -171,6 +171,21 @@ abstract class BaseModel extends Model
         self::ACCESSOR_TYPE_ORGANIZATION,
     ];
 
+    /** @var string Certificate types */
+
+    public const CERTIFICATE_COMPETENT = 1;
+    public const CERTIFICATE_NOT_COMPETENT = 2;
+    public const CERTIFICATE_GRADING = 3;
+    public const CERTIFICATE_MARKS = 4;
+    public const CERTIFICATE_PARTICIPATION = 5;
+
+    public const CERTIFICATE_TYPE = [
+        ['id'=> self::CERTIFICATE_COMPETENT, 'title'=>'Competent'],
+        ['id'=> self::CERTIFICATE_NOT_COMPETENT, 'title'=>'Not Competent'],
+        ['id'=> self::CERTIFICATE_GRADING, 'title'=>'Grading'],
+        ['id'=> self::CERTIFICATE_MARKS, 'title'=>'Marks'],
+        ['id'=> self::CERTIFICATE_PARTICIPATION, 'title'=>'Participation']
+    ];
 
 
     public function getIndustryAssociationData(array &$originalData)
@@ -180,7 +195,6 @@ abstract class BaseModel extends Model
             $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
             $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
         }
-
     }
 
 
