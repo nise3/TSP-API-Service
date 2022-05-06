@@ -57,6 +57,20 @@ class CourseController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function getFourIrCourses(Request $request): JsonResponse
+    {
+        $filter = $this->courseService->filterValidator($request)->validate();
+        $response = $this->courseService->getCourseList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * Display the specified resource
      * @param int $id
      * @return JsonResponse
@@ -67,6 +81,28 @@ class CourseController extends Controller
         $course = $this->courseService->getOneCourse($id);
 
         $this->authorize('view', $course);
+
+        $response = [
+            "data" => $course,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+
+    /**
+     * Display the specified resource
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function getSingleFourIrCourse(int $id): JsonResponse
+    {
+        $course = $this->courseService->getOneCourse($id);
 
         $response = [
             "data" => $course,
@@ -107,6 +143,31 @@ class CourseController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    function createFourIrCourse(Request $request): JsonResponse
+    {
+        $validated = $this->courseService->validator($request)->validate();
+        $validated['code'] = CodeGeneratorService::getCourseCode();
+        $course = $this->courseService->store($validated);
+
+        $response = [
+            'data' => $course,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_CREATED,
+                "message" => "Course added successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
      * * update the specified resource in storage
      * @param Request $request
      * @param int $id
@@ -128,6 +189,55 @@ class CourseController extends Controller
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
                 "message" => "Course updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     * * update the specified resource in storage
+     *
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function updateFourIrCourse(Request $request, int $id): JsonResponse
+    {
+        $course = Course::findOrFail($id);
+
+        $validated = $this->courseService->validator($request, $id)->validate();
+        $data = $this->courseService->update($course, $validated);
+        $response = [
+            'data' => $data,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Course updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_CREATED);
+    }
+
+    /**
+     * * update the specified resource in storage
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function approveFourIrCourse(int $id): JsonResponse
+    {
+        $course = Course::findOrFail($id);
+
+        $data = $this->courseService->approveFourIrCourse($course);
+        $response = [
+            'data' => $data,
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Course approved successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
