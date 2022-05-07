@@ -14,7 +14,7 @@ class AddFourIrInitiativeIdToCoursesTable extends Migration
     public function up()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->unsignedInteger('four_ir_initiative_id')->nullable();
+            $table->unsignedInteger('four_ir_initiative_id')->nullable()->after('industry_association_id');
         });
     }
 
