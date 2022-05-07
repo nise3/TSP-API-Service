@@ -175,6 +175,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->put('update-four-ir-course/{id}', ["as" => "update-four-ir-course", "uses" => "CourseController@updateFourIrCourse"]);
         $router->put('approve-four-ir-course/{id}', ["as" => "approve-four-ir-course", "uses" => "CourseController@approveFourIrCourse"]);
         $router->get('get-four-ir-course-enrolled-youths', ["as" => "get-four-ir-course-enrolled-youths", "uses" => "CourseEnrollmentController@getEnrolledYouths"]);
+        $router->get('get-four-ir-course-batches', ["as" => "get-four-ir-course-batches", "uses" => "BatchController@getCourseBatches"]);
     });
 
     /** Exam management */
