@@ -40,7 +40,6 @@ class CertificateTypeController extends Controller
     public function getList(Request $request): JsonResponse
     {
         //$this->authorize('viewAny', Certificate::class);
-
         $filter = $this->certificateTypeService->filterValidator($request)->validate();
 
         $response = $this->certificateTypeService->getList($filter, $this->startTime);
