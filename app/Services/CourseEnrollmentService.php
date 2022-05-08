@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\Exam;
 use App\Models\ExamResult;
 use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
@@ -1330,6 +1331,8 @@ class CourseEnrollmentService
                 'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
+                'exam_types.is_published',
+                'exam_types.published_at',
                 'exams.type',
                 'batches.id as batch_id',
                 'batches.title as batch_title',
@@ -1340,6 +1343,8 @@ class CourseEnrollmentService
                 'exam_subjects.title as subject_title',
                 'exam_subjects.title_en as subject_title_en',
             ]);
+
+            $examsBuilder->where('exam_types.is_published', '=', Exam::EXAM_PUBLISHED);
 
 
             $examsBuilder->join("batches", function ($join) {
