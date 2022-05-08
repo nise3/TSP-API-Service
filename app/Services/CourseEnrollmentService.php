@@ -1340,7 +1340,6 @@ class CourseEnrollmentService
                 'batches.id as batch_id',
                 'exam_types.title',
                 'exam_types.title_en',
-                'exam_types.is_published',
                 'exam_types.published_at',
                 'exams.type',
                 'batches.id as batch_id',
