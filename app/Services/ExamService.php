@@ -935,8 +935,7 @@ class ExamService
      */
     private function countManualMarkingQuestions(int $examId): int
     {
-        $examSectionBuilder = ExamSection::query();
-        return $examSectionBuilder->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
+        return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
 
     }
 
