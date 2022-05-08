@@ -169,6 +169,14 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Fetch all recent courses for youth feed API */
         $router->get('youth-feed-courses', ["as" => "youth-feed-courses", "uses" => "CourseController@youthFeedCourses"]);
 
+        /** Four IR */
+        $router->get('get-four-ir-course-list', ["as" => "get-four-ir-course-list", "uses" => "CourseController@getFourIrCourses"]);
+        $router->get('get-four-ir-course/{id}', ["as" => "get-four-ir-course", "uses" => "CourseController@getSingleFourIrCourse"]);
+        $router->post('create-four-ir-course', ["as" => "create-four-ir-course", "uses" => "CourseController@createFourIrCourse"]);
+        $router->put('update-four-ir-course/{id}', ["as" => "update-four-ir-course", "uses" => "CourseController@updateFourIrCourse"]);
+        $router->put('approve-four-ir-course/{id}', ["as" => "approve-four-ir-course", "uses" => "CourseController@approveFourIrCourse"]);
+        $router->get('get-four-ir-course-enrolled-youths', ["as" => "get-four-ir-course-enrolled-youths", "uses" => "CourseEnrollmentController@getEnrolledYouths"]);
+        $router->get('get-four-ir-course-batches', ["as" => "get-four-ir-course-batches", "uses" => "BatchController@getCourseBatches"]);
     });
 
     /** Exam management */

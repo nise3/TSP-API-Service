@@ -49,6 +49,8 @@ class CourseService
     {
         $titleEn = $request['title_en'] ?? "";
         $title = $request['title'] ?? "";
+        $isFourIr = $request['is_four_ir'] ?? BaseModel::FALSE;
+        $fourIrInitiativeId = $request['four_ir_initiative_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $instituteId = $request['institute_id'] ?? "";
@@ -75,6 +77,7 @@ class CourseService
                 'programs.title_en as program_title_en',
                 'courses.title',
                 'courses.title_en',
+                'courses.four_ir_initiative_id',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.overview',
@@ -130,6 +133,13 @@ class CourseService
         }
         if (!empty($title)) {
             $coursesBuilder->where('courses.title', 'like', '%' . $title . '%');
+        }
+
+        if(!$isFourIr){
+            $coursesBuilder->whereNull('four_ir_initiative_id');
+        }
+        if(!empty($fourIrInitiativeId)){
+            $coursesBuilder->where('four_ir_initiative_id', $fourIrInitiativeId);
         }
 
         if (is_numeric($instituteId)) {
@@ -191,6 +201,7 @@ class CourseService
                 'programs.title_en as program_title_en',
                 'courses.title',
                 'courses.title_en',
+                'courses.four_ir_initiative_id',
                 'courses.course_fee',
                 'courses.duration',
                 'courses.overview',
@@ -297,8 +308,6 @@ class CourseService
      */
     public function store(array $data): Course
     {
-
-
         $course = new Course();
         $course->fill($data);
         $course->save();
@@ -320,6 +329,19 @@ class CourseService
         $course->fill($data);
         $course->save();
         $this->assignSkills($course, $data["skills"]);
+        return $course;
+    }
+
+    /**
+     * @param Course $course
+     * @return Course
+     */
+    public function approveFourIrCourse(Course $course): Course
+    {
+        $course->fill([
+            'row_status' => BaseModel::ROW_STATUS_ACTIVE
+        ]);
+        $course->save();
         return $course;
     }
 
@@ -1046,6 +1068,10 @@ class CourseService
                 "nullable",
                 "int"
             ],
+            'four_ir_initiative_id' => [
+                'nullable',
+                'integer'
+            ],
             'branch_id' => [
                 'nullable',
                 'int',
@@ -1214,6 +1240,8 @@ class CourseService
         $rules = [
             'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
             'industry_association_id' => 'nullable|int|gt:0',
+            'is_four_ir' => 'nullable|int',
+            'four_ir_initiative_id' => 'nullable|int',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [

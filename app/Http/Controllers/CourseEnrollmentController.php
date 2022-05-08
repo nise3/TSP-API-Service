@@ -41,6 +41,7 @@ class CourseEnrollmentController extends Controller
     /**
      * CourseEnrollmentController constructor.
      * @param CourseEnrollmentService $courseEnrollService
+     * @param CourseEnrollmentBulkEntryService $courseEnrollmentBulkEntryService
      */
     public function __construct(CourseEnrollmentService $courseEnrollService, CourseEnrollmentBulkEntryService $courseEnrollmentBulkEntryService)
     {
@@ -74,6 +75,21 @@ class CourseEnrollmentController extends Controller
     {
         $validated = $this->courseEnrollService->youthEnrollCoursesFilterValidator($request)->validate();
         $response = $this->courseEnrollService->getYouthEnrollCourses($validated, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @throws Throwable
+     * @throws ValidationException
+     */
+    public function getEnrolledYouths(Request $request): JsonResponse
+    {
+        $validated = $this->courseEnrollService->enrolledYouthsFilterValidator($request)->validate();
+        $response = $this->courseEnrollService->getEnrolledYouths($validated);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

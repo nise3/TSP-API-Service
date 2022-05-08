@@ -1407,6 +1407,75 @@ class CourseEnrollmentService
 
     /**
      * @param array $request
+     * @return array
+     */
+    public function getEnrolledYouths(array $request): array
+    {
+        $courseId = $request['course_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
+        $coursesEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'course_enrollments.course_id'
+            ]
+        );
+
+        if (!empty($courseId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.course_id', '=', $courseId);
+        }
+
+        if (is_numeric($rowStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
+
+        /** @var Collection $courseEnrollments */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courseEnrollments = $coursesEnrollmentBuilder->paginate($pageSize);
+            $paginateData = (object)$courseEnrollments->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courseEnrollments = $coursesEnrollmentBuilder->get();
+        }
+
+        /** Add youth details */
+        $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
+        if ($youthIds) {
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+            $indexedYouths = [];
+
+            foreach ($youthProfiles as $item) {
+                $indexedYouths[$item['id']] = $item;
+            }
+
+            foreach ($courseEnrollments as $enrollment){
+                $enrollment['youth_details'] = $indexedYouths[$enrollment->youth_id];
+            }
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK
+        ];
+
+        return $response;
+    }
+
+    /**
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
@@ -1512,6 +1581,43 @@ class CourseEnrollmentService
 
         $rules = [
             'youth_id' => 'required|min:1',
+            'course_id' => 'nullable|int|gt:0',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'nullable',
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in(CourseEnrollment::ROW_STATUSES),
+            ]
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
+    }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return Validator
+     */
+    public function enrolledYouthsFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
+        ];
+
+        $requestData = $request->all();
+
+        $rules = [
             'course_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
