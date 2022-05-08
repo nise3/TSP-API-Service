@@ -46,6 +46,12 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('rpl-assessment-question-sets', 'RplAssessmentQuestionSetController')->render();
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
+        $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
+        // TODO use 'certificates', 'certificate-types', ''certificate-issued'
+        $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
+        $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
 
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
@@ -112,6 +118,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 
     $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
+
+    // TODO remove this routes and uncomment auth middleware routs
+//    $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
+//    $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
+//    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
     /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
