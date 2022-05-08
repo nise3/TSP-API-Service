@@ -80,6 +80,7 @@ class CourseEnrollmentService
                 'course_enrollments.batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
+                'batches.certificate_id as certificate_id',
                 'course_enrollments.payment_status',
                 'course_enrollments.first_name',
                 'course_enrollments.first_name_en',
