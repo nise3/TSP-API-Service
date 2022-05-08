@@ -38,6 +38,12 @@ class ExamQuestionBank extends BaseModel
         self::EXAM_QUESTION_TYPE_YES_NO,
     ];
 
+    public const AUTO_MARKING_QUESTION_TYPES = [
+        self::EXAM_QUESTION_TYPE_MCQ,
+        self::EXAM_QUESTION_TYPE_Fill_IN_THE_BLANKS,
+        self::EXAM_QUESTION_TYPE_YES_NO,
+    ];
+
     public const QUESTION_SELECTION_FIXED = 1;
     public const QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK = 2;
     public const QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS = 3;

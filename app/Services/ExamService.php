@@ -880,8 +880,8 @@ class ExamService
         $examResultBuilder->selectRaw('sum(exam_results.marks_achieved) as marks_achieved');
         $examResultBuilder->where('exam_results.exam_id', $id);
 
-        if (!empty($youthId)) {
-            $examResultBuilder->where('exam_results.youth_id', 'like', '%' . $youthId . '%');
+        if (is_numeric($youthId)) {
+            $examResultBuilder->where('exam_results.youth_id', $youthId);
         }
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -909,6 +909,12 @@ class ExamService
         }
 
         foreach ($resultArray["data"] as &$item) {
+            $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($item['exam_id']);
+            if ($manualMarkingQuestionNumbers == 0) {
+                $item['auto_marking'] = true;
+            } else {
+                $item['auto_marking'] = false;
+            }
             $id = $item['youth_id'];
             $youthData = $indexedYouths[$id];
             $item['youth_profile'] = $youthData;
@@ -921,6 +927,17 @@ class ExamService
         $response['data'] = $resultData;
 
         return $response;
+    }
+
+    /**
+     * @param int $examId
+     * @return int
+     */
+    private function countManualMarkingQuestions(int $examId): int
+    {
+        $examSectionBuilder = ExamSection::query();
+        return $examSectionBuilder->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
+
     }
 
     /**
