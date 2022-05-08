@@ -11834,7 +11834,55 @@
                     }
                 }
             }
+<<<<<<< Updated upstream
         }
+=======
+        },
+        "/exam-publish/{examTypeId}": {
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "summary": "publish a Exam",
+                "description": "API endpoint to publish exam . A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/examPublish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/examPublish"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exam published successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+>>>>>>> Stashed changes
     },
     "components": {
         "securitySchemes": {
@@ -15279,7 +15327,8 @@
                     "type": "boolean",
                     "example": true
                 }
-            }
+            },
+
         }
     }
 }

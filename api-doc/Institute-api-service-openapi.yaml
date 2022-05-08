@@ -1165,6 +1165,7 @@ paths:
         - "$ref": "#/components/parameters/branch_id_optional"
         - "$ref": "#/components/parameters/program_id_optional"
         - "$ref": "#/components/parameters/course_id_optional"
+        - "$ref": "#/components/parameters/certificateId"
         - "$ref": "#/components/parameters/training_center_id_optional"
       responses:
         '200':
@@ -1196,6 +1197,7 @@ paths:
                     training_center_title_en: Mr. Javonte Conn IV
                     training_center_title: Whitney Leuschke
                     application_form_settings:
+                    certificate_id:
                     row_status: 1
                     created_by:
                     updated_by:
@@ -1249,6 +1251,7 @@ paths:
                   training_center_title_en: Mr. Javonte Conn IV
                   training_center_title: Whitney Leuschke
                   application_form_settings:
+                  certificate_id:
                   row_status: 1
                   created_by:
                   updated_by:
@@ -1305,6 +1308,7 @@ paths:
                   training_center_title_en: Gideon Gibson
                   training_center_title: Miss Dejah Mosciski
                   application_form_settings:
+                  certificate_id:
                   row_status: 1
                   created_by:
                   updated_by:
@@ -1416,6 +1420,7 @@ paths:
                   training_center_title_en: Mr. Javonte Conn IV
                   training_center_title: Whitney Leuschke
                   application_form_settings:
+                  certificate_id:
                   row_status: 1
                   created_by:
                   updated_by:
@@ -2462,6 +2467,339 @@ paths:
           required: false
           schema:
             type: integer
+  "/certificate":
+    get:
+      tags:
+        - Certificate
+      summary: get_list
+      description: API endpoint to get list of Certificate. A successful request response
+        will show 200 HTTP status code
+      parameters:
+        - "$ref": "#/components/parameters/title_en_optional"
+        - "$ref": "#/components/parameters/title_optional"
+        - "$ref": "#/components/parameters/resultType"
+        - "$ref": "#/components/parameters/page"
+        - "$ref": "#/components/parameters/order"
+        - "$ref": "#/components/parameters/page_size"
+        - "$ref": "#/components/parameters/row_status_optional"
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/certificates"
+              example:
+                data:
+                  - id: 1
+                    title: "a"
+                    title_en: "B"
+                    template: "AA"
+                    result_type:  2
+                    accessor_type: 1
+                    accessor_id: 1
+                _response_status:
+                  success: true
+                  code: 200
+                  query_time: 0
+        default:
+          description: Unexpected error
+    post:
+      tags:
+        - Certificate
+      summary: create
+      description: " API endpoint to create a Certificate.A successful request response
+          will show 201 HTTP status code"
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              "$ref": "#/components/schemas/certificates"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              example:
+                data:
+                  - id: 1
+                    title: "a"
+                    title_en: "B"
+                    template: "AA"
+                    result_type: 2
+                    accessor_type: 1
+                    accessor_id: 1
+                _response_status:
+                  success: true
+                  code: 201
+                  message: Certificate added successfully.
+                  query_time: 0
+  "/certificate/{certificateId}":
+    get:
+      parameters:
+        - name: certificateId
+          in: path
+          description: certificate id to get one
+          required: true
+          schema:
+            type: integer
+            example: '1'
+      tags:
+        - Certificate
+      summary: get_one
+      description: " API endpoint to get a certificate.A successful request response will
+        show 200 HTTP status code"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              example:
+                data:
+                  - id: 1
+                    title: "a"
+                    title_en: "B"
+                    template: "AA"
+                    result_type: 2
+                    accessor_type: 1
+                    accessor_id: 1
+                _response_status:
+                  success: true
+                  code: 200
+                  query_time: 0
+    put:
+      tags:
+        - Certificate
+      summary: update
+      description: API endpoint to update the specified Certificate.A successful request
+        response will show 201 HTTP status code
+      parameters:
+        - name: certificateId
+          required: true
+          in: path
+          schema:
+            type: integer
+          example: '2'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              "$ref": "#/components/schemas/certificates"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/certificates"
+              example:
+                data:
+                  - id: 1
+                    title: "a"
+                    title_en: "B"
+                    template: "AA"
+                    result_type: 2
+                    accessor_type: 1
+                    accessor_id: 1
+                _response_status:
+                  success: true
+                  code: 200
+                  message: Trainer update successfully.
+                  query_time: 0
+    delete:
+      tags:
+        - Certificate
+      summary: delete
+      description: API endpoint to delete a Certificate. A successful request response
+        will show 200 HTTP status code
+      parameters:
+        - name: certificateId
+          in: path
+          description: Certificate id to delete
+          required: true
+          schema:
+            type: integer
+          example: '20'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/certificates"
+              example:
+                _response_status:
+                  success: true
+                  code: 200
+                  message: Certificate delete successfully.
+                  query_time: 0
+
+  "/certificate-issued":
+    get:
+      tags:
+        - Certificate-Issued
+      summary: get_list
+      description: API endpoint to get list of Certificate-Issued. A successful request response
+        will show 200 HTTP status code
+      parameters:
+        - "$ref": "#/components/parameters/batchId"
+        - "$ref": "#/components/parameters/youthId"
+        - "$ref": "#/components/parameters/certificateId"
+        - "$ref": "#/components/parameters/page"
+        - "$ref": "#/components/parameters/order"
+        - "$ref": "#/components/parameters/page_size"
+        - "$ref": "#/components/parameters/row_status_optional"
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/certificate-issued"
+              example:
+                data:
+                  - id: 1
+                    certificate_id: 2
+                    youth_id: 3
+                    batch_id: 4
+                    row_status: 1
+                    created_at: ""
+                    updated_at: ""
+                _response_status:
+                  success: true
+                  code: 200
+                  query_time: 0
+        default:
+          description: Unexpected error
+    post:
+      tags:
+        - Certificate-Issued
+      summary: create
+      description: " API endpoint to create a Certificate-Issued.A successful request response
+            will show 201 HTTP status code"
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              "$ref": "#/components/schemas/certificate-issued"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              example:
+                data:
+                  - id: 1
+                    certificate_id: 2
+                    youth_id: 3
+                    batch_id: 4
+                    row_status: 1
+                    created_at: ""
+                    updated_at: ""
+                _response_status:
+                  success: true
+                  code: 201
+                  message: Certificate Issued successfully.
+                  query_time: 0
+  "/certificate-issued/{issuedId}":
+      get:
+        parameters:
+          - name: issuedId
+            in: path
+            description: certificate Issued id to get one
+            required: true
+            schema:
+              type: integer
+              example: '1'
+        tags:
+          - Certificate-Issued
+        summary: get_one
+        description: " API endpoint to get a certificate issued.A successful request response will
+          show 200 HTTP status code"
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                example:
+                  data:
+                    - id: 1
+                      certificate_id: 2
+                      youth_id: 3
+                      batch_id: 4
+                      row_status: 1
+                      created_at: ""
+                      updated_at: ""
+                  _response_status:
+                    success: true
+                    code: 200
+                    query_time: 0
+      put:
+        tags:
+          - Certificate-Issued
+        summary: update
+        description: API endpoint to update the specified Certificate.A successful request
+          response will show 201 HTTP status code
+        parameters:
+          - name: issuedId
+            required: true
+            in: path
+            schema:
+              type: integer
+            example: '2'
+        requestBody:
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                "$ref": "#/components/schemas/certificate-issued"
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  "$ref": "#/components/schemas/certificate-issued"
+                example:
+                  data:
+                    - id: 1
+                      certificate_id: 2
+                      youth_id: 3
+                      batch_id: 4
+                      row_status: 1
+                      created_at: ""
+                      updated_at: ""
+                  _response_status:
+                    success: true
+                    code: 200
+                    message: Certificate update successfully.
+                    query_time: 0
+      delete:
+        tags:
+          - Certificate-Issued
+        summary: delete
+        description: API endpoint to delete a Certificate Issued. A successful request response
+          will show 200 HTTP status code
+        parameters:
+          - name: issuedId
+            in: path
+            description: Certificate Issued id to delete
+            required: true
+            schema:
+              type: integer
+            example: '20'
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  "$ref": "#/components/schemas/certificate-issued"
+                example:
+                  _response_status:
+                    success: true
+                    code: 200
+                    message: Certificate Issued delete successfully.
+                  query_time: 0
 #      tags:
 #          -Courses_List
 
@@ -3130,6 +3468,8 @@ components:
           format: date-time
         available_seats:
           type: integer
+        certificate_id:
+          type: integer
         row_status:
           type: integer
           enum:
@@ -3212,6 +3552,43 @@ components:
                 type: integer
               batch_row_status:
                 type: integer
+    certificates:
+      type: object
+      description: Certificate with active OR/AND upcoming batches
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        title_en:
+          type: string
+        template:
+          type: string
+        result_type:
+          type: integer
+        accessor_type:
+          type: integer
+        accessor_id:
+          type: string
+    certificate-issued:
+      type: object
+      description: Certificate Issue with active OR/AND for youth
+      properties:
+        id:
+          type: integer
+        certificate_id:
+          type: integer
+        youth_id:
+          type: integer
+        batch_id:
+          type: integer
+        row_status:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+
   parameters:
     country:
       name: country
@@ -3624,3 +4001,24 @@ components:
       schema:
         type: boolean
         example: true
+    resultType:
+      name: result_type
+      in: query
+      description: get all result type
+      schema:
+        type: integer
+        example: 1
+    youthId:
+      name: result_type
+      in: query
+      description: get all course enrollment by youth id
+      schema:
+        type: integer
+        example: 1
+    certificateId:
+      name: certificate_id
+      in: query
+      description: get all issued certificate ty certificate_id
+      schema:
+        type: integer
+        example: 1
