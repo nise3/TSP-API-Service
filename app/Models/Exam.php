@@ -23,6 +23,15 @@ class Exam extends BaseModel
         self::EXAM_TYPE_MIXED,
     ];
 
+    public const EXAM_PUBLISHED = 1;
+    public const EXAM_UNPUBLISHED = 0;
+
+
+    public const EXAM_PUBLICATION = [
+        self::EXAM_PUBLISHED,
+        self::EXAM_UNPUBLISHED
+    ];
+
     public function examSections(): HasMany
     {
         return $this->hasMany(ExamSection::class, 'exam_id', 'id');

@@ -11834,6 +11834,49 @@
                     }
                 }
             }
+        },
+        "/exam-publish/{examTypeId}": {
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "summary": "publish a Exam",
+                "description": "API endpoint to publish exam . A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/examPublish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/examPublish"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exam published successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -11899,27 +11942,34 @@
                     },
                     "number_of_ongoing_trades": {
                         "type": "integer"
+
                     },
                     "number_of_computers": {
                         "type": "integer"
                     },
                     "number_of_other_equipments": {
                         "type": "integer"
+
                     },
                     "amount_of_total_fdr": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_women": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_men": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_disabled_and_others": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_total": {
                         "type": "integer"
+
                     },
                     "total_trainees_women": {
                         "type": "integer"
@@ -12243,6 +12293,7 @@
                     "comments": {
                         "type": "string"
                     }
+
                 },
                 "required": [
                     "institute_id",
@@ -12586,6 +12637,21 @@
                     "title"
                 ]
             },
+            "examPublish": {
+                "type": "object",
+                "properties": {
+                    "is_published": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    }
+                },
+                "required": [
+                    "is_published"
+                ]
+            },
             "exams": {
                 "type": "object",
                 "properties": {
@@ -12628,19 +12694,19 @@
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title_en": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "subject_id": {
-                        "type": "integer"
+                        "type" : "integer"
                     },
                     "accessor_type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "accessor_id": {
                         "type": "integer"
@@ -14644,6 +14710,7 @@
                     "example": "1"
                 }
             },
+
             "order": {
                 "name": "order",
                 "in": "query",
@@ -14720,6 +14787,7 @@
                     "type": "integer"
                 }
             },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -14939,6 +15007,7 @@
                     "type": "integer"
                 }
             },
+
             "examId": {
                 "name": "examId",
                 "required": true,

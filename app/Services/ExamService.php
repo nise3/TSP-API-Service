@@ -56,6 +56,8 @@ class ExamService
             'exam_types.row_status',
             'exam_types.created_at',
             'exam_types.updated_at',
+            'exam_types.is_published',
+            'exam_types.published_at',
         ]);
 
         $examTypeBuilder->join("exam_subjects", function ($join) {
@@ -461,6 +463,26 @@ class ExamService
         $examType->fill($data);
         $examType->save();
         return $examType;
+    }
+
+    /**
+     * @param array $data
+     * @param ExamType $examType
+     * @param Carbon $startTime
+     */
+    public function examPublish(array $data, ExamType $examType, Carbon $startTime)
+    {
+
+        if ($data['is_published'] == Exam::EXAM_PUBLISHED) {
+            $examType->is_published = Exam::EXAM_PUBLISHED;
+            $examType->published_at = $startTime;
+        } else {
+            $examType->is_published = Exam::EXAM_UNPUBLISHED;
+            $examType->published_at = null;
+        }
+
+        $examType->save();
+
     }
 
     /**
@@ -1669,9 +1691,27 @@ class ExamService
 
         ];
 
-        return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
+        return Validator::make($data, $rules, $customMessage);
     }
 
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function examPublishValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'is_published' => [
+                'required',
+                'int',
+                Rule::in(Exam::EXAM_PUBLICATION)
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+
+    }
 
 }
 
