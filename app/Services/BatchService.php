@@ -78,6 +78,7 @@ class BatchService
             'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
+            'batches.certificate_id',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
