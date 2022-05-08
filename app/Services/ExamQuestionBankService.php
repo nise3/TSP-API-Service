@@ -205,7 +205,7 @@ class ExamQuestionBankService
                 'required',
                 'string',
                 'max:100',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                Rule::in(BaseModel::ACCESSOR_TYPES)
             ],
             'accessor_id' => [
                 'required',

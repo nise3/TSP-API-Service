@@ -15,7 +15,7 @@ AddCertificateTemplateIdToBatchesTable extends Migration
     public function up()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->text('certificate_id');
+            $table->unsignedInteger('certificate_id')->nullable();
         });
     }
 

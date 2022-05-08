@@ -168,11 +168,6 @@ class CertificateIssuedService
                 'required',
                 'int'
             ],
-            'accessor_id' => [
-//                'required',
-                'int',
-                'min:1'
-            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',

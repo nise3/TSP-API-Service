@@ -1101,7 +1101,7 @@ class ExamService
                             'nullable',
                             'string',
                             'max:100',
-                            Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                            Rule::in(BaseModel::ACCESSOR_TYPES)
                         ];
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*.accessor_id'] = [
                             Rule::requiredIf(!empty($examQuestionSet)),
@@ -1354,7 +1354,7 @@ class ExamService
                     Rule::requiredIf(!empty($examQuestion['questions'])),
                     'string',
                     'max:100',
-                    Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                    Rule::in(BaseModel::ACCESSOR_TYPES)
                 ];
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*.accessor_id'] = [
                     Rule::requiredIf(!empty($examQuestion['questions'])),

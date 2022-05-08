@@ -15,10 +15,10 @@ class CreateCertificateIssued extends Migration
     {
         Schema::create('certificate_issued', function (Blueprint $table) {
             $table->id();
-            $table->text('certificate_id');
-            $table->text('youth_id');
-            $table->text('batch_id');
-            $table->text('row_status');
+            $table->unsignedInteger('certificate_id');
+            $table->unsignedInteger('youth_id');
+            $table->unsignedInteger('batch_id');
+            $table->unsignedInteger('row_status');
             $table->timestamps();
         });
     }

@@ -36,8 +36,8 @@ class CertificateService
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var Certificate|Builder $CertificateBuilder */
-        $CertificateBuilder = Certificate::select([
+        /** @var Certificate|Builder $certificateBuilder */
+        $certificateBuilder = Certificate::select([
             'certificates.id',
             'certificates.title',
             'certificates.title_en',
@@ -47,34 +47,35 @@ class CertificateService
             'certificates.accessor_id',
             'certificates.row_status',
             'certificates.created_at',
-            'certificates.updated_at',
-        ]);
+            'certificates.updated_at'
 
-        $CertificateBuilder->orderBy('certificates.id', $order);
+        ])->acl();
+
+        $certificateBuilder->orderBy('certificates.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $CertificateBuilder->where('certificates.row_status', $rowStatus);
+            $certificateBuilder->where('certificates.row_status', $rowStatus);
         }
 
-        if(!empty($resultType)) {
-            $CertificateBuilder->where('certificates.result_type', $resultType);
+        if(is_numeric($resultType)) {
+            $certificateBuilder->where('certificates.result_type', $resultType);
         }
         if (!empty($titleEn)) {
-            $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
+            $certificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $CertificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
+            $certificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
         }
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $certificate = $CertificateBuilder->paginate($pageSize);
+            $certificate = $certificateBuilder->paginate($pageSize);
             $paginateData = (object)$certificate->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $certificate = $CertificateBuilder->get();
+            $certificate = $certificateBuilder->get();
         }
 
         $response['order'] = $order;
@@ -92,7 +93,7 @@ class CertificateService
      * @param int $id
      * @return Certificate
      */
-    public function getOneExamSubject(int $id): Certificate
+    public function getOneCertificate(int $id): Certificate
     {
         /** @var Certificate|Builder $CertificateBuilder */
         $CertificateBuilder = Certificate::select([
@@ -107,7 +108,9 @@ class CertificateService
             'certificates.created_at',
             'certificates.updated_at',
         ]);
+
         $CertificateBuilder->where('certificates.id', $id);
+
         /** @var Certificate exam_subjects */
         return $CertificateBuilder->firstOrFail();
     }
@@ -122,6 +125,7 @@ class CertificateService
         $certificateTemplate = app()->make(Certificate::class);
         $certificateTemplate->fill($data);
         $certificateTemplate->save();
+
         return $certificateTemplate;
     }
 
@@ -163,12 +167,14 @@ class CertificateService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
+
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
+
         $rules = [
             'title' => [
-//                'required',
+                'required',
                 'string',
                 'max:500'
             ],
@@ -181,13 +187,13 @@ class CertificateService
                 'string'
             ],
             'accessor_type' => [
-//                'required',
+                'required',
                 'string',
                 'max:250',
-                Rule::in(BaseModel::EXAM_ACCESSOR_TYPES)
+                Rule::in(BaseModel::ACCESSOR_TYPES)
             ],
             'accessor_id' => [
-//                'required',
+                'required',
                 'int',
                 'min:1'
             ],
@@ -208,7 +214,7 @@ class CertificateService
 
     public function filterValidator(Request $request): Validator
     {
-//        dd($request);
+
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }

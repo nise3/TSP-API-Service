@@ -177,7 +177,7 @@ abstract class BaseModel extends Model
     public const ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
     public const ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
 
-    public const EXAM_ACCESSOR_TYPES = [
+    public const ACCESSOR_TYPES = [
         self::ACCESSOR_TYPE_INSTITUTE,
         self::ACCESSOR_TYPE_ORGANIZATION,
     ];
@@ -190,12 +190,12 @@ abstract class BaseModel extends Model
     public const CERTIFICATE_MARKS = 4;
     public const CERTIFICATE_PARTICIPATION = 5;
 
-    public const CERTIFICATE_TYPE = [
-        ['id'=> self::CERTIFICATE_COMPETENT, 'title'=>'Competent'],
-        ['id'=> self::CERTIFICATE_NOT_COMPETENT, 'title'=>'Not Competent'],
-        ['id'=> self::CERTIFICATE_GRADING, 'title'=>'Grading'],
-        ['id'=> self::CERTIFICATE_MARKS, 'title'=>'Marks'],
-        ['id'=> self::CERTIFICATE_PARTICIPATION, 'title'=>'Participation']
+    public const CERTIFICATE_TYPES = [
+        self::CERTIFICATE_COMPETENT,
+        self::CERTIFICATE_NOT_COMPETENT,
+        self::CERTIFICATE_GRADING,
+        self::CERTIFICATE_MARKS,
+        self::CERTIFICATE_PARTICIPATION
     ];
 
     public function getIndustryAssociationData(array &$originalData)
