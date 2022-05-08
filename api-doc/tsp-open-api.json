@@ -12144,7 +12144,7 @@
                         "$ref": "#/components/parameters/batchId"
                     },
                     {
-                        "$ref": "#/components/parameters/youthId"
+                        "$ref": "#/components/parameters/result_type"
                     },
                     {
                         "$ref": "#/components/parameters/certificateId"
@@ -15920,7 +15920,7 @@
                     "example": 1
                 }
             },
-            "youthId": {
+            "result_type": {
                 "name": "result_type",
                 "in": "query",
                 "description": "get all course enrollment by youth id",
