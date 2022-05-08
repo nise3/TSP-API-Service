@@ -314,10 +314,11 @@ class ExamController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws ValidationException|AuthorizationException
      */
     public function examPublish(Request $request, int $id): JsonResponse
     {
+        $this->authorize('create', Exam::class);
         $examType = ExamType::findOrFail($id);
         $validatedData = $this->examService->examPublishValidator($request)->validate();
         $this->examService->examPublish($validatedData, $examType, $this->startTime);
