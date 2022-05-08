@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 class CertificateIssuedController extends Controller
 {
@@ -27,7 +28,7 @@ class CertificateIssuedController extends Controller
 
     /**
      * CertificateController constructor.
-     * @param CertificateService $certificateIssuedService
+     * @param CertificateIssuedService $certificateIssuedService
      */
     public function __construct(CertificateIssuedService $certificateIssuedService)
     {
@@ -75,8 +76,8 @@ class CertificateIssuedController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Throwable
+     * @throws ValidationException
+     * @throws Throwable
      */
     public function store(Request $request): JsonResponse
     {
@@ -93,10 +94,10 @@ class CertificateIssuedController extends Controller
         ];
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
         if (isset($data['_response_status']['success']) && $data['_response_status']['success']){
-            /** Mail send after user registration */
+            /** Mail send after certificate issued */
             $to = array($youth['email']);
             $from = BaseModel::NISE3_FROM_EMAIL;
-            $subject = "User Registration Information";
+            $subject = "Certificate Issued";
             $message = "Congratulation, A certificate is issued for you. Your can download from here : ";
             $messageBody = MailService::templateView($message);
 
@@ -111,23 +112,23 @@ class CertificateIssuedController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $certificateIssuedOne = CertificateIssued::findOrFail($id);
+        $certificateIssued = CertificateIssued::findOrFail($id);
 
         $validated = $this->certificateIssuedService->validator($request, $id)->validate();
 
-        $data = $this->certificateIssuedService->update($certificateIssuedOne, $validated);
+        $data = $this->certificateIssuedService->update($certificateIssued, $validated);
 
         $response = [
             'data' => $data,
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Certificate template updated successfully.",
+                "message" => "Certificate Issued updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
@@ -147,7 +148,7 @@ class CertificateIssuedController extends Controller
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "Certificate template deleted successfully.",
+                "message" => "Certificate Issued deleted successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];

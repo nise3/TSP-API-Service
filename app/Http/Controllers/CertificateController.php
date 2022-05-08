@@ -42,8 +42,8 @@ class CertificateController extends Controller
         //$this->authorize('viewAny', Certificate::class);
         $filter = $this->certificateService->filterValidator($request)->validate();
 
-
         $response = $this->certificateService->getList($filter, $this->startTime);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -55,7 +55,7 @@ class CertificateController extends Controller
 
     public function read(Request $request, int $id): JsonResponse
     {
-        $certificate = $this->certificateService->getOneExamSubject($id);
+        $certificate = $this->certificateService->getOneCertificate($id);
         $response = [
             "data" => $certificate,
             "_response_status" => [
@@ -71,7 +71,7 @@ class CertificateController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      * @throws \Throwable
      */
     public function store(Request $request): JsonResponse
@@ -96,7 +96,7 @@ class CertificateController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
 
     public function update(Request $request, int $id): JsonResponse
