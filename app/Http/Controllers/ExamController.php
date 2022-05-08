@@ -303,6 +303,35 @@ class ExamController extends Controller
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
+                "message" => "youth exam mark updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function examPublish(Request $request, int $id): JsonResponse
+    {
+        $examType = ExamType::findOrFail($id);
+        $validatedData = $this->examService->examPublishValidator($request)->validate();
+        $this->examService->examPublish($validatedData, $examType, $this->startTime);
+
+        if ($validatedData['is_published'] == Exam::EXAM_PUBLISHED) {
+            $message = "exam published successfully";
+        } else {
+            $message = "exam unpublished successfully";
+        }
+        $response = [
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => $message,
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];

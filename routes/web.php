@@ -50,6 +50,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
         $router->get('preview-youth-exam/{examId}/{youthId}', ["as" => "preview-youth-exam", "uses" => "ExamController@previewYouthExam"]);
         $router->put('youth-exam-mark-update', ["as" => "youth-exam-mark-update", "uses" => "ExamController@youthExamMarkUpdate"]);
+        $router->put('exam-publish/{id}', ["as" => "exam-publish", "uses" => "ExamController@examPublish"]);
 
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {

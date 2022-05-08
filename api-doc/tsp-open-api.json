@@ -9146,7 +9146,6 @@
                         "$ref": "#/components/parameters/instituteId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9213,7 +9212,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9244,7 +9242,6 @@
                                         "date_of_last_election_of_all_party_council": "0000-00-00 00:00:00",
                                         "created_at": "2022-03-21T09:01:52.000000Z",
                                         "updated_at": "2022-03-21T09:01:58.000000Z"
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -9316,7 +9313,6 @@
                 }
             }
         },
-
         "/training-centers/reporting/combined-progress/{CombineProgressId}": {
             "get": {
                 "tags": [
@@ -9329,7 +9325,6 @@
                         "$ref": "#/components/parameters/CombineProgressId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9412,7 +9407,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9420,7 +9414,7 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "data":  {
+                                    "data": {
                                         "id": 1,
                                         "institute_id": 1,
                                         "training_center_id": 1,
@@ -9557,7 +9551,6 @@
                         "$ref": "#/components/parameters/progressId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9644,7 +9637,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9695,7 +9687,6 @@
                                         "latest_test_passed_trainee_total": 0,
                                         "created_at": null,
                                         "updated_at": null
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -9793,7 +9784,6 @@
                         "$ref": "#/components/parameters/IncomeExpenditureId"
                     }
                 ],
-
                 "responses": {
                     "200": {
                         "description": "successful",
@@ -9857,7 +9847,6 @@
                 }
             }
         },
-
         "/training-centers/reporting/income-expenditure": {
             "get": {
                 "tags": [
@@ -9878,7 +9867,6 @@
                     {
                         "$ref": "#/components/parameters/order"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -9913,7 +9901,6 @@
                                         "comments": null,
                                         "created_at": null,
                                         "updated_at": null
-
                                     },
                                     "_response_status": {
                                         "success": true,
@@ -10768,7 +10755,6 @@
                                 }
                             }
                         }
-
                     }
                 },
                 "responses": {
@@ -11117,7 +11103,6 @@
                                 }
                             }
                         }
-
                     }
                 },
                 "responses": {
@@ -11164,188 +11149,191 @@
                 }
             },
             "delete": {
-            "tags": [
-                "Exams"
-            ],
-            "summary": "Delete a Exam",
-            "description": "API endpoint to delete a Exam. A successful request response will show 200 HTTP status code",
-            "parameters": [
-                {
-                    "$ref": "#/components/parameters/examTypeId"
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "successful",
-                    "content": {
-                        "application/json": {
-                            "example": {
-                                "_response_status": {
-                                    "success": true,
-                                    "code": 200,
-                                    "message": "Exam Subject deleted successfully.",
-                                    "query_time": 0
-                                }
-                            }
-                        }
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Delete a Exam",
+                "description": "API endpoint to delete a Exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
                     }
-                }
-            }
-        }
-        },
-        "/exam-youth-list/{examId}":{
-            "get":{
-            "tags": [
-                "Exams"
-            ],
-            "summary": "Get all Youth and results for a exam",
-            "description": "API endpoint to get all Youth and results for a exam . A successful request response will show 200 HTTP status code",
-            "parameters": [
-                {
-                    "$ref": "#/components/parameters/examId"
-                },
-                {
-                    "$ref": "#/components/parameters/youth_id"
-                },
-                {
-                    "$ref": "#/components/parameters/page"
-                },
-                {
-                    "$ref": "#/components/parameters/page_size"
-                },
-                {
-                    "$ref": "#/components/parameters/order"
-                },
-                {
-                    "$ref": "#/components/parameters/row_status_optional"
-                }
-            ],
-            "responses": {
-                "200": {
-                    "description": "successful",
-                    "content": {
-                        "application/json": {
-                            "example": {
-                                "order": "ASC",
-                                "data": [
-                                    {
-                                        "id": 1,
-                                        "exam_id": 1,
-                                        "youth_id": 5,
-                                        "exam_section_question_id": "9fa93177-a2c8-46ca-8525-0e3ccb0f4d78",
-                                        "answers": ["pagla"],
-                                        "marks_achieved": "0.00",
-                                        "file_paths": "[\"a\", \"b\"]",
-                                        "youth_profile": {
-                                            "id": 5,
-                                            "idp_user_id": "cfbf2df7-838c-4e45-89f5-ac26a45695d3",
-                                            "username": "01634433444",
-                                            "user_name_type": 2,
-                                            "first_name": "Piyal",
-                                            "first_name_en": null,
-                                            "last_name": "Rahman",
-                                            "last_name_en": null,
-                                            "expected_salary": null,
-                                            "job_level": null,
-                                            "loc_division_id": 3,
-                                            "code": "Y0000000000000012",
-                                            "division_title": "ঢাকা",
-                                            "division_title_en": "Dhaka",
-                                            "loc_district_id": 18,
-                                            "district_title": "ঢাকা ",
-                                            "district_title_en": "DHAKA",
-                                            "loc_upazila_id": 112,
-                                            "upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
-                                            "upazila_title_en": "TEJGAON UNNAYAN CIRCLE",
-                                            "gender": 1,
-                                            "religion": null,
-                                            "is_freelance_profile": 0,
-                                            "marital_status": null,
-                                            "nationality": 1,
-                                            "email": "joxiga7719h@chinamkm.com",
-                                            "mobile": "01634433444",
-                                            "identity_number_type": null,
-                                            "identity_number": null,
-                                            "date_of_birth": "1996-02-07T18:00:00.000000Z",
-                                            "age": 26,
-                                            "freedom_fighter_status": 1,
-                                            "physical_disability_status": 0,
-                                            "does_belong_to_ethnic_group": 0,
-                                            "bio": null,
-                                            "bio_en": null,
-                                            "photo": null,
-                                            "cv_path": null,
-                                            "signature_image_path": null,
-                                            "default_cv_template": null,
-                                            "admin_access_type": null,
-                                            "row_status": 1,
-                                            "created_at": "2022-02-09T16:07:08.000000Z",
-                                            "updated_at": "2022-02-09T16:08:06.000000Z",
-                                            "profile_completed": 33,
-                                            "total_job_experience": {
-                                                "year": 0,
-                                                "month": 0
-                                            },
-                                            "physical_disabilities": [],
-                                            "youth_languages_proficiencies": [],
-                                            "skills": [
-                                                {
-                                                    "id": 2,
-                                                    "title": "প্রজেক্ট ম্যানেজমেন্ট",
-                                                    "title_en": "Project Management",
-                                                    "deleted_at": null
-                                                },
-                                                {
-                                                    "id": 3,
-                                                    "title": "কম্পিউটার প্রোগ্রামিং",
-                                                    "title_en": "Computer Programming",
-                                                    "deleted_at": null
-                                                }
-                                            ],
-                                            "youth_educations": [],
-                                            "youth_job_experiences": [],
-                                            "youth_certifications": [],
-                                            "youth_portfolios": [],
-                                            "youth_addresses": [
-                                                {
-                                                    "id": 5,
-                                                    "youth_id": 5,
-                                                    "address_type": 1,
-                                                    "loc_division_id": 3,
-                                                    "loc_district_id": 18,
-                                                    "loc_upazila_id": 112,
-                                                    "village_or_area": null,
-                                                    "village_or_area_en": null,
-                                                    "house_n_road": null,
-                                                    "house_n_road_en": null,
-                                                    "zip_or_postal_code": null,
-                                                    "created_at": "2022-02-09T16:07:08.000000Z",
-                                                    "updated_at": "2022-02-09T16:07:08.000000Z",
-                                                    "deleted_at": null,
-                                                    "loc_division_title": "ঢাকা",
-                                                    "loc_division_title_en": "Dhaka",
-                                                    "loc_district_title": "ঢাকা ",
-                                                    "loc_district_title_en": "DHAKA",
-                                                    "loc_upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
-                                                    "loc_upazila_tile_en": "TEJGAON UNNAYAN CIRCLE"
-                                                }
-                                            ]
-                                        }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Exam Subject deleted successfully.",
+                                        "query_time": 0
                                     }
-                                ],
-                                "_response_status": {
-                                    "success": true,
-                                    "code": 200,
-                                    "query_time": 0
                                 }
                             }
                         }
                     }
                 }
             }
-        } } ,
-        "/preview-youth-exam/{examId}/{youthId}":{
-            "get":{
+        },
+        "/exam-youth-list/{examId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get all Youth and results for a exam",
+                "description": "API endpoint to get all Youth and results for a exam . A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "exam_id": 1,
+                                            "youth_id": 5,
+                                            "exam_section_question_id": "9fa93177-a2c8-46ca-8525-0e3ccb0f4d78",
+                                            "answers": [
+                                                "pagla"
+                                            ],
+                                            "marks_achieved": "0.00",
+                                            "file_paths": "[\"a\", \"b\"]",
+                                            "youth_profile": {
+                                                "id": 5,
+                                                "idp_user_id": "cfbf2df7-838c-4e45-89f5-ac26a45695d3",
+                                                "username": "01634433444",
+                                                "user_name_type": 2,
+                                                "first_name": "Piyal",
+                                                "first_name_en": null,
+                                                "last_name": "Rahman",
+                                                "last_name_en": null,
+                                                "expected_salary": null,
+                                                "job_level": null,
+                                                "loc_division_id": 3,
+                                                "code": "Y0000000000000012",
+                                                "division_title": "ঢাকা",
+                                                "division_title_en": "Dhaka",
+                                                "loc_district_id": 18,
+                                                "district_title": "ঢাকা ",
+                                                "district_title_en": "DHAKA",
+                                                "loc_upazila_id": 112,
+                                                "upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                                "upazila_title_en": "TEJGAON UNNAYAN CIRCLE",
+                                                "gender": 1,
+                                                "religion": null,
+                                                "is_freelance_profile": 0,
+                                                "marital_status": null,
+                                                "nationality": 1,
+                                                "email": "joxiga7719h@chinamkm.com",
+                                                "mobile": "01634433444",
+                                                "identity_number_type": null,
+                                                "identity_number": null,
+                                                "date_of_birth": "1996-02-07T18:00:00.000000Z",
+                                                "age": 26,
+                                                "freedom_fighter_status": 1,
+                                                "physical_disability_status": 0,
+                                                "does_belong_to_ethnic_group": 0,
+                                                "bio": null,
+                                                "bio_en": null,
+                                                "photo": null,
+                                                "cv_path": null,
+                                                "signature_image_path": null,
+                                                "default_cv_template": null,
+                                                "admin_access_type": null,
+                                                "row_status": 1,
+                                                "created_at": "2022-02-09T16:07:08.000000Z",
+                                                "updated_at": "2022-02-09T16:08:06.000000Z",
+                                                "profile_completed": 33,
+                                                "total_job_experience": {
+                                                    "year": 0,
+                                                    "month": 0
+                                                },
+                                                "physical_disabilities": [],
+                                                "youth_languages_proficiencies": [],
+                                                "skills": [
+                                                    {
+                                                        "id": 2,
+                                                        "title": "প্রজেক্ট ম্যানেজমেন্ট",
+                                                        "title_en": "Project Management",
+                                                        "deleted_at": null
+                                                    },
+                                                    {
+                                                        "id": 3,
+                                                        "title": "কম্পিউটার প্রোগ্রামিং",
+                                                        "title_en": "Computer Programming",
+                                                        "deleted_at": null
+                                                    }
+                                                ],
+                                                "youth_educations": [],
+                                                "youth_job_experiences": [],
+                                                "youth_certifications": [],
+                                                "youth_portfolios": [],
+                                                "youth_addresses": [
+                                                    {
+                                                        "id": 5,
+                                                        "youth_id": 5,
+                                                        "address_type": 1,
+                                                        "loc_division_id": 3,
+                                                        "loc_district_id": 18,
+                                                        "loc_upazila_id": 112,
+                                                        "village_or_area": null,
+                                                        "village_or_area_en": null,
+                                                        "house_n_road": null,
+                                                        "house_n_road_en": null,
+                                                        "zip_or_postal_code": null,
+                                                        "created_at": "2022-02-09T16:07:08.000000Z",
+                                                        "updated_at": "2022-02-09T16:07:08.000000Z",
+                                                        "deleted_at": null,
+                                                        "loc_division_title": "ঢাকা",
+                                                        "loc_division_title_en": "Dhaka",
+                                                        "loc_district_title": "ঢাকা ",
+                                                        "loc_district_title_en": "DHAKA",
+                                                        "loc_upazila_title": "তেজগাঁও উন্নয়ন সার্কেল",
+                                                        "loc_upazila_tile_en": "TEJGAON UNNAYAN CIRCLE"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/preview-youth-exam/{examId}/{youthId}": {
+            "get": {
                 "tags": [
                     "Exams"
                 ],
@@ -11423,7 +11411,9 @@
                                                         "option_4": "fghgfh",
                                                         "option_4_en": null,
                                                         "exam_result_id": 1,
-                                                        "answers": ["pagla"],
+                                                        "answers": [
+                                                            "pagla"
+                                                        ],
                                                         "file_paths": "[\"a\", \"b\"]"
                                                     }
                                                 ]
@@ -11460,20 +11450,19 @@
                         }
                     }
                 }
-            } },
-        "/exam-question-paper/{examId}":{
-            "get":{
+            }
+        },
+        "/exam-question-paper/{examId}": {
+            "get": {
                 "tags": [
                     "Exams"
                 ],
                 "summary": "Get a exam Question Paper",
                 "description": "API endpoint to get a exam Question Paper. A successful request response will show 200 HTTP status code",
                 "parameters": [
-
                     {
                         "$ref": "#/components/parameters/examId"
                     }
-
                 ],
                 "responses": {
                     "200": {
@@ -11593,7 +11582,8 @@
                         }
                     }
                 }
-            } },
+            }
+        },
         "/submit-exam-paper": {
             "post": {
                 "tags": [
@@ -11619,19 +11609,21 @@
                                         "questions": [
                                             {
                                                 "question_id": 1,
-                                                "individual_marks":10,
-                                                "Answers": ["dfg","fdhgfh"],
+                                                "individual_marks": 10,
+                                                "Answers": [
+                                                    "dfg",
+                                                    "fdhgfh"
+                                                ],
                                                 "file_path": ""
                                             },
                                             {
                                                 "question_id": 2,
-                                                "individual_marks":10,
+                                                "individual_marks": 10,
                                                 "answers": [],
                                                 "file_path": ""
                                             }
                                         ]
                                     }
-
                                 },
                                 "From Selected Questions": {
                                     "summary": "An example of Exam  Submit Paper for Selected Questions",
@@ -11641,27 +11633,27 @@
                                         "youth_id": "4",
                                         "questions": [
                                             {
-                                                "exam_section_question_id" : "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
                                                 "question_id": 1,
-                                                "individual_marks":10,
-                                                "Answers": ["dfg","fdhgfh"],
+                                                "individual_marks": 10,
+                                                "Answers": [
+                                                    "dfg",
+                                                    "fdhgfh"
+                                                ],
                                                 "file_path": ""
                                             },
                                             {
-                                                "exam_section_question_id" : "f45f6477-585a-46e2-a5ea-1f33a42b4518",
+                                                "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
                                                 "question_id": 2,
-                                                "individual_marks":10,
+                                                "individual_marks": 10,
                                                 "answers": [],
                                                 "file_path": ""
                                             }
                                         ]
                                     }
-
                                 }
-
                             }
                         }
-
                     }
                 },
                 "responses": {
@@ -11735,14 +11727,11 @@
                                                 "exam_result_id": 2,
                                                 "marks_achieved": 2
                                             }
-
                                         ]
                                     }
-
                                 }
                             }
                         }
-
                     }
                 },
                 "responses": {
@@ -11780,6 +11769,49 @@
                                         "success": true,
                                         "code": 201,
                                         "message": "Exam Question Bank added successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/exam-publish/{examTypeId}": {
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "summary": "publish a Exam",
+                "description": "API endpoint to publish exam . A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/examPublish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/examPublish"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exam published successfully",
                                         "query_time": 0
                                     }
                                 }
@@ -11840,77 +11872,58 @@
                 "properties": {
                     "institute_id": {
                         "type": "integer"
-
                     },
                     "training_center_id": {
                         "type": "integer"
-
                     },
                     "reporting_month": {
                         "type": "string",
                         "format": "date"
-
                     },
                     "number_of_trades_allowed": {
                         "type": "integer"
-
                     },
                     "number_of_ongoing_trades": {
                         "type": "integer"
-
                     },
                     "number_of_computers": {
                         "type": "integer"
-
                     },
                     "number_of_other_equipments": {
                         "type": "integer"
-
                     },
                     "amount_of_total_fdr": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_women": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_men": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_disabled_and_others": {
                         "type": "integer"
-
                     },
                     "current_session_trainees_total": {
                         "type": "integer"
-
                     },
                     "total_trainees_women": {
                         "type": "integer"
-
-                    }
-                ,
+                    },
                     "total_trainees_men": {
                         "type": "integer"
-
                     },
                     "total_trainees_disabled_and_others": {
                         "type": "integer"
-
                     },
                     "total_trainees_total": {
                         "type": "integer"
-
                     },
                     "bank_status_skill_development": {
                         "type": "integer"
-
                     },
                     "bank_status_coordinating_council": {
                         "type": "integer"
-
                     },
                     "date_of_last_election_of_all_party_council": {
                         "type": "string",
@@ -11920,7 +11933,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingCenterCombineProgressReport": {
                 "type": "object",
@@ -11964,8 +11981,7 @@
                     },
                     "total_number_of_members": {
                         "type": "integer"
-                    }
-                ,
+                    },
                     "subscriptions_collected_so_far": {
                         "type": "number"
                     },
@@ -12036,7 +12052,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingCenterProgressReport": {
                 "type": "object",
@@ -12139,7 +12159,11 @@
                         "type": "string"
                     }
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "trainingIncomeExpenditureReport": {
                 "type": "object",
@@ -12205,9 +12229,12 @@
                     "comments": {
                         "type": "string"
                     }
-
                 },
-                "required": ["institute_id","training_center_id","reporting_month"]
+                "required": [
+                    "institute_id",
+                    "training_center_id",
+                    "reporting_month"
+                ]
             },
             "assignToBatch": {
                 "type": "object",
@@ -12540,14 +12567,31 @@
                     }
                 },
                 "required": [
-                    "question_type", "subject_id","title"
+                    "question_type",
+                    "subject_id",
+                    "title"
+                ]
+            },
+            "examPublish": {
+                "type": "object",
+                "properties": {
+                    "is_published": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    }
+                },
+                "required": [
+                    "is_published"
                 ]
             },
             "exams": {
                 "type": "object",
                 "properties": {
                     "exam_type_id": {
-                        "type" : "integer"
+                        "type": "integer"
                     },
                     "exam_date": {
                         "type": "string",
@@ -12577,35 +12621,36 @@
                     }
                 },
                 "required": [
-                    "exam_type_id","exam_date"
+                    "exam_type_id",
+                    "exam_date"
                 ]
             },
             "exam_type": {
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type" : "string"
+                        "type": "string"
                     },
                     "title": {
-                        "type" : "string"
+                        "type": "string"
                     },
                     "title_en": {
-                        "type" : "string"
+                        "type": "string"
                     },
                     "subject_id": {
-                        "type" : "integer"
+                        "type": "integer"
                     },
                     "accessor_type": {
-                        "type" : "string"
+                        "type": "string"
                     },
                     "accessor_id": {
-                        "type" : "integer"
+                        "type": "integer"
                     },
                     "purpose_name": {
                         "type": "string"
                     },
                     "purpose_id": {
-                        "type" : "integer"
+                        "type": "integer"
                     },
                     "row_status": {
                         "type": "integer",
@@ -12617,7 +12662,12 @@
                     }
                 },
                 "required": [
-                    "title","type","subject_id","purpose_name","accessor_type","accessor_id"
+                    "title",
+                    "type",
+                    "subject_id",
+                    "purpose_name",
+                    "accessor_type",
+                    "accessor_id"
                 ]
             },
             "rplOccupation": {
@@ -14569,7 +14619,6 @@
                     "example": "1"
                 }
             },
-
             "order": {
                 "name": "order",
                 "in": "query",
@@ -14646,7 +14695,6 @@
                     "type": "integer"
                 }
             },
-
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -14866,7 +14914,6 @@
                     "type": "integer"
                 }
             },
-
             "examId": {
                 "name": "examId",
                 "required": true,
