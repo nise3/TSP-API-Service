@@ -56,7 +56,6 @@ class ExamService
             'exam_types.row_status',
             'exam_types.created_at',
             'exam_types.updated_at',
-            'exam_types.is_published',
             'exam_types.published_at',
         ]);
 
@@ -474,10 +473,8 @@ class ExamService
     {
 
         if ($data['is_published'] == Exam::EXAM_PUBLISHED) {
-            $examType->is_published = Exam::EXAM_PUBLISHED;
             $examType->published_at = $startTime;
         } else {
-            $examType->is_published = Exam::EXAM_UNPUBLISHED;
             $examType->published_at = null;
         }
 
