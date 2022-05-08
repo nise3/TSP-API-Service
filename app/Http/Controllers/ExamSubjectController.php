@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\ExamSubject;
-use App\Services\CertificateService;
 use App\Services\ExamSubjectService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -17,9 +16,9 @@ use Throwable;
 class ExamSubjectController extends Controller
 {
     /**
-     * @var CertificateService
+     * @var ExamSubjectService
      */
-    public CertificateService $ExamSubjectService;
+    public ExamSubjectService $ExamSubjectService;
 
     /**
      * @var Carbon
@@ -28,10 +27,9 @@ class ExamSubjectController extends Controller
 
     /**
      * @param ExamSubjectService $examSubjectService
-     * @param CertificateService $ExamSubjectService
      */
 
-    public function __construct(CertificateService $examSubjectService)
+    public function __construct(ExamSubjectService $examSubjectService)
     {
         $this->ExamSubjectService = $examSubjectService;
         $this->startTime = Carbon::now();
@@ -46,7 +44,7 @@ class ExamSubjectController extends Controller
 
     public function getList(Request $request): JsonResponse
     {
-
+        $this->authorize('viewAny',ExamSubject::class);
         $filter = $this->ExamSubjectService->filterValidator($request)->validate();
         $response = $this->ExamSubjectService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
