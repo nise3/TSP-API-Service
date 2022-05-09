@@ -1352,7 +1352,7 @@ class CourseEnrollmentService
                 'exam_subjects.title_en as subject_title_en',
             ]);
 
-            $examsBuilder->where('exam_types.is_published', '=', Exam::EXAM_PUBLISHED);
+            $examsBuilder->whereNotNull('exam_types.published_at');
 
 
             $examsBuilder->join("batches", function ($join) {
@@ -1371,7 +1371,7 @@ class CourseEnrollmentService
                     ->whereNull('exams.deleted_at');
             });
 
-              //TODO:Need To Implement This
+            //TODO:Need To Implement This
 
 //            SELECT * from exams left join exam_results on exams.id = exam_results.exam_id group by exam_results.id
 //             DB::raw("IF(COUNT(exam_results.id) > 0, 'true', 'false') AS participated")
@@ -1385,16 +1385,18 @@ class CourseEnrollmentService
             //TODO:Remove Loop And Implement Query
 
             foreach ($exams as &$exam) {
-                $examParticipation = ExamResult::where('exam_results.exam_id', $exam['exam_id'])
-                    ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->count('exam_results.id');
-                if ($examParticipation > 0) {
+                $examResults = $this->getExamResults($exam, $courseEnrollment);
+                if (!empty($examResults) && count($examResults) > 0) {
                     $exam['participated'] = true;
                 } else {
                     $exam['participated'] = false;
                 }
+                if (!empty($examResults)) {
+                    $exam['marks_obtained'] = $this->youthExamObtainedMarks($examResults);
+                } else {
+                    $exam['marks_obtained'] = null;
+                }
             }
-
-
             $courseEnrollment['exams'] = $exams;
         }
 
@@ -1408,6 +1410,35 @@ class CourseEnrollmentService
         ];
 
         return $response;
+    }
+
+    /**
+     * @param array $exam
+     * @param array $courseEnrollment
+     * @return mixed
+     */
+    private function getExamResults(array $exam, array $courseEnrollment): mixed
+    {
+        return ExamResult::where('exam_results.exam_id', $exam['exam_id'])
+            ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->get();
+    }
+
+    /**
+     * @param Collection $examResults
+     * @return int|null
+     */
+    private function youthExamObtainedMarks(Collection $examResults): int|null
+    {
+        $markObtained = 0;
+        foreach ($examResults as $examResult) {
+            if ($examResult->marks_achieved == null) {
+                $markObtained = null;
+                break;
+            } else {
+                $markObtained += $examResult->marks_achieved;
+            }
+        }
+        return $markObtained;
     }
 
     /**
