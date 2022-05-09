@@ -184,7 +184,12 @@ class CertificateService
                 'max:250'
             ],
             'template' => [
+                'nullable',
                 'string'
+            ],
+            'result_type' => [
+                'required',
+                'int'
             ],
             'accessor_type' => [
                 'required',
