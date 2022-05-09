@@ -11878,7 +11878,7 @@
                 }
             }
         },
-        "/certificate": {
+        "/certificates": {
             "get": {
                 "tags": [
                     "Certificate"
@@ -11987,7 +11987,7 @@
                 }
             }
         },
-        "/certificate/{certificateId}": {
+        "/certificates/{certificateId}": {
             "get": {
                 "parameters": [
                     {
@@ -12144,7 +12144,7 @@
                         "$ref": "#/components/parameters/batchId"
                     },
                     {
-                        "$ref": "#/components/parameters/youthId"
+                        "$ref": "#/components/parameters/youth_id"
                     },
                     {
                         "$ref": "#/components/parameters/certificateId"
@@ -15554,7 +15554,7 @@
                 }
             },
             "youth_id": {
-                "name": "youthId",
+                "name": "youth_id",
                 "required": false,
                 "in": "query",
                 "schema": {
@@ -15915,15 +15915,6 @@
                 "name": "result_type",
                 "in": "query",
                 "description": "get all result type",
-                "schema": {
-                    "type": "integer",
-                    "example": 1
-                }
-            },
-            "youthId": {
-                "name": "result_type",
-                "in": "query",
-                "description": "get all course enrollment by youth id",
                 "schema": {
                     "type": "integer",
                     "example": 1
