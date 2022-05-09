@@ -189,7 +189,13 @@ class CertificateService
             ],
             'result_type' => [
                 'required',
-                'int'
+                'int',
+                Rule::in([
+                    BaseModel::CERTIFICATE_COMPETENT,
+                    BaseModel::CERTIFICATE_NOT_COMPETENT,
+                    BaseModel::CERTIFICATE_GRADING,
+                    BaseModel::CERTIFICATE_MARKS
+                ])
             ],
             'accessor_type' => [
                 'required',
