@@ -11893,7 +11893,7 @@
                         "$ref": "#/components/parameters/title_optional"
                     },
                     {
-                        "$ref": "#/components/parameters/resultType"
+                        "$ref": "#/components/parameters/result_type"
                     },
                     {
                         "$ref": "#/components/parameters/page"
@@ -15920,14 +15920,21 @@
                     "example": true
                 }
             },
-            "resultType": {
+            "result_type": {
                 "name": "result_type",
                 "in": "query",
-                "description": "get all result type",
                 "schema": {
                     "type": "integer",
                     "example": 1
-                }
+                },
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
             },
             "certificate_id": {
                 "name": "certificate_id",

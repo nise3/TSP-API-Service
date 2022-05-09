@@ -482,6 +482,10 @@ class BatchService
                 'after:registration_start_date',
                 'date_format:Y-m-d',
             ],
+            'certificate_id' => [
+                'nullable',
+                'integer'
+            ],
             'batch_start_date' => [
                 'required',
                 'date',
