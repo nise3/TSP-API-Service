@@ -1338,6 +1338,7 @@ class CourseEnrollmentService
                 'batches.title_en as batch_title_en',
                 'exams.id as exam_id',
                 'exams.exam_date',
+                'exams.total_marks',
                 'exams.duration',
                 'exam_subjects.title as subject_title',
                 'exam_subjects.title_en as subject_title_en',
