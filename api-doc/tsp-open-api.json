@@ -12141,13 +12141,13 @@
                 "description": "API endpoint to get list of Certificate-Issued. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/batchId"
+                        "$ref": "#/components/parameters/batch_id"
                     },
                     {
                         "$ref": "#/components/parameters/youth_id"
                     },
                     {
-                        "$ref": "#/components/parameters/certificateId"
+                        "$ref": "#/components/parameters/certificate_id"
                     },
                     {
                         "$ref": "#/components/parameters/page"
@@ -12168,7 +12168,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/certificate-issued"
+                                    "$ref": "#/components/schemas/certificateIssued"
                                 },
                                 "example": {
                                     "data": [
@@ -12206,7 +12206,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/certificate-issued"
+                                "$ref": "#/components/schemas/certificateIssued"
                             }
                         }
                     }
@@ -12309,7 +12309,7 @@
                     "content": {
                         "application/x-www-form-urlencoded": {
                             "schema": {
-                                "$ref": "#/components/schemas/certificate-issued"
+                                "$ref": "#/components/schemas/certificateIssued"
                             }
                         }
                     }
@@ -12320,7 +12320,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/certificate-issued"
+                                    "$ref": "#/components/schemas/certificateIssued"
                                 },
                                 "example": {
                                     "data": [
@@ -12370,7 +12370,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/certificate-issued"
+                                    "$ref": "#/components/schemas/certificateIssued"
                                 },
                                 "example": {
                                     "_response_status": {
@@ -15053,7 +15053,7 @@
                     }
                 }
             },
-            "certificate-issued": {
+            "certificateIssued": {
                 "type": "object",
                 "description": "Certificate Issue with active OR/AND for youth",
                 "properties": {
@@ -15786,6 +15786,15 @@
                     "example": "1"
                 }
             },
+            "batch_id": {
+                "name": "batch_id",
+                "in": "query",
+                "description": "batch id",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "rto_batch_id": {
                 "name": "rto_batch_id",
                 "in": "query",
@@ -15920,13 +15929,12 @@
                     "example": 1
                 }
             },
-            "certificateId": {
+            "certificate_id": {
                 "name": "certificate_id",
                 "in": "query",
                 "description": "get all issued certificate ty certificate_id",
                 "schema": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "integer"
                 }
             }
         }

@@ -122,7 +122,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     // TODO remove this routes and uncomment auth middleware routs
 //    $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
 //    $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-//    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+//    $customRouter()->resourceRoute('certificateIssued', 'CertificateIssuedController')->render();
 
     /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
