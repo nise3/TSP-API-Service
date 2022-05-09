@@ -1557,10 +1557,10 @@ class ExamService
             'exam_subjects.title_en as subject_title_en',
             'exam_types.title',
             'exam_types.title_en',
+            'exams.id as exam_id',
             'exams.duration',
             'exams.exam_date',
             'exams.total_marks'
-
         ]);
         $examPreviewBuilder->where('exams.id', $examId);
 
@@ -1575,6 +1575,13 @@ class ExamService
         });
 
         $examPreview = $examPreviewBuilder->firstOrFail()->toArray();
+
+        $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($examPreview['exam_id']);
+        if ($manualMarkingQuestionNumbers == 0) {
+            $examPreview['auto_marking'] = true;
+        } else {
+            $examPreview['auto_marking'] = false;
+        }
 
 
         $youthIds = [];
