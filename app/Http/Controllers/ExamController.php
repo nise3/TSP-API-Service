@@ -217,6 +217,8 @@ class ExamController extends Controller
     {
         $examData = $this->examService->getExamQuestionPaper($id);
         $exam = Exam::findOrFail($examData['id']);
+
+        /** Set the timezone to local in env for this part */
         $examStartTime = CarbonImmutable::create($exam->exam_date);
         $examEndTime = $examStartTime->addMinutes($exam->duration);
         throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
@@ -244,6 +246,7 @@ class ExamController extends Controller
 
         $exam = Exam::findOrFail($validatedData['exam_id']);
 
+        /** Set the timezone to local in env for this part */
         $examStartTime = CarbonImmutable::create($exam->exam_date);
         $examEndTime = $examStartTime->addMinutes($exam->duration);
         throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
