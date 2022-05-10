@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use App\Models\ExamType;
 use App\Services\ExamService;
+use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -215,12 +216,11 @@ class ExamController extends Controller
     public function getExamQuestionPaper(int $id): JsonResponse
     {
         $examData = $this->examService->getExamQuestionPaper($id);
-        //TODO : fix validation issue
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = Carbon::parse($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($examData['id']);
+        $examStartTime = CarbonImmutable::create($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         $response = [
             "data" => $examData ?? null,
@@ -242,12 +242,12 @@ class ExamController extends Controller
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
 
-        //TODO : fix validation issue
-//        $exam = Exam::findOrFail($validatedData['exam_id']);
-//        $examStartTime = Carbon::parse($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime < $examStartTime, ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime > $examEndTime, ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($validatedData['exam_id']);
+
+        $examStartTime = CarbonImmutable::create($exam->exam_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
