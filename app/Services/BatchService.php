@@ -49,6 +49,7 @@ class BatchService
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
+        $certificateId = $request['certificate_id'] ?? "";
 
 
         /** @var Batch|Builder $batchBuilder */
@@ -126,6 +127,10 @@ class BatchService
         }
         if (is_numeric($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
+        }
+
+        if (is_numeric($certificateId)) {
+            $batchBuilder->where('batches.certificate_id', $certificateId);
         }
 
         if (is_numeric($programId)) {
