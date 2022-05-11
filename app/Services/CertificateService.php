@@ -210,6 +210,10 @@ class CertificateService
                 'int',
                 'min:1'
             ],
+            'issued_at' => [
+                'nullable',
+                'string'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
