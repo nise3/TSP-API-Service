@@ -47,7 +47,8 @@ class CertificateService
             'certificates.accessor_id',
             'certificates.row_status',
             'certificates.created_at',
-            'certificates.updated_at'
+            'certificates.updated_at',
+            'certificates.issued_at'
 
         ])->acl();
 
@@ -107,6 +108,7 @@ class CertificateService
             'certificates.row_status',
             'certificates.created_at',
             'certificates.updated_at',
+            'certificates.issued_at'
         ]);
 
         $CertificateBuilder->where('certificates.id', $id);
