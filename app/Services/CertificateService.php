@@ -231,7 +231,6 @@ class CertificateService
 
     public function filterValidator(Request $request): Validator
     {
-
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
