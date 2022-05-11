@@ -51,6 +51,7 @@ class BatchService
         $trainingCenterId = $request['training_center_id'] ?? "";
         $certificateId = $request['certificate_id'] ?? "";
 
+//        dd($request);
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::select([
@@ -529,6 +530,7 @@ class BatchService
      */
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+//        dd($request);
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
@@ -546,6 +548,7 @@ class BatchService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
+            'certificate_id' => 'nullable|int',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
