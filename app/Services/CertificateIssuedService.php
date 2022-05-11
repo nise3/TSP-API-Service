@@ -5,6 +5,8 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Certificate;
 use App\Models\CertificateIssued;
+use App\Models\CourseEnrollment;
+use App\Models\ExamResult;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -30,7 +32,7 @@ class CertificateIssuedService
     {
 //        $titleEn = $request['title_en'] ?? "";
 //        $title = $request['title'] ?? "";
-        $pageSize = $request['page_size'] ?? "";
+        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
@@ -69,8 +71,27 @@ class CertificateIssuedService
             $certificateIssued = $CertificateIssuedBuilder->get();
         }
 
+        $resultArray = $certificateIssued->toArray();
+        $youthIds = CertificateIssued::pluck('youth_id')->unique()->toArray();
+        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+        $resultData = $resultArray['data'] ?? $resultArray;
+
         $response['order'] = $order;
-        $response['data'] = $certificateIssued->toArray()['data'] ?? $certificateIssued->toArray();
+        $response['data'] = $resultData;
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
