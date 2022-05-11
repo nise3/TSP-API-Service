@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
@@ -23,6 +24,7 @@ use Throwable;
 
 class CertificateIssuedService
 {
+
     /**
      * @param array $request
      * @param Carbon $startTime
@@ -39,7 +41,7 @@ class CertificateIssuedService
 
 
         /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder =  CertificateIssued::select([
+        $CertificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
             'certificate_issued.certificate_id',
             'certificate_issued.youth_id',
@@ -133,6 +135,14 @@ class CertificateIssuedService
         $certificateIssued->fill($data);
         $certificateIssued->save();
         return $certificateIssued;
+    }
+
+    public function certificateIssuedAtUpdate($certificateId)
+    {
+      //$abc = app(Certificate::class);
+        $UpdateDetails = Certificate::where('id', $certificateId)->first();
+        $UpdateDetails->issued_at  = Carbon::now();
+        $UpdateDetails->save();
     }
 
     /**

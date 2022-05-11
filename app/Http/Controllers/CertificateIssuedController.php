@@ -6,10 +6,12 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
 use App\Services\CertificateIssuedService;
+use App\Services\CertificateService;
 use App\Services\CommonServices\MailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -30,7 +32,9 @@ class CertificateIssuedController extends Controller
      * CertificateController constructor.
      * @param CertificateIssuedService $certificateIssuedService
      */
-    public function __construct(CertificateIssuedService $certificateIssuedService)
+    public function __construct(
+        CertificateIssuedService $certificateIssuedService
+    )
     {
         $this->certificateIssuedService = $certificateIssuedService;
         $this->startTime = Carbon::now();
@@ -82,16 +86,30 @@ class CertificateIssuedController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validatedData = $this->certificateIssuedService->validator($request)->validate();
-        $data = $this->certificateIssuedService->store($validatedData);
-        $response = [
-            'data' => $data ?: null,
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_CREATED,
-                "message" => "Certificate Issued successfully.",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+
+        DB::beginTransaction();
+
+        try {
+            $data = $this->certificateIssuedService->store($validatedData);
+//            dd($validatedData);
+            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            DB::commit();
+            $response = [
+                'data' => $data ?: null,
+                '_response_status' => [
+                    "success" => true,
+                    "code" => ResponseAlias::HTTP_CREATED,
+                    "message" => "Certificate Issued successfully.",
+                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+                ]
+            ];
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+
+
+
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
         if (isset($data['_response_status']['success']) && $data['_response_status']['success']){
             /** Mail send after certificate issued */
