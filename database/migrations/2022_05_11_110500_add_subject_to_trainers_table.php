@@ -15,6 +15,7 @@ class AddSubjectToTrainersTable extends Migration
     {
         Schema::table('trainers', function (Blueprint $table) {
             $table->text('subject')->nullable()->after('training_center_id');
+            $table->text('subject_en')->nullable()->after('subject');
         });
     }
 
@@ -27,6 +28,7 @@ class AddSubjectToTrainersTable extends Migration
     {
         Schema::table('trainers', function (Blueprint $table) {
             $table->dropColumn('subject');
+            $table->dropColumn('subject_en');
         });
     }
 }

@@ -57,6 +57,7 @@ class TrainerService
             'training_centers.title_en as training_center_title_en',
             'training_centers.title as training_center_title',
             'training_centers.subject',
+            'training_centers.subject_en',
             'trainers.trainer_name',
             'trainers.trainer_name_en',
             'trainers.trainer_registration_number',
@@ -217,6 +218,7 @@ class TrainerService
         $trainerBuilder = Trainer::select([
             'trainers.id',
             'training_centers.subject',
+            'training_centers.subject_en',
             'trainers.industry_association_id',
             'trainers.branch_id',
             'branches.title_en as branch_title_en',
@@ -635,6 +637,10 @@ class TrainerService
             ],
             'subject' => [
                 'required',
+                'string',
+            ],
+            'subject_en' => [
+                'nullable',
                 'string',
             ],
             'trainer_name' => [
