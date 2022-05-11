@@ -13,14 +13,21 @@ class Exam extends BaseModel
     use  SoftDeletes, CreatedUpdatedBy;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
+
     public const EXAM_TYPE_ONLINE = 1;
     public const EXAM_TYPE_OFFLINE = 2;
     public const EXAM_TYPE_MIXED = 3;
+    public const EXAM_TYPE_PRACTICAL = 4;
+    public const EXAM_TYPE_FIELD_WORK = 5;
+    public const EXAM_TYPE_PRESENTATION = 6;
 
     public const EXAM_TYPES = [
         self::EXAM_TYPE_ONLINE,
         self::EXAM_TYPE_OFFLINE,
         self::EXAM_TYPE_MIXED,
+        self::EXAM_TYPE_PRACTICAL,
+        self::EXAM_TYPE_FIELD_WORK,
+        self::EXAM_TYPE_PRESENTATION,
     ];
 
     public const EXAM_PUBLISHED = 1;
