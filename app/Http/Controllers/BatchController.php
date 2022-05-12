@@ -50,6 +50,21 @@ class BatchController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+//        dd($request);
+        $filter = $this->batchService->filterValidator($request)->validate();
+        $response = $this->batchService->getBatchList($filter, $this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * * Display a listing of the resource.
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function getCourseBatches(Request $request): JsonResponse
+    {
         $filter = $this->batchService->filterValidator($request)->validate();
         $response = $this->batchService->getBatchList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);

@@ -57,7 +57,7 @@ class Authenticate
                     $request->offsetSet('training_center_id', $authUser->training_center_id);
                 }
 
-                /** Modularized accessor for Exam Module */
+                /** SET Modularized Accessor*/
                 $request->offsetSet('accessor_type', BaseModel::ACCESSOR_TYPE_INSTITUTE);
                 $request->offsetSet('accessor_id', $authUser->institute_id);
 

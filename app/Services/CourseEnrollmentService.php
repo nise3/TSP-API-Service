@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Exam;
@@ -81,6 +82,7 @@ class CourseEnrollmentService
                 'course_enrollments.batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
+                'batches.certificate_id as certificate_id',
                 'course_enrollments.payment_status',
                 'course_enrollments.first_name',
                 'course_enrollments.first_name_en',
@@ -186,8 +188,28 @@ class CourseEnrollmentService
         } else {
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
+
+        $resultArray = $courseEnrollments->toArray();
+        $youthIds = CourseEnrollment::pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+        $resultData = $resultArray['data'] ?? $resultArray;
+
         $response['order'] = $order;
-        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+//        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['data'] = $resultData;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
@@ -277,9 +299,10 @@ class CourseEnrollmentService
 
     /**
      * @param array $data
+     * @param bool $isBulkImport
      * @return CourseEnrollment
      */
-    public function enrollCourse(array $data): CourseEnrollment
+    public function enrollCourse(array $data, bool $isBulkImport = false): CourseEnrollment
     {
         $courseEnrollment = app(CourseEnrollment::class);
 
@@ -290,8 +313,8 @@ class CourseEnrollmentService
         } elseif (!empty($course->industry_association_id)) {
             $data['industry_association_id'] = $course->industry_association_id;
         }
-
-        $data['row_status'] = BaseModel::ROW_STATUS_PENDING;
+        $data['row_status'] = $isBulkImport ? BaseModel::ROW_STATUS_ACTIVE : BaseModel::ROW_STATUS_PENDING;
+        $data['saga_status'] = $isBulkImport ? BaseModel::SAGA_STATUS_COMMIT : BaseModel::SAGA_STATUS_CREATE_PENDING;
 
         $courseEnrollment->fill($data);
         $courseEnrollment->save();
@@ -438,6 +461,14 @@ class CourseEnrollmentService
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules);
+    }
+
+    public function rollbackYouth(array $payload)
+    {
+        foreach ($payload as $value) {
+            ServiceToServiceCall::rollbackYouthUserById($value['mobile']);
+        }
+
     }
 
 
@@ -1179,10 +1210,9 @@ class CourseEnrollmentService
      * @param int $eduLabelId
      * @return bool
      */
-    private function getRequiredStatus(string $key, int $eduLabelId): bool
+    public function getRequiredStatus(string $key, int $eduLabelId): bool
     {
         switch ($key) {
-
             /** Validation Rule Based On YouthEducation Level */
             case EnrollmentEducation::DEGREE:
             {
@@ -1435,6 +1465,75 @@ class CourseEnrollmentService
 
     /**
      * @param array $request
+     * @return array
+     */
+    public function getEnrolledYouths(array $request): array
+    {
+        $courseId = $request['course_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        /** @var CourseEnrollment|Builder $coursesEnrollmentBuilder */
+        $coursesEnrollmentBuilder = CourseEnrollment::select(
+            [
+                'course_enrollments.id',
+                'course_enrollments.youth_id',
+                'course_enrollments.course_id'
+            ]
+        );
+
+        if (!empty($courseId)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.course_id', '=', $courseId);
+        }
+
+        if (is_numeric($rowStatus)) {
+            $coursesEnrollmentBuilder->where('course_enrollments.row_status', $rowStatus);
+        }
+
+        $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
+
+        /** @var Collection $courseEnrollments */
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $courseEnrollments = $coursesEnrollmentBuilder->paginate($pageSize);
+            $paginateData = (object)$courseEnrollments->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $courseEnrollments = $coursesEnrollmentBuilder->get();
+        }
+
+        /** Add youth details */
+        $youthIds = $courseEnrollments->pluck('youth_id')->unique()->toArray();
+        if ($youthIds) {
+            $youthProfiles = ServiceToServiceCall::getYouthProfilesByIds($youthIds);
+            $indexedYouths = [];
+
+            foreach ($youthProfiles as $item) {
+                $indexedYouths[$item['id']] = $item;
+            }
+
+            foreach ($courseEnrollments as $enrollment){
+                $enrollment['youth_details'] = $indexedYouths[$enrollment->youth_id];
+            }
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK
+        ];
+
+        return $response;
+    }
+
+    /**
+     * @param array $request
      * @param Carbon $startTime
      * @return array
      */
@@ -1540,6 +1639,43 @@ class CourseEnrollmentService
 
         $rules = [
             'youth_id' => 'required|min:1',
+            'course_id' => 'nullable|int|gt:0',
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'nullable',
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in(CourseEnrollment::ROW_STATUSES),
+            ]
+        ];
+
+        return \Illuminate\Support\Facades\Validator::make($requestData, $rules, $customMessage);
+    }
+
+    /**
+     * @param Request $request
+     * return use Illuminate\Support\Facades\Validator;
+     * @return Validator
+     */
+    public function enrolledYouthsFilterValidator(Request $request): Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be between 0 to 3. [30000]'
+        ];
+
+        $requestData = $request->all();
+
+        $rules = [
             'course_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
