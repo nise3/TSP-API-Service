@@ -137,6 +137,7 @@ class CourseService
 
         if(!$isFourIr){
             $coursesBuilder->whereNull('four_ir_initiative_id');
+
         }
         if(!empty($fourIrInitiativeId)){
             $coursesBuilder->where('four_ir_initiative_id', $fourIrInitiativeId);
