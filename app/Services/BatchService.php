@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
@@ -380,6 +381,18 @@ class BatchService
         return $batch;
     }
 
+    /**
+     * @param $batch
+     * @param array $examTypeIds
+     * @return Batch
+     */
+    public function assignExamToBatch($batch, array $examTypeIds):Batch
+    {
+        $batch->exams()->sync($examTypeIds);
+        return $batch;
+
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -631,9 +644,9 @@ class BatchService
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
 
-            if(!$isPublicApi){
-                $trainingCenterBuilder->acl();
-            }
+        if (!$isPublicApi) {
+            $trainingCenterBuilder->acl();
+        }
 
         $result = $trainingCenterBuilder->get();
 
@@ -740,6 +753,30 @@ class BatchService
                 return $e;
             })
             ->json();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function examTypeValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        if (!empty($data['exam_type_ids'])) {
+            $data["exam_type_ids"] = is_array($data['exam_type_ids']) ? $data['exam_type_ids'] : explode(',', $data['exam_type_ids']);
+        }
+
+        $rules = [
+            'exam_type_ids' => 'required|array|min:1',
+            'exam_type_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                'exists:exam_types,id,deleted_at,NULL'
+            ]
+        ];
+        return Validator::make($data, $rules);
     }
 
 

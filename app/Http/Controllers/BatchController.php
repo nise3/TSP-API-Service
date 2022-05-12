@@ -275,4 +275,28 @@ class BatchController extends Controller
         return Response::json($response);
     }
 
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function assignExamToBatch(Request $request,int $id): JsonResponse
+    {
+        $batch = Batch::findOrFail($id);
+        $validatedData = $this->batchService->examTypeValidator($request)->validate();
+        $validatedData['exam_type_ids'] = !empty($validatedData['exam_type_ids']) ? $validatedData['exam_type_ids'] : [];
+        $batch = $this->batchService->assignExamToBatch($batch, $validatedData['exam_type_ids']);
+        $response = [
+            'data' => $batch->exams()->get(),
+            '_response_status' => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "exams assigned to batch successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
 }
