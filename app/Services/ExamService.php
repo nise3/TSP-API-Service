@@ -464,7 +464,7 @@ class ExamService
             $offlineExam = $this->storeOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else {
+        } else if($data['type'] == Exam::EXAM_TYPE_MIXED){
             $data['online']['exam_type_id'] = $data['exam_type_id'];
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
 
@@ -473,6 +473,10 @@ class ExamService
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
+        } else{
+            $exam = app(Exam::class);
+            $exam->fill($data);
+            $exam->save();
         }
 
         return $examIds;

@@ -94,7 +94,9 @@ class ExamController extends Controller
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
             }
-            $this->examService->storeExamSections($validatedData);
+            if (!empty($data['type']) && !in_array($data['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->storeExamSections($validatedData);
+            }
             DB::commit();
             $response = [
                 '_response_status' => [
