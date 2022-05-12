@@ -25,6 +25,8 @@ class CreateExamsTable extends Migration
             $table->text('venue')->nullable();
             $table->unsignedDecimal('total_marks')->default(0);
             $table->unsignedTinyInteger('row_status')->default(1);
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
