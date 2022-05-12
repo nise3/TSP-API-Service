@@ -6,6 +6,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Exam;
@@ -187,8 +188,28 @@ class CourseEnrollmentService
         } else {
             $courseEnrollments = $coursesEnrollmentBuilder->get();
         }
+
+        $resultArray = $courseEnrollments->toArray();
+        $youthIds = CourseEnrollment::pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+        $resultData = $resultArray['data'] ?? $resultArray;
+
         $response['order'] = $order;
-        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+//        $response['data'] = $courseEnrollments->toArray()['data'] ?? $courseEnrollments->toArray();
+        $response['data'] = $resultData;
         $response['_response_status'] = [
             "success" => true,
             "code" => \Symfony\Component\HttpFoundation\Response::HTTP_OK,
