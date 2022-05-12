@@ -198,13 +198,11 @@ class ExamService
     }
 
     /**
-     * @param array $request
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(array $request, int $id): Model|Builder
+    public function getOneExamType(int $id): Model|Builder
     {
-        $purposeName = $request['purpose_name'] ?? '';
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
             'exam_types.id',
@@ -212,7 +210,6 @@ class ExamService
             'exam_subjects.title  as exam_subject_title',
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
-            'exam_types.purpose_id',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -225,29 +222,6 @@ class ExamService
             $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                 ->whereNull('exam_types.deleted_at');
         });
-
-        if ($purposeName == ExamType::EXAM_PURPOSE_BATCH) {
-            $examTypeBuilder->join("batches", function ($join) {
-                $join->on('exam_types.purpose_id', '=', 'batches.id')
-                    ->whereNull('batches.deleted_at');
-            });
-            $examTypeBuilder->join("training_centers", function ($join) {
-                $join->on('batches.training_center_id', '=', 'training_centers.id')
-                    ->whereNull('training_centers.deleted_at');
-            });
-            $examTypeBuilder->join("courses", function ($join) {
-                $join->on('batches.course_id', '=', 'courses.id')
-                    ->whereNull('courses.deleted_at');
-            });
-            $examTypeBuilder->addSelect('batches.title as batch_title')
-                ->addSelect('batches.title_en as batch_title_en')
-                ->addSelect('training_center_id')
-                ->addSelect('training_centers.title as training_center_title')
-                ->addSelect('training_centers.title_en as training_center_title_en')
-                ->addSelect('course_id')
-                ->addSelect('courses.title as course_title')
-                ->addSelect('courses.title_en as course_title_en');
-        }
 
 
         $examTypeBuilder->where('exam_types.id', $id);
@@ -269,8 +243,6 @@ class ExamService
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.subject_id',
-            'exam_types.purpose_name',
-            'exam_types.purpose_id',
             'exam_subjects.title as subject_title',
             'exam_subjects.title_en as subject_title_en',
             'exams.exam_date',
@@ -295,11 +267,6 @@ class ExamService
         $exam = $examQuestionPaperBuilder->firstOrFail()->toArray();
         $exam['exam_sections'] = $this->getExamSectionByExam($id);
 
-        if ($exam['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
-            /** @var Batch $batch */
-            $batch = Batch::findOrFail($exam['purpose_id']);
-            $exam['course_id'] = $batch->course_id;
-        }
         foreach ($exam['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $exam['subject_id'];
             if ($examSection['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
@@ -1493,19 +1460,6 @@ class ExamService
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);
-    }
-
-    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            'purpose_name' => [
-                'required',
-                'string',
-                Rule::in(ExamType::EXAM_PURPOSES)
-            ],
-        ];
-
-        return Validator::make($request->all(), $rules);
     }
 
     /**
