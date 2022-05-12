@@ -53,9 +53,6 @@ class ExamQuestionBank extends BaseModel
         1 => "MCQ",
         2 => "FIll in the blanks",
         3 => "Yes/No Question",
-        4 => "Practical",
-        5 => "Filed Work",
-        6 => "Presentation",
-        7 => "Descriptive Question",
+        4 => "Descriptive Question",
     ];
 }
