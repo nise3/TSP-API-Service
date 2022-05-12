@@ -607,7 +607,7 @@ class ExamService
             $this->storeOfflineExamSections($data['offline']['exam_questions'], $data);
         } else if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
             $this->storeOnlineExamSections($data['exam_questions'], $data);
-        } else {
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
             $this->storeOfflineExamSections($data['exam_questions'], $data);
         }
     }
@@ -1019,7 +1019,7 @@ class ExamService
         } else {
             $examValidationRules = $this->examValidationRules($data, '', $id);
             $rules = array_merge($rules, $examValidationRules);
-            if(!empty($data['type']) && !in_array($data['type'],Exam::EXAM_TYPES_WITHOUT_QUESTION)){
+            if (!empty($data['type']) && !in_array($data['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
                 $examSectionValidationRules = $this->examSectionValidationRules();
                 $rules = array_merge($rules, $examSectionValidationRules);
             }
