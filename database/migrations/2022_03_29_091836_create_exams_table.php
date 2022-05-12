@@ -19,8 +19,9 @@ class CreateExamsTable extends Migration
             $table->id();
             $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline');
             $table->unsignedInteger('exam_type_id');
-            $table->dateTime('exam_date');
-            $table->unsignedInteger('duration');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date')->nullable();
+            $table->unsignedInteger('duration')->nullable();
             $table->text('venue')->nullable();
             $table->unsignedDecimal('total_marks')->default(0);
             $table->unsignedTinyInteger('row_status')->default(1);

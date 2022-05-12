@@ -20,6 +20,7 @@ class Exam extends BaseModel
     public const EXAM_TYPE_PRACTICAL = 4;
     public const EXAM_TYPE_FIELD_WORK = 5;
     public const EXAM_TYPE_PRESENTATION = 6;
+    public const EXAM_TYPE_ASSIGNMENT = 7;
 
     public const EXAM_TYPES = [
         self::EXAM_TYPE_ONLINE,
@@ -28,6 +29,20 @@ class Exam extends BaseModel
         self::EXAM_TYPE_PRACTICAL,
         self::EXAM_TYPE_FIELD_WORK,
         self::EXAM_TYPE_PRESENTATION,
+        self::EXAM_TYPE_ASSIGNMENT,
+    ];
+
+    public const DURATION_REQUIRED_EXAM_TYPES = [
+        self::EXAM_TYPE_ONLINE,
+        self::EXAM_TYPE_OFFLINE,
+        self::EXAM_TYPE_MIXED,
+    ];
+
+    public const EXAM_TYPES_WITHOUT_QUESTION = [
+        self::EXAM_TYPE_PRACTICAL,
+        self::EXAM_TYPE_FIELD_WORK,
+        self::EXAM_TYPE_PRESENTATION,
+        self::EXAM_TYPE_ASSIGNMENT,
     ];
 
     public const EXAM_PUBLISHED = 1;
