@@ -18,8 +18,6 @@ class ExamType extends BaseModel
         self::EXAM_PURPOSE_BATCH
     ];
 
-    /** purpose name tables */
-    public const EXAM_PURPOSE_TABLE_BATCH = 'batches';
 
 
     public function exams(): HasMany
