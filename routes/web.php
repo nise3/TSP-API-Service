@@ -52,6 +52,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
+        $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
+
 
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);

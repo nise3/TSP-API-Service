@@ -198,6 +198,22 @@ abstract class BaseModel extends Model
         self::CERTIFICATE_PARTICIPATION
     ];
 
+    /** @var string Result types */
+
+    public const RESULT_TYPE_COMPETENT = 1;
+    public const RESULT_TYPE_NOT_COMPETENT = 2;
+    public const RESULT_TYPE_GRADING = 3;
+    public const RESULT_TYPE_MARKS = 4;
+    public const RESULT_TYPE_PARTICIPATION = 5;
+
+    public const RESULT_TYPES = [
+        self::RESULT_TYPE_COMPETENT,
+        self::RESULT_TYPE_NOT_COMPETENT,
+        self::RESULT_TYPE_GRADING,
+        self::RESULT_TYPE_MARKS,
+        self::RESULT_TYPE_PARTICIPATION
+    ];
+
     public function getIndustryAssociationData(array &$originalData)
     {
         if (!empty($originalData['industry_association_id'])) {
