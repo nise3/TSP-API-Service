@@ -91,7 +91,7 @@ class Handler extends ExceptionHandler
         } elseif ($e instanceof BindingResolutionException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = "Binding Resolution Error";
-        }  elseif ($e instanceof ConnectionException) {
+        } elseif ($e instanceof ConnectionException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_REQUEST_TIMEOUT;
             $errors['_response_status']['message'] = $e->getMessage();
         } else if ($e instanceof HttpErrorException) {
@@ -99,7 +99,7 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['code'] = $e->getCode() ? $e->getCode() : ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
         } else if ($e instanceof RequestException) {
             $errors = idUserErrorMessage($e);
-        }elseif ($e instanceof ModelNotFoundException) {
+        } elseif ($e instanceof ModelNotFoundException) {
             $errors['_response_status']['code'] = ResponseAlias::HTTP_NOT_FOUND;
             $errors['_response_status']['message'] = 'Entry or Row for ' . str_replace('App\\', '', $e->getModel()) . ' was not Found'; //$e->getMessage();
         } elseif ($e instanceof NotFoundHttpException) {
@@ -125,7 +125,16 @@ class Handler extends ExceptionHandler
             $errors['_response_status']['code'] = ResponseAlias::HTTP_INTERNAL_SERVER_ERROR;
             $errors['_response_status']['message'] = $e->getMessage();
         } elseif ($e instanceof Exception) {
-            $errors['_response_status']['message'] = $e->getMessage();
+            $messageBody = json_decode($e->getMessage(), true);
+            $errors['_response_status']['code'] = $e->getCode();
+
+            if (!empty($messageBody['errors'])) {
+                $errors['errors'] = $messageBody['errors'];
+            }
+            if (!empty($messageBody['message'])) {
+                $errors['_response_status']['message'] = $messageBody['message'];
+            }
+
         }
         return response()->json($errors, $errors['_response_status']['code']);
 

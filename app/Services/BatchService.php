@@ -41,6 +41,8 @@ class BatchService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
         $order = $request['order'] ?? "ASC";
         $instituteId = $request['institute_id'] ?? "";
         $industryAssociationId = $request['industry_association_id'] ?? "";
@@ -48,7 +50,9 @@ class BatchService
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
+        $certificateId = $request['certificate_id'] ?? "";
 
+//        dd($request);
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::select([
@@ -79,6 +83,7 @@ class BatchService
             'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
+            'batches.certificate_id',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -126,6 +131,10 @@ class BatchService
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
+        if (is_numeric($certificateId)) {
+            $batchBuilder->where('batches.certificate_id', $certificateId);
+        }
+
         if (is_numeric($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
         }
@@ -137,6 +146,13 @@ class BatchService
         if (is_numeric($trainingCenterId)) {
             $batchBuilder->where('batches.training_center_id', $trainingCenterId);
         }
+        if (!empty($titleEn)) {
+            $batchBuilder->where('batches.title_en', 'like', '%' . $titleEn . '%');
+        }
+        if (!empty($title)) {
+            $batchBuilder->where('batches.title', 'like', '%' . $title . '%');
+        }
+
 
         /** @var Collection $batches */
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -485,6 +501,10 @@ class BatchService
                 'after:registration_start_date',
                 'date_format:Y-m-d',
             ],
+            'certificate_id' => [
+                'nullable',
+                'integer'
+            ],
             'batch_start_date' => [
                 'required',
                 'date',
@@ -523,6 +543,7 @@ class BatchService
      */
     public function filterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
+//        dd($request);
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
@@ -533,11 +554,14 @@ class BatchService
         ];
 
         $rules = [
+            'title_en' => 'nullable|string',
+            'title' => 'nullable|string',
             'institute_id' => 'nullable|int|gt:0|exists:institutes,id,deleted_at,NULL',
             'industry_association_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
+            'certificate_id' => 'nullable|int',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',

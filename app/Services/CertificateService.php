@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
-use App\Models\ExamSubject;
+use App\Models\Certificate;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class ExamSubjectService
+class CertificateService
 {
     /**
      * @param array $request
@@ -31,49 +31,56 @@ class ExamSubjectService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
+        $resultType = $request['result_type'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var ExamSubject|Builder $ExamSubjectBuilder */
-        $ExamSubjectBuilder = ExamSubject::select([
-            'exam_subjects.id',
-            'exam_subjects.title',
-            'exam_subjects.title_en',
-            'exam_subjects.accessor_type',
-            'exam_subjects.accessor_id',
-            'exam_subjects.row_status',
-            'exam_subjects.created_at',
-            'exam_subjects.updated_at',
-            'exam_subjects.deleted_at',
-        ]);
+        /** @var Certificate|Builder $certificateBuilder */
+        $certificateBuilder = Certificate::select([
+            'certificates.id',
+            'certificates.title',
+            'certificates.title_en',
+            'certificates.template',
+            'certificates.result_type',
+            'certificates.accessor_type',
+            'certificates.accessor_id',
+            'certificates.row_status',
+            'certificates.created_at',
+            'certificates.updated_at',
+            'certificates.issued_at'
 
-        $ExamSubjectBuilder->orderBy('exam_subjects.id', $order);
+        ])->acl();
+
+        $certificateBuilder->orderBy('certificates.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $ExamSubjectBuilder->where('exam_subjects.row_status', $rowStatus);
+            $certificateBuilder->where('certificates.row_status', $rowStatus);
         }
 
+        if(is_numeric($resultType)) {
+            $certificateBuilder->where('certificates.result_type', $resultType);
+        }
         if (!empty($titleEn)) {
-            $ExamSubjectBuilder->where('exam_subjects.title_en', 'like', '%' . $titleEn . '%');
+            $certificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $ExamSubjectBuilder->where('exam_subjects.title', 'like', '%' . $title . '%');
+            $certificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
         }
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $examSubject = $ExamSubjectBuilder->paginate($pageSize);
-            $paginateData = (object)$examSubject->toArray();
+            $certificate = $certificateBuilder->paginate($pageSize);
+            $paginateData = (object)$certificate->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $examSubject = $ExamSubjectBuilder->get();
+            $certificate = $certificateBuilder->get();
         }
 
         $response['order'] = $order;
-        $response['data'] = $examSubject->toArray()['data'] ?? $examSubject->toArray();
+        $response['data'] = $certificate->toArray()['data'] ?? $certificate->toArray();
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -85,68 +92,73 @@ class ExamSubjectService
 
     /**
      * @param int $id
-     * @return ExamSubject
+     * @return Certificate
      */
-    public function getOneExamSubject(int $id): ExamSubject
+    public function getOneCertificate(int $id): Certificate
     {
-        /** @var ExamSubject|Builder $ExamSubjectBuilder */
-        $ExamSubjectBuilder = ExamSubject::select([
-            'exam_subjects.id',
-            'exam_subjects.title',
-            'exam_subjects.title_en',
-            'exam_subjects.accessor_type',
-            'exam_subjects.accessor_id',
-            'exam_subjects.row_status',
-            'exam_subjects.created_at',
-            'exam_subjects.updated_at',
-            'exam_subjects.deleted_at',
+        /** @var Certificate|Builder $CertificateBuilder */
+        $CertificateBuilder = Certificate::select([
+            'certificates.id',
+            'certificates.title',
+            'certificates.title_en',
+            'certificates.template',
+            'certificates.result_type',
+            'certificates.accessor_type',
+            'certificates.accessor_id',
+            'certificates.row_status',
+            'certificates.created_at',
+            'certificates.updated_at',
+            'certificates.issued_at'
         ]);
-        $ExamSubjectBuilder->where('exam_subjects.id', $id);
-        /** @var ExamSubject exam_subjects */
-        return $ExamSubjectBuilder->firstOrFail();
+
+        $CertificateBuilder->where('certificates.id', $id);
+
+        /** @var Certificate exam_subjects */
+        return $CertificateBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return ExamSubject
+     * @return Certificate
      * @throws Throwable
      */
-    public function store(array $data): ExamSubject
+    public function store(array $data): Certificate
     {
-        $subject = app()->make(ExamSubject::class);
-        $subject->fill($data);
-        $subject->save();
-        return $subject;
+        $certificateTemplate = app()->make(Certificate::class);
+        $certificateTemplate->fill($data);
+        $certificateTemplate->save();
+
+        return $certificateTemplate;
     }
 
     /**
-     * @param ExamSubject $examSubject
+     * @param Certificate $certificate
      * @param array $data
-     * @return ExamSubject
+     * @return Certificate
      */
-    public function update(ExamSubject $examSubject, array $data): ExamSubject
+    public function update(Certificate $certificate, array $data): Certificate
     {
-        $examSubject->fill($data);
-        $examSubject->save();
-        return $examSubject;
+        $certificate->fill($data);
+        $certificate->save();
+        return $certificate;
     }
 
     /**
-     * @param ExamSubject $examSubject
+     * @param Certificate $certificate
      * @return bool
      */
-    public function destroy(ExamSubject $examSubject): bool
+    public function destroy(Certificate $certificate): bool
     {
-        return $examSubject->delete();
+        return $certificate->delete();
     }
 
     /**
-     * @param ExamSubject $examSubject
+     * @param Certificate $certificate
      * @return bool
      */
-    public function forceDelete(ExamSubject $examSubject): bool
+    public function forceDelete(Certificate $certificate): bool
     {
-        return $examSubject->forceDelete();
+        return $certificate->forceDelete();
     }
 
     /**
@@ -157,9 +169,11 @@ class ExamSubjectService
     public function validator(Request $request, int $id = null): Validator
     {
         $data = $request->all();
+
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
+
         $rules = [
             'title' => [
                 'required',
@@ -170,6 +184,20 @@ class ExamSubjectService
                 'nullable',
                 'string',
                 'max:250'
+            ],
+            'template' => [
+                'nullable',
+                'string'
+            ],
+            'result_type' => [
+                'required',
+                'int',
+                Rule::in([
+                    BaseModel::CERTIFICATE_COMPETENT,
+                    BaseModel::CERTIFICATE_NOT_COMPETENT,
+                    BaseModel::CERTIFICATE_GRADING,
+                    BaseModel::CERTIFICATE_MARKS
+                ])
             ],
             'accessor_type' => [
                 'required',
@@ -182,13 +210,16 @@ class ExamSubjectService
                 'int',
                 'min:1'
             ],
+            'issued_at' => [
+                'nullable',
+                'string'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
                 Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ]
         ];
-
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
     }
 
@@ -211,6 +242,7 @@ class ExamSubjectService
 
             'accessor_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:250|min:2',
+            'result_type' => 'nullable',
             'accessor_type' => 'nullable|max:250|min:2',
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',

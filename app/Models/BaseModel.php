@@ -71,6 +71,11 @@ abstract class BaseModel extends Model
     public const IDENTITY_TYPE_NID = 1;
     public const IDENTITY_TYPE_BCERT = 2;
     public const IDENTITY_TYPE_PASSPORT = 3;
+    public const IDENTITY_TYPES = [
+        self::IDENTITY_TYPE_NID => "NID NO",
+        self::IDENTITY_TYPE_BCERT => "Birth Certificate No",
+        self::IDENTITY_TYPE_PASSPORT => "Passport No",
+    ];
 
     /** Marital Statuses */
     public const MARITAL_STATUS_SINGLE = 1;
@@ -86,6 +91,12 @@ abstract class BaseModel extends Model
         self::MALE,
         self::FEMALE,
         self::OTHERS
+    ];
+
+    public const GENDER_LABEL = [
+        self::MALE => "Male",
+        self::FEMALE => "Female",
+        self::OTHERS => "Others"
     ];
 
     public const ETHNIC_GROUP_INFO = 'ethnic_group_info';
@@ -166,12 +177,26 @@ abstract class BaseModel extends Model
     public const ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
     public const ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
 
-    public const EXAM_ACCESSOR_TYPES = [
+    public const ACCESSOR_TYPES = [
         self::ACCESSOR_TYPE_INSTITUTE,
         self::ACCESSOR_TYPE_ORGANIZATION,
     ];
 
+    /** @var string Certificate types */
 
+    public const CERTIFICATE_COMPETENT = 1;
+    public const CERTIFICATE_NOT_COMPETENT = 2;
+    public const CERTIFICATE_GRADING = 3;
+    public const CERTIFICATE_MARKS = 4;
+    public const CERTIFICATE_PARTICIPATION = 5;
+
+    public const CERTIFICATE_TYPES = [
+        self::CERTIFICATE_COMPETENT,
+        self::CERTIFICATE_NOT_COMPETENT,
+        self::CERTIFICATE_GRADING,
+        self::CERTIFICATE_MARKS,
+        self::CERTIFICATE_PARTICIPATION
+    ];
 
     public function getIndustryAssociationData(array &$originalData)
     {
@@ -180,7 +205,6 @@ abstract class BaseModel extends Model
             $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
             $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
         }
-
     }
 
 

@@ -4624,6 +4624,63 @@
                 }
             }
         },
+        "/public/course-enrollment-bulk-import-file-format": {
+            "get": {
+                "tags": [
+                    "course-enrollment-bulk-import"
+                ],
+                "summary": "course-enrollment-bulk-import-file-format",
+                "description": "course-enrollment-bulk-import-file-format",
+                "parameters": [
+                    {
+                        "name": "course_id",
+                        "in": "query",
+                        "description": "Course Id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "batch_id",
+                        "in": "query",
+                        "description": "Course Id",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully done"
+                    }
+                }
+            }
+        },
+        "/course-enrollment-bulk-import": {
+            "post": {
+                "tags": [
+                    "course-enrollment-bulk-import"
+                ],
+                "summary": "course-enrollment-bulk-import-file-format",
+                "description": "course-enrollment-bulk-import-file-format",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/courseEnrollmentBulkImport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully done"
+                    }
+                }
+            }
+        },
         "/rpl-applications/payment/payment-via-ek-pay/pay-now": {
             "post": {
                 "tags": [
@@ -11820,6 +11877,514 @@
                     }
                 }
             }
+        },
+        "/certificates": {
+            "get": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "get_list",
+                "description": "API endpoint to get list of Certificate. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/title_en_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/title_optional"
+                    },
+                    {
+                        "$ref": "#/components/parameters/result_type"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificates"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "a",
+                                            "title_en": "B",
+                                            "template": "AA",
+                                            "result_type": 2,
+                                            "accessor_type": 1,
+                                            "accessor_id": 1
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "create",
+                "description": " API endpoint to create a Certificate.A successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/certificates"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "a",
+                                            "title_en": "B",
+                                            "template": "AA",
+                                            "result_type": 2,
+                                            "accessor_type": 1,
+                                            "accessor_id": 1
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Certificate added successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certificates/{certificateId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "certificateId",
+                        "in": "path",
+                        "description": "certificate id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a certificate.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "a",
+                                            "title_en": "B",
+                                            "template": "AA",
+                                            "result_type": 2,
+                                            "accessor_type": 1,
+                                            "accessor_id": 1
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "update",
+                "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "certificateId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/certificates"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificates"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "title": "a",
+                                            "title_en": "B",
+                                            "template": "AA",
+                                            "result_type": 2,
+                                            "accessor_type": 1,
+                                            "accessor_id": 1
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Trainer update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Certificate"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Certificate. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "certificateId",
+                        "in": "path",
+                        "description": "Certificate id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "20"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificates"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Certificate delete successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certificate-issued": {
+            "get": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "get_list",
+                "description": "API endpoint to get list of Certificate-Issued. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batch_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/certificate_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "create",
+                "description": " API endpoint to create a Certificate-Issued.A successful request response will show 201 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/certificateIssued"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Certificate Issued successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certificate-issued/{issuedId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "in": "path",
+                        "description": "certificate Issued id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a certificate issued.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "update",
+                "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/certificateIssued"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Certificate update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Certificate Issued. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "in": "path",
+                        "description": "Certificate Issued id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "20"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Certificate Issued delete successfully."
+                                    },
+                                    "query_time": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -11885,27 +12450,34 @@
                     },
                     "number_of_ongoing_trades": {
                         "type": "integer"
+
                     },
                     "number_of_computers": {
                         "type": "integer"
                     },
                     "number_of_other_equipments": {
                         "type": "integer"
+
                     },
                     "amount_of_total_fdr": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_women": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_men": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_disabled_and_others": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_total": {
                         "type": "integer"
+
                     },
                     "total_trainees_women": {
                         "type": "integer"
@@ -12229,6 +12801,7 @@
                     "comments": {
                         "type": "string"
                     }
+
                 },
                 "required": [
                     "institute_id",
@@ -12629,19 +13202,19 @@
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title_en": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "subject_id": {
-                        "type": "integer"
+                        "type" : "integer"
                     },
                     "accessor_type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "accessor_id": {
                         "type": "integer"
@@ -12941,6 +13514,32 @@
                 "required": [
                     "payment_gateway_type",
                     "youth_assessment_id"
+                ]
+            },
+            "courseEnrollmentBulkImport": {
+                "type": "object",
+                "properties": {
+                    "course_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "program_id": {
+                        "type": "integer"
+                    },
+                    "training_center_id": {
+                        "type": "integer"
+                    },
+                    "course_enrollment_excel_file": {
+                        "type": "string",
+                        "format": "binary"
+                    }
+                },
+                "required": [
+                    "course_id",
+                    "batch_id",
+                    "course_enrollment_excel_file"
                 ]
             },
             "batchAssign": {
@@ -14426,6 +15025,60 @@
                         }
                     }
                 }
+            },
+            "certificates": {
+                "type": "object",
+                "description": "Certificate with active OR/AND upcoming batches",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "template": {
+                        "type": "string"
+                    },
+                    "result_type": {
+                        "type": "integer"
+                    },
+                    "accessor_type": {
+                        "type": "integer"
+                    },
+                    "accessor_id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "certificateIssued": {
+                "type": "object",
+                "description": "Certificate Issue with active OR/AND for youth",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "certificate_id": {
+                        "type": "integer"
+                    },
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "parameters": {
@@ -14619,6 +15272,7 @@
                     "example": "1"
                 }
             },
+
             "order": {
                 "name": "order",
                 "in": "query",
@@ -14695,6 +15349,7 @@
                     "type": "integer"
                 }
             },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -14899,7 +15554,7 @@
                 }
             },
             "youth_id": {
-                "name": "youthId",
+                "name": "youth_id",
                 "required": false,
                 "in": "query",
                 "schema": {
@@ -14914,6 +15569,7 @@
                     "type": "integer"
                 }
             },
+
             "examId": {
                 "name": "examId",
                 "required": true,
@@ -15130,6 +15786,15 @@
                     "example": "1"
                 }
             },
+            "batch_id": {
+                "name": "batch_id",
+                "in": "query",
+                "description": "batch id",
+                "required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "rto_batch_id": {
                 "name": "rto_batch_id",
                 "in": "query",
@@ -15253,6 +15918,30 @@
                 "schema": {
                     "type": "boolean",
                     "example": true
+                }
+            },
+            "result_type": {
+                "name": "result_type",
+                "in": "query",
+                "schema": {
+                    "type": "integer",
+                    "example": 1,
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
+                },
+                "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
+            },
+            "certificate_id": {
+                "name": "certificate_id",
+                "in": "query",
+                "description": "get all issued certificate ty certificate_id",
+                "schema": {
+                    "type": "integer"
                 }
             }
         }
