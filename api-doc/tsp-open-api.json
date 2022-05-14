@@ -2604,92 +2604,6 @@
                 }
             }
         },
-        "/batches/{batchId}/assign-exams-to-batch": {
-            "post": {
-                "summary": "Assign Exams to Batch",
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/batchId"
-                    }
-                ],
-                "requestBody": {
-                    "content": {
-                        "application/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#/components/schemas/batchExams"
-                            }
-                        }
-                    }
-                },
-                "tags": [
-                    "batches"
-                ],
-                "description": "API endpoint to assign exams to batches.A successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "data": [
-                                        {
-                                            "id": 1,
-                                            "type": 1,
-                                            "title": "test",
-                                            "title_en": null,
-                                            "subject_id": 2,
-                                            "accessor_type": "",
-                                            "accessor_id": 0,
-                                            "purpose_name": "BATCH",
-                                            "purpose_id": 16,
-                                            "row_status": 1,
-                                            "created_at": "2022-04-21T06:47:21.000000Z",
-                                            "updated_at": "2022-05-08T02:01:15.000000Z",
-                                            "published_at": null,
-                                            "deleted_at": null,
-                                            "created_by": null,
-                                            "updated_by": 1,
-                                            "pivot": {
-                                                "batch_id": 1,
-                                                "exam_type_id": 1
-                                            }
-                                        },
-                                        {
-                                            "id": 2,
-                                            "type": 1,
-                                            "title": "Test",
-                                            "title_en": null,
-                                            "subject_id": 2,
-                                            "accessor_type": "",
-                                            "accessor_id": 0,
-                                            "purpose_name": "BATCH",
-                                            "purpose_id": 16,
-                                            "row_status": 1,
-                                            "created_at": "2022-04-21T09:26:13.000000Z",
-                                            "updated_at": "2022-04-21T09:26:13.000000Z",
-                                            "published_at": null,
-                                            "deleted_at": null,
-                                            "created_by": null,
-                                            "updated_by": null,
-                                            "pivot": {
-                                                "batch_id": 1,
-                                                "exam_type_id": 2
-                                            }
-                                        }
-                                    ],
-                                    "_response_status": {
-                                        "success": true,
-                                        "code": 200,
-                                        "message": "exams assigned to batch successfully",
-                                        "query_time": 0
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/courses": {
             "get": {
                 "tags": [
@@ -12536,27 +12450,34 @@
                     },
                     "number_of_ongoing_trades": {
                         "type": "integer"
+
                     },
                     "number_of_computers": {
                         "type": "integer"
                     },
                     "number_of_other_equipments": {
                         "type": "integer"
+
                     },
                     "amount_of_total_fdr": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_women": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_men": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_disabled_and_others": {
                         "type": "integer"
+
                     },
                     "current_session_trainees_total": {
                         "type": "integer"
+
                     },
                     "total_trainees_women": {
                         "type": "integer"
@@ -12880,6 +12801,7 @@
                     "comments": {
                         "type": "string"
                     }
+
                 },
                 "required": [
                     "institute_id",
@@ -13238,60 +13160,6 @@
                     "is_published"
                 ]
             },
-            "certificates": {
-                "type": "object",
-                "description": "Certificate with active OR/AND upcoming batches",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "title_en": {
-                        "type": "string"
-                    },
-                    "template": {
-                        "type": "string"
-                    },
-                    "result_type": {
-                        "type": "integer"
-                    },
-                    "accessor_type": {
-                        "type": "integer"
-                    },
-                    "accessor_id": {
-                        "type": "string"
-                    }
-                }
-            },
-            "certificateIssued": {
-                "type": "object",
-                "description": "Certificate Issue with active OR/AND for youth",
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                    "certificate_id": {
-                        "type": "integer"
-                    },
-                    "youth_id": {
-                        "type": "integer"
-                    },
-                    "batch_id": {
-                        "type": "integer"
-                    },
-                    "row_status": {
-                        "type": "integer"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    }
-                }
-            },
             "exams": {
                 "type": "object",
                 "properties": {
@@ -13334,19 +13202,19 @@
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "title_en": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "subject_id": {
-                        "type": "integer"
+                        "type" : "integer"
                     },
                     "accessor_type": {
-                        "type": "string"
+                        "type" : "string"
                     },
                     "accessor_id": {
                         "type": "integer"
@@ -13625,7 +13493,29 @@
                     "course_enrollment_id"
                 ]
             },
-
+            "rplApplicationPaymentSchema": {
+                "type": "object",
+                "properties": {
+                    "payment_gateway_type": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                        ],
+                        "description": "1=Ek-Pay"
+                    },
+                    "youth_assessment_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "payment_gateway_type",
+                    "youth_assessment_id"
+                ]
+            },
             "courseEnrollmentBulkImport": {
                 "type": "object",
                 "properties": {
@@ -13650,29 +13540,6 @@
                     "course_id",
                     "batch_id",
                     "course_enrollment_excel_file"
-                ]
-            },
-            "rplApplicationPaymentSchema": {
-                "type": "object",
-                "properties": {
-                    "payment_gateway_type": {
-                        "type": "integer",
-                        "enum": [
-                            1,
-                            2,
-                            3,
-                            4,
-                            5
-                        ],
-                        "description": "1=Ek-Pay"
-                    },
-                    "youth_assessment_id": {
-                        "type": "integer"
-                    }
-                },
-                "required": [
-                    "payment_gateway_type",
-                    "youth_assessment_id"
                 ]
             },
             "batchAssign": {
@@ -14764,21 +14631,6 @@
                     "trainerIds"
                 ]
             },
-            "batchExams": {
-                "type": "object",
-                "description": "Associate Model",
-                "properties": {
-                    "exam_type_ids": {
-                        "type": "array",
-                        "items": {
-                            "type": "integer"
-                        }
-                    }
-                },
-                "required": [
-                    "exam_type_ids"
-                ]
-            },
             "batches": {
                 "type": "object",
                 "description": "Batch management Service",
@@ -15173,6 +15025,57 @@
                         }
                     }
                 }
+            },
+            "certificates": {
+                "type": "object",
+                "description": "Certificate with active OR/AND upcoming batches",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "title_en": {
+                        "type": "string"
+                    },
+                    "template": {
+                        "type": "string"
+                    },
+                    "result_type": {
+                        "type": "integer"
+                    },
+                    "language": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "certificateIssued": {
+                "type": "object",
+                "description": "Certificate Issue with active OR/AND for youth",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "certificate_id": {
+                        "type": "integer"
+                    },
+                    "youth_id": {
+                        "type": "integer"
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    },
+                    "row_status": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                }
             }
         },
         "parameters": {
@@ -15366,6 +15269,7 @@
                     "example": "1"
                 }
             },
+
             "order": {
                 "name": "order",
                 "in": "query",
@@ -15442,6 +15346,7 @@
                     "type": "integer"
                 }
             },
+
             "title_optional": {
                 "in": "query",
                 "required": false,
@@ -15449,23 +15354,6 @@
                 "schema": {
                     "type": "string"
                 }
-            },
-            "result_type": {
-                "name": "result_type",
-                "in": "query",
-                "schema": {
-                    "type": "integer",
-                    "example": 1,
-
-                    "enum": [
-                        1,
-                        2,
-                        3,
-                        4,
-                        5
-                    ]
-                },
-                "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
             },
             "trainer_name_en": {
                 "in": "query",
@@ -15670,23 +15558,6 @@
                     "type": "integer"
                 }
             },
-            "certificate_id": {
-                "name": "certificate_id",
-                "in": "query",
-                "description": "get all issued certificate ty certificate_id",
-                "schema": {
-                    "type": "integer"
-                }
-            },
-            "batch_id": {
-                "name": "batch_id",
-                "in": "query",
-                "description": "batch id",
-                "required": false,
-                "schema": {
-                    "type": "integer"
-                }
-            },
             "youthId": {
                 "name": "youthId",
                 "required": true,
@@ -15695,6 +15566,7 @@
                     "type": "integer"
                 }
             },
+
             "examId": {
                 "name": "examId",
                 "required": true,
@@ -15904,11 +15776,20 @@
             "batchId": {
                 "name": "batchId",
                 "in": "path",
-                "description": "batch id",
+                "description": "trainer id",
                 "required": true,
                 "schema": {
                     "type": "integer",
                     "example": "1"
+                }
+            },
+            "batch_id": {
+                "name": "batch_id",
+                "in": "query",
+                "description": "batch id",
+                "required": false,
+                "schema": {
+                    "type": "integer"
                 }
             },
             "rto_batch_id": {
@@ -16034,6 +15915,30 @@
                 "schema": {
                     "type": "boolean",
                     "example": true
+                }
+            },
+            "result_type": {
+                "name": "result_type",
+                "in": "query",
+                "schema": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ],
+                "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
+            },
+            "certificate_id": {
+                "name": "certificate_id",
+                "in": "query",
+                "description": "get all issued certificate ty certificate_id",
+                "schema": {
+                    "type": "integer"
                 }
             }
         }

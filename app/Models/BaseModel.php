@@ -190,6 +190,10 @@ abstract class BaseModel extends Model
     public const CERTIFICATE_MARKS = 4;
     public const CERTIFICATE_PARTICIPATION = 5;
 
+    /** @var int Certificate Language types */
+    public const CERTIFICATE_BD = 1;
+    public const CERTIFICATE_EN = 2;
+
     public const CERTIFICATE_TYPES = [
         self::CERTIFICATE_COMPETENT,
         self::CERTIFICATE_NOT_COMPETENT,
