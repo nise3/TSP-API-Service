@@ -15922,15 +15922,15 @@
                 "in": "query",
                 "schema": {
                     "type": "integer",
-                    "example": 1
+                    "example": 1,
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
                 },
-                "enum": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5
-                ],
                 "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
             },
             "certificate_id": {
