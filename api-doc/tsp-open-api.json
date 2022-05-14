@@ -15045,11 +15045,8 @@
                     "result_type": {
                         "type": "integer"
                     },
-                    "accessor_type": {
+                    "language": {
                         "type": "integer"
-                    },
-                    "accessor_id": {
-                        "type": "string"
                     }
                 }
             },

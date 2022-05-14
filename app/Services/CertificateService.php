@@ -45,6 +45,7 @@ class CertificateService
             'certificates.result_type',
             'certificates.accessor_type',
             'certificates.accessor_id',
+            'certificates.language',
             'certificates.row_status',
             'certificates.created_at',
             'certificates.updated_at',
@@ -105,6 +106,7 @@ class CertificateService
             'certificates.result_type',
             'certificates.accessor_type',
             'certificates.accessor_id',
+            'certificates.language',
             'certificates.row_status',
             'certificates.created_at',
             'certificates.updated_at',
@@ -199,6 +201,14 @@ class CertificateService
                     BaseModel::CERTIFICATE_MARKS
                 ])
             ],
+            'language' => [
+                'required',
+                'int',
+                Rule::in([
+                    BaseModel::CERTIFICATE_BD,
+                    BaseModel::CERTIFICATE_EN,
+                ])
+            ],
             'accessor_type' => [
                 'required',
                 'string',
@@ -243,6 +253,7 @@ class CertificateService
             'accessor_id' => 'nullable|int|gt:0',
             'title_en' => 'nullable|max:250|min:2',
             'result_type' => 'nullable',
+            'language' => 'int|gt:0',
             'accessor_type' => 'nullable|max:250|min:2',
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
