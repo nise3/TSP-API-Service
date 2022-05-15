@@ -10,7 +10,7 @@ use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\Exam;
-use App\Models\ExamResult;
+use App\Models\ExamAnswer;
 use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
 use App\Models\EducationLevel;
@@ -1441,7 +1441,7 @@ class CourseEnrollmentService
      */
     private function getExamResults(array $exam, array $courseEnrollment): mixed
     {
-        return ExamResult::where('exam_results.exam_id', $exam['exam_id'])
+        return ExamAnswer::where('exam_results.exam_id', $exam['exam_id'])
             ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->get();
     }
 
