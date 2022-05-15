@@ -50,6 +50,7 @@ class Batch extends BaseModel
 //        return $originalData;
 //    }
 
+
     /**
      * @return BelongsTo
      */

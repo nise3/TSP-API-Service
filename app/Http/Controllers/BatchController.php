@@ -70,6 +70,20 @@ class BatchController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+
+    /**
+     * @param int $id
+     * @return JsonResponse
+     */
+
+
+    public function getBatchesByFourIrInitiativeId(int $fourIrInitiativeId): JsonResponse
+    {
+
+        $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId,$this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
     /**
      * @param int $id
      *  * Display the specified resource

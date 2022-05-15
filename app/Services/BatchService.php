@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Course;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
@@ -21,6 +22,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -758,6 +760,118 @@ class BatchService
             ->json();
     }
 
+    /**
+     * @param int $fourIrInitiativeId
+     * @param Carbon $startTime
+     * @return array
+     */
+    public function getFourIrBatchList(int $fourIrInitiativeId,Carbon $startTime): array
+    {
+
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+        $courses=$this->getFourIrCourseIds($fourIrInitiativeId);
+
+
+        $batchBuilder = Batch::select([
+            'batches.id',
+            'batches.title',
+            'batches.title_en',
+            'batches.course_id',
+            'courses.title_en as course_title_en',
+            'courses.title as course_title',
+            'batches.institute_id',
+            'institutes.title_en as institute_title_en',
+            'institutes.title as institute_title',
+            'batches.industry_association_id',
+            'batches.branch_id',
+            'branches.title_en as branch_title_en',
+            'branches.title as branch_title',
+            'courses.program_id',
+            'programs.title_en as program_title_en',
+            'programs.title as program_title',
+            'batches.number_of_seats',
+            'batches.registration_start_date',
+            'batches.registration_end_date',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'batches.available_seats',
+            'batches.training_center_id',
+            'training_centers.title_en as training_center_title_en',
+            'training_centers.title as training_center_title',
+            'courses.application_form_settings',
+            'batches.row_status',
+            'batches.created_by',
+            'batches.updated_by',
+            'batches.created_at',
+            'batches.updated_at',
+            'batches.deleted_at',
+        ]);
+
+        $batchBuilder->leftJoin("courses", function ($join) {
+            $join->on('batches.course_id', '=', 'courses.id')
+                ->whereNull('courses.deleted_at');
+        });
+        $batchBuilder->leftjoin("institutes", function ($join) {
+            $join->on('batches.institute_id', '=', 'institutes.id')
+                ->whereNull('institutes.deleted_at');
+        });
+        $batchBuilder->leftjoin("programs", function ($join) {
+            $join->on('courses.program_id', '=', 'programs.id')
+                ->whereNull('programs.deleted_at');
+        });
+
+        $batchBuilder->leftjoin("branches", function ($join) {
+            $join->on('batches.branch_id', '=', 'branches.id')
+                ->whereNull('branches.deleted_at');
+        });
+        $batchBuilder->join("training_centers", function ($join) {
+            $join->on('batches.training_center_id', '=', 'training_centers.id')
+                ->whereNull('training_centers.deleted_at');
+        });
+
+        $batchBuilder->with('trainers');
+
+        /** @var Batch $batch */
+        $batchBuilder->whereIn('course_id',$courses);
+
+        /** @var Collection $batches */
+
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $batches = $batchBuilder->paginate($pageSize);
+            $paginateData = (object)$batches->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $batches = $batchBuilder->get();
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $batches->toArray()['data'] ?? $batches->toArray();
+
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
+    /**
+     * @param int $fourIrInitiativeId
+     * @return array
+     */
+    public function getFourIrCourseIds(int $fourIrInitiativeId): array
+    {
+        return  Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+
+    }
 
 }
 
