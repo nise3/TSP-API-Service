@@ -137,7 +137,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("registered-training-organizations", ["as" => "public.registered-training-organizations", "uses" => "RegisteredTrainingOrganizationController@getPublicList"]);
         /** Course All batches / Active batches / Up-coming batches */
         $router->get('courses/{id}/training-centers/batches', ['as' => 'courses.get-batches', 'uses' => 'BatchController@getPublicBatchesByCourseId']);
-
+        $router->get('batches-by-four-ir-initiative-id/{fourIrInitiativeId}', ['as' => 'batches-by-four-ir-initiative-id', 'uses' => 'BatchController@getBatchesByFourIrInitiativeId']);
         /** nise-statistics */
         $router->get('nise-statistics', ["as" => "nise-statistics", "uses" => "InstituteStatisticsController@niseStatistics"]);
 
