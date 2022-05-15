@@ -21,6 +21,7 @@ class Exam extends BaseModel
     public const EXAM_TYPE_FIELD_WORK = 5;
     public const EXAM_TYPE_PRESENTATION = 6;
     public const EXAM_TYPE_ASSIGNMENT = 7;
+    public const EXAM_TYPE_ATTENDANCE = 8;
 
     public const EXAM_TYPES = [
         self::EXAM_TYPE_ONLINE,
@@ -30,6 +31,17 @@ class Exam extends BaseModel
         self::EXAM_TYPE_FIELD_WORK,
         self::EXAM_TYPE_PRESENTATION,
         self::EXAM_TYPE_ASSIGNMENT,
+    ];
+
+    public const YOUTH_EXAM_TYPES = [
+        self::EXAM_TYPE_ONLINE,
+        self::EXAM_TYPE_OFFLINE,
+        self::EXAM_TYPE_MIXED,
+        self::EXAM_TYPE_PRACTICAL,
+        self::EXAM_TYPE_FIELD_WORK,
+        self::EXAM_TYPE_PRESENTATION,
+        self::EXAM_TYPE_ASSIGNMENT,
+        self::EXAM_TYPE_ATTENDANCE,
     ];
 
     public const DURATION_REQUIRED_EXAM_TYPES = [
