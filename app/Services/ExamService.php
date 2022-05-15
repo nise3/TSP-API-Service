@@ -815,8 +815,9 @@ class ExamService
 
     /**
      * @param ExamType $ExamType
+     * @return void
      */
-    public function destroy(ExamType $ExamType)
+    public function destroy(ExamType $ExamType): void
     {
 
         $ExamTypeId = $ExamType->id;
@@ -1216,6 +1217,7 @@ class ExamService
         ];
         $rules[$examType . 'duration'] = [
             Rule::requiredIf(!empty($data['type']) && in_array($data['type'], Exam::DURATION_REQUIRED_EXAM_TYPES)),
+            'nullable',
             'int'
         ];
         $rules[$examType . 'venue'] = [
