@@ -778,7 +778,7 @@ class ExamService
      * @param array $examIds
      * @return void
      */
-    public function deleteExamRelatedDataForUpdate(array $examIds): void
+    public function deleteExamQuestionRelatedDataForUpdate(array $examIds): void
     {
         if (!empty($examIds['online'])) {
             ExamSection::where('exam_id', $examIds['online'])->delete();
