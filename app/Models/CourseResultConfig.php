@@ -10,7 +10,8 @@ class CourseResultConfig extends BaseModel
     use SoftDeletes;
 
     protected $casts = [
-        'gradings' => 'array'
+        'gradings' => 'array',
+        'result_percentages' => 'array'
     ];
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
