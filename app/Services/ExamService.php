@@ -464,7 +464,7 @@ class ExamService
             $offlineExam = $this->storeOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else if($data['type'] == Exam::EXAM_TYPE_MIXED){
+        } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $data['online']['exam_type_id'] = $data['exam_type_id'];
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
 
@@ -473,7 +473,7 @@ class ExamService
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
-        } else{
+        } else {
             $exam = app(Exam::class);
             $exam->fill($data);
             $exam->save();
@@ -571,7 +571,7 @@ class ExamService
      * @param array $data
      * @throws Throwable
      */
-    public function storeExamSections(array $data)
+    public function storeExamSections(array $data): void
     {
         if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $this->storeOnlineExamSections($data['online']['exam_questions'], $data);
@@ -586,7 +586,7 @@ class ExamService
     /**
      * @throws Throwable
      */
-    private function storeOnlineExamSections($examQuestions, $data)
+    private function storeOnlineExamSections($examQuestions, $data): void
     {
         foreach ($examQuestions as $examSectionData) {
             $examSectionData['uuid'] = ExamSection::examSectionId();
@@ -751,6 +751,7 @@ class ExamService
      */
     public function updateExam(array $data): array
     {
+        $examIds = [];
         if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
             $onlineExam = $this->updateOnlineExam($data);
             $examIds['online'] = $onlineExam->id;
@@ -759,17 +760,25 @@ class ExamService
             $offlineExam = $this->updateOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else {
+        } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $onlineExam = $this->updateOnlineExam($data['online']);
             $offlineExam = $this->updateOfflineExam($data['offline']);
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
+        } else {
+            $exam = Exam::findOrFail($data['exam_id']);
+            $exam->fill($data);
+            $exam->save();
         }
         return $examIds;
     }
 
-    public function deleteExamRelatedDataForUpdate(array $examIds)
+    /**
+     * @param array $examIds
+     * @return void
+     */
+    public function deleteExamRelatedDataForUpdate(array $examIds): void
     {
         if (!empty($examIds['online'])) {
             ExamSection::where('exam_id', $examIds['online'])->delete();

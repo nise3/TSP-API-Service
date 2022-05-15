@@ -140,13 +140,15 @@ class ExamController extends Controller
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
             }
-            $this->examService->storeExamSections($validatedData);
+            if (!empty($validatedData['type']) && !in_array($validatedData['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->storeExamSections($validatedData);
+            }
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Exam  updated successfully.",
+                    "message" => "Exam updated successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
