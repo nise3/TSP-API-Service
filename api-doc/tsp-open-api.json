@@ -2604,7 +2604,7 @@
                 }
             }
         },
-        "/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
+        "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [
                     {
