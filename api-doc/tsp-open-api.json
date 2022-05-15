@@ -2604,6 +2604,235 @@
                 }
             }
         },
+        "/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "fourIrInitiativeId",
+                        "in": "path",
+                        "description": "fourIrInitiativeId id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Four Ir Batches"
+                ],
+                "summary": "get four ir batches",
+                "description": " API endpoint to get a batch by four ir id four ir initiative  id.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 40,
+                                        "title": "Prof. Gonzalo Cole",
+                                        "title_en": "Deion Medhurst MD",
+                                        "course_id": 14,
+                                        "course_title_en": "Miss Geraldine Vandervort",
+                                        "course_title": "Jazlyn Dooley",
+                                        "institute_id": 5,
+                                        "institute_title_en": "Della Batz",
+                                        "institute_title": "Prof. Gavin Johns MD",
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "program_id": 14,
+                                        "program_title_en": "Mafalda Ratke",
+                                        "program_title": "Demetris Rutherford",
+                                        "number_of_seats": 62,
+                                        "registration_start_date": "2021-08-08",
+                                        "registration_end_date": "2021-08-08",
+                                        "batch_start_date": "2021-08-08",
+                                        "batch_end_date": "2021-08-08",
+                                        "available_seats": 0,
+                                        "training_center_id": 14,
+                                        "training_center_title_en": "Gideon Gibson",
+                                        "training_center_title": "Miss Dejah Mosciski",
+                                        "application_form_settings": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null,
+                                        "trainers": [
+                                            {
+                                                "id": 48,
+                                                "institute_id": 5,
+                                                "branch_id": null,
+                                                "training_center_id": null,
+                                                "trainer_name": "Michale Cronin",
+                                                "trainer_name_en": "Ms. Veda Boehm DDS",
+                                                "trainer_registration_number": "67379243-2698-3330-abe9-8288008b118a",
+                                                "email": "adams.pascale@example.org",
+                                                "mobile": "01761964270",
+                                                "date_of_birth": null,
+                                                "about_me": "Laboriosam non est odit magni qui.",
+                                                "about_me_en": null,
+                                                "educational_qualification": "Ex explicabo sit possimus quos.",
+                                                "educational_qualification_en": "Nostrum voluptatem magni dolores delectus magnam eos dolorum.",
+                                                "skills": "ea alias id vero quaerat quasi",
+                                                "skills_en": null,
+                                                "gender": 2,
+                                                "marital_status": 0,
+                                                "religion": 3,
+                                                "nationality": "Bangladeshi",
+                                                "nid": "5734381691493",
+                                                "passport_number": "590721010310772792",
+                                                "present_address_division_id": 1,
+                                                "present_address_district_id": 1,
+                                                "present_address_upazila_id": 18,
+                                                "present_house_address": "2632 Dannie Circle\nPort Makenna, HI 20664-4139",
+                                                "present_house_address_en": "5370 Mills Crescent\nEast Cathrine, LA 97110",
+                                                "permanent_address_division_id": 1,
+                                                "permanent_address_district_id": 1,
+                                                "permanent_address_upazila_id": 18,
+                                                "permanent_house_address": "69378 Evans Dam\nNikolausburgh, RI 90470-5545",
+                                                "permanent_house_address_en": "3234 Joanny Branch\nSouth Jewelfort, MI 23699",
+                                                "photo": "softbd.jpg",
+                                                "signature": "Celia Schinner",
+                                                "row_status": 1,
+                                                "created_by": null,
+                                                "updated_by": null,
+                                                "created_at": "2021-10-13T08:48:09.000000Z",
+                                                "updated_at": "2021-10-13T08:48:09.000000Z",
+                                                "deleted_at": null,
+                                                "pivot": {
+                                                    "batch_id": 40,
+                                                    "trainer_id": 48
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "batches"
+                ],
+                "summary": "update",
+                "description": " API endpoint to update a batch.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "batchId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batches"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 2,
+                                        "course_id": 1,
+                                        "course_title_en": "Mrs. Lindsay Bernhard I",
+                                        "course_title": "Tyreek Koelpin",
+                                        "institute_id": 1,
+                                        "institute_title_en": "Prof. Shyann Armstrong",
+                                        "institute_title": "Dr. Cristopher Schiller V",
+                                        "branch_id": null,
+                                        "branch_title_en": null,
+                                        "branch_title": null,
+                                        "program_id": 2,
+                                        "program_title_en": "Prof. Kirstin Satterfield DDS",
+                                        "program_title": "Trey Nader I",
+                                        "number_of_seats": 100,
+                                        "registration_start_date": "2021-11-15",
+                                        "registration_end_date": "2021-11-15",
+                                        "batch_start_date": "2021-11-15",
+                                        "batch_end_date": "2021-11-15",
+                                        "available_seats": 0,
+                                        "training_center_id": 2,
+                                        "training_center_title_en": "Mr. Javonte Conn IV",
+                                        "training_center_title": "Whitney Leuschke",
+                                        "application_form_settings": null,
+                                        "row_status": 1,
+                                        "created_by": null,
+                                        "updated_by": null,
+                                        "created_at": "2021-10-13T08:48:09.000000Z",
+                                        "updated_at": "2021-10-13T08:48:10.000000Z",
+                                        "deleted_at": null
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Batch update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "batches"
+                ],
+                "summary": "deleted",
+                "description": "API endpoint to delete a batch. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "batchId",
+                        "in": "path",
+                        "description": "batch id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "4"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Job finished successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/courses": {
             "get": {
                 "tags": [
