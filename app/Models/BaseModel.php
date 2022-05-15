@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Facade\ServiceToServiceCall;
 use App\Traits\Scopes\ScopeAcl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -200,28 +199,13 @@ abstract class BaseModel extends Model
 
     /** @var string Result types */
 
-    public const RESULT_TYPE_COMPETENT = 1;
-    public const RESULT_TYPE_NOT_COMPETENT = 2;
-    public const RESULT_TYPE_GRADING = 3;
-    public const RESULT_TYPE_MARKS = 4;
-    public const RESULT_TYPE_PARTICIPATION = 5;
+
+    public const RESULT_TYPE_GRADING = 1;
+    public const RESULT_TYPE_MARKS = 2;
 
     public const RESULT_TYPES = [
-        self::RESULT_TYPE_COMPETENT,
-        self::RESULT_TYPE_NOT_COMPETENT,
         self::RESULT_TYPE_GRADING,
-        self::RESULT_TYPE_MARKS,
-        self::RESULT_TYPE_PARTICIPATION
+        self::RESULT_TYPE_MARKS
     ];
-
-    public function getIndustryAssociationData(array &$originalData)
-    {
-        if (!empty($originalData['industry_association_id'])) {
-            $industryAssociationData = ServiceToServiceCall::getIndustryAssociationData($originalData['industry_association_id']);
-            $originalData['industry_association_title'] = !empty($industryAssociationData['title']) ? $industryAssociationData['title'] : null;
-            $originalData['industry_association_title_en'] = !empty($industryAssociationData['title_en']) ? $industryAssociationData['title_en'] : null;
-        }
-    }
-
 
 }

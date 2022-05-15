@@ -18,7 +18,7 @@ class CreateCourseResultConfigsTable extends Migration
             $table->unsignedInteger('institute_id')->nullable();
             $table->unsignedInteger('industry_association_id')->nullable();
             $table->unsignedInteger('course_id');
-            $table->unsignedInteger('result_type')->comment("1=> COMPETENT, 2=> NOT COMPETENT, 3=>GRADING, 4=>MARKS, 5=> PARTICIPATION");
+            $table->unsignedInteger('result_type')->comment("1=>GRADING, 2=>MARKS");
             $table->json('gradings')->nullable();
             $table->unsignedTinyInteger('is_attendance_marks_count')->default(0)->comment("0 => FALSE, 1 => TRUE");
             $table->softDeletes();

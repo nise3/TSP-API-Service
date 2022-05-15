@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExamMark extends BaseModel
+class Results extends BaseModel
 {
     //
 }
