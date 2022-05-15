@@ -8,10 +8,12 @@ use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
+use App\Models\CourseEnrollment;
 use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
+use App\Models\YouthExam;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -915,6 +917,36 @@ class BatchService
     {
         return  Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
 
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function resultProcessingValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'batch_id' => 'required|int|min:1|exists:batches,id,deleted_at,NULL'
+        ];
+        return Validator::make($data, $rules);
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function processResult(array $data): bool
+    {
+        dd('pppp');
+        $youthIds = CourseEnrollment::where('batch_id',$data['batch_id'])->pluck('youth_id');
+
+        foreach ($youthIds as $youthId){
+            $youthExams = YouthExam::where('youth_id',$youthId)->where('batch_id',$data['batch_id'])->get();
+
+        }
     }
 
 }
