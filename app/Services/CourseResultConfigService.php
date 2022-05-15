@@ -40,7 +40,8 @@ class CourseResultConfigService
             'course_result_configs.course_id',
             'course_result_configs.result_type',
             'course_result_configs.gradings',
-            'course_result_configs.is_attendance_marks_count',
+            'course_result_configs.result_percentages',
+            'course_result_configs.pass_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -77,7 +78,8 @@ class CourseResultConfigService
             'course_result_configs.course_id',
             'course_result_configs.result_type',
             'course_result_configs.gradings',
-            'course_result_configs.is_attendance_marks_count',
+            'course_result_configs.result_percentages',
+            'course_result_configs.pass_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -159,6 +161,9 @@ class CourseResultConfigService
                 Rule::in(BaseModel::RESULT_TYPES)
             ],
             'gradings' => [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['result_type'] == BaseModel::RESULT_TYPE_GRADING;
+                }),
                 'nullable',
                 'array',
                 'min:1',
@@ -198,23 +203,85 @@ class CourseResultConfigService
                 'required',
                 'string'
             ],
-            'is_attendance_marks_count' => [
+            'pass_marks' => [
+                Rule::requiredIf(function () use ($data) {
+                    return $data['result_type'] == BaseModel::RESULT_TYPE_MARKS;
+                }),
+                'max:100',
+                "nullable",
+                "int"
+            ],
+            "result_percentages" => [
                 'required',
-                'int',
-                Rule::in([BaseModel::TRUE, BaseModel::FALSE])
+                'min:1',
+                'array',
+                function ($attr, $value, $failed) use ($data) {
+
+                    if ($data['gradings'][0]['min'] !== '0') {
+                        $failed("initial value should start from 0!");
+                    }
+                    $maxValue = null;
+                    $totalPercentage = 0;
+                    foreach ($data['result_percentages'] as $percentage){
+                        $totalPercentage += $percentage;
+                    }
+
+                    if($totalPercentage > 100){
+                        $failed("total percentage should not be greater than 100");
+                    }
+                }
+            ],
+            "result_percentages.online" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.offline" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.mixed" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.practical" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.field_work" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.presentation" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.assignment" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
+            ],
+            "result_percentages.attendance" => [
+                'nullable',
+                'min:1',
+                'max:100',
+                'int'
             ]
         ];
 
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
-    }
-
-    /**
-     * @param array $data
-     * @return Validator
-     */
-    public function getGradingsValidatedData(array $data): Validator
-    {
-        dd($data);
     }
 
 
