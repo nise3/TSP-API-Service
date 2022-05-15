@@ -135,7 +135,9 @@ class ExamController extends Controller
             $this->examService->updateExamType($examType, $validatedData);
             $examIds = $this->examService->updateExam($validatedData);
             $validatedData['exam_ids'] = $examIds;
-            $this->examService->deleteExamRelatedDataForUpdate($examIds);
+            if (!empty($validatedData['type']) && !in_array($validatedData['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->deleteExamQuestionRelatedDataForUpdate($examIds);
+            }
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
