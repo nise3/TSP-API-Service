@@ -7,7 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Certificate;
 use App\Models\CertificateIssued;
 use App\Models\CourseEnrollment;
-use App\Models\ExamResult;
+use App\Models\ExamAnswer;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;

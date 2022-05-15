@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamResultsTable extends Migration
+class CreateYouthExamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class CreateExamResultsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exam_results', function (Blueprint $table) {
+        Schema::create('youth_exams', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('exam_id');
             $table->unsignedInteger('youth_id');
-            $table->char('exam_section_question_id', 50);
-            $table->json('answers')->nullable();
-            $table->unsignedDecimal('marks_achieved')->default(0);
+            $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline,3=>mixed');
             $table->json('file_paths')->nullable();
+            $table->unsignedDecimal('total_obtained_marks')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ class CreateExamResultsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exam_results');
+        Schema::dropIfExists('youth_exams');
     }
 }

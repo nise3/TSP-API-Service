@@ -7,7 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
-use App\Models\ExamResult;
+use App\Models\ExamAnswer;
 use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
@@ -151,7 +151,7 @@ class ExamService
                 $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
             }
             Log::info($question);
-            $examResult = app(ExamResult::class);
+            $examResult = app(ExamAnswer::class);
             $examResult->fill($question);
             $examResult->save();
         }
@@ -794,7 +794,7 @@ class ExamService
 
         foreach ($data['marks'] as $mark) {
             $examResultId = $mark['exam_result_id'];
-            $examResult = ExamResult::findOrFail($examResultId);
+            $examResult = ExamAnswer::findOrFail($examResultId);
             $examResult->marks_achieved = $mark['marks_achieved'];
             $examResult->youth_id = $youthId;
             $examResult->exam_id = $examId;
@@ -834,8 +834,8 @@ class ExamService
         $order = $request['order'] ?? "ASC";
         $response = [];
 
-        /** @var ExamResult|Builder $examResultBuilder */
-        $examResultBuilder = ExamResult::select([
+        /** @var ExamAnswer|Builder $examResultBuilder */
+        $examResultBuilder = ExamAnswer::select([
             "exam_results.id",
             "exam_results.exam_id",
             "exam_results.youth_id",
@@ -865,7 +865,7 @@ class ExamService
 
         $resultArray = $candidates->toArray();
 
-        $youthIds = ExamResult::where('exam_id', $id)->pluck('youth_id')->unique()->toArray();
+        $youthIds = ExamAnswer::where('exam_id', $id)->pluck('youth_id')->unique()->toArray();
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
