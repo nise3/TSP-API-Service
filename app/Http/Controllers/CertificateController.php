@@ -101,11 +101,11 @@ class CertificateController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $examSubject = Certificate::findOrFail($id);
+        $certificate = Certificate::findOrFail($id);
 
         $validated = $this->certificateService->validator($request, $id)->validate();
 
-        $data = $this->certificateService->update($examSubject, $validated);
+        $data = $this->certificateService->update($certificate, $validated);
 
         $response = [
             'data' => $data,

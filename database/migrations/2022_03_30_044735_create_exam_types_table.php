@@ -21,9 +21,10 @@ class CreateExamTypesTable extends Migration
             $table->unsignedInteger('subject_id');
             $table->string('accessor_type', 150);
             $table->unsignedInteger('accessor_id');
-            $table->string('purpose_name', 150)->comment("example=> COURSE");
-            $table->unsignedInteger('purpose_id');
             $table->unsignedTinyInteger('row_status')->default(1);
+            $table->unsignedInteger('created_by')->nullable();
+            $table->unsignedInteger('updated_by')->nullable();
+            $table->dateTime('published_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

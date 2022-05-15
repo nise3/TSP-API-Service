@@ -47,7 +47,8 @@ class CertificateService
             'certificates.accessor_id',
             'certificates.row_status',
             'certificates.created_at',
-            'certificates.updated_at'
+            'certificates.updated_at',
+            'certificates.issued_at'
 
         ])->acl();
 
@@ -107,6 +108,7 @@ class CertificateService
             'certificates.row_status',
             'certificates.created_at',
             'certificates.updated_at',
+            'certificates.issued_at'
         ]);
 
         $CertificateBuilder->where('certificates.id', $id);
@@ -208,6 +210,10 @@ class CertificateService
                 'int',
                 'min:1'
             ],
+            'issued_at' => [
+                'nullable',
+                'string'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
@@ -225,7 +231,6 @@ class CertificateService
 
     public function filterValidator(Request $request): Validator
     {
-
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }

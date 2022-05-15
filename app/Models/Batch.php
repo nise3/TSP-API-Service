@@ -91,4 +91,9 @@ class Batch extends BaseModel
         return $this->belongsToMany(Trainer::class, 'trainer_batch', 'batch_id', 'trainer_id');
     }
 
+    public function exams(): BelongsToMany
+    {
+        return $this->belongsToMany(ExamType::class, 'batch_exams',  'batch_id', 'exam_type_id');
+    }
+
 }

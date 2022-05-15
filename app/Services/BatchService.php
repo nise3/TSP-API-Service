@@ -8,6 +8,7 @@ use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
+use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
@@ -51,7 +52,9 @@ class BatchService
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
+        $certificateId = $request['certificate_id'] ?? "";
 
+//        dd($request);
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::select([
@@ -128,6 +131,10 @@ class BatchService
         }
         if (is_numeric($branchId)) {
             $batchBuilder->where('batches.branch_id', $branchId);
+        }
+
+        if (is_numeric($certificateId)) {
+            $batchBuilder->where('batches.certificate_id', $certificateId);
         }
 
         if (is_numeric($programId)) {
@@ -392,6 +399,18 @@ class BatchService
         return $batch;
     }
 
+    /**
+     * @param $batch
+     * @param array $examTypeIds
+     * @return Batch
+     */
+    public function assignExamToBatch($batch, array $examTypeIds):Batch
+    {
+        $batch->exams()->sync($examTypeIds);
+        return $batch;
+
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -543,6 +562,7 @@ class BatchService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
+            'certificate_id' => 'nullable|int',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
@@ -649,9 +669,9 @@ class BatchService
             ->whereNull('training_centers.deleted_at')
             ->whereNull('batches.deleted_at');
 
-            if(!$isPublicApi){
-                $trainingCenterBuilder->acl();
-            }
+        if (!$isPublicApi) {
+            $trainingCenterBuilder->acl();
+        }
 
         $result = $trainingCenterBuilder->get();
 
@@ -758,6 +778,30 @@ class BatchService
                 return $e;
             })
             ->json();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function examTypeValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        if (!empty($data['exam_type_ids'])) {
+            $data["exam_type_ids"] = is_array($data['exam_type_ids']) ? $data['exam_type_ids'] : explode(',', $data['exam_type_ids']);
+        }
+
+        $rules = [
+            'exam_type_ids' => 'required|array|min:1',
+            'exam_type_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                'exists:exam_types,id,deleted_at,NULL'
+            ]
+        ];
+        return Validator::make($data, $rules);
     }
 
     /**

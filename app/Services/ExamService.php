@@ -198,13 +198,11 @@ class ExamService
     }
 
     /**
-     * @param array $request
      * @param int $id
      * @return Model|Builder
      */
-    public function getOneExamType(array $request, int $id): Model|Builder
+    public function getOneExamType(int $id): Model|Builder
     {
-        $purposeName = $request['purpose_name'] ?? '';
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
             'exam_types.id',
@@ -212,7 +210,6 @@ class ExamService
             'exam_subjects.title  as exam_subject_title',
             'exam_subjects.title_en  as exam_subject_title_en',
             'exam_types.type',
-            'exam_types.purpose_id',
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.row_status',
@@ -225,29 +222,6 @@ class ExamService
             $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                 ->whereNull('exam_types.deleted_at');
         });
-
-        if ($purposeName == ExamType::EXAM_PURPOSE_BATCH) {
-            $examTypeBuilder->join("batches", function ($join) {
-                $join->on('exam_types.purpose_id', '=', 'batches.id')
-                    ->whereNull('batches.deleted_at');
-            });
-            $examTypeBuilder->join("training_centers", function ($join) {
-                $join->on('batches.training_center_id', '=', 'training_centers.id')
-                    ->whereNull('training_centers.deleted_at');
-            });
-            $examTypeBuilder->join("courses", function ($join) {
-                $join->on('batches.course_id', '=', 'courses.id')
-                    ->whereNull('courses.deleted_at');
-            });
-            $examTypeBuilder->addSelect('batches.title as batch_title')
-                ->addSelect('batches.title_en as batch_title_en')
-                ->addSelect('training_center_id')
-                ->addSelect('training_centers.title as training_center_title')
-                ->addSelect('training_centers.title_en as training_center_title_en')
-                ->addSelect('course_id')
-                ->addSelect('courses.title as course_title')
-                ->addSelect('courses.title_en as course_title_en');
-        }
 
 
         $examTypeBuilder->where('exam_types.id', $id);
@@ -269,8 +243,6 @@ class ExamService
             'exam_types.title',
             'exam_types.title_en',
             'exam_types.subject_id',
-            'exam_types.purpose_name',
-            'exam_types.purpose_id',
             'exam_subjects.title as subject_title',
             'exam_subjects.title_en as subject_title_en',
             'exams.exam_date',
@@ -295,11 +267,6 @@ class ExamService
         $exam = $examQuestionPaperBuilder->firstOrFail()->toArray();
         $exam['exam_sections'] = $this->getExamSectionByExam($id);
 
-        if ($exam['purpose_name'] == ExamType::EXAM_PURPOSE_BATCH) {
-            /** @var Batch $batch */
-            $batch = Batch::findOrFail($exam['purpose_id']);
-            $exam['course_id'] = $batch->course_id;
-        }
         foreach ($exam['exam_sections'] as &$examSection) {
             $examSection['subject_id'] = $exam['subject_id'];
             if ($examSection['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
@@ -497,7 +464,7 @@ class ExamService
             $offlineExam = $this->storeOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else {
+        } else if($data['type'] == Exam::EXAM_TYPE_MIXED){
             $data['online']['exam_type_id'] = $data['exam_type_id'];
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
 
@@ -506,6 +473,10 @@ class ExamService
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
+        } else{
+            $exam = app(Exam::class);
+            $exam->fill($data);
+            $exam->save();
         }
 
         return $examIds;
@@ -607,7 +578,7 @@ class ExamService
             $this->storeOfflineExamSections($data['offline']['exam_questions'], $data);
         } else if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
             $this->storeOnlineExamSections($data['exam_questions'], $data);
-        } else {
+        } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
             $this->storeOfflineExamSections($data['exam_questions'], $data);
         }
     }
@@ -945,8 +916,6 @@ class ExamService
     {
         $data = $request->all();
 
-        /** If multiple purpose is added ,then add purpose table them conditionally */
-        $examPurposeTable = ExamType::EXAM_PURPOSE_TABLE_BATCH;
 
         $customMessage = [
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
@@ -973,17 +942,6 @@ class ExamService
                 'int',
                 'exists:exam_subjects,id,deleted_at,NULL'
             ],
-            'purpose_name' => [
-                'required',
-                'string',
-                'max:500',
-                Rule::in(ExamType::EXAM_PURPOSES)
-            ],
-            'purpose_id' => [
-                'required',
-                'int',
-                'exists:' . $examPurposeTable . ',id,deleted_at,NULL',
-            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
@@ -998,7 +956,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('online.', $id);
+            $examValidationRules = $this->examValidationRules($data, 'online.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('online.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -1013,7 +971,7 @@ class ExamService
                 'array',
                 'required'
             ];
-            $examValidationRules = $this->examValidationRules('offline.', $id);
+            $examValidationRules = $this->examValidationRules($data, 'offline.', $id);
             $rules = array_merge($rules, $examValidationRules);
             $examSectionValidationRules = $this->examSectionValidationRules('offline.');
             $rules = array_merge($rules, $examSectionValidationRules);
@@ -1030,11 +988,12 @@ class ExamService
 
 
         } else {
-            $examValidationRules = $this->examValidationRules('', $id);
+            $examValidationRules = $this->examValidationRules($data, '', $id);
             $rules = array_merge($rules, $examValidationRules);
-            $examSectionValidationRules = $this->examSectionValidationRules();
-            $rules = array_merge($rules, $examSectionValidationRules);
-
+            if (!empty($data['type']) && !in_array($data['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $examSectionValidationRules = $this->examSectionValidationRules();
+                $rules = array_merge($rules, $examSectionValidationRules);
+            }
             if (!empty($data['type']) && $data['type'] == Exam::EXAM_TYPE_ONLINE) {
                 if (!empty($data['exam_questions'])) {
                     $onlineExamQuestionRules = $this->onlineExamQuestionValidationRules($data['exam_questions']);
@@ -1224,11 +1183,12 @@ class ExamService
     }
 
     /**
+     * @param array $data
      * @param string $examType
      * @param int|null $id
      * @return array
      */
-    public function examValidationRules(string $examType = '', int $id = null): array
+    public function examValidationRules(array $data, string $examType = '', int $id = null): array
     {
         $rules = [];
         $rules[$examType . 'exam_id'] = [
@@ -1237,12 +1197,16 @@ class ExamService
             'int',
             'exists:exams,id,deleted_at,NULL'
         ];
-        $rules[$examType . 'exam_date'] = [
+        $rules[$examType . 'start_date'] = [
+            'required',
+            'date_format:Y-m-d H:i:s'
+        ];
+        $rules[$examType . 'end_date'] = [
             'required',
             'date_format:Y-m-d H:i:s'
         ];
         $rules[$examType . 'duration'] = [
-            'required',
+            Rule::requiredIf(!empty($data['type']) && in_array($data['type'], Exam::DURATION_REQUIRED_EXAM_TYPES)),
             'int'
         ];
         $rules[$examType . 'venue'] = [
@@ -1500,19 +1464,6 @@ class ExamService
         ];
 
         return Validator::make($request->all(), $rules, $customMessage);
-    }
-
-    public function getExamFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $rules = [
-            'purpose_name' => [
-                'required',
-                'string',
-                Rule::in(ExamType::EXAM_PURPOSES)
-            ],
-        ];
-
-        return Validator::make($request->all(), $rules);
     }
 
     /**

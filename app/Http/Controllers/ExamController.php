@@ -53,17 +53,14 @@ class ExamController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws ValidationException
      * @throws AuthorizationException
      */
-    public function read(Request $request, int $id): JsonResponse
+    public function read(int $id): JsonResponse
     {
         $this->authorize('view', Exam::class);
-        $filter = $this->examService->getExamFilterValidator($request)->validate();
-        $exam = $this->examService->getOneExamType($filter, $id);
+        $exam = $this->examService->getOneExamType($id);
         $response = [
             "data" => $exam,
             "_response_status" => [
@@ -97,7 +94,9 @@ class ExamController extends Controller
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
             }
-            $this->examService->storeExamSections($validatedData);
+            if (!empty($data['type']) && !in_array($data['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->storeExamSections($validatedData);
+            }
             DB::commit();
             $response = [
                 '_response_status' => [
