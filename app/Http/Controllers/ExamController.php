@@ -219,9 +219,9 @@ class ExamController extends Controller
     public function getExamQuestionPaper(int $id): JsonResponse
     {
         $examData = $this->examService->getExamQuestionPaper($id);
-        $exam = Exam::findOrFail($examData['id']);
 
-        /** // TODO: check the start end logic  */
+        /** // TODO: check the start end logic and udate the commented code  */
+//        $exam = Exam::findOrFail($examData['id']);
 //        $examStartTime = CarbonImmutable::create($exam->exam_date);
 //        $examEndTime = $examStartTime->addMinutes($exam->duration);
 //        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
@@ -247,13 +247,13 @@ class ExamController extends Controller
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
 
-        $exam = Exam::findOrFail($validatedData['exam_id']);
-
-        /** // TODO: check the start end logic  */
+        /** // TODO: check the start end logic and udate the commented code  */
+//        $exam = Exam::findOrFail($examData['id']);
 //        $examStartTime = CarbonImmutable::create($exam->exam_date);
 //        $examEndTime = $examStartTime->addMinutes($exam->duration);
 //        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
 //        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+
 
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
