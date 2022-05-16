@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamType;
+use App\Services\BatchService;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -348,9 +349,12 @@ class ExamController extends Controller
     }
 
 
-    public function youthAssessmentList(int $fourIrInitiativeId): JsonResponse
+    public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $youthAssessmentList = $this->examService->getYouthAssessmentList($fourIrInitiativeId);
+        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+        $request->offsetSet('batch_id', $batchIds);
+        $filter = $this->examService->youthAssessmentValidator($request)->validate();
+        $youthAssessmentList = $this->examService->getYouthAssessmentList($filter);
         $response = [
             "data" => $youthAssessmentList,
             "_response_status" => [
