@@ -1696,11 +1696,6 @@ class ExamService
 
     }
 
-    public function getYouthAssessmentList(int $fourIrInitiativeId)
-    {
-        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
-        $batchIds = Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
-    }
 
 }
 

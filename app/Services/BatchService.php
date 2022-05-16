@@ -260,6 +260,12 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId): array
+    {
+        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
+    }
+
 
     /**
      * @param array $data
@@ -830,7 +836,7 @@ class BatchService
 
         foreach ($resultArray as &$exam) {
             $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['exam_id']);
-            if ($manualMarkingQuestionNumbers == 0 && !in_array($exam['type'],Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+            if ($manualMarkingQuestionNumbers == 0 && !in_array($exam['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
                 $exam['auto_marking'] = true;
             } else {
                 $exam['auto_marking'] = false;

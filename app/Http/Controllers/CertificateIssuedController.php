@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
+use App\Services\BatchService;
 use App\Services\CertificateIssuedService;
 use App\Services\CertificateService;
 use App\Services\CommonServices\MailService;
@@ -59,12 +60,11 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateList(Request $request): JsonResponse
+    public function getCertificateList(int $fourIrInitiativeId): JsonResponse
     {
-        $filter = $this->certificateIssuedService->filterValidator($request)->validate();
-
+        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+        $filter['batch_id'] = $batchIds;
         $response = $this->certificateIssuedService->getList($filter, $this->startTime);
-
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -121,9 +121,8 @@ class CertificateIssuedController extends Controller
         }
 
 
-
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
-        if (isset($data['_response_status']['success']) && $data['_response_status']['success']){
+        if (isset($data['_response_status']['success']) && $data['_response_status']['success']) {
             /** Mail send after certificate issued */
             $to = array($youth['email']);
             $from = BaseModel::NISE3_FROM_EMAIL;
