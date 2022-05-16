@@ -41,43 +41,46 @@ class CertificateIssuedService
         $youthIds = $request['youth_id'] ?? [];
         $certificateIds = $request['certificate_id'] ?? [];
 
-        /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = CertificateIssued::select([
+        /** @var CertificateIssued|Builder $certificateIssuedBuilder */
+        $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
             'certificate_issued.certificate_id',
+            'certificates.title as certificate_title',
+            'certificates.title_en as certificate_title_en',
+            'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
             'certificate_issued.row_status'
         ]);
 
-        $CertificateIssuedBuilder->orderBy('certificate_issued.id', $order);
-
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
-            $CertificateIssuedBuilder->where('certificates.row_status', $rowStatus);
+            $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
         }
 
         if (!empty($batchIds)) {
-            $CertificateIssuedBuilder->whereIn('certificate_issued.batch_id', $batchIds);
+            $certificateIssuedBuilder->whereIn('certificate_issued.batch_id', $batchIds);
         }
 
         if (!empty($youthIds)) {
-            $CertificateIssuedBuilder->whereIn('certificate_issued.youth_id', $youthIds);
+            $certificateIssuedBuilder->whereIn('certificate_issued.youth_id', $youthIds);
         }
 
         if (!empty($certificateIds)) {
-            $CertificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
         }
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $certificateIssued = $CertificateIssuedBuilder->paginate($pageSize);
+            $certificateIssued = $certificateIssuedBuilder->paginate($pageSize);
             $paginateData = (object)$certificateIssued->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $certificateIssued = $CertificateIssuedBuilder->get();
+            $certificateIssued = $certificateIssuedBuilder->get();
         }
 
         $resultArray = $certificateIssued->toArray();
@@ -112,23 +115,28 @@ class CertificateIssuedService
 
     /**
      * @param int $id
-     * @return Certificate
+     * @return CertificateIssued
      */
     public function getOneIssuedCertificate(int $id): CertificateIssued
     {
-        /** @var Certificate|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = CertificateIssued::select([
+        /** @var CertificateIssued|Builder $certificateIssuedBuilder */
+        $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
             'certificate_issued.certificate_id',
+            'certificates.title as certificate_title',
+            'certificates.title_en as certificate_title_en',
+            'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
-            'certificate_issued.row_status',
-            'certificate_issued.created_at',
-            'certificate_issued.updated_at'
+            'certificate_issued.row_status'
         ]);
-        $CertificateIssuedBuilder->where('certificate_issued.id', $id);
+
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+
+        $certificateIssuedBuilder->where('certificate_issued.id', $id);
+
         /** @var Certificate exam_subjects */
-        return $CertificateIssuedBuilder->firstOrFail();
+        return $certificateIssuedBuilder->firstOrFail();
     }
 
     /**
@@ -147,9 +155,9 @@ class CertificateIssuedService
     public function certificateIssuedAtUpdate($certificateId)
     {
         //$abc = app(Certificate::class);
-        $UpdateDetails = Certificate::where('id', $certificateId)->first();
-        $UpdateDetails->issued_at = Carbon::now();
-        $UpdateDetails->save();
+        $updateDetails = Certificate::where('id', $certificateId)->first();
+        $updateDetails->issued_at = Carbon::now();
+        $updateDetails->save();
     }
 
     /**
