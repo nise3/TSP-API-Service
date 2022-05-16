@@ -57,6 +57,18 @@ class CertificateIssuedController extends Controller
     }
 
     /**
+     * @throws ValidationException
+     */
+    public function getCertificateList(Request $request): JsonResponse
+    {
+        $filter = $this->certificateIssuedService->filterValidator($request)->validate();
+
+        $response = $this->certificateIssuedService->getList($filter, $this->startTime);
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
