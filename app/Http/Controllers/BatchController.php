@@ -80,7 +80,7 @@ class BatchController extends Controller
     public function getBatchesByFourIrInitiativeId(int $fourIrInitiativeId): JsonResponse
     {
 
-        $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId,$this->startTime);
+        $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -291,6 +291,22 @@ class BatchController extends Controller
         return Response::json($response);
     }
 
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function getExamsByBatchId(Request $request, $id): JsonResponse
+    {
+        $filter = $this->batchService->examListByBatchfilterValidator($request)->validate();
+
+        $response = $this->batchService->getExamListByBatch($filter,$this->startTime, $id);
+
+        return Response::json($response);
+    }
+
     /**
      * @param Request $request
      * @param $id
@@ -310,7 +326,7 @@ class BatchController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function assignExamToBatch(Request $request,int $id): JsonResponse
+    public function assignExamToBatch(Request $request, int $id): JsonResponse
     {
         $batch = Batch::findOrFail($id);
         $validatedData = $this->batchService->examTypeValidator($request)->validate();
@@ -348,8 +364,6 @@ class BatchController extends Controller
 //        ];
 //        return Response::json($response, ResponseAlias::HTTP_OK);
     }
-
-
 
 
 }

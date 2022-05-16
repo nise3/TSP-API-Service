@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\BatchExam;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\ExamType;
@@ -406,7 +407,7 @@ class BatchService
      * @param array $examTypeIds
      * @return Batch
      */
-    public function assignExamToBatch($batch, array $examTypeIds):Batch
+    public function assignExamToBatch($batch, array $examTypeIds): Batch
     {
         $batch->exams()->sync($examTypeIds);
         return $batch;
@@ -740,6 +741,131 @@ class BatchService
     }
 
     /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @param $id
+     * @return array
+     */
+    public function getExamListByBatch(array $request, Carbon $startTime, $id): array
+    {
+
+        $titleEn = $request['title_en'] ?? "";
+        $title = $request['title'] ?? "";
+        $subjectId = $request['subject_id'] ?? "";
+        $pageSize = $request['page_size'] ?? "";
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+
+
+        /** @var ExamType|Builder $batchExamBuilder */
+        $batchExamBuilder = BatchExam::select([
+            'batch_exams.batch_id',
+            'batch_exams.exam_type_id',
+            'exam_types.subject_id',
+            'exam_subjects.title  as subject_title',
+            'exam_subjects.title_en  as subject_title_en',
+            'exam_types.type',
+            'exam_types.title',
+            'exam_types.title_en',
+            'exams.type as exam_type',
+            'exam_types.row_status',
+            'exam_types.created_at',
+            'exam_types.updated_at',
+            'exam_types.published_at',
+        ]);
+
+        $batchExamBuilder->where('batch_exams.batch_id', $id);
+
+        $batchExamBuilder->join("exam_types", function ($join) {
+            $join->on('batch_exams.exam_type_id', '=', 'exam_types.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+        $batchExamBuilder->join("exams", function ($join) {
+            $join->on('batch_exams.exam_id', '=', 'exams.id')
+                ->whereNull('exams.deleted_at');
+        });
+
+        $batchExamBuilder->join("exam_subjects", function ($join) {
+            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                ->whereNull('exam_types.deleted_at');
+        });
+
+        $batchExamBuilder->orderBy('exam_types.id', $order);
+
+
+        if (is_numeric($rowStatus)) {
+            $batchExamBuilder->where('exam_types.row_status', $rowStatus);
+        }
+
+        if (!empty($titleEn)) {
+            $batchExamBuilder->where('exam_types.title_en', 'like', '%' . $titleEn . '%');
+        }
+        if (!empty($title)) {
+            $batchExamBuilder->where('exam_types.title', 'like', '%' . $title . '%');
+        }
+
+        if (!empty($subjectId)) {
+            $batchExamBuilder->where('exam_types.subject_id', 'like', '%' . $subjectId . '%');
+        }
+
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $ExamType = $batchExamBuilder->paginate($pageSize);
+            $paginateData = (object)$ExamType->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $ExamType = $batchExamBuilder->get();
+        }
+
+        $response['order'] = $order;
+        $response['data'] = $ExamType->toArray()['data'] ?? $ExamType->toArray();
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+
+    public function examListByBatchfilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+        ];
+        $rules = [
+
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
+    }
+
+    /**
      * @param array $batch
      * @return array
      * @throws RequestException
@@ -915,7 +1041,7 @@ class BatchService
      */
     public function getFourIrCourseIds(int $fourIrInitiativeId): array
     {
-        return  Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        return Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
 
     }
 
@@ -941,10 +1067,10 @@ class BatchService
     public function processResult(array $data): bool
     {
         dd('pppp');
-        $youthIds = CourseEnrollment::where('batch_id',$data['batch_id'])->pluck('youth_id');
+        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
 
-        foreach ($youthIds as $youthId){
-            $youthExams = YouthExam::where('youth_id',$youthId)->where('batch_id',$data['batch_id'])->get();
+        foreach ($youthIds as $youthId) {
+            $youthExams = YouthExam::where('youth_id', $youthId)->where('batch_id', $data['batch_id'])->get();
 
         }
     }
