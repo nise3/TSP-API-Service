@@ -201,12 +201,12 @@ class CertificateIssuedService
             'batch_id' => [
                 'required',
                 'int',
-                "exists:batches,id,deleted,NULL"
+                "exists:batches,id,deleted_at,NULL"
             ],
             'certificate_id' => [
                 'required',
                 'int',
-                "exists:certificates,id,deleted,NULL"
+                "exists:certificates,id,deleted_at,NULL"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -230,15 +230,19 @@ class CertificateIssuedService
         }
 
         if ($request->filled('batch_id')) {
-            $this->toArray($request->get('batch_id'));
+            $decodedValue=json_decode($request->get('batch_id'),true);
+            $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
         if ($request->filled('certificate_id')) {
-            $this->toArray($request->get('certificate_id'));
+            $decodedValue=json_decode($request->get('certificate_id'),true);
+            $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
+
         }
 
         if ($request->filled('youth_id')) {
-            $this->toArray($request->get('youth_id'));
+            $decodedValue=json_decode($request->get('youth_id'),true);
+            $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
         }
 
         $customMessage = [
@@ -259,7 +263,7 @@ class CertificateIssuedService
             'batch_id.*' => [
                 "required",
                 "integer",
-                "exists:batches,id,deleted,NULL"
+                "exists:batches,id,deleted_at,NULL"
             ],
             'certificate_id' => [
                 "nullable",
@@ -268,7 +272,7 @@ class CertificateIssuedService
             'certificate_id.*' => [
                 "nullable",
                 "integer",
-                "exists:certificates,id,deleted,NULL"
+                "exists:certificates,id,deleted_at,NULL"
             ],
             'youth_id' => [
                 "nullable",

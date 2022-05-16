@@ -50,7 +50,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         // TODO use 'certificates', 'certificate-types', ''certificate-issued'
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
 
@@ -235,8 +235,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
+    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 //    $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 });
+
 
 
 
