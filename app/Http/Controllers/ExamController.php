@@ -254,7 +254,6 @@ class ExamController extends Controller
 //        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
 //        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
-
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
             $response = [

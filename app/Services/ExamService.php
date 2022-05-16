@@ -12,6 +12,7 @@ use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
 use App\Models\ExamType;
+use App\Models\YouthExam;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -150,7 +151,6 @@ class ExamService
                 $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
                 $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
             }
-            Log::info($question);
             $examResult = app(ExamAnswer::class);
             $examResult->fill($question);
             $examResult->save();
@@ -1589,25 +1589,29 @@ class ExamService
                 'required'
             ],
             'questions' => [
-                'required',
+                'nullable',
                 'array',
             ],
             'questions.*' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'array',
             ],
             'questions.*.exam_section_question_id' => [
+                Rule::requiredIf(!empty($data['questions'])),
                 'nullable',
                 'string',
                 'exists:exam_section_questions,uuid,deleted_at,NULL'
             ],
             'questions.*.question_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'int',
                 'exists:exam_question_banks,id,deleted_at,NULL'
             ],
             'questions.*.individual_marks' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'numeric',
             ],
             'questions.*.answers' => [
