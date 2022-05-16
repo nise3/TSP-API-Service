@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -74,5 +75,10 @@ class Exam extends BaseModel
     public function examSets(): HasMany
     {
         return $this->hasMany(ExamSet::class, 'exam_id', 'id');
+    }
+
+    public function subject(): HasOne
+    {
+        return $this->hasOne(ExamSubject::class, 'id','subject_id');
     }
 }
