@@ -9,6 +9,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\CourseResultConfig;
 use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
@@ -406,7 +407,7 @@ class BatchService
      * @param array $examTypeIds
      * @return Batch
      */
-    public function assignExamToBatch($batch, array $examTypeIds):Batch
+    public function assignExamToBatch($batch, array $examTypeIds): Batch
     {
         $batch->exams()->sync($examTypeIds);
         return $batch;
@@ -811,7 +812,7 @@ class BatchService
      * @param Carbon $startTime
      * @return array
      */
-    public function getFourIrBatchList(int $fourIrInitiativeId,Carbon $startTime): array
+    public function getFourIrBatchList(int $fourIrInitiativeId, Carbon $startTime): array
     {
 
         $pageSize = $request['page_size'] ?? "";
@@ -819,7 +820,7 @@ class BatchService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        $courses=$this->getFourIrCourseIds($fourIrInitiativeId);
+        $courses = $this->getFourIrCourseIds($fourIrInitiativeId);
 
 
         $batchBuilder = Batch::select([
@@ -882,7 +883,7 @@ class BatchService
         $batchBuilder->with('trainers');
 
         /** @var Batch $batch */
-        $batchBuilder->whereIn('course_id',$courses);
+        $batchBuilder->whereIn('course_id', $courses);
 
         /** @var Collection $batches */
 
@@ -915,7 +916,7 @@ class BatchService
      */
     public function getFourIrCourseIds(int $fourIrInitiativeId): array
     {
-        return  Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        return Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
 
     }
 
@@ -940,13 +941,36 @@ class BatchService
      */
     public function processResult(array $data): bool
     {
-        dd('pppp');
-        $youthIds = CourseEnrollment::where('batch_id',$data['batch_id'])->pluck('youth_id');
 
-        foreach ($youthIds as $youthId){
-            $youthExams = YouthExam::where('youth_id',$youthId)->where('batch_id',$data['batch_id'])->get();
+        /** @var Batch $batch */
+        $batch = Batch::find($data['batch_id']);
+
+        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
+        $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
+
+        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
+
+        foreach ($youthIds as $youthId) {
+            foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
+                //dd($resultPercentage);
+                $examType = $examTypes[$key];
+                $youthExams = YouthExam::query()->where('youth_id', $youthId)
+                    ->where('batch_id', $data['batch_id'])
+                    ->join('exams', 'exam_id', '=', 'exams.id')
+                    ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
+                    ->where('exam_types.type',$examType);
+
+                $totalMarks = $youthExams->sum('total_marks');
+                $totalObtainedMarks = $youthExams->sum('total_obtained_marks');
+
+                $finalMark = ($totalObtainedMarks*100) / 300;
+                //dd($totalMarks, $totalObtainedMarks,$finalMark);
+            }
 
         }
+
+
+        return false;
     }
 
 }
