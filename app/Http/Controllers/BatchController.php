@@ -336,9 +336,8 @@ class BatchController extends Controller
         $batch = Batch::findOrFail($id);
         $validatedData = $this->batchService->examTypeValidator($request)->validate();
         $validatedData['exam_type_ids'] = !empty($validatedData['exam_type_ids']) ? $validatedData['exam_type_ids'] : [];
-        $batch = $this->batchService->assignExamToBatch($batch, $validatedData['exam_type_ids']);
+        $this->batchService->assignExamToBatch($batch, $validatedData['exam_type_ids']);
         $response = [
-            'data' => $batch->exams()->get(),
             '_response_status' => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
