@@ -100,6 +100,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Assign exams to batch */
         $router->post('batches/{id}/assign-exams-to-batch', ['as' => 'batches.assign-exams-to-batch', 'uses' => 'BatchController@assignExamToBatch']);
 
+        /**  exam list by batch */
+        $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
+
+
         /** Reject course enrollment application */
         $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);
 
@@ -124,7 +128,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 
     $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
-    $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
 
     // TODO remove this routes and uncomment auth middleware routs
 //    $customRouter()->resourceRoute('certificates', 'CertificateController')->render();

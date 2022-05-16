@@ -2604,6 +2604,73 @@
                 }
             }
         },
+        "/batches/{batchId}/exams": {
+            "get": {
+                "summary": "exam list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": [
+                                        {
+                                            "batch_id": 1,
+                                            "exam_type_id": 1,
+                                            "subject_id": 1,
+                                            "subject_title": "Bangla 1st paper",
+                                            "subject_title_en": "Bangla 1st paper",
+                                            "type": 3,
+                                            "title": "exam 1",
+                                            "title_en": "exam1",
+                                            "exam_id": 1,
+                                            "exam_type": 1,
+                                            "row_status": 1,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "published_at": "0000-00-00 00:00:00",
+                                            "auto_marking": true
+                                        },
+                                        {
+                                            "batch_id": 1,
+                                            "exam_type_id": 1,
+                                            "subject_id": 1,
+                                            "subject_title": "Bangla 1st paper",
+                                            "subject_title_en": "Bangla 1st paper",
+                                            "type": 3,
+                                            "title": "exam 1",
+                                            "title_en": "exam1",
+                                            "exam_id": 2,
+                                            "exam_type": 2,
+                                            "row_status": 1,
+                                            "created_at": null,
+                                            "updated_at": null,
+                                            "published_at": "0000-00-00 00:00:00",
+                                            "auto_marking": false
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [

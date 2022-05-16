@@ -11,6 +11,9 @@ use App\Models\BatchExam;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\CourseResultConfig;
+use App\Models\Exam;
+use App\Models\ExamQuestionBank;
+use App\Models\ExamSection;
 use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
@@ -769,6 +772,7 @@ class BatchService
             'exam_types.type',
             'exam_types.title',
             'exam_types.title_en',
+            'exams.id as exam_id',
             'exams.type as exam_type',
             'exam_types.row_status',
             'exam_types.created_at',
@@ -822,8 +826,21 @@ class BatchService
             $ExamType = $batchExamBuilder->get();
         }
 
+        $resultArray = $ExamType->toArray()['data'] ?? $ExamType->toArray();
+
+        foreach ($resultArray as &$exam) {
+            $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['exam_id']);
+            if ($manualMarkingQuestionNumbers == 0 && !in_array($exam['type'],Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $exam['auto_marking'] = true;
+            } else {
+                $exam['auto_marking'] = false;
+            }
+        }
+
         $response['order'] = $order;
-        $response['data'] = $ExamType->toArray()['data'] ?? $ExamType->toArray();
+        $response["data"] = $resultArray;
+
+
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -831,6 +848,16 @@ class BatchService
         ];
 
         return $response;
+
+    }
+
+    /**
+     * @param int $examId
+     * @return int
+     */
+    private function countManualMarkingQuestions(int $examId): int
+    {
+        return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
 
     }
 
@@ -1084,12 +1111,12 @@ class BatchService
                     ->where('batch_id', $data['batch_id'])
                     ->join('exams', 'exam_id', '=', 'exams.id')
                     ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
-                    ->where('exam_types.type',$examType);
+                    ->where('exam_types.type', $examType);
 
                 $totalMarks = $youthExams->sum('total_marks');
                 $totalObtainedMarks = $youthExams->sum('total_obtained_marks');
 
-                $finalMark = ($totalObtainedMarks*100) / 300;
+                $finalMark = ($totalObtainedMarks * 100) / 300;
                 //dd($totalMarks, $totalObtainedMarks,$finalMark);
             }
 
