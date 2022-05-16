@@ -16,7 +16,6 @@ class CreateBatchExamsTable extends Migration
         Schema::create('batch_exams', function (Blueprint $table) {
             $table->unsignedInteger('batch_id');
             $table->unsignedInteger('exam_type_id');
-            $table->unsignedInteger('exam_id');
         });
     }
 

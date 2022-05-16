@@ -296,13 +296,18 @@ class BatchController extends Controller
      * @param Request $request
      * @param $id
      * @return JsonResponse
-     * @throws ValidationException
      */
     public function getExamsByBatchId(Request $request, $id): JsonResponse
     {
-        $filter = $this->batchService->examListByBatchfilterValidator($request)->validate();
-
-        $response = $this->batchService->getExamListByBatch($filter,$this->startTime, $id);
+        $data = $this->batchService->getExamListByBatch($id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
 
         return Response::json($response);
     }

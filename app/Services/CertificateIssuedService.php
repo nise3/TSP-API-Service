@@ -50,10 +50,13 @@ class CertificateIssuedService
             'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
             'certificate_issued.row_status'
         ]);
 
         $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
             $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
