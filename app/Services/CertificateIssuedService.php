@@ -32,13 +32,14 @@ class CertificateIssuedService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-//        $titleEn = $request['title_en'] ?? "";
-//        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
+        $batchIds = $request['batch_id'] ?? [];
+        $youthIds = $request['youth_id'] ?? [];
+        $certificateIds = $request['certificate_id'] ?? [];
 
         /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
         $CertificateIssuedBuilder = CertificateIssued::select([
@@ -55,12 +56,18 @@ class CertificateIssuedService
             $CertificateIssuedBuilder->where('certificates.row_status', $rowStatus);
         }
 
-//        if (!empty($titleEn)) {
-//            $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
-//        }
-//        if (!empty($title)) {
-//            $CertificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
-//        }
+        if (!empty($batchIds)) {
+            $CertificateIssuedBuilder->whereIn('certificate_issued.batch_id', $batchIds);
+        }
+
+        if (!empty($youthIds)) {
+            $CertificateIssuedBuilder->whereIn('certificate_issued.youth_id', $youthIds);
+        }
+
+        if (!empty($certificateIds)) {
+            $CertificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+        }
+
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $certificateIssued = $CertificateIssuedBuilder->paginate($pageSize);
@@ -139,9 +146,9 @@ class CertificateIssuedService
 
     public function certificateIssuedAtUpdate($certificateId)
     {
-      //$abc = app(Certificate::class);
+        //$abc = app(Certificate::class);
         $UpdateDetails = Certificate::where('id', $certificateId)->first();
-        $UpdateDetails->issued_at  = Carbon::now();
+        $UpdateDetails->issued_at = Carbon::now();
         $UpdateDetails->save();
     }
 
@@ -193,11 +200,13 @@ class CertificateIssuedService
             ],
             'batch_id' => [
                 'required',
-                'int'
+                'int',
+                "exists:batches,id,deleted,NULL"
             ],
             'certificate_id' => [
                 'required',
-                'int'
+                'int',
+                "exists:certificates,id,deleted,NULL"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -219,6 +228,19 @@ class CertificateIssuedService
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
+        if ($request->filled('batch_id')) {
+            $this->toArray($request->get('batch_id'));
+        }
+
+        if ($request->filled('certificate_id')) {
+            $this->toArray($request->get('certificate_id'));
+        }
+
+        if ($request->filled('youth_id')) {
+            $this->toArray($request->get('youth_id'));
+        }
+
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
@@ -230,6 +252,28 @@ class CertificateIssuedService
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
+            'batch_id' => [
+                "nullable",
+                "array"
+            ],
+            'batch_id.*' => [
+                "required",
+                "integer",
+                "exists:batches,id,deleted,NULL"
+            ],
+            'certificate_id' => [
+                "nullable",
+                "array"
+            ],
+            'certificate_id.*' => [
+                "nullable",
+                "integer",
+                "exists:certificates,id,deleted,NULL"
+            ],
+            'youth_id' => [
+                "nullable",
+                "array"
+            ],
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -242,6 +286,17 @@ class CertificateIssuedService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+    }
+
+    private function toArray(int|array $data): array
+    {
+        if (is_array($data)) {
+            return $data;
+        } else {
+            return [
+                $data
+            ];
+        }
     }
 }
 
