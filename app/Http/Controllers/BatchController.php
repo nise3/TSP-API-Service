@@ -328,4 +328,28 @@ class BatchController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function processBatchResult(Request $request): JsonResponse
+    {
+        $validatedData = $this->batchService->resultProcessingValidator($request)->validate();
+        $processResult = $this->batchService->processResult($validatedData);
+//        $response = [
+//            'data' => $batch->exams()->get(),
+//            '_response_status' => [
+//                "success" => true,
+//                "code" => ResponseAlias::HTTP_OK,
+//                "message" => "exams assigned to batch successfully",
+//                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+//            ]
+//        ];
+//        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+
+
+
 }

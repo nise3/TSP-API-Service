@@ -53,6 +53,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
+        $router->post("process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
 
 
         /** Fetch all youth  who are a  participant of an exam */
