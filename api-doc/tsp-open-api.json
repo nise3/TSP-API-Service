@@ -2604,7 +2604,7 @@
                 }
             }
         },
-        "/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
+        "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [
                     {
@@ -15163,11 +15163,8 @@
                     "result_type": {
                         "type": "integer"
                     },
-                    "accessor_type": {
+                    "language": {
                         "type": "integer"
-                    },
-                    "accessor_id": {
-                        "type": "string"
                     }
                 }
             },
@@ -16052,7 +16049,6 @@
                         5
                     ]
                 },
-
                 "description": "1=>Competent, 2=>Not Competent, 3=>Grading, 4=>Marks, 5=>Participation"
             },
             "certificate_id": {
