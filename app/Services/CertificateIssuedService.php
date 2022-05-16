@@ -238,18 +238,18 @@ class CertificateIssuedService
         }
 
         if ($request->filled('batch_id')) {
-            $decodedValue=json_decode($request->get('batch_id'),true);
+            $decodedValue=$request->get('batch_id');
             $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
         if ($request->filled('certificate_id')) {
-            $decodedValue=json_decode($request->get('certificate_id'),true);
+            $decodedValue=$request->get('certificate_id');
             $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
 
         }
 
         if ($request->filled('youth_id')) {
-            $decodedValue=json_decode($request->get('youth_id'),true);
+            $decodedValue=$request->get('youth_id');
             $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
         }
 
