@@ -671,7 +671,6 @@ class CourseEnrollmentBulkEntryService
             $identityNumberTypeDropdown .= $key . ' | ' . $type . ",";
         }
 
-
         $dynamicField = self::YOUTH_PROFILE_BASIC_FIELDS;
 
         $this->buildProfessionalInfo($objPHPExcel, $dynamicField, $courseId);

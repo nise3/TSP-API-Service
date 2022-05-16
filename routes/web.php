@@ -50,7 +50,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         // TODO use 'certificates', 'certificate-types', ''certificate-issued'
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
         $router->post("process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
@@ -198,6 +198,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->put('approve-four-ir-course/{id}', ["as" => "approve-four-ir-course", "uses" => "CourseController@approveFourIrCourse"]);
         $router->get('get-four-ir-course-enrolled-youths', ["as" => "get-four-ir-course-enrolled-youths", "uses" => "CourseEnrollmentController@getEnrolledYouths"]);
         $router->get('get-four-ir-course-batches', ["as" => "get-four-ir-course-batches", "uses" => "BatchController@getCourseBatches"]);
+
+        /** Assessment List */
+        $router->get('get-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
     });
 
     /** Exam management */
@@ -237,8 +240,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('payment-via-ek-pay/pay-now', ["as" => "payment-via-ek-pay.pay-now", "uses" => "RplApplicationCertificationPaymentController@paymentViaEkPay"]);
         $router->post('payment-via-ek-pay/ipn-handler/{secretToken}', ["as" => "payment-via-ek-pay.ipn-handler", "uses" => "RplApplicationCertificationPaymentController@ipnHandler"]);
     });
+    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 //    $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 });
+
 
 
 

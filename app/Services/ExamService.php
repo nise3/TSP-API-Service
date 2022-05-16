@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamAnswer;
@@ -1693,6 +1694,12 @@ class ExamService
 
         return Validator::make($request->all(), $rules);
 
+    }
+
+    public function getYouthAssessmentList(int $fourIrInitiativeId)
+    {
+        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        $batchIds = Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
     }
 
 }
