@@ -2622,43 +2622,31 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "order": "ASC",
-                                    "data": [
-                                        {
-                                            "batch_id": 1,
-                                            "exam_type_id": 1,
-                                            "subject_id": 1,
-                                            "subject_title": "Bangla 1st paper",
-                                            "subject_title_en": "Bangla 1st paper",
-                                            "type": 3,
-                                            "title": "exam 1",
-                                            "title_en": "exam1",
-                                            "exam_id": 1,
-                                            "exam_type": 1,
-                                            "row_status": 1,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "published_at": "0000-00-00 00:00:00",
-                                            "auto_marking": true
-                                        },
-                                        {
-                                            "batch_id": 1,
-                                            "exam_type_id": 1,
-                                            "subject_id": 1,
-                                            "subject_title": "Bangla 1st paper",
-                                            "subject_title_en": "Bangla 1st paper",
-                                            "type": 3,
-                                            "title": "exam 1",
-                                            "title_en": "exam1",
-                                            "exam_id": 2,
-                                            "exam_type": 2,
-                                            "row_status": 1,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "published_at": "0000-00-00 00:00:00",
-                                            "auto_marking": false
-                                        }
-                                    ],
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,

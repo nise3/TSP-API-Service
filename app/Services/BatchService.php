@@ -19,6 +19,7 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -744,110 +745,43 @@ class BatchService
         return $response;
     }
 
+
     /**
-     * @param array $request
-     * @param Carbon $startTime
      * @param $id
-     * @return array
+     * @return Batch
      */
-    public function getExamListByBatch(array $request, Carbon $startTime, $id): array
+    public function getExamListByBatch($id): Batch
     {
 
-        $titleEn = $request['title_en'] ?? "";
-        $title = $request['title'] ?? "";
-        $subjectId = $request['subject_id'] ?? "";
-        $pageSize = $request['page_size'] ?? "";
-        $paginate = $request['page'] ?? "";
-        $rowStatus = $request['row_status'] ?? "";
-        $order = $request['order'] ?? "ASC";
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::select([
+            'batches.id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
 
-
-        /** @var ExamType|Builder $batchExamBuilder */
-        $batchExamBuilder = BatchExam::select([
-            'batch_exams.batch_id',
-            'batch_exams.exam_type_id',
-            'exam_types.subject_id',
-            'exam_subjects.title  as subject_title',
-            'exam_subjects.title_en  as subject_title_en',
-            'exam_types.type',
-            'exam_types.title',
-            'exam_types.title_en',
-            'exams.id as exam_id',
-            'exams.type as exam_type',
-            'exam_types.row_status',
-            'exam_types.created_at',
-            'exam_types.updated_at',
-            'exam_types.published_at',
         ]);
+        $batchBuilder->where('batches.id', $id);
 
-        $batchExamBuilder->where('batch_exams.batch_id', $id);
+        $batchBuilder->with('examTypes.exams');
 
-        $batchExamBuilder->join("exam_types", function ($join) {
-            $join->on('batch_exams.exam_type_id', '=', 'exam_types.id')
-                ->whereNull('exam_types.deleted_at');
-        });
-        $batchExamBuilder->join("exams", function ($join) {
-            $join->on('batch_exams.exam_id', '=', 'exams.id')
-                ->whereNull('exams.deleted_at');
-        });
+        $batchBuilder->with(['examTypes' => function ($query) {
+            $query->select([
+                'exam_types.id',
+                'exam_types.type',
+                'exam_types.title',
+                'exam_types.title_en',
+            ]);
+            $query->with(['exams'=>function($subQuery){
+                $subQuery->select([
+                    'exams.id',
+                    'exams.exam_type_id',
+                    'exams.type'
+                ]);
+            }]);
+        }]);
 
-        $batchExamBuilder->join("exam_subjects", function ($join) {
-            $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
-                ->whereNull('exam_types.deleted_at');
-        });
+        return $batchBuilder->firstOrFail();
 
-        $batchExamBuilder->orderBy('exam_types.id', $order);
-
-
-        if (is_numeric($rowStatus)) {
-            $batchExamBuilder->where('exam_types.row_status', $rowStatus);
-        }
-
-        if (!empty($titleEn)) {
-            $batchExamBuilder->where('exam_types.title_en', 'like', '%' . $titleEn . '%');
-        }
-        if (!empty($title)) {
-            $batchExamBuilder->where('exam_types.title', 'like', '%' . $title . '%');
-        }
-
-        if (!empty($subjectId)) {
-            $batchExamBuilder->where('exam_types.subject_id', 'like', '%' . $subjectId . '%');
-        }
-
-        if (is_numeric($paginate) || is_numeric($pageSize)) {
-            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
-            $ExamType = $batchExamBuilder->paginate($pageSize);
-            $paginateData = (object)$ExamType->toArray();
-            $response['current_page'] = $paginateData->current_page;
-            $response['total_page'] = $paginateData->last_page;
-            $response['page_size'] = $paginateData->per_page;
-            $response['total'] = $paginateData->total;
-        } else {
-            $ExamType = $batchExamBuilder->get();
-        }
-
-        $resultArray = $ExamType->toArray()['data'] ?? $ExamType->toArray();
-
-        foreach ($resultArray as &$exam) {
-            $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['exam_id']);
-            if ($manualMarkingQuestionNumbers == 0 && !in_array($exam['type'],Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
-                $exam['auto_marking'] = true;
-            } else {
-                $exam['auto_marking'] = false;
-            }
-        }
-
-        $response['order'] = $order;
-        $response["data"] = $resultArray;
-
-
-        $response['_response_status'] = [
-            "success" => true,
-            "code" => Response::HTTP_OK,
-            "query_time" => $startTime->diffInSeconds(Carbon::now()),
-        ];
-
-        return $response;
 
     }
 
@@ -866,7 +800,7 @@ class BatchService
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-    public function examListByBatchfilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function examListByBatchFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
     {
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));

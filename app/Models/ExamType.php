@@ -12,11 +12,8 @@ class ExamType extends BaseModel
     use  SoftDeletes, CreatedUpdatedBy;
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
-    public const EXAM_PURPOSE_BATCH = "BATCH";
-    public const EXAM_PURPOSES = [
-        self::EXAM_PURPOSE_BATCH
-    ];
 
+    protected $hidden = ['pivot'];
 
 
     public function exams(): HasMany
