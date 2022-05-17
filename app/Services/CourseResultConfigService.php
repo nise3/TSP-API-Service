@@ -168,22 +168,23 @@ class CourseResultConfigService
                 'array',
                 'min:1',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
-                    $maxValue = null;
-
-                    foreach ($data['gradings'] as $grading){
-                        if($grading['min'] >= $grading['max']){
-                            $failed("max value should be greater than min");
+                    if(!empty($data['gradings'])){
+                        if ($data['gradings'][0]['min'] !== '0') {
+                            $failed("initial value should start from 0!");
                         }
-                        if($grading['min'] > $maxValue){
-                            $maxValue = $grading['max'];
-                        }else{
-                            $failed("range should be greater than previous");
-                        }
+                        $maxValue = null;
 
+                        foreach ($data['gradings'] as $grading){
+                            if($grading['min'] >= $grading['max']){
+                                $failed("max value should be greater than min");
+                            }
+                            if($grading['min'] > $maxValue){
+                                $maxValue = $grading['max'];
+                            }else{
+                                $failed("range should be greater than previous");
+                            }
+
+                        }
                     }
                 }
             ],
@@ -216,10 +217,6 @@ class CourseResultConfigService
                 'min:1',
                 'array',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
                     $maxValue = null;
                     $totalPercentage = 0;
                     foreach ($data['result_percentages'] as $percentage){
