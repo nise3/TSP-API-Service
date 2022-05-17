@@ -110,8 +110,11 @@ class ExamService
     /**
      * @param array $data
      */
-    public function submitExamQuestionPaper(array $data)
+    public function submitExamQuestionPaper(array $data): void
     {
+        $youthExam = app(YouthExam::class);
+        $youthExam->fill($data);
+
         $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
 
         $examSectionIdsByQuestionType = [];
@@ -1588,6 +1591,12 @@ class ExamService
                 'int',
                 'required'
             ],
+            'batch_id' => [
+                'int',
+                'required',
+                'exists:batches,id,deleted_at,NULL'
+
+            ],
             'questions' => [
                 'nullable',
                 'array',
@@ -1622,11 +1631,11 @@ class ExamService
                 'nullable',
                 'string',
             ],
-            'questions.*.file_path' => [
+            'file_paths' => [
                 'nullable',
                 'array',
             ],
-            'questions.*.file_path.*' => [
+            'file_path.*' => [
                 'nullable',
                 'string',
             ],
