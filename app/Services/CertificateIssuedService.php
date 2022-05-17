@@ -50,10 +50,13 @@ class CertificateIssuedService
             'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
             'certificate_issued.row_status'
         ]);
 
         $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
             $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
@@ -238,18 +241,18 @@ class CertificateIssuedService
         }
 
         if ($request->filled('batch_id')) {
-            $decodedValue=json_decode($request->get('batch_id'),true);
+            $decodedValue=$request->get('batch_id');
             $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
         if ($request->filled('certificate_id')) {
-            $decodedValue=json_decode($request->get('certificate_id'),true);
+            $decodedValue=$request->get('certificate_id');
             $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
 
         }
 
         if ($request->filled('youth_id')) {
-            $decodedValue=json_decode($request->get('youth_id'),true);
+            $decodedValue=$request->get('youth_id');
             $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
         }
 

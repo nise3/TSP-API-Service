@@ -130,10 +130,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
 
-    // TODO remove this routes and uncomment auth middleware routs
-//    $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
-//    $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-//    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
     /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
@@ -174,7 +170,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
         $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
-
+        /** Youth Certificate View */
+        $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
     });
 
     //Service to service direct call without any authorization and authentication
@@ -202,7 +199,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('get-four-ir-certificate-list/{fourIrInitiativeId}', ["as" => "get-four-ir-certificate-list", "uses" => "CertificateIssuedController@getCertificateList"]);
 
         /** Assessment List */
-        $router->get('get-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
+        $router->get('get-four-ir-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-four-ir-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
+
     });
 
     /** Exam management */

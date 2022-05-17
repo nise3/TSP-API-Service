@@ -21,8 +21,6 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
-use Doctrine\DBAL\Exception\DatabaseDoesNotExist;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -265,6 +263,12 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId): array
+    {
+        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
+    }
+
 
     /**
      * @param array $data
@@ -418,7 +422,7 @@ class BatchService
      */
     public function assignExamToBatch($batch, array $examTypeIds): Batch
     {
-        $batch->exams()->sync($examTypeIds);
+        $batch->examTypes()->sync($examTypeIds);
         return $batch;
 
     }

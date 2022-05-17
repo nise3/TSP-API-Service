@@ -162,7 +162,7 @@ class CourseResultConfigService
             ],
             'gradings' => [
                 Rule::requiredIf(function () use ($data) {
-                    return $data['result_type'] == BaseModel::RESULT_TYPE_GRADING;
+                    return !empty($data['result_type']) && $data['result_type'] == BaseModel::RESULT_TYPE_GRADING;
                 }),
                 'nullable',
                 'array',
@@ -205,7 +205,7 @@ class CourseResultConfigService
             ],
             'pass_marks' => [
                 Rule::requiredIf(function () use ($data) {
-                    return $data['result_type'] == BaseModel::RESULT_TYPE_MARKS;
+                    return !empty($data['result_type']) && $data['result_type'] == BaseModel::RESULT_TYPE_MARKS;
                 }),
                 'max:100',
                 "nullable",
