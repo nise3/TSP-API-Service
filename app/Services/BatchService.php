@@ -1098,7 +1098,6 @@ class BatchService
                     $totalObtainedMarks += $finalMarkPercentage;
 
                     Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
-                    // dd($examTotalMarks, $totalObtainedMarks,$finalMark,$resultPercentage,$finalMarkPercentage);
                 }
 
                 $result = app()->make(Result::class);
