@@ -21,6 +21,7 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -800,9 +801,9 @@ class BatchService
                     $exam['auto_marking'] = false;
                 }
                 if (is_numeric($youthId)) {
-                   $youthExamData = $this->getYouthExamData($id,$youthId,$exam->id);
-                    $exam['obtained_mark'] =$youthExamData->total_obtained ?? 0;
-                    $exam['file_paths'] =$youthExamData->file_paths ?? [];
+                    $youthExamData = $this->getYouthExamData($id, $youthId, $exam->id);
+                    $exam['obtained_mark'] = $youthExamData->total_obtained ?? 0;
+                    $exam['file_paths'] = $youthExamData->file_paths ?? [];
 
                 }
             }
@@ -811,20 +812,19 @@ class BatchService
         return $examTypes;
     }
 
+
     /**
      * @param int $batchId
      * @param int $youthId
      * @param int $examId
-     * @return \Illuminate\Database\Query\Builder|null
+     * @return YouthExam|null
      */
-    public function getYouthExamData(int $batchId,int $youthId,int $examId):\Illuminate\Database\Query\Builder|null
+    public function getYouthExamData(int $batchId, int $youthId, int $examId): YouthExam|null
     {
-        return DB::table('youth_exams')
-            ->where('batch_id',$batchId)
-            ->where('youth_id',$youthId)
-            ->where('exam_id',$examId)
+        return YouthExam::where('batch_id', $batchId)
+            ->where('youth_id', $youthId)
+            ->where('exam_id', $examId)
             ->first();
-
     }
 
     /**
