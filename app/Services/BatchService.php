@@ -748,11 +748,13 @@ class BatchService
 
 
     /**
+     * @param Request $request
      * @param $id
      * @return array
      */
-    public function getExamListByBatch($id): array
+    public function getExamListByBatch(Request $request, $id): array
     {
+        $youthId = $request->query('youth_id') ?? "";
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::where('batches.id', $id)
@@ -783,10 +785,32 @@ class BatchService
                 } else {
                     $exam['auto_marking'] = false;
                 }
+                if (is_numeric($youthId)) {
+                   $youthExamData = $this->getYouthExamData($id,$youthId,$exam->id);
+                    $exam['obtained_mark'] =$youthExamData->total_obtained ?? 0;
+                    $exam['file_paths'] =$youthExamData->file_paths ?? [];
+
+                }
             }
         }
 
         return $examTypes;
+    }
+
+    /**
+     * @param int $batchId
+     * @param int $youthId
+     * @param int $examId
+     * @return \Illuminate\Database\Query\Builder|null
+     */
+    public function getYouthExamData(int $batchId,int $youthId,int $examId):\Illuminate\Database\Query\Builder|null
+    {
+        return DB::table('youth_exams')
+            ->where('batch_id',$batchId)
+            ->where('youth_id',$youthId)
+            ->where('exam_id',$examId)
+            ->first();
+
     }
 
     /**

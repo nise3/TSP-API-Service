@@ -299,7 +299,7 @@ class BatchController extends Controller
      */
     public function getExamsByBatchId(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getExamListByBatch($id);
+        $data = $this->batchService->getExamListByBatch($request,$id);
         $response = [
             "data" => $data,
             "_response_status" => [
