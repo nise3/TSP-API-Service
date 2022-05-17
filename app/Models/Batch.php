@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * Class Batch
  * @package App\Models
+ * @property int id
  * @property int institute_id
  * @property int branch_id
  * @property int training_center_id
