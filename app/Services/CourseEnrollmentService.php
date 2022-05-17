@@ -1384,7 +1384,11 @@ class CourseEnrollmentService
             });
 
             $examsBuilder->with(['batches' => function ($query) use ($courseEnrollment) {
-                $query->where('batch_id', $courseEnrollment['batch_id']);
+                $query->select([
+                    'batches.id as batch_id',
+                    'batches.title as batch_title',
+                    'batches.title_en as batch_title_en',
+                ])->where('batch_id', $courseEnrollment['batch_id']);
             }]);
 
 
