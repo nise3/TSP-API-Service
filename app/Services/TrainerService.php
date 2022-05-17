@@ -58,6 +58,8 @@ class TrainerService
             'training_centers.title as training_center_title',
             'trainers.trainer_name',
             'trainers.trainer_name_en',
+            'trainers.subject',
+            'trainers.subject_en',
             'trainers.trainer_registration_number',
             'trainers.email',
             'trainers.mobile',
@@ -224,6 +226,8 @@ class TrainerService
             'training_centers.title as training_center_title',
             'trainers.trainer_name',
             'trainers.trainer_name_en',
+            'trainers.subject',
+            'trainers.subject_en',
             'trainers.trainer_registration_number',
             'trainers.email',
             'trainers.mobile',
@@ -340,13 +344,13 @@ class TrainerService
 
             /** Sync in institute_trainer pivot table */
             $pivotTableData = [];
-            if(!empty($data['institute_id'])){
+            if (!empty($data['institute_id'])) {
                 $pivotTableData[] = [
                     "institute_id" => $data['institute_id'],
                     "industry_association_id" => null
                 ];
             }
-            if(!empty($data['industry_association_id'])){
+            if (!empty($data['industry_association_id'])) {
                 $pivotTableData[] = [
                     "institute_id" => null,
                     "industry_association_id" => $data['industry_association_id']
@@ -363,8 +367,8 @@ class TrainerService
             $coreUser = ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
 
             $trainer['role_id'] = $coreUser['role_id'] ?? "";
-            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "" ;
-            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "" ;
+            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "";
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "";
 
             DB::commit();
 
@@ -385,7 +389,7 @@ class TrainerService
 
         } catch (Throwable $e) {
             DB::rollBack();
-            if(!empty($youth)){
+            if (!empty($youth)) {
                 ServiceToServiceCall::rollbackTrainerYouthUser($youth);
             }
             throw $e;
@@ -630,6 +634,14 @@ class TrainerService
                 'nullable',
                 'exists:training_centers,id,deleted_at,NULL',
                 'int',
+            ],
+            'subject' => [
+                'required',
+                'string',
+            ],
+            'subject_en' => [
+                'nullable',
+                'string',
             ],
             'trainer_name' => [
                 'required',
