@@ -51,10 +51,10 @@ class CourseResultConfigService
             $courseResultConfigBuilder->where('course_result_configs.course_id', $courseId);
         }
 
-        $courseResultConfigs = $courseResultConfigBuilder->first();
+        $courseResultConfig = $courseResultConfigBuilder->first();
 
         $response['order'] = 'ASC';
-        $response['data'] = $courseResultConfigs->toArray();
+        $response['data'] = $courseResultConfig;
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
