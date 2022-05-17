@@ -1034,62 +1034,11 @@ class BatchService
     public function processResult(array $data): bool
     {
         /** @var Batch $batch */
-      $batch = Batch::find($data['batch_id']);
-      $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
+        $batch = Batch::find($data['batch_id']);
+        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
-//        //dd($batchExamTypes->toArray());
-//
-         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
-//       $examTypes = [1 => 'online', 2 => 'offline', 3 => 'mixed', 4 => 'practical', 5 => 'field_work', 6 => 'presentation', 7 => 'assignment', 8 => 'attendance'];
-//
-//
-//
-//        foreach ($batch->examTypes as $batchExamType){
-//            $resultPercentage = $courseResultConfig->result_percentages[$examTypes[$batchExamType->type]];
-//            $examTotalMarks = Exam::where('exam_type_id',$batchExamType->id)->sum('total_marks');
-//            //foreach ($batchExamType->exams as $exam){
-//                $youthTotalObtainedMarkInBatch = 0;
-//                foreach ($youthIds as $youthId){
-//
-//                    //foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
-//                        $youthExams = YouthExam::query()->where('youth_id', $youthId)
-//                            ->where('batch_id', $data['batch_id'])
-//                            ->leftjoin('exams', 'exam_id', '=', 'exams.id')
-//                            ->leftjoin('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
-//                            ->where('exam_types.type', $batchExamType->type);
-//
-//                        $youthObtainedMarks = $youthExams->sum('total_obtained_marks');
-//                        $finalMark = 0;
-//
-//                        if($examTotalMarks > 0){
-//                            $finalMark = ($youthObtainedMarks * 100) / $examTotalMarks;
-//                        }
-//
-//                        $finalMarkPercentage = ($finalMark * $resultPercentage) / 100;
-//
-//                        $resultSummary = app()->make(ResultSummary::class);
-//                        $resultSummary->youth_id = $youthId;
-//                        $resultSummary->batch_id = $data['batch_id'];
-//                        $resultSummary->exam_type = $batchExamType->type;
-//                        $resultSummary->total_marks = $examTotalMarks;
-//                        $resultSummary->percentage = $resultPercentage;
-//                        $resultSummary->final_marks = $finalMarkPercentage;
-//                        $resultSummary->save();
-//
-//                        $youthTotalObtainedMarkInBatch += $finalMarkPercentage;
-//                    }
-//
-//                    //dd($examTotalMarks, $youthObtainedMarks,$finalMark, $resultPercentage,$finalMarkPercentage);
-//                }
-//
-////            $result = app()->make(Result::class);
-////            $result->batch_id = $data['batch_id'];
-////            $result->youth_id = $youthId;
-////            $result->result_type = $courseResultConfig->result_type;
-////            $result->result = $this->getResult($youthTotalObtainedMarkInBatch, $courseResultConfig);
-////            $result->save();
-//           // }
-//       // }
+
+        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         DB::beginTransaction();
 
@@ -1098,45 +1047,64 @@ class BatchService
                 $totalObtainedMarks = 0;
                 foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
                     $examType = $examTypes[$key];
+                    Log::info('youth id--->' . $youthId);
+                    Log::info('exam type--->' . $examType);
+
+                    $examTotalMarks = Exam::query()
+                        ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
+                        ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
+                        ->where('batch_id', $data['batch_id'])
+                        ->where('exam_types.type', $examType)->sum('total_marks');
+
+                    Log::info('exam type total marks--->' . $examTotalMarks);
 
                     $youthExams = YouthExam::query()->where('youth_id', $youthId)
                         ->where('batch_id', $data['batch_id'])
-                        ->leftjoin('exams', 'exam_id', '=', 'exams.id')
-                        ->leftjoin('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
+                        ->join('exams', 'exam_id', '=', 'exams.id')
+                        ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
                         ->where('exam_types.type', $examType);
 
-                   // dd($youthExams->get()->toArray());
 
-                    $totalMarks = $youthExams->sum('total_marks');
                     $obtainedMarks = $youthExams->sum('total_obtained_marks');
+                    Log::info('exam type youth obtained marks--->' . $obtainedMarks);
                     $finalMark = 0;
 
-                    if($totalMarks > 0){
-                        $finalMark = ($obtainedMarks * 100) / $totalMarks;
+                    if ($examTotalMarks > 0) {
+                        $finalMark = ($obtainedMarks * 100) / $examTotalMarks;
                     }
+
+                    Log::info('exam type youth obtained mark in 100--->' . $finalMark);
 
                     $finalMarkPercentage = ($finalMark * $resultPercentage) / 100;
 
+                    Log::info('exam type result percentage--->' . $resultPercentage);
+
+                    Log::info('exam type youth obtained mark final percentage--->' . $finalMark);
 
                     $resultSummary = app()->make(ResultSummary::class);
                     $resultSummary->youth_id = $youthId;
                     $resultSummary->batch_id = $data['batch_id'];
                     $resultSummary->exam_type = $examType;
-                    $resultSummary->total_marks = $totalMarks;
+                    $resultSummary->total_marks = $examTotalMarks;
+                    $resultSummary->obtained_marks = $obtainedMarks;
                     $resultSummary->percentage = $resultPercentage;
                     $resultSummary->final_marks = $finalMarkPercentage;
                     $resultSummary->save();
 
                     $totalObtainedMarks += $finalMarkPercentage;
-                    // dd($totalMarks, $totalObtainedMarks,$finalMark,$finalMarkPercentage);
+
+                    Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
+                    // dd($examTotalMarks, $totalObtainedMarks,$finalMark,$resultPercentage,$finalMarkPercentage);
                 }
 
                 $result = app()->make(Result::class);
                 $result->batch_id = $data['batch_id'];
                 $result->youth_id = $youthId;
+                $result->total_marks = $totalObtainedMarks;
                 $result->result_type = $courseResultConfig->result_type;
                 $result->result = $this->getResult($totalObtainedMarks, $courseResultConfig);
                 $result->save();
+
             }
 
             DB::commit();
@@ -1161,6 +1129,8 @@ class BatchService
             if ($marks >= $courseResultConfig->pass_marks) {
                 $result = "Pass";
             }
+
+            return $result;
         }
 
         return "Unknown Result";
