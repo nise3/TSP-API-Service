@@ -127,8 +127,7 @@ class CourseResultConfigService
         $rules = [
             'course_id' => [
                 'required',
-                'string',
-                'max:500'
+                'int'
             ],
             'institute_id' => [
                 Rule::requiredIf(function () use ($authUser, $request) {
