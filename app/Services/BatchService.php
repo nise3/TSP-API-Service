@@ -427,7 +427,7 @@ class BatchService
      */
     public function assignExamToBatch($batch, array $examTypeIds): Batch
     {
-        $batch->exams()->sync($examTypeIds);
+        $batch->examTypes()->sync($examTypeIds);
         return $batch;
 
     }
