@@ -1698,15 +1698,16 @@ class ExamService
 
     }
 
-    //TODO: RESOURSE REFACTORING
-    public function getYouthAssessmentList(array $request): array
+
+    public function getYouthAssessmentList(array $request,int $fourIrInitiativeId): array
     {
         $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
         $response = [];
 
-        $batchIds = $request['batch_id'];
+        $batchIds = !empty($request['course_id']) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request['course_id']) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+
         $examTypes = BatchExam::whereIn('batch_id', $batchIds)->pluck('exam_type_id')->toArray();
         $examIds = Exam::whereIn("exam_type_id", $examTypes)->pluck('id')->toArray();
 
@@ -1757,8 +1758,8 @@ class ExamService
         $youthExamData = $response['data'] = $youthExam->toArray()['data'] ?? $youthExam->toArray();
         $youthIds = [];
 
-        foreach ($youthExamData as $youthExamDatum){
-            $youthIds[]=$youthExamDatum['youth_youth_id'];
+        foreach ($youthExamData as $youthExamDatum) {
+            $youthIds[] = $youthExamDatum['youth_youth_id'];
         }
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
@@ -1796,9 +1797,8 @@ class ExamService
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
         ];
         $rules = [
-            "batch_id" => [
-                'required',
-                'array'
+            "course_id" => [
+                'nullable'
             ],
             'page_size' => 'int|gt:0',
             'youth_id' => 'int|gt:0',
