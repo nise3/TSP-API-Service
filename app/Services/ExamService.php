@@ -1734,10 +1734,7 @@ class ExamService
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
         $response = [];
-
-
         $batchIds = !empty($request['course_id']) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request['course_id']) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
-        Log::info(json_encode($request),$batchIds);
         $examTypes = BatchExam::whereIn('batch_id', $batchIds)->pluck('exam_type_id')->toArray();
         $examIds = Exam::whereIn("exam_type_id", $examTypes)->pluck('id')->toArray();
 

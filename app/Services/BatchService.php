@@ -264,9 +264,15 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
-    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId): array
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId, int $courseId = null): array
     {
-        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        $courseBuilder = Course::where("four_ir_initiative_id", $fourIrInitiativeId);
+
+        if (!empty($courseId)) {
+            $courseBuilder->where("id", $courseId);
+        }
+
+        $courseIds = $courseBuilder->pluck('id')->toArray();
         return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
     }
 
