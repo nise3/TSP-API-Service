@@ -17,7 +17,7 @@ class CreateExamsTable extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline');
+            $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline,3=>mixed,4=>Practical,5=>Field Work,6=>Presentation,7=>Assignment');
             $table->unsignedInteger('exam_type_id');
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();

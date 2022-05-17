@@ -15,7 +15,7 @@ class CreateExamTypesTable extends Migration
     {
         Schema::create('exam_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline,3=>mixed');
+            $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline,3=>mixed,4=>Practical,5=>Field Work,6=>Presentation,7=>Assignment');
             $table->string('title', 500);
             $table->string('title_en', 250)->nullable();
             $table->unsignedInteger('subject_id');

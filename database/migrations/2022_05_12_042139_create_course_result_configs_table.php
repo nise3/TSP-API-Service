@@ -20,7 +20,8 @@ class CreateCourseResultConfigsTable extends Migration
             $table->unsignedInteger('course_id');
             $table->unsignedInteger('result_type')->comment("1=>GRADING, 2=>MARKS");
             $table->json('gradings')->nullable();
-            $table->unsignedTinyInteger('is_attendance_marks_count')->default(0)->comment("0 => FALSE, 1 => TRUE");
+            $table->unsignedInteger('pass_marks')->nullable();
+            $table->json('result_percentages')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

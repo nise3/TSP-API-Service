@@ -2604,6 +2604,101 @@
                 }
             }
         },
+        "/batches/{batchId}/assign-exams-to-batch": {
+            "post": {
+                "summary": "Assign Exams to Batch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchExam"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "batches"
+                ],
+                "description": "API endpoint to assign exams to batch.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exams assigned to batch successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batches/{batchId}/exams": {
+            "get": {
+                "summary": "exam list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [
@@ -14749,6 +14844,21 @@
                     "trainerIds"
                 ]
             },
+            "batchExam": {
+                "type": "object",
+                "description": "Associate Model",
+                "properties": {
+                    "exam_type_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "required": [
+                    "exam_type_ids"
+                ]
+            },
             "batches": {
                 "type": "object",
                 "description": "Batch management Service",
@@ -15894,7 +16004,7 @@
             "batchId": {
                 "name": "batchId",
                 "in": "path",
-                "description": "trainer id",
+                "description": "batch id",
                 "required": true,
                 "schema": {
                     "type": "integer",

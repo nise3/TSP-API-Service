@@ -12,6 +12,7 @@ use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
 use App\Models\ExamType;
+use App\Models\YouthExam;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -109,8 +110,11 @@ class ExamService
     /**
      * @param array $data
      */
-    public function submitExamQuestionPaper(array $data)
+    public function submitExamQuestionPaper(array $data): void
     {
+        $youthExam = app(YouthExam::class);
+        $youthExam->fill($data);
+
         $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
 
         $examSectionIdsByQuestionType = [];
@@ -150,7 +154,6 @@ class ExamService
                 $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
                 $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
             }
-            Log::info($question);
             $examResult = app(ExamAnswer::class);
             $examResult->fill($question);
             $examResult->save();
@@ -464,7 +467,7 @@ class ExamService
             $offlineExam = $this->storeOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else if($data['type'] == Exam::EXAM_TYPE_MIXED){
+        } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $data['online']['exam_type_id'] = $data['exam_type_id'];
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
 
@@ -473,7 +476,7 @@ class ExamService
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
-        } else{
+        } else {
             $exam = app(Exam::class);
             $exam->fill($data);
             $exam->save();
@@ -571,7 +574,7 @@ class ExamService
      * @param array $data
      * @throws Throwable
      */
-    public function storeExamSections(array $data)
+    public function storeExamSections(array $data): void
     {
         if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $this->storeOnlineExamSections($data['online']['exam_questions'], $data);
@@ -586,7 +589,7 @@ class ExamService
     /**
      * @throws Throwable
      */
-    private function storeOnlineExamSections($examQuestions, $data)
+    private function storeOnlineExamSections($examQuestions, $data): void
     {
         foreach ($examQuestions as $examSectionData) {
             $examSectionData['uuid'] = ExamSection::examSectionId();
@@ -751,6 +754,7 @@ class ExamService
      */
     public function updateExam(array $data): array
     {
+        $examIds = [];
         if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
             $onlineExam = $this->updateOnlineExam($data);
             $examIds['online'] = $onlineExam->id;
@@ -759,17 +763,25 @@ class ExamService
             $offlineExam = $this->updateOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
-        } else {
+        } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $onlineExam = $this->updateOnlineExam($data['online']);
             $offlineExam = $this->updateOfflineExam($data['offline']);
 
             $examIds['online'] = $onlineExam->id;
             $examIds['offline'] = $offlineExam->id;
+        } else {
+            $exam = Exam::findOrFail($data['exam_id']);
+            $exam->fill($data);
+            $exam->save();
         }
         return $examIds;
     }
 
-    public function deleteExamRelatedDataForUpdate(array $examIds)
+    /**
+     * @param array $examIds
+     * @return void
+     */
+    public function deleteExamQuestionRelatedDataForUpdate(array $examIds): void
     {
         if (!empty($examIds['online'])) {
             ExamSection::where('exam_id', $examIds['online'])->delete();
@@ -806,8 +818,9 @@ class ExamService
 
     /**
      * @param ExamType $ExamType
+     * @return void
      */
-    public function destroy(ExamType $ExamType)
+    public function destroy(ExamType $ExamType): void
     {
 
         $ExamTypeId = $ExamType->id;
@@ -1207,6 +1220,7 @@ class ExamService
         ];
         $rules[$examType . 'duration'] = [
             Rule::requiredIf(!empty($data['type']) && in_array($data['type'], Exam::DURATION_REQUIRED_EXAM_TYPES)),
+            'nullable',
             'int'
         ];
         $rules[$examType . 'venue'] = [
@@ -1577,26 +1591,36 @@ class ExamService
                 'int',
                 'required'
             ],
-            'questions' => [
+            'batch_id' => [
+                'int',
                 'required',
+                'exists:batches,id,deleted_at,NULL'
+
+            ],
+            'questions' => [
+                'nullable',
                 'array',
             ],
             'questions.*' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'array',
             ],
             'questions.*.exam_section_question_id' => [
+                Rule::requiredIf(!empty($data['questions'])),
                 'nullable',
                 'string',
                 'exists:exam_section_questions,uuid,deleted_at,NULL'
             ],
             'questions.*.question_id' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'int',
                 'exists:exam_question_banks,id,deleted_at,NULL'
             ],
             'questions.*.individual_marks' => [
-                'required',
+                Rule::requiredIf(!empty($data['questions'])),
+                'nullable',
                 'numeric',
             ],
             'questions.*.answers' => [
@@ -1607,11 +1631,11 @@ class ExamService
                 'nullable',
                 'string',
             ],
-            'questions.*.file_path' => [
+            'file_paths' => [
                 'nullable',
                 'array',
             ],
-            'questions.*.file_path.*' => [
+            'file_path.*' => [
                 'nullable',
                 'string',
             ],

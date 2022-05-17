@@ -135,18 +135,22 @@ class ExamController extends Controller
             $this->examService->updateExamType($examType, $validatedData);
             $examIds = $this->examService->updateExam($validatedData);
             $validatedData['exam_ids'] = $examIds;
-            $this->examService->deleteExamRelatedDataForUpdate($examIds);
+            if (!empty($validatedData['type']) && !in_array($validatedData['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->deleteExamQuestionRelatedDataForUpdate($examIds);
+            }
             if (!empty($validatedData['sets']) || !empty($validatedData['offline']['sets'])) {
                 $examSets = $this->examService->storeExamSets($validatedData);
                 $validatedData['sets'] = $examSets;
             }
-            $this->examService->storeExamSections($validatedData);
+            if (!empty($validatedData['type']) && !in_array($validatedData['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
+                $this->examService->storeExamSections($validatedData);
+            }
             DB::commit();
             $response = [
                 '_response_status' => [
                     "success" => true,
                     "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Exam  updated successfully.",
+                    "message" => "Exam updated successfully.",
                     "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
                 ]
             ];
@@ -215,13 +219,13 @@ class ExamController extends Controller
     public function getExamQuestionPaper(int $id): JsonResponse
     {
         $examData = $this->examService->getExamQuestionPaper($id);
-        $exam = Exam::findOrFail($examData['id']);
 
-        /** Set the timezone to local in env for this part */
-        $examStartTime = CarbonImmutable::create($exam->exam_date);
-        $examEndTime = $examStartTime->addMinutes($exam->duration);
-        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        /** // TODO: check the start end logic and udate the commented code  */
+//        $exam = Exam::findOrFail($examData['id']);
+//        $examStartTime = CarbonImmutable::create($exam->exam_date);
+//        $examEndTime = $examStartTime->addMinutes($exam->duration);
+//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         $response = [
             "data" => $examData ?? null,
@@ -243,13 +247,12 @@ class ExamController extends Controller
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
 
-        $exam = Exam::findOrFail($validatedData['exam_id']);
-
-        /** Set the timezone to local in env for this part */
-        $examStartTime = CarbonImmutable::create($exam->exam_date);
-        $examEndTime = $examStartTime->addMinutes($exam->duration);
-        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        /** // TODO: check the start end logic and udate the commented code  */
+//        $exam = Exam::findOrFail($examData['id']);
+//        $examStartTime = CarbonImmutable::create($exam->exam_date);
+//        $examEndTime = $examStartTime->addMinutes($exam->duration);
+//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         try {
             $this->examService->submitExamQuestionPaper($validatedData);

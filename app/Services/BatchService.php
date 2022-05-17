@@ -7,11 +7,19 @@ namespace App\Services;
 use App\Exceptions\HttpErrorException;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\BatchExam;
 use App\Models\Course;
+use App\Models\CourseEnrollment;
+use App\Models\CourseResultConfig;
+use App\Models\Exam;
+use App\Models\ExamQuestionBank;
+use App\Models\ExamSection;
 use App\Models\ExamType;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
+use App\Models\YouthExam;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -404,9 +412,9 @@ class BatchService
      * @param array $examTypeIds
      * @return Batch
      */
-    public function assignExamToBatch($batch, array $examTypeIds):Batch
+    public function assignExamToBatch($batch, array $examTypeIds): Batch
     {
-        $batch->exams()->sync($examTypeIds);
+        $batch->examTypes()->sync($examTypeIds);
         return $batch;
 
     }
@@ -737,6 +745,88 @@ class BatchService
         return $response;
     }
 
+
+    /**
+     * @param $id
+     * @return Batch
+     */
+    public function getExamListByBatch($id): Batch
+    {
+
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::select([
+            'batches.id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
+
+        ]);
+        $batchBuilder->where('batches.id', $id);
+
+        $batchBuilder->with('examTypes.exams');
+
+        $batchBuilder->with(['examTypes' => function ($query) {
+            $query->select([
+                'exam_types.id',
+                'exam_types.type',
+                'exam_types.title',
+                'exam_types.title_en',
+            ]);
+            $query->with(['exams'=>function($subQuery){
+                $subQuery->select([
+                    'exams.id',
+                    'exams.exam_type_id',
+                    'exams.type'
+                ]);
+            }]);
+        }]);
+
+        return $batchBuilder->firstOrFail();
+
+
+    }
+
+    /**
+     * @param int $examId
+     * @return int
+     */
+    private function countManualMarkingQuestions(int $examId): int
+    {
+        return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
+
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+
+    public function examListByBatchFilterValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+        ];
+        $rules = [
+
+            'page_size' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ],
+            'row_status' => [
+                'nullable',
+                "int",
+                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules, $customMessage);
+    }
+
     /**
      * @param array $batch
      * @return array
@@ -809,7 +899,7 @@ class BatchService
      * @param Carbon $startTime
      * @return array
      */
-    public function getFourIrBatchList(int $fourIrInitiativeId,Carbon $startTime): array
+    public function getFourIrBatchList(int $fourIrInitiativeId, Carbon $startTime): array
     {
 
         $pageSize = $request['page_size'] ?? "";
@@ -817,7 +907,7 @@ class BatchService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
-        $courses=$this->getFourIrCourseIds($fourIrInitiativeId);
+        $courses = $this->getFourIrCourseIds($fourIrInitiativeId);
 
 
         $batchBuilder = Batch::select([
@@ -880,7 +970,7 @@ class BatchService
         $batchBuilder->with('trainers');
 
         /** @var Batch $batch */
-        $batchBuilder->whereIn('course_id',$courses);
+        $batchBuilder->whereIn('course_id', $courses);
 
         /** @var Collection $batches */
 
@@ -913,8 +1003,61 @@ class BatchService
      */
     public function getFourIrCourseIds(int $fourIrInitiativeId): array
     {
-        return  Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        return Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
 
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function resultProcessingValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'batch_id' => 'required|int|min:1|exists:batches,id,deleted_at,NULL'
+        ];
+        return Validator::make($data, $rules);
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function processResult(array $data): bool
+    {
+
+        /** @var Batch $batch */
+        $batch = Batch::find($data['batch_id']);
+
+        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
+        $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
+
+        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
+
+        foreach ($youthIds as $youthId) {
+            foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
+                //dd($resultPercentage);
+                $examType = $examTypes[$key];
+                $youthExams = YouthExam::query()->where('youth_id', $youthId)
+                    ->where('batch_id', $data['batch_id'])
+                    ->join('exams', 'exam_id', '=', 'exams.id')
+                    ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
+                    ->where('exam_types.type', $examType);
+
+                $totalMarks = $youthExams->sum('total_marks');
+                $totalObtainedMarks = $youthExams->sum('total_obtained_marks');
+
+                $finalMark = ($totalObtainedMarks * 100) / 300;
+                //dd($totalMarks, $totalObtainedMarks,$finalMark);
+            }
+
+        }
+
+
+        return false;
     }
 
 }
