@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\BatchExam;
 use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
@@ -1698,7 +1699,7 @@ class ExamService
     }
 
     //TODO: RESOURSE REFACTORING
-    public function getYouthAssessmentList(array $request)
+    public function getYouthAssessmentList(array $request): array
     {
         $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
@@ -1706,14 +1707,14 @@ class ExamService
         $response = [];
 
         $batchIds = $request['batch_id'];
-        $examTypes = ExamType::whereIn('batch_id', $batchIds)->pluck('exam_type_id')->toArray();
+        $examTypes = BatchExam::whereIn('batch_id', $batchIds)->pluck('exam_type_id')->toArray();
         $examIds = Exam::whereIn("exam_type_id", $examTypes)->pluck('id')->toArray();
 
         $youthExamBuilder = YouthExam::select([
-            "youth_exams.id as youth_exam_id",
+            "youth_exams.id",
             "youth_exams.youth_id as youth_youth_id",
             "youth_exams.exam_id as youth_exam_id",
-            "exams.exam_type as exam_type_id",
+            "exams.exam_type_id as exam_type_id",
             "exam_types.title as exam_type_title",
             "exam_types.title_en as exam_type_title_en",
             "batches.title as batch_title",
@@ -1737,6 +1738,7 @@ class ExamService
         $youthExamBuilder->join("courses", "courses.id", "batches.course_id");
         $youthExamBuilder->whereIn("youth_exams.exam_id", $examIds);
         $youthExamBuilder->groupBy("youth_exams.exam_id");
+        $youthExamBuilder->orderBy("youth_exams.id", $order);
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
@@ -1751,7 +1753,13 @@ class ExamService
         }
 
         $response['order'] = $order;
-        $response['data'] = $youthExam->toArray()['data'] ?? $youthExam->toArray();
+
+        $youthExamData = $response['data'] = $youthExam->toArray()['data'] ?? $youthExam->toArray();
+        $youthIds = [];
+
+        foreach ($youthExamData as $youthExamDatum){
+            $youthIds[]=$youthExamDatum['youth_youth_id'];
+        }
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
@@ -1762,7 +1770,7 @@ class ExamService
         }
 
         foreach ($response['data'] as &$item) {
-            $id = $item['youth_id'];
+            $id = $item['youth_youth_id'];
             $youthData = $indexedYouths[$id];
             $item['youth_profile'] = $youthData;
         }

@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -351,7 +352,7 @@ class ExamController extends Controller
 
     public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+        $batchIds = !empty($request->get('course_id')) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request->get('course_id')) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
         $request->offsetSet('batch_id', $batchIds);
         $filter = $this->examService->youthAssessmentValidator($request)->validate();
         $youthAssessmentList = $this->examService->getYouthAssessmentList($filter);
