@@ -1654,7 +1654,7 @@ class ExamService
                 'nullable',
                 'array',
             ],
-            'file_path.*' => [
+            'file_paths.*' => [
                 'nullable',
                 'string',
             ],

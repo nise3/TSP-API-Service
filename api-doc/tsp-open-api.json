@@ -11875,7 +11875,12 @@
                                     "description": "An example of Exam, using `value` property",
                                     "value": {
                                         "exam_id": 1,
-                                        "youth_id": "4",
+                                        "youth_id": 4,
+                                        "batch_id": 11,
+                                        "file_paths": [
+                                            "dfg",
+                                            "fdhgfh"
+                                        ],
                                         "questions": [
                                             {
                                                 "question_id": 1,
@@ -11883,14 +11888,12 @@
                                                 "Answers": [
                                                     "dfg",
                                                     "fdhgfh"
-                                                ],
-                                                "file_path": ""
+                                                ]
                                             },
                                             {
                                                 "question_id": 2,
                                                 "individual_marks": 10,
-                                                "answers": [],
-                                                "file_path": ""
+                                                "answers": []
                                             }
                                         ]
                                     }
@@ -11900,7 +11903,12 @@
                                     "description": "An example of Exam, using `value` property",
                                     "value": {
                                         "exam_id": 1,
-                                        "youth_id": "4",
+                                        "youth_id": 4,
+                                        "batch_id": 11,
+                                        "file_paths": [
+                                            "dfg",
+                                            "fdhgfh"
+                                        ],
                                         "questions": [
                                             {
                                                 "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
@@ -11909,15 +11917,13 @@
                                                 "Answers": [
                                                     "dfg",
                                                     "fdhgfh"
-                                                ],
-                                                "file_path": ""
+                                                ]
                                             },
                                             {
                                                 "exam_section_question_id": "f45f6477-585a-46e2-a5ea-1f33a42b4518",
                                                 "question_id": 2,
                                                 "individual_marks": 10,
-                                                "answers": [],
-                                                "file_path": ""
+                                                "answers": []
                                             }
                                         ]
                                     }
