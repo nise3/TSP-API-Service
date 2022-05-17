@@ -2604,6 +2604,46 @@
                 }
             }
         },
+        "/batches/{batchId}/assign-exams-to-batch": {
+            "post": {
+                "summary": "Assign Exams to Batch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchExam"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "batches"
+                ],
+                "description": "API endpoint to assign exams to batch.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exams assigned to batch successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/batches/{batchId}/exams": {
             "get": {
                 "summary": "exam list by Batch Id",
@@ -2622,43 +2662,31 @@
                         "content": {
                             "application/json": {
                                 "example": {
-                                    "order": "ASC",
-                                    "data": [
-                                        {
-                                            "batch_id": 1,
-                                            "exam_type_id": 1,
-                                            "subject_id": 1,
-                                            "subject_title": "Bangla 1st paper",
-                                            "subject_title_en": "Bangla 1st paper",
-                                            "type": 3,
-                                            "title": "exam 1",
-                                            "title_en": "exam1",
-                                            "exam_id": 1,
-                                            "exam_type": 1,
-                                            "row_status": 1,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "published_at": "0000-00-00 00:00:00",
-                                            "auto_marking": true
-                                        },
-                                        {
-                                            "batch_id": 1,
-                                            "exam_type_id": 1,
-                                            "subject_id": 1,
-                                            "subject_title": "Bangla 1st paper",
-                                            "subject_title_en": "Bangla 1st paper",
-                                            "type": 3,
-                                            "title": "exam 1",
-                                            "title_en": "exam1",
-                                            "exam_id": 2,
-                                            "exam_type": 2,
-                                            "row_status": 1,
-                                            "created_at": null,
-                                            "updated_at": null,
-                                            "published_at": "0000-00-00 00:00:00",
-                                            "auto_marking": false
-                                        }
-                                    ],
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
                                     "_response_status": {
                                         "success": true,
                                         "code": 200,
@@ -12570,6 +12598,247 @@
                     }
                 }
             }
+        },
+        "/public/youth-certificate-issued/{issuedId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "in": "path",
+                        "description": "certificate Issued id to get one",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a certificate issued.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "update",
+                "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "2"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/certificateIssued"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 1,
+                                            "certificate_id": 2,
+                                            "youth_id": 3,
+                                            "batch_id": 4,
+                                            "row_status": 1,
+                                            "created_at": "",
+                                            "updated_at": ""
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Certificate update successfully.",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Certificate Issued. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "name": "issuedId",
+                        "in": "path",
+                        "description": "Certificate Issued id to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": "20"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "Certificate Issued delete successfully."
+                                    },
+                                    "query_time": 0
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/course-result-configs": {
+            "get": {
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "get_list",
+                "description": "API endpoint to get list of Result-Configs. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/course_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                }
+
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "create",
+                "description": " API endpoint to create a Result-Configs.A successful request response will show 201 HTTP status code",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/course-result-configs/{courseConfigId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Result Config.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Result Config. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -14816,6 +15085,21 @@
                     "trainerIds"
                 ]
             },
+            "batchExam": {
+                "type": "object",
+                "description": "Associate Model",
+                "properties": {
+                    "exam_type_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "required": [
+                    "exam_type_ids"
+                ]
+            },
             "batches": {
                 "type": "object",
                 "description": "Batch management Service",
@@ -15272,6 +15556,7 @@
                     "type": "integer"
                 }
             },
+
             "rpl_occupation_id_optional": {
                 "name": "rpl_occupation_id",
                 "in": "query",
@@ -15851,6 +16136,14 @@
                     "type": "integer"
                 }
             },
+            "courseConfigId": {
+                "name": "courseConfigId",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
             "course_id_optional": {
                 "name": "course_id",
                 "in": "query",
@@ -15961,7 +16254,7 @@
             "batchId": {
                 "name": "batchId",
                 "in": "path",
-                "description": "trainer id",
+                "description": "batch id",
                 "required": true,
                 "schema": {
                     "type": "integer",
