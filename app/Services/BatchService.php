@@ -33,6 +33,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
+use function PHPUnit\Framework\returnArgument;
 
 /**
  * Class BatchService
@@ -748,41 +749,44 @@ class BatchService
 
     /**
      * @param $id
-     * @return Batch
+     * @return array
      */
-    public function getExamListByBatch($id): Batch
+    public function getExamListByBatch($id): array
     {
 
         /** @var Batch|Builder $batchBuilder */
-        $batchBuilder = Batch::select([
-            'batches.id',
-            'batches.title as batch_title',
-            'batches.title_en as batch_title_en',
-
-        ]);
-        $batchBuilder->where('batches.id', $id);
-
-        $batchBuilder->with('examTypes.exams');
-
-        $batchBuilder->with(['examTypes' => function ($query) {
-            $query->select([
-                'exam_types.id',
-                'exam_types.type',
-                'exam_types.title',
-                'exam_types.title_en',
-            ]);
-            $query->with(['exams'=>function($subQuery){
-                $subQuery->select([
-                    'exams.id',
-                    'exams.exam_type_id',
-                    'exams.type'
+        $batchBuilder = Batch::where('batches.id', $id)
+            ->with(['examTypes' => function ($query) {
+                $query->select([
+                    'exam_types.id',
+                    'exam_types.type',
+                    'exam_types.title',
+                    'exam_types.title_en',
                 ]);
+                $query->with(['exams' => function ($subQuery) {
+                    $subQuery->select([
+                        'exams.id',
+                        'exams.exam_type_id',
+                        'exams.type'
+                    ]);
+                }]);
             }]);
-        }]);
 
-        return $batchBuilder->firstOrFail();
+        $batch = $batchBuilder->firstOrFail();
+        $examTypes = $batch->examTypes->toArray();
 
+        foreach ($examTypes as &$examType) {
+            foreach ($examType['exams'] as &$exam) {
+                $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['id']);
+                if ($manualMarkingQuestionNumbers == 0) {
+                    $exam['auto_marking'] = true;
+                } else {
+                    $exam['auto_marking'] = false;
+                }
+            }
+        }
 
+        return $examTypes;
     }
 
     /**

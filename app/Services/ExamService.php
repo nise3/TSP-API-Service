@@ -112,52 +112,69 @@ class ExamService
      */
     public function submitExamQuestionPaper(array $data): void
     {
+        $exam = Exam::query()->findOrFail($data['exam_id']);
+        $data['exam_type_id'] = $exam->exam_type_id;
+        $data['type'] = $exam->type;
         $youthExam = app(YouthExam::class);
         $youthExam->fill($data);
+        $youthExam->save();
 
-        $examSections = ExamSection::where('exam_id', $data['exam_id'])->get()->toArray();
+        if($data['type']!=Exam::EXAM_TYPES_WITHOUT_QUESTION){
 
-        $examSectionIdsByQuestionType = [];
+            $examSections = ExamSection::query()->where('exam_id', $data['exam_id'])->get()->toArray();
 
-        foreach ($examSections as $examSection) {
-            $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
+            $examSectionIdsByQuestionType = [];
+
+            foreach ($examSections as $examSection) {
+                $examSectionIdsByQuestionType[$examSection['question_type']] = $examSection['uuid'];
+            }
+
+            $totalMarksObtained = 0;
+
+            foreach ($data['questions'] as $questionData) {
+                $question = [];
+                $examSectionQuestion = null;
+                if (empty($questionData['exam_section_question_id'])) {
+                    $question = ExamQuestionBank::query()->findOrFail($questionData['question_id'])->toArray();
+
+                    $question['exam_section_uuid'] = $examSectionIdsByQuestionType[$question['question_type']];
+                    $question['question_id'] = $question['id'];
+                    /** question  id is assigned to question_id **/
+                    unset($question['id']);
+                    $question['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK;
+                    $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
+                    $question['individual_marks'] = $questionData['individual_marks'];
+
+                    $examSectionQuestion = $this->storeRandomQuestionsToExamSectionQuestions($question);
+                }
+                $question['youth_id'] = $data['youth_id'];
+                $question['exam_id'] = $data['exam_id'];
+                $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $questionData['exam_section_question_id'];
+                if (isset($questionData['answers'])) {
+                    $question['answers'] = $questionData['answers'];
+                }
+                $question['question_id'] = $questionData['question_id'];
+
+
+                $question['youth_exam_id'] = $youthExam->id;
+
+                $examSectionQuestionInfo = ExamSectionQuestion::where('uuid', $question['exam_section_question_id'])->first()->toArray();
+                if (in_array($examSectionQuestionInfo['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)) {
+                    $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
+                    $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
+                    $totalMarksObtained += $question['marks_achieved'];
+                }
+
+                $examResult = app(ExamAnswer::class);
+                $examResult->fill($question);
+                $examResult->save();
+
+                $youthExam->total_marks_obtained = $totalMarksObtained;
+                $youthExam->save();
+            }
         }
-        foreach ($data['questions'] as $questionData) {
-            $question = [];
-            $examSectionQuestion = null;
-            if (empty($questionData['exam_section_question_id'])) {
-                $question = ExamQuestionBank::findOrFail($questionData['question_id'])->toArray();
 
-                $question['exam_section_uuid'] = $examSectionIdsByQuestionType[$question['question_type']];
-                $question['question_id'] = $question['id'];
-                /** question  id is assigned to question_id **/
-                unset($question['id']);
-                $question['question_selection_type'] = ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK;
-                $question['uuid'] = ExamSectionQuestion::examSectionQuestionId();
-                $question['individual_marks'] = $questionData['individual_marks'];
 
-                $examSectionQuestion = $this->storeRandomQuestionsToExamSectionQuestions($question);
-            }
-            $question['youth_id'] = $data['youth_id'];
-            $question['exam_id'] = $data['exam_id'];
-            $question['exam_section_question_id'] = $examSectionQuestion->uuid ?? $questionData['exam_section_question_id'];
-            if (isset($questionData['answers'])) {
-                $question['answers'] = $questionData['answers'];
-            }
-            $question['question_id'] = $questionData['question_id'];
-            if (isset($questionData['file_path'])) {
-                $question['file_paths'] = $questionData['file_path'];
-            }
-
-            $examSectionQuestionInfo = ExamSectionQuestion::where('uuid', $question['exam_section_question_id'])->first()->toArray();
-            if (in_array($examSectionQuestionInfo['question_type'], ExamQuestionBank::ANSWER_REQUIRED_QUESTION_TYPES)) {
-                $isCorrectAnswer = $this->getAutoCalculatedAchievedMarks($examSectionQuestionInfo, $questionData);
-                $isCorrectAnswer ? $question['marks_achieved'] = $questionData['individual_marks'] : $question['marks_achieved'] = floatval(0);
-            }
-            $examResult = app(ExamAnswer::class);
-            $examResult->fill($question);
-            $examResult->save();
-        }
 
     }
 
