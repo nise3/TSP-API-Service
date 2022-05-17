@@ -12743,6 +12743,102 @@
                     }
                 }
             }
+        },
+
+        "/course-result-configs": {
+            "get": {
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "get_list",
+                "description": "API endpoint to get list of Result-Configs. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/course_id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/certificateIssued"
+                                }
+
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "create",
+                "description": " API endpoint to create a Result-Configs.A successful request response will show 201 HTTP status code",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/course-result-configs/{courseConfigId}": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Result Config.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Result Config. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -15460,6 +15556,7 @@
                     "type": "integer"
                 }
             },
+
             "rpl_occupation_id_optional": {
                 "name": "rpl_occupation_id",
                 "in": "query",
@@ -16034,6 +16131,14 @@
             "course_id": {
                 "name": "course_id",
                 "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "courseConfigId": {
+                "name": "courseConfigId",
+                "in": "path",
                 "required": true,
                 "schema": {
                     "type": "integer"
