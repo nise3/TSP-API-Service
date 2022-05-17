@@ -18,6 +18,7 @@ class CreateResultsTable extends Migration
             $table->unsignedInteger('batch_id')->nullable();
             $table->unsignedInteger('youth_id')->nullable();
             $table->unsignedInteger('result_type')->comment("1=>GRADING, 2=>MARKS");
+            $table->unsignedDecimal('total_marks');
             $table->string('result',100);
             $table->softDeletes();
             $table->timestamps();

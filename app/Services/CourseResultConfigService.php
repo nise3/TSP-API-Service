@@ -51,10 +51,10 @@ class CourseResultConfigService
             $courseResultConfigBuilder->where('course_result_configs.course_id', $courseId);
         }
 
-        $courseResultConfigs = $courseResultConfigBuilder->get();
+        $courseResultConfig = $courseResultConfigBuilder->first();
 
         $response['order'] = 'ASC';
-        $response['data'] = $courseResultConfigs->toArray();
+        $response['data'] = $courseResultConfig;
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -127,8 +127,7 @@ class CourseResultConfigService
         $rules = [
             'course_id' => [
                 'required',
-                'string',
-                'max:500'
+                'int'
             ],
             'institute_id' => [
                 Rule::requiredIf(function () use ($authUser, $request) {
@@ -162,28 +161,29 @@ class CourseResultConfigService
             ],
             'gradings' => [
                 Rule::requiredIf(function () use ($data) {
-                    return $data['result_type'] == BaseModel::RESULT_TYPE_GRADING;
+                    return !empty($data['result_type']) && $data['result_type'] == BaseModel::RESULT_TYPE_GRADING;
                 }),
                 'nullable',
                 'array',
                 'min:1',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
-                    $maxValue = null;
-
-                    foreach ($data['gradings'] as $grading){
-                        if($grading['min'] >= $grading['max']){
-                            $failed("max value should be greater than min");
+                    if(!empty($data['gradings'])){
+                        if ($data['gradings'][0]['min'] !== '0') {
+                            $failed("initial value should start from 0!");
                         }
-                        if($grading['min'] > $maxValue){
-                            $maxValue = $grading['max'];
-                        }else{
-                            $failed("range should be greater than previous");
-                        }
+                        $maxValue = null;
 
+                        foreach ($data['gradings'] as $grading){
+                            if($grading['min'] >= $grading['max']){
+                                $failed("max value should be greater than min");
+                            }
+                            if($grading['min'] > $maxValue){
+                                $maxValue = $grading['max'];
+                            }else{
+                                $failed("range should be greater than previous");
+                            }
+
+                        }
                     }
                 }
             ],
@@ -205,7 +205,7 @@ class CourseResultConfigService
             ],
             'pass_marks' => [
                 Rule::requiredIf(function () use ($data) {
-                    return $data['result_type'] == BaseModel::RESULT_TYPE_MARKS;
+                    return !empty($data['result_type']) && $data['result_type'] == BaseModel::RESULT_TYPE_MARKS;
                 }),
                 'max:100',
                 "nullable",
@@ -216,10 +216,6 @@ class CourseResultConfigService
                 'min:1',
                 'array',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
                     $maxValue = null;
                     $totalPercentage = 0;
                     foreach ($data['result_percentages'] as $percentage){

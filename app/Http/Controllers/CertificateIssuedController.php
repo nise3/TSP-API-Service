@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
+use App\Services\BatchService;
 use App\Services\CertificateIssuedService;
 use App\Services\CertificateService;
 use App\Services\CommonServices\MailService;
@@ -12,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -53,6 +55,18 @@ class CertificateIssuedController extends Controller
 
         $response = $this->certificateIssuedService->getList($filter, $this->startTime);
 
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public function getCertificateList(Request $request,int $fourIrInitiativeId): JsonResponse
+    {
+        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+        $request->offsetSet('batch_id',$batchIds);
+        $filter = $this->certificateIssuedService->filterValidator($request)->validate();
+        $response = $this->certificateIssuedService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -109,9 +123,8 @@ class CertificateIssuedController extends Controller
         }
 
 
-
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
-        if (isset($data['_response_status']['success']) && $data['_response_status']['success']){
+        if (isset($data['_response_status']['success']) && $data['_response_status']['success']) {
             /** Mail send after certificate issued */
             $to = array($youth['email']);
             $from = BaseModel::NISE3_FROM_EMAIL;

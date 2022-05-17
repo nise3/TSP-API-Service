@@ -48,9 +48,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         // TODO use 'certificates', 'certificate-types', ''certificate-issued'
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
         $router->post("process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
@@ -129,10 +130,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
 
-    // TODO remove this routes and uncomment auth middleware routs
-//    $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
-//    $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-//    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
     /** Public Apis */
     $router->group(['prefix' => 'public', 'as' => 'public'], function () use ($router) {
@@ -173,7 +170,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
             $router->get('course-list[/{type}]', ["as" => "courses.filter", "uses" => "CourseController@getFilterCourseList"]);
         });
         $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
-
+        /** Youth Certificate View */
+        $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
     });
 
     //Service to service direct call without any authorization and authentication
@@ -198,6 +196,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->put('approve-four-ir-course/{id}', ["as" => "approve-four-ir-course", "uses" => "CourseController@approveFourIrCourse"]);
         $router->get('get-four-ir-course-enrolled-youths', ["as" => "get-four-ir-course-enrolled-youths", "uses" => "CourseEnrollmentController@getEnrolledYouths"]);
         $router->get('get-four-ir-course-batches', ["as" => "get-four-ir-course-batches", "uses" => "BatchController@getCourseBatches"]);
+        $router->get('get-four-ir-certificate-list/{fourIrInitiativeId}', ["as" => "get-four-ir-certificate-list", "uses" => "CertificateIssuedController@getCertificateList"]);
+
+        /** Assessment List */
+        $router->get('get-four-ir-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-four-ir-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
+
     });
 
     /** Exam management */
@@ -239,6 +242,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     });
 //    $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
 });
+
 
 
 
