@@ -2699,6 +2699,125 @@
                 }
             }
         },
+        "/batches/{batchId}/process-result": {
+            "post": {
+                "summary": "Process Result of Batch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "Result Processing"
+                ],
+                "description": "API endpoint to process result to batch.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batches/{batchId}/results": {
+            "get": {
+                "summary": "result list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "Result Processing"
+                ],
+                "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": [
+                                        {
+                                            "id": 2,
+                                            "batch_id": 1,
+                                            "youth_id": 1,
+                                            "result_type": 1,
+                                            "total_marks": "66.25",
+                                            "result": "A",
+                                            "deleted_at": null,
+                                            "created_at": "2022-05-17T09:42:21.000000Z",
+                                            "updated_at": "2022-05-17T09:42:21.000000Z",
+                                            "youth_profile": {
+                                                "first_name": "Rahul Das",
+                                                "first_name_en": null,
+                                                "last_name": "last_name updated",
+                                                "last_name_en": null,
+                                                "email": "ybergstrom@example.com",
+                                                "mobile": "ybergstrom@example.com"
+                                            }
+                                        },
+                                        {
+                                            "id": 3,
+                                            "batch_id": 1,
+                                            "youth_id": 2,
+                                            "result_type": 1,
+                                            "total_marks": "0.00",
+                                            "result": "F",
+                                            "deleted_at": null,
+                                            "created_at": "2022-05-17T09:42:21.000000Z",
+                                            "updated_at": "2022-05-17T09:42:21.000000Z",
+                                            "youth_profile": {
+                                                "first_name": "Richard Torphy III",
+                                                "first_name_en": null,
+                                                "last_name": "Richard Torphy III",
+                                                "last_name_en": null,
+                                                "email": "otilia51@example.com",
+                                                "mobile": "otilia51@example.com"
+                                            }
+                                        },
+                                        {
+                                            "id": 4,
+                                            "batch_id": 1,
+                                            "youth_id": 3,
+                                            "result_type": 1,
+                                            "total_marks": "5.25",
+                                            "result": "F",
+                                            "deleted_at": null,
+                                            "created_at": "2022-05-17T09:42:21.000000Z",
+                                            "updated_at": "2022-05-17T09:42:21.000000Z",
+                                            "youth_profile": {
+                                                "first_name": "Eric McGlynn",
+                                                "first_name_en": null,
+                                                "last_name": "Eric McGlynn",
+                                                "last_name_en": null,
+                                                "email": "ykoelpin@example.org",
+                                                "mobile": "ykoelpin@example.org"
+                                            }
+                                        }
+                                    ],
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 3
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [

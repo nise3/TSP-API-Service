@@ -1396,14 +1396,16 @@ class CourseEnrollmentService
             $exams = $examsBuilder->toArray() ?? [];
 
             foreach ($exams as &$exam) {
-                $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $exam['id']);
-                if (!empty($youthExamData)) {
-                    $exam['participated'] = true;
-                    $exam['marks_obtained'] = $youthExamData->total_obtained_marks;
+                if (!empty($courseEnrollment['batch_id']) && !empty($youthId) && !empty($exam['id'])) {
+                    $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $exam['id']);
+                    if (!empty($youthExamData)) {
+                        $exam['participated'] = true;
+                        $exam['marks_obtained'] = $youthExamData->total_obtained_marks;
 
-                } else {
-                    $exam['participated'] = false;
-                    $exam['marks_obtained'] = null;
+                    } else {
+                        $exam['participated'] = false;
+                        $exam['marks_obtained'] = null;
+                    }
                 }
 
             }

@@ -15,8 +15,7 @@ class CreateResultSummariesTable extends Migration
     {
         Schema::create('result_summaries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('youth_id');
-            $table->unsignedInteger('batch_id')->nullable();
+            $table->unsignedInteger('result_id')->nullable();
             $table->unsignedTinyInteger('exam_type')->comment('1=>online, 2=>offline, 3=>mixed, 4=>Practical, 5=>Field Work, 6=>Presentation, 7=>Assignment, 8=>Attendance');
             $table->unsignedDecimal('total_marks')->nullable();
             $table->unsignedDecimal('obtained_marks')->nullable();
