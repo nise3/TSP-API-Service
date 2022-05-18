@@ -807,9 +807,8 @@ class BatchService
                 }
                 if (is_numeric($youthId)) {
                     $youthExamData = $this->getYouthExamData($id, $youthId, $exam['id']);
-                    $exam['obtained_mark'] = $youthExamData->total_obtained ?? 0;
+                    $exam['obtained_mark'] = $youthExamData->total_obtained_marks ?? 0;
                     $exam['file_paths'] = $youthExamData->file_paths ?? null;
-
                 }
             }
         }
