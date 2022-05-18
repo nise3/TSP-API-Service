@@ -1356,10 +1356,6 @@ class CourseEnrollmentService
         foreach ($courseEnrollments as &$courseEnrollment) {
 
             if ($courseEnrollment['batch_id']) {
-                //$examTypeIds = Batch::find($courseEnrollment['batch_id'])->examTypes->pluck('id');
-                //$exams = Exam::whereIn('exam_type_id', $examTypeIds)->with('examType')->get();
-
-
                 /** @var Builder $examsBuilder */
                 $examsBuilder = ExamType::select([
                     'exam_types.id',
@@ -1394,14 +1390,6 @@ class CourseEnrollmentService
                         ->whereNull('exams.deleted_at');
                 });
 
-//                $examsBuilder->with(['batches' => function ($query) use ($courseEnrollment) {
-//                    $query->select([
-//                        'batches.id as batch_id',
-//                        'batches.title as batch_title',
-//                        'batches.title_en as batch_title_en',
-//                    ])->where('batch_id', $courseEnrollment['batch_id']);
-//                }]);
-
                 $exams = $examsBuilder->get()->toArray() ?? [];
 
                 foreach ($exams as &$exam) {
@@ -1420,48 +1408,6 @@ class CourseEnrollmentService
                 }
                 $courseEnrollment['exams'] = $exams;
             }
-
-//            /** @var Builder $examsBuilder */
-//            $examsBuilder = ExamType::select([
-//                'exam_types.id',
-//                'exam_types.title',
-//                'exam_types.title_en',
-//                'exam_types.published_at',
-//                'exams.type',
-//                'exams.id as exam_id',
-//                'exams.start_date',
-//                'exams.end_date',
-//                'exams.total_marks',
-//                'exams.duration',
-//                'exam_subjects.title as subject_title',
-//                'exam_subjects.title_en as subject_title_en',
-//            ]);
-//
-//            $examsBuilder->whereNotNull('exam_types.published_at');
-//
-//            $examsBuilder->join("exam_subjects", function ($join) {
-//                $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
-//                    ->whereNull('exam_subjects.deleted_at');
-//            });
-//
-//
-//            $examsBuilder->join("exams", function ($join) {
-//                $join->on('exam_types.id', '=', 'exams.exam_type_id')
-//                    ->whereNull('exams.deleted_at');
-//            });
-//
-//            $examsBuilder->with(['batches' => function ($query) use ($courseEnrollment) {
-//                $query->select([
-//                    'batches.id as batch_id',
-//                    'batches.title as batch_title',
-//                    'batches.title_en as batch_title_en',
-//                ])->where('batch_id', $courseEnrollment['batch_id']);
-//            }]);
-//
-//
-//            $examsBuilder = $examsBuilder->get();
-//            $exams = $examsBuilder->toArray() ?? [];
-
 
         }
 
