@@ -32,45 +32,58 @@ class CertificateIssuedService
      */
     public function getList(array $request, Carbon $startTime): array
     {
-//        $titleEn = $request['title_en'] ?? "";
-//        $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
 
+        $batchIds = $request['batch_id'] ?? [];
+        $youthIds = $request['youth_id'] ?? [];
+        $certificateIds = $request['certificate_id'] ?? [];
 
-        /** @var CertificateIssued|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = CertificateIssued::select([
+        /** @var CertificateIssued|Builder $certificateIssuedBuilder */
+        $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
             'certificate_issued.certificate_id',
+            'certificates.title as certificate_title',
+            'certificates.title_en as certificate_title_en',
+            'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
             'certificate_issued.row_status'
         ]);
 
-        $CertificateIssuedBuilder->orderBy('certificate_issued.id', $order);
-
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
+        $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
-            $CertificateIssuedBuilder->where('certificates.row_status', $rowStatus);
+            $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
         }
 
-//        if (!empty($titleEn)) {
-//            $CertificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
-//        }
-//        if (!empty($title)) {
-//            $CertificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
-//        }
+        if (!empty($batchIds)) {
+            $certificateIssuedBuilder->whereIn('certificate_issued.batch_id', $batchIds);
+        }
+
+        if (!empty($youthIds)) {
+            $certificateIssuedBuilder->whereIn('certificate_issued.youth_id', $youthIds);
+        }
+
+        if (!empty($certificateIds)) {
+            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+        }
+
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
-            $certificateIssued = $CertificateIssuedBuilder->paginate($pageSize);
+            $certificateIssued = $certificateIssuedBuilder->paginate($pageSize);
             $paginateData = (object)$certificateIssued->toArray();
             $response['current_page'] = $paginateData->current_page;
             $response['total_page'] = $paginateData->last_page;
             $response['page_size'] = $paginateData->per_page;
             $response['total'] = $paginateData->total;
         } else {
-            $certificateIssued = $CertificateIssuedBuilder->get();
+            $certificateIssued = $certificateIssuedBuilder->get();
         }
 
         $resultArray = $certificateIssued->toArray();
@@ -105,23 +118,28 @@ class CertificateIssuedService
 
     /**
      * @param int $id
-     * @return Certificate
+     * @return CertificateIssued
      */
     public function getOneIssuedCertificate(int $id): CertificateIssued
     {
-        /** @var Certificate|Builder $CertificateIssuedBuilder */
-        $CertificateIssuedBuilder = CertificateIssued::select([
+        /** @var CertificateIssued|Builder $certificateIssuedBuilder */
+        $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
             'certificate_issued.certificate_id',
+            'certificates.title as certificate_title',
+            'certificates.title_en as certificate_title_en',
+            'certificates.result_type as certificate_result_type',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
-            'certificate_issued.row_status',
-            'certificate_issued.created_at',
-            'certificate_issued.updated_at'
+            'certificate_issued.row_status'
         ]);
-        $CertificateIssuedBuilder->where('certificate_issued.id', $id);
+
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+
+        $certificateIssuedBuilder->where('certificate_issued.id', $id);
+
         /** @var Certificate exam_subjects */
-        return $CertificateIssuedBuilder->firstOrFail();
+        return $certificateIssuedBuilder->firstOrFail();
     }
 
     /**
@@ -139,10 +157,10 @@ class CertificateIssuedService
 
     public function certificateIssuedAtUpdate($certificateId)
     {
-      //$abc = app(Certificate::class);
-        $UpdateDetails = Certificate::where('id', $certificateId)->first();
-        $UpdateDetails->issued_at  = Carbon::now();
-        $UpdateDetails->save();
+        //$abc = app(Certificate::class);
+        $updateDetails = Certificate::where('id', $certificateId)->first();
+        $updateDetails->issued_at = Carbon::now();
+        $updateDetails->save();
     }
 
     /**
@@ -193,11 +211,13 @@ class CertificateIssuedService
             ],
             'batch_id' => [
                 'required',
-                'int'
+                'int',
+                "exists:batches,id,deleted_at,NULL"
             ],
             'certificate_id' => [
                 'required',
-                'int'
+                'int',
+                "exists:certificates,id,deleted_at,NULL"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
@@ -219,6 +239,23 @@ class CertificateIssuedService
         if ($request->filled('order')) {
             $request->offsetSet('order', strtoupper($request->get('order')));
         }
+
+        if ($request->filled('batch_id')) {
+            $decodedValue=json_decode($request->get('batch_id'),true);
+            $request->offsetSet('batch_id', $this->toArray($decodedValue));
+        }
+
+        if ($request->filled('certificate_id')) {
+            $decodedValue=json_decode($request->get('certificate_id'),true);
+            $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
+
+        }
+
+        if ($request->filled('youth_id')) {
+            $decodedValue=json_decode($request->get('youth_id'),true);
+            $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
+        }
+
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
             'row_status.in' => 'Row status must be either 1 or 0. [30000]'
@@ -230,6 +267,28 @@ class CertificateIssuedService
             'title' => 'nullable|max:500|min:2',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
+            'batch_id' => [
+                "nullable",
+                "array"
+            ],
+            'batch_id.*' => [
+                "required",
+                "integer",
+                "exists:batches,id,deleted_at,NULL"
+            ],
+            'certificate_id' => [
+                "nullable",
+                "array"
+            ],
+            'certificate_id.*' => [
+                "nullable",
+                "integer",
+                "exists:certificates,id,deleted_at,NULL"
+            ],
+            'youth_id' => [
+                "nullable",
+                "array"
+            ],
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
@@ -242,6 +301,17 @@ class CertificateIssuedService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+    }
+
+    private function toArray(int|array $data): array
+    {
+        if (is_array($data)) {
+            return $data;
+        } else {
+            return [
+                $data
+            ];
+        }
     }
 }
 

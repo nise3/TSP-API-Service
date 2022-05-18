@@ -346,4 +346,20 @@ class ExamController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+
+    public function youthAssessmentList(int $fourIrInitiativeId): JsonResponse
+    {
+        $youthAssessmentList = $this->examService->getYouthAssessmentList($fourIrInitiativeId);
+        $response = [
+            "data" => $youthAssessmentList,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "Youth Assessment List",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, $response['_response_status']['code']);
+    }
+
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamAnswer;
@@ -1707,6 +1708,7 @@ class ExamService
         return Validator::make($request->all(), $rules);
 
     }
+
 
 }
 
