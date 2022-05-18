@@ -1358,7 +1358,6 @@ class CourseEnrollmentService
             if($courseEnrollment['batch_id']){
                 $examTypeIds = Batch::find($courseEnrollment['batch_id'])->examTypes->pluck('id');
                 $exams = Exam::whereIn('exam_type_id',$examTypeIds)->with('examType')->get();
-
                 foreach ($exams as &$exam) {
                     if (!empty($courseEnrollment['batch_id']) && !empty($youthId) && !empty($exam['id'])) {
                         $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $exam['id']);
@@ -1373,6 +1372,7 @@ class CourseEnrollmentService
                     }
 
                 }
+                $courseEnrollment['exams'] = $exams;
             }
 
 //            /** @var Builder $examsBuilder */
