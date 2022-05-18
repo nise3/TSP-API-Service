@@ -207,22 +207,27 @@ class CertificateIssuedService
         $rules = [
             'youth_id' => [
                 'required',
-                'int'
+                'int',
+                Rule::unique('certificate_issued', 'youth_id')
+                    ->where(function (\Illuminate\Database\Query\Builder $query) use ($request) {
+                        return $query->where('certificate_issued.batch_id', $request->input('batch_id'))
+                            ->where('certificate_issued.certificate_id', $request->input('certificate_id'));
+                    }),
             ],
             'batch_id' => [
                 'required',
                 'int',
-                "exists:batches,id,deleted_at,NULL"
+//                "exists:batches,id,deleted_at,NULL",
             ],
             'certificate_id' => [
                 'required',
                 'int',
-                "exists:certificates,id,deleted_at,NULL"
+//                "exists:certificates,id,NULL"
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
-                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
+//                Rule::in([BaseModel::ROW_STATUS_ACTIVE, BaseModel::ROW_STATUS_INACTIVE]),
             ]
         ];
         return \Illuminate\Support\Facades\Validator::make($data, $rules, $customMessage);
