@@ -233,7 +233,8 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -261,7 +262,8 @@ class BatchController extends Controller
 
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {
