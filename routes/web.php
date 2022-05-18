@@ -20,8 +20,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
-//    $customRouter()->resourceRoute('batches', 'BatchController')->render();
-    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
@@ -49,7 +48,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         // TODO use 'certificates', 'certificate-types', ''certificate-issued'
-//        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
 
