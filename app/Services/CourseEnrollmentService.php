@@ -663,7 +663,7 @@ class CourseEnrollmentService
                 'max:300'
             ],
             'first_name_en' => [
-                'nullable',
+                'required',
                 'string',
                 'max:150'
             ],
@@ -673,7 +673,7 @@ class CourseEnrollmentService
                 'max:300'
             ],
             'last_name_en' => [
-                'nullable',
+                'required',
                 'string',
                 'max:150'
             ],
