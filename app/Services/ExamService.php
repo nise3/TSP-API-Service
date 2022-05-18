@@ -890,7 +890,7 @@ class ExamService
         if (is_numeric($youthId)) {
             $examResultBuilder->where('youth_exams.youth_id', $youthId);
         }
-       if (is_numeric($batchId)) {
+        if (is_numeric($batchId)) {
             $examResultBuilder->where('youth_exams.batch_id', $batchId);
         }
 
@@ -1105,12 +1105,22 @@ class ExamService
                             'nullable',
                             'string',
                         ];
-                        $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
-                            Rule::requiredIf(!empty($examQuestionSet)),
-                            'nullable',
-                            'array',
-                            'size:' . $offlineExamQuestionNumbers
-                        ];
+                        if($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS){
+                            $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
+                                Rule::requiredIf(!empty($examQuestionSet)),
+                                'nullable',
+                                'array',
+                                'min:' . $offlineExamQuestionNumbers
+                            ];
+                        }else{
+                            $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
+                                Rule::requiredIf(!empty($examQuestionSet)),
+                                'nullable',
+                                'array',
+                                'size:' . $offlineExamQuestionNumbers
+                            ];
+                        }
+
                         $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions.*'] = [
                             Rule::requiredIf(!empty($examQuestionSet)),
                             'nullable',
@@ -1365,11 +1375,21 @@ class ExamService
                 $onlineExamQuestionNumbers = 0;
             }
             if (!empty($examQuestion['question_selection_type']) && $examQuestion['question_selection_type'] != ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_QUESTION_BANK) {
-                $rules[$examType . 'exam_questions.' . $index . '.questions'] = [
-                    'required',
-                    'array',
-                    'size:' . $onlineExamQuestionNumbers
-                ];
+
+                if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
+                    $rules[$examType . 'exam_questions.' . $index . '.questions'] = [
+                        'required',
+                        'array',
+                        'min:' . $onlineExamQuestionNumbers
+                    ];
+                } else {
+                    $rules[$examType . 'exam_questions.' . $index . '.questions'] = [
+                        'required',
+                        'array',
+                        'size:' . $onlineExamQuestionNumbers
+                    ];
+                }
+
                 $rules[$examType . 'exam_questions.' . $index . '.questions.*'] = [
                     'required',
                     'array',
@@ -1855,6 +1875,12 @@ class ExamService
         ];
         return Validator::make($request->all(), $rules, $customMessage);
     }
+
+    public function youthBatchExamMarkUpdateValidator(Request $request)
+    {
+
+    }
+
 
 }
 
