@@ -58,7 +58,13 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
         $router->get('preview-youth-exam/{examId}/{youthId}', ["as" => "preview-youth-exam", "uses" => "ExamController@previewYouthExam"]);
+
+        /** youth individual exam answer sheet marking  */
         $router->put('youth-exam-mark-update', ["as" => "youth-exam-mark-update", "uses" => "ExamController@youthExamMarkUpdate"]);
+
+        /** youth all exams by batch marking  */
+        $router->post('youth-batch-exams-mark-update', ["as" => "youth-batch-exam-mark-update", "uses" => "ExamController@youthBatchExamsMarkUpdate"]);
+
         $router->put('exam-publish/{id}', ["as" => "exam-publish", "uses" => "ExamController@examPublish"]);
 
         /** training center skill development reports */
