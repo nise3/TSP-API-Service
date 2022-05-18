@@ -351,19 +351,8 @@ class ExamController extends Controller
 
     public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $batchIds = !empty($request->get('course_id')) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request->get('course_id')) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
-        $request->offsetSet('batch_id', $batchIds);
         $filter = $this->examService->youthAssessmentValidator($request)->validate();
-        $youthAssessmentList = $this->examService->getYouthAssessmentList($filter);
-        $response = [
-            "data" => $youthAssessmentList,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Youth Assessment List",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $response = $this->examService->getYouthAssessmentList($filter,$fourIrInitiativeId);
         return Response::json($response, $response['_response_status']['code']);
     }
 

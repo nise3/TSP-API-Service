@@ -6,10 +6,8 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
-use App\Models\Exam;
 use App\Models\ExamAnswer;
 use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
@@ -20,6 +18,7 @@ use App\Models\EnrollmentGuardian;
 use App\Models\EnrollmentMiscellaneous;
 use App\Models\EnrollmentProfessionalInfo;
 use App\Models\PhysicalDisability;
+use App\Models\YouthExam;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use App\Services\Payment\CourseEnrollmentPaymentService;
@@ -1353,21 +1352,18 @@ class CourseEnrollmentService
 
         $courseEnrollments = $courseEnrollments->toArray() ?? [];
 
-
         foreach ($courseEnrollments as &$courseEnrollment) {
 
             /** @var Builder $examsBuilder */
             $examsBuilder = ExamType::select([
-                'batches.id as batch_id',
+                'exam_types.id',
                 'exam_types.title',
                 'exam_types.title_en',
                 'exam_types.published_at',
                 'exams.type',
-                'batches.id as batch_id',
-                'batches.title as batch_title',
-                'batches.title_en as batch_title_en',
                 'exams.id as exam_id',
-                'exams.exam_date',
+                'exams.start_date',
+                'exams.end_date',
                 'exams.total_marks',
                 'exams.duration',
                 'exam_subjects.title as subject_title',
@@ -1375,12 +1371,6 @@ class CourseEnrollmentService
             ]);
 
             $examsBuilder->whereNotNull('exam_types.published_at');
-
-
-            $examsBuilder->join("batches", function ($join) {
-                $join->on('exam_types.purpose_id', '=', 'batches.id')
-                    ->whereNull('batches.deleted_at');
-            });
 
             $examsBuilder->join("exam_subjects", function ($join) {
                 $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
@@ -1393,31 +1383,29 @@ class CourseEnrollmentService
                     ->whereNull('exams.deleted_at');
             });
 
-            //TODO:Need To Implement This
-
-//            SELECT * from exams left join exam_results on exams.id = exam_results.exam_id group by exam_results.id
-//             DB::raw("IF(COUNT(exam_results.id) > 0, 'true', 'false') AS participated")
-
-            $examsBuilder->where('exam_types.purpose_id', '=', $courseEnrollment['batch_id']);
+            $examsBuilder->with(['batches' => function ($query) use ($courseEnrollment) {
+                $query->select([
+                    'batches.id as batch_id',
+                    'batches.title as batch_title',
+                    'batches.title_en as batch_title_en',
+                ])->where('batch_id', $courseEnrollment['batch_id']);
+            }]);
 
 
             $examsBuilder = $examsBuilder->get();
             $exams = $examsBuilder->toArray() ?? [];
 
-            //TODO:Remove Loop And Implement Query
-
             foreach ($exams as &$exam) {
-                $examResults = $this->getExamResults($exam, $courseEnrollment);
-                if (!empty($examResults) && count($examResults) > 0) {
+                $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $exam['id']);
+                if (!empty($youthExamData)) {
                     $exam['participated'] = true;
+                    $exam['marks_obtained'] = $youthExamData->total_obtained_marks;
+
                 } else {
                     $exam['participated'] = false;
-                }
-                if (!empty($examResults)) {
-                    $exam['marks_obtained'] = $this->youthExamObtainedMarks($examResults);
-                } else {
                     $exam['marks_obtained'] = null;
                 }
+
             }
             $courseEnrollment['exams'] = $exams;
         }
@@ -1435,14 +1423,28 @@ class CourseEnrollmentService
     }
 
     /**
+     * @param int $batchId
+     * @param int $youthId
+     * @param int $examId
+     * @return YouthExam|null
+     */
+    public function getYouthExamData(int $batchId, int $youthId, int $examId): YouthExam|null
+    {
+        return YouthExam::where('batch_id', $batchId)
+            ->where('youth_id', $youthId)
+            ->where('exam_id', $examId)
+            ->first();
+    }
+
+    /**
      * @param array $exam
      * @param array $courseEnrollment
      * @return mixed
      */
     private function getExamResults(array $exam, array $courseEnrollment): mixed
     {
-        return ExamAnswer::where('exam_results.exam_id', $exam['exam_id'])
-            ->where('exam_results.youth_id', '=', $courseEnrollment['youth_id'])->get();
+        return ExamAnswer::where('exam_answers.exam_id', $exam['exam_id'])
+            ->where('exam_answers.youth_id', '=', $courseEnrollment['youth_id'])->get();
     }
 
     /**
@@ -1517,7 +1519,7 @@ class CourseEnrollmentService
                 $indexedYouths[$item['id']] = $item;
             }
 
-            foreach ($courseEnrollments as $enrollment){
+            foreach ($courseEnrollments as $enrollment) {
                 $enrollment['youth_details'] = $indexedYouths[$enrollment->youth_id];
             }
         }

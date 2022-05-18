@@ -23,6 +23,7 @@ use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -266,9 +267,15 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
-    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId): array
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId, int $courseId = null): array
     {
-        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        $courseBuilder = Course::where("four_ir_initiative_id", $fourIrInitiativeId);
+
+        if (!empty($courseId)) {
+            $courseBuilder->where("id", $courseId);
+        }
+
+        $courseIds = $courseBuilder->pluck('id')->toArray();
         return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
     }
 
@@ -758,11 +765,13 @@ class BatchService
 
 
     /**
+     * @param Request $request
      * @param $id
      * @return array
      */
-    public function getExamListByBatch($id): array
+    public function getExamListByBatch(Request $request, $id): array
     {
+        $youthId = $request->query('youth_id') ?? "";
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::where('batches.id', $id)
@@ -793,10 +802,31 @@ class BatchService
                 } else {
                     $exam['auto_marking'] = false;
                 }
+                if (is_numeric($youthId)) {
+                    $youthExamData = $this->getYouthExamData($id, $youthId, $exam->id);
+                    $exam['obtained_mark'] = $youthExamData->total_obtained ?? 0;
+                    $exam['file_paths'] = $youthExamData->file_paths ?? [];
+
+                }
             }
         }
 
         return $examTypes;
+    }
+
+
+    /**
+     * @param int $batchId
+     * @param int $youthId
+     * @param int $examId
+     * @return YouthExam|null
+     */
+    public function getYouthExamData(int $batchId, int $youthId, int $examId): YouthExam|null
+    {
+        return YouthExam::where('batch_id', $batchId)
+            ->where('youth_id', $youthId)
+            ->where('exam_id', $examId)
+            ->first();
     }
 
     /**
