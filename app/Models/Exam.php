@@ -81,9 +81,4 @@ class Exam extends BaseModel
     {
         return $this->hasOne(ExamSubject::class, 'id','subject_id');
     }
-
-    public function examType(): BelongsTo
-    {
-        return $this->belongsTo(ExamType::class, 'exam_type_id','id');
-    }
 }
