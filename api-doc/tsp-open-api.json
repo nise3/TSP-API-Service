@@ -12173,6 +12173,63 @@
                 }
             }
         },
+        "/youth-batch-exams-mark-update": {
+            "post": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Youth batch exams mark update",
+                "description": "API endpoint to Youth batch exams mark update. A successful request response will show 200 HTTP status code.Options are required if its an mcq question",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                            },
+                            "example": {
+                                    "exams": [
+                                        {
+                                            "exam_id": "13",
+                                            "exam_type_id": "11",
+                                            "type": "7",
+                                            "total_obtained_marks": "0",
+                                            "youth_id": 41,
+                                            "batch_id": 22
+                                        },
+                                        {
+                                            "exam_id": "5",
+                                            "exam_type_id": "4",
+                                            "type": "1",
+                                            "youth_id": 41,
+                                            "batch_id": 22
+                                        }
+                                    ]
+
+                            }
+                        }
+
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 201,
+                                        "message": "Youth Batch Exams obtained marks  successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        },
         "/exam-publish/{examTypeId}": {
             "put": {
                 "tags": [

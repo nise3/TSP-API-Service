@@ -37,7 +37,6 @@ class Exam extends BaseModel
     public const YOUTH_EXAM_TYPES = [
         self::EXAM_TYPE_ONLINE,
         self::EXAM_TYPE_OFFLINE,
-        self::EXAM_TYPE_MIXED,
         self::EXAM_TYPE_PRACTICAL,
         self::EXAM_TYPE_FIELD_WORK,
         self::EXAM_TYPE_PRESENTATION,

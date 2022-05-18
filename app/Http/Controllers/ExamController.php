@@ -321,21 +321,20 @@ class ExamController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
-     * @throws ValidationException
+     * @throws AuthorizationException|ValidationException
      */
     public function youthBatchExamsMarkUpdate(Request $request): JsonResponse
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthBatchExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData);
+        $this->examService->youthBatchExamMarkUpdate($validatedData);
         $response = [
-            "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "youth exam mark updated successfully.",
+                "message" => "youth Batch exams obtained mark updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];

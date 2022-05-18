@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\BatchExam;
 use App\Models\Course;
+use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamAnswer;
@@ -1105,14 +1106,14 @@ class ExamService
                             'nullable',
                             'string',
                         ];
-                        if($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS){
+                        if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
                             $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
                                 Rule::requiredIf(!empty($examQuestionSet)),
                                 'nullable',
                                 'array',
                                 'min:' . $offlineExamQuestionNumbers
                             ];
-                        }else{
+                        } else {
                             $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
                                 Rule::requiredIf(!empty($examQuestionSet)),
                                 'nullable',
@@ -1876,11 +1877,70 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public function youthBatchExamMarkUpdateValidator(Request $request)
+
+    /**
+     * @param array $validatedData
+     * @return void
+     */
+    public function youthBatchExamMarkUpdate(array $validatedData): void
     {
+        foreach ($validatedData['exams'] as $exam) {
+            YouthExam::query()->updateOrCreate([
+                'batch_id' => $exam['batch_id'],
+                'youth_id' => $exam['youth_id'],
+                'exam_id' => $exam['exam_id']
+            ], $exam);
+        }
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function youthBatchExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'exams' => [
+                'required',
+                'array',
+                'min:1'
+            ],
+            'exams.*' => [
+                'required',
+                'array',
+                'min:1'
+            ],
+            'exams.*.exam_id' => [
+                'required',
+                'int',
+                'exists:exams,id,deleted_at,NULL'
+            ],
+            'exams.*.exam_type_id' => [
+                'required',
+                'int',
+                'exists:exam_types,id,deleted_at,NULL'
+            ],
+            'exams.*.type' => [
+                'required',
+                'int',
+                Rule::in(Exam::YOUTH_EXAM_TYPES)
+            ],
+            'exams.*.youth_id' => [
+                'required',
+                'int',
+                'min:0'
+            ],
+            'exams.*.batch_id' => [
+                'required',
+                'int',
+                'exists:batches,id,deleted_at,NULL'
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+
+    }
 
 }
 
