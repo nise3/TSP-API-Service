@@ -171,7 +171,7 @@ class ExamService
                 $examResult->fill($question);
                 $examResult->save();
 
-                $youthExam->total_marks_obtained = $totalMarksObtained;
+                $youthExam->total_obtained_marks = $totalMarksObtained;
                 $youthExam->save();
             }
         }
