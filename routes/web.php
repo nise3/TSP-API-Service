@@ -54,8 +54,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
-        $router->post("process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
-
 
         /** Fetch all youth  who are a  participant of an exam */
         $router->get('exam-youth-list/{id}', ["as" => "exam-youth-list", "uses" => "ExamController@getExamYouthList"]);
@@ -104,6 +102,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /**  exam list by batch */
         $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
 
+        /** Result Processing By Batch **/
+        $router->post("batches/{id}/process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
+        $router->get("batches/{id}/results", ["as" => "batches.process-result", "uses" => "BatchController@getBatchExamResults"]);
 
         /** Reject course enrollment application */
         $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);

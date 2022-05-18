@@ -135,10 +135,6 @@ class CourseService
             $coursesBuilder->where('courses.title', 'like', '%' . $title . '%');
         }
 
-        if(!$isFourIr){
-            $coursesBuilder->whereNull('four_ir_initiative_id');
-
-        }
 //        if(!$isFourIr){
 //            $coursesBuilder->whereNull('four_ir_initiative_id');
 //        }

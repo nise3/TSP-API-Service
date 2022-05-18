@@ -5,9 +5,11 @@ namespace App\Services;
 
 
 use App\Exceptions\HttpErrorException;
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\BatchExam;
+use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\CourseResultConfig;
@@ -33,6 +35,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -1051,29 +1054,23 @@ class BatchService
 
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    public function resultProcessingValidator(Request $request): \Illuminate\Contracts\Validation\Validator
-    {
-        $data = $request->all();
-
-        $rules = [
-            'batch_id' => 'required|int|min:1|exists:batches,id,deleted_at,NULL'
-        ];
-        return Validator::make($data, $rules);
-    }
-
-    /**
-     * @param array $data
+     * @param int $id
      * @return bool
      * @throws Throwable
      */
-    public function processResult(array $data): bool
+    public function processResult(int $id): bool
     {
+
+
+
         /** @var Batch $batch */
-        $batch = Batch::find($data['batch_id']);
-        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
+        $batch = Batch::findOrFail($id);
+
+        throw_if(($batch->result_published_at != null), ValidationException::withMessages([
+            "Result Already Published!"
+        ]));
+
+        $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
@@ -1083,66 +1080,74 @@ class BatchService
         try {
             foreach ($youthIds as $youthId) {
                 $totalObtainedMarks = 0;
+                $resultSummaryObjects = collect();
                 foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
                     $examType = $examTypes[$key];
-                    Log::info('youth id--->' . $youthId);
-                    Log::info('exam type--->' . $examType);
+                    //Log::info('youth id--->' . $youthId);
+                    //Log::info('exam type--->' . $examType);
 
                     $examTotalMarks = Exam::query()
                         ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
                         ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
-                        ->where('batch_id', $data['batch_id'])
+                        ->where('batch_id', $batch->id)
                         ->where('exam_types.type', $examType)->sum('total_marks');
 
                     Log::info('exam type total marks--->' . $examTotalMarks);
 
                     $youthExams = YouthExam::query()->where('youth_id', $youthId)
-                        ->where('batch_id', $data['batch_id'])
+                        ->where('batch_id', $batch->id)
                         ->join('exams', 'exam_id', '=', 'exams.id')
                         ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
                         ->where('exam_types.type', $examType);
 
 
                     $obtainedMarks = $youthExams->sum('total_obtained_marks');
-                    Log::info('exam type youth obtained marks--->' . $obtainedMarks);
+                    //Log::info('exam type youth obtained marks--->' . $obtainedMarks);
                     $finalMark = 0;
 
                     if ($examTotalMarks > 0) {
                         $finalMark = ($obtainedMarks * 100) / $examTotalMarks;
                     }
 
-                    Log::info('exam type youth obtained mark in 100--->' . $finalMark);
+                    //Log::info('exam type youth obtained mark in 100--->' . $finalMark);
 
                     $finalMarkPercentage = ($finalMark * $resultPercentage) / 100;
 
-                    Log::info('exam type result percentage--->' . $resultPercentage);
+                    //Log::info('exam type result percentage--->' . $resultPercentage);
 
-                    Log::info('exam type youth obtained mark final percentage--->' . $finalMark);
+                    //Log::info('exam type youth obtained mark final percentage--->' . $finalMark);
 
                     $resultSummary = app()->make(ResultSummary::class);
-                    $resultSummary->youth_id = $youthId;
-                    $resultSummary->batch_id = $data['batch_id'];
                     $resultSummary->exam_type = $examType;
                     $resultSummary->total_marks = $examTotalMarks;
                     $resultSummary->obtained_marks = $obtainedMarks;
                     $resultSummary->percentage = $resultPercentage;
                     $resultSummary->final_marks = $finalMarkPercentage;
-                    $resultSummary->save();
+
+                    $resultSummaryObjects->push($resultSummary);
 
                     $totalObtainedMarks += $finalMarkPercentage;
 
-                    Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
+                    //Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
                 }
 
                 $result = app()->make(Result::class);
-                $result->batch_id = $data['batch_id'];
+                $result->batch_id = $batch->id;
                 $result->youth_id = $youthId;
                 $result->total_marks = $totalObtainedMarks;
                 $result->result_type = $courseResultConfig->result_type;
                 $result->result = $this->getResult($totalObtainedMarks, $courseResultConfig);
                 $result->save();
 
+                foreach ($resultSummaryObjects as $resultSummary){
+                    $resultSummary->result_id = $result->id;
+                    $resultSummary->save();
+                }
+
             }
+
+            $batch->result_published_at = Carbon::now();
+            $batch->save();
 
             DB::commit();
 
@@ -1171,6 +1176,38 @@ class BatchService
         }
 
         return "Unknown Result";
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getResultsByBatch($id): array
+    {
+
+        /** @var Batch|Builder $batchBuilder */
+        $batch = Batch::findOrFail($id);
+
+        $results = Result::where('batch_id',$batch->id)->get();
+        $youthIds = $results->pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $youth['first_name'] = $item['first_name'];
+            $youth['first_name_en'] = $item['first_name_en'];
+            $youth['last_name'] = $item['last_name'];
+            $youth['last_name_en'] = $item['last_name_en'];
+            $youth['email'] = $item['email'];
+            $youth['mobile'] = $item['email'];
+            $indexedYouths[$item['id']] = $youth;
+        }
+
+        foreach ($results as $item) {
+            $item['youth_profile'] = $indexedYouths[$item->youth_id];
+        }
+
+        return $results->toArray();
     }
 
 }
