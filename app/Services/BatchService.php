@@ -35,6 +35,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Validation\ValidationException;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -1060,8 +1061,14 @@ class BatchService
     public function processResult(int $id): bool
     {
 
+
+
         /** @var Batch $batch */
         $batch = Batch::findOrFail($id);
+
+        throw_if(($batch->result_published_at != null), ValidationException::withMessages([
+            "Result Already Published!"
+        ]));
 
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
@@ -1076,8 +1083,8 @@ class BatchService
                 $resultSummaryObjects = collect();
                 foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
                     $examType = $examTypes[$key];
-                    Log::info('youth id--->' . $youthId);
-                    Log::info('exam type--->' . $examType);
+                    //Log::info('youth id--->' . $youthId);
+                    //Log::info('exam type--->' . $examType);
 
                     $examTotalMarks = Exam::query()
                         ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
@@ -1095,20 +1102,20 @@ class BatchService
 
 
                     $obtainedMarks = $youthExams->sum('total_obtained_marks');
-                    Log::info('exam type youth obtained marks--->' . $obtainedMarks);
+                    //Log::info('exam type youth obtained marks--->' . $obtainedMarks);
                     $finalMark = 0;
 
                     if ($examTotalMarks > 0) {
                         $finalMark = ($obtainedMarks * 100) / $examTotalMarks;
                     }
 
-                    Log::info('exam type youth obtained mark in 100--->' . $finalMark);
+                    //Log::info('exam type youth obtained mark in 100--->' . $finalMark);
 
                     $finalMarkPercentage = ($finalMark * $resultPercentage) / 100;
 
-                    Log::info('exam type result percentage--->' . $resultPercentage);
+                    //Log::info('exam type result percentage--->' . $resultPercentage);
 
-                    Log::info('exam type youth obtained mark final percentage--->' . $finalMark);
+                    //Log::info('exam type youth obtained mark final percentage--->' . $finalMark);
 
                     $resultSummary = app()->make(ResultSummary::class);
                     $resultSummary->exam_type = $examType;
@@ -1121,7 +1128,7 @@ class BatchService
 
                     $totalObtainedMarks += $finalMarkPercentage;
 
-                    Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
+                    //Log::info('exam type youth obtained total obtained marks--->' . $totalObtainedMarks);
                 }
 
                 $result = app()->make(Result::class);
@@ -1138,6 +1145,9 @@ class BatchService
                 }
 
             }
+
+            $batch->result_published_at = Carbon::now();
+            $batch->save();
 
             DB::commit();
 

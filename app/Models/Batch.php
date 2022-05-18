@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon registration_end_date
  * @property Carbon batch_start_date
  * @property Carbon batch_end_date
+ * @property Carbon result_published_at
  * @property-read Institute institute
  * @property-read Branch branch
  * @property-read TrainingCenter trainingCenter
