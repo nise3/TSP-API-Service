@@ -321,6 +321,28 @@ class ExamController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     * @throws AuthorizationException
+     * @throws ValidationException
+     */
+    public function youthBatchExamsMarkUpdate(Request $request): JsonResponse
+    {
+        $this->authorize('updateYouthExam', Exam::class);
+        $validatedData = $this->examService->youthBatchExamMarkUpdateValidator($request)->validate();
+        $this->examService->youthExamMarkUpdate($validatedData);
+        $response = [
+            "data" => $youthExamMarkUpdateData ?? null,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "youth exam mark updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -353,7 +375,7 @@ class ExamController extends Controller
     public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
         $filter = $this->examService->youthAssessmentValidator($request)->validate();
-        $response = $this->examService->getYouthAssessmentList($filter,$fourIrInitiativeId);
+        $response = $this->examService->getYouthAssessmentList($filter, $fourIrInitiativeId);
         return Response::json($response, $response['_response_status']['code']);
     }
 
