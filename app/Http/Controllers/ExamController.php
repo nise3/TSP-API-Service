@@ -223,11 +223,11 @@ class ExamController extends Controller
         $examData = $this->examService->getExamQuestionPaper($id);
 
         /** // TODO: check the start end logic and udate the commented code  */
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = CarbonImmutable::create($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($examData['id']);
+        $examStartTime = CarbonImmutable::create($exam->start_date);
+        $examEndTime = $examStartTime->addMinutes($exam->duration);
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         $response = [
             "data" => $examData ?? null,
