@@ -806,9 +806,9 @@ class BatchService
                     $exam['auto_marking'] = false;
                 }
                 if (is_numeric($youthId)) {
-                    $youthExamData = $this->getYouthExamData($id, $youthId, $exam->id);
+                    $youthExamData = $this->getYouthExamData($id, $youthId, $exam['id']);
                     $exam['obtained_mark'] = $youthExamData->total_obtained ?? 0;
-                    $exam['file_paths'] = $youthExamData->file_paths ?? [];
+                    $exam['file_paths'] = $youthExamData->file_paths ?? null;
 
                 }
             }
