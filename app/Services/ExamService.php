@@ -122,7 +122,7 @@ class ExamService
         $youthExam->fill($data);
         $youthExam->save();
 
-        if ($data['type'] != Exam::EXAM_TYPES_WITHOUT_QUESTION) {
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
 
             $examSections = ExamSection::query()->where('exam_id', $data['exam_id'])->get()->toArray();
 
