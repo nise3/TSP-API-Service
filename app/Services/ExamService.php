@@ -431,8 +431,7 @@ class ExamService
             'exam_answers.id as exam_answer_id',
             'youth_exams.id as youth_exam_id',
             'exam_answers.answers',
-            'exam_answers.marks_achieved',
-            'exam_answers.file_paths',
+            'exam_answers.marks_achieved'
         ]);
 
         $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
@@ -1597,14 +1596,6 @@ class ExamService
         });
 
         $examPreview = $examPreviewBuilder->firstOrFail()->toArray();
-
-        $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($examPreview['exam_id']);
-        if ($manualMarkingQuestionNumbers == 0) {
-            $examPreview['auto_marking'] = true;
-        } else {
-            $examPreview['auto_marking'] = false;
-        }
-
 
         $youthIds = [];
         array_push($youthIds, $youthId);
