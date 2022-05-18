@@ -1669,7 +1669,7 @@ class ExamService
                 'array',
             ],
             'questions.*.exam_section_question_id' => [
-                Rule::requiredIf(!empty($data['questions'])),
+                //Rule::requiredIf(!empty($data['questions'])),
                 'nullable',
                 'string',
                 'exists:exam_section_questions,uuid,deleted_at,NULL'
