@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
+use App\Models\BatchExam;
 use App\Models\Course;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
@@ -1709,6 +1710,119 @@ class ExamService
 
     }
 
+    //TODO: RESOURSE REFACTORING
+    public function getYouthAssessmentList(array $request): array
+    {
+        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
+        $paginate = $request['page'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $response = [];
+
+        $batchIds = $request['batch_id'];
+        $examTypes = BatchExam::whereIn('batch_id', $batchIds)->pluck('exam_type_id')->toArray();
+        $examIds = Exam::whereIn("exam_type_id", $examTypes)->pluck('id')->toArray();
+
+        $youthExamBuilder = YouthExam::select([
+            "youth_exams.id",
+            "youth_exams.youth_id as youth_youth_id",
+            "youth_exams.exam_id as youth_exam_id",
+            "exams.exam_type_id as exam_type_id",
+            "exam_types.title as exam_type_title",
+            "exam_types.title_en as exam_type_title_en",
+            "batches.title as batch_title",
+            "batches.title_en as batch_title_en",
+            "courses.title as course_title",
+            "courses.title_en as course_title_en",
+        ]);
+
+        /** join exams on exams.id=youth_exams.exam_id
+         * join batch_exams on batch_exams.exam_type_id=exams.exam_type_id
+         * join exam_types on exams.exam_type_id=exam_types.id
+         * join batches on batches.id=batch_exams.batch_id
+         * join courses on courses.id= batches.course_id
+         * where youth_exams.exam_id in (1,2,3)
+         * group by youth_exams.exam_id */
+
+        $youthExamBuilder->join("exams", "exams.id", "youth_exams.exam_id");
+        $youthExamBuilder->join("batch_exams", "batch_exams.exam_type_id", "exams.exam_type_id");
+        $youthExamBuilder->join("exam_types", "exams.exam_type_id", "exam_types.id");
+        $youthExamBuilder->join("batches", "batches.id", "batch_exams.batch_id");
+        $youthExamBuilder->join("courses", "courses.id", "batches.course_id");
+        $youthExamBuilder->whereIn("youth_exams.exam_id", $examIds);
+        $youthExamBuilder->groupBy("youth_exams.exam_id");
+        $youthExamBuilder->orderBy("youth_exams.id", $order);
+
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: BaseModel::DEFAULT_PAGE_SIZE;
+            $youthExam = $youthExamBuilder->paginate($pageSize);
+            $paginateData = (object)$youthExam->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $youthExam = $youthExamBuilder->get();
+        }
+
+        $response['order'] = $order;
+
+        $youthExamData = $response['data'] = $youthExam->toArray()['data'] ?? $youthExam->toArray();
+        $youthIds = [];
+
+        foreach ($youthExamData as $youthExamDatum){
+            $youthIds[]=$youthExamDatum['youth_youth_id'];
+        }
+
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($response['data'] as &$item) {
+            $id = $item['youth_youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => 0
+        ];
+
+        return $response;
+
+
+    }
+
+    public function youthAssessmentValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        if ($request->filled('order')) {
+            $request->offsetSet('order', strtoupper($request->get('order')));
+        }
+        $customMessage = [
+            'order.in' => 'Order must be either ASC or DESC. [30000]',
+            'row_status.in' => 'Row status must be either 1 or 0. [30000]'
+        ];
+        $rules = [
+            "batch_id" => [
+                'required',
+                'array'
+            ],
+            'page_size' => 'int|gt:0',
+            'youth_id' => 'int|gt:0',
+            'page' => 'int|gt:0',
+            'order' => [
+                'string',
+                Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])
+            ]
+
+        ];
+        return Validator::make($request->all(), $rules, $customMessage);
+    }
 
 }
 

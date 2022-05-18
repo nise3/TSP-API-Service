@@ -261,9 +261,16 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
-    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId): array
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId, $courseId = null): array
     {
-        $courseIds = Course::where("four_ir_initiative_id", $fourIrInitiativeId)->pluck('id')->toArray();
+        $courseBuilder= Course::where("four_ir_initiative_id", $fourIrInitiativeId);
+
+        if(!empty($courseId)){
+            $courseBuilder->where("id",$courseId);
+        }
+
+        $courseIds=$courseBuilder->pluck('id')->toArray();
+
         return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
     }
 
@@ -777,7 +784,7 @@ class BatchService
                 'exam_types.title',
                 'exam_types.title_en',
             ]);
-            $query->with(['exams'=>function($subQuery){
+            $query->with(['exams' => function ($subQuery) {
                 $subQuery->select([
                     'exams.id',
                     'exams.exam_type_id',

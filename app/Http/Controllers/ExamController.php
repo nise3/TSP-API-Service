@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamType;
+use App\Services\BatchService;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -12,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -347,9 +349,12 @@ class ExamController extends Controller
     }
 
 
-    public function youthAssessmentList(int $fourIrInitiativeId): JsonResponse
+    public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $youthAssessmentList = $this->examService->getYouthAssessmentList($fourIrInitiativeId);
+        $batchIds = !empty($request->get('course_id')) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request->get('course_id')) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
+        $request->offsetSet('batch_id', $batchIds);
+        $filter = $this->examService->youthAssessmentValidator($request)->validate();
+        $youthAssessmentList = $this->examService->getYouthAssessmentList($filter);
         $response = [
             "data" => $youthAssessmentList,
             "_response_status" => [
