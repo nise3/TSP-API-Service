@@ -431,8 +431,7 @@ class ExamService
             'exam_answers.id as exam_answer_id',
             'youth_exams.id as youth_exam_id',
             'exam_answers.answers',
-            'exam_answers.marks_achieved',
-            'exam_answers.file_paths',
+            'exam_answers.marks_achieved'
         ]);
 
         $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
@@ -825,11 +824,11 @@ class ExamService
 
     public function youthExamMarkUpdate(array $data): void
     {
-        $youthExamId = $data['youth_exam_id'];
-
         $totalObtainedMarks = 0;
+        $youthExamId = null;
         foreach ($data['marks'] as $mark) {
-            $totalObtainedMarks += 0;
+            $totalObtainedMarks += $mark['marks_achieved'];
+            $youthExamId = $mark['youth_exam_id'];
             $examAnswerId = $mark['exam_answer_id'];
             $examAnswer = ExamAnswer::findOrFail($examAnswerId);
             $examAnswer->marks_achieved = $mark['marks_achieved'];
@@ -837,7 +836,7 @@ class ExamService
             $examAnswer->save();
         }
 
-        $youthExam = YouthExam::findOrFail($data['youth_exam_id']);
+        $youthExam = YouthExam::findOrFail($youthExamId);
 
         $youthExam->total_obtained_marks = $totalObtainedMarks;
         $youthExam->save();
@@ -1598,14 +1597,6 @@ class ExamService
 
         $examPreview = $examPreviewBuilder->firstOrFail()->toArray();
 
-        $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($examPreview['exam_id']);
-        if ($manualMarkingQuestionNumbers == 0) {
-            $examPreview['auto_marking'] = true;
-        } else {
-            $examPreview['auto_marking'] = false;
-        }
-
-
         $youthIds = [];
         array_push($youthIds, $youthId);
 
@@ -1669,7 +1660,7 @@ class ExamService
                 'array',
             ],
             'questions.*.exam_section_question_id' => [
-                Rule::requiredIf(!empty($data['questions'])),
+                //Rule::requiredIf(!empty($data['questions'])),
                 'nullable',
                 'string',
                 'exists:exam_section_questions,uuid,deleted_at,NULL'
@@ -1716,13 +1707,6 @@ class ExamService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-
-            'youth_exam_id' => [
-                'required',
-                'int',
-                'min:1',
-                'exists:youth_exams,id'
-            ],
             'marks' => [
                 'array',
                 'required',
@@ -1736,6 +1720,13 @@ class ExamService
                 'required',
                 'exists:exam_answers,id'
             ],
+            'marks.*youth_exam_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:youth_exams,id'
+            ],
+
             'marks.*.marks_achieved' => [
                 'numeric',
                 'required',
