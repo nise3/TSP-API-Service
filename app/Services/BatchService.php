@@ -1132,13 +1132,18 @@ class BatchService
                     //Log::info('youth id--->' . $youthId);
                     //Log::info('exam type--->' . $examType);
 
-                    $examTotalMarks = Exam::query()
-                        ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
-                        ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
-                        ->where('batch_id', $batch->id)
-                        ->where('exam_types.type', $examType)->sum('total_marks');
+                    if($examType == Exam::EXAM_TYPE_ATTENDANCE){ // Attendance total mark calculate from course result config
+                        $examTotalMarks = $courseResultConfig->total_attendance_marks;
+                    }else{
+                        $examTotalMarks = Exam::query()
+                            ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
+                            ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
+                            ->where('batch_id', $batch->id)
+                            ->where('exam_types.type', $examType)->sum('total_marks');
+                    }
 
-                    Log::info('exam type total marks--->' . $examTotalMarks);
+
+                   // Log::info('exam type total marks--->' . $examTotalMarks);
 
                     $youthExams = YouthExam::query()->where('youth_id', $youthId)
                         ->where('batch_id', $batch->id)

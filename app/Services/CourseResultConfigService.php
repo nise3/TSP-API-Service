@@ -2,22 +2,14 @@
 
 namespace App\Services;
 
-use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CourseResultConfig;
-use App\Models\ExamSubject;
-use App\Models\RplSubject;
-use App\Services\CommonServices\MailService;
-use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -42,6 +34,7 @@ class CourseResultConfigService
             'course_result_configs.gradings',
             'course_result_configs.result_percentages',
             'course_result_configs.pass_marks',
+            'course_result_configs.total_attendance_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -80,6 +73,7 @@ class CourseResultConfigService
             'course_result_configs.gradings',
             'course_result_configs.result_percentages',
             'course_result_configs.pass_marks',
+            'course_result_configs.total_attendance_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -209,7 +203,7 @@ class CourseResultConfigService
                 }),
                 'max:100',
                 "nullable",
-                "int"
+                "numeric"
             ],
             "result_percentages" => [
                 'required',
@@ -274,6 +268,11 @@ class CourseResultConfigService
                 'min:1',
                 'max:100',
                 'int'
+            ],
+            "total_attendance_marks" => [
+                Rule::requiredIf(!empty($data['result_percentages']['attendance'])),
+                "nullable",
+                "numeric"
             ]
         ];
 
