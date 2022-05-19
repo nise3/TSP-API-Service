@@ -50,7 +50,6 @@ class BatchController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-//        dd($request);
         $filter = $this->batchService->filterValidator($request)->validate();
         $response = $this->batchService->getBatchList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -72,14 +71,13 @@ class BatchController extends Controller
 
 
     /**
-     * @param int $id
+     * @param int $fourIrInitiativeId
      * @return JsonResponse
      */
 
 
     public function getBatchesByFourIrInitiativeId(int $fourIrInitiativeId): JsonResponse
     {
-
         $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -351,22 +349,13 @@ class BatchController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param int $id
      * @return JsonResponse
      * @throws Throwable
-     * @throws ValidationException
      */
     public function processBatchResult(int $id): JsonResponse
     {
-        $processResultStatus = $this->batchService->processResult($id);
-        $response = [
-            '_response_status' => [
-                "success" => $processResultStatus,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $response = $this->batchService->processResult($id,$this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -377,14 +366,8 @@ class BatchController extends Controller
     public function getBatchExamResults($id): JsonResponse
     {
         $data = $this->batchService->getResultsByBatch($id);
-        $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
+
+        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
         return Response::json($response);
     }

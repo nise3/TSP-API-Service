@@ -8,36 +8,33 @@ use App\Exceptions\HttpErrorException;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\BatchExam;
-use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamSection;
-use App\Models\ExamType;
 use App\Models\Result;
 use App\Models\ResultSummary;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
 use function PHPUnit\Framework\returnArgument;
 
@@ -1056,23 +1053,27 @@ class BatchService
 
     /**
      * @param int $id
-     * @return bool
+     * @param Carbon $startTime
+     * @return array
      * @throws Throwable
      */
-    public function processResult(int $id): bool
+    public function processResult(int $id, Carbon $startTime): array
     {
-
-
-
         /** @var Batch $batch */
         $batch = Batch::findOrFail($id);
 
-        throw_if(($batch->result_published_at != null), ValidationException::withMessages([
-            "Result Already Published!"
-        ]));
-
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
+
+        if ($batch->result_published_at != null) {
+
+            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_CONFLICT, "Result Already Published!");
+
+        } else if (empty($courseResultConfig)) {
+
+            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!");
+
+        }
 
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
@@ -1140,7 +1141,7 @@ class BatchService
                 $result->result = $this->getResult($totalObtainedMarks, $courseResultConfig);
                 $result->save();
 
-                foreach ($resultSummaryObjects as $resultSummary){
+                foreach ($resultSummaryObjects as $resultSummary) {
                     $resultSummary->result_id = $result->id;
                     $resultSummary->save();
                 }
@@ -1152,7 +1153,8 @@ class BatchService
 
             DB::commit();
 
-            return true;
+            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_OK, "Result Processing Successfully Done");
+
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
@@ -1189,7 +1191,7 @@ class BatchService
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $results = Result::where('batch_id',$batch->id)->get();
+        $results = Result::where('batch_id', $batch->id)->get();
         $youthIds = $results->pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
