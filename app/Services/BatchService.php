@@ -818,7 +818,8 @@ class BatchService
                     $subQuery->select([
                         'exams.id',
                         'exams.exam_type_id',
-                        'exams.type'
+                        'exams.type',
+                        'exams.total_marks'
                     ]);
                 }]);
             }]);
