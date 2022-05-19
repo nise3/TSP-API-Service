@@ -354,14 +354,7 @@ class BatchController extends Controller
      */
     public function processBatchResult(int $id): JsonResponse
     {
-        $processResultStatus = $this->batchService->processResult($id);
-        $response = [
-            '_response_status' => [
-                "success" => $processResultStatus,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $response = $this->batchService->processResult($id,$this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -372,14 +365,8 @@ class BatchController extends Controller
     public function getBatchExamResults($id): JsonResponse
     {
         $data = $this->batchService->getResultsByBatch($id);
-        $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
+
+        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
         return Response::json($response);
     }
