@@ -315,6 +315,27 @@ class BatchController extends Controller
      * @param Request $request
      * @param $id
      * @return JsonResponse
+     * @throws Throwable
+     */
+    public function getYouthExamListByBatch(Request $request, $id): JsonResponse
+    {
+        $data = $this->batchService->getYouthExamListByBatch($request,$id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+
+        return Response::json($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
     public function getPublicBatchesByCourseId(Request $request, $id): JsonResponse
     {
