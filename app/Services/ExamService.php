@@ -827,7 +827,7 @@ class ExamService
         $totalObtainedMarks = 0;
         $youthExamId = null;
         foreach ($data['marks'] as $mark) {
-            $totalObtainedMarks += 0;
+            $totalObtainedMarks += $mark['marks_achieved'];
             $youthExamId = $mark['youth_exam_id'];
             $examAnswerId = $mark['exam_answer_id'];
             $examAnswer = ExamAnswer::findOrFail($examAnswerId);
