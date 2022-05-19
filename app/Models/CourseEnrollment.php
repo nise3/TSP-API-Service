@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon | null verification_code_sent_at
  * @property Carbon | null verification_code_verified_at
  * @property int saga_status
+ * @property int certificate_issued_id
  * @property HasOne course
  * @property Carbon created_at
  * @property Carbon updated_at

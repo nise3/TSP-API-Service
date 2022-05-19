@@ -157,9 +157,18 @@ class CertificateIssuedService
 
     public function certificateIssuedAtUpdate($certificateId)
     {
-        //$abc = app(Certificate::class);
         $updateDetails = Certificate::where('id', $certificateId)->first();
         $updateDetails->issued_at = Carbon::now();
+        $updateDetails->save();
+    }
+
+    public function courseEnrollmentUpdate($request, $certificateIssueData)
+    {
+        $updateDetails = CourseEnrollment::where('batch_id', $request['batch_id'])
+        ->where('youth_id', $request['youth_id'])
+            ->first();
+
+        $updateDetails->certificate_issued_id = $certificateIssueData['id'];
         $updateDetails->save();
     }
 

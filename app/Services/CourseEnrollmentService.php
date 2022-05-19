@@ -52,7 +52,7 @@ class CourseEnrollmentService
         $firstName = $request['first_name'] ?? "";
         $firstNameEn = $request['first_name_en'] ?? "";
         $pageSize = $request['page_size'] ?? "";
-        $paginate = $request['page'] ?? "";
+        $paginate = $request['page'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $courseId = $request['course_id'] ?? "";
         $courseTitle = $request['course_title'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
@@ -99,6 +99,7 @@ class CourseEnrollmentService
                 'course_enrollments.nationality',
                 'course_enrollments.physical_disability_status',
                 'course_enrollments.freedom_fighter_status',
+                'course_enrollments.certificate_issued_id',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -192,18 +193,17 @@ class CourseEnrollmentService
         $resultArray = $courseEnrollments->toArray();
         $youthIds = CourseEnrollment::pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
-
         $indexedYouths = [];
-        foreach ($youthProfiles as $item) {
-            $id = $item['id'];
-            $indexedYouths[$id] = $item;
-        }
 
-        foreach ($resultArray["data"] as &$item) {
-            $id = $item['youth_id'];
-            $youthData = $indexedYouths[$id];
-            $item['youth_profile'] = $youthData;
-        }
+            foreach ($youthProfiles as $item) {
+                $id = $item['id'];
+                $indexedYouths[$id] = $item;
+            }
+            foreach ($resultArray["data"] as &$item) {
+                $id = $item['youth_id'];
+                $youthData = $indexedYouths[$id];
+                $item['youth_profile'] = $youthData;
+            }
 
         $resultData = $resultArray['data'] ?? $resultArray;
 
@@ -259,6 +259,7 @@ class CourseEnrollmentService
                 'course_enrollments.nationality',
                 'course_enrollments.physical_disability_status',
                 'course_enrollments.freedom_fighter_status',
+                'course_enrollments.certificate_issued_id',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -1643,6 +1644,7 @@ class CourseEnrollmentService
         $rules = [
             'youth_id' => 'required|min:1',
             'course_id' => 'nullable|int|gt:0',
+            'certificate_issued_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [

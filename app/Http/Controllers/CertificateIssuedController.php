@@ -114,8 +114,8 @@ class CertificateIssuedController extends Controller
 
         try {
             $data = $this->certificateIssuedService->store($validatedData);
-//            dd($validatedData);
             $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            $this->certificateIssuedService->courseEnrollmentUpdate($validatedData, $data);
             DB::commit();
             $response = [
                 'data' => $data ?: null,
