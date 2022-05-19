@@ -825,16 +825,18 @@ class ExamService
     public function youthExamMarkUpdate(array $data): void
     {
         $totalObtainedMarks = 0;
+        $youthExamId = null;
         foreach ($data['marks'] as $mark) {
             $totalObtainedMarks += 0;
+            $youthExamId = $mark['youth_exam_id'];
             $examAnswerId = $mark['exam_answer_id'];
             $examAnswer = ExamAnswer::findOrFail($examAnswerId);
             $examAnswer->marks_achieved = $mark['marks_achieved'];
-            $examAnswer->youth_exam_id = $mark['youth_exam_id'];
+            $examAnswer->youth_exam_id = $youthExamId;
             $examAnswer->save();
         }
 
-        $youthExam = YouthExam::findOrFail($data['youth_exam_id']);
+        $youthExam = YouthExam::findOrFail($youthExamId);
 
         $youthExam->total_obtained_marks = $totalObtainedMarks;
         $youthExam->save();
