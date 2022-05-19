@@ -76,9 +76,4 @@ class Exam extends BaseModel
     {
         return $this->hasMany(ExamSet::class, 'exam_id', 'id');
     }
-
-    public function subject(): HasOne
-    {
-        return $this->hasOne(ExamSubject::class, 'id','subject_id');
-    }
 }

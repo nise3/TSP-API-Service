@@ -824,15 +824,13 @@ class ExamService
 
     public function youthExamMarkUpdate(array $data): void
     {
-        $youthExamId = $data['youth_exam_id'];
-
         $totalObtainedMarks = 0;
         foreach ($data['marks'] as $mark) {
             $totalObtainedMarks += 0;
             $examAnswerId = $mark['exam_answer_id'];
             $examAnswer = ExamAnswer::findOrFail($examAnswerId);
             $examAnswer->marks_achieved = $mark['marks_achieved'];
-            $examAnswer->youth_exam_id = $youthExamId;
+            $examAnswer->youth_exam_id = $mark['youth_exam_id'];
             $examAnswer->save();
         }
 
@@ -1707,13 +1705,6 @@ class ExamService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-
-            'youth_exam_id' => [
-                'required',
-                'int',
-                'min:1',
-                'exists:youth_exams,id'
-            ],
             'marks' => [
                 'array',
                 'required',
@@ -1727,6 +1718,13 @@ class ExamService
                 'required',
                 'exists:exam_answers,id'
             ],
+            'marks.*youth_exam_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:youth_exams,id'
+            ],
+
             'marks.*.marks_achieved' => [
                 'numeric',
                 'required',
