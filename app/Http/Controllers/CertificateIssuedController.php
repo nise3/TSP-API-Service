@@ -71,6 +71,15 @@ class CertificateIssuedController extends Controller
     }
 
     /**
+     * @throws ValidationException
+     */
+    public function getCertificateIssuedByYouthId(int $youthId): JsonResponse
+    {
+        $response = CertificateIssued::query()->where('youth_id', $youthId)->firstOrFail();
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
