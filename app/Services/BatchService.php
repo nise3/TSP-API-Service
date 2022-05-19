@@ -1107,19 +1107,18 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        // Dont remove/change any http code. this http code used by frontend
         if (count($batch->examTypes) == 0) {
 
-            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_METHOD_NOT_ALLOWED, "There is no exams for processing!");
+            return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!",false);
 
         }
         else if ($batch->result_published_at != null) {
 
-            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_CONFLICT, "Result Already Published!");
+            return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!",false);
 
         } else if (empty($courseResultConfig)) {
 
-            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!");
+            return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!",false);
 
         }
 
