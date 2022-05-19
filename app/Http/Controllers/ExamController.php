@@ -224,7 +224,7 @@ class ExamController extends Controller
 
         $exam = Exam::findOrFail($id);
         $examStartTime = CarbonImmutable::create($exam->start_date);
-        if($exam->type == Exam::EXAM_TYPES_WITHOUT_QUESTION){
+        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
             $examEndTime = $exam->end_date;
         }else{
             $examEndTime = $examStartTime->addMinutes($exam->duration);
@@ -254,7 +254,7 @@ class ExamController extends Controller
 
         $exam = Exam::findOrFail($validatedData['exam_id']);
         $examStartTime = CarbonImmutable::create($exam->start_date);
-        if($exam->type == Exam::EXAM_TYPES_WITHOUT_QUESTION){
+        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
             $examEndTime = $exam->end_date;
         }else{
             $examEndTime = $examStartTime->addMinutes($exam->duration);
@@ -340,7 +340,7 @@ class ExamController extends Controller
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "youth Batch exams obtained mark updated successfully.",
+                "message" => "youth Batch exam mark updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
