@@ -771,7 +771,39 @@ class BatchService
      */
     public function getExamListByBatch(Request $request, $id): array
     {
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::where('batches.id', $id)
+            ->with(['examTypes' => function ($query) {
+                $query->select([
+                    'exam_types.id',
+                    'exam_types.type',
+                    'exam_types.title',
+                    'exam_types.title_en',
+                ]);
+                $query->with(['exams' => function ($subQuery) {
+                    $subQuery->select([
+                        'exams.id',
+                        'exams.exam_type_id',
+                        'exams.type'
+                    ]);
+                }]);
+            }]);
+
+        $batch = $batchBuilder->firstOrFail();
+
+        return $batch->examTypes->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return array
+     * @throws Throwable
+     */
+    public function getYouthExamListByBatch(Request $request, $id): array
+    {
         $youthId = $request->query('youth_id') ?? "";
+        throw_if(empty($youthId), ValidationException::withMessages(['Youth id is required']));
 
         /** @var Batch|Builder $batchBuilder */
         $batchBuilder = Batch::where('batches.id', $id)
@@ -810,7 +842,18 @@ class BatchService
             }
         }
 
-        return $examTypes;
+        return [
+           'exams' => $examTypes,
+           'attendance' => $this->getYouthAttendanceByBatch($id, $youthId)
+       ];
+    }
+
+    public function getYouthAttendanceByBatch(int $batchId, int $youthId)
+    {
+        $youthExamData = YouthExam::where('batch_id', $batchId)->where('youth_id', $youthId)->where('type', Exam::EXAM_TYPE_ATTENDANCE)->first();
+
+        return $youthExamData->total_obtained_marks ?? null;
+
     }
 
 

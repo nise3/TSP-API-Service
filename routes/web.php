@@ -107,6 +107,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /**  exam list by batch */
         $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
+        $router->get('batches/{id}/youth-exams', ["as" => "batches.youth-exams-list-by-batch-id", "uses" => "BatchController@getYouthExamListByBatch"]);
 
         /** Result Processing By Batch **/
         $router->post("batches/{id}/process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
