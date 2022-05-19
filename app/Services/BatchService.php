@@ -1111,8 +1111,7 @@ class BatchService
 
             return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!",false);
 
-        }
-        else if ($batch->result_published_at != null) {
+        } else if ($batch->result_published_at != null) {
 
             return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!",false);
 
