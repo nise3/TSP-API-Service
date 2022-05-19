@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 /**
  * Class Batch
@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
  * @property-read Branch branch
  * @property-read TrainingCenter trainingCenter
  * @property-read Course course
+ * @property-read Collection examTypes
  */
 class Batch extends BaseModel
 {
