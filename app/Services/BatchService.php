@@ -32,11 +32,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
-use JetBrains\PhpStorm\NoReturn;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
-use function PHPUnit\Framework\returnArgument;
 
 /**
  * Class BatchService
@@ -1109,7 +1107,13 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        if ($batch->result_published_at != null) {
+        // Dont remove/change any http code. this http code used by frontend
+        if (count($batch->examTypes) == 0) {
+
+            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_METHOD_NOT_ALLOWED, "There is no exams for processing!");
+
+        }
+        else if ($batch->result_published_at != null) {
 
             return formatApiResponse(null, $startTime, ResponseAlias::HTTP_CONFLICT, "Result Already Published!");
 
