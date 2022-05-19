@@ -47,7 +47,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
-        // TODO use 'certificates', 'certificate-types', ''certificate-issued'
+        // TODO: use 'certificates', 'certificate-types', ''certificate-issued'
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
         $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
         $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
@@ -107,6 +107,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /**  exam list by batch */
         $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
+        $router->get('batches/{id}/youth-exams', ["as" => "batches.youth-exams-list-by-batch-id", "uses" => "BatchController@getYouthExamListByBatch"]);
 
         /** Result Processing By Batch **/
         $router->post("batches/{id}/process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
@@ -207,6 +208,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Assessment List */
         $router->get('get-four-ir-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-four-ir-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
+
+        /** Youth Certificate List */
+        $router->get('get-youth-certificate-issued/{youthId}', ["as" => "get-four-ir-certificate-list", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
 
     });
 

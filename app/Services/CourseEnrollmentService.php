@@ -8,6 +8,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
+use App\Models\Exam;
 use App\Models\ExamAnswer;
 use App\Models\ExamType;
 use App\Models\PaymentTransactionHistory;
@@ -51,7 +52,7 @@ class CourseEnrollmentService
         $firstName = $request['first_name'] ?? "";
         $firstNameEn = $request['first_name_en'] ?? "";
         $pageSize = $request['page_size'] ?? "";
-        $paginate = $request['page'] ?? "";
+        $paginate = $request['page'] ?? BaseModel::DEFAULT_PAGE_SIZE;
         $courseId = $request['course_id'] ?? "";
         $courseTitle = $request['course_title'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
@@ -98,6 +99,7 @@ class CourseEnrollmentService
                 'course_enrollments.nationality',
                 'course_enrollments.physical_disability_status',
                 'course_enrollments.freedom_fighter_status',
+                'course_enrollments.certificate_issued_id',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -191,18 +193,17 @@ class CourseEnrollmentService
         $resultArray = $courseEnrollments->toArray();
         $youthIds = CourseEnrollment::pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
-
         $indexedYouths = [];
-        foreach ($youthProfiles as $item) {
-            $id = $item['id'];
-            $indexedYouths[$id] = $item;
-        }
 
-        foreach ($resultArray["data"] as &$item) {
-            $id = $item['youth_id'];
-            $youthData = $indexedYouths[$id];
-            $item['youth_profile'] = $youthData;
-        }
+            foreach ($youthProfiles as $item) {
+                $id = $item['id'];
+                $indexedYouths[$id] = $item;
+            }
+            foreach ($resultArray["data"] as &$item) {
+                $id = $item['youth_id'];
+                $youthData = $indexedYouths[$id];
+                $item['youth_profile'] = $youthData;
+            }
 
         $resultData = $resultArray['data'] ?? $resultArray;
 
@@ -258,6 +259,7 @@ class CourseEnrollmentService
                 'course_enrollments.nationality',
                 'course_enrollments.physical_disability_status',
                 'course_enrollments.freedom_fighter_status',
+                'course_enrollments.certificate_issued_id',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -1354,62 +1356,60 @@ class CourseEnrollmentService
 
         foreach ($courseEnrollments as &$courseEnrollment) {
 
-            /** @var Builder $examsBuilder */
-            $examsBuilder = ExamType::select([
-                'exam_types.id',
-                'exam_types.title',
-                'exam_types.title_en',
-                'exam_types.published_at',
-                'exams.type',
-                'exams.id as exam_id',
-                'exams.start_date',
-                'exams.end_date',
-                'exams.total_marks',
-                'exams.duration',
-                'exam_subjects.title as subject_title',
-                'exam_subjects.title_en as subject_title_en',
-            ]);
+            if ($courseEnrollment['batch_id']) {
+                /** @var Builder $examsBuilder */
+                $examTypesBuilder = ExamType::select([
+                    'exam_types.id',
+                    'exam_types.title',
+                    'exam_types.title_en',
+                    'exam_types.published_at',
+                    'exams.type',
+                    'exams.id as exam_id',
+                    'exams.start_date',
+                    'exams.end_date',
+                    'exams.total_marks',
+                    'exams.duration',
+                    'exam_subjects.title as subject_title',
+                    'exam_subjects.title_en as subject_title_en',
+                ]);
 
-            $examsBuilder->whereNotNull('exam_types.published_at');
+                $examTypesBuilder->whereNotNull('exam_types.published_at');
 
-            $examsBuilder->join("exam_subjects", function ($join) {
-                $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
-                    ->whereNull('exam_subjects.deleted_at');
-            });
+                $examTypesBuilder->join("batch_exams", function ($join) use ($courseEnrollment) {
+                    $join->on('batch_exams.exam_type_id', '=', 'exam_types.id')
+                        ->where('batch_exams.batch_id', $courseEnrollment['batch_id']);
+                });
 
-
-            $examsBuilder->join("exams", function ($join) {
-                $join->on('exam_types.id', '=', 'exams.exam_type_id')
-                    ->whereNull('exams.deleted_at');
-            });
-
-            $examsBuilder->with(['batches' => function ($query) use ($courseEnrollment) {
-                $query->select([
-                    'batches.id as batch_id',
-                    'batches.title as batch_title',
-                    'batches.title_en as batch_title_en',
-                ])->where('batch_id', $courseEnrollment['batch_id']);
-            }]);
+                $examTypesBuilder->join("exam_subjects", function ($join) {
+                    $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
+                        ->whereNull('exam_subjects.deleted_at');
+                });
 
 
-            $examsBuilder = $examsBuilder->get();
-            $exams = $examsBuilder->toArray() ?? [];
+                $examTypesBuilder->join("exams", function ($join) {
+                    $join->on('exam_types.id', '=', 'exams.exam_type_id')
+                        ->whereNull('exams.deleted_at');
+                });
 
-            foreach ($exams as &$exam) {
-                if (!empty($courseEnrollment['batch_id']) && !empty($youthId) && !empty($exam['id'])) {
-                    $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $exam['id']);
-                    if (!empty($youthExamData)) {
-                        $exam['participated'] = true;
-                        $exam['marks_obtained'] = $youthExamData->total_obtained_marks;
+                $examTypes = $examTypesBuilder->get()->toArray() ?? [];
 
-                    } else {
-                        $exam['participated'] = false;
-                        $exam['marks_obtained'] = null;
+                foreach ($examTypes as &$examType) {
+                    if (!empty($courseEnrollment['batch_id']) && !empty($youthId) && !empty($examType['exam_id'])) {
+                        $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $examType['exam_id']);
+                        if (!empty($youthExamData)) {
+                            $examType['participated'] = true;
+                            $examType['marks_obtained'] = $youthExamData->total_obtained_marks;
+
+                        } else {
+                            $examType['participated'] = false;
+                            $examType['marks_obtained'] = null;
+                        }
                     }
-                }
 
+                }
+                $courseEnrollment['exams'] = $examTypes;
             }
-            $courseEnrollment['exams'] = $exams;
+
         }
 
         $courseEnrollments = $courseEnrollments['data'] ?? $courseEnrollments;
@@ -1644,6 +1644,7 @@ class CourseEnrollmentService
         $rules = [
             'youth_id' => 'required|min:1',
             'course_id' => 'nullable|int|gt:0',
+            'certificate_issued_id' => 'nullable|int|gt:0',
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'order' => [

@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\BatchExam;
 use App\Models\Course;
+use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamAnswer;
@@ -121,7 +122,7 @@ class ExamService
         $youthExam->fill($data);
         $youthExam->save();
 
-        if ($data['type'] != Exam::EXAM_TYPES_WITHOUT_QUESTION) {
+        if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
 
             $examSections = ExamSection::query()->where('exam_id', $data['exam_id'])->get()->toArray();
 
@@ -430,8 +431,7 @@ class ExamService
             'exam_answers.id as exam_answer_id',
             'youth_exams.id as youth_exam_id',
             'exam_answers.answers',
-            'exam_answers.marks_achieved',
-            'exam_answers.file_paths',
+            'exam_answers.marks_achieved'
         ]);
 
         $examSectionBuilder->where('exam_section_questions.exam_section_uuid', $examSection['uuid']);
@@ -824,11 +824,11 @@ class ExamService
 
     public function youthExamMarkUpdate(array $data): void
     {
-        $youthExamId = $data['youth_exam_id'];
-
         $totalObtainedMarks = 0;
+        $youthExamId = null;
         foreach ($data['marks'] as $mark) {
-            $totalObtainedMarks += 0;
+            $totalObtainedMarks += $mark['marks_achieved'];
+            $youthExamId = $mark['youth_exam_id'];
             $examAnswerId = $mark['exam_answer_id'];
             $examAnswer = ExamAnswer::findOrFail($examAnswerId);
             $examAnswer->marks_achieved = $mark['marks_achieved'];
@@ -836,7 +836,7 @@ class ExamService
             $examAnswer->save();
         }
 
-        $youthExam = YouthExam::findOrFail($data['youth_exam_id']);
+        $youthExam = YouthExam::findOrFail($youthExamId);
 
         $youthExam->total_obtained_marks = $totalObtainedMarks;
         $youthExam->save();
@@ -1105,14 +1105,14 @@ class ExamService
                             'nullable',
                             'string',
                         ];
-                        if($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS){
+                        if ($examQuestion['question_selection_type'] == ExamQuestionBank::QUESTION_SELECTION_RANDOM_FROM_SELECTED_QUESTIONS) {
                             $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
                                 Rule::requiredIf(!empty($examQuestionSet)),
                                 'nullable',
                                 'array',
                                 'min:' . $offlineExamQuestionNumbers
                             ];
-                        }else{
+                        } else {
                             $rules[$examType . 'exam_questions.' . $outerIndex . '.question_sets.' . $index . '.questions'] = [
                                 Rule::requiredIf(!empty($examQuestionSet)),
                                 'nullable',
@@ -1597,14 +1597,6 @@ class ExamService
 
         $examPreview = $examPreviewBuilder->firstOrFail()->toArray();
 
-        $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($examPreview['exam_id']);
-        if ($manualMarkingQuestionNumbers == 0) {
-            $examPreview['auto_marking'] = true;
-        } else {
-            $examPreview['auto_marking'] = false;
-        }
-
-
         $youthIds = [];
         array_push($youthIds, $youthId);
 
@@ -1668,7 +1660,7 @@ class ExamService
                 'array',
             ],
             'questions.*.exam_section_question_id' => [
-                Rule::requiredIf(!empty($data['questions'])),
+                //Rule::requiredIf(!empty($data['questions'])),
                 'nullable',
                 'string',
                 'exists:exam_section_questions,uuid,deleted_at,NULL'
@@ -1715,13 +1707,6 @@ class ExamService
             'row_status.in' => 'Order must be either ASC or DESC. [30000]',
         ];
         $rules = [
-
-            'youth_exam_id' => [
-                'required',
-                'int',
-                'min:1',
-                'exists:youth_exams,id'
-            ],
             'marks' => [
                 'array',
                 'required',
@@ -1735,6 +1720,13 @@ class ExamService
                 'required',
                 'exists:exam_answers,id'
             ],
+            'marks.*youth_exam_id' => [
+                'required',
+                'int',
+                'min:1',
+                'exists:youth_exams,id'
+            ],
+
             'marks.*.marks_achieved' => [
                 'numeric',
                 'required',
@@ -1876,11 +1868,98 @@ class ExamService
         return Validator::make($request->all(), $rules, $customMessage);
     }
 
-    public function youthBatchExamMarkUpdateValidator(Request $request)
-    {
 
+    /**
+     * @param array $validatedData
+     * @return void
+     */
+    public function youthBatchExamMarkUpdate(array $validatedData): void
+    {
+        foreach ($validatedData['exams'] as $exam) {
+            YouthExam::query()->updateOrCreate([
+                'batch_id' => $exam['batch_id'],
+                'youth_id' => $exam['youth_id'],
+                'exam_id' => $exam['exam_id']
+            ], $exam);
+        }
+
+        if (!empty($validatedData['attendance'])) {
+            $validatedData['attendance']['type'] = Exam::EXAM_TYPE_ATTENDANCE;
+            YouthExam::query()->updateOrCreate([
+                'batch_id' => $validatedData['attendance']['batch_id'],
+                'youth_id' => $validatedData['attendance']['youth_id'],
+                'type' => $validatedData['attendance']['type'],
+            ], $validatedData['attendance']);
+        }
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function youthBatchExamMarkUpdateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+        $rules = [
+            'exams' => [
+                'required',
+                'array',
+                'min:1'
+            ],
+            'exams.*' => [
+                'array',
+                'min:1'
+            ],
+            'exams.*.exam_id' => [
+                'required',
+                'int',
+                'exists:exams,id,deleted_at,NULL'
+            ],
+            'exams.*.exam_type_id' => [
+                'required',
+                'int',
+                'exists:exam_types,id,deleted_at,NULL'
+            ],
+            'exams.*.type' => [
+                'required',
+                'int',
+                Rule::in(Exam::YOUTH_EXAM_TYPES)
+            ],
+            'exams.*.youth_id' => [
+                'required',
+                'int',
+                'min:0'
+            ],
+            'exams.*.batch_id' => [
+                'required',
+                'int',
+                'exists:batches,id,deleted_at,NULL'
+            ],
+            'attendance' => [
+                'nullable',
+                'array'
+            ],
+            'attendance.total_obtained_marks' => [
+                Rule::requiredIf(!empty($data['attendance'])),
+                'nullable',
+                'numeric'
+            ],
+            'attendance.youth_id' => [
+                Rule::requiredIf(!empty($data['attendance'])),
+                'nullable',
+                'int'
+            ],
+            'attendance.batch_id' => [
+                Rule::requiredIf(!empty($data['attendance'])),
+                'nullable',
+                'int'
+            ]
+
+        ];
+
+        return Validator::make($data, $rules);
+
+    }
 
 }
 

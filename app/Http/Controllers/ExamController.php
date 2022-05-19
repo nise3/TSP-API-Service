@@ -222,12 +222,15 @@ class ExamController extends Controller
     {
         $examData = $this->examService->getExamQuestionPaper($id);
 
-        /** // TODO: check the start end logic and udate the commented code  */
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = CarbonImmutable::create($exam->start_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($id);
+        $examStartTime = CarbonImmutable::create($exam->start_date);
+        if($exam->type == Exam::EXAM_TYPES_WITHOUT_QUESTION){
+            $examEndTime = $exam->end_date;
+        }else{
+            $examEndTime = $examStartTime->addMinutes($exam->duration);
+        }
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         $response = [
             "data" => $examData ?? null,
@@ -249,12 +252,15 @@ class ExamController extends Controller
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
 
-        /** // TODO: check the start end logic and udate the commented code  */
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = CarbonImmutable::create($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($validatedData['exam_id']);
+        $examStartTime = CarbonImmutable::create($exam->start_date);
+        if($exam->type == Exam::EXAM_TYPES_WITHOUT_QUESTION){
+            $examEndTime = $exam->end_date;
+        }else{
+            $examEndTime = $examStartTime->addMinutes($exam->duration);
+        }
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         DB::beginTransaction();
         try {
@@ -321,21 +327,20 @@ class ExamController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
-     * @throws AuthorizationException
-     * @throws ValidationException
+     * @throws AuthorizationException|ValidationException
      */
     public function youthBatchExamsMarkUpdate(Request $request): JsonResponse
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthBatchExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData);
+        $this->examService->youthBatchExamMarkUpdate($validatedData);
         $response = [
-            "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
                 "success" => true,
                 "code" => ResponseAlias::HTTP_OK,
-                "message" => "youth exam mark updated successfully.",
+                "message" => "youth Batch exams obtained mark updated successfully.",
                 "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
             ]
         ];
