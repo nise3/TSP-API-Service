@@ -278,12 +278,14 @@ class CourseService
             $course["trainers"] = $trainers->toArray();
         }
 
+
         if (is_numeric($youthId)) {
             $courseEnrollment = CourseEnrollment::where('course_id', $id)
                 ->where('youth_id', $youthId)
                 ->where('saga_status','!=',BaseModel::SAGA_STATUS_ROLLBACK)
                 ->withoutGlobalScope(SagaStatusGlobalScope::class)
                 ->first();
+
             $course["enrolled"] = (bool)$courseEnrollment;
             $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
             $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
