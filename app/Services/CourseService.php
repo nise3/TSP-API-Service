@@ -290,7 +290,8 @@ class CourseService
             $course["payment_status"] = !empty($courseEnrollment) && (bool)$courseEnrollment->payment_status;
             $course["verified"] = !empty($courseEnrollment) && !empty($courseEnrollment->verification_code_verified_at);
             $course["enrollment_id"] = !empty($courseEnrollment) && !empty($courseEnrollment->id) ? $courseEnrollment->id : null;
-            $course["certificate_issued"] = !empty($courseEnrollment) && !empty($courseEnrollment->certificate_issued_id);
+//            $course["certificate_issued"] = !empty($courseEnrollment) && !empty($courseEnrollment->certificate_issued_id);
+            $course["certificate_issued_id"] = $courseEnrollment->certificate_issued_id;
         }
 
         /** Set enrollable field to determine weather Youth Can Enroll into this course */
