@@ -1109,24 +1109,29 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
+        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         if (count($batch->examTypes) == 0) {
 
             return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!", false);
 
-        } if ($batch->result_published_at != null) {
+        }
+        if ($batch->result_published_at != null) {
 
             return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!", false);
 
-        } if (empty($courseResultConfig)) {
+        }
+        if (empty($courseResultConfig)) {
 
             return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!", false);
 
         } else {
-            $courseResultConfigExamTypes = array_filter($courseResultConfig->result_percentages, function ($examType) {
-                return $examType != Exam::EXAM_TYPE_ATTENDANCE;
-            });
-
+            $courseResultConfigExamTypes = [];
+            foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
+                if ($examTypes[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
+                    array_push($courseResultConfigExamTypes, $examTypes[$key]);
+                }
+            }
 
             $exams = Exam::query()->whereIn('exam_type_id', $batch->examTypes->pluck('id'))->with('examType:id,type')->get();
 
@@ -1152,9 +1157,6 @@ class BatchService
                 return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
             }
         }
-
-
-        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         DB::beginTransaction();
 
