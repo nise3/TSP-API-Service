@@ -48,6 +48,7 @@ class CertificateIssuedService
             'certificates.title as certificate_title',
             'certificates.title_en as certificate_title_en',
             'certificates.result_type as certificate_result_type',
+            'certificates.issued_at',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
             'batches.title as batch_title',
@@ -129,6 +130,7 @@ class CertificateIssuedService
             'certificates.title as certificate_title',
             'certificates.title_en as certificate_title_en',
             'certificates.result_type as certificate_result_type',
+            'certificates.issued_at',
             'certificate_issued.youth_id',
             'certificate_issued.batch_id',
             'certificate_issued.row_status'
