@@ -14,6 +14,7 @@ use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamSection;
+use App\Models\ExamType;
 use App\Models\Result;
 use App\Models\ResultSummary;
 use App\Models\Trainer;
@@ -843,9 +844,9 @@ class BatchService
         }
 
         return [
-           'exams' => $examTypes,
-           'attendance' => $this->getYouthAttendanceByBatch($id, $youthId)
-       ];
+            'exams' => $examTypes,
+            'attendance' => $this->getYouthAttendanceByBatch($id, $youthId)
+        ];
     }
 
     public function getYouthAttendanceByBatch(int $batchId, int $youthId)
@@ -1108,17 +1109,29 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
+        $exams = Exam::query()->with(['examTypes' => function ($query) use ($id) {
+            $query->with(['batches' => function ($subQuery) use ($id) {
+                $subQuery->where('batch_id', $id);
+            }]);
+        }]);
+
+        foreach ($exams as $exam) {
+            if ($exam->end_time > $startTime->toDateTimeString() || ($exam->end_time + $exam->duration) > $startTime->toDateTimeString()) {
+                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
+            }
+        }
+
         if (count($batch->examTypes) == 0) {
 
-            return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!",false);
+            return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!", false);
 
         } else if ($batch->result_published_at != null) {
 
-            return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!",false);
+            return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!", false);
 
         } else if (empty($courseResultConfig)) {
 
-            return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!",false);
+            return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!", false);
 
         }
 
@@ -1134,14 +1147,14 @@ class BatchService
                     $examType = $examTypes[$key];
 
                     // Attendance total mark calculate from course result config
-                    if($examType == Exam::EXAM_TYPE_ATTENDANCE){
+                    if ($examType == Exam::EXAM_TYPE_ATTENDANCE) {
                         $examTotalMarks = $courseResultConfig->total_attendance_marks;
                         $obtainedMarks = YouthExam::query()
                             ->where('youth_id', $youthId)
-                            ->where('batch_id',$batch->id)
-                            ->where('type',$examType)
+                            ->where('batch_id', $batch->id)
+                            ->where('type', $examType)
                             ->sum('total_obtained_marks');
-                    }else{
+                    } else {
                         $examTotalMarks = Exam::query()
                             ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
                             ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
@@ -1255,6 +1268,18 @@ class BatchService
         }
 
         return $results->toArray();
+    }
+
+    /**
+     * @param $resultId
+     * @return array
+     */
+    public function getResultSummariesByResult(int $resultId): array
+    {
+        /** @var ResultSummary|Builder $resultSummaryBuilder */
+        $resultSummaries = ResultSummary::where('result_id', $resultId)->get();
+
+        return $resultSummaries->toArray();
     }
 
 }

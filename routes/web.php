@@ -136,6 +136,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post("course-enrollment-bulk-import", ["as" => "course-enrollment-bulk-import", "uses" => "CourseEnrollmentController@courseEnrollmentBulkImport"]);
     });
 
+    $router->get("exam-result-summaries/{resultId}", ["as" => "batches.youth-exam-result-summaries", "uses" => "BatchController@getBatchExamResultSummaries"]);
 
     $router->get('youth-enroll-courses', ["as" => "courses.youth-enroll-courses", "uses" => "CourseEnrollmentController@getYouthEnrollCourses"]);
 
