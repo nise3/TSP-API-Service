@@ -1109,15 +1109,17 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $exams = Exam::query()->with(['examTypes' => function ($query) use ($id) {
-            $query->with(['batches' => function ($subQuery) use ($id) {
-                $subQuery->where('batch_id', $id);
-            }]);
-        }]);
 
-        foreach ($exams as $exam) {
-            if ($exam->end_time > $startTime->toDateTimeString() || ($exam->end_time + $exam->duration) > $startTime->toDateTimeString()) {
-                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
+       $exams = Exam::query()->with(['examTypes' => function ($query) use($id) {
+                $query->with(['batches' => function ($subQuery)use($id) {
+                    $subQuery->where('batch_id',$id);
+                }]);
+            }]);
+
+        foreach ($exams as $exam){
+            $examEndDate = Carbon::create($exam->end_time);
+            if($examEndDate->lt($startTime)){
+                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!",false);
             }
         }
 

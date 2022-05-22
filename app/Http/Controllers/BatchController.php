@@ -377,7 +377,7 @@ class BatchController extends Controller
      */
     public function processBatchResult(int $id): JsonResponse
     {
-        $this->authorize('viewAny',Result::class);
+        $this->authorize('create',Result::class);
 
         $response = $this->batchService->processResult($id,$this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -390,7 +390,7 @@ class BatchController extends Controller
      */
     public function getBatchExamResults($id): JsonResponse
     {
-        $this->authorize('create',Result::class);
+        $this->authorize('viewAny',Result::class);
 
         $data = $this->batchService->getResultsByBatch($id);
 
