@@ -135,6 +135,7 @@ class CertificateIssuedService
             'certificate_issued.certificate_id',
             'certificates.title as certificate_title',
             'certificates.title_en as certificate_title_en',
+            'certificates.template as certificate_template',
             'certificates.result_type as certificate_result_type',
             'certificates.issued_at',
             'certificates.language as certificate_language',
