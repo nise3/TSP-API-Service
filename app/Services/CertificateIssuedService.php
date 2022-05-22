@@ -137,13 +137,31 @@ class CertificateIssuedService
             'certificates.title_en as certificate_title_en',
             'certificates.result_type as certificate_result_type',
             'certificates.issued_at',
+            'certificates.language as certificate_language',
             'certificate_issued.youth_id',
             'certificate_issued.course_id',
+            'courses.title as course_title',
+            'courses.title_en as course_title_en',
+            'training_centers.title as training_center_title',
+            'training_centers.title_en as training_center_title_en',
             'certificate_issued.batch_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
             'certificate_issued.row_status'
         ]);
 
         $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+
+        $certificateIssuedBuilder
+            ->leftJoin('course_enrollments',"course_enrollments.certificate_issued_id","=","certificate_issued.id");
+
+        $certificateIssuedBuilder->leftJoin('batches', 'batches.id', '=', 'course_enrollments.batch_id');
+        $certificateIssuedBuilder->leftJoin('courses', 'courses.id', '=', 'course_enrollments.course_id');
+        $certificateIssuedBuilder->leftJoin('training_centers', 'training_centers.id', '=', 'course_enrollments.training_center_id');
+
+//        dd($certificateIssuedBuilder);
 
         $certificateIssuedBuilder->where('certificate_issued.id', $id);
 
