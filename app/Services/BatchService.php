@@ -1109,19 +1109,41 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
+        $courseResultConfigExamTypes = array_filter($courseResultConfig->result_percentages, function ($examType) {
+            return $examType != Exam::EXAM_TYPE_ATTENDANCE;
+        });
 
-       $exams = Exam::query()->with(['examTypes' => function ($query) use($id) {
-                $query->with(['batches' => function ($subQuery)use($id) {
-                    $subQuery->where('batch_id',$id);
-                }]);
-            }]);
 
-        foreach ($exams as $exam){
+        $exams = Exam::query()->with(['examType' => function ($query) use ($id) {
+            $query->select(['exam_types.id',
+                            'exam_types.type as exam_type',
+            ]);
+            $query->whereHas('batches' , function ($subQuery) use ($id) {
+                $subQuery->where('batch_id', $id);
+            });
+        }]);
+
+        $isAllExamFinished = true;
+
+        $examTypes = [];
+        foreach ($exams as $exam) {
+            $examTypes[] = $exam->exam_type->exam_type;
             $examEndDate = Carbon::create($exam->end_time);
-            if($examEndDate->lt($startTime)){
-                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!",false);
+            if ($examEndDate->lt($startTime)) {
+                $isAllExamFinished = false;
             }
         }
+
+        $arrayDiff = array_diff($courseResultConfigExamTypes,$examTypes);
+
+        if(!empty($arrayDiff)){
+            return formatApiResponse(["error_code" => "configured_exams_not_found"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Configured exams not found!", false);
+        }
+
+        if (!$isAllExamFinished) {
+            return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
+        }
+
 
         if (count($batch->examTypes) == 0) {
 
