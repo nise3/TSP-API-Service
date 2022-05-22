@@ -1135,7 +1135,7 @@ class BatchService
             $examTypes = [];
             foreach ($exams as $exam) {
                 $examTypes[] = $exam->examType->type;
-                $examEndDate = Carbon::create($exam->end_time);
+                $examEndDate = Carbon::create($exam->end_date);
 
                 if ($examEndDate->lt($startTime)) {
                     $isAllExamFinished = false;

@@ -82,6 +82,6 @@ class Exam extends BaseModel
      */
     public function examType(): BelongsTo
     {
-        return $this->belongsTo(Exam::class, 'exam_type_id', 'id');
+        return $this->belongsTo(ExamType::class, 'exam_type_id', 'id');
     }
 }
