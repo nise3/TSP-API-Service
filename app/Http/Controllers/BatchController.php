@@ -400,4 +400,17 @@ class BatchController extends Controller
     }
 
 
+    /**
+     * @param $resultId
+     * @return JsonResponse
+     */
+    public function getBatchExamResultSummaries(int $resultId): JsonResponse
+    {
+        $data = $this->batchService->getResultSummariesByResult($resultId);
+
+        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result summaries Fetch Successfully");
+
+        return Response::json($response);
+    }
+
 }
