@@ -214,7 +214,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Youth Certificate List */
         $router->get('get-youth-certificate-issued/{youthId}/course-id/{courseId}', ["as" => "get-youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
-
     });
 
     /** Exam management */

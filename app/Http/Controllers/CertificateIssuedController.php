@@ -75,7 +75,7 @@ class CertificateIssuedController extends Controller
      */
     public function getCertificateIssuedByYouthId(int $youthId, int $courseId): JsonResponse
     {
-        Log::info('log info ' . $youthId . ' ' . $courseId);
+//        Log::info('log info ' . $youthId . ' ' . $courseId);
         $certificateIssued = CertificateIssued::where('youth_id', $youthId)
             ->where('course_id', $courseId)
             ->firstOrFail();
