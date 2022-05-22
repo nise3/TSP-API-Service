@@ -212,7 +212,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('get-four-ir-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-four-ir-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
 
         /** Youth Certificate List */
-        $router->get('get-youth-certificate-issued/{youthId}/batch-id/{batchId}', ["as" => "get-youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
+        $router->get('get-youth-certificate-issued/{youthId}/course-id/{courseId}', ["as" => "get-youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
 
     });
 

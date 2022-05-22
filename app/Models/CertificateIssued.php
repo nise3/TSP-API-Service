@@ -8,6 +8,7 @@ namespace App\Models;
  * @property int youth_id
  * @property int batch_id
  * @property int certificate_id
+ * @property int course_id
  * @property string row_status
 */
 class CertificateIssued extends BaseModel

@@ -39,6 +39,7 @@ class CertificateIssuedService
 
         $batchIds = $request['batch_id'] ?? [];
         $youthIds = $request['youth_id'] ?? [];
+        $courseId = $request['course_id'] ?? [];
         $certificateIds = $request['certificate_id'] ?? [];
 
         /** @var CertificateIssued|Builder $certificateIssuedBuilder */
@@ -50,6 +51,7 @@ class CertificateIssuedService
             'certificates.result_type as certificate_result_type',
             'certificates.issued_at',
             'certificate_issued.youth_id',
+            'certificate_issued.course_id',
             'certificate_issued.batch_id',
             'batches.title as batch_title',
             'batches.title_en as batch_title_en',
@@ -75,6 +77,10 @@ class CertificateIssuedService
             $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
         }
 
+        if (!empty($courseId)) {
+            $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
+        }
+
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $certificateIssued = $certificateIssuedBuilder->paginate($pageSize);
@@ -89,7 +95,7 @@ class CertificateIssuedService
 
         $resultArray = $certificateIssued->toArray();
         $youthIds = CertificateIssued::pluck('youth_id')->unique()->toArray();
-        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
+//        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
         $indexedYouths = [];
@@ -132,6 +138,7 @@ class CertificateIssuedService
             'certificates.result_type as certificate_result_type',
             'certificates.issued_at',
             'certificate_issued.youth_id',
+            'certificate_issued.course_id',
             'certificate_issued.batch_id',
             'certificate_issued.row_status'
         ]);
@@ -235,6 +242,11 @@ class CertificateIssuedService
                 'int',
 //                "exists:certificates,id,NULL"
             ],
+            'course_id' => [
+                'required',
+                'int',
+//                "exists:certificates,id,NULL"
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',
@@ -271,6 +283,10 @@ class CertificateIssuedService
             $decodedValue=$request->get('youth_id');
             $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
         }
+        if ($request->filled('course_id')) {
+            $decodedValue=$request->get('course_id');
+            $request->offsetSet('course_id',$this->toArray( $this->toArray($decodedValue)));
+        }
 
         $customMessage = [
             'order.in' => 'Order must be either ASC or DESC. [30000]',
@@ -304,6 +320,10 @@ class CertificateIssuedService
             'youth_id' => [
                 "nullable",
                 "array"
+            ],
+            'course_id' => [
+                "nullable",
+                "integer"
             ],
             'order' => [
                 'string',
