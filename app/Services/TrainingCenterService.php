@@ -449,7 +449,7 @@ class TrainingCenterService
                 'verify' => config('nise3.should_ssl_verify'),
                 'debug' => config('nise3.http_debug')
             ])
-            ->timeout(60)
+            ->timeout(120)
             ->delete($url, $userPostField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
