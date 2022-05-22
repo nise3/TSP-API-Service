@@ -1114,15 +1114,15 @@ class BatchService
 
             return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!", false);
 
-        } else if ($batch->result_published_at != null) {
+        } if ($batch->result_published_at != null) {
 
             return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!", false);
 
-        } else if (empty($courseResultConfig)) {
+        } if (empty($courseResultConfig)) {
 
             return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!", false);
 
-        }else {
+        } else {
             $courseResultConfigExamTypes = array_filter($courseResultConfig->result_percentages, function ($examType) {
                 return $examType != Exam::EXAM_TYPE_ATTENDANCE;
             });
@@ -1144,7 +1144,7 @@ class BatchService
 
             $examTypesDiff = array_diff($courseResultConfigExamTypes, array_unique($examTypes));
 
-            if(!empty($examTypesDiff)){
+            if (!empty($examTypesDiff)) {
                 return formatApiResponse(["error_code" => "configured_exams_not_found"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Configured exams not found!", false);
             }
 
@@ -1152,7 +1152,6 @@ class BatchService
                 return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
             }
         }
-
 
 
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
@@ -1324,7 +1323,7 @@ class BatchService
      * @param array $data
      * @param int $id
      */
-    public function publishExamResult(array $data, int $id) : Batch
+    public function publishExamResult(array $data, int $id): Batch
     {
         $batch = Batch::findOrFail($id);
 
