@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Batch;
+use App\Models\Result;
 use App\Services\BatchService;
 use App\Services\CommonServices\CodeGeneratorService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -375,6 +377,8 @@ class BatchController extends Controller
      */
     public function processBatchResult(int $id): JsonResponse
     {
+        $this->authorize('viewAny',Result::class);
+
         $response = $this->batchService->processResult($id,$this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -382,9 +386,12 @@ class BatchController extends Controller
     /**
      * @param $id
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function getBatchExamResults($id): JsonResponse
     {
+        $this->authorize('create',Result::class);
+
         $data = $this->batchService->getResultsByBatch($id);
 
         $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
