@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,7 +38,6 @@ class Exam extends BaseModel
     public const YOUTH_EXAM_TYPES = [
         self::EXAM_TYPE_ONLINE,
         self::EXAM_TYPE_OFFLINE,
-        self::EXAM_TYPE_MIXED,
         self::EXAM_TYPE_PRACTICAL,
         self::EXAM_TYPE_FIELD_WORK,
         self::EXAM_TYPE_PRESENTATION,
@@ -75,10 +75,5 @@ class Exam extends BaseModel
     public function examSets(): HasMany
     {
         return $this->hasMany(ExamSet::class, 'exam_id', 'id');
-    }
-
-    public function subject(): HasOne
-    {
-        return $this->hasOne(ExamSubject::class, 'id','subject_id');
     }
 }

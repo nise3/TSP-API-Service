@@ -14,17 +14,20 @@ if (!function_exists("clientUrl")) {
 if (!function_exists('formatApiResponse')) {
     /**
      * @param $data
-     * @param $startTime
+     * @param Carbon $startTime
      * @param int $statusCode
+     * @param string $message
+     * @param bool $success
      * @return array
      */
-    function formatApiResponse($data, $startTime, int $statusCode = 200): array
+    function formatApiResponse($data, Carbon $startTime, int $statusCode = 200, $message = '', $success = true): array
     {
         return [
             "data" => $data ?: null,
             "_response_status" => [
-                "success" => true,
-                "code" => $startTime,
+                "success" => $success,
+                "message" => $message,
+                "code" => $statusCode,
                 "query_time" => $startTime->diffForHumans(Carbon::now())
             ]
         ];

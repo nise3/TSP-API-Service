@@ -2,22 +2,14 @@
 
 namespace App\Services;
 
-use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CourseResultConfig;
-use App\Models\ExamSubject;
-use App\Models\RplSubject;
-use App\Services\CommonServices\MailService;
-use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -42,6 +34,7 @@ class CourseResultConfigService
             'course_result_configs.gradings',
             'course_result_configs.result_percentages',
             'course_result_configs.pass_marks',
+            'course_result_configs.total_attendance_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -51,10 +44,10 @@ class CourseResultConfigService
             $courseResultConfigBuilder->where('course_result_configs.course_id', $courseId);
         }
 
-        $courseResultConfigs = $courseResultConfigBuilder->get();
+        $courseResultConfig = $courseResultConfigBuilder->first();
 
         $response['order'] = 'ASC';
-        $response['data'] = $courseResultConfigs->toArray();
+        $response['data'] = $courseResultConfig;
         $response['_response_status'] = [
             "success" => true,
             "code" => Response::HTTP_OK,
@@ -80,6 +73,7 @@ class CourseResultConfigService
             'course_result_configs.gradings',
             'course_result_configs.result_percentages',
             'course_result_configs.pass_marks',
+            'course_result_configs.total_attendance_marks',
             'course_result_configs.created_at',
             'course_result_configs.updated_at',
             'course_result_configs.deleted_at',
@@ -127,8 +121,7 @@ class CourseResultConfigService
         $rules = [
             'course_id' => [
                 'required',
-                'string',
-                'max:500'
+                'int'
             ],
             'institute_id' => [
                 Rule::requiredIf(function () use ($authUser, $request) {
@@ -168,22 +161,23 @@ class CourseResultConfigService
                 'array',
                 'min:1',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
-                    $maxValue = null;
-
-                    foreach ($data['gradings'] as $grading){
-                        if($grading['min'] >= $grading['max']){
-                            $failed("max value should be greater than min");
+                    if(!empty($data['gradings'])){
+                        if ($data['gradings'][0]['min'] !== '0') {
+                            $failed("initial value should start from 0!");
                         }
-                        if($grading['min'] > $maxValue){
-                            $maxValue = $grading['max'];
-                        }else{
-                            $failed("range should be greater than previous");
-                        }
+                        $maxValue = null;
 
+                        foreach ($data['gradings'] as $grading){
+                            if($grading['min'] >= $grading['max']){
+                                $failed("max value should be greater than min");
+                            }
+                            if($grading['min'] > $maxValue){
+                                $maxValue = $grading['max'];
+                            }else{
+                                $failed("range should be greater than previous");
+                            }
+
+                        }
                     }
                 }
             ],
@@ -209,17 +203,13 @@ class CourseResultConfigService
                 }),
                 'max:100',
                 "nullable",
-                "int"
+                "numeric"
             ],
             "result_percentages" => [
                 'required',
                 'min:1',
                 'array',
                 function ($attr, $value, $failed) use ($data) {
-
-                    if ($data['gradings'][0]['min'] !== '0') {
-                        $failed("initial value should start from 0!");
-                    }
                     $maxValue = null;
                     $totalPercentage = 0;
                     foreach ($data['result_percentages'] as $percentage){
@@ -278,6 +268,11 @@ class CourseResultConfigService
                 'min:1',
                 'max:100',
                 'int'
+            ],
+            "total_attendance_marks" => [
+                Rule::requiredIf(!empty($data['result_percentages']['attendance'])),
+                "nullable",
+                "numeric"
             ]
         ];
 

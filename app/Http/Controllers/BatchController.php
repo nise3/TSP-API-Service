@@ -50,7 +50,6 @@ class BatchController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
-//        dd($request);
         $filter = $this->batchService->filterValidator($request)->validate();
         $response = $this->batchService->getBatchList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -72,14 +71,11 @@ class BatchController extends Controller
 
 
     /**
-     * @param int $id
+     * @param int $fourIrInitiativeId
      * @return JsonResponse
      */
-
-
     public function getBatchesByFourIrInitiativeId(int $fourIrInitiativeId): JsonResponse
     {
-
         $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -233,7 +229,8 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param Request $request
+     * @return JsonResponse
      */
     public function getTrashedData(Request $request): JsonResponse
     {
@@ -242,7 +239,8 @@ class BatchController extends Controller
     }
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function restore(int $id): JsonResponse
     {
@@ -261,7 +259,8 @@ class BatchController extends Controller
 
 
     /**
-     * @throws Throwable
+     * @param int $id
+     * @return JsonResponse
      */
     public function forceDelete(int $id): JsonResponse
     {
@@ -299,7 +298,28 @@ class BatchController extends Controller
      */
     public function getExamsByBatchId(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getExamListByBatch($id);
+        $data = $this->batchService->getExamListByBatch($request,$id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+
+        return Response::json($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function getYouthExamListByBatch(Request $request, $id): JsonResponse
+    {
+        $data = $this->batchService->getYouthExamListByBatch($request,$id);
         $response = [
             "data" => $data,
             "_response_status" => [
@@ -349,24 +369,27 @@ class BatchController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param int $id
      * @return JsonResponse
-     * @throws ValidationException
+     * @throws Throwable
      */
-    public function processBatchResult(Request $request): JsonResponse
+    public function processBatchResult(int $id): JsonResponse
     {
-        $validatedData = $this->batchService->resultProcessingValidator($request)->validate();
-        $processResult = $this->batchService->processResult($validatedData);
-//        $response = [
-//            'data' => $batch->exams()->get(),
-//            '_response_status' => [
-//                "success" => true,
-//                "code" => ResponseAlias::HTTP_OK,
-//                "message" => "exams assigned to batch successfully",
-//                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-//            ]
-//        ];
-//        return Response::json($response, ResponseAlias::HTTP_OK);
+        $response = $this->batchService->processResult($id,$this->startTime);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getBatchExamResults($id): JsonResponse
+    {
+        $data = $this->batchService->getResultsByBatch($id);
+
+        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+
+        return Response::json($response);
     }
 
 

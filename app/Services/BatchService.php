@@ -5,34 +5,36 @@ namespace App\Services;
 
 
 use App\Exceptions\HttpErrorException;
+use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
-use App\Models\BatchExam;
 use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
 use App\Models\ExamSection;
-use App\Models\ExamType;
+use App\Models\Result;
+use App\Models\ResultSummary;
 use App\Models\Trainer;
 use App\Models\TrainingCenter;
 use App\Models\User;
 use App\Models\YouthExam;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
-use JetBrains\PhpStorm\NoReturn;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use Throwable;
 
 /**
  * Class BatchService
@@ -87,6 +89,7 @@ class BatchService
             'batches.registration_end_date',
             'batches.batch_start_date',
             'batches.batch_end_date',
+            'batches.result_published_at',
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
@@ -218,6 +221,7 @@ class BatchService
             'batches.registration_end_date',
             'batches.batch_start_date',
             'batches.batch_end_date',
+            'batches.result_published_at',
             'batches.available_seats',
             'batches.training_center_id',
             'training_centers.title_en as training_center_title_en',
@@ -261,16 +265,15 @@ class BatchService
         return $batchBuilder->firstOrFail();
     }
 
-    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId, $courseId = null): array
+    public function getBatchIdByFourIrInitiativeId(int $fourIrInitiativeId, int $courseId = null): array
     {
-        $courseBuilder= Course::where("four_ir_initiative_id", $fourIrInitiativeId);
+        $courseBuilder = Course::where("four_ir_initiative_id", $fourIrInitiativeId);
 
-        if(!empty($courseId)){
-            $courseBuilder->where("id",$courseId);
+        if (!empty($courseId)) {
+            $courseBuilder->where("id", $courseId);
         }
 
-        $courseIds=$courseBuilder->pluck('id')->toArray();
-
+        $courseIds = $courseBuilder->pluck('id')->toArray();
         return Batch::whereIn("course_id", $courseIds)->pluck('id')->toArray();
     }
 
@@ -760,42 +763,112 @@ class BatchService
 
 
     /**
+     * @param Request $request
      * @param $id
-     * @return Batch
+     * @return array
      */
-    public function getExamListByBatch($id): Batch
+    public function getExamListByBatch(Request $request, $id): array
     {
+        /** @var Batch|Builder $batchBuilder */
+        $batchBuilder = Batch::where('batches.id', $id)
+            ->with(['examTypes' => function ($query) {
+                $query->select([
+                    'exam_types.id',
+                    'exam_types.type',
+                    'exam_types.title',
+                    'exam_types.title_en',
+                ]);
+                $query->with(['exams' => function ($subQuery) {
+                    $subQuery->select([
+                        'exams.id',
+                        'exams.exam_type_id',
+                        'exams.type'
+                    ]);
+                }]);
+            }]);
+
+        $batch = $batchBuilder->firstOrFail();
+
+        return $batch->examTypes->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return array
+     * @throws Throwable
+     */
+    public function getYouthExamListByBatch(Request $request, $id): array
+    {
+        $youthId = $request->query('youth_id') ?? "";
+        throw_if(empty($youthId), ValidationException::withMessages(['Youth id is required']));
 
         /** @var Batch|Builder $batchBuilder */
-        $batchBuilder = Batch::select([
-            'batches.id',
-            'batches.title as batch_title',
-            'batches.title_en as batch_title_en',
-
-        ]);
-        $batchBuilder->where('batches.id', $id);
-
-        $batchBuilder->with('examTypes.exams');
-
-        $batchBuilder->with(['examTypes' => function ($query) {
-            $query->select([
-                'exam_types.id',
-                'exam_types.type',
-                'exam_types.title',
-                'exam_types.title_en',
-            ]);
-            $query->with(['exams' => function ($subQuery) {
-                $subQuery->select([
-                    'exams.id',
-                    'exams.exam_type_id',
-                    'exams.type'
+        $batchBuilder = Batch::where('batches.id', $id)
+            ->with(['examTypes' => function ($query) {
+                $query->select([
+                    'exam_types.id',
+                    'exam_types.type',
+                    'exam_types.title',
+                    'exam_types.title_en',
                 ]);
+                $query->with(['exams' => function ($subQuery) {
+                    $subQuery->select([
+                        'exams.id',
+                        'exams.exam_type_id',
+                        'exams.type',
+                        'exams.total_marks'
+                    ]);
+                }]);
             }]);
-        }]);
 
-        return $batchBuilder->firstOrFail();
+        $batch = $batchBuilder->firstOrFail();
+        $examTypes = $batch->examTypes->toArray();
+
+        foreach ($examTypes as &$examType) {
+            foreach ($examType['exams'] as &$exam) {
+                $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['id']);
+                if ($manualMarkingQuestionNumbers == 0) {
+                    $exam['auto_marking'] = true;
+                } else {
+                    $exam['auto_marking'] = false;
+                }
+                if (is_numeric($youthId)) {
+                    $youthExamData = $this->getYouthExamData($id, $youthId, $exam['id']);
+                    $exam['obtained_mark'] = $youthExamData->total_obtained_marks ?? 0;
+                    $exam['participated'] = !empty($youthExamData);
+                    $exam['file_paths'] = $youthExamData->file_paths ?? null;
+                }
+            }
+        }
+
+        return [
+           'exams' => $examTypes,
+           'attendance' => $this->getYouthAttendanceByBatch($id, $youthId)
+       ];
+    }
+
+    public function getYouthAttendanceByBatch(int $batchId, int $youthId)
+    {
+        $youthExamData = YouthExam::where('batch_id', $batchId)->where('youth_id', $youthId)->where('type', Exam::EXAM_TYPE_ATTENDANCE)->first();
+
+        return $youthExamData->total_obtained_marks ?? null;
+
+    }
 
 
+    /**
+     * @param int $batchId
+     * @param int $youthId
+     * @param int $examId
+     * @return YouthExam|null
+     */
+    public function getYouthExamData(int $batchId, int $youthId, int $examId): YouthExam|null
+    {
+        return YouthExam::where('batch_id', $batchId)
+            ->where('youth_id', $youthId)
+            ->where('exam_id', $examId)
+            ->first();
     }
 
     /**
@@ -1022,55 +1095,166 @@ class BatchService
 
 
     /**
-     * @param Request $request
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @param int $id
+     * @param Carbon $startTime
+     * @return array
+     * @throws Throwable
      */
-    public function resultProcessingValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    public function processResult(int $id, Carbon $startTime): array
     {
-        $data = $request->all();
-
-        $rules = [
-            'batch_id' => 'required|int|min:1|exists:batches,id,deleted_at,NULL'
-        ];
-        return Validator::make($data, $rules);
-    }
-
-    /**
-     * @param array $data
-     * @return bool
-     */
-    public function processResult(array $data): bool
-    {
-
         /** @var Batch $batch */
-        $batch = Batch::find($data['batch_id']);
+        $batch = Batch::findOrFail($id);
 
-        $youthIds = CourseEnrollment::where('batch_id', $data['batch_id'])->pluck('youth_id');
+        $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
+        if (count($batch->examTypes) == 0) {
 
-        foreach ($youthIds as $youthId) {
-            foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
-                //dd($resultPercentage);
-                $examType = $examTypes[$key];
-                $youthExams = YouthExam::query()->where('youth_id', $youthId)
-                    ->where('batch_id', $data['batch_id'])
-                    ->join('exams', 'exam_id', '=', 'exams.id')
-                    ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
-                    ->where('exam_types.type', $examType);
+            return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!",false);
 
-                $totalMarks = $youthExams->sum('total_marks');
-                $totalObtainedMarks = $youthExams->sum('total_obtained_marks');
+        } else if ($batch->result_published_at != null) {
 
-                $finalMark = ($totalObtainedMarks * 100) / 300;
-                //dd($totalMarks, $totalObtainedMarks,$finalMark);
-            }
+            return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!",false);
+
+        } else if (empty($courseResultConfig)) {
+
+            return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!",false);
 
         }
 
+        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
-        return false;
+        DB::beginTransaction();
+
+        try {
+            foreach ($youthIds as $youthId) {
+                $totalObtainedMarks = 0;
+                $resultSummaryObjects = collect();
+                foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
+                    $examType = $examTypes[$key];
+
+                    // Attendance total mark calculate from course result config
+                    if($examType == Exam::EXAM_TYPE_ATTENDANCE){
+                        $examTotalMarks = $courseResultConfig->total_attendance_marks;
+                        $obtainedMarks = YouthExam::query()
+                            ->where('youth_id', $youthId)
+                            ->where('batch_id',$batch->id)
+                            ->where('type',$examType)
+                            ->sum('total_obtained_marks');
+                    }else{
+                        $examTotalMarks = Exam::query()
+                            ->join('exam_types', 'exams.exam_type_id', '=', 'exam_types.id')
+                            ->join('batch_exams', 'batch_exams.exam_type_id', '=', 'exam_types.id')
+                            ->where('batch_id', $batch->id)
+                            ->where('exam_types.type', $examType)->sum('total_marks');
+
+                        $obtainedMarks = YouthExam::query()
+                            ->where('youth_id', $youthId)
+                            ->where('batch_id', $batch->id)
+                            ->join('exams', 'exam_id', '=', 'exams.id')
+                            ->join('exam_types', 'youth_exams.exam_type_id', '=', 'exam_types.id')
+                            ->where('exam_types.type', $examType)->sum('total_obtained_marks');
+                    }
+
+                    $finalMark = 0;
+
+                    if ($examTotalMarks > 0) {
+                        $finalMark = ($obtainedMarks * 100) / $examTotalMarks;
+                    }
+
+                    $finalMarkPercentage = ($finalMark * $resultPercentage) / 100;
+
+                    $resultSummary = app()->make(ResultSummary::class);
+                    $resultSummary->exam_type = $examType;
+                    $resultSummary->total_marks = $examTotalMarks;
+                    $resultSummary->obtained_marks = $obtainedMarks;
+                    $resultSummary->percentage = $resultPercentage;
+                    $resultSummary->final_marks = $finalMarkPercentage;
+
+                    $resultSummaryObjects->push($resultSummary);
+
+                    $totalObtainedMarks += $finalMarkPercentage;
+
+                }
+
+                $result = app()->make(Result::class);
+                $result->batch_id = $batch->id;
+                $result->youth_id = $youthId;
+                $result->total_marks = $totalObtainedMarks;
+                $result->result_type = $courseResultConfig->result_type;
+                $result->result = $this->getResult($totalObtainedMarks, $courseResultConfig);
+                $result->save();
+
+                foreach ($resultSummaryObjects as $resultSummary) {
+                    $resultSummary->result_id = $result->id;
+                    $resultSummary->save();
+                }
+
+            }
+
+            $batch->result_published_at = Carbon::now();
+            $batch->save();
+
+            DB::commit();
+
+            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_OK, "Result Processing Successfully Done");
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    private function getResult($marks, CourseResultConfig $courseResultConfig): string
+    {
+        if ($courseResultConfig->result_type == BaseModel::RESULT_TYPE_GRADING) {
+            foreach ($courseResultConfig->gradings as $grading) {
+                if ($marks >= $grading['min'] && $marks <= $grading['max']) {
+                    return $grading['label'];
+                }
+            }
+        } else if ($courseResultConfig->result_type == BaseModel::RESULT_TYPE_MARKS) {
+            $result = "Fail";
+            if ($marks >= $courseResultConfig->pass_marks) {
+                $result = "Pass";
+            }
+
+            return $result;
+        }
+
+        return "Unknown Result";
+    }
+
+    /**
+     * @param $id
+     * @return array
+     */
+    public function getResultsByBatch($id): array
+    {
+
+        /** @var Batch|Builder $batchBuilder */
+        $batch = Batch::findOrFail($id);
+
+        $results = Result::where('batch_id', $batch->id)->get();
+        $youthIds = $results->pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $youth['first_name'] = $item['first_name'];
+            $youth['first_name_en'] = $item['first_name_en'];
+            $youth['last_name'] = $item['last_name'];
+            $youth['last_name_en'] = $item['last_name_en'];
+            $youth['email'] = $item['email'];
+            $youth['mobile'] = $item['email'];
+            $indexedYouths[$item['id']] = $youth;
+        }
+
+        foreach ($results as $item) {
+            $item['youth_profile'] = $indexedYouths[$item->youth_id];
+        }
+
+        return $results->toArray();
     }
 
 }

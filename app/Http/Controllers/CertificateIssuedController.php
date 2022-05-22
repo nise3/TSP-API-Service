@@ -71,6 +71,15 @@ class CertificateIssuedController extends Controller
     }
 
     /**
+     * @throws ValidationException
+     */
+    public function getCertificateIssuedByYouthId(int $youthId): JsonResponse
+    {
+        $response = CertificateIssued::query()->where('youth_id', $youthId)->firstOrFail();
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return JsonResponse
@@ -105,8 +114,8 @@ class CertificateIssuedController extends Controller
 
         try {
             $data = $this->certificateIssuedService->store($validatedData);
-//            dd($validatedData);
             $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            $this->certificateIssuedService->courseEnrollmentUpdate($validatedData, $data);
             DB::commit();
             $response = [
                 'data' => $data ?: null,

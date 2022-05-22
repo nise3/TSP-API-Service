@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
 
 /**
  * Class Batch
  * @package App\Models
+ * @property int id
  * @property int institute_id
  * @property int branch_id
  * @property int training_center_id
@@ -23,10 +24,12 @@ use Illuminate\Support\Facades\Auth;
  * @property Carbon registration_end_date
  * @property Carbon batch_start_date
  * @property Carbon batch_end_date
+ * @property Carbon result_published_at
  * @property-read Institute institute
  * @property-read Branch branch
  * @property-read TrainingCenter trainingCenter
  * @property-read Course course
+ * @property-read Collection examTypes
  */
 class Batch extends BaseModel
 {

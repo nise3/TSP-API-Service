@@ -21,7 +21,7 @@ class CreateYouthExamsTable extends Migration
             $table->unsignedInteger('exam_type_id');
             $table->unsignedTinyInteger('type')->comment('1=>online, 2=>offline,3=>mixed,4=>Practical,5=>Field Work,6=>Presentation,7=>Assignment,8=>Assignment');
             $table->json('file_paths')->nullable();
-            $table->unsignedDecimal('total_obtained_marks')->nullable();
+            $table->unsignedDecimal('total_obtained_marks')->default(0);
             $table->timestamps();
         });
     }

@@ -222,12 +222,15 @@ class ExamController extends Controller
     {
         $examData = $this->examService->getExamQuestionPaper($id);
 
-        /** // TODO: check the start end logic and udate the commented code  */
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = CarbonImmutable::create($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($id);
+        $examStartTime = CarbonImmutable::create($exam->start_date);
+        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
+            $examEndTime = $exam->end_date;
+        }else{
+            $examEndTime = $examStartTime->addMinutes($exam->duration);
+        }
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
         $response = [
             "data" => $examData ?? null,
@@ -249,13 +252,17 @@ class ExamController extends Controller
     {
         $validatedData = $this->examService->examPaperSubmitValidator($request)->validate();
 
-        /** // TODO: check the start end logic and udate the commented code  */
-//        $exam = Exam::findOrFail($examData['id']);
-//        $examStartTime = CarbonImmutable::create($exam->exam_date);
-//        $examEndTime = $examStartTime->addMinutes($exam->duration);
-//        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
-//        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
+        $exam = Exam::findOrFail($validatedData['exam_id']);
+        $examStartTime = CarbonImmutable::create($exam->start_date);
+        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
+            $examEndTime = $exam->end_date;
+        }else{
+            $examEndTime = $examStartTime->addMinutes($exam->duration);
+        }
+        throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
+        throw_if($this->startTime->gt($examEndTime), ValidationException::withMessages(["Exam is over"]));
 
+        DB::beginTransaction();
         try {
             $this->examService->submitExamQuestionPaper($validatedData);
             $response = [
@@ -321,6 +328,27 @@ class ExamController extends Controller
 
     /**
      * @param Request $request
+     * @return JsonResponse
+     * @throws AuthorizationException|ValidationException
+     */
+    public function youthBatchExamsMarkUpdate(Request $request): JsonResponse
+    {
+        $this->authorize('updateYouthExam', Exam::class);
+        $validatedData = $this->examService->youthBatchExamMarkUpdateValidator($request)->validate();
+        $this->examService->youthBatchExamMarkUpdate($validatedData);
+        $response = [
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => "youth Batch exam mark updated successfully.",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException|AuthorizationException
@@ -351,19 +379,8 @@ class ExamController extends Controller
 
     public function youthAssessmentList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $batchIds = !empty($request->get('course_id')) ? app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId, $request->get('course_id')) : app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
-        $request->offsetSet('batch_id', $batchIds);
         $filter = $this->examService->youthAssessmentValidator($request)->validate();
-        $youthAssessmentList = $this->examService->getYouthAssessmentList($filter);
-        $response = [
-            "data" => $youthAssessmentList,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "Youth Assessment List",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $response = $this->examService->getYouthAssessmentList($filter, $fourIrInitiativeId);
         return Response::json($response, $response['_response_status']['code']);
     }
 
