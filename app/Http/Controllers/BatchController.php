@@ -300,7 +300,7 @@ class BatchController extends Controller
      */
     public function getExamsByBatchId(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getExamListByBatch($request,$id);
+        $data = $this->batchService->getExamListByBatch($request, $id);
         $response = [
             "data" => $data,
             "_response_status" => [
@@ -321,7 +321,7 @@ class BatchController extends Controller
      */
     public function getYouthExamListByBatch(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getYouthExamListByBatch($request,$id);
+        $data = $this->batchService->getYouthExamListByBatch($request, $id);
         $response = [
             "data" => $data,
             "_response_status" => [
@@ -377,9 +377,9 @@ class BatchController extends Controller
      */
     public function processBatchResult(int $id): JsonResponse
     {
-        $this->authorize('viewAny',Result::class);
+        $this->authorize('create', Result::class);
 
-        $response = $this->batchService->processResult($id,$this->startTime);
+        $response = $this->batchService->processResult($id, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -390,11 +390,11 @@ class BatchController extends Controller
      */
     public function getBatchExamResults($id): JsonResponse
     {
-        $this->authorize('create',Result::class);
+        $this->authorize('viewAny', Result::class);
 
         $data = $this->batchService->getResultsByBatch($id);
 
-        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
         return Response::json($response);
     }
@@ -408,9 +408,32 @@ class BatchController extends Controller
     {
         $data = $this->batchService->getResultSummariesByResult($resultId);
 
-        $response = formatApiResponse($data,$this->startTime, ResponseAlias::HTTP_OK, "Result summaries Fetch Successfully");
+        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result summaries Fetch Successfully");
 
         return Response::json($response);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException|AuthorizationException
+     */
+    public function publishExamResult(Request $request, int $id): JsonResponse
+    {
+        $this->authorize('create', Result::class);
+        $validatedData = $this->batchService->resultPublishValidator($request)->validate();
+        $this->batchService->publishExamResult($validatedData, $id);
+
+        $response = [
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "message" => $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully",
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 }

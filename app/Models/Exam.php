@@ -76,4 +76,12 @@ class Exam extends BaseModel
     {
         return $this->hasMany(ExamSet::class, 'exam_id', 'id');
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function examType(): BelongsTo
+    {
+        return $this->belongsTo(ExamType::class, 'exam_type_id', 'id');
+    }
 }

@@ -1109,17 +1109,6 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $exams = Exam::query()->with(['examTypes' => function ($query) use ($id) {
-            $query->with(['batches' => function ($subQuery) use ($id) {
-                $subQuery->where('batch_id', $id);
-            }]);
-        }]);
-
-        foreach ($exams as $exam) {
-            if ($exam->end_time > $startTime->toDateTimeString() || ($exam->end_time + $exam->duration) > $startTime->toDateTimeString()) {
-                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
-            }
-        }
 
         if (count($batch->examTypes) == 0) {
 
@@ -1133,7 +1122,38 @@ class BatchService
 
             return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!", false);
 
+        }else {
+            $courseResultConfigExamTypes = array_filter($courseResultConfig->result_percentages, function ($examType) {
+                return $examType != Exam::EXAM_TYPE_ATTENDANCE;
+            });
+
+
+            $exams = Exam::query()->whereIn('exam_type_id', $batch->examTypes->pluck('id'))->with('examType:id,type')->get();
+
+            $isAllExamFinished = true;
+
+            $examTypes = [];
+            foreach ($exams as $exam) {
+                $examTypes[] = $exam->examType->type;
+                $examEndDate = Carbon::create($exam->end_date);
+
+                if ($examEndDate->lt($startTime)) {
+                    $isAllExamFinished = false;
+                }
+            }
+
+            $examTypesDiff = array_diff($courseResultConfigExamTypes, array_unique($examTypes));
+
+            if(!empty($examTypesDiff)){
+                return formatApiResponse(["error_code" => "configured_exams_not_found"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Configured exams not found!", false);
+            }
+
+            if (!$isAllExamFinished) {
+                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
+            }
         }
+
+
 
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
@@ -1205,7 +1225,7 @@ class BatchService
 
             }
 
-            $batch->result_published_at = Carbon::now();
+            $batch->result_processed_at = Carbon::now();
             $batch->save();
 
             DB::commit();
@@ -1280,6 +1300,42 @@ class BatchService
         $resultSummaries = ResultSummary::where('result_id', $resultId)->get();
 
         return $resultSummaries->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function resultPublishValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'is_published' => [
+                'required',
+                'int',
+                Rule::in(Result::RESULT_PUBLICATIONS)
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+
+    }
+
+    /**
+     * @param array $data
+     * @param int $id
+     */
+    public function publishExamResult(array $data, int $id) : Batch
+    {
+        $batch = Batch::findOrFail($id);
+
+        if ($data['is_published'] == Result::RESULT_PUBLICATIONS) {
+            $batch->result_published_at = Carbon::now();
+        } else {
+            $batch->result_published_at = null;
+        }
+
+        return $batch->save();
+
     }
 
 }

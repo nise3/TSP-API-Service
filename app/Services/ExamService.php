@@ -481,18 +481,24 @@ class ExamService
      */
     public function storeExam(array $data): array
     {
+
         $examIds = [];
         if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $data['end_date'] =$data['start_date']+$data['duration'];
             $onlineExam = $this->storeOnlineExam($data);
             $examIds['online'] = $onlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $data['end_date'] =$data['start_Date']+$data['duration'];
             $offlineExam = $this->storeOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $data['online']['exam_type_id'] = $data['exam_type_id'];
+            $data['online']['end_date'] =$data['start_date']+$data['duration'];
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
+            $data['offline']['end_date'] =$data['start_date']+$data['duration'];
+
 
             $onlineExam = $this->storeOnlineExam($data['online']);
             $offlineExam = $this->storeOfflineExam($data['offline']);
@@ -1259,7 +1265,8 @@ class ExamService
             'date_format:Y-m-d H:i:s'
         ];
         $rules[$examType . 'end_date'] = [
-            'required',
+            Rule::requiredIf(!empty($data['type']) && in_array($data['type'], Exam::EXAM_TYPES_WITHOUT_QUESTION)),
+            'nullable',
             'date_format:Y-m-d H:i:s'
         ];
         $rules[$examType . 'duration'] = [
