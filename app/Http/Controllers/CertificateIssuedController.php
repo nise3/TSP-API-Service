@@ -73,10 +73,11 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateIssuedByYouthId(int $youthId, int $batchId): JsonResponse
+    public function getCertificateIssuedByYouthId(int $youthId, int $courseId): JsonResponse
     {
+        Log::info('log info ' . $youthId . ' ' . $courseId);
         $certificateIssued = CertificateIssued::where('youth_id', $youthId)
-            ->where('batch_id', $batchId)
+            ->where('course_id', $courseId)
             ->firstOrFail();
         $response = [
             "data" => $this->certificateIssuedService->getOneIssuedCertificate($certificateIssued->id),
