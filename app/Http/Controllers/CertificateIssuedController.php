@@ -73,9 +73,19 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateIssuedByYouthId(int $youthId): JsonResponse
+    public function getCertificateIssuedByYouthId(int $youthId, int $batchId): JsonResponse
     {
-        $response = CertificateIssued::query()->where('youth_id', $youthId)->firstOrFail();
+        $certificateIssued = CertificateIssued::where('youth_id', $youthId)
+            ->where('batch_id', $batchId)
+            ->firstOrFail();
+        $response = [
+            "data" => $this->certificateIssuedService->getOneIssuedCertificate($certificateIssued->id),
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
