@@ -112,6 +112,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Result Processing By Batch **/
         $router->post("batches/{id}/process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
         $router->get("batches/{id}/results", ["as" => "batches.process-result", "uses" => "BatchController@getBatchExamResults"]);
+        $router->put("batches/{id}/result-publish", ["as" => "batches.result-published", "uses" => "BatchController@publishExamResult"]);
 
         /** Reject course enrollment application */
         $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);

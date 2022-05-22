@@ -1207,7 +1207,7 @@ class BatchService
 
             }
 
-            $batch->result_published_at = Carbon::now();
+            $batch->result_processed_at = Carbon::now();
             $batch->save();
 
             DB::commit();
@@ -1282,6 +1282,42 @@ class BatchService
         $resultSummaries = ResultSummary::where('result_id', $resultId)->get();
 
         return $resultSummaries->toArray();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function resultPublishValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'is_published' => [
+                'required',
+                'int',
+                Rule::in(Result::RESULT_PUBLICATIONS)
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+
+    }
+
+    /**
+     * @param array $data
+     * @param int $id
+     */
+    public function publishExamResult(array $data, int $id) : Batch
+    {
+        $batch = Batch::findOrFail($id);
+
+        if ($data['is_published'] == Result::RESULT_PUBLICATIONS) {
+            $batch->result_published_at = Carbon::now();
+        } else {
+            $batch->result_published_at = null;
+        }
+
+        return $batch->save();
+
     }
 
 }
