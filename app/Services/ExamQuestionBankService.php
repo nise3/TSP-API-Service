@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\BaseModel;
 use App\Models\ExamQuestionBank;
+use App\Models\ExamSectionQuestion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use phpseclib3\File\ASN1\Maps\Attribute;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExamQuestionBankService
@@ -215,7 +217,19 @@ class ExamQuestionBankService
             'subject_id' => [
                 'required',
                 'int',
-                'exists:exam_subjects,id,deleted_at,NULL'
+                'exists:exam_subjects,id,deleted_at,NULL',
+                function ($attr, $value, $failed) use ($data, $id) {
+                    if ($id != null) {
+                        $question = ExamQuestionBank::query()->find($id);
+                        /**check if the given subject id is the existing subject id */
+                        if ($data['subject_id'] != $value) {
+                            $assignedQuestions = ExamSectionQuestion::query()->where('subject_id', $question->subject_id)->first();
+                            if ($assignedQuestions) {
+                                $failed("subject_id can not be updated");
+                            }
+                        }
+                    }
+                }
             ],
             'question_type' => [
                 'required',
