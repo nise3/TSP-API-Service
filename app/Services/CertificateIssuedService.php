@@ -60,6 +60,7 @@ class CertificateIssuedService
         ]);
 
         $certificateIssuedBuilder->join('certificates', "certificates.id", "=", "certificate_issued.certificate_id");
+
         $certificateIssuedBuilder->join('batches', "batches.id", "=", "certificate_issued.batch_id");
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
@@ -77,12 +78,10 @@ class CertificateIssuedService
         if (!empty($certificateIds)) {
             $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
         }
-
         if (!empty($courseId)) {
             Log::info("Course Id in certificate Issued Table" . json_encode($courseId, JSON_PRETTY_PRINT));
             $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
         }
-
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
             $certificateIssued = $certificateIssuedBuilder->paginate($pageSize);
