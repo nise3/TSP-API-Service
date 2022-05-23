@@ -328,7 +328,7 @@ class BatchService
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->delete($url)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -1263,44 +1263,36 @@ class BatchService
     }
 
     /**
-     * @param Request $request
      * @param $id
      * @return array
      */
-    public function getResultsByBatch(Request $request, $id): array
+    public function getResultsByBatch($id): array
     {
-        $youthId = $request->get('youth_id') ?? null;
-
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $resultBuilder = Result::where('batch_id', $batch->id);
-
-        if ($youthId) { // if request from youth
-            $resultBuilder->where('youth_id', $youthId);
-        }
+        $resultBuilder = Result::where('batch_id', $batch->id)->get();
 
         $results = $resultBuilder->get();
 
-        if(!$youthId){ //if request not from youth then all youth profiles fetch
-            $youthIds = $results->pluck('youth_id')->unique()->toArray();
-            $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+        $youthIds = $results->pluck('youth_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
-            $indexedYouths = [];
-            foreach ($youthProfiles as $item) {
-                $youth['first_name'] = $item['first_name'];
-                $youth['first_name_en'] = $item['first_name_en'];
-                $youth['last_name'] = $item['last_name'];
-                $youth['last_name_en'] = $item['last_name_en'];
-                $youth['email'] = $item['email'];
-                $youth['mobile'] = $item['email'];
-                $indexedYouths[$item['id']] = $youth;
-            }
-
-            foreach ($results as $item) {
-                $item['youth_profile'] = $indexedYouths[$item->youth_id];
-            }
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $youth['first_name'] = $item['first_name'];
+            $youth['first_name_en'] = $item['first_name_en'];
+            $youth['last_name'] = $item['last_name'];
+            $youth['last_name_en'] = $item['last_name_en'];
+            $youth['email'] = $item['email'];
+            $youth['mobile'] = $item['email'];
+            $indexedYouths[$item['id']] = $youth;
         }
+
+        foreach ($results as $item) {
+            $item['youth_profile'] = $indexedYouths[$item->youth_id];
+        }
+
 
         return $results->toArray();
     }
@@ -1352,6 +1344,32 @@ class BatchService
 
         return $batch->save();
 
+    }
+
+
+    /**
+     * @param array $data
+     * @param int $batchId
+     * @return Result
+     */
+    public function getYouthExamResultByBatch(array $data, int $batchId): Result
+    {
+        /** @var Result|Builder $resultBuilder */
+        return Result::where('youth_id',$data['youth_id'])->where('batch_id', $batchId)->with('resultSummaries')->first();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function youthExamResultValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'youth_id' => 'required|int|min:1',
+        ];
+        return Validator::make($data, $rules);
     }
 }
 

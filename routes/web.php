@@ -20,6 +20,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
+//        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
 
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
@@ -185,7 +186,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Youth Certificate View */
         $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
 
-        $router->get('/batches/{id}/results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicBatchExamResults"]);
+        $router->get('/batches/{id}/youth-exam-results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicYouthExamResultByBatch"]);
 
     });
 
@@ -217,8 +218,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get('get-four-ir-youth-assessment-list/{fourIrInitiativeId}', ["as" => "get-four-ir-youth-assessment-list", "uses" => "ExamController@youthAssessmentList"]);
 
         /** Youth Certificate List */
-        $router->get('get-youth-certificate-issued/{youthId}', ["as" => "get-four-ir-certificate-list", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
-
+        $router->get('get-youth-certificate-issued/{youthId}/course-id/{courseId}', ["as" => "get-youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedByYouthId"]);
     });
 
     /** Exam management */

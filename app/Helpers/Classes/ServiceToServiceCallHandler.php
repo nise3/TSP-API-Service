@@ -31,7 +31,7 @@ class ServiceToServiceCallHandler
                 'verify' => config('nise3.should_ssl_verify'),
                 'debug' => config('nise3.http_debug')
             ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $userPostField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -60,7 +60,7 @@ class ServiceToServiceCallHandler
                 'verify' => config('nise3.should_ssl_verify'),
                 'debug' => config('nise3.http_debug')
             ])
-            ->timeout(5)
+            ->timeout(120)
             ->get($url)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -89,7 +89,7 @@ class ServiceToServiceCallHandler
                 'verify' => config('nise3.should_ssl_verify'),
                 'debug' => config('nise3.http_debug')
             ])
-            ->timeout(5)
+            ->timeout(120)
             ->get($url)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -120,7 +120,7 @@ class ServiceToServiceCallHandler
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $postField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -167,6 +167,32 @@ class ServiceToServiceCallHandler
 
         $postField = [
             "trainer_info" => $trainerInfo
+        ];
+
+        $youthData = Http::withOptions([
+            'verify' => config("nise3.should_ssl_verify"),
+            'debug' => config('nise3.http_debug')
+        ])
+            ->timeout(120)
+            ->post($url, $postField)
+            ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
+                Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
+                Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
+                throw new HttpErrorException($httpResponse);
+            })
+            ->json('data');
+
+        Log::info("Youth Data:" . json_encode($youthData));
+
+        return $youthData;
+    }
+
+    public function updateTrainerYouthUser(array $trainer): mixed
+    {
+        $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'service-to-service-call/update-trainer-youth';
+
+        $postField = [
+            "trainer_info" => $trainer
         ];
 
         $youthData = Http::withOptions([
@@ -230,7 +256,7 @@ class ServiceToServiceCallHandler
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $postField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -261,7 +287,7 @@ class ServiceToServiceCallHandler
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $postField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -287,7 +313,7 @@ class ServiceToServiceCallHandler
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $postField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));

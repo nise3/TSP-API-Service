@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
+use App\Models\Course;
 use App\Services\BatchService;
 use App\Services\CertificateIssuedService;
 use App\Services\CertificateService;
@@ -61,10 +62,10 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateList(Request $request,int $fourIrInitiativeId): JsonResponse
+    public function getCertificateList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
-        $request->offsetSet('batch_id',$batchIds);
+        $curseIds = Course::where("courses.four_ir_initiative_id", $fourIrInitiativeId)->pluck("id")->toArray();
+        $request->offsetSet('course_id', $curseIds);
         $filter = $this->certificateIssuedService->filterValidator($request)->validate();
         $response = $this->certificateIssuedService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
@@ -73,9 +74,20 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateIssuedByYouthId(int $youthId): JsonResponse
+    public function getCertificateIssuedByYouthId(int $youthId, int $courseId): JsonResponse
     {
-        $response = CertificateIssued::query()->where('youth_id', $youthId)->firstOrFail();
+//        Log::info('log info ' . $youthId . ' ' . $courseId);
+        $certificateIssued = CertificateIssued::where('youth_id', $youthId)
+            ->where('course_id', $courseId)
+            ->firstOrFail();
+        $response = [
+            "data" => $this->certificateIssuedService->getOneIssuedCertificate($certificateIssued->id),
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
+            ]
+        ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

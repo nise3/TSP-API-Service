@@ -327,7 +327,7 @@ class RegisteredTrainingOrganizationService
                 'verify' => config('nise3.should_ssl_verify'),
                 'debug' => config('nise3.http_debug')
             ])
-            ->timeout(5)
+            ->timeout(120)
             ->delete($url, $userPostField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
@@ -360,7 +360,7 @@ class RegisteredTrainingOrganizationService
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(120)
             ->post($url, $userPostField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));

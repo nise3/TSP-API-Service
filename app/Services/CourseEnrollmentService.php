@@ -82,6 +82,8 @@ class CourseEnrollmentService
                 'course_enrollments.batch_id',
                 'batches.title as batch_title',
                 'batches.title_en as batch_title_en',
+                'batches.batch_start_date',
+                'batches.batch_end_date',
                 'batches.certificate_id as certificate_id',
                 'batches.result_published_at',
                 'course_enrollments.payment_status',

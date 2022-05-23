@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Result extends BaseModel
 {
@@ -16,4 +17,12 @@ class Result extends BaseModel
         self::RESULT_PUBLISHED,
         self::RESULT_UNPUBLISHED
     ];
+
+    /**
+     * @return HasMany
+     */
+    public function resultSummaries(): HasMany
+    {
+        return $this->hasMany(ResultSummary::class, 'result_id', 'id');
+    }
 }

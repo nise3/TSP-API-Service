@@ -405,8 +405,74 @@ class TrainerService
      */
     public function update(Trainer $trainer, array $data): Trainer
     {
-        $trainer->fill($data);
-        $trainer->save();
+        $youth = null;
+
+        DB::beginTransaction();
+        try {
+            $trainerInfo = [];
+            $this->getYouthTrainerInfo($data, $trainerInfo);
+
+            /** Youth service call */
+            $youth = ServiceToServiceCall::updateTrainerYouthUser($data);
+
+            /** Save trainer with youth_id */
+            $data['youth_id'] = $youth['id'];
+            $trainer->fill($data);
+            $trainer->save();
+
+            /** Sync in institute_trainer pivot table */
+            $pivotTableData = [];
+            if (!empty($data['institute_id'])) {
+                $pivotTableData[] = [
+                    "institute_id" => $data['institute_id'],
+                    "industry_association_id" => null
+                ];
+            }
+            if (!empty($data['industry_association_id'])) {
+                $pivotTableData[] = [
+                    "institute_id" => null,
+                    "industry_association_id" => $data['industry_association_id']
+                ];
+            }
+            $trainer->institutes()->sync($pivotTableData);
+
+            /** Sync in institute_skill pivot table */
+            $trainer->skills()->sync($data['skills']);
+
+            /** Core service call */
+            $trainerData = $trainer->toArray();
+            $trainerData['role_id'] = $data['role_id'];
+            $coreUser = ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
+
+            $trainer['role_id'] = $coreUser['role_id'] ?? "";
+            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "";
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "";
+
+            DB::commit();
+
+            /** Mail send after user registration */
+            $to = array($youth['email']);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Registration Information";
+            $message = "Congratulation, You are successfully registered as a Trainer user. Username: " . $youth['username'] . " & Password: " . BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** SMS send after user registration */
+            $recipient = $youth['mobile'];
+            $smsMessage = "Congratulation, You are successfully registered as a Trainer user.";
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            if (!empty($youth)) {
+                ServiceToServiceCall::rollbackTrainerYouthUser($youth);
+            }
+            throw $e;
+        }
+
         return $trainer;
     }
 
@@ -836,5 +902,31 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
+    }
+
+    private function getYouthTrainerInfo(array $data, array &$trainerInfo): void
+    {
+        $trainerInfo = [
+            'user_name_type' => BaseModel::USER_NAME_TYPE_MOBILE_NUMBER,
+            'first_name' => $data['trainer_name'] ?? "",
+            'first_name_en' => $data['trainer_name_en'] ?? "",
+            'last_name' => $data['trainer_name'] ?? "",
+            'last_name_en' => $data['trainer_name_en'] ?? "",
+            'loc_division_id' => $data['present_address_division_id'] ?? "",
+            'loc_district_id' => $data['present_address_district_id'] ?? "",
+            'loc_upazila_id' => $data['present_address_upazila_id'] ?? "",
+            'date_of_birth' => $data['date_of_birth'],
+            'gender' => $data['gender'],
+            'email' => $data['email'] ?? "",
+            'mobile' => $data['mobile'],
+            'physical_disability_status' => BaseModel::FALSE,
+            'skills' => $data['skills'],
+            'password' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'password_confirmation' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'village_or_area' => $data['present_house_address'] ?? "",
+            'village_or_area_en' => $data['present_house_address_en'] ?? "",
+            'house_n_road' => $data['present_house_address'] ?? "",
+            'house_n_road_en' => $data['present_house_address_en'] ?? ""
+        ];
     }
 }
