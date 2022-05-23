@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
+use App\Models\Course;
 use App\Services\BatchService;
 use App\Services\CertificateIssuedService;
 use App\Services\CertificateService;
@@ -61,10 +62,10 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateList(Request $request,int $fourIrInitiativeId): JsonResponse
+    public function getCertificateList(Request $request, int $fourIrInitiativeId): JsonResponse
     {
-        $batchIds = app(BatchService::class)->getBatchIdByFourIrInitiativeId($fourIrInitiativeId);
-        $request->offsetSet('batch_id',$batchIds);
+        $curseIds = Course::where("", $fourIrInitiativeId)->pluck("id")->toArray();
+        $request->offsetSet('course_id', $curseIds);
         $filter = $this->certificateIssuedService->filterValidator($request)->validate();
         $response = $this->certificateIssuedService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);

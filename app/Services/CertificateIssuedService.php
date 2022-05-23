@@ -16,6 +16,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -58,8 +59,8 @@ class CertificateIssuedService
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
-        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
+        $certificateIssuedBuilder->join('certificates', "certificates.id", "=", "certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches', "batches.id", "=", "certificate_issued.batch_id");
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
             $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
@@ -78,6 +79,7 @@ class CertificateIssuedService
         }
 
         if (!empty($courseId)) {
+            Log::info("Course Id in certificate Issued Table" . json_encode($courseId, JSON_PRETTY_PRINT));
             $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
         }
 
@@ -153,10 +155,10 @@ class CertificateIssuedService
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('certificates', "certificates.id", "=", "certificate_issued.certificate_id");
 
         $certificateIssuedBuilder
-            ->leftJoin('course_enrollments',"course_enrollments.certificate_issued_id","=","certificate_issued.id");
+            ->leftJoin('course_enrollments', "course_enrollments.certificate_issued_id", "=", "certificate_issued.id");
 
         $certificateIssuedBuilder->leftJoin('batches', 'batches.id', '=', 'course_enrollments.batch_id');
         $certificateIssuedBuilder->leftJoin('courses', 'courses.id', '=', 'course_enrollments.course_id');
@@ -193,7 +195,7 @@ class CertificateIssuedService
     public function courseEnrollmentUpdate($request, $certificateIssueData)
     {
         $updateDetails = CourseEnrollment::where('batch_id', $request['batch_id'])
-        ->where('youth_id', $request['youth_id'])
+            ->where('youth_id', $request['youth_id'])
             ->first();
 
         $updateDetails->certificate_issued_id = $certificateIssueData['id'];
@@ -288,23 +290,23 @@ class CertificateIssuedService
         }
 
         if ($request->filled('batch_id')) {
-            $decodedValue=$request->get('batch_id');
+            $decodedValue = $request->get('batch_id');
             $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
         if ($request->filled('certificate_id')) {
-            $decodedValue=$request->get('certificate_id');
-            $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
+            $decodedValue = $request->get('certificate_id');
+            $request->offsetSet('certificate_id', $this->toArray($this->toArray($decodedValue)));
 
         }
 
         if ($request->filled('youth_id')) {
-            $decodedValue=$request->get('youth_id');
-            $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
+            $decodedValue = $request->get('youth_id');
+            $request->offsetSet('youth_id', $this->toArray($this->toArray($decodedValue)));
         }
         if ($request->filled('course_id')) {
-            $decodedValue=$request->get('course_id');
-            $request->offsetSet('course_id',$this->toArray( $this->toArray($decodedValue)));
+            $decodedValue = $request->get('course_id');
+            $request->offsetSet('course_id', $this->toArray($this->toArray($decodedValue)));
         }
 
         $customMessage = [

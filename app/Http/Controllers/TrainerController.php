@@ -86,7 +86,7 @@ class TrainerController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $this->authorize('create', Trainer::class);
+//        $this->authorize('create', Trainer::class);
 
         $validatedData = $this->trainerService->validator($request)->validate();
         $data = $this->trainerService->store($validatedData);
@@ -114,7 +114,7 @@ class TrainerController extends Controller
     {
         $trainer = Trainer::findOrFail($id);
 
-        $this->authorize('update', $trainer);
+       // $this->authorize('update', $trainer);
 
         $validated = $this->trainerService->validator($request, $id)->validate();
 
