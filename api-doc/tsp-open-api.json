@@ -2705,6 +2705,9 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
                     }
                 ],
                 "tags": [
@@ -2974,6 +2977,145 @@
                                         "code": 200,
                                         "message": "Result published successfully",
                                         "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/batches/{batchId}/youth-exams": {
+            "get": {
+                "summary": "public youth exam list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
+
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get public youth exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/batches/{batchId}/youth-exam-results": {
+            "get": {
+                "summary": "result list by Batch Id & Youth Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id"
+                    }
+                ],
+                "tags": [
+                    "Result Processing"
+                ],
+                "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_id": 1,
+                                        "youth_id": 1,
+                                        "result_type": 1,
+                                        "total_marks": "66.25",
+                                        "result": "A",
+                                        "deleted_at": null,
+                                        "created_at": "2022-05-18T04:08:24.000000Z",
+                                        "updated_at": "2022-05-18T04:08:24.000000Z",
+                                        "result_summaries": [
+                                            {
+                                                "id": 1,
+                                                "result_id": 1,
+                                                "exam_type": 3,
+                                                "total_marks": "200.00",
+                                                "obtained_marks": "80.00",
+                                                "percentage": "20.00",
+                                                "final_marks": "8.00",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            },
+                                            {
+                                                "id": 2,
+                                                "result_id": 1,
+                                                "exam_type": 1,
+                                                "total_marks": "300.00",
+                                                "obtained_marks": "210.00",
+                                                "percentage": "50.00",
+                                                "final_marks": "35.00",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            },
+                                            {
+                                                "id": 3,
+                                                "result_id": 1,
+                                                "exam_type": 2,
+                                                "total_marks": "400.00",
+                                                "obtained_marks": "310.00",
+                                                "percentage": "30.00",
+                                                "final_marks": "23.25",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "message": "Result Fetch Successfully",
+                                        "code": 200,
+                                        "query_time": "1 second before"
                                     }
                                 }
                             }
@@ -16287,6 +16429,14 @@
             "youth_id": {
                 "name": "youth_id",
                 "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youth_id_required": {
+                "name": "youth_id",
+                "required": true,
                 "in": "query",
                 "schema": {
                     "type": "integer"

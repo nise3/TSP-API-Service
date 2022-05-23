@@ -160,6 +160,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("rpl-levels", ["as" => "public.rpl-levels", "uses" => "RplLevelController@getPublicList"]);
         $router->get("rpl-assessment-questions", ["as" => "public.rpl-assessment-questions", "uses" => "RplAssessmentQuestionController@getPublicList"]);
 
+        /** youth batch exams  **/
+        $router->get('batches/{id}/youth-exams', ["as" => "public.batches.youth-exams-list-by-batch-id", "uses" => "BatchController@getPublicYouthExamListByBatch"]);
 
         $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
 
@@ -183,6 +185,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
         /** Youth Certificate View */
         $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
+
+        $router->get('/batches/{id}/youth-exam-results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicYouthExamResultByBatch"]);
+
     });
 
     //Service to service direct call without any authorization and authentication

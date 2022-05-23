@@ -1268,11 +1268,13 @@ class BatchService
      */
     public function getResultsByBatch($id): array
     {
-
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $results = Result::where('batch_id', $batch->id)->get();
+        $resultBuilder = Result::where('batch_id', $batch->id)->get();
+
+        $results = $resultBuilder->get();
+
         $youthIds = $results->pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
@@ -1290,6 +1292,7 @@ class BatchService
         foreach ($results as $item) {
             $item['youth_profile'] = $indexedYouths[$item->youth_id];
         }
+
 
         return $results->toArray();
     }
@@ -1327,6 +1330,7 @@ class BatchService
     /**
      * @param array $data
      * @param int $id
+     * @return Batch
      */
     public function publishExamResult(array $data, int $id): Batch
     {
@@ -1342,5 +1346,30 @@ class BatchService
 
     }
 
+
+    /**
+     * @param array $data
+     * @param int $batchId
+     * @return Result
+     */
+    public function getYouthExamResultByBatch(array $data, int $batchId): Result
+    {
+        /** @var Result|Builder $resultBuilder */
+        return Result::where('youth_id',$data['youth_id'])->where('batch_id', $batchId)->with('resultSummaries')->first();
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function youthExamResultValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        $rules = [
+            'youth_id' => 'required|int|min:1',
+        ];
+        return Validator::make($data, $rules);
+    }
 }
 

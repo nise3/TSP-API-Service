@@ -333,6 +333,26 @@ class BatchController extends Controller
 
         return Response::json($response);
     }
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function getPublicYouthExamListByBatch(Request $request, $id): JsonResponse
+    {
+        $data = $this->batchService->getYouthExamListByBatch($request, $id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+
+        return Response::json($response);
+    }
 
     /**
      * @param Request $request
@@ -434,6 +454,23 @@ class BatchController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws ValidationException
+     */
+    public function getPublicYouthExamResultByBatch(Request $request, $id): JsonResponse
+    {
+        $validatedData = $this->batchService->youthExamResultValidator($request)->validate();
+
+        $data = $this->batchService->getYouthExamResultByBatch($validatedData,$id);
+
+        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+
+        return Response::json($response);
     }
 
 }
