@@ -692,11 +692,11 @@ class ExamService
     {
         $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
             ->where('question_type', $examSectionData['question_type'])
-            ->where('subject_id', $examSectionData['subject_id'])
             ->inRandomOrder()
             ->limit($examSectionData['number_of_questions'])
             ->get()
             ->toArray();
+
         throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
             "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
         ]));
