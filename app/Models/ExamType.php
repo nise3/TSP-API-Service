@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\CreatedUpdatedBy;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,11 @@ class ExamType extends BaseModel
     public function batches(): BelongsToMany
     {
         return $this->belongsToMany(Batch::class, 'batch_exams', 'exam_type_id', 'batch_id');
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(ExamSubject::class, 'subject_id', 'id');
     }
 
 }
