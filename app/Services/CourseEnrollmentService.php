@@ -1308,6 +1308,8 @@ class CourseEnrollmentService
                 'courses.duration as duration',
                 'courses.created_at as course_created_at',
                 'course_enrollments.batch_id',
+                'batches.title',
+                'batches.title_en',
                 'batches.result_published_at',
                 'batches.result_processed_at',
                 'institutes.id as institute_id',
