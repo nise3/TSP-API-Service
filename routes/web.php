@@ -186,7 +186,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Youth Certificate View */
         $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
 
-        $router->get('/batches/{id}/results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicBatchExamResults"]);
+        $router->get('/batches/{id}/youth-exam-results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicYouthExamResultByBatch"]);
 
     });
 

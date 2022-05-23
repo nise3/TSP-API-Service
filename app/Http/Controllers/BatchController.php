@@ -404,16 +404,15 @@ class BatchController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param $id
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function getBatchExamResults(Request $request, $id): JsonResponse
+    public function getBatchExamResults($id): JsonResponse
     {
         $this->authorize('viewAny', Result::class);
 
-        $data = $this->batchService->getResultsByBatch($request,$id);
+        $data = $this->batchService->getResultsByBatch($id);
 
         $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
@@ -461,10 +460,13 @@ class BatchController extends Controller
      * @param Request $request
      * @param $id
      * @return JsonResponse
+     * @throws ValidationException
      */
-    public function getPublicBatchExamResults(Request $request, $id): JsonResponse
+    public function getPublicYouthExamResultByBatch(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getResultsByBatch($request,$id);
+        $validatedData = $this->batchService->youthExamResultValidator($request)->validate();
+
+        $data = $this->batchService->getYouthExamResultByBatch($validatedData,$id);
 
         $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
