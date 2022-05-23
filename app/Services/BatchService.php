@@ -820,6 +820,7 @@ class BatchService
                     $subQuery->select([
                         'exams.type',
                         'exams.id as exam_id',
+                        'exams.exam_type_id',
                         'exams.start_date',
                         'exams.end_date',
                         'exams.total_marks',
