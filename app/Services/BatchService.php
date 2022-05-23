@@ -1342,5 +1342,29 @@ class BatchService
 
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return array
+     */
+    public function getPublicResultsByBatch(Request $request, $id): array
+    {
+
+        /** @var Batch|Builder $batchBuilder */
+        $batch = Batch::findOrFail($id);
+
+        $youthId = $request->get('youth_id') ?? null;
+
+        $resultBuilder = Result::where('batch_id', $batch->id);
+
+        if ($youthId) {
+            $resultBuilder->where('youth_id', $youthId);
+        }
+
+        $results = $resultBuilder->get();
+
+        return $results->toArray();
+    }
+
 }
 

@@ -993,7 +993,7 @@ class ExamService
             'subject_id' => [
                 'required',
                 'int',
-                'exists:exam_subjects,id,deleted_at,NULL'
+                'exists:exam_subjects,id,deleted_at,NULL',
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

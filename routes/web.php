@@ -182,6 +182,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->get("course-enrollment-bulk-import-file-format", ["as" => "course-enrollment-bulk-import-file-format", "uses" => "CourseEnrollmentController@courseEnrollmentExcelFormat"]);
         /** Youth Certificate View */
         $router->get('youth-certificate-issued', ["as" => "certificarte-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getOneIssuedCertificate"]);
+
+        $router->get('/batches/{id}/exam-results', ["as" => "batches.public.exam-result", "uses" => "BatchController@getPublicBatchExamResults"]);
+
     });
 
     //Service to service direct call without any authorization and authentication
