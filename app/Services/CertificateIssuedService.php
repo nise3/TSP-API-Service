@@ -344,7 +344,7 @@ class CertificateIssuedService
             ],
             'course_id' => [
                 "nullable",
-                "integer"
+                "array"
             ],
             'order' => [
                 'string',
