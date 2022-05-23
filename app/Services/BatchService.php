@@ -814,13 +814,16 @@ class BatchService
                     'exam_types.type',
                     'exam_types.title',
                     'exam_types.title_en',
+                    'exam_types.published_at',
                 ]);
                 $query->with(['exams' => function ($subQuery) {
                     $subQuery->select([
-                        'exams.id',
-                        'exams.exam_type_id',
                         'exams.type',
-                        'exams.total_marks'
+                        'exams.id as exam_id',
+                        'exams.start_date',
+                        'exams.end_date',
+                        'exams.total_marks',
+                        'exams.duration',
                     ]);
                 }]);
             }]);
