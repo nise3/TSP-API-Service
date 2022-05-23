@@ -2705,6 +2705,9 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
                     }
                 ],
                 "tags": [
@@ -2988,6 +2991,10 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
+
                     }
                 ],
                 "tags": [
@@ -16434,6 +16441,14 @@
             "youth_id": {
                 "name": "youth_id",
                 "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youth_id_required": {
+                "name": "youth_id",
+                "required": true,
                 "in": "query",
                 "schema": {
                     "type": "integer"
