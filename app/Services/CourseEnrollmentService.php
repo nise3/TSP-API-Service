@@ -1299,7 +1299,6 @@ class CourseEnrollmentService
             [
                 'course_enrollments.id',
                 'course_enrollments.youth_id',
-                'course_enrollments.batch_id',
                 'courses.id as course_id',
                 'courses.cover_image',
                 'courses.code as course_code',
@@ -1310,6 +1309,9 @@ class CourseEnrollmentService
                 'courses.course_fee as course_fee',
                 'courses.duration as duration',
                 'courses.created_at as course_created_at',
+                'course_enrollments.batch_id',
+                'batches.result_published_at',
+                'batches.result_processed_at',
                 'institutes.id as institute_id',
                 'institutes.title as institute_title',
                 'institutes.title_en as institute_title_en',
@@ -1326,6 +1328,10 @@ class CourseEnrollmentService
         $coursesEnrollmentBuilder->join("courses", function ($join) {
             $join->on('course_enrollments.course_id', '=', 'courses.id')
                 ->whereNull('courses.deleted_at');
+        });
+        $coursesEnrollmentBuilder->join("batches", function ($join) {
+            $join->on('course_enrollments.batch_id', '=', 'batches.id')
+                ->whereNull('batches.deleted_at');
         });
 
         $coursesEnrollmentBuilder->join("institutes", function ($join) {
