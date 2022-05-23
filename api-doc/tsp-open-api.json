@@ -2982,6 +2982,61 @@
                 }
             }
         },
+        "/public/batches/{batchId}/youth-exams": {
+            "get": {
+                "summary": "public youth exam list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get public youth exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/public/batches-by-four-ir-initiative-id/{fourIrInitiativeId}": {
             "get": {
                 "parameters": [
