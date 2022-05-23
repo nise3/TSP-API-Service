@@ -811,11 +811,19 @@ class BatchService
             ->with(['examTypes' => function ($query) {
                 $query->select([
                     'exam_types.id',
+                    'exam_types.subject_id',
                     'exam_types.type',
                     'exam_types.title',
                     'exam_types.title_en',
                     'exam_types.published_at',
                 ]);
+                $query->with(['subject' => function ($subQuery) {
+                    $subQuery->select([
+                        'exam_subjects.id',
+                        'exam_subjects.title as subject_title',
+                        'exam_subjects.title_en as subject_title_en',
+                        ]);
+                }]);
                 $query->with(['exams' => function ($subQuery) {
                     $subQuery->select([
                         'exams.type',
@@ -1359,7 +1367,7 @@ class BatchService
     public function getYouthExamResultByBatch(array $data, int $batchId): Result
     {
         /** @var Result|Builder $resultBuilder */
-        return Result::where('youth_id',$data['youth_id'])->where('batch_id', $batchId)->with('resultSummaries')->first();
+        return Result::where('youth_id', $data['youth_id'])->where('batch_id', $batchId)->with('resultSummaries')->first();
     }
 
     /**
