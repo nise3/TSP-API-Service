@@ -464,7 +464,7 @@ class BatchController extends Controller
      */
     public function getPublicBatchExamResults(Request $request, $id): JsonResponse
     {
-        $data = $this->batchService->getPublicResultsByBatch($request,$id);
+        $data = $this->batchService->getResultsByBatch($request,$id);
 
         $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
