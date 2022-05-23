@@ -1263,32 +1263,43 @@ class BatchService
     }
 
     /**
+     * @param Request $request
      * @param $id
      * @return array
      */
-    public function getResultsByBatch($id): array
+    public function getResultsByBatch(Request $request, $id): array
     {
+        $youthId = $request->get('youth_id') ?? null;
 
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $results = Result::where('batch_id', $batch->id)->get();
-        $youthIds = $results->pluck('youth_id')->unique()->toArray();
-        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+        $resultBuilder = Result::where('batch_id', $batch->id);
 
-        $indexedYouths = [];
-        foreach ($youthProfiles as $item) {
-            $youth['first_name'] = $item['first_name'];
-            $youth['first_name_en'] = $item['first_name_en'];
-            $youth['last_name'] = $item['last_name'];
-            $youth['last_name_en'] = $item['last_name_en'];
-            $youth['email'] = $item['email'];
-            $youth['mobile'] = $item['email'];
-            $indexedYouths[$item['id']] = $youth;
+        if ($youthId) { // if request from youth
+            $resultBuilder->where('youth_id', $youthId);
         }
 
-        foreach ($results as $item) {
-            $item['youth_profile'] = $indexedYouths[$item->youth_id];
+        $results = $resultBuilder->get();
+
+        if(!$youthId){ //if request not from youth then all youth profiles fetch
+            $youthIds = $results->pluck('youth_id')->unique()->toArray();
+            $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+            $indexedYouths = [];
+            foreach ($youthProfiles as $item) {
+                $youth['first_name'] = $item['first_name'];
+                $youth['first_name_en'] = $item['first_name_en'];
+                $youth['last_name'] = $item['last_name'];
+                $youth['last_name_en'] = $item['last_name_en'];
+                $youth['email'] = $item['email'];
+                $youth['mobile'] = $item['email'];
+                $indexedYouths[$item['id']] = $youth;
+            }
+
+            foreach ($results as $item) {
+                $item['youth_profile'] = $indexedYouths[$item->youth_id];
+            }
         }
 
         return $results->toArray();
@@ -1327,6 +1338,7 @@ class BatchService
     /**
      * @param array $data
      * @param int $id
+     * @return Batch
      */
     public function publishExamResult(array $data, int $id): Batch
     {
@@ -1341,6 +1353,5 @@ class BatchService
         return $batch->save();
 
     }
-
 }
 

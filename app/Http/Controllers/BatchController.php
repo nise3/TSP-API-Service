@@ -333,6 +333,26 @@ class BatchController extends Controller
 
         return Response::json($response);
     }
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     * @throws Throwable
+     */
+    public function getPublicYouthExamListByBatch(Request $request, $id): JsonResponse
+    {
+        $data = $this->batchService->getYouthExamListByBatch($request, $id);
+        $response = [
+            "data" => $data,
+            "_response_status" => [
+                "success" => true,
+                "code" => ResponseAlias::HTTP_OK,
+                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
+            ]
+        ];
+
+        return Response::json($response);
+    }
 
     /**
      * @param Request $request
@@ -384,15 +404,16 @@ class BatchController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param $id
      * @return JsonResponse
      * @throws AuthorizationException
      */
-    public function getBatchExamResults($id): JsonResponse
+    public function getBatchExamResults(Request $request, $id): JsonResponse
     {
         $this->authorize('viewAny', Result::class);
 
-        $data = $this->batchService->getResultsByBatch($id);
+        $data = $this->batchService->getResultsByBatch($request,$id);
 
         $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
 
@@ -434,6 +455,20 @@ class BatchController extends Controller
             ]
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function getPublicBatchExamResults(Request $request, $id): JsonResponse
+    {
+        $data = $this->batchService->getResultsByBatch($request,$id);
+
+        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+
+        return Response::json($response);
     }
 
 }

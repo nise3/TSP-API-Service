@@ -196,15 +196,15 @@ class CourseEnrollmentService
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
         $indexedYouths = [];
 
-            foreach ($youthProfiles as $item) {
-                $id = $item['id'];
-                $indexedYouths[$id] = $item;
-            }
-            foreach ($resultArray["data"] as &$item) {
-                $id = $item['youth_id'];
-                $youthData = $indexedYouths[$id];
-                $item['youth_profile'] = $youthData;
-            }
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
 
         $resultData = $resultArray['data'] ?? $resultArray;
 
@@ -1282,9 +1282,8 @@ class CourseEnrollmentService
     /**
      * @param array $request
      * @param Carbon $startTime
-     * @return array
      */
-    public function getYouthEnrollCourses(array $request, Carbon $startTime): array
+    public function getYouthEnrollCourses(array $request, Carbon $startTime)
     {
         $youthId = $request['youth_id'] ?? "";
         $pageSize = $request['page_size'] ?? "";
@@ -1359,57 +1358,11 @@ class CourseEnrollmentService
         foreach ($courseEnrollments as &$courseEnrollment) {
 
             if ($courseEnrollment['batch_id']) {
-                /** @var Builder $examsBuilder */
-                $examTypesBuilder = ExamType::select([
-                    'exam_types.id',
-                    'exam_types.title',
-                    'exam_types.title_en',
-                    'exam_types.published_at',
-                    'exams.type',
-                    'exams.id as exam_id',
-                    'exams.start_date',
-                    'exams.end_date',
-                    'exams.total_marks',
-                    'exams.duration',
-                    'exam_subjects.title as subject_title',
-                    'exam_subjects.title_en as subject_title_en',
-                ]);
+                $examTypes = ExamType::query()->whereHas('batches', function ($query) use ($courseEnrollment) {
+                    $query->where('batch_id', $courseEnrollment['batch_id']);
+                })->whereNotNull('exam_types.published_at')->get();
 
-                $examTypesBuilder->whereNotNull('exam_types.published_at');
-
-                $examTypesBuilder->join("batch_exams", function ($join) use ($courseEnrollment) {
-                    $join->on('batch_exams.exam_type_id', '=', 'exam_types.id')
-                        ->where('batch_exams.batch_id', $courseEnrollment['batch_id']);
-                });
-
-                $examTypesBuilder->join("exam_subjects", function ($join) {
-                    $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
-                        ->whereNull('exam_subjects.deleted_at');
-                });
-
-
-                $examTypesBuilder->join("exams", function ($join) {
-                    $join->on('exam_types.id', '=', 'exams.exam_type_id')
-                        ->whereNull('exams.deleted_at');
-                });
-
-                $examTypes = $examTypesBuilder->get()->toArray() ?? [];
-
-                foreach ($examTypes as &$examType) {
-                    if (!empty($courseEnrollment['batch_id']) && !empty($youthId) && !empty($examType['exam_id'])) {
-                        $youthExamData = $this->getYouthExamData($courseEnrollment['batch_id'], $youthId, $examType['exam_id']);
-                        if (!empty($youthExamData)) {
-                            $examType['participated'] = true;
-                            $examType['marks_obtained'] = $youthExamData->total_obtained_marks;
-
-                        } else {
-                            $examType['participated'] = false;
-                            $examType['marks_obtained'] = null;
-                        }
-                    }
-
-                }
-                $courseEnrollment['exams'] = $examTypes;
+                $courseEnrollment['exams'] = !$examTypes->isEmpty();
             }
 
         }
