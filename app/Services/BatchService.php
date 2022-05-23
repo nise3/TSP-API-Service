@@ -834,7 +834,7 @@ class BatchService
 
         foreach ($examTypes as &$examType) {
             foreach ($examType['exams'] as &$exam) {
-                $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['id']);
+                $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($exam['exam_id']);
                 if ($manualMarkingQuestionNumbers == 0) {
                     $exam['auto_marking'] = true;
                 } else {
