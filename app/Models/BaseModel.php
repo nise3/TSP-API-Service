@@ -175,6 +175,7 @@ abstract class BaseModel extends Model
     /** @var string Exam Accessor types */
     public const ACCESSOR_TYPE_INSTITUTE = "INSTITUTE";
     public const ACCESSOR_TYPE_ORGANIZATION = "ORGANIZATION";
+    public const ACCESSOR_TYPE_INDUSTRY_ASSOCIATION = "INDUSTRY_ASSOCIATION";
 
     public const ACCESSOR_TYPES = [
         self::ACCESSOR_TYPE_INSTITUTE,
