@@ -225,7 +225,7 @@ class ExamQuestionBankService
                         if ($data['subject_id'] != $value) {
                             $assignedQuestions = ExamSectionQuestion::query()->where('subject_id', $question->subject_id)->first();
                             if ($assignedQuestions) {
-                                $failed("subject_id can not be updated");
+                                $failed("subject id can not be updated[67000]");
                             }
                         }
                     }
