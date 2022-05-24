@@ -806,6 +806,28 @@ class InstituteService
                 'nullable',
                 'string'
             ],
+            'phone_numbers' => [
+                'nullable',
+                'array'
+            ],
+            'phone_numbers.*' => [
+                'nullable',
+                'string',
+            ],
+            'primary_mobile' => [
+                'required',
+                'string',
+                BaseModel::MOBILE_REGEX
+            ],
+            'mobile_numbers' => [
+                'nullable',
+                'array'
+            ],
+            'mobile_numbers.*' => [
+                'nullable',
+                'string',
+                BaseModel::MOBILE_REGEX
+            ],
             'name_of_the_office_head' => [
                 'required',
                 'string',
