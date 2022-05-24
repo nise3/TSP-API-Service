@@ -34,6 +34,55 @@ if (!function_exists('formatApiResponse')) {
     }
 }
 
+
+if (!function_exists('formatSuccessResponse')) {
+    /**
+     * @param $data
+     * @param Carbon $startTime
+     * @param string $message
+     * @return array
+     */
+    function formatSuccessResponse($data, Carbon $startTime, $message = ''): array
+    {
+        if (!$startTime) {
+            $startTime = Carbon::now();
+        }
+
+        return [
+            "data" => $data ?: null,
+            "_response_status" => [
+                "success" => true,
+                "message" => $message,
+                "query_time" => $startTime->diffForHumans(Carbon::now())
+            ]
+        ];
+    }
+}
+
+if (!function_exists('formatErrorResponse')) {
+    /**
+     * @param $data
+     * @param Carbon $startTime
+     * @param string $message
+     * @return array
+     */
+    function formatErrorResponse($data, Carbon $startTime, $message = ''): array
+    {
+        if (!$startTime) {
+            $startTime = Carbon::now();
+        }
+        return [
+            "data" => $data ?: null,
+            "_response_status" => [
+                "success" => false,
+                "message" => $message,
+                "query_time" => $startTime->diffForHumans(Carbon::now())
+            ]
+        ];
+    }
+}
+
+
 if (!function_exists("idpUserErrorMessage")) {
 
     /**

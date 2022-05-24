@@ -67,7 +67,9 @@ class BatchController extends Controller
     public function getCourseBatches(Request $request): JsonResponse
     {
         $filter = $this->batchService->filterValidator($request)->validate();
+
         $response = $this->batchService->getBatchList($filter, $this->startTime);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -79,6 +81,7 @@ class BatchController extends Controller
     public function getBatchesByFourIrInitiativeId(int $fourIrInitiativeId): JsonResponse
     {
         $response = $this->batchService->getFourIrBatchList($fourIrInitiativeId, $this->startTime);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -92,14 +95,7 @@ class BatchController extends Controller
     {
         $data = $this->batchService->getBatch($id);
 
-        $response = [
-            "data" => $data ?: [],
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
+        $response = formatSuccessResponse($data, $this->startTime, "Batch Fetch successfully.");
 
         return Response::json($response, ResponseAlias::HTTP_OK);
 
@@ -123,22 +119,16 @@ class BatchController extends Controller
             $data = $this->batchService->store($validatedData);
             $this->batchService->createCalenderEventForBatch($data->toArray());
 
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Batch added successfully",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
+            $response = formatSuccessResponse($data, $this->startTime, "Batch added successfully.");
 
             DB::commit();
+
+            return Response::json($response, ResponseAlias::HTTP_CREATED);
+
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -159,21 +149,17 @@ class BatchController extends Controller
         try {
             $data = $this->batchService->update($batch, $validated);
             $this->batchService->updateCalenderEventOnBatchUpdate($data->toArray());
-            $response = [
-                'data' => $data ?: [],
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_CREATED,
-                    "message" => "Batch update successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
+
+            $response = formatSuccessResponse($data, $this->startTime, "Batch update successfully.");
+
             DB::commit();
+
+            return Response::json($response, ResponseAlias::HTTP_OK);
+
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
         }
-        return Response::json($response, ResponseAlias::HTTP_CREATED);
     }
 
     /**
@@ -187,23 +173,20 @@ class BatchController extends Controller
         $batch = Batch::findOrFail($id);
 
         DB::beginTransaction();
+
         try {
             $this->batchService->destroy($batch);
             $this->batchService->destroyCalenderEventByBatchId($id);
-            $response = [
-                '_response_status' => [
-                    "success" => true,
-                    "code" => ResponseAlias::HTTP_OK,
-                    "message" => "Batch Delete successfully.",
-                    "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-                ]
-            ];
+
+            $response = formatSuccessResponse(null, $this->startTime, "Batch Delete successfully!");
+
             DB::commit();
+
+            return Response::json($response, ResponseAlias::HTTP_OK);
         } catch (Throwable $exception) {
             DB::rollBack();
             throw $exception;
         }
-        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -218,15 +201,9 @@ class BatchController extends Controller
         $batch = Batch::findOrFail($id);
         $validated['trainerIds'] = !empty($validated['trainerIds']) ? $validated['trainerIds'] : [];
         $batch = $this->batchService->assignTrainer($batch, $validated['trainerIds']);
-        $response = [
-            'data' => $batch->trainers()->get(),
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "trainer added to batch successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+
+        $response = formatSuccessResponse($batch->trainers()->get(), $this->startTime, "Trainer added to batch successfully!");
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -237,6 +214,7 @@ class BatchController extends Controller
     public function getTrashedData(Request $request): JsonResponse
     {
         $response = $this->batchService->getBatchTrashList($request, $this->startTime);
+
         return Response::json($response);
     }
 
@@ -248,14 +226,9 @@ class BatchController extends Controller
     {
         $batch = Batch::onlyTrashed()->findOrFail($id);
         $this->batchService->restore($batch);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "batch restored successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now())
-            ]
-        ];
+
+        $response = formatSuccessResponse(null, $this->startTime, "Batch restored successfully!");
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -301,16 +274,10 @@ class BatchController extends Controller
     public function getExamsByBatchId(Request $request, $id): JsonResponse
     {
         $data = $this->batchService->getExamListByBatch($request, $id);
-        $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
 
-        return Response::json($response);
+        $response = formatSuccessResponse($data, $this->startTime, "Exams Fetch Successfully!");
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -322,17 +289,12 @@ class BatchController extends Controller
     public function getYouthExamListByBatch(Request $request, $id): JsonResponse
     {
         $data = $this->batchService->getYouthExamListByBatch($request, $id);
-        $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
 
-        return Response::json($response);
+        $response = formatSuccessResponse($data, $this->startTime, "Fetch Successfully!");
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
     /**
      * @param Request $request
      * @param $id
@@ -342,16 +304,10 @@ class BatchController extends Controller
     public function getPublicYouthExamListByBatch(Request $request, $id): JsonResponse
     {
         $data = $this->batchService->getYouthExamListByBatch($request, $id);
-        $response = [
-            "data" => $data,
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "query_time" => $this->startTime->diffInSeconds(\Carbon\Carbon::now())
-            ]
-        ];
 
-        return Response::json($response);
+        $response = formatSuccessResponse($data, $this->startTime, "Fetch Successfully!");
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -364,7 +320,7 @@ class BatchController extends Controller
 
         $response = $this->batchService->batchesWithTrainingCenters($request, $id, $this->startTime, true);
 
-        return Response::json($response);
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
     /**
@@ -379,14 +335,9 @@ class BatchController extends Controller
         $validatedData = $this->batchService->examTypeValidator($request)->validate();
         $validatedData['exam_type_ids'] = !empty($validatedData['exam_type_ids']) ? $validatedData['exam_type_ids'] : [];
         $this->batchService->assignExamToBatch($batch, $validatedData['exam_type_ids']);
-        $response = [
-            '_response_status' => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => "exams assigned to batch successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+
+        $response = formatSuccessResponse(null, $this->startTime, "Exams assigned to batch successfully");
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -400,6 +351,7 @@ class BatchController extends Controller
         $this->authorize('create', Result::class);
 
         $response = $this->batchService->processResult($id, $this->startTime);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -414,7 +366,7 @@ class BatchController extends Controller
 
         $data = $this->batchService->getResultsByBatch($id);
 
-        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+        $response = formatSuccessResponse($data, $this->startTime, "Result Fetch Successfully");
 
         return Response::json($response);
     }
@@ -428,7 +380,7 @@ class BatchController extends Controller
     {
         $data = $this->batchService->getResultSummariesByResult($resultId);
 
-        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result summaries Fetch Successfully");
+        $response = formatSuccessResponse($data, $this->startTime, "Result summaries Fetch Successfully");
 
         return Response::json($response);
     }
@@ -445,14 +397,10 @@ class BatchController extends Controller
         $validatedData = $this->batchService->resultPublishValidator($request)->validate();
         $this->batchService->publishExamResult($validatedData, $id);
 
-        $response = [
-            "_response_status" => [
-                "success" => true,
-                "code" => ResponseAlias::HTTP_OK,
-                "message" => $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully",
-                "query_time" => $this->startTime->diffInSeconds(Carbon::now()),
-            ]
-        ];
+        $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
+
+        $response = formatSuccessResponse(null, $this->startTime, $message);
+
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -466,9 +414,9 @@ class BatchController extends Controller
     {
         $validatedData = $this->batchService->youthExamResultValidator($request)->validate();
 
-        $data = $this->batchService->getYouthExamResultByBatch($validatedData,$id);
+        $data = $this->batchService->getYouthExamResultByBatch($validatedData, $id);
 
-        $response = formatApiResponse($data, $this->startTime, ResponseAlias::HTTP_OK, "Result Fetch Successfully");
+        $response = formatSuccessResponse($data, $this->startTime, "Result Fetch Successfully");
 
         return Response::json($response);
     }
