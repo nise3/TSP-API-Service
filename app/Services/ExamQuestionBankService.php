@@ -220,9 +220,9 @@ class ExamQuestionBankService
                 'exists:exam_subjects,id,deleted_at,NULL',
                 function ($attr, $value, $failed) use ($data, $id) {
                     if ($id != null) {
-                        $question = ExamQuestionBank::query()->find($id);
+                        $question = ExamQuestionBank::find($id);
                         /**check if the given subject id is the existing subject id */
-                        if ($data['subject_id'] != $value) {
+                        if (!empty($question) && $data['subject_id'] != $question->subject_id) {
                             $assignedQuestions = ExamSectionQuestion::query()->where('subject_id', $question->subject_id)->first();
                             if ($assignedQuestions) {
                                 $failed("subject id can not be updated[67000]");
