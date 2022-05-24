@@ -815,7 +815,7 @@ class InstituteService
                 'string',
             ],
             'primary_mobile' => [
-                'required',
+                'nullable',
                 'string',
                 BaseModel::MOBILE_REGEX
             ],
