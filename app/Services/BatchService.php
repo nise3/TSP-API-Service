@@ -822,7 +822,7 @@ class BatchService
                         'exam_subjects.id',
                         'exam_subjects.title as subject_title',
                         'exam_subjects.title_en as subject_title_en',
-                        ]);
+                    ]);
                 }]);
                 $query->with(['exams' => function ($subQuery) {
                     $subQuery->select([
@@ -1128,17 +1128,17 @@ class BatchService
 
         if (count($batch->examTypes) == 0) {
 
-            return formatApiResponse(["error_code" => "no_exams"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "There is no exams for processing!", false);
+            return formatErrorResponse(["error_code" => "no_exams"], $startTime, "There is no exams for processing!");
 
         }
         if ($batch->result_published_at != null) {
 
-            return formatApiResponse(["error_code" => "already_published"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Result Already Published!", false);
+            return formatErrorResponse(["error_code" => "already_published"], $startTime, "Result Already Published!");
 
         }
         if (empty($courseResultConfig)) {
 
-            return formatApiResponse(["error_code" => "no_config"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Please config result first in Course!", false);
+            return formatErrorResponse(["error_code" => "no_config"], $startTime, "Please config result first in Course!");
 
         } else {
             $courseResultConfigExamTypes = [];
@@ -1165,11 +1165,11 @@ class BatchService
             $examTypesDiff = array_diff($courseResultConfigExamTypes, array_unique($examTypes));
 
             if (!empty($examTypesDiff)) {
-                return formatApiResponse(["error_code" => "configured_exams_not_found"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "Configured exams not found!", false);
+                return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime,"Configured exams not found!");
             }
 
             if (!$isAllExamFinished) {
-                return formatApiResponse(["error_code" => "exams_not_finished"], $startTime, ResponseAlias::HTTP_BAD_REQUEST, "All exams are not finished!", false);
+                return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
             }
         }
 
@@ -1246,7 +1246,7 @@ class BatchService
 
             DB::commit();
 
-            return formatApiResponse(null, $startTime, ResponseAlias::HTTP_OK, "Result Processing Successfully Done");
+            return formatSuccessResponse(null, $startTime, "Result Processing Successfully Done");
 
         } catch (Throwable $e) {
             DB::rollBack();
