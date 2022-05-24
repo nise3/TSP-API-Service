@@ -163,6 +163,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** youth batch exams  **/
         $router->get('batches/{id}/youth-exams', ["as" => "public.batches.youth-exams-list-by-batch-id", "uses" => "BatchController@getPublicYouthExamListByBatch"]);
 
+        /** youth preview self exam answer paper */
+        $router->get('preview-youth-exam/{examId}/{youthId}', ["as" => "preview-youth-exam", "uses" => "ExamController@previewPublicYouthExam"]);
+
         $router->get("rpl-applications/{id}", ["as" => "public.rpl-applications", "uses" => "RplApplicationController@getRplApplicationDetails"]);
 
 
