@@ -996,10 +996,10 @@ class ExamService
                 'exists:exam_subjects,id,deleted_at,NULL',
                 function ($attr, $value, $failed) use ($data, $id) {
                     if ($id != null) {
-                        $examIds = Exam::query()->where('exam_type_id',$id)->pluck('id');
-
+                        $examIds = Exam::query()->where('exam_type_id',$id)->get()->pluck('id')->toArray();
+                        $examType =ExamType::find($id);
                         /**check if the given subject id is the existing subject id */
-                        if ($data['subject_id'] != $value) {
+                        if ($data['subject_id'] != $examType->subject_id && !empty($examIds)) {
                             $assignedQuestions = ExamSectionQuestion::query()->whereIn('exam_id', $examIds)->first();
                             if ($assignedQuestions) {
                                 $failed("subject id can not be updated[67000]");
