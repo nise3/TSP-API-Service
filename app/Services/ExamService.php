@@ -692,11 +692,11 @@ class ExamService
     {
         $questions = ExamQuestionBank::where('subject_id', $examSectionData['subject_id'])
             ->where('question_type', $examSectionData['question_type'])
-            ->where('subject_id', $examSectionData['subject_id'])
             ->inRandomOrder()
             ->limit($examSectionData['number_of_questions'])
             ->get()
             ->toArray();
+
         throw_if(count($questions) != $examSectionData['number_of_questions'], ValidationException::withMessages([
             "Number Of " . ExamQuestionBank::EXAM_QUESTION_VALIDATION_MESSAGES[$examSectionData["question_type"]] . " questions in question bank for this subject must be at least " . $examSectionData['number_of_questions'] . "[42001]"
         ]));
@@ -993,7 +993,20 @@ class ExamService
             'subject_id' => [
                 'required',
                 'int',
-                'exists:exam_subjects,id,deleted_at,NULL'
+                'exists:exam_subjects,id,deleted_at,NULL',
+                function ($attr, $value, $failed) use ($data, $id) {
+                    if ($id != null) {
+                        $examIds = Exam::query()->where('exam_type_id',$id)->get()->pluck('id')->toArray();
+                        $examType =ExamType::find($id);
+                        /**check if the given subject id is the existing subject id */
+                        if ($data['subject_id'] != $examType->subject_id && !empty($examIds)) {
+                            $assignedQuestions = ExamSectionQuestion::query()->whereIn('exam_id', $examIds)->first();
+                            if ($assignedQuestions) {
+                                $failed("subject id can not be updated[67000]");
+                            }
+                        }
+                    }
+                }
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

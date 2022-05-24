@@ -2705,6 +2705,9 @@
                 "parameters": [
                     {
                         "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
                     }
                 ],
                 "tags": [
@@ -2974,6 +2977,145 @@
                                         "code": 200,
                                         "message": "Result published successfully",
                                         "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/batches/{batchId}/youth-exams": {
+            "get": {
+                "summary": "public youth exam list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id_required"
+
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get public youth exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/public/batches/{batchId}/youth-exam-results": {
+            "get": {
+                "summary": "result list by Batch Id & Youth Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youth_id"
+                    }
+                ],
+                "tags": [
+                    "Result Processing"
+                ],
+                "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_id": 1,
+                                        "youth_id": 1,
+                                        "result_type": 1,
+                                        "total_marks": "66.25",
+                                        "result": "A",
+                                        "deleted_at": null,
+                                        "created_at": "2022-05-18T04:08:24.000000Z",
+                                        "updated_at": "2022-05-18T04:08:24.000000Z",
+                                        "result_summaries": [
+                                            {
+                                                "id": 1,
+                                                "result_id": 1,
+                                                "exam_type": 3,
+                                                "total_marks": "200.00",
+                                                "obtained_marks": "80.00",
+                                                "percentage": "20.00",
+                                                "final_marks": "8.00",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            },
+                                            {
+                                                "id": 2,
+                                                "result_id": 1,
+                                                "exam_type": 1,
+                                                "total_marks": "300.00",
+                                                "obtained_marks": "210.00",
+                                                "percentage": "50.00",
+                                                "final_marks": "35.00",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            },
+                                            {
+                                                "id": 3,
+                                                "result_id": 1,
+                                                "exam_type": 2,
+                                                "total_marks": "400.00",
+                                                "obtained_marks": "310.00",
+                                                "percentage": "30.00",
+                                                "final_marks": "23.25",
+                                                "created_at": "2022-05-18T04:08:24.000000Z",
+                                                "updated_at": "2022-05-18T04:08:24.000000Z"
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "message": "Result Fetch Successfully",
+                                        "code": 200,
+                                        "query_time": "1 second before"
                                     }
                                 }
                             }
@@ -12005,6 +12147,126 @@
                 }
             }
         },
+        "/public/preview-youth-exam/{examId}/{youthId}": {
+            "get": {
+                "tags": [
+                    "Exams"
+                ],
+                "summary": "Get a public youth exam preview for a exam",
+                "description": "API endpoint to get a public youth exam preview for a exam. A successful request response will show 200 HTTP status code",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/youthId"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page"
+                    },
+                    {
+                        "$ref": "#/components/parameters/page_size"
+                    },
+                    {
+                        "$ref": "#/components/parameters/order"
+                    },
+                    {
+                        "$ref": "#/components/parameters/row_status_optional"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "order": "ASC",
+                                    "data": {
+                                        "subject_id": 1,
+                                        "subject_title": "math",
+                                        "subject_title_en": "math",
+                                        "title": "dfdg",
+                                        "title_en": "dfsd",
+                                        "duration": 100,
+                                        "exam_date": "2022-04-11 14:54:53",
+                                        "total_marks": "100.00",
+                                        "first_name": "Piyal",
+                                        "first_name_en": null,
+                                        "last_name": "Rahman",
+                                        "last_name_en": null,
+                                        "mobile": "01634433444",
+                                        "email": "joxiga7719h@chinamkm.com",
+                                        "exam_sections": [
+                                            {
+                                                "uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": [
+                                                    {
+                                                        "question_id": 1,
+                                                        "exam_section_uuid": "3f4953d6-511f-4258-bd34-9fa93177-a2c8-46ca-8525-0e",
+                                                        "individual_marks": "0.00",
+                                                        "exam_id": 2,
+                                                        "title": "hh",
+                                                        "title_en": "hfgjhfg",
+                                                        "subject_id": 1,
+                                                        "question_type": 1,
+                                                        "accessor_type": "INSTITUTE",
+                                                        "accessor_id": 1,
+                                                        "option_1": "gfhgf",
+                                                        "option_1_en": null,
+                                                        "option_2": "ghfghfgh",
+                                                        "option_2_en": null,
+                                                        "option_3": "gfhgf",
+                                                        "option_3_en": null,
+                                                        "option_4": "fghgfh",
+                                                        "option_4_en": null,
+                                                        "exam_result_id": 1,
+                                                        "answers": [
+                                                            "pagla"
+                                                        ],
+                                                        "file_paths": "[\"a\", \"b\"]"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "uuid": "f38f87a6-8b77-40b6-87b8-7bf80ccfbf64",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": []
+                                            },
+                                            {
+                                                "uuid": "e5312dd2-4af2-4cce-b2e1-d2c702f6b0b0",
+                                                "question_type": 1,
+                                                "total_marks": "100.00",
+                                                "exam_id": 1,
+                                                "question_selection_type": "1",
+                                                "number_of_questions": 1,
+                                                "subject_id": 1,
+                                                "questions": []
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/exam-question-paper/{examId}": {
             "get": {
                 "tags": [
@@ -16287,6 +16549,14 @@
             "youth_id": {
                 "name": "youth_id",
                 "required": false,
+                "in": "query",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "youth_id_required": {
+                "name": "youth_id",
+                "required": true,
                 "in": "query",
                 "schema": {
                     "type": "integer"

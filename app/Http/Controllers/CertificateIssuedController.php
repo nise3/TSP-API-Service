@@ -67,7 +67,7 @@ class CertificateIssuedController extends Controller
         $curseIds = Course::where("courses.four_ir_initiative_id", $fourIrInitiativeId)->pluck("id")->toArray();
         $request->offsetSet('course_id', $curseIds);
         $filter = $this->certificateIssuedService->filterValidator($request)->validate();
-        $response = $this->certificateIssuedService->getList($filter, $this->startTime);
+        $response = $this->certificateIssuedService->getListForFourIr($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 

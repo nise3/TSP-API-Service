@@ -49,6 +49,8 @@ class CertificateIssuedService
             'certificate_issued.certificate_id',
             'certificates.title as certificate_title',
             'certificates.title_en as certificate_title_en',
+            'courses.title as course_title',
+            'courses.title_en as course_title_en',
             'certificates.result_type as certificate_result_type',
             'certificates.issued_at',
             'certificate_issued.youth_id',
@@ -56,11 +58,14 @@ class CertificateIssuedService
             'certificate_issued.batch_id',
             'batches.title as batch_title',
             'batches.title_en as batch_title_en',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates', "certificates.id", "=", "certificate_issued.certificate_id");
-        $certificateIssuedBuilder->join('batches', "batches.id", "=", "certificate_issued.batch_id");
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
+        $certificateIssuedBuilder->leftJoin('courses', 'courses.id', '=', 'certificate_issued.course_id');
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
             $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
@@ -79,7 +84,6 @@ class CertificateIssuedService
         }
 
         if (!empty($courseId)) {
-            Log::info("Course Id in certificate Issued Table" . json_encode($courseId, JSON_PRETTY_PRINT));
             $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
         }
 
@@ -125,6 +129,97 @@ class CertificateIssuedService
         return $response;
     }
 
+    /**
+     * @param array $request
+     * @param Carbon $startTime
+     * @return array
+     */
+
+    public function getListForFourIr(array $request, Carbon $startTime): array
+    {
+        $pageSize = $request['page_size'] ?? BaseModel::DEFAULT_PAGE_SIZE;
+        $paginate = $request['page'] ?? "";
+        $rowStatus = $request['row_status'] ?? "";
+        $order = $request['order'] ?? "ASC";
+        $courseId = $request['course_id'] ?? [];
+        $certificateIds = $request['certificate_id'] ?? [];
+
+        /** @var CertificateIssued|Builder $certificateIssuedBuilder */
+        $certificateIssuedBuilder = CertificateIssued::select([
+            'certificate_issued.id',
+            'certificate_issued.certificate_id',
+            'certificates.title as certificate_title',
+            'certificates.title_en as certificate_title_en',
+            'courses.title as course_title',
+            'courses.title_en as course_title_en',
+            'certificates.result_type as certificate_result_type',
+            'certificates.issued_at',
+            'certificate_issued.youth_id',
+            'certificate_issued.course_id',
+            'certificate_issued.batch_id',
+            'batches.title as batch_title',
+            'batches.title_en as batch_title_en',
+            'batches.batch_start_date',
+            'batches.batch_end_date',
+            'certificate_issued.row_status'
+        ]);
+
+        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
+        $certificateIssuedBuilder->join('courses', 'courses.id', '=', 'certificate_issued.course_id');
+        $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
+        if (is_numeric($rowStatus)) {
+            $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
+        }
+
+
+        if (!empty($certificateIds)) {
+            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+        }
+
+        $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
+
+        if (is_numeric($paginate) || is_numeric($pageSize)) {
+            $pageSize = $pageSize ?: 10;
+            $certificateIssued = $certificateIssuedBuilder->paginate($pageSize);
+            $paginateData = (object)$certificateIssued->toArray();
+            $response['current_page'] = $paginateData->current_page;
+            $response['total_page'] = $paginateData->last_page;
+            $response['page_size'] = $paginateData->per_page;
+            $response['total'] = $paginateData->total;
+        } else {
+            $certificateIssued = $certificateIssuedBuilder->get();
+        }
+
+        $resultArray = $certificateIssued->toArray();
+        $youthIds = CertificateIssued::pluck('youth_id')->unique()->toArray();
+//        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
+        $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+
+        $indexedYouths = [];
+        foreach ($youthProfiles as $item) {
+            $id = $item['id'];
+            $indexedYouths[$id] = $item;
+        }
+
+        foreach ($resultArray["data"] as &$item) {
+            $id = $item['youth_id'];
+            $youthData = $indexedYouths[$id];
+            $item['youth_profile'] = $youthData;
+        }
+
+        $resultData = $resultArray['data'] ?? $resultArray;
+
+        $response['order'] = $order;
+        $response['data'] = $resultData;
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+
+        return $response;
+    }
     /**
      * @param int $id
      * @return CertificateIssued
@@ -290,23 +385,23 @@ class CertificateIssuedService
         }
 
         if ($request->filled('batch_id')) {
-            $decodedValue = $request->get('batch_id');
+            $decodedValue=$request->get('batch_id');
             $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
         if ($request->filled('certificate_id')) {
-            $decodedValue = $request->get('certificate_id');
-            $request->offsetSet('certificate_id', $this->toArray($this->toArray($decodedValue)));
+            $decodedValue=$request->get('certificate_id');
+            $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
 
         }
 
         if ($request->filled('youth_id')) {
-            $decodedValue = $request->get('youth_id');
-            $request->offsetSet('youth_id', $this->toArray($this->toArray($decodedValue)));
+            $decodedValue=$request->get('youth_id');
+            $request->offsetSet('youth_id',$this->toArray( $this->toArray($decodedValue)));
         }
         if ($request->filled('course_id')) {
-            $decodedValue = $request->get('course_id');
-            $request->offsetSet('course_id', $this->toArray($this->toArray($decodedValue)));
+            $decodedValue=$request->get('course_id');
+            $request->offsetSet('course_id',$this->toArray( $this->toArray($decodedValue)));
         }
 
         $customMessage = [

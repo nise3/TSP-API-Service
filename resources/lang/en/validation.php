@@ -126,6 +126,7 @@ return [
     'uuid' => 'The :attribute must be a valid UUID.[65000]',
     'password_regex' => 'The :attribute must contain at least one uppercase, lowercase letter and at least one number.[66000]',
 
+    /** subject_id => subject id can not be updated[67000]*
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
