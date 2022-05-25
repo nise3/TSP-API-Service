@@ -497,9 +497,9 @@ class ExamService
 
         } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $data['online']['exam_type_id'] = $data['exam_type_id'];
-            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['duration']);
+            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['online']['duration']);
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
-            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['duration']);
+            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['offline']['duration']);
 
 
             $onlineExam = $this->storeOnlineExam($data['online']);
