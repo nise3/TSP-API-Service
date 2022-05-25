@@ -1124,6 +1124,10 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
+        $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
+            return !empty($item);
+        });
+
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         if (count($batch->examTypes) == 0) {
@@ -1140,37 +1144,40 @@ class BatchService
 
             return formatErrorResponse(["error_code" => "no_config"], $startTime, "Please config result first in Course!");
 
-        } else {
-            $courseResultConfigExamTypes = [];
-            foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
-                if ($examTypes[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
-                    array_push($courseResultConfigExamTypes, $examTypes[$key]);
-                }
+        }
+
+        $courseResultConfigExamTypes = [];
+        foreach ($courseResultPercentages as $key => $resultPercentage) {
+            if (!empty($resultPercentage) && $examTypes[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
+                array_push($courseResultConfigExamTypes, $examTypes[$key]);
             }
+        }
 
-            $exams = Exam::query()->whereIn('exam_type_id', $batch->examTypes->pluck('id'))->with('examType:id,type')->get();
+        $exams = Exam::query()->whereIn('exam_type_id', $batch->examTypes->pluck('id'))->with('examType:id,type')->get();
 
-            $isAllExamFinished = true;
+        $isAllExamFinished = true;
 
-            $examTypes = [];
-            foreach ($exams as $exam) {
+        $examTypes = [];
+        foreach ($exams as $exam) {
+            if(!in_array($exam->examType->type,$examTypes)){
                 $examTypes[] = $exam->examType->type;
-                $examEndDate = Carbon::create($exam->end_date);
-
-                if ($examEndDate->lt($startTime)) {
-                    $isAllExamFinished = false;
-                }
             }
+            $examEndDate = Carbon::create($exam->end_date);
 
-            $examTypesDiff = array_diff($courseResultConfigExamTypes, array_unique($examTypes));
-
-            if (!empty($examTypesDiff)) {
-                return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime,"Configured exams not found!");
+            if ($examEndDate->lt($startTime)) {
+                $isAllExamFinished = false;
             }
+        }
 
-            if (!$isAllExamFinished) {
-                return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
-            }
+        sort($courseResultConfigExamTypes);
+        sort($examTypes);
+
+        if ($courseResultConfigExamTypes !== $examTypes) {
+            return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime, "Configured exams not found!");
+        }
+
+        if (!$isAllExamFinished) {
+            return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
         }
 
         DB::beginTransaction();
@@ -1179,7 +1186,7 @@ class BatchService
             foreach ($youthIds as $youthId) {
                 $totalObtainedMarks = 0;
                 $resultSummaryObjects = collect();
-                foreach ($courseResultConfig->result_percentages as $key => $resultPercentage) {
+                foreach ($courseResultPercentages as $key => $resultPercentage) {
                     $examType = $examTypes[$key];
 
                     // Attendance total mark calculate from course result config
