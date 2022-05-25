@@ -42,17 +42,6 @@ class CreateEnrollmentAddressesTable extends Migration
                 ->onUpdate('CASCADE')
                 ->onDelete('CASCADE');
 
-            $table->foreign('loc_division_id')
-                ->references('id')
-                ->on('loc_divisions')
-                ->onDelete("CASCADE")
-                ->onUpdate("CASCADE");
-
-            $table->foreign('loc_district_id')
-                ->references('id')
-                ->on('loc_districts')
-                ->onDelete("CASCADE")
-                ->onUpdate("CASCADE");
         });
     }
 
