@@ -1349,9 +1349,9 @@ class BatchService
     /**
      * @param array $data
      * @param int $id
-     * @return Batch
+     * @return bool
      */
-    public function publishExamResult(array $data, int $id): Batch
+    public function publishExamResult(array $data, int $id): bool
     {
         $batch = Batch::findOrFail($id);
 
