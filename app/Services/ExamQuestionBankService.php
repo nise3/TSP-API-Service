@@ -29,9 +29,9 @@ class ExamQuestionBankService
         $title = $request['title'] ?? "";
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
-        $order = $request['order'] ?? "ASC";
+        $order = $request['order'] ?? BaseModel::DEFAULT_ROW_ORDER;
         $subjectId = $request['subject_id'] ?? "";
-        $questionType = $request['question_type'] ?? BaseModel::DEFAULT_ROW_ORDER;
+        $questionType = $request['question_type'] ?? "";
 
         /** @var ExamQuestionBank|Builder $examQuestionBankBuilder */
         $examQuestionBankBuilder = ExamQuestionBank::select([
