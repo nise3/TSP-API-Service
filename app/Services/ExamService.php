@@ -67,6 +67,8 @@ class ExamService
             $join->on('exam_types.subject_id', '=', 'exam_subjects.id')
                 ->whereNull('exam_types.deleted_at');
         });
+        $examTypeBuilder->with('exams:exam_type_id,type,start_date,end_date,duration');
+
 
         $examTypeBuilder->orderBy('exam_types.id', $order);
 
@@ -1768,7 +1770,7 @@ class ExamService
             'is_published' => [
                 'required',
                 'int',
-                Rule::in(Exam::EXAM_PUBLICATION)
+                Rule::in(Exam::EXAM_PUBLISH_UNPUBLISHED)
             ],
         ];
 
