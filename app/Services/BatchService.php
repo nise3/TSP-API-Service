@@ -1290,9 +1290,7 @@ class BatchService
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $resultBuilder = Result::where('batch_id', $batch->id)->get();
-
-        $results = $resultBuilder->get();
+        $results = Result::where('batch_id', $batch->id)->get();
 
         $youthIds = $results->pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
