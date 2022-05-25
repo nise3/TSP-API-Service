@@ -36,7 +36,7 @@ class ServiceToServiceCallHandler
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
                 Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
-                throw new HttpErrorException($httpResponse);
+                CustomExceptionHandler::customHttpResponseMessage($httpResponse->body());
             })
             ->json('data');
 
@@ -173,12 +173,12 @@ class ServiceToServiceCallHandler
             'verify' => config("nise3.should_ssl_verify"),
             'debug' => config('nise3.http_debug')
         ])
-            ->timeout(5)
+            ->timeout(15)
             ->post($url, $postField)
             ->throw(static function (\Illuminate\Http\Client\Response $httpResponse, $httpException) use ($url) {
                 Log::debug(get_class($httpResponse) . ' - ' . get_class($httpException));
                 Log::debug("Http/Curl call error. Destination:: " . $url . ' and Response:: ' . $httpResponse->body());
-                throw new HttpErrorException($httpResponse);
+                CustomExceptionHandler::customHttpResponseMessage($httpResponse->body());
             })
             ->json('data');
 
