@@ -45,7 +45,7 @@ class ExamService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
-        $order = $request['order'] ?? "ASC";
+        $order = $request['order'] ?? BaseModel::DEFAULT_ROW_ORDER;
 
 
         /** @var ExamType|Builder $examTypeBuilder */
