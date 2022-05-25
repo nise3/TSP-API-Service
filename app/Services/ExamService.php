@@ -192,8 +192,8 @@ class ExamService
         $correctAnswer = array_map('strtolower', $examSectionQuestion['answers']);
         $givenAnswer = array_map('strtolower', $questionData['answers']);
 
-        for ($i = 0; $i < count($givenAnswer); $i++) {
-            if (in_array($givenAnswer[$i], $correctAnswer)) {
+        for ($i = 0; $i < count($correctAnswer); $i++) {
+            if (in_array($correctAnswer[$i], $givenAnswer)) {
                 $answerStatus = true;
             } else {
                 $answerStatus = false;
