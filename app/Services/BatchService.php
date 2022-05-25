@@ -1124,10 +1124,6 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
-            return !empty($item);
-        });
-
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         if (count($batch->examTypes) == 0) {
@@ -1145,6 +1141,10 @@ class BatchService
             return formatErrorResponse(["error_code" => "no_config"], $startTime, "Please config result first in Course!");
 
         }
+
+        $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
+            return !empty($item);
+        });
 
         $courseResultConfigExamTypes = [];
         foreach ($courseResultPercentages as $key => $resultPercentage) {
