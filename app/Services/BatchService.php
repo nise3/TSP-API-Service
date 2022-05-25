@@ -439,6 +439,13 @@ class BatchService
 
     }
 
+    public function assignBatchCertificateTemplateIds($batch, array $batchCertificateTemplateIds): Batch
+    {
+        $batch->CertificateTemplateIds()->sync($batchCertificateTemplateIds);
+        return $batch;
+
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -987,6 +994,30 @@ class BatchService
         $rules = [
             'exam_type_ids' => 'required|array|min:1',
             'exam_type_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                'exists:exam_types,id,deleted_at,NULL'
+            ]
+        ];
+        return Validator::make($data, $rules);
+    }
+
+/**
+* @param Request $request
+* @return \Illuminate\Contracts\Validation\Validator
+*/
+    public function batchCertificateTemplateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        if (!empty($data['certificate_template_ids'])) {
+            $data["certificate_template_ids"] = is_array($data['certificate_template_ids']) ? $data['certificate_template_ids'] : explode(',', $data['certificate_template_ids']);
+        }
+
+        $rules = [
+            'certificate_template_ids' => 'required|array|min:1',
+            'certificate_template_ids.*' => [
                 'required',
                 'integer',
                 'distinct',

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
-use App\Models\Certificate;
+use App\Models\CertificateTemplates;
 use App\Models\CertificateIssued;
 use App\Models\CourseEnrollment;
 use App\Models\ExamAnswer;
@@ -41,18 +41,18 @@ class CertificateIssuedService
         $batchIds = $request['batch_id'] ?? [];
         $youthIds = $request['youth_id'] ?? [];
         $courseId = $request['course_id'] ?? [];
-        $certificateIds = $request['certificate_id'] ?? [];
+        $certificateIds = $request['certificate_template_id'] ?? [];
 
         /** @var CertificateIssued|Builder $certificateIssuedBuilder */
         $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
-            'certificate_issued.certificate_id',
-            'certificates.title as certificate_title',
-            'certificates.title_en as certificate_title_en',
+            'certificate_issued.certificate_template_id',
+            'certificate_templates.title as certificate_title',
+            'certificate_templates.title_en as certificate_title_en',
             'courses.title as course_title',
             'courses.title_en as course_title_en',
-            'certificates.result_type as certificate_result_type',
-            'certificates.issued_at',
+            'certificate_templates.result_type as certificate_result_type',
+            'certificate_templates.issued_at',
             'certificate_issued.youth_id',
             'certificate_issued.course_id',
             'certificate_issued.batch_id',
@@ -63,12 +63,12 @@ class CertificateIssuedService
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('certificate_templates',"certificate_templates.id","=","certificate_issued.certificate_template_id");
         $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
         $certificateIssuedBuilder->leftJoin('courses', 'courses.id', '=', 'certificate_issued.course_id');
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
-            $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
+            $certificateIssuedBuilder->where('certificate_templates.row_status', $rowStatus);
         }
 
         if (!empty($batchIds)) {
@@ -80,7 +80,7 @@ class CertificateIssuedService
         }
 
         if (!empty($certificateIds)) {
-            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_template_id', $certificateIds);
         }
 
         if (!empty($courseId)) {
@@ -101,7 +101,7 @@ class CertificateIssuedService
 
         $resultArray = $certificateIssued->toArray();
         $youthIds = CertificateIssued::pluck('youth_id')->unique()->toArray();
-//        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
+//        $certificateIds = CertificateIssued::pluck('certificate_template_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
         $indexedYouths = [];
@@ -142,18 +142,18 @@ class CertificateIssuedService
         $rowStatus = $request['row_status'] ?? "";
         $order = $request['order'] ?? "ASC";
         $courseId = $request['course_id'] ?? [];
-        $certificateIds = $request['certificate_id'] ?? [];
+        $certificateIds = $request['certificate_template_id'] ?? [];
 
         /** @var CertificateIssued|Builder $certificateIssuedBuilder */
         $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
-            'certificate_issued.certificate_id',
-            'certificates.title as certificate_title',
-            'certificates.title_en as certificate_title_en',
+            'certificate_issued.certificate_template_id',
+            'certificate_templates.title as certificate_title',
+            'certificate_templates.title_en as certificate_title_en',
             'courses.title as course_title',
             'courses.title_en as course_title_en',
-            'certificates.result_type as certificate_result_type',
-            'certificates.issued_at',
+            'certificate_templates.result_type as certificate_result_type',
+            'certificate_templates.issued_at',
             'certificate_issued.youth_id',
             'certificate_issued.course_id',
             'certificate_issued.batch_id',
@@ -164,17 +164,17 @@ class CertificateIssuedService
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates',"certificates.id","=","certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('certificate_templates',"certificate_templates.id","=","certificate_issued.certificate_template_id");
         $certificateIssuedBuilder->join('batches',"batches.id","=","certificate_issued.batch_id");
         $certificateIssuedBuilder->join('courses', 'courses.id', '=', 'certificate_issued.course_id');
         $certificateIssuedBuilder->orderBy('certificate_issued.id', $order);
         if (is_numeric($rowStatus)) {
-            $certificateIssuedBuilder->where('certificates.row_status', $rowStatus);
+            $certificateIssuedBuilder->where('certificate_templates.row_status', $rowStatus);
         }
 
 
         if (!empty($certificateIds)) {
-            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_id', $certificateIds);
+            $certificateIssuedBuilder->whereIn('certificate_issued.certificate_template_id', $certificateIds);
         }
 
         $certificateIssuedBuilder->whereIn('certificate_issued.course_id', $courseId);
@@ -193,7 +193,7 @@ class CertificateIssuedService
 
         $resultArray = $certificateIssued->toArray();
         $youthIds = CertificateIssued::pluck('youth_id')->unique()->toArray();
-//        $certificateIds = CertificateIssued::pluck('certificate_id')->unique()->toArray();
+//        $certificateIds = CertificateIssued::pluck('certificate_template_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
 
         $indexedYouths = [];
@@ -229,13 +229,13 @@ class CertificateIssuedService
         /** @var CertificateIssued|Builder $certificateIssuedBuilder */
         $certificateIssuedBuilder = CertificateIssued::select([
             'certificate_issued.id',
-            'certificate_issued.certificate_id',
-            'certificates.title as certificate_title',
-            'certificates.title_en as certificate_title_en',
-            'certificates.template as certificate_template',
-            'certificates.result_type as certificate_result_type',
-            'certificates.issued_at',
-            'certificates.language as certificate_language',
+            'certificate_issued.certificate_template_id',
+            'certificate_templates.title as certificate_title',
+            'certificate_templates.title_en as certificate_title_en',
+            'certificate_templates.template as certificate_template',
+            'certificate_templates.result_type as certificate_result_type',
+            'certificate_templates.issued_at',
+            'certificate_templates.language as certificate_language',
             'certificate_issued.youth_id',
             'certificate_issued.course_id',
             'courses.title as course_title',
@@ -250,7 +250,7 @@ class CertificateIssuedService
             'certificate_issued.row_status'
         ]);
 
-        $certificateIssuedBuilder->join('certificates', "certificates.id", "=", "certificate_issued.certificate_id");
+        $certificateIssuedBuilder->join('certificate_templates', "certificate_templates.id", "=", "certificate_issued.certificate_template_id");
 
         $certificateIssuedBuilder
             ->leftJoin('course_enrollments', "course_enrollments.certificate_issued_id", "=", "certificate_issued.id");
@@ -263,7 +263,7 @@ class CertificateIssuedService
 
         $certificateIssuedBuilder->where('certificate_issued.id', $id);
 
-        /** @var Certificate exam_subjects */
+        /** @var CertificateTemplates exam_subjects */
         return $certificateIssuedBuilder->firstOrFail();
     }
 
@@ -282,7 +282,7 @@ class CertificateIssuedService
 
     public function certificateIssuedAtUpdate($certificateId)
     {
-        $updateDetails = Certificate::where('id', $certificateId)->first();
+        $updateDetails = CertificateTemplates::where('id', $certificateId)->first();
         $updateDetails->issued_at = Carbon::now();
         $updateDetails->save();
     }
@@ -345,7 +345,7 @@ class CertificateIssuedService
                 Rule::unique('certificate_issued', 'youth_id')
                     ->where(function (\Illuminate\Database\Query\Builder $query) use ($request) {
                         return $query->where('certificate_issued.batch_id', $request->input('batch_id'))
-                            ->where('certificate_issued.certificate_id', $request->input('certificate_id'));
+                            ->where('certificate_issued.certificate_template_id', $request->input('certificate_template_id'));
                     }),
             ],
             'batch_id' => [
@@ -353,7 +353,7 @@ class CertificateIssuedService
                 'int',
 //                "exists:batches,id,deleted_at,NULL",
             ],
-            'certificate_id' => [
+            'certificate_template_id' => [
                 'required',
                 'int',
 //                "exists:certificates,id,NULL"
@@ -389,9 +389,9 @@ class CertificateIssuedService
             $request->offsetSet('batch_id', $this->toArray($decodedValue));
         }
 
-        if ($request->filled('certificate_id')) {
-            $decodedValue=$request->get('certificate_id');
-            $request->offsetSet('certificate_id', $this->toArray( $this->toArray($decodedValue)));
+        if ($request->filled('certificate_template_id')) {
+            $decodedValue=$request->get('certificate_template_id');
+            $request->offsetSet('certificate_template_id', $this->toArray( $this->toArray($decodedValue)));
 
         }
 
@@ -424,11 +424,11 @@ class CertificateIssuedService
                 "integer",
                 "exists:batches,id,deleted_at,NULL"
             ],
-            'certificate_id' => [
+            'certificate_template_id' => [
                 "nullable",
                 "array"
             ],
-            'certificate_id.*' => [
+            'certificate_template_id.*' => [
                 "nullable",
                 "integer",
                 "exists:certificates,id,deleted_at,NULL"

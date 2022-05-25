@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCertificateIssued extends Migration
+class CreateCertificateIssuedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,14 @@ class CreateCertificateIssued extends Migration
     public function up()
     {
         Schema::create('certificate_issued', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedInteger('certificate_id');
+            $table->increments('id');
+            $table->unsignedInteger('certificate_template_id');
             $table->unsignedInteger('youth_id');
             $table->unsignedInteger('batch_id');
-            $table->unsignedInteger('row_status');
+            $table->unsignedInteger('course_id')->nullable();
+            $table->unsignedInteger('row_status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

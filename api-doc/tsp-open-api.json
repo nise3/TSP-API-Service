@@ -2644,6 +2644,46 @@
                 }
             }
         },
+        "/batches/{batchId}/assign-certificate-template-to-batch": {
+            "post": {
+                "summary": "Assign Certificate Template to Batch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchExam"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "batches"
+                ],
+                "description": "API endpoint to assign certificate template to batch.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exams assigned to batch successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/batches/{batchId}/exams": {
             "get": {
                 "summary": "exam list by Batch Id",
@@ -12699,7 +12739,7 @@
                 }
             }
         },
-        "/certificates": {
+        "/certificate-templates": {
             "get": {
                 "tags": [
                     "Certificate"
@@ -12808,11 +12848,11 @@
                 }
             }
         },
-        "/certificates/{certificateId}": {
+        "/certificate-templates/{templateId}": {
             "get": {
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "certificate id to get one",
                         "required": true,
@@ -12823,7 +12863,7 @@
                     }
                 ],
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "get_one",
                 "description": " API endpoint to get a certificate.A successful request response will show 200 HTTP status code",
@@ -12857,13 +12897,13 @@
             },
             "put": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "update",
                 "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "required": true,
                         "in": "path",
                         "schema": {
@@ -12915,13 +12955,13 @@
             },
             "delete": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "delete",
                 "description": "API endpoint to delete a Certificate. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "Certificate id to delete",
                         "required": true,
