@@ -3037,7 +3037,7 @@
                 }
             }
         },
-        "/batches/{id}/result-publish": {
+        "/batches/{batchId}/result-publish": {
             "put": {
                 "tags": [
                     "Result Processing"
@@ -12797,7 +12797,7 @@
         "/certificate-templates": {
             "get": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "get_list",
                 "description": "API endpoint to get list of Certificate. A successful request response will show 200 HTTP status code",
@@ -12860,7 +12860,7 @@
             },
             "post": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a Certificate.A successful request response will show 201 HTTP status code",
