@@ -22,7 +22,6 @@ class CreateLocCityCorporationWardsTable extends Migration
             $table->mediumInteger('loc_division_id')->unsigned()->default(0);
             $table->mediumInteger('loc_district_id')->unsigned()->default(0);
             $table->mediumInteger('loc_city_corporation_id')->unsigned();
-            $table->timestamps();
             $table->softDeletes();
         });
 
