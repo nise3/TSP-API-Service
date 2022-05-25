@@ -1290,9 +1290,7 @@ class BatchService
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $resultBuilder = Result::where('batch_id', $batch->id)->get();
-
-        $results = $resultBuilder->get();
+        $results = Result::where('batch_id', $batch->id)->get();
 
         $youthIds = $results->pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
@@ -1355,7 +1353,7 @@ class BatchService
     {
         $batch = Batch::findOrFail($id);
 
-        if ($data['is_published'] == Result::RESULT_PUBLICATIONS) {
+        if ($data['is_published'] == Result::RESULT_PUBLISHED) {
             $batch->result_published_at = Carbon::now();
         } else {
             $batch->result_published_at = null;
