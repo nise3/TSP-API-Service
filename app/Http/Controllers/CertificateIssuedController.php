@@ -126,7 +126,7 @@ class CertificateIssuedController extends Controller
 
         try {
             $data = $this->certificateIssuedService->store($validatedData);
-            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_template_id']);
             $this->certificateIssuedService->courseEnrollmentUpdate($validatedData, $data);
             DB::commit();
             $response = [
@@ -195,6 +195,7 @@ class CertificateIssuedController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $certificate = CertificateIssued::findOrFail($id);
+
         $this->certificateIssuedService->destroy($certificate);
         $response = [
             '_response_status' => [

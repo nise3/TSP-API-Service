@@ -15,6 +15,7 @@ class CreateCertificateIssuedTable extends Migration
     {
         Schema::create('certificate_issued', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('certificate_template_id');
             $table->unsignedInteger('youth_id');
             $table->unsignedInteger('batch_id');
             $table->unsignedInteger('course_id')->nullable();
