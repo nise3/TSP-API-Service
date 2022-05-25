@@ -1157,10 +1157,10 @@ class BatchService
 
         $isAllExamFinished = true;
 
-        $examTypes = [];
+        $batchExamTypes = [];
         foreach ($exams as $exam) {
-            if(!in_array($exam->examType->type,$examTypes)){
-                $examTypes[] = $exam->examType->type;
+            if(!in_array($exam->examType->type,$batchExamTypes)){
+                $batchExamTypes[] = $exam->examType->type;
             }
             $examEndDate = Carbon::create($exam->end_date);
 
@@ -1170,9 +1170,9 @@ class BatchService
         }
 
         sort($courseResultConfigExamTypes);
-        sort($examTypes);
+        sort($batchExamTypes);
 
-        if ($courseResultConfigExamTypes !== $examTypes) {
+        if ($courseResultConfigExamTypes !== $batchExamTypes) {
             return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime, "Configured exams not found!");
         }
 
