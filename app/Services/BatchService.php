@@ -1010,7 +1010,7 @@ class BatchService
                 'required',
                 'integer',
                 'distinct',
-                'exists:exam_types,id,deleted_at,NULL'
+                'exists:certificate_templates,id,deleted_at,NULL'
             ]
         ];
         return Validator::make($data, $rules);
