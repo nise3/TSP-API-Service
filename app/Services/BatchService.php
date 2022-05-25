@@ -1355,7 +1355,7 @@ class BatchService
     {
         $batch = Batch::findOrFail($id);
 
-        if ($data['is_published'] == Result::RESULT_PUBLICATIONS) {
+        if ($data['is_published'] == Result::RESULT_PUBLISHED) {
             $batch->result_published_at = Carbon::now();
         } else {
             $batch->result_published_at = null;
