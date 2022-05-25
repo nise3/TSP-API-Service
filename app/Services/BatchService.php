@@ -1164,7 +1164,8 @@ class BatchService
                 $batchExamTypes[] = $exam->examType->type;
             }
             $examEndDate = Carbon::create($exam->end_date);
-
+            Log::info('exam End Date--->'.$examEndDate);
+            Log::info('exam date check--->'.$examEndDate->lt($startTime));
             if ($examEndDate->lt($startTime)) {
                 $isAllExamFinished = false;
             }
@@ -1176,7 +1177,7 @@ class BatchService
         if ($courseResultConfigExamTypes !== $batchExamTypes) {
             return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime, "Configured exams not found!");
         }
-
+        Log::info('isAllExamFinished--->'.$isAllExamFinished);
         if (!$isAllExamFinished) {
             return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
         }
