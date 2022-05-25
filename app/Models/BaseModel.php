@@ -119,6 +119,8 @@ abstract class BaseModel extends Model
 
     public const DEFAULT_PAGE_SIZE = 10;
 
+    public const DEFAULT_ROW_ORDER = "DESC";
+
     /** Client Url End Point Type*/
     public const ORGANIZATION_CLIENT_URL_TYPE = "ORGANIZATION";
     public const INSTITUTE_URL_CLIENT_TYPE = "INSTITUTE";

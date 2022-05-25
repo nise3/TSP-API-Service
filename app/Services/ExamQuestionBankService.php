@@ -31,7 +31,7 @@ class ExamQuestionBankService
         $paginate = $request['page'] ?? "";
         $order = $request['order'] ?? "ASC";
         $subjectId = $request['subject_id'] ?? "";
-        $questionType = $request['question_type'] ?? "";
+        $questionType = $request['question_type'] ?? BaseModel::DEFAULT_ROW_ORDER;
 
         /** @var ExamQuestionBank|Builder $examQuestionBankBuilder */
         $examQuestionBankBuilder = ExamQuestionBank::select([
