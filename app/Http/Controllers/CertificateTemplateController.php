@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Certificate;
-use App\Services\CertificateService;
+use App\Models\CertificateTemplates;
+use App\Services\CertificateTemplatesService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -11,24 +11,24 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
-class CertificateController extends Controller
+class CertificateTemplateController extends Controller
 {
     /**
-     * @var CertificateService
+     * @var CertificateTemplatesService
      */
-    public CertificateService $certificateService;
+    public CertificateTemplatesService $certificateTemplateService;
     /**
      * @var \Carbon\Carbon|Carbon
      */
     private \Carbon\Carbon|Carbon $startTime;
 
     /**
-     * CertificateController constructor.
-     * @param CertificateService $certificateService
+     * CertificateTemplateController constructor.
+     * @param CertificateTemplatesService $certificateService
      */
-    public function __construct(CertificateService $certificateService)
+    public function __construct(CertificateTemplatesService $certificateService)
     {
-        $this->certificateService = $certificateService;
+        $this->certificateTemplateService = $certificateService;
         $this->startTime = Carbon::now();
     }
 
@@ -39,11 +39,11 @@ class CertificateController extends Controller
      */
     public function getList(Request $request): JsonResponse
     {
+
         //$this->authorize('viewAny', Certificate::class);
-        $filter = $this->certificateService->filterValidator($request)->validate();
+        $filter = $this->certificateTemplateService->filterValidator($request)->validate();
 
-        $response = $this->certificateService->getList($filter, $this->startTime);
-
+        $response = $this->certificateTemplateService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -55,7 +55,7 @@ class CertificateController extends Controller
 
     public function read(Request $request, int $id): JsonResponse
     {
-        $certificate = $this->certificateService->getOneCertificate($id);
+        $certificate = $this->certificateTemplateService->getOneCertificate($id);
         $response = [
             "data" => $certificate,
             "_response_status" => [
@@ -77,8 +77,8 @@ class CertificateController extends Controller
     public function store(Request $request): JsonResponse
     {
 
-        $validatedData = $this->certificateService->validator($request)->validate();
-        $data = $this->certificateService->store($validatedData);
+        $validatedData = $this->certificateTemplateService->validator($request)->validate();
+        $data = $this->certificateTemplateService->store($validatedData);
         $response = [
             'data' => $data ?: null,
             '_response_status' => [
@@ -101,11 +101,10 @@ class CertificateController extends Controller
 
     public function update(Request $request, int $id): JsonResponse
     {
-        $certificate = Certificate::findOrFail($id);
+        $certificate = CertificateTemplates::findOrFail($id);
 
-        $validated = $this->certificateService->validator($request, $id)->validate();
-
-        $data = $this->certificateService->update($certificate, $validated);
+        $validated = $this->certificateTemplateService->validator($request, $id)->validate();
+        $data = $this->certificateTemplateService->update($certificate, $validated);
 
         $response = [
             'data' => $data,
@@ -126,8 +125,8 @@ class CertificateController extends Controller
 
     public function destroy(int $id): JsonResponse
     {
-        $certificate = Certificate::findOrFail($id);
-        $this->certificateService->destroy($certificate);
+        $certificate = CertificateTemplates::findOrFail($id);
+        $this->certificateTemplateService->destroy($certificate);
         $response = [
             '_response_status' => [
                 "success" => true,

@@ -8,7 +8,7 @@ use App\Models\CertificateIssued;
 use App\Models\Course;
 use App\Services\BatchService;
 use App\Services\CertificateIssuedService;
-use App\Services\CertificateService;
+use App\Services\CertificateTemplatesService;
 use App\Services\CommonServices\MailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class CertificateIssuedController extends Controller
     private \Carbon\Carbon|Carbon $startTime;
 
     /**
-     * CertificateController constructor.
+     * CertificateTemplateController constructor.
      * @param CertificateIssuedService $certificateIssuedService
      */
     public function __construct(

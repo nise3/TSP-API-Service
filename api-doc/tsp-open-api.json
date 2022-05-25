@@ -12699,7 +12699,7 @@
                 }
             }
         },
-        "/certificates": {
+        "/certificate-templates": {
             "get": {
                 "tags": [
                     "Certificate"
@@ -12808,11 +12808,11 @@
                 }
             }
         },
-        "/certificates/{certificateId}": {
+        "/certificate-templates/{templateId}": {
             "get": {
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "certificate id to get one",
                         "required": true,
@@ -12823,7 +12823,7 @@
                     }
                 ],
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "get_one",
                 "description": " API endpoint to get a certificate.A successful request response will show 200 HTTP status code",
@@ -12857,13 +12857,13 @@
             },
             "put": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "update",
                 "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "required": true,
                         "in": "path",
                         "schema": {
@@ -12915,13 +12915,13 @@
             },
             "delete": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "delete",
                 "description": "API endpoint to delete a Certificate. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "Certificate id to delete",
                         "required": true,

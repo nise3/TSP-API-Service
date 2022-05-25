@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
-use App\Models\Certificate;
+use App\Models\CertificateTemplates;
 use App\Models\CertificateIssued;
 use App\Models\CourseEnrollment;
 use App\Models\ExamAnswer;
@@ -263,7 +263,7 @@ class CertificateIssuedService
 
         $certificateIssuedBuilder->where('certificate_issued.id', $id);
 
-        /** @var Certificate exam_subjects */
+        /** @var CertificateTemplates exam_subjects */
         return $certificateIssuedBuilder->firstOrFail();
     }
 
@@ -282,7 +282,7 @@ class CertificateIssuedService
 
     public function certificateIssuedAtUpdate($certificateId)
     {
-        $updateDetails = Certificate::where('id', $certificateId)->first();
+        $updateDetails = CertificateTemplates::where('id', $certificateId)->first();
         $updateDetails->issued_at = Carbon::now();
         $updateDetails->save();
     }
