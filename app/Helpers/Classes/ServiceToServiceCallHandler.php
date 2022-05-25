@@ -189,10 +189,34 @@ class ServiceToServiceCallHandler
 
     public function updateTrainerYouthUser(array $trainer): mixed
     {
+
         $url = clientUrl(BaseModel::YOUTH_CLIENT_URL_TYPE) . 'service-to-service-call/update-trainer-youth';
 
+        $trainerInfo = [
+            'user_name_type' => BaseModel::USER_NAME_TYPE_MOBILE_NUMBER,
+            'first_name' => $trainer['trainer_name'] ?? "",
+            'first_name_en' => $trainer['trainer_name_en'] ?? "",
+            'last_name' => $trainer['trainer_name'] ?? "",
+            'last_name_en' => $trainer['trainer_name_en'] ?? "",
+            'loc_division_id' => $trainer['present_address_division_id'] ?? "",
+            'loc_district_id' => $trainer['present_address_district_id'] ?? "",
+            'loc_upazila_id' => $trainer['present_address_upazila_id'] ?? "",
+            'date_of_birth' => $trainer['date_of_birth'],
+            'gender' => $trainer['gender'],
+            'email' => $trainer['email'] ?? "",
+            'mobile' => $trainer['mobile'],
+            'physical_disability_status' => BaseModel::FALSE,
+            'skills' => $trainer['skills'],
+            'password' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'password_confirmation' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
+            'village_or_area' => $trainer['present_house_address'] ?? "",
+            'village_or_area_en' => $trainer['present_house_address_en'] ?? "",
+            'house_n_road' => $trainer['present_house_address'] ?? "",
+            'house_n_road_en' => $trainer['present_house_address_en'] ?? ""
+        ];
+
         $postField = [
-            "trainer_info" => $trainer
+            "trainer_info" => $trainerInfo
         ];
 
         $youthData = Http::withOptions([

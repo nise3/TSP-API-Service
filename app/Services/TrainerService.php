@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Trainer;
+use App\Models\Youth;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
@@ -405,9 +406,77 @@ class TrainerService
      */
     public function update(Trainer $trainer, array $data): Trainer
     {
-        $trainer->fill($data);
-        $trainer->save();
+
+        $youth = null;
+        DB::beginTransaction();
+        try {
+            /** Youth service call */
+
+            $youth =ServiceToServiceCall::updateTrainerYouthUser($data);
+
+            /** Save trainer with youth_id */
+            $data['youth_id'] = $youth['id'];
+            $trainer->fill($data);
+            $trainer->save();
+
+            /** Sync in institute_trainer pivot table */
+            $pivotTableData = [];
+            if (!empty($data['institute_id'])) {
+                $pivotTableData[] = [
+                    "institute_id" => $data['institute_id'],
+                    "industry_association_id" => null
+                ];
+            }
+            if (!empty($data['industry_association_id'])) {
+                $pivotTableData[] = [
+                    "institute_id" => null,
+                    "industry_association_id" => $data['industry_association_id']
+                ];
+            }
+            $trainer->institutes()->sync($pivotTableData);
+
+            /** Sync in institute_skill pivot table */
+            $trainer->skills()->sync($data['skills']);
+
+            /** Core service call */
+            $trainerData = $trainer->toArray();
+            $trainerData['role_id'] = $data['role_id'];
+            $coreUser = ServiceToServiceCall::createTrainerCoreUser($trainerData, $youth);
+
+            $trainer['role_id'] = $coreUser['role_id'] ?? "";
+            $trainer['institute_id'] = !empty($coreUser['institute_id']) ? $coreUser['institute_id'] : "";
+            $trainer['industry_association_id'] = !empty($coreUser['industry_association_id']) ? $coreUser['industry_association_id'] : "";
+
+            DB::commit();
+
+            /** Mail send after user registration */
+            $to = array($youth['email']);
+            $from = BaseModel::NISE3_FROM_EMAIL;
+            $subject = "User Registration Information";
+            $message = "Congratulation, You are successfully registered as a Trainer user. Username: " . $youth['username'] . " & Password: " . BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD;
+            $messageBody = MailService::templateView($message);
+            $mailService = new MailService($to, $from, $subject, $messageBody);
+            $mailService->sendMail();
+
+            /** SMS send after user registration */
+            $recipient = $youth['mobile'];
+            $smsMessage = "Congratulation, You are successfully registered as a Trainer user.";
+            $smsService = new SmsService();
+            $smsService->sendSms($recipient, $smsMessage);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            if (!empty($youth)) {
+                ServiceToServiceCall::rollbackTrainerYouthUser($youth);
+            }
+            throw $e;
+        }
+
         return $trainer;
+
+//        $trainer->fill($data);
+//        $trainer->save();
+//        return $trainer;
     }
 
     /**
