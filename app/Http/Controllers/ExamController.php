@@ -224,9 +224,9 @@ class ExamController extends Controller
 
         $exam = Exam::findOrFail($id);
         $examStartTime = CarbonImmutable::create($exam->start_date);
-        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
+        if (in_array($exam->type, Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
             $examEndTime = $exam->end_date;
-        }else{
+        } else {
             $examEndTime = $examStartTime->addMinutes($exam->duration);
         }
         throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
@@ -254,9 +254,9 @@ class ExamController extends Controller
 
         $exam = Exam::findOrFail($validatedData['exam_id']);
         $examStartTime = CarbonImmutable::create($exam->start_date);
-        if(in_array($exam->type,Exam::EXAM_TYPES_WITHOUT_QUESTION)){
+        if (in_array($exam->type, Exam::EXAM_TYPES_WITHOUT_QUESTION)) {
             $examEndTime = $exam->end_date;
-        }else{
+        } else {
             $examEndTime = $examStartTime->addMinutes($exam->duration);
         }
         throw_if($this->startTime->lt($examStartTime), ValidationException::withMessages(["Exam has not started"]));
@@ -302,6 +302,7 @@ class ExamController extends Controller
         ];
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
+
     /**
      * @param int $examId
      * @param int $youthId
@@ -371,11 +372,19 @@ class ExamController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException|AuthorizationException
+     * @throws Throwable
      */
     public function examPublish(Request $request, int $id): JsonResponse
     {
         $this->authorize('create', Exam::class);
         $examType = ExamType::findOrFail($id);
+
+        $exams = Exam::where('exam_type_id', $id)->get()->toArray();
+        foreach ($exams as $exam) {
+            $examStartDate = Carbon::create($exam['start_date']);
+            throw_if($this->startTime->gte($examStartDate), ValidationException::withMessages(["Exam can not be published or unpublished"]));
+        }
+
         $validatedData = $this->examService->examPublishValidator($request)->validate();
         $this->examService->examPublish($validatedData, $examType, $this->startTime);
 
