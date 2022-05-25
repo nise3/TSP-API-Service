@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,18 +17,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string|null $title_en
  * @property string|null $bbs_code
  * @property int $loc_division_id
- * @property Carbon $created_at
- * @property Carbon $updated_at
  * @property bool|null $is_sadar_district
  * @property-read Collection|LocUpazila[] $locUpazilas
  * @property-read LocDivision $locDivision
  */
 class LocDistrict extends BaseModel
 {
-    use SoftDeletes;
+    use SoftDeletes, HasFactory;
+
+    public $timestamps = false;
 
     protected $table = 'loc_districts';
-    public $timestamps = false;
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_ONLY_SOFT_DELETE;
 
     public function locDivision(): BelongsTo

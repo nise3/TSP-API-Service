@@ -515,6 +515,8 @@ class LocUpazilasTableSeeder extends Seeder
             array('id' => '499','loc_division_id' => '2','loc_district_id' => '11','title_en' => 'Lalmai','title' => 'লালমাই','is_sadar_upazila' => '0','bbs_code' => NULL,'deleted_at' => NULL)
         ));
 
+
+
         Schema::enableForeignKeyConstraints();
 
     }
