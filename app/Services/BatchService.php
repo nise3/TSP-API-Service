@@ -1270,7 +1270,7 @@ class BatchService
         $result = Result::where('youth_id',$youthId)->where('batch_id',$batchId)->first();
 
         if($result){
-            $result->resultSummaries->delete();
+            ResultSummary::where('result_id',$result->id)->delete();
             $result->delete();
         }
     }
