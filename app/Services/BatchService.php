@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
+use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
@@ -1180,10 +1181,12 @@ class BatchService
             return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
         }
 
+
         DB::beginTransaction();
 
         try {
             foreach ($youthIds as $youthId) {
+                $this->deleteAllPreviousProcessedData($youthId, $batch->id);
                 $totalObtainedMarks = 0;
                 $resultSummaryObjects = collect();
                 foreach ($courseResultPercentages as $key => $resultPercentage) {
@@ -1258,6 +1261,16 @@ class BatchService
         } catch (Throwable $e) {
             DB::rollBack();
             throw $e;
+        }
+    }
+
+    private function deleteAllPreviousProcessedData($youthId, $batchId){
+
+        $result = Result::where('youthId',$youthId)->where('batch_id',$batchId)->first();
+
+        if($result){
+            $result->resultSummaries->delete();
+            $result->delete();
         }
     }
 
