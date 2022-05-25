@@ -1266,7 +1266,7 @@ class BatchService
 
     private function deleteAllPreviousProcessedData($youthId, $batchId){
 
-        $result = Result::where('youthId',$youthId)->where('batch_id',$batchId)->first();
+        $result = Result::where('youth_id',$youthId)->where('batch_id',$batchId)->first();
 
         if($result){
             $result->resultSummaries->delete();
