@@ -6,7 +6,7 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
 use App\Models\Course;
-use App\Services\BatchService;
+use App\Services\BatchCertificateTemplateService;
 use App\Services\CertificateIssuedService;
 use App\Services\CertificateTemplatesService;
 use App\Services\CommonServices\MailService;

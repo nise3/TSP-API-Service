@@ -20,6 +20,8 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
+    $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
+    $router->get('batches/{id}/certificate-templates', ['as' => 'batches.assign-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getListByBatchId']);
 
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
@@ -49,9 +51,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         // TODO: use 'certificates', 'certificate-types', ''certificate-issued'
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
-        $customRouter()->resourceRoute('certificate-templates', 'CertificateTemplateController')->render();
-        $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-
+//        $customRouter()->resourceRoute('certificate-templates', 'CertificateTemplateController')->render();
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
 
@@ -104,6 +104,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** Assign exams to batch */
         $router->post('batches/{id}/assign-exams-to-batch', ['as' => 'batches.assign-exams-to-batch', 'uses' => 'BatchController@assignExamToBatch']);
+//        $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
 
         /**  exam list by batch */
         $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
