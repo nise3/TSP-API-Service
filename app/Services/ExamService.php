@@ -1768,7 +1768,7 @@ class ExamService
             'is_published' => [
                 'required',
                 'int',
-                Rule::in(Exam::EXAM_PUBLICATION)
+                Rule::in(Exam::EXAM_PUBLISH_UNPUBLISHED)
             ],
         ];
 

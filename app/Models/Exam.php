@@ -62,7 +62,7 @@ class Exam extends BaseModel
     public const EXAM_UNPUBLISHED = 0;
 
 
-    public const EXAM_PUBLICATION = [
+    public const EXAM_PUBLISH_UNPUBLISHED = [
         self::EXAM_PUBLISHED,
         self::EXAM_UNPUBLISHED
     ];
