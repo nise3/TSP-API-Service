@@ -1166,7 +1166,7 @@ class BatchService
             $examEndDate = Carbon::create($exam->end_date);
             Log::info('exam End Date--->'.$examEndDate);
             Log::info('exam date check--->'.$examEndDate->lt($startTime));
-            if ($examEndDate->lt($startTime)) {
+            if ($examEndDate->gt($startTime)) {
                 $isAllExamFinished = false;
             }
         }
