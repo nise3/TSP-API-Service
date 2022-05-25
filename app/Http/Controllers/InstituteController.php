@@ -629,11 +629,8 @@ class InstituteController extends Controller
     public function updateInstituteProfile(Request $request): JsonResponse
     {
         $instituteId = $request->input('institute_id');
-
-        $institute = $this->instituteService->getOneInstitute($instituteId);
-
+        $institute = Institute::findOrFail($instituteId);
         $this->authorize('updateProfile', $institute);
-
         $validated = $this->instituteService->instituteProfileUpdateValidator($request, $instituteId)->validate();
         $data = $this->instituteService->update($institute, $validated);
         $response = [

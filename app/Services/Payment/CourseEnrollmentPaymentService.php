@@ -43,7 +43,7 @@ class CourseEnrollmentPaymentService
         $invoiceId = CodeGeneratorService::getNewInvoiceCode($invoicePrefix, $ekPayMerchantIdSize); // Invoice id as a trnx_id;
 
         $time = Carbon::now()->format('Y-m-d H:i:s');
-        $customerFullName = $courseEnrollment->first_name . " " . $courseEnrollment->last_name;
+        $customerFullName = $courseEnrollment->first_name_en . " " . $courseEnrollment->last_name_en;
         $customerCleanName = preg_replace('/[^A-Za-z0-9 \-\.]/', '', $customerFullName);
         $paymentPurpose = PaymentTransactionHistory::PAYMENT_PURPOSE_COURSE_ENROLLMENT;
 

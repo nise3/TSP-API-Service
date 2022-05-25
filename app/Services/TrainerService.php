@@ -649,7 +649,7 @@ class TrainerService
                 'max:500'
             ],
             'trainer_name_en' => [
-                'nullable',
+                'required',
                 'string',
                 'max:250'
             ],
