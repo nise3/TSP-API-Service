@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
+use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Throwable;
@@ -63,7 +64,6 @@ class BatchService
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
-        $certificateId = $request['certificate_id'] ?? "";
 
 //        dd($request);
 
@@ -98,7 +98,6 @@ class BatchService
             'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
-            'batches.certificate_id',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -146,9 +145,6 @@ class BatchService
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
-        if (is_numeric($certificateId)) {
-            $batchBuilder->where('batches.certificate_id', $certificateId);
-        }
 
         if (is_numeric($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
@@ -438,6 +434,13 @@ class BatchService
 
     }
 
+    public function assignBatchCertificateTemplateIds($batch, array $batchCertificateTemplateIds): Batch
+    {
+        $batch->CertificateTemplateIds()->sync($batchCertificateTemplateIds);
+        return $batch;
+
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -530,10 +533,6 @@ class BatchService
                 'after:registration_start_date',
                 'date_format:Y-m-d',
             ],
-            'certificate_id' => [
-                'nullable',
-                'integer'
-            ],
             'batch_start_date' => [
                 'required',
                 'date',
@@ -589,7 +588,6 @@ class BatchService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
-            'certificate_id' => 'nullable|int',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
@@ -995,6 +993,30 @@ class BatchService
         return Validator::make($data, $rules);
     }
 
+/**
+* @param Request $request
+* @return \Illuminate\Contracts\Validation\Validator
+*/
+    public function batchCertificateTemplateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        if (!empty($data['certificate_template_ids'])) {
+            $data["certificate_template_ids"] = is_array($data['certificate_template_ids']) ? $data['certificate_template_ids'] : explode(',', $data['certificate_template_ids']);
+        }
+
+        $rules = [
+            'certificate_template_ids' => 'required|array|min:1',
+            'certificate_template_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                'exists:certificate_templates,id,deleted_at,NULL'
+            ]
+        ];
+        return Validator::make($data, $rules);
+    }
+
     /**
      * @param int $fourIrInitiativeId
      * @param Carbon $startTime
@@ -1124,10 +1146,6 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
-            return !empty($item);
-        });
-
         $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         if (count($batch->examTypes) == 0) {
@@ -1146,6 +1164,10 @@ class BatchService
 
         }
 
+        $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
+            return !empty($item);
+        });
+
         $courseResultConfigExamTypes = [];
         foreach ($courseResultPercentages as $key => $resultPercentage) {
             if (!empty($resultPercentage) && $examTypes[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
@@ -1155,35 +1177,38 @@ class BatchService
 
         $exams = Exam::query()->whereIn('exam_type_id', $batch->examTypes->pluck('id'))->with('examType:id,type')->get();
 
-        $isAllExamFinished = true;
+        $isAllExamNotFinished = false;
 
-        $examTypes = [];
+        $batchExamTypes = [];
         foreach ($exams as $exam) {
-            if(!in_array($exam->examType->type,$examTypes)){
-                $examTypes[] = $exam->examType->type;
+            if(!in_array($exam->examType->type,$batchExamTypes)){
+                $batchExamTypes[] = $exam->examType->type;
             }
             $examEndDate = Carbon::create($exam->end_date);
-
+            Log::info('exam End Date--->'.$examEndDate);
+            Log::info('exam date check--->'.$examEndDate->lt($startTime));
             if ($examEndDate->lt($startTime)) {
-                $isAllExamFinished = false;
+                $isAllExamNotFinished = true;
             }
         }
 
         sort($courseResultConfigExamTypes);
-        sort($examTypes);
+        sort($batchExamTypes);
 
-        if ($courseResultConfigExamTypes !== $examTypes) {
+        if ($courseResultConfigExamTypes !== $batchExamTypes) {
             return formatErrorResponse(["error_code" => "configured_exams_not_found"], $startTime, "Configured exams not found!");
         }
-
-        if (!$isAllExamFinished) {
+        Log::info('isAllExamFinished--->'.$isAllExamNotFinished);
+        if ($isAllExamNotFinished) {
             return formatErrorResponse(["error_code" => "exams_not_finished"], $startTime, "All exams are not finished!");
         }
+
 
         DB::beginTransaction();
 
         try {
             foreach ($youthIds as $youthId) {
+                $this->deleteAllPreviousProcessedData($youthId, $batch->id);
                 $totalObtainedMarks = 0;
                 $resultSummaryObjects = collect();
                 foreach ($courseResultPercentages as $key => $resultPercentage) {
@@ -1261,6 +1286,16 @@ class BatchService
         }
     }
 
+    private function deleteAllPreviousProcessedData($youthId, $batchId){
+
+        $result = Result::where('youth_id',$youthId)->where('batch_id',$batchId)->first();
+
+        if($result){
+            ResultSummary::where('result_id',$result->id)->delete();
+            $result->delete();
+        }
+    }
+
     private function getResult($marks, CourseResultConfig $courseResultConfig): string
     {
         if ($courseResultConfig->result_type == BaseModel::RESULT_TYPE_GRADING) {
@@ -1290,9 +1325,7 @@ class BatchService
         /** @var Batch|Builder $batchBuilder */
         $batch = Batch::findOrFail($id);
 
-        $resultBuilder = Result::where('batch_id', $batch->id)->get();
-
-        $results = $resultBuilder->get();
+        $results = Result::where('batch_id', $batch->id)->get();
 
         $youthIds = $results->pluck('youth_id')->unique()->toArray();
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
@@ -1349,13 +1382,13 @@ class BatchService
     /**
      * @param array $data
      * @param int $id
-     * @return Batch
+     * @return bool
      */
-    public function publishExamResult(array $data, int $id): Batch
+    public function publishExamResult(array $data, int $id): bool
     {
         $batch = Batch::findOrFail($id);
 
-        if ($data['is_published'] == Result::RESULT_PUBLICATIONS) {
+        if ($data['is_published'] == Result::RESULT_PUBLISHED) {
             $batch->result_published_at = Carbon::now();
         } else {
             $batch->result_published_at = null;

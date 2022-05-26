@@ -6,9 +6,9 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
 use App\Models\Course;
-use App\Services\BatchService;
+use App\Services\BatchCertificateTemplateService;
 use App\Services\CertificateIssuedService;
-use App\Services\CertificateService;
+use App\Services\CertificateTemplatesService;
 use App\Services\CommonServices\MailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class CertificateIssuedController extends Controller
     private \Carbon\Carbon|Carbon $startTime;
 
     /**
-     * CertificateController constructor.
+     * CertificateTemplateController constructor.
      * @param CertificateIssuedService $certificateIssuedService
      */
     public function __construct(
@@ -126,7 +126,7 @@ class CertificateIssuedController extends Controller
 
         try {
             $data = $this->certificateIssuedService->store($validatedData);
-            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_template_id']);
             $this->certificateIssuedService->courseEnrollmentUpdate($validatedData, $data);
             DB::commit();
             $response = [
@@ -195,6 +195,7 @@ class CertificateIssuedController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $certificate = CertificateIssued::findOrFail($id);
+
         $this->certificateIssuedService->destroy($certificate);
         $response = [
             '_response_status' => [

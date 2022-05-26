@@ -497,9 +497,9 @@ class ExamService
 
         } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
             $data['online']['exam_type_id'] = $data['exam_type_id'];
-            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['duration']);
+            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['online']['duration']);
             $data['offline']['exam_type_id'] = $data['exam_type_id'];
-            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['duration']);
+            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['offline']['duration']);
 
 
             $onlineExam = $this->storeOnlineExam($data['online']);
@@ -787,14 +787,18 @@ class ExamService
     {
         $examIds = [];
         if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $data['end_date'] = Carbon::create($data['start_date'])->addMinutes($data['duration']);
             $onlineExam = $this->updateOnlineExam($data);
             $examIds['online'] = $onlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $data['end_date'] = Carbon::create($data['start_date'])->addMinutes($data['duration']);
             $offlineExam = $this->updateOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
+            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['online']['duration']);
+            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['offline']['duration']);
             $onlineExam = $this->updateOnlineExam($data['online']);
             $offlineExam = $this->updateOfflineExam($data['offline']);
 
@@ -1009,6 +1013,17 @@ class ExamService
                         }
                     }
                 }
+            ],
+            'accessor_type' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::in(BaseModel::ACCESSOR_TYPES)
+            ],
+            'accessor_id' => [
+                'required',
+                'int',
+                'min:1'
             ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',

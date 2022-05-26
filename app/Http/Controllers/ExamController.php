@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamType;
-use App\Services\BatchService;
+use App\Services\BatchCertificateTemplateService;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
