@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamType;
-use App\Services\BatchService;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -13,7 +12,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -50,6 +48,7 @@ class ExamController extends Controller
     {
         $this->authorize('viewAny', Exam::class);
         $filter = $this->examService->filterValidator($request)->validate();
+
         $response = $this->examService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }

@@ -1125,7 +1125,6 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
-        $examTypes = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
 
         if (count($batch->examTypes) == 0) {
 
@@ -1149,8 +1148,8 @@ class BatchService
 
         $courseResultConfigExamTypes = [];
         foreach ($courseResultPercentages as $key => $resultPercentage) {
-            if (!empty($resultPercentage) && $examTypes[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
-                array_push($courseResultConfigExamTypes, $examTypes[$key]);
+            if (!empty($resultPercentage) && BaseModel::EXAM_TYPE_VALUES[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
+                $courseResultConfigExamTypes[] = BaseModel::EXAM_TYPE_VALUES[$key];
             }
         }
 
@@ -1191,7 +1190,7 @@ class BatchService
                 $totalObtainedMarks = 0;
                 $resultSummaryObjects = collect();
                 foreach ($courseResultPercentages as $key => $resultPercentage) {
-                    $examType = $examTypes[$key];
+                    $examType = BaseModel::EXAM_TYPE_VALUES[$key];
 
                     // Attendance total mark calculate from course result config
                     if ($examType == Exam::EXAM_TYPE_ATTENDANCE) {

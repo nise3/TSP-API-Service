@@ -216,4 +216,7 @@ abstract class BaseModel extends Model
         self::RESULT_TYPE_MARKS
     ];
 
+    public const EXAM_TYPE_VALUES = ['online' => 1, 'offline' => 2, 'mixed' => 3, 'practical' => 4, 'field_work' => 5, 'presentation' => 6, 'assignment' => 7, 'attendance' => 8];
+
+
 }

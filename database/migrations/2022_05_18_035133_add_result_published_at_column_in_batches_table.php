@@ -14,7 +14,7 @@ class AddResultPublishedAtColumnInBatchesTable extends Migration
     public function up()
     {
         Schema::table('batches', function (Blueprint $table) {
-            $table->date('result_published_at')->nullable();
+            $table->dateTime('result_published_at')->nullable();
         });
     }
 
