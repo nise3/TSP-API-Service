@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array|mixed getIndustryAssociationData(int $industryAssociationId)
  * @method static array|mixed getYouthProfilesByIds(array $youthIds)
  * @method static array|mixed createTrainerYouthUser(array $trainer)
+ *  * @method static array|mixed updateTrainerYouthUser(array $trainer)
  * @method static array|mixed createTrainerCoreUser(array $trainer, array $youth)
  * @method static array|mixed rollbackTrainerYouthUser(array $youth)
  * @method static array|mixed updateOrCreateYouthUser(array $payload)
@@ -22,6 +23,8 @@ use Illuminate\Support\Facades\Facade;
  */
 class ServiceToServiceCall extends Facade
 {
+
+
     protected static function getFacadeAccessor(): string
     {
         return 'service_to_service_call';

@@ -113,11 +113,11 @@ class TrainerController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $trainer = Trainer::findOrFail($id);
-
+        $youthId=$trainer['youth_id'];
         $this->authorize('update', $trainer);
 
         $validated = $this->trainerService->validator($request, $id)->validate();
-
+        $validated['youth_id']=$youthId;
         $data = $this->trainerService->update($trainer, $validated);
 
         $response = [
