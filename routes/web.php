@@ -20,7 +20,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
-//    $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
+    $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
 //    $router->get('batches/{id}/certificate-templates', ['as' => 'batches.assign-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getListByBatchId']);
 
     /** Auth routes */
@@ -106,7 +106,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $router->post('batches/{id}/assign-exams-to-batch', ['as' => 'batches.assign-exams-to-batch', 'uses' => 'BatchController@assignExamToBatch']);
 
         /** Assign certificate templates to batch */
-        $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
+//        $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
         $router->get('batches/{id}/certificate-templates', ['as' => 'batches.assign-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getListByBatchId']);
 
         /**  exam list by batch */

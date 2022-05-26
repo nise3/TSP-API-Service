@@ -59,6 +59,7 @@ class BatchCertificateTemplateService
         $batchCertificateBuilder = BatchCertificateTemplates::select([
             'batch_certificate_templates.id',
             'batch_certificate_templates.certificate_template_id',
+            'certificate_templates.result_type',
             'batch_certificate_templates.batch_id',
             'certificate_templates.title_en as certificate_templates_title',
             'certificate_templates.title as certificate_templates_title'
