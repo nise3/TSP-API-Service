@@ -36,6 +36,7 @@ trait ScopeAcl
             }
             /** for modularize accessor column */
             if (Schema::hasColumn($tableName, 'accessor_id')) {
+                $query->where($tableName . '.accessor_type', BaseModel::ACCESSOR_TYPE_INSTITUTE);
                 $query->where($tableName . '.accessor_id', $authUser->institute_id);
             }
         } else if ($authUser && $authUser->isOrganizationUser()) { // industry association user
@@ -43,6 +44,7 @@ trait ScopeAcl
                 $query = $query->where($tableName . '.organization_id', $authUser->organization_id);
             }
             if (Schema::hasColumn($tableName, 'accessor_id')) {
+                $query->where($tableName . '.accessor_type', BaseModel::ACCESSOR_TYPE_ORGANIZATION);
                 $query->where($tableName . '.accessor_id', $authUser->organization_id);
             }
         }
@@ -51,6 +53,7 @@ trait ScopeAcl
                 $query = $query->where($tableName . '.industry_association_id', $authUser->industry_association_id);
             }
             if (Schema::hasColumn($tableName, 'accessor_id')) {
+                $query->where($tableName . '.accessor_type', BaseModel::ACCESSOR_TYPE_INDUSTRY_ASSOCIATION);
                 $query->where($tableName . '.accessor_id', $authUser->industry_association_id);
             }
         } else if ($authUser && $authUser->isRtoUser()) {  // RTO User
