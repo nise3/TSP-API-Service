@@ -1010,6 +1010,17 @@ class ExamService
                     }
                 }
             ],
+            'accessor_type' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::in(BaseModel::ACCESSOR_TYPES)
+            ],
+            'accessor_id' => [
+                'required',
+                'int',
+                'min:1'
+            ],
             'row_status' => [
                 'required_if:' . $id . ',!=,null',
                 'nullable',

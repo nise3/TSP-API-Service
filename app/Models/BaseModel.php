@@ -182,6 +182,7 @@ abstract class BaseModel extends Model
     public const ACCESSOR_TYPES = [
         self::ACCESSOR_TYPE_INSTITUTE,
         self::ACCESSOR_TYPE_ORGANIZATION,
+        self::ACCESSOR_TYPE_INDUSTRY_ASSOCIATION
     ];
 
     /** @var string Certificate types */
