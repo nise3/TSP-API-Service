@@ -406,7 +406,6 @@ class TrainerService
      */
     public function update(Trainer $trainer, array $data): Trainer
     {
-
         $youth = null;
         DB::beginTransaction();
         try {
