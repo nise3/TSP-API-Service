@@ -787,14 +787,18 @@ class ExamService
     {
         $examIds = [];
         if ($data['type'] == Exam::EXAM_TYPE_ONLINE) {
+            $data['end_date'] = Carbon::create($data['start_date'])->addMinutes($data['duration']);
             $onlineExam = $this->updateOnlineExam($data);
             $examIds['online'] = $onlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_OFFLINE) {
+            $data['end_date'] = Carbon::create($data['start_date'])->addMinutes($data['duration']);
             $offlineExam = $this->updateOfflineExam($data);
             $examIds['offline'] = $offlineExam->id;
 
         } else if ($data['type'] == Exam::EXAM_TYPE_MIXED) {
+            $data['online']['end_date'] = Carbon::create($data['online']['start_date'])->addMinutes($data['online']['duration']);
+            $data['offline']['end_date'] = Carbon::create($data['offline']['start_date'])->addMinutes($data['offline']['duration']);
             $onlineExam = $this->updateOnlineExam($data['online']);
             $offlineExam = $this->updateOfflineExam($data['offline']);
 
