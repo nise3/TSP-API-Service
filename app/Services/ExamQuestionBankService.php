@@ -286,7 +286,7 @@ class ExamQuestionBankService
                 'array',
             ],
             'answers.*' => [
-                'nullable',
+                'required',
                 'string',
             ],
             'row_status' => [
