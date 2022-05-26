@@ -6,7 +6,6 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Batch;
 use App\Models\BatchExam;
-use App\Models\Course;
 use App\Models\CourseResultConfig;
 use App\Models\Exam;
 use App\Models\ExamQuestionBank;
@@ -18,9 +17,7 @@ use App\Models\ExamType;
 use App\Models\YouthExam;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,8 +42,28 @@ class ExamService
         $pageSize = $request['page_size'] ?? "";
         $paginate = $request['page'] ?? "";
         $rowStatus = $request['row_status'] ?? "";
+        $batchId = $request['batch_id'] ?? "";
+        $isResultConfigCourses = $request['is_result_config_courses'] ?? BaseModel::FALSE;
         $order = $request['order'] ?? BaseModel::DEFAULT_ROW_ORDER;
 
+        $courseResultConfigExamTypes = [];
+        if ($isResultConfigCourses == BaseModel::TRUE && !empty($batchId)) {
+            $batch = Batch::findOrFail($batchId);
+            $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
+            if (empty($courseResultConfig)) {
+                return formatErrorResponse(["error_code" => "no_config"], $startTime, "Please config result first in Course!");
+            } else {
+                $courseResultPercentages = array_filter($courseResultConfig->result_percentages, function ($item) {
+                    return !empty($item);
+                });
+
+                foreach ($courseResultPercentages as $key => $resultPercentage) {
+                    if (!empty($resultPercentage) && BaseModel::EXAM_TYPE_VALUES[$key] !== Exam::EXAM_TYPE_ATTENDANCE) {
+                        $courseResultConfigExamTypes[] = BaseModel::EXAM_TYPE_VALUES[$key];
+                    }
+                }
+            }
+        }
 
         /** @var ExamType|Builder $examTypeBuilder */
         $examTypeBuilder = ExamType::select([
@@ -83,9 +100,11 @@ class ExamService
         if (!empty($title)) {
             $examTypeBuilder->where('exam_types.title', 'like', '%' . $title . '%');
         }
-
         if (!empty($subjectId)) {
             $examTypeBuilder->where('exam_types.subject_id', 'like', '%' . $subjectId . '%');
+        }
+        if (!empty($courseResultConfigExamTypes)) {
+            $examTypeBuilder->whereIn('exam_types.type', $courseResultConfigExamTypes);
         }
 
         if (is_numeric($paginate) || is_numeric($pageSize)) {
@@ -1557,6 +1576,8 @@ class ExamService
 
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
+            'is_result_config_courses' => 'nullable|int',
+            'batch_id' => 'nullable|int|min:1',
             'order' => [
                 'string',
                 Rule::in([BaseModel::ROW_ORDER_ASC, BaseModel::ROW_ORDER_DESC])

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddResultProcessingAtColumnToBatchesTable extends Migration
+class AddExamResultPublishedAtToBatchExamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddResultProcessingAtColumnToBatchesTable extends Migration
      */
     public function up()
     {
-        Schema::table('batches', function (Blueprint $table) {
-            $table->dateTime('result_processed_at')->nullable();
+        Schema::table('batch_exams', function (Blueprint $table) {
+            $table->dateTime('exam_result_published_at')->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddResultProcessingAtColumnToBatchesTable extends Migration
      */
     public function down()
     {
-        Schema::table('batches', function (Blueprint $table) {
-            $table->dropColumn('result_processed_at');
+        Schema::table('batch_exams', function (Blueprint $table) {
+            $table->dropColumn('result_published_at');
         });
     }
 }
