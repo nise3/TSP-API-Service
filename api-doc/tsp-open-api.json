@@ -13446,7 +13446,7 @@
                 }
             }
         },
-        "/certificate-templates-by-batchids/{batchIds}": {
+        "/certificate-templates-by-batchids": {
             "get": {
                 "parameters": [
                     {
