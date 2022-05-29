@@ -13450,7 +13450,7 @@
             "get": {
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/batchIds"
+                        "$ref": "#/components/parameters/batch_ids"
                     }
                 ],
                 "tags": [
@@ -16797,8 +16797,8 @@
                     "type": "integer"
                 }
             },
-            "batchIds": {
-                "name": "batchIds",
+            "batch_ids": {
+                "name": "batch_ids",
                 "in": "query",
                 "required": true,
                 "schema": {
