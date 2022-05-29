@@ -1315,7 +1315,7 @@ class BatchService
             $youth['last_name'] = $item['last_name'];
             $youth['last_name_en'] = $item['last_name_en'];
             $youth['email'] = $item['email'];
-            $youth['mobile'] = $item['email'];
+            $youth['mobile'] = $item['mobile'];
             $indexedYouths[$item['id']] = $youth;
         }
 
