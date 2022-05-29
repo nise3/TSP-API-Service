@@ -140,11 +140,11 @@ class CourseEnrollmentService
                 ->whereNull('batches.deleted_at');
         });
 
-        $coursesEnrollmentBuilder->join("certificate_issued", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("certificate_issued", function ($join) use ($rowStatus) {
             $join->on('course_enrollments.certificate_issued_id', '=', 'certificate_issued.id')
                 ->whereNull('certificate_issued.deleted_at');
         });
-        $coursesEnrollmentBuilder->join("certificate_templates", function ($join) use ($rowStatus) {
+        $coursesEnrollmentBuilder->leftJoin("certificate_templates", function ($join) use ($rowStatus) {
             $join->on('certificate_issued.certificate_template_id', '=', 'certificate_templates.id')
                 ->whereNull('certificate_templates.deleted_at');
         });
