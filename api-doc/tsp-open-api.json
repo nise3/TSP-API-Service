@@ -16799,13 +16799,10 @@
             },
             "batchIds": {
                 "name": "batchIds",
-                "in": "path",
+                "in": "query",
                 "required": true,
                 "schema": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
+                    "type": "string"
                 }
             },
             "course_id_optional": {
