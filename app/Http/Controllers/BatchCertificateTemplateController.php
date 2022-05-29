@@ -66,8 +66,7 @@ class BatchCertificateTemplateController extends Controller
      */
     public function getListByBatchIds(Request $request, $ids): JsonResponse
     {
-        $arrayIds = json_decode($ids);
-//        $arrayIds = $ids;
+        $arrayIds = explode(',',$ids);
         $filter = $this->batchCertificateTemplateService->filterValidator($request)->validate();
         $response = $this->batchCertificateTemplateService->getListByBatchIds($filter, $arrayIds);
         return Response::json($response, ResponseAlias::HTTP_OK);
