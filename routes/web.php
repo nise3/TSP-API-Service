@@ -68,6 +68,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         $router->put('exam-publish/{id}', ["as" => "exam-publish", "uses" => "ExamController@examPublish"]);
 
+        /** individual exam  result publish */
+        $router->put("exams/{id}/result-publish", ["as" => "exams-result-published", "uses" => "ExamController@publishExamResult"]);
+
+
         /** training center skill development reports */
         $router->group(['prefix' => 'training-centers/reporting', 'as' => 'training-centers-reporting'], function () use ($router) {
             $router->get("skill-development", ["as" => "training-centers.skill-development-reports", "uses" => "TrainingCenterSkillDevelopmentReportController@getList"]);
@@ -113,7 +117,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Result Processing By Batch **/
         $router->post("batches/{id}/process-result", ["as" => "batches.process-result", "uses" => "BatchController@processBatchResult"]);
         $router->get("batches/{id}/results", ["as" => "batches.process-result", "uses" => "BatchController@getBatchExamResults"]);
-        $router->put("batches/{id}/result-publish", ["as" => "batches.result-published", "uses" => "BatchController@publishExamResult"]);
+        $router->put("batches/{id}/result-publish", ["as" => "batches.result-published", "uses" => "BatchController@publishBatchExamsResult"]);
 
         /** Reject course enrollment application */
         $router->post("reject-course-enrollment", ["as" => "course-enroll.reject", "uses" => "CourseEnrollmentController@rejectCourseEnrollment"]);

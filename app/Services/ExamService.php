@@ -14,6 +14,7 @@ use App\Models\ExamSection;
 use App\Models\ExamSectionQuestion;
 use App\Models\ExamSet;
 use App\Models\ExamType;
+use App\Models\Result;
 use App\Models\YouthExam;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -135,7 +136,7 @@ class ExamService
      * @param array $data
      * @param Carbon $startTime
      */
-    public function submitExamQuestionPaper(array $data,Carbon $startTime): void
+    public function submitExamQuestionPaper(array $data, Carbon $startTime): void
     {
         $exam = Exam::query()->findOrFail($data['exam_id']);
         $data['exam_type_id'] = $exam->exam_type_id;
@@ -207,6 +208,7 @@ class ExamService
 
 
     }
+
     /**
      * @param int $examId
      * @return int
@@ -216,7 +218,6 @@ class ExamService
         return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
 
     }
-
 
 
     /**
@@ -871,7 +872,7 @@ class ExamService
      * @return void
      */
 
-    public function youthExamMarkUpdate(array $data,Carbon $startTime): void
+    public function youthExamMarkUpdate(array $data, Carbon $startTime): void
     {
         $totalObtainedMarks = 0;
         $youthExamId = null;
@@ -2029,6 +2030,64 @@ class ExamService
         return Validator::make($data, $rules);
 
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function resultPublishValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $rules = [
+            'is_published' => [
+                'required',
+                'int',
+                Rule::in(Result::RESULT_PUBLICATIONS)
+            ],
+            'batch_id' => [
+                'required',
+                'int',
+                'exists:batches,id,deleted_at,NULL'
+            ],
+        ];
+
+        return Validator::make($request->all(), $rules);
+
+    }
+
+
+    /**
+     * @param int $batchId
+     * @param int $examTypeId
+     * @return bool
+     */
+    public function isExamAllYouthMarkUpdatedDone(int $batchId,int $examTypeId): bool
+    {
+        $youthExams =  YouthExam::query()->where('batch_id',$batchId)->where('exam_type_id',$examTypeId)->get()->toArray();
+
+        foreach ($youthExams as $youthExam){
+            if(empty($youthExam['marks_updated_at'])){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $data
+     * @param int $id
+     * @param Carbon $startTime
+     * @return void
+     */
+    public function publishExamResult(array $data, int $id, Carbon $startTime): void
+    {
+        $batch = Batch::findOrFail($data['batch_id']);
+
+        if ($data['is_published'] == Result::RESULT_PUBLISHED) {
+            $batch->examTypes()->where('exam_type_id',$id)->update(['exam_result_published_at' => $startTime]);
+        } else {
+            $batch->result_published_at = null;
+        }}
 
 }
 

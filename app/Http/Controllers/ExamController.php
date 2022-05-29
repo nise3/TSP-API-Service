@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\ExamType;
+use App\Models\Result;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -263,7 +264,7 @@ class ExamController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->examService->submitExamQuestionPaper($validatedData,$this->startTime);
+            $this->examService->submitExamQuestionPaper($validatedData, $this->startTime);
             $response = [
                 "_response_status" => [
                     "success" => true,
@@ -332,7 +333,7 @@ class ExamController extends Controller
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData,$this->startTime);
+        $this->examService->youthExamMarkUpdate($validatedData, $this->startTime);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
@@ -409,6 +410,34 @@ class ExamController extends Controller
         $filter = $this->examService->youthAssessmentValidator($request)->validate();
         $response = $this->examService->getYouthAssessmentList($filter, $fourIrInitiativeId);
         return Response::json($response, $response['_response_status']['code']);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws ValidationException|AuthorizationException
+     * @throws Throwable
+     */
+    public function publishExamResult(Request $request, int $id): JsonResponse
+    {
+        $this->authorize('create', Exam::class);
+
+        $validatedData = $this->examService->resultPublishValidator($request)->validate();
+        $isAllExamYouthMarkUpdateDone = $this->examService->isExamAllYouthMarkUpdatedDone($id, $validatedData['batch_id']);
+
+        if (!$isAllExamYouthMarkUpdateDone) {
+            return Response::json(formatErrorResponse(["error_code" => "mark_update_not_complete"], $this->startTime, "All youth mark update not completed!"));
+        }
+
+        $this->examService->publishExamResult($validatedData, $id, $this->startTime);
+
+        $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
+
+        $response = formatSuccessResponse(null, $this->startTime, $message);
+
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
 }

@@ -390,16 +390,32 @@ class BatchController extends Controller
      * @param int $id
      * @return JsonResponse
      * @throws ValidationException|AuthorizationException
+     * @throws Throwable
      */
-    public function publishExamResult(Request $request, int $id): JsonResponse
+    public function publishBatchExamsResult(Request $request, int $id): JsonResponse
     {
         $this->authorize('create', Result::class);
         $validatedData = $this->batchService->resultPublishValidator($request)->validate();
-        $this->batchService->publishExamResult($validatedData, $id);
 
-        $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
+        $isBatchAllYouthMarkUpdateDone = $this->batchService->isBatchAllYouthMarkUpdatedDone($id);
 
-        $response = formatSuccessResponse(null, $this->startTime, $message);
+        if(!$isBatchAllYouthMarkUpdateDone){
+            return Response::json(formatErrorResponse(["error_code" => "mark_update_not_complete"], $this->startTime, "All youth mark update not completed!"));
+        }
+
+        DB::beginTransaction();
+        try {
+            $this->batchService->publishExamResult($validatedData, $id,$this->startTime);
+
+            $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
+
+            $response = formatSuccessResponse(null, $this->startTime, $message);
+
+        }catch (Throwable $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+
 
         return Response::json($response, ResponseAlias::HTTP_OK);
     }

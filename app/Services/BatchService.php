@@ -1360,9 +1360,10 @@ class BatchService
     /**
      * @param array $data
      * @param int $id
+     * @param Carbon $startTime
      * @return bool
      */
-    public function publishExamResult(array $data, int $id): bool
+    public function publishExamResult(array $data, int $id, Carbon $startTime): bool
     {
         $batch = Batch::findOrFail($id);
 
@@ -1372,8 +1373,26 @@ class BatchService
             $batch->result_published_at = null;
         }
 
-        return $batch->save();
+        $batch->examTypes()->update(['exam_result_published_at' => $startTime]);
 
+        return $batch->save();
+    }
+
+    /**
+     * @param int $batchId
+     * @return bool
+     */
+    public function isBatchAllYouthMarkUpdatedDone(int $batchId): bool
+    {
+       $youthExams =  YouthExam::query()->where('batch_id',$batchId)->get()->toArray();
+
+       foreach ($youthExams as $youthExam){
+           if(empty($youthExam['marks_updated_at'])){
+               return false;
+           }
+       }
+
+       return true;
     }
 
 
