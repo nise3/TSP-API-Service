@@ -72,17 +72,17 @@ class BatchCertificateTemplateService
         $batchCertificateBuilder = BatchCertificateTemplates::select([
             'batch_certificate_templates.id',
             'batch_certificate_templates.certificate_template_id',
-//            'certificate_templates.result_type',
+            'certificate_templates.result_type',
             'batch_certificate_templates.batch_id',
-//            'certificate_templates.title_en as certificate_templates_title',
-//            'certificate_templates.title as certificate_templates_title'
+            'certificate_templates.title_en as certificate_templates_title_en',
+            'certificate_templates.title as certificate_templates_title'
         ])
             ->acl();
 
-//        $batchCertificateBuilder->join("certificate_templates", function ($join) use ($rowStatus) {
-//            $join->on('batch_certificate_templates.certificate_template_id', '=', 'certificate_templates.id');
-//            //->whereNull('batch_certificate_templates.deleted_at');
-//        });
+        $batchCertificateBuilder->join("certificate_templates", function ($join) use ($rowStatus) {
+            $join->on('batch_certificate_templates.certificate_template_id', '=', 'certificate_templates.id');
+            //->whereNull('batch_certificate_templates.deleted_at');
+        });
 
         $batchTemplate = $batchCertificateBuilder->whereIn('batch_certificate_templates.batch_id', $ids)->get();
         $response['data'] = $batchTemplate->toArray()['data'] ?? $batchTemplate->toArray();
