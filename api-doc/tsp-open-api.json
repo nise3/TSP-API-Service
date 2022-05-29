@@ -13445,6 +13445,54 @@
                     }
                 }
             }
+        },
+        "/certificate-templates-by-batchids/{ids}": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchIds"
+                    }
+                ],
+                "tags": [
+                    "Batch Certificate Template"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Certifcate Template By Batch Ids.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/courseConfigId"
+                    }
+                ],
+                "tags": [
+                    "Course Result Configs"
+                ],
+                "summary": "delete",
+                "description": "API endpoint to delete a Result Config. A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -16771,6 +16819,14 @@
                 "required": true,
                 "schema": {
                     "type": "integer"
+                }
+            },
+            "batchIds": {
+                "name": "batchIds",
+                "in": "path",
+                "required": true,
+                "schema": {
+                    "type": "array"
                 }
             },
             "course_id_optional": {
