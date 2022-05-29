@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
-use App\Models\Certificate;
+use App\Models\CertificateTemplates;
 use App\Models\RplSubject;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class CertificateService
+class CertificateTemplatesService
 {
     /**
      * @param array $request
@@ -36,37 +36,36 @@ class CertificateService
         $order = $request['order'] ?? "ASC";
 
 
-        /** @var Certificate|Builder $certificateBuilder */
-        $certificateBuilder = Certificate::select([
-            'certificates.id',
-            'certificates.title',
-            'certificates.title_en',
-            'certificates.template',
-            'certificates.result_type',
-            'certificates.accessor_type',
-            'certificates.accessor_id',
-            'certificates.language',
-            'certificates.row_status',
-            'certificates.created_at',
-            'certificates.updated_at',
-            'certificates.issued_at'
+        /** @var CertificateTemplates|Builder $certificateBuilder */
+        $certificateBuilder = CertificateTemplates::select([
+            'certificate_templates.id',
+            'certificate_templates.title',
+            'certificate_templates.title_en',
+            'certificate_templates.result_type',
+            'certificate_templates.accessor_type',
+            'certificate_templates.accessor_id',
+            'certificate_templates.language',
+            'certificate_templates.row_status',
+            'certificate_templates.created_at',
+            'certificate_templates.updated_at',
+            'certificate_templates.issued_at'
 
         ])->acl();
 
-        $certificateBuilder->orderBy('certificates.id', $order);
+        $certificateBuilder->orderBy('certificate_templates.id', $order);
 
         if (is_numeric($rowStatus)) {
-            $certificateBuilder->where('certificates.row_status', $rowStatus);
+            $certificateBuilder->where('certificate_templates.row_status', $rowStatus);
         }
 
         if(is_numeric($resultType)) {
-            $certificateBuilder->where('certificates.result_type', $resultType);
+            $certificateBuilder->where('certificate_templates.result_type', $resultType);
         }
         if (!empty($titleEn)) {
-            $certificateBuilder->where('certificates.title_en', 'like', '%' . $titleEn . '%');
+            $certificateBuilder->where('certificate_templates.title_en', 'like', '%' . $titleEn . '%');
         }
         if (!empty($title)) {
-            $certificateBuilder->where('certificates.title', 'like', '%' . $title . '%');
+            $certificateBuilder->where('certificate_templates.title', 'like', '%' . $title . '%');
         }
         if (is_numeric($paginate) || is_numeric($pageSize)) {
             $pageSize = $pageSize ?: 10;
@@ -93,40 +92,40 @@ class CertificateService
 
     /**
      * @param int $id
-     * @return Certificate
+     * @return CertificateTemplates
      */
-    public function getOneCertificate(int $id): Certificate
+    public function getOneCertificate(int $id): CertificateTemplates
     {
-        /** @var Certificate|Builder $CertificateBuilder */
-        $CertificateBuilder = Certificate::select([
-            'certificates.id',
-            'certificates.title',
-            'certificates.title_en',
-            'certificates.template',
-            'certificates.result_type',
-            'certificates.accessor_type',
-            'certificates.accessor_id',
-            'certificates.language',
-            'certificates.row_status',
-            'certificates.created_at',
-            'certificates.updated_at',
-            'certificates.issued_at'
+        /** @var CertificateTemplates|Builder $CertificateBuilder */
+        $CertificateBuilder = CertificateTemplates::select([
+            'certificate_templates.id',
+            'certificate_templates.title',
+            'certificate_templates.title_en',
+            'certificate_templates.template',
+            'certificate_templates.result_type',
+            'certificate_templates.accessor_type',
+            'certificate_templates.accessor_id',
+            'certificate_templates.language',
+            'certificate_templates.row_status',
+            'certificate_templates.created_at',
+            'certificate_templates.updated_at',
+            'certificate_templates.issued_at'
         ]);
 
-        $CertificateBuilder->where('certificates.id', $id);
+        $CertificateBuilder->where('certificate_templates.id', $id);
 
-        /** @var Certificate exam_subjects */
+        /** @var CertificateTemplates exam_subjects */
         return $CertificateBuilder->firstOrFail();
     }
 
     /**
      * @param array $data
-     * @return Certificate
+     * @return CertificateTemplates
      * @throws Throwable
      */
-    public function store(array $data): Certificate
+    public function store(array $data): CertificateTemplates
     {
-        $certificateTemplate = app()->make(Certificate::class);
+        $certificateTemplate = app()->make(CertificateTemplates::class);
         $certificateTemplate->fill($data);
         $certificateTemplate->save();
 
@@ -134,11 +133,11 @@ class CertificateService
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateTemplates $certificate
      * @param array $data
-     * @return Certificate
+     * @return CertificateTemplates
      */
-    public function update(Certificate $certificate, array $data): Certificate
+    public function update(CertificateTemplates $certificate, array $data): CertificateTemplates
     {
         $certificate->fill($data);
         $certificate->save();
@@ -146,19 +145,19 @@ class CertificateService
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateTemplates $certificate
      * @return bool
      */
-    public function destroy(Certificate $certificate): bool
+    public function destroy(CertificateTemplates $certificate): bool
     {
         return $certificate->delete();
     }
 
     /**
-     * @param Certificate $certificate
+     * @param CertificateTemplates $certificate
      * @return bool
      */
-    public function forceDelete(Certificate $certificate): bool
+    public function forceDelete(CertificateTemplates $certificate): bool
     {
         return $certificate->forceDelete();
     }
@@ -180,12 +179,14 @@ class CertificateService
             'title' => [
                 'required',
                 'string',
-                'max:500'
+                'max:500',
+                Rule::unique('certificate_templates', 'title')
             ],
             'title_en' => [
                 'nullable',
                 'string',
-                'max:250'
+                'max:250',
+                Rule::unique('certificate_templates', 'title_en')
             ],
             'template' => [
                 'nullable',
@@ -198,7 +199,8 @@ class CertificateService
                     BaseModel::CERTIFICATE_COMPETENT,
                     BaseModel::CERTIFICATE_NOT_COMPETENT,
                     BaseModel::CERTIFICATE_GRADING,
-                    BaseModel::CERTIFICATE_MARKS
+                    BaseModel::CERTIFICATE_MARKS,
+                    BaseModel::CERTIFICATE_PARTICIPATION
                 ])
             ],
             'language' => [

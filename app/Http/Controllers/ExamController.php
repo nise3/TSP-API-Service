@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Exam;
 use App\Models\ExamType;
 use App\Models\Result;
+use App\Services\BatchCertificateTemplateService;
 use App\Services\ExamService;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -49,7 +50,6 @@ class ExamController extends Controller
     {
         $this->authorize('viewAny', Exam::class);
         $filter = $this->examService->filterValidator($request)->validate();
-
         $response = $this->examService->getList($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
@@ -264,7 +264,7 @@ class ExamController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->examService->submitExamQuestionPaper($validatedData, $this->startTime);
+            $this->examService->submitExamQuestionPaper($validatedData);
             $response = [
                 "_response_status" => [
                     "success" => true,
@@ -333,7 +333,7 @@ class ExamController extends Controller
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData, $this->startTime);
+        $this->examService->youthExamMarkUpdate($validatedData);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [

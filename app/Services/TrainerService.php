@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\Trainer;
+use App\Models\Youth;
 use App\Services\CommonServices\MailService;
 use App\Services\CommonServices\SmsService;
 use Illuminate\Http\Request;
@@ -406,14 +407,11 @@ class TrainerService
     public function update(Trainer $trainer, array $data): Trainer
     {
         $youth = null;
-
         DB::beginTransaction();
         try {
-            $trainerInfo = [];
-            $this->getYouthTrainerInfo($data, $trainerInfo);
-
             /** Youth service call */
-            $youth = ServiceToServiceCall::updateTrainerYouthUser($data);
+
+            $youth =ServiceToServiceCall::updateTrainerYouthUser($data);
 
             /** Save trainer with youth_id */
             $data['youth_id'] = $youth['id'];
@@ -474,6 +472,10 @@ class TrainerService
         }
 
         return $trainer;
+
+//        $trainer->fill($data);
+//        $trainer->save();
+//        return $trainer;
     }
 
     /**
@@ -902,31 +904,5 @@ class TrainerService
         ];
 
         return \Illuminate\Support\Facades\Validator::make($request->all(), $rules, $customMessage);
-    }
-
-    private function getYouthTrainerInfo(array $data, array &$trainerInfo): void
-    {
-        $trainerInfo = [
-            'user_name_type' => BaseModel::USER_NAME_TYPE_MOBILE_NUMBER,
-            'first_name' => $data['trainer_name'] ?? "",
-            'first_name_en' => $data['trainer_name_en'] ?? "",
-            'last_name' => $data['trainer_name'] ?? "",
-            'last_name_en' => $data['trainer_name_en'] ?? "",
-            'loc_division_id' => $data['present_address_division_id'] ?? "",
-            'loc_district_id' => $data['present_address_district_id'] ?? "",
-            'loc_upazila_id' => $data['present_address_upazila_id'] ?? "",
-            'date_of_birth' => $data['date_of_birth'],
-            'gender' => $data['gender'],
-            'email' => $data['email'] ?? "",
-            'mobile' => $data['mobile'],
-            'physical_disability_status' => BaseModel::FALSE,
-            'skills' => $data['skills'],
-            'password' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
-            'password_confirmation' => BaseModel::ADMIN_CREATED_USER_DEFAULT_PASSWORD,
-            'village_or_area' => $data['present_house_address'] ?? "",
-            'village_or_area_en' => $data['present_house_address_en'] ?? "",
-            'house_n_road' => $data['present_house_address'] ?? "",
-            'house_n_road_en' => $data['present_house_address_en'] ?? ""
-        ];
     }
 }

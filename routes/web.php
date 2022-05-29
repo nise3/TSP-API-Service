@@ -20,8 +20,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
-//        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
-
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
@@ -48,11 +46,9 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exam-subjects', 'ExamSubjectController')->render();
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
-        // TODO: use 'certificates', 'certificate-types', ''certificate-issued'
+        // TODO: use 'certificates', 'certificate-types', 'certificate-issued'
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
-        $customRouter()->resourceRoute('certificates', 'CertificateController')->render();
-        $customRouter()->resourceRoute('certificate-types', 'CertificateTypeController')->render();
-
+        $customRouter()->resourceRoute('certificate-templates', 'CertificateTemplateController')->render();
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
 
@@ -110,6 +106,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         /** Assign exams to batch */
         $router->post('batches/{id}/assign-exams-to-batch', ['as' => 'batches.assign-exams-to-batch', 'uses' => 'BatchController@assignExamToBatch']);
 
+        /** Assign certificate templates to batch */
+        $router->post('batches/{id}/assign-certificate-template-to-batch', ['as' => 'batches.assign-certificate-template-to-batch', 'uses' => 'BatchController@assignCertificateTemplateToBatch']);
+        $router->get('batches/{id}/certificate-templates', ['as' => 'batches.assign-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getListByBatchId']);
+
         /**  exam list by batch */
         $router->get('batches/{id}/exams', ["as" => "batches.exams-list-by-batch-id", "uses" => "BatchController@getExamsByBatchId"]);
         $router->get('batches/{id}/youth-exams', ["as" => "batches.youth-exams-list-by-batch-id", "uses" => "BatchController@getYouthExamListByBatch"]);
@@ -137,8 +137,11 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** RTO dashboard statistics */
         $router->get('rto-dashboard-statistics', ["as" => "rto.dashboard-statistics", "uses" => "InstituteStatisticsController@rtoDashboardStatistics"]);
-
         $router->post("course-enrollment-bulk-import", ["as" => "course-enrollment-bulk-import", "uses" => "CourseEnrollmentController@courseEnrollmentBulkImport"]);
+
+        /** get certificate template by batch  */
+        $router->get('batch-certificate-templates', ['as' => 'batch-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getList']);
+        $router->get('certificate-templates-by-batchids', ['as' => 'certificate-templates-by-batchids', 'uses' => 'BatchCertificateTemplateController@getListByBatchIds']);
     });
 
     $router->get("exam-result-summaries/{resultId}", ["as" => "batches.youth-exam-result-summaries", "uses" => "BatchController@getBatchExamResultSummaries"]);

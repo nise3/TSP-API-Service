@@ -1844,10 +1844,20 @@ class ExamService
             "exams.exam_type_id as exam_type_id",
             "exam_types.title as exam_type_title",
             "exam_types.title_en as exam_type_title_en",
+            "exams.start_date as exam_start_date",
+            "exams.end_date as exam_end_date",
+            "exams.duration as exam_duration",
+            "exams.venue as exam_venue",
+            "exams.total_marks as exam_total_marks",
+            "exam_subjects.title as exam_subject_title",
+            "exam_subjects.title_en as exam_subject_title_en",
+            "batches.id as batch_id",
             "batches.title as batch_title",
             "batches.title_en as batch_title_en",
             "courses.title as course_title",
             "courses.title_en as course_title_en",
+            'youth_exams.created_at',
+            'youth_exams.updated_at',
         ]);
 
         /** join exams on exams.id=youth_exams.exam_id
@@ -1863,6 +1873,7 @@ class ExamService
         $youthExamBuilder->join("exam_types", "exams.exam_type_id", "exam_types.id");
         $youthExamBuilder->join("batches", "batches.id", "batch_exams.batch_id");
         $youthExamBuilder->join("courses", "courses.id", "batches.course_id");
+        $youthExamBuilder->join("exam_subjects", "exam_subjects.id", "exam_types.subject_id");
         $youthExamBuilder->whereIn("youth_exams.exam_id", $examIds);
         $youthExamBuilder->groupBy("youth_exams.exam_id");
         $youthExamBuilder->orderBy("youth_exams.id", $order);
@@ -1889,6 +1900,7 @@ class ExamService
         }
 
         $youthProfiles = !empty($youthIds) ? ServiceToServiceCall::getYouthProfilesByIds($youthIds) : [];
+        $trainers = Batch::with('trainers:id as trainer_id,trainer_name,trainer_name_en')->whereIn("batches.id", $batchIds)->get()->keyBy("id")->toArray();
 
         $indexedYouths = [];
         foreach ($youthProfiles as $item) {
@@ -1898,8 +1910,10 @@ class ExamService
 
         foreach ($response['data'] as &$item) {
             $id = $item['youth_youth_id'];
+            $batchId = $item['batch_id'];
             $youthData = $indexedYouths[$id];
             $item['youth_profile'] = $youthData;
+            $item['trainer_profile'] = $trainers[$batchId]['trainers'] ?? [];
         }
 
         $response['_response_status'] = [

@@ -530,6 +530,8 @@ class CourseEnrollmentBulkEntryService
         self::EXAM_TYPE_PHD => EducationLevel::EDUCATION_LEVEL_PHD,
     ];
 
+    const DROP_DOWN_ROWS = 1000;
+
 
     public function purseExcelAndInsert(array $data, array $extraData): array
     {
@@ -632,7 +634,7 @@ class CourseEnrollmentBulkEntryService
     /**
      * @throws Exception
      */
-    public function buildImportExcel(int $courseId, int $batchId): string
+    public function buildImportExcel(int $courseId, int $batchId)
     {
         $objPHPExcel = new Spreadsheet();
         foreach (self::YOUTH_PROFILE_BASIC_FIELDS as $key => $value) {
@@ -714,49 +716,70 @@ class CourseEnrollmentBulkEntryService
         $this->dropDownColumnBuilderWorkSheetBased($objPHPExcel, self::DISTRICT_COLUMN, '$B:$B', 2);
         $this->dropDownColumnBuilderWorkSheetBased($objPHPExcel, self::UPAZILA_COLUMN, '$C:$C', 3);
 
+        /** $fileName = 'candidate_list_excel_upload_' . time() . '.xlsx';
+         * header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+         * header("Content-Disposition: attachment;filename=$fileName");
+         * header('Cache-Control: max-age=0');
+         * header('Cache-Control: max-age=1');
+         * header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+         * header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+         * header('Cache-Control: cache, must-revalidate');
+         * header('Pragma: public');
+         * $writer = new Xlsx($objPHPExcel);
+         * $writer->save('php://output');*/
+
         $writer = new Xlsx($objPHPExcel);
         ob_start();
         $writer->save('php://output');
         $excelData = ob_get_contents();
         ob_end_clean();
-        return "data:application/vnd.ms-excel;base64,".base64_encode($excelData);
+        return "data:application/vnd.ms-excel;base64," . base64_encode($excelData);
     }
 
     /**
      * @throws Exception
      */
-    private function dropDownColumnBuilder(Spreadsheet $objPHPExcel, string $column, string $dropdownData)
+    private function dropDownColumnBuilder(Spreadsheet $objPHPExcel, string $column, string $dropdownData): void
     {
-        $objValidation = $objPHPExcel->setActiveSheetIndex(0)->getCell($column)->getDataValidation();
-        $objValidation->setType(DataValidation::TYPE_LIST);
-        $objValidation->setErrorStyle(DataValidation::STYLE_INFORMATION);
-        $objValidation->setAllowBlank(false);
-        $objValidation->setShowInputMessage(true);
-        $objValidation->setShowDropDown(true);
-        $objValidation->setPromptTitle('Pick from list');
-        $objValidation->setPrompt('Please pick a value from the drop-down list.');
-        $objValidation->setErrorTitle('Input error');
-        $objValidation->setError('Value is not in list');
-        $objValidation->setFormula1('"' . $dropdownData . '"');
+        $column = substr_replace($column, "", -1);
+        for ($i = 2; $i <= self::DROP_DOWN_ROWS + 1; $i++) {
+            $newColumn = $column . $i;
+            $objValidation = $objPHPExcel->setActiveSheetIndex(0)->getCell($newColumn)->getDataValidation();
+            $objValidation->setType(DataValidation::TYPE_LIST);
+            $objValidation->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $objValidation->setAllowBlank(false);
+            $objValidation->setShowInputMessage(true);
+            $objValidation->setShowDropDown(true);
+            $objValidation->setPromptTitle('Pick from list');
+            $objValidation->setPrompt('Please pick a value from the drop-down list.');
+            $objValidation->setErrorTitle('Input error');
+            $objValidation->setError('Value is not in list');
+            $objValidation->setFormula1('"' . $dropdownData . '"');
+        }
+
     }
 
     /**
      * @throws Exception
      */
-    private function dropDownColumnBuilderWorkSheetBased(Spreadsheet $objPHPExcel, string $column, string $dropdownData, string $worksheetNumber)
+    private function dropDownColumnBuilderWorkSheetBased(Spreadsheet $objPHPExcel, string $column, string $dropdownData, string $worksheetNumber): void
     {
-        $objValidation = $objPHPExcel->setActiveSheetIndex(0)->getCell($column)->getDataValidation();
-        $objValidation->setType(DataValidation::TYPE_LIST);
-        $objValidation->setErrorStyle(DataValidation::STYLE_INFORMATION);
-        $objValidation->setAllowBlank(false);
-        $objValidation->setShowInputMessage(true);
-        $objValidation->setShowDropDown(true);
-        $objValidation->setPromptTitle('Pick from list');
-        $objValidation->setPrompt('Please pick a value from the drop-down list.');
-        $objValidation->setErrorTitle('Input error');
-        $objValidation->setError('Value is not in list');
-        $f2 = $dropdownData;
-        $objValidation->setFormula1("='Worksheet {$worksheetNumber}'!{$f2}");
+        $column = substr_replace($column, "", -1);
+        for ($i = 2; $i <= self::DROP_DOWN_ROWS + 1; $i++) {
+            $newColumn = $column . $i;
+            $objValidation = $objPHPExcel->setActiveSheetIndex(0)->getCell($newColumn)->getDataValidation();
+            $objValidation->setType(DataValidation::TYPE_LIST);
+            $objValidation->setErrorStyle(DataValidation::STYLE_INFORMATION);
+            $objValidation->setAllowBlank(false);
+            $objValidation->setShowInputMessage(true);
+            $objValidation->setShowDropDown(true);
+            $objValidation->setPromptTitle('Pick from list');
+            $objValidation->setPrompt('Please pick a value from the drop-down list.');
+            $objValidation->setErrorTitle('Input error');
+            $objValidation->setError('Value is not in list');
+            $f2 = $dropdownData;
+            $objValidation->setFormula1("='Worksheet {$worksheetNumber}'!{$f2}");
+        }
 
     }
 

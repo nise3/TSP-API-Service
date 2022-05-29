@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeTemplateTypeJsonToCertificates extends Migration
+class DropColumnsToBatchCertificateTemplates extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class ChangeTemplateTypeJsonToCertificates extends Migration
      */
     public function up()
     {
-        Schema::table('certificates', function (Blueprint $table) {
-            $table->longText('template')->nullable()->change();
+        Schema::table('batch_certificate_templates', function (Blueprint $table) {
+            $table->dropColumn('id');
+            $table->dropColumn('created_at');
+            $table->dropColumn('updated_at');
         });
     }
 
@@ -25,8 +27,6 @@ class ChangeTemplateTypeJsonToCertificates extends Migration
      */
     public function down()
     {
-        Schema::table('certificates', function (Blueprint $table) {
-            $table->dropColumn('template');
-        });
+
     }
 }

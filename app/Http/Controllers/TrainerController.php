@@ -86,7 +86,7 @@ class TrainerController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-//        $this->authorize('create', Trainer::class);
+        $this->authorize('create', Trainer::class);
 
         $validatedData = $this->trainerService->validator($request)->validate();
         $data = $this->trainerService->store($validatedData);
@@ -113,11 +113,11 @@ class TrainerController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $trainer = Trainer::findOrFail($id);
-
-       // $this->authorize('update', $trainer);
+        $youthId=$trainer['youth_id'];
+        $this->authorize('update', $trainer);
 
         $validated = $this->trainerService->validator($request, $id)->validate();
-
+        $validated['youth_id']=$youthId;
         $data = $this->trainerService->update($trainer, $validated);
 
         $response = [

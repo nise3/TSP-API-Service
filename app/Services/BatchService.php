@@ -64,7 +64,6 @@ class BatchService
         $programId = $request['program_id'] ?? "";
         $courseId = $request['course_id'] ?? "";
         $trainingCenterId = $request['training_center_id'] ?? "";
-        $certificateId = $request['certificate_id'] ?? "";
 
 //        dd($request);
 
@@ -99,7 +98,6 @@ class BatchService
             'training_centers.title as training_center_title',
             'courses.application_form_settings',
             'batches.row_status',
-            'batches.certificate_id',
             'batches.created_by',
             'batches.updated_by',
             'batches.created_at',
@@ -147,9 +145,6 @@ class BatchService
             $batchBuilder->where('batches.branch_id', $branchId);
         }
 
-        if (is_numeric($certificateId)) {
-            $batchBuilder->where('batches.certificate_id', $certificateId);
-        }
 
         if (is_numeric($programId)) {
             $batchBuilder->where('courses.program_id', $programId);
@@ -439,6 +434,13 @@ class BatchService
 
     }
 
+    public function assignBatchCertificateTemplateIds($batch, array $batchCertificateTemplateIds): Batch
+    {
+        $batch->CertificateTemplateIds()->sync($batchCertificateTemplateIds);
+        return $batch;
+
+    }
+
     public function restore(Batch $batch): bool
     {
         return $batch->restore();
@@ -531,10 +533,6 @@ class BatchService
                 'after:registration_start_date',
                 'date_format:Y-m-d',
             ],
-            'certificate_id' => [
-                'nullable',
-                'integer'
-            ],
             'batch_start_date' => [
                 'required',
                 'date',
@@ -590,7 +588,6 @@ class BatchService
             'page_size' => 'int|gt:0',
             'page' => 'int|gt:0',
             'course_id' => 'nullable|int|exists:courses,id,deleted_at,NULL',
-            'certificate_id' => 'nullable|int',
             'branch_id' => 'nullable|int|exists:branches,id,deleted_at,NULL',
             'program_id' => 'nullable|int|exists:programs,id,deleted_at,NULL',
             'training_center_id' => 'nullable|int|exists:training_centers,id,deleted_at,NULL',
@@ -991,6 +988,30 @@ class BatchService
                 'integer',
                 'distinct',
                 'exists:exam_types,id,deleted_at,NULL'
+            ]
+        ];
+        return Validator::make($data, $rules);
+    }
+
+/**
+* @param Request $request
+* @return \Illuminate\Contracts\Validation\Validator
+*/
+    public function batchCertificateTemplateValidator(Request $request): \Illuminate\Contracts\Validation\Validator
+    {
+        $data = $request->all();
+
+        if (!empty($data['certificate_template_ids'])) {
+            $data["certificate_template_ids"] = is_array($data['certificate_template_ids']) ? $data['certificate_template_ids'] : explode(',', $data['certificate_template_ids']);
+        }
+
+        $rules = [
+            'certificate_template_ids' => 'required|array|min:1',
+            'certificate_template_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                'exists:certificate_templates,id,deleted_at,NULL'
             ]
         ];
         return Validator::make($data, $rules);

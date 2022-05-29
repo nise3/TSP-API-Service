@@ -99,5 +99,9 @@ class Batch extends BaseModel
     {
         return $this->belongsToMany(ExamType::class, 'batch_exams',  'batch_id', 'exam_type_id');
     }
+    public function CertificateTemplateIds(): BelongsToMany
+    {
+        return $this->belongsToMany(ExamType::class, 'batch_certificate_templates',  'batch_id', 'certificate_template_id');
+    }
 
 }

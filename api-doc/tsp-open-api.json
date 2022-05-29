@@ -2644,6 +2644,46 @@
                 }
             }
         },
+        "/batches/{batchId}/assign-certificate-template-to-batch": {
+            "post": {
+                "summary": "Assign Certificate Template to Batch",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/batchExam"
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "batches"
+                ],
+                "description": "API endpoint to assign certificate template to batch.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exams assigned to batch successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/batches/{batchId}/exams": {
             "get": {
                 "summary": "exam list by Batch Id",
@@ -2656,6 +2696,61 @@
                     "batches"
                 ],
                 "description": " API endpoint to get exams by a batch id .A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "id": 1,
+                                        "batch_title": "ব্লক বাটিক - 01",
+                                        "batch_title_en": null,
+                                        "exam_types": [
+                                            {
+                                                "id": 1,
+                                                "type": 3,
+                                                "title": "",
+                                                "title_en": null,
+                                                "exams": [
+                                                    {
+                                                        "id": 1,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    },
+                                                    {
+                                                        "id": 2,
+                                                        "exam_type_id": 1,
+                                                        "type": 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batches/{batchId}/certificate-templates": {
+            "get": {
+                "summary": "certificate template list by Batch Id",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batchId"
+                    }
+                ],
+                "tags": [
+                    "batches"
+                ],
+                "description": " API endpoint to get certificate template by a batch id .A successful request response will show 200 HTTP status code",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -2942,7 +3037,7 @@
                 }
             }
         },
-        "/batches/{id}/result-publish": {
+        "/batches/{batchId}/result-publish": {
             "put": {
                 "tags": [
                     "Result Processing"
@@ -12699,10 +12794,10 @@
                 }
             }
         },
-        "/certificates": {
+        "/certificate-templates": {
             "get": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "get_list",
                 "description": "API endpoint to get list of Certificate. A successful request response will show 200 HTTP status code",
@@ -12765,7 +12860,7 @@
             },
             "post": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "create",
                 "description": " API endpoint to create a Certificate.A successful request response will show 201 HTTP status code",
@@ -12808,11 +12903,11 @@
                 }
             }
         },
-        "/certificates/{certificateId}": {
+        "/certificate-templates/{templateId}": {
             "get": {
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "certificate id to get one",
                         "required": true,
@@ -12823,7 +12918,7 @@
                     }
                 ],
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "get_one",
                 "description": " API endpoint to get a certificate.A successful request response will show 200 HTTP status code",
@@ -12857,13 +12952,13 @@
             },
             "put": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "update",
                 "description": "API endpoint to update the specified Certificate.A successful request response will show 201 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "required": true,
                         "in": "path",
                         "schema": {
@@ -12915,13 +13010,13 @@
             },
             "delete": {
                 "tags": [
-                    "Certificate"
+                    "Certificate Template"
                 ],
                 "summary": "delete",
                 "description": "API endpoint to delete a Certificate. A successful request response will show 200 HTTP status code",
                 "parameters": [
                     {
-                        "name": "certificateId",
+                        "name": "templateId",
                         "in": "path",
                         "description": "Certificate id to delete",
                         "required": true,
@@ -13345,6 +13440,57 @@
                                 "schema": {
 
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/certificate-templates-by-batchids": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batch_ids"
+                    }
+                ],
+                "tags": [
+                    "Batch Certificate Template"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Certifcate Template By Batch Ids.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/batch-certificate-templates": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batch_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/certificate_template_id"
+                    }
+                ],
+                "tags": [
+                    "Batch Certificate Template"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Certifcate Template By Batch Ids.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
                             }
                         }
                     }
@@ -16678,6 +16824,14 @@
                     "type": "integer"
                 }
             },
+            "batch_ids": {
+                "name": "batch_ids",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
             "course_id_optional": {
                 "name": "course_id",
                 "in": "query",
@@ -16957,6 +17111,14 @@
             },
             "certificate_id": {
                 "name": "certificate_id",
+                "in": "query",
+                "description": "get all issued certificate ty certificate_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "certificate_template_id": {
+                "name": "certificate_template_id",
                 "in": "query",
                 "description": "get all issued certificate ty certificate_id",
                 "schema": {

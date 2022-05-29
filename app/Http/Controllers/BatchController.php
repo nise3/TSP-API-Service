@@ -341,6 +341,19 @@ class BatchController extends Controller
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
+    public function assignCertificateTemplateToBatch(Request $request, int $id): JsonResponse
+    {
+
+        $batch = Batch::findOrFail($id);
+        $validatedData = $this->batchService->batchCertificateTemplateValidator($request)->validate();
+        $validatedData['certificate_template_ids'] = !empty($validatedData['certificate_template_ids']) ? $validatedData['certificate_template_ids'] : [];
+        $this->batchService->assignBatchCertificateTemplateIds($batch, $validatedData['certificate_template_ids']);
+
+        $response = formatSuccessResponse(null, $this->startTime, "Certificate Template assigned to batch successfully");
+
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
     /**
      * @param int $id
      * @return JsonResponse

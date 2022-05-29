@@ -6,9 +6,9 @@ use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
 use App\Models\CertificateIssued;
 use App\Models\Course;
-use App\Services\BatchService;
+use App\Services\BatchCertificateTemplateService;
 use App\Services\CertificateIssuedService;
-use App\Services\CertificateService;
+use App\Services\CertificateTemplatesService;
 use App\Services\CommonServices\MailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,7 +32,7 @@ class CertificateIssuedController extends Controller
     private \Carbon\Carbon|Carbon $startTime;
 
     /**
-     * CertificateController constructor.
+     * CertificateTemplateController constructor.
      * @param CertificateIssuedService $certificateIssuedService
      */
     public function __construct(
@@ -51,7 +51,6 @@ class CertificateIssuedController extends Controller
     public function getList(Request $request): JsonResponse
     {
         //$this->authorize('viewAny', Certificate::class);
-
         $filter = $this->certificateIssuedService->filterValidator($request)->validate();
 
         $response = $this->certificateIssuedService->getList($filter, $this->startTime);
@@ -67,7 +66,7 @@ class CertificateIssuedController extends Controller
         $curseIds = Course::where("courses.four_ir_initiative_id", $fourIrInitiativeId)->pluck("id")->toArray();
         $request->offsetSet('course_id', $curseIds);
         $filter = $this->certificateIssuedService->filterValidator($request)->validate();
-        $response = $this->certificateIssuedService->getList($filter, $this->startTime);
+        $response = $this->certificateIssuedService->getListForFourIr($filter, $this->startTime);
         return Response::json($response, ResponseAlias::HTTP_OK);
     }
 
@@ -126,7 +125,7 @@ class CertificateIssuedController extends Controller
 
         try {
             $data = $this->certificateIssuedService->store($validatedData);
-            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_id']);
+            $this->certificateIssuedService->certificateIssuedAtUpdate($validatedData['certificate_template_id']);
             $this->certificateIssuedService->courseEnrollmentUpdate($validatedData, $data);
             DB::commit();
             $response = [
@@ -195,6 +194,7 @@ class CertificateIssuedController extends Controller
     public function destroy(int $id): JsonResponse
     {
         $certificate = CertificateIssued::findOrFail($id);
+
         $this->certificateIssuedService->destroy($certificate);
         $response = [
             '_response_status' => [
