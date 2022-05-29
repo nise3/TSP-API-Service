@@ -199,7 +199,8 @@ class CertificateTemplatesService
                     BaseModel::CERTIFICATE_COMPETENT,
                     BaseModel::CERTIFICATE_NOT_COMPETENT,
                     BaseModel::CERTIFICATE_GRADING,
-                    BaseModel::CERTIFICATE_MARKS
+                    BaseModel::CERTIFICATE_MARKS,
+                    BaseModel::CERTIFICATE_PARTICIPATION
                 ])
             ],
             'language' => [
