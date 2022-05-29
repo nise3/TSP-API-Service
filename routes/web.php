@@ -48,7 +48,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         $customRouter()->resourceRoute('exams', 'ExamController')->render();
         $customRouter()->resourceRoute('exam_types', 'ExamTypeController')->render();
         // TODO: use 'certificates', 'certificate-types', 'certificate-issued'
-//        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
+        $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
         $customRouter()->resourceRoute('certificate-templates', 'CertificateTemplateController')->render();
 
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
