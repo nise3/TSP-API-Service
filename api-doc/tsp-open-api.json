@@ -13469,6 +13469,33 @@
                     }
                 }
             }
+        },
+        "/batch-certificate-templates": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/batch_id"
+                    },
+                    {
+                        "$ref": "#/components/parameters/certificate_template_id"
+                    }
+                ],
+                "tags": [
+                    "Batch Certificate Template"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Certifcate Template By Batch Ids.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -17084,6 +17111,14 @@
             },
             "certificate_id": {
                 "name": "certificate_id",
+                "in": "query",
+                "description": "get all issued certificate ty certificate_id",
+                "schema": {
+                    "type": "integer"
+                }
+            },
+            "certificate_template_id": {
+                "name": "certificate_template_id",
                 "in": "query",
                 "description": "get all issued certificate ty certificate_id",
                 "schema": {
