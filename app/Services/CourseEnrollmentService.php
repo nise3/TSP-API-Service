@@ -149,8 +149,6 @@ class CourseEnrollmentService
                 ->whereNull('certificate_templates.deleted_at');
         });
 
-        dd($coursesEnrollmentBuilder->get());
-
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
 
         if (is_numeric($rowStatus)) {
