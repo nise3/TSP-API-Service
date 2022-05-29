@@ -12794,6 +12794,49 @@
                 }
             }
         },
+        "/exams/{examTypeId}/result-publish": {
+            "put": {
+                "tags": [
+                    "Exams"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/examTypeId"
+                    }
+                ],
+                "summary": "publish a Exam Result",
+                "description": "API endpoint to publish a exam result. A successful request response will show 200 HTTP status code",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/examResultPublish"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/examResultPublish"
+                                },
+                                "example": {
+                                    "_response_status": {
+                                        "success": true,
+                                        "code": 200,
+                                        "message": "exam result  published successfully",
+                                        "query_time": 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/certificate-templates": {
             "get": {
                 "tags": [
@@ -14269,6 +14312,25 @@
                 },
                 "required": [
                     "is_published"
+                ]
+            },
+            "examResultPublish": {
+                "type": "object",
+                "properties": {
+                    "is_published": {
+                        "type": "integer",
+                        "enum": [
+                            1,
+                            0
+                        ]
+                    },
+                    "batch_id": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "is_published",
+                    "batch_id"
                 ]
             },
             "resultPublish": {
