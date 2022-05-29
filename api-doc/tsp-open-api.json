@@ -13446,7 +13446,7 @@
                 }
             }
         },
-        "/certificate-templates-by-batchids/{ids}": {
+        "/certificate-templates-by-batchids/{batchIds}": {
             "get": {
                 "parameters": [
                     {
@@ -13464,30 +13464,6 @@
                         "content": {
                             "application/json": {
 
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "parameters": [
-                    {
-                        "$ref": "#/components/parameters/courseConfigId"
-                    }
-                ],
-                "tags": [
-                    "Course Result Configs"
-                ],
-                "summary": "delete",
-                "description": "API endpoint to delete a Result Config. A successful request response will show 200 HTTP status code",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-
-                                }
                             }
                         }
                     }
@@ -16826,7 +16802,10 @@
                 "in": "path",
                 "required": true,
                 "schema": {
-                    "type": "array"
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
                 }
             },
             "course_id_optional": {
