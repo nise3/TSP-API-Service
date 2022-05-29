@@ -102,6 +102,10 @@ class CourseEnrollmentService
                 'course_enrollments.physical_disability_status',
                 'course_enrollments.freedom_fighter_status',
                 'course_enrollments.certificate_issued_id',
+                'certificate_issued.certificate_template_id',
+                'certificate_templates.title as certificate_templates_title',
+                'certificate_templates.title_en as certificate_templates_title_en',
+                'certificate_templates.result_type',
                 'course_enrollments.row_status',
                 'course_enrollments.created_at',
                 'course_enrollments.updated_at'
@@ -135,6 +139,17 @@ class CourseEnrollmentService
             $join->on('course_enrollments.batch_id', '=', 'batches.id')
                 ->whereNull('batches.deleted_at');
         });
+
+        $coursesEnrollmentBuilder->join("certificate_issued", function ($join) use ($rowStatus) {
+            $join->on('course_enrollments.certificate_issued_id', '=', 'certificate_issued.id')
+                ->whereNull('certificate_issued.deleted_at');
+        });
+        $coursesEnrollmentBuilder->join("certificate_templates", function ($join) use ($rowStatus) {
+            $join->on('certificate_issued.certificate_template_id', '=', 'certificate_templates.id')
+                ->whereNull('certificate_templates.deleted_at');
+        });
+
+        dd($coursesEnrollmentBuilder->get());
 
         $coursesEnrollmentBuilder->orderBy('course_enrollments.id', $order);
 

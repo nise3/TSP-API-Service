@@ -20,7 +20,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
-//    $router->get('batch-certificate-templates', ['as' => 'batch-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getList']);
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
