@@ -263,7 +263,7 @@ class ExamController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->examService->submitExamQuestionPaper($validatedData);
+            $this->examService->submitExamQuestionPaper($validatedData,$this->startTime);
             $response = [
                 "_response_status" => [
                     "success" => true,
@@ -332,7 +332,7 @@ class ExamController extends Controller
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData);
+        $this->examService->youthExamMarkUpdate($validatedData,$this->startTime);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [

@@ -133,8 +133,9 @@ class ExamService
 
     /**
      * @param array $data
+     * @param Carbon $startTime
      */
-    public function submitExamQuestionPaper(array $data): void
+    public function submitExamQuestionPaper(array $data,Carbon $startTime): void
     {
         $exam = Exam::query()->findOrFail($data['exam_id']);
         $data['exam_type_id'] = $exam->exam_type_id;
@@ -193,13 +194,29 @@ class ExamService
                 $examResult->fill($question);
                 $examResult->save();
 
+
+                $manualMarkingQuestionNumbers = $this->countManualMarkingQuestions($data['exam_id']);
+
                 $youthExam->total_obtained_marks = $totalMarksObtained;
+                if ($manualMarkingQuestionNumbers == 0) {
+                    $youthExam->marks_updated_at = $startTime;
+                }
                 $youthExam->save();
             }
         }
 
 
     }
+    /**
+     * @param int $examId
+     * @return int
+     */
+    private function countManualMarkingQuestions(int $examId): int
+    {
+        return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
+
+    }
+
 
 
     /**
@@ -850,10 +867,11 @@ class ExamService
 
     /**
      * @param array $data
+     * @param Carbon $startTime
      * @return void
      */
 
-    public function youthExamMarkUpdate(array $data): void
+    public function youthExamMarkUpdate(array $data,Carbon $startTime): void
     {
         $totalObtainedMarks = 0;
         $youthExamId = null;
@@ -870,6 +888,8 @@ class ExamService
         $youthExam = YouthExam::findOrFail($youthExamId);
 
         $youthExam->total_obtained_marks = $totalObtainedMarks;
+        $youthExam->marks_updated_at = $startTime;
+
         $youthExam->save();
 
     }
@@ -975,15 +995,6 @@ class ExamService
         return $response;
     }
 
-    /**
-     * @param int $examId
-     * @return int
-     */
-    private function countManualMarkingQuestions(int $examId): int
-    {
-        return ExamSection::query()->whereNotIn('question_type', ExamQuestionBank::AUTO_MARKING_QUESTION_TYPES)->where('exam_id', $examId)->count('uuid');
-
-    }
 
     /**
      * @param Request $request

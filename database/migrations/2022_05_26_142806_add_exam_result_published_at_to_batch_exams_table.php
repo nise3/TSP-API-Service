@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddColumnsToBatchExamsTable extends Migration
+class AddExamResultPublishedAtToBatchExamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,8 +15,6 @@ class AddColumnsToBatchExamsTable extends Migration
     {
         Schema::table('batch_exams', function (Blueprint $table) {
             $table->dateTime('exam_result_published_at')->nullable();
-            $table->dateTime('mark_updated_at')->nullable();
-            $table->unsignedInteger('exam_type_id')->nullable()->change();
         });
     }
 
@@ -28,9 +26,7 @@ class AddColumnsToBatchExamsTable extends Migration
     public function down()
     {
         Schema::table('batch_exams', function (Blueprint $table) {
-            $table->dropColumn('result_published_at');
-            $table->dropColumn('mark_updated_at');
-            $table->unsignedInteger('exam_type_id')->nullable(false);
+            $table->dropColumn('exam_result_published_at');
         });
     }
 }
