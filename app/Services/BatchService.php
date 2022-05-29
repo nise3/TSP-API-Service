@@ -1401,9 +1401,9 @@ class BatchService
     /**
      * @param array $data
      * @param int $batchId
-     * @return Result
+     * @return Result|null
      */
-    public function getYouthExamResultByBatch(array $data, int $batchId): Result
+    public function getYouthExamResultByBatch(array $data, int $batchId): Result|null
     {
         /** @var Result|Builder $resultBuilder */
         return Result::where('youth_id', $data['youth_id'])->where('batch_id', $batchId)->with('resultSummaries')->first();
