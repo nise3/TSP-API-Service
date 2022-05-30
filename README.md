@@ -13,8 +13,6 @@ develop
 Code of master branch has not been used. We are using container image from staging branch to deploy to production.
 Common configurations should be placed in the ```.env.example``` file.
 
-
-
 #### Development Environment
 Sensitive information like different type of credentials for development environment have to be configured in the file named ```deploy/values.dev.yaml```.
 In order to release in the development environment, we have to switch to ```develop``` branch and after that we have to increase the value of the property ```devBuildImageVersion``` in ```deploy/version.yaml```.
