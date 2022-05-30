@@ -134,7 +134,9 @@ class Course extends BaseModel
      */
     public function certificateIssues(): HasMany
     {
-        return $this->hasMany(CertificateIssued::class,'course_id','id');
+        return $this->hasMany(CertificateIssued::class,'course_id','id')
+            ->join('certificate_templates','certificate_templates.id','certificate_issued.certificate_template_id')
+            ->select(['certificate_issued.*','certificate_templates.id as certificate_template_id','certificate_templates.result_type as result_type']);
     }
 
     /**
