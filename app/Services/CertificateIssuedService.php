@@ -381,11 +381,11 @@ class CertificateIssuedService
             'youth_id' => [
                 'required',
                 'int',
-                Rule::unique('certificate_issued', 'youth_id')
-                    ->where(function (\Illuminate\Database\Query\Builder $query) use ($request) {
-                        return $query->where('certificate_issued.batch_id', $request->input('batch_id'))
-                            ->where('certificate_issued.certificate_template_id', $request->input('certificate_template_id'));
-                    }),
+//                Rule::unique('certificate_issued', 'youth_id')
+//                    ->where(function (\Illuminate\Database\Query\Builder $query) use ($request) {
+//                        return $query->where('certificate_issued.batch_id', $request->input('batch_id'))
+//                            ->where('certificate_issued.certificate_template_id', $request->input('certificate_template_id'));
+//                    }),
             ],
             'batch_id' => [
                 'required',
