@@ -353,7 +353,7 @@ class ExamController extends Controller
      */
     public function youthBatchExamsMarkUpdate(Request $request): JsonResponse
     {
-//        $this->authorize('updateYouthExam', Exam::class);
+        $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthBatchExamMarkUpdateValidator($request)->validate();
         $this->examService->youthBatchExamMarkUpdate($validatedData);
         $response = [
