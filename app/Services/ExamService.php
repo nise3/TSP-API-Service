@@ -1986,7 +1986,6 @@ class ExamService
         $data = $request->all();
         $rules = [
             'exam' => [
-                'required_without:attendance',
                 'nullable',
                 'array',
             ],
@@ -2026,7 +2025,6 @@ class ExamService
                 'numeric',
             ],
             'attendance' => [
-                'required_without:exam',
                 'nullable',
                 'array'
             ],
