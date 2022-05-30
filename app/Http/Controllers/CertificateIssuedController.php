@@ -85,11 +85,11 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
-    public function getCertificateIssuedByYouthId(int $youthId, int $courseId): JsonResponse
+    public function getCertificateIssuedByYouthId(int $youthId, int $issueId): JsonResponse
     {
-//        Log::info('log info ' . $youthId . ' ' . $courseId);
+        Log::info('log info ' . $youthId . ' ' . $issueId);
         $certificateIssued = CertificateIssued::where('youth_id', $youthId)
-            ->where('course_id', $courseId)
+            ->where('id', $issueId)
             ->firstOrFail();
         $response = [
             "data" => $this->certificateIssuedService->getOneIssuedCertificate($certificateIssued->id),
@@ -156,6 +156,7 @@ class CertificateIssuedController extends Controller
 
 
         $youth = ServiceToServiceCall::getYouthProfilesByIds([$data->youth_id])[0];
+        ([$data->youth_id])[0];
         if (isset($data['_response_status']['success']) && $data['_response_status']['success']) {
             /** Mail send after certificate issued */
             $to = array($youth['email']);
