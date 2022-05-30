@@ -141,7 +141,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** get certificate template by batch  */
         $router->get('batch-certificate-templates', ['as' => 'batch-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getList']);
-        $router->get('certificate-templates-by-batchids', ['as' => 'certificate-templates-by-batchids', 'uses' => 'BatchCertificateTemplateController@getCertificateIssuedListByYouthIds']);
+        $router->get('certificate-templates-by-batchids', ['as' => 'certificate-templates-by-batchids', 'uses' => 'BatchCertificateTemplateController@getListByBatchIds']);
 
         /** get certificate issued list by youth  */
         $router->get('youth-certificate-issued-by-youth-ids', ["as" => "certificate-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedListByYouthIds"]);
