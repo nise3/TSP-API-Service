@@ -21,7 +21,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
     $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
-    $router->get('youth-certificate-issued', ["as" => "certificate-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedListByYouthIds"]);
+    $router->get('youth-certificate-issued-by-youth-ids', ["as" => "certificate-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedListByYouthIds"]);
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
