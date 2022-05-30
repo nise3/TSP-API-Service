@@ -39,13 +39,6 @@ After deploying at the first time, seeder files have to be run by running the fo
 php artisan queue:work --queue=institute.course.enrollment.q,institute.batch.calender.q,institute.db.sync.q
 ```
 
-## Contributing
-
-
-## Security Vulnerabilities
-
-## License
-Softbd LTD
 
 
 
