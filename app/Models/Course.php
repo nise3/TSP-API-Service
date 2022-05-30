@@ -130,6 +130,14 @@ class Course extends BaseModel
     }
 
     /**
+     * @return HasMany
+     */
+    public function certificateIssues(): HasMany
+    {
+        return $this->hasMany(CertificateIssued::class,'course_id','id');
+    }
+
+    /**
      * @return BelongsTo
      */
     public function program(): BelongsTo
