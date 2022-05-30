@@ -1959,12 +1959,12 @@ class ExamService
      */
     public function youthBatchExamMarkUpdate(array $validatedData): void
     {
-        foreach ($validatedData['exams'] as $exam) {
-            YouthExam::query()->updateOrCreate([
-                'batch_id' => $exam['batch_id'],
-                'youth_id' => $exam['youth_id'],
-                'exam_id' => $exam['exam_id']
-            ], $exam);
+        if(!empty($validatedData['exam'])){
+            YouthExam::updateOrCreate([
+                'batch_id' => $validatedData['exam']['batch_id'],
+                'youth_id' => $validatedData['exam']['youth_id'],
+                'exam_id' => $validatedData['exam']['exam_id']
+            ], $validatedData['exam']);
         }
 
         if (!empty($validatedData['attendance'])) {
@@ -1985,41 +1985,48 @@ class ExamService
     {
         $data = $request->all();
         $rules = [
-            'exams' => [
-                'required',
+            'exam' => [
+                'required_without:attendance',
+                'nullable',
                 'array',
-                'min:1'
             ],
-            'exams.*' => [
-                'array',
-                'min:1'
-            ],
-            'exams.*.exam_id' => [
-                'required',
+            'exam.exam_id' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
                 'int',
                 'exists:exams,id,deleted_at,NULL'
             ],
-            'exams.*.exam_type_id' => [
-                'required',
+            'exam.exam_type_id' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
                 'int',
                 'exists:exam_types,id,deleted_at,NULL'
             ],
-            'exams.*.type' => [
-                'required',
+            'exam.type' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
                 'int',
                 Rule::in(Exam::YOUTH_EXAM_TYPES)
             ],
-            'exams.*.youth_id' => [
-                'required',
+            'exam.youth_id' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
                 'int',
                 'min:0'
             ],
-            'exams.*.batch_id' => [
-                'required',
+            'exam.batch_id' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
                 'int',
                 'exists:batches,id,deleted_at,NULL'
             ],
+            'exam.total_obtained_marks' => [
+                Rule::requiredIf(!empty($data['exam'])),
+                'nullable',
+                'numeric',
+            ],
             'attendance' => [
+                'required_without:exam',
                 'nullable',
                 'array'
             ],
@@ -2074,12 +2081,12 @@ class ExamService
      * @param int $examTypeId
      * @return bool
      */
-    public function isExamAllYouthMarkUpdatedDone(int $batchId,int $examTypeId): bool
+    public function isExamAllYouthMarkUpdatedDone(int $batchId, int $examTypeId): bool
     {
-        $youthExams =  YouthExam::query()->where('batch_id',$batchId)->where('exam_type_id',$examTypeId)->get()->toArray();
+        $youthExams = YouthExam::query()->where('batch_id', $batchId)->where('exam_type_id', $examTypeId)->get()->toArray();
 
-        foreach ($youthExams as $youthExam){
-            if(empty($youthExam['marks_updated_at'])){
+        foreach ($youthExams as $youthExam) {
+            if (empty($youthExam['marks_updated_at'])) {
                 return false;
             }
         }
@@ -2098,10 +2105,11 @@ class ExamService
         $batch = Batch::findOrFail($data['batch_id']);
 
         if ($data['is_published'] == Result::RESULT_PUBLISHED) {
-            $batch->examTypes()->where('exam_type_id',$id)->update(['exam_result_published_at' => $startTime]);
+            $batch->examTypes()->where('exam_type_id', $id)->update(['exam_result_published_at' => $startTime]);
         } else {
             $batch->result_published_at = null;
-        }}
+        }
+    }
 
 }
 
