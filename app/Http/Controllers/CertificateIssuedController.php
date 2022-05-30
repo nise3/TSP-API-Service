@@ -73,6 +73,18 @@ class CertificateIssuedController extends Controller
     /**
      * @throws ValidationException
      */
+    public function getCertificateIssuedListByYouthIds(Request $request): JsonResponse
+    {
+//        dd($request['youth_ids']);
+        $arrayIds = explode(',',$request['youth_ids']);
+        $filter = $this->certificateIssuedService->filterValidator($request)->validate();
+        $response = $this->certificateIssuedService->getListByYouthIdsIds($filter, $arrayIds);
+        return Response::json($response, ResponseAlias::HTTP_OK);
+    }
+
+    /**
+     * @throws ValidationException
+     */
     public function getCertificateIssuedByYouthId(int $youthId, int $courseId): JsonResponse
     {
 //        Log::info('log info ' . $youthId . ' ' . $courseId);
