@@ -20,6 +20,7 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
     $router->get('/', ['as' => 'api-info', 'uses' => 'ApiInfoController@apiInfo']);
 
     $router->post('/file-upload', ['as' => 'api-info.upload', 'uses' => 'ApiInfoController@fileUpload']);
+//    $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
     /** Auth routes */
     $router->group(['middleware' => 'auth'], function () use ($customRouter, $router) {
         $customRouter()->resourceRoute('institutes', 'InstituteController')->render();
@@ -49,7 +50,6 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
         // TODO: use 'certificates', 'certificate-types', 'certificate-issued'
         $customRouter()->resourceRoute('certificate-issued', 'CertificateIssuedController')->render();
         $customRouter()->resourceRoute('certificate-templates', 'CertificateTemplateController')->render();
-
         $customRouter()->resourceRoute('course-result-configs', 'CourseResultConfigController')->render();
 
         /** Fetch all youth  who are a  participant of an exam */
@@ -141,7 +141,10 @@ $router->group(['prefix' => 'api/v1', 'as' => 'api.v1'], function () use ($route
 
         /** get certificate template by batch  */
         $router->get('batch-certificate-templates', ['as' => 'batch-certificate-templates', 'uses' => 'BatchCertificateTemplateController@getList']);
-        $router->get('certificate-templates-by-batchids', ['as' => 'certificate-templates-by-batchids', 'uses' => 'BatchCertificateTemplateController@getListByBatchIds']);
+        $router->get('certificate-templates-by-batchids', ['as' => 'certificate-templates-by-batchids', 'uses' => 'BatchCertificateTemplateController@getCertificateIssuedListByYouthIds']);
+
+        /** get certificate issued list by youth  */
+        $router->get('youth-certificate-issued-by-youth-ids', ["as" => "certificate-issued.youth-certificate-issued", "uses" => "CertificateIssuedController@getCertificateIssuedListByYouthIds"]);
     });
 
     $router->get("exam-result-summaries/{resultId}", ["as" => "batches.youth-exam-result-summaries", "uses" => "BatchController@getBatchExamResultSummaries"]);

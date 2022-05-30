@@ -13539,6 +13539,30 @@
                     }
                 }
             }
+        },
+        "/youth-certificate-issued-by-youth-ids": {
+            "get": {
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/youth_ids"
+                    }
+                ],
+                "tags": [
+                    "Certificate-Issued"
+                ],
+                "summary": "get_one",
+                "description": " API endpoint to get a Certifcate Template By Batch Ids.A successful request response will show 200 HTTP status code",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -16888,6 +16912,14 @@
             },
             "batch_ids": {
                 "name": "batch_ids",
+                "in": "query",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "youth_ids": {
+                "name": "youth_ids",
                 "in": "query",
                 "required": true,
                 "schema": {

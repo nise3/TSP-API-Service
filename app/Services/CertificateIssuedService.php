@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Facade\ServiceToServiceCall;
 use App\Models\BaseModel;
+use App\Models\BatchCertificateTemplates;
 use App\Models\CertificateTemplates;
 use App\Models\CertificateIssued;
 use App\Models\CourseEnrollment;
@@ -220,6 +221,44 @@ class CertificateIssuedService
 
         return $response;
     }
+
+    /**
+     * @param array $request
+     * @param \Illuminate\Support\Carbon $startTime
+     * @return array
+     */
+    public function getListByYouthIdsIds(array $request, array $ids): array
+    {
+        $startTime = Carbon::now();
+        $rowStatus = $request['row_status'] ?? "";
+
+        /** @var CertificateIssued|Builder $youthCertificateIssuedBuilder */
+        $youthCertificateIssuedBuilder = CertificateIssued::select([
+            'certificate_issued.id',
+            'certificate_issued.certificate_template_id',
+            'certificate_issued.youth_id',
+            'certificate_issued.batch_id',
+            'certificate_issued.course_id',
+            'certificate_templates.title_en as certificate_templates_title_en',
+            'certificate_templates.title as certificate_templates_title',
+            'certificate_templates.result_type'
+        ])
+            ->acl();
+
+        $youthCertificateIssuedBuilder
+            ->join('certificate_templates',"certificate_templates.id","=","certificate_issued.certificate_template_id");
+
+        $issuedList = $youthCertificateIssuedBuilder->whereIn('certificate_issued.youth_id', $ids)->get();
+        $response['data'] = $issuedList->toArray()['data'] ?? $issuedList->toArray();
+
+        $response['_response_status'] = [
+            "success" => true,
+            "code" => Response::HTTP_OK,
+            "query_time" => $startTime->diffInSeconds(Carbon::now()),
+        ];
+        return $response;
+    }
+
     /**
      * @param int $id
      * @return CertificateIssued
