@@ -247,10 +247,9 @@ class CourseService
                 ->whereNull('programs.deleted_at');
         });
 
-        $courseBuilder->where('courses.id', '=', $id);
-
+        $courseBuilder->with('certificateIssues');
         $courseBuilder->with('skills');
-
+        $courseBuilder->where('courses.id', '=', $id);
         /** @var Course $course */
         $course = $courseBuilder->firstOrFail();
 
