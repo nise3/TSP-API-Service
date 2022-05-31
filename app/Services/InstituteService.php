@@ -65,6 +65,7 @@ class InstituteService
             'institutes.location_longitude',
             'institutes.google_map_src',
             'institutes.logo',
+            'institutes.user_manual_path',
             'institutes.country',
             'institutes.phone_code',
             'institutes.primary_phone',
@@ -175,6 +176,7 @@ class InstituteService
             'institutes.location_longitude',
             'institutes.google_map_src',
             'institutes.logo',
+            'institutes.user_manual_path',
             'institutes.country',
             'institutes.phone_code',
             'institutes.primary_phone',
@@ -600,6 +602,10 @@ class InstituteService
                 'regex:/^(http|https):\/\/[a-zA-Z-\-\.0-9]+$/',
                 'max:191'
             ],
+            'user_manual_path' => [
+                'nullable',
+                'string'
+            ],
             'loc_division_id' => [
                 'required',
                 'integer',
@@ -850,6 +856,10 @@ class InstituteService
             'logo' => [
                 'nullable',
                 'string',
+            ],
+            'user_manual_path' => [
+                'nullable',
+                'string'
             ],
             'contact_person_name' => [
                 'required',
