@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Batch;
+use App\Models\BatchExam;
 use App\Models\Exam;
 use App\Models\ExamType;
 use App\Models\Result;
@@ -264,7 +266,7 @@ class ExamController extends Controller
 
         DB::beginTransaction();
         try {
-            $this->examService->submitExamQuestionPaper($validatedData,$this->startTime);
+            $this->examService->submitExamQuestionPaper($validatedData, $this->startTime);
             $response = [
                 "_response_status" => [
                     "success" => true,
@@ -333,7 +335,7 @@ class ExamController extends Controller
     {
         $this->authorize('updateYouthExam', Exam::class);
         $validatedData = $this->examService->youthExamMarkUpdateValidator($request)->validate();
-        $this->examService->youthExamMarkUpdate($validatedData,$this->startTime);
+        $this->examService->youthExamMarkUpdate($validatedData, $this->startTime);
         $response = [
             "data" => $youthExamMarkUpdateData ?? null,
             "_response_status" => [
@@ -426,11 +428,19 @@ class ExamController extends Controller
         $validatedData = $this->examService->resultPublishValidator($request)->validate();
         $isAllExamYouthMarkUpdateDone = $this->examService->isExamAllYouthMarkUpdatedDone($id, $validatedData['batch_id']);
 
+        $batch = Batch::findOrFail($validatedData['batch_id']);
+
+        $batchExamData = BatchExam::where('exam_type_id', $id)->where('batch_id', $validatedData['batch_id'])->first();
+
+        if($batchExamData->exam_result_published_at){
+            return Response::json(formatErrorResponse(["error_code" => "exam_result_already_published"], $this->startTime, "Exam Result Already published!"));
+        }
+
         if (!$isAllExamYouthMarkUpdateDone) {
             return Response::json(formatErrorResponse(["error_code" => "mark_update_not_complete"], $this->startTime, "All youth mark update not completed!"));
         }
 
-        $this->examService->publishExamResult($validatedData, $id, $this->startTime);
+        $this->examService->publishExamResult($validatedData, $id, $batch, $this->startTime);
 
         $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
 
