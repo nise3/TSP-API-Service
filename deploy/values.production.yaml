@@ -1,0 +1,119 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# Please do not change anything if you dont know what you are doing - Kalyan
+
+#auto scaling config
+autoScaling:
+  enabled: true
+  minReplicas: 6
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  # with this time if uses of resource up/down then do not autoscale down
+  stabilizationWindowSecondsForScaleDown: 1200
+
+VAR:
+  APP_ENV: "local"
+  APP_DEBUG: "true"
+  APP_URL: &prodHost "nise-institute.default"
+
+  LOG_CHANNEL: "elasticsearch"
+  ELASTIC_HOST: "http://elasticsearch.monitoring:9200"
+  ELASTIC_LOGS_INDEX: "tsp_file_logs"
+
+  DB_HOST: "db-service.default"
+  DB_PORT: 3306
+  DB_DATABASE: nise_ssp
+  DB_USERNAME: dbuser
+  DB_PASSWORD: dbpass
+
+  CACHE_DRIVER: "redis"
+  REDIS_CLIENT: "predis"
+  REDIS_HOST: "redis-headless.redis-node"
+  REDIS_PASSWORD: "redis_pass"
+  REDIS_PORT: 6379
+
+  RABBITMQ_HOST: "rabbitmqcluster.default"
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_VHOST: "/"
+  RABBITMQ_USER: "default_user"
+  RABBITMQ_PASSWORD: "password"
+
+  API_GATEWAY_BASE_URL: "https://apim-gateway"
+  PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
+  API_GATEWAY_API_KEY: ""
+
+  EK_PAY_DEBUG: "true"
+  IS_SANDBOX: "true"
+
+  WSO2_APIM_BASE_URL: ""
+  WSO2_APIM_CLIENT_KEY: "key"
+  WSO2_APIM_CLIENT_SECRET: "secret"
+
+  WSO2_IDP_BASE_URL: "h"
+  WSO2_IDP_BASE_USER_URL: ""
+  WSO2_IDP_USERNAME: user
+  WSO2_IDP_PASSWORD: "pass"
+  WSO2_IDP_CLIENT_KEY: "key"
+  WSO2_IDP_CLIENT_SECRET: "secret"
+
+  CORE_API_BASE_URL: "http://nise-core.com/api/v1/"
+  YOUTH_API_BASE_URL: "http://nise-youth.com/api/v1/"
+  TSP_API_BASE_URL: "http://nise-institute.com/api/v1/"
+  INDUSTRY_API_BASE_URL: "http://nise-org.com/api/v1/"
+  CMS_API_BASE_URL: "http://nise-cms.com/api/v1/"
+  MAIL_API_BASE_URL: "http://nise-mail.com/api/v1/"
+
+
+imagePullPolicy: "IfNotPresent"
+
+serviceType: "ClusterIP"
+
+# service port, this provide traffic to ingress within this port
+servicePort: 80
+
+# target container port
+serviceTargetPort: 80
+
+developBranch: "master"
+
+#git hub project id
+githubProjectRepoID: "28218768"
+
+#fetch laravel php artisan or bash command and run on run
+enableGitCommitCommandFetch: true
+
+# do not change even in merge keep current changes
+hostName: *prodHost
+
+# if values is false, then creating ingress will be escape
+enableEngress: false
+
+  # is lts acme, value is boolean
+ltsAcme: false
+
+# increase this when you need scale up
+replicaCount: 6
+
+# deployment strategy
+strategy: RollingUpdate
+
+#application environment v
+annotations:
+  cert-manager.io/cluster-issuer: "k-issuer"
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+
+resources:
+  requests:
+    memory: "500Mi"
+    cpu: "500m"
+
+siteIP: "xx.xx.xx.xx"
+
+sites: |
+  [ 'apim.nise', 'identity.nise', 'registry.nise']
+
+
+APP_ENV: 'PRODUCTION'
