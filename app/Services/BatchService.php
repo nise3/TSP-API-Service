@@ -771,7 +771,9 @@ class BatchService
     public function getExamListByBatch(Request $request, $id): array
     {
         /** @var Batch|Builder $batchBuilder */
-        $batchBuilder = Batch::where('batches.id', $id)
+        $batchBuilder = Batch::select([
+            'batches.result_processed_at'
+        ])->where('batches.id', $id)
             ->with(['examTypes' => function ($query) {
                 $query->select([
                     'exam_types.id',
