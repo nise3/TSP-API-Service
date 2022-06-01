@@ -1,0 +1,124 @@
+# Default values for helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+# "Please do not change anything if you dont know what you are doing" - Kalyan
+
+#auto scaling config
+autoScaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+  # with this time if uses of resource up/down then do not autoscale down
+  stabilizationWindowSecondsForScaleDown: 1200
+
+  # application config
+  # APP_ENV environment available values are DEV/STAGING/PRODUCTION
+VAR:
+  APP_ENV: "local"
+  APP_DEBUG: "true"
+  APP_URL: &devHost "gateway-dev.nise.com"
+
+  LOG_CHANNEL: "elasticsearch"
+  ELASTIC_HOST: "elasticsearch.monitoring:9200"
+  ELASTIC_LOGS_INDEX: "tsp_file_logs"
+
+  DB_HOST: "db-service.default"
+  DB_PORT: 3306
+  DB_DATABASE: "nise_ssp"
+  DB_USERNAME: "nise_ssp_user"
+  DB_PASSWORD: "nise_ssp_password"
+
+  CACHE_DRIVER: "redis"
+  REDIS_CLIENT: "predis"
+  REDIS_HOST: "redis-headless.redis-node"
+  REDIS_PASSWORD: "redis_pass"
+  REDIS_PORT: 6379
+
+  RABBITMQ_HOST: "rabbitmqcluster.rabbitmq-system"
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_VHOST: "/"
+  RABBITMQ_USER: "default_user"
+  RABBITMQ_PASSWORD: "default_pass"
+
+  API_GATEWAY_BASE_URL: "https://gateway-dev.nise.com"
+  PAYMENT_GATEWAY_IPN_ENDPOINT_BASE_URI: "payment-gateway-ipn-endpoint"
+  API_GATEWAY_API_KEY: ""
+
+  EK_PAY_DEBUG: "true"
+  IS_SANDBOX: "true"
+
+  WSO2_APIM_BASE_URL: "https://apim-dev.nise.com"
+  WSO2_APIM_CLIENT_KEY: "client_key"
+  WSO2_APIM_CLIENT_SECRET: "client_pass"
+
+  WSO2_IDP_BASE_URL: "https://identity-dev.nise.com"
+  WSO2_IDP_BASE_USER_URL: "https://identity-dev.nise.com/scim2/users"
+  WSO2_IDP_USERNAME: username
+  WSO2_IDP_PASSWORD: password
+  WSO2_IDP_CLIENT_KEY: "key"
+  WSO2_IDP_CLIENT_SECRET: "secret"
+
+
+ # This will be used for internal service communication
+  CORE_API_BASE_URL: "http://nise-core.default/api/v1/"
+  YOUTH_API_BASE_URL: "http://nise-youth.default/api/v1/"
+  TSP_API_BASE_URL: "http://nise-institute.default/api/v1/"
+  INDUSTRY_API_BASE_URL: "http://nise-org.default/api/v1/"
+  CMS_API_BASE_URL: "http://nise-cms.default/api/v1/"
+  MAIL_API_BASE_URL: "http://nise-mail.default/api/v1/"
+
+
+imagePullPolicy: "IfNotPresent"
+
+serviceType: "ClusterIP"
+
+# service port, this provide traffic to ingress within this port
+servicePort: 80
+
+# target container port
+serviceTargetPort: 80
+
+developBranch: "develop"
+
+#git hub project id
+githubProjectRepoID: "28218768"
+
+#fetch laravel php artisan or bash command and run on run
+enableGitCommitCommandFetch: true
+
+# do not change even in merge keep current changes
+hostName: *devHost
+
+# if values is false, then creating ingress will be escape
+enableEngress: false
+
+  # is lts acme, value is boolean
+ltsAcme: false
+
+# increase this when you need scale up
+replicaCount: 1
+
+# deployment strategy
+strategy: RollingUpdate
+
+#application environment v
+annotations:
+  cert-manager.io/cluster-issuer: "k-issuer"
+  kubernetes.io/ingress.class: nginx
+  nginx.ingress.kubernetes.io/ssl-passthrough: 'true'
+
+resources:
+  requests:
+    memory: "500Mi"
+    cpu: "500m"
+
+
+siteIP: "10.10.10.13"
+
+sites: |
+  [ 'apim-dev.nise.com', 'identity-dev.nise.com']
+
+
+APP_ENV: 'DEV'
