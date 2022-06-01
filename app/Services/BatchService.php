@@ -778,6 +778,7 @@ class BatchService
                     'exam_types.type',
                     'exam_types.title',
                     'exam_types.title_en',
+                    'batch_exams.exam_result_published_at'
                 ]);
                 $query->with(['exams' => function ($subQuery) {
                     $subQuery->select([
