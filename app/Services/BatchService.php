@@ -1148,6 +1148,11 @@ class BatchService
         $youthIds = CourseEnrollment::where('batch_id', $batch->id)->pluck('youth_id');
         $courseResultConfig = CourseResultConfig::where('course_id', $batch->course_id)->first();
 
+        $isBatchAllYouthMarkUpdateDone = $this->isBatchAllYouthMarkUpdatedDone($id);
+
+        if(!$isBatchAllYouthMarkUpdateDone){
+            return formatErrorResponse(["error_code" => "mark_update_not_complete"], $startTime, "All youth mark update not completed!");
+        }
 
         if (count($batch->examTypes) == 0) {
 
@@ -1186,8 +1191,7 @@ class BatchService
                 $batchExamTypes[] = $exam->examType->type;
             }
             $examEndDate = Carbon::create($exam->end_date);
-            Log::info('exam End Date--->'.$examEndDate);
-            Log::info('exam date check--->'.$examEndDate->lt($startTime));
+
             if ($examEndDate->lt($startTime)) {
                 $isAllExamNotFinished = true;
             }

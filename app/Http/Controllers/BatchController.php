@@ -412,14 +412,13 @@ class BatchController extends Controller
 
         $validatedData = $this->batchService->resultPublishValidator($request)->validate();
 
-        $isBatchAllYouthMarkUpdateDone = $this->batchService->isBatchAllYouthMarkUpdatedDone($id);
+        if(empty($batch->result_processed_at)){
+            return Response::json(formatErrorResponse(["error_code" => "batch_result_not_processed"], $this->startTime, "Batch Result Not Processed!"));
 
+        }
         if($batch->result_published_at){
             return Response::json(formatErrorResponse(["error_code" => "batch_result_already_published"], $this->startTime, "Batch Result Already Published!"));
 
-        }
-        if(!$isBatchAllYouthMarkUpdateDone){
-            return Response::json(formatErrorResponse(["error_code" => "mark_update_not_complete"], $this->startTime, "All youth mark update not completed!"));
         }
 
         DB::beginTransaction();
