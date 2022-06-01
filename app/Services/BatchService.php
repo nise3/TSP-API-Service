@@ -1382,13 +1382,12 @@ class BatchService
 
     /**
      * @param array $data
-     * @param int $id
+     * @param Batch $batch
      * @param Carbon $startTime
      * @return bool
      */
-    public function publishExamResult(array $data, int $id, Carbon $startTime): bool
+    public function publishExamResult(array $data, Batch $batch, Carbon $startTime): bool
     {
-        $batch = Batch::findOrFail($id);
 
         if ($data['is_published'] == Result::RESULT_PUBLISHED) {
             $batch->result_published_at = Carbon::now();

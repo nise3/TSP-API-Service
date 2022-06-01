@@ -14,7 +14,6 @@ class ExamType extends BaseModel
 
     protected $guarded = BaseModel::COMMON_GUARDED_FIELDS_SIMPLE_SOFT_DELETE;
 
-    protected $hidden = ['pivot'];
 
 
     public function exams(): HasMany

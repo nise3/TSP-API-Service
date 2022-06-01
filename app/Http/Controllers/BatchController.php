@@ -408,17 +408,23 @@ class BatchController extends Controller
     public function publishBatchExamsResult(Request $request, int $id): JsonResponse
     {
         $this->authorize('create', Result::class);
+        $batch = Batch::findOrFail($id);
+
         $validatedData = $this->batchService->resultPublishValidator($request)->validate();
 
         $isBatchAllYouthMarkUpdateDone = $this->batchService->isBatchAllYouthMarkUpdatedDone($id);
 
+        if($batch->result_published_at){
+            return Response::json(formatErrorResponse(["error_code" => "batch_result_already_published"], $this->startTime, "Batch Result Already Published!"));
+
+        }
         if(!$isBatchAllYouthMarkUpdateDone){
             return Response::json(formatErrorResponse(["error_code" => "mark_update_not_complete"], $this->startTime, "All youth mark update not completed!"));
         }
 
         DB::beginTransaction();
         try {
-            $this->batchService->publishExamResult($validatedData, $id,$this->startTime);
+            $this->batchService->publishExamResult($validatedData,$batch, $this->startTime);
 
             $message = $validatedData['is_published'] == Result::RESULT_PUBLISHED ? "Result published successfully" : "Result unpublished successfully";
 

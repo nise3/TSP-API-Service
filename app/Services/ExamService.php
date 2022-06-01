@@ -2098,9 +2098,8 @@ class ExamService
      * @param Carbon $startTime
      * @return void
      */
-    public function publishExamResult(array $data, int $id, Carbon $startTime): void
+    public function publishExamResult(array $data, int $id,Batch $batch, Carbon $startTime): void
     {
-        $batch = Batch::findOrFail($data['batch_id']);
 
         if ($data['is_published'] == Result::RESULT_PUBLISHED) {
             $batch->examTypes()->where('exam_type_id', $id)->update(['exam_result_published_at' => $startTime]);
