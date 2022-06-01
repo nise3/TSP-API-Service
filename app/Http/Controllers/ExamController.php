@@ -426,7 +426,7 @@ class ExamController extends Controller
         $this->authorize('create', Exam::class);
 
         $validatedData = $this->examService->resultPublishValidator($request)->validate();
-        $isAllExamYouthMarkUpdateDone = $this->examService->isExamAllYouthMarkUpdatedDone($id, $validatedData['batch_id']);
+        $isAllExamYouthMarkUpdateDone = $this->examService->isExamAllYouthMarkUpdatedDone($validatedData['batch_id'],$id);
 
         $batch = Batch::findOrFail($validatedData['batch_id']);
 
